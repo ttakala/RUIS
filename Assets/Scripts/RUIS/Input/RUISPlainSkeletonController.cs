@@ -32,22 +32,25 @@ public class RUISPlainSkeletonController : MonoBehaviour {
     }
 
 	void LateUpdate () {
-        UpdateSkeletonPosition();
-
-        UpdateTransform(ref head, skeletonManager.skeletons[playerId].head);
-        UpdateTransform(ref torso, skeletonManager.skeletons[playerId].torso);
-        UpdateTransform(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
-        UpdateTransform(ref leftElbow, skeletonManager.skeletons[playerId].leftElbow);
-        UpdateTransform(ref leftHand, skeletonManager.skeletons[playerId].leftHand);
-        UpdateTransform(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
-        UpdateTransform(ref rightElbow, skeletonManager.skeletons[playerId].rightElbow);
-        UpdateTransform(ref rightHand, skeletonManager.skeletons[playerId].rightHand);
-        UpdateTransform(ref leftHip, skeletonManager.skeletons[playerId].leftHip);
-        UpdateTransform(ref leftKnee, skeletonManager.skeletons[playerId].leftKnee);
-        UpdateTransform(ref leftFoot, skeletonManager.skeletons[playerId].leftFoot);
-        UpdateTransform(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
-        UpdateTransform(ref rightKnee, skeletonManager.skeletons[playerId].rightKnee);
-        UpdateTransform(ref rightFoot, skeletonManager.skeletons[playerId].rightFoot);
+        if (skeletonManager != null && skeletonManager.skeletons[playerId] != null)
+        {
+            UpdateSkeletonPosition();
+        
+            UpdateTransform(ref head, skeletonManager.skeletons[playerId].head);
+            UpdateTransform(ref torso, skeletonManager.skeletons[playerId].torso);
+            UpdateTransform(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
+            UpdateTransform(ref leftElbow, skeletonManager.skeletons[playerId].leftElbow);
+            UpdateTransform(ref leftHand, skeletonManager.skeletons[playerId].leftHand);
+            UpdateTransform(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
+            UpdateTransform(ref rightElbow, skeletonManager.skeletons[playerId].rightElbow);
+            UpdateTransform(ref rightHand, skeletonManager.skeletons[playerId].rightHand);
+            UpdateTransform(ref leftHip, skeletonManager.skeletons[playerId].leftHip);
+            UpdateTransform(ref leftKnee, skeletonManager.skeletons[playerId].leftKnee);
+            UpdateTransform(ref leftFoot, skeletonManager.skeletons[playerId].leftFoot);
+            UpdateTransform(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
+            UpdateTransform(ref rightKnee, skeletonManager.skeletons[playerId].rightKnee);
+            UpdateTransform(ref rightFoot, skeletonManager.skeletons[playerId].rightFoot);
+        }
 
         if (leftHand != null)
         {
