@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ns2:m2k xmlns:ns2="http://ruisystem.net/m2k">
-  <translate x="-0.01624374" y="0.03505778" z="0.05339502" />
-  <rotate r00="0.1066604" r01="0.004763664" r02="0.01391809" r10="-0.005499448" r11="0.1055978" r12="-0.0007666487" r20="0.002470706" r21="0.00684347" r22="0.0954994" />
-  <kinectFloorNormal x="0.04675395" y="0.9880109" z="0.1471348" />
-  <kinectDistanceFromFloor value="0.8328022" />
-</ns2:m2k>
