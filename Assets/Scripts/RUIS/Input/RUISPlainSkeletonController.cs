@@ -35,7 +35,7 @@ public class RUISPlainSkeletonController : MonoBehaviour {
         if (skeletonManager != null && skeletonManager.skeletons[playerId] != null)
         {
             UpdateSkeletonPosition();
-        
+
             UpdateTransform(ref head, skeletonManager.skeletons[playerId].head);
             UpdateTransform(ref torso, skeletonManager.skeletons[playerId].torso);
             UpdateTransform(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
@@ -50,16 +50,19 @@ public class RUISPlainSkeletonController : MonoBehaviour {
             UpdateTransform(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
             UpdateTransform(ref rightKnee, skeletonManager.skeletons[playerId].rightKnee);
             UpdateTransform(ref rightFoot, skeletonManager.skeletons[playerId].rightFoot);
-        }
 
-        if (leftHand != null)
-        {
-            leftHand.localRotation = leftElbow.localRotation;
-        }
 
-        if (rightHand != null)
-        {
-            rightHand.localRotation = rightElbow.localRotation;
+            if (leftHand != null)
+            {
+                leftHand.localRotation = leftElbow.localRotation;
+            }
+
+            if (rightHand != null)
+            {
+                rightHand.localRotation = rightElbow.localRotation;
+            }
+
+            transform.position = skeletonPosition;
         }
 	}
 

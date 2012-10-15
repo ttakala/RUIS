@@ -89,35 +89,29 @@ public class RUISSelectable : MonoBehaviour {
     }
 
 
-    Vector3 baa, baabaa, baabaabaa = Vector3.zero;
     public virtual void OnSelectionEnd()
     {
+        Vector3 oldVelocity = Vector3.zero;
+
         if (rigidbody)
         {
+            oldVelocity = rigidbody.velocity;
             rigidbody.isKinematic = rigidbodyWasKinematic;
         }
 
-        if (maintainMomentumAfterRelease && !rigidbody.isKinematic)
+
+        Debug.Log(oldVelocity);
+
+        if (maintainMomentumAfterRelease && rigidbody && !rigidbody.isKinematic)
         {
             //give the rigidbody speed based on its current velocity
             Vector3 velocity = selector.velocity;
-            /*
+            
             if (positionSelectionGrabType == SelectionGrabType.AlongSelectionRay)
             {
-                Quaternion angularRotation = Quaternion.Euler(selector.angularVelocity);
-                Quaternion.S
-                Vector3 difference = transform.position - selector.transform.position;
-                Vector3 rotatedDifference = angularRotation * difference;
-                velocity += rotatedDifference - difference;
-                Debug.Log("angular velocity component: " + (rotatedDifference - difference));
-
-                baa = selector.transform.position;
-                baabaa = transform.position;
-                baabaabaa = rotatedDifference;
-                
-                Debug.Log("Angular velocity component: " + Vector3.Distance(transform.position, selector.transform.position) * Mathf.Deg2Rad * selector.angularVelocity);
-                velocity += Vector3.Distance(transform.position, selector.transform.position) * Mathf.Deg2Rad * selector.angularVelocity;
-            }*/
+                //velocity = AverageBufferContent(velocityBuffer);
+                velocity = oldVelocity;
+            }
             rigidbody.AddForce(velocity, ForceMode.VelocityChange);
 
             Vector3 bufferedRotationalVelocity = AverageBufferContent(rotationalVelocityBuffer);
@@ -144,35 +138,50 @@ public class RUISSelectable : MonoBehaviour {
     {
         if (!isSelected) return;
 
+        Vector3 newPosition = transform.position;
+        Quaternion newRotation = transform.rotation;
+
         switch (positionSelectionGrabType)
         {
             case SelectionGrabType.SnapToWand:
-                transform.position = selector.transform.position;
+                newPosition = selector.transform.position;
                 break;
             case SelectionGrabType.RelativeToWand:
                 Vector3 selectorPositionChange = selector.transform.position - selectorPositionAtSelection;
-                transform.position = positionAtSelection + selectorPositionChange;
+                newPosition = positionAtSelection + selectorPositionChange;
                 break;
             case SelectionGrabType.AlongSelectionRay:
                 float clampDistance = distanceFromSelectionRayOrigin;
                 if (clampToCertainDistance) clampDistance = distanceToClampTo;
-                transform.position = selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
+                newPosition = selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
                 break;
         }
 
         switch (rotationSelectionGrabType)
         {
             case SelectionGrabType.SnapToWand:
-                transform.rotation = selector.transform.rotation;
+                newRotation = selector.transform.rotation;
                 break;
             case SelectionGrabType.RelativeToWand:
-                transform.rotation = rotationAtSelection;
+                newRotation = rotationAtSelection;
                 Vector3 selectorRotationChange = (Quaternion.Inverse(selectorRotationAtSelection) * selector.transform.rotation).eulerAngles;
-                transform.Rotate(selectorRotationChange, Space.World);
+                //transform.Rotate(selectorRotationChange, Space.World);
+                newRotation = newRotation * Quaternion.Euler(selectorRotationChange);
                 break;
             case SelectionGrabType.AlongSelectionRay:
-                transform.rotation = Quaternion.LookRotation(selector.selectionRay.direction);
+                newRotation = Quaternion.LookRotation(selector.selectionRay.direction);
                 break;
+        }
+
+        if (rigidbody)
+        {
+            rigidbody.MovePosition(newPosition);
+            rigidbody.MoveRotation(newRotation);
+        }
+        else
+        {
+            transform.position = newPosition;
+            transform.rotation = newRotation;
         }
     }
 

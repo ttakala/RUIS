@@ -38,8 +38,17 @@ public class RUISPSMoveController : RUISWand {
 	
 	void Update ()
     {
-        transform.position = position;
-        transform.rotation = qOrientation;
+        if (rigidbody)
+        {
+            rigidbody.MovePosition(position);
+            rigidbody.MoveRotation(qOrientation);
+        }
+        else
+        {
+            transform.position = position;
+            transform.rotation = qOrientation;
+        }
+
 
         if (meshRenderer)
         {

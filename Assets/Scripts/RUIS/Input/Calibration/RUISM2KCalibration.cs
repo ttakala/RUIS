@@ -257,6 +257,9 @@ public class RUISM2KCalibration : MonoBehaviour {
         psMoveSamples.Add(coordinateSystem.ConvertMovePosition(psMoveWrapper.handlePosition[calibratingPSMoveControllerId]));
         kinectSamples.Add(coordinateSystem.ConvertKinectPosition(jointPosition.Position));
 
+        Debug.Log("Hand position in skeleton manager: " + (FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager).skeletons[0].rightHand.position);
+        Debug.Log("Hand position in calibration script: " + coordinateSystem.ConvertKinectPosition(jointPosition.Position));
+
         numberOfSamplesTaken++;
         timeSinceLastSample = 0;
 
