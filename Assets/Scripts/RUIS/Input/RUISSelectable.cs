@@ -31,15 +31,11 @@ public class RUISSelectable : MonoBehaviour {
     public Material selectionMaterial;
 
     public bool maintainMomentumAfterRelease = true;
-    private Queue<Vector3> velocityBuffer;
-    public int velocityBufferSize = 5;
-    private Queue<Vector3> rotationalVelocityBuffer;
-    public int rotationalVelocityBufferSize = 5;
+
+    private Vector3 latestVelocity = Vector3.zero;
 
     public void Awake()
     {
-        velocityBuffer = new Queue<Vector3>();
-        rotationalVelocityBuffer = new Queue<Vector3>();
     }
 
     public void Start()
@@ -52,19 +48,12 @@ public class RUISSelectable : MonoBehaviour {
 
     public void FixedUpdate()
     {
-        Vector3 oldPosition = transform.position;
-        Vector3 oldRotation = transform.rotation.eulerAngles;
+        UpdateTransform(true);
 
-        UpdateTransform();
-
-        Vector3 velocity = (transform.position - oldPosition) / Time.fixedDeltaTime;
-        velocityBuffer.Enqueue(velocity);
-        LimitBufferSize(velocityBuffer, velocityBufferSize);
-
-        Vector3 rotationalVelocity = (transform.rotation.eulerAngles - oldRotation) / Time.fixedDeltaTime;
-        rotationalVelocityBuffer.Enqueue(rotationalVelocity);
-        LimitBufferSize(rotationalVelocityBuffer, rotationalVelocityBufferSize);
-        
+        if (rigidbody)
+        {
+            latestVelocity = (rigidbody.velocity != Vector3.zero) ? rigidbody.velocity : latestVelocity;
+        }
     }
 
     public virtual void OnSelection(RUISWandSelector selector)
@@ -83,38 +72,23 @@ public class RUISSelectable : MonoBehaviour {
             rigidbody.isKinematic = true;
         }
 
-        velocityBuffer.Clear();
-
         AddMaterial(selectionMaterial);
+
+        UpdateTransform(false);
     }
 
 
     public virtual void OnSelectionEnd()
     {
-        Vector3 oldVelocity = Vector3.zero;
-
         if (rigidbody)
         {
-            oldVelocity = rigidbody.velocity;
             rigidbody.isKinematic = rigidbodyWasKinematic;
         }
 
-
-        Debug.Log(oldVelocity);
-
         if (maintainMomentumAfterRelease && rigidbody && !rigidbody.isKinematic)
         {
-            //give the rigidbody speed based on its current velocity
-            Vector3 velocity = selector.velocity;
-            
-            if (positionSelectionGrabType == SelectionGrabType.AlongSelectionRay)
-            {
-                //velocity = AverageBufferContent(velocityBuffer);
-                velocity = oldVelocity;
-            }
-            rigidbody.AddForce(velocity, ForceMode.VelocityChange);
+            rigidbody.AddForce(latestVelocity, ForceMode.VelocityChange);
 
-            Vector3 bufferedRotationalVelocity = AverageBufferContent(rotationalVelocityBuffer);
             rigidbody.AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
         }
 
@@ -134,7 +108,7 @@ public class RUISSelectable : MonoBehaviour {
         RemoveMaterial();
     }
 
-    protected virtual void UpdateTransform()
+    protected virtual void UpdateTransform(bool safePhysics)
     {
         if (!isSelected) return;
 
@@ -173,7 +147,7 @@ public class RUISSelectable : MonoBehaviour {
                 break;
         }
 
-        if (rigidbody)
+        if (rigidbody && safePhysics)
         {
             rigidbody.MovePosition(newPosition);
             rigidbody.MoveRotation(newRotation);

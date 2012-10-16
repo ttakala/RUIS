@@ -2,6 +2,21 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISPSMoveController : RUISWand {
+    public enum SelectionButton
+    {
+        Trigger,
+        Cross,
+        Circle,
+        Square,
+        Triangle,
+        Move,
+        Start,
+        Select,
+        None
+    }
+
+    public SelectionButton selectionButton;
+
     private static PSMoveWrapper psMoveWrapper;
     
     public int controllerId;
@@ -12,6 +27,8 @@ public class RUISPSMoveController : RUISWand {
     public RUISCoordinateSystem coordinateSystem;
 
     private Renderer meshRenderer;
+
+    public bool copyColor = false;
 
 	public void Awake ()
     {
@@ -50,7 +67,7 @@ public class RUISPSMoveController : RUISWand {
         }
 
 
-        if (meshRenderer)
+        if (meshRenderer && copyColor)
         {
             meshRenderer.material.color = color;
         }
@@ -85,12 +102,52 @@ public class RUISPSMoveController : RUISWand {
 
     public override bool SelectionButtonWasPressed()
     {
-        return triggerButtonWasPressed;
+        switch (selectionButton)
+        {
+            case SelectionButton.Trigger:
+                return triggerButtonWasPressed;
+            case SelectionButton.Cross:
+                return crossButtonWasPressed;
+            case SelectionButton.Circle:
+                return circleButtonWasPressed;
+            case SelectionButton.Square:
+                return squareButtonWasPressed;
+            case SelectionButton.Triangle:
+                return triangleButtonWasPressed;
+            case SelectionButton.Move:
+                return moveButtonWasPressed;
+            case SelectionButton.Start:
+                return startButtonWasPressed;
+            case SelectionButton.Select:
+                return selectButtonWasPressed;
+            default:
+                return false;
+        }
     }
 
     public override bool SelectionButtonWasReleased()
     {
-        return triggerButtonWasReleased;
+        switch (selectionButton)
+        {
+            case SelectionButton.Trigger:
+                return triggerButtonWasReleased;
+            case SelectionButton.Cross:
+                return crossButtonWasReleased;
+            case SelectionButton.Circle:
+                return circleButtonWasReleased;
+            case SelectionButton.Square:
+                return squareButtonWasReleased;
+            case SelectionButton.Triangle:
+                return triangleButtonWasReleased;
+            case SelectionButton.Move:
+                return moveButtonWasReleased;
+            case SelectionButton.Start:
+                return startButtonWasReleased;
+            case SelectionButton.Select:
+                return selectButtonWasReleased;
+            default:
+                return false;
+        }
     }
 
     public Vector3 position
@@ -134,14 +191,7 @@ public class RUISPSMoveController : RUISWand {
     {
         get
         {
-            Debug.Log(psMoveWrapper.angularVelocity[controllerId]);
-            Debug.Log(coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]));
             return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]);
-            /*Vector3 angularVelocity = psMoveWrapper.angularAcceleration[controllerId];
-            angularVelocity.x = -angularVelocity.x;
-            angularVelocity.z = -angularVelocity.z;
-            Debug.Log(coordinateSystem.ConvertMovePosition(angularVelocity));
-            return coordinateSystem.ConvertMovePosition(angularVelocity);*/
         }
     }
     public Vector3 angularAcceleration

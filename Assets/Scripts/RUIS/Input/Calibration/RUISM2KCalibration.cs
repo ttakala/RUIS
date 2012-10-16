@@ -149,7 +149,7 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     private void DoWaitingForMovePress()
     {
-        statusText.text = "Take a Move controller into your right hand.\nPress X to start calibrating.\nPress Triangle to reset floor normal.";
+        statusText.text = "Take a Move controller into your right hand.\nWave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
         if (kinectSelection.GetNumberOfSelectedPlayers() < 1)
         {
             currentState = State.WaitingForSkeleton;

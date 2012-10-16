@@ -17,6 +17,8 @@ public class RUISWandSelector : MonoBehaviour {
     public Ray selectionRay { get; private set; }
 
     public Transform headTransform;
+
+    public bool toggleSelection;
     
     private RUISWand wand;
     private RUISSelectable selection;
@@ -84,7 +86,7 @@ public class RUISWandSelector : MonoBehaviour {
                 }
             }
         }
-        else if (selection && wand.SelectionButtonWasReleased())
+        else if (selection && ((!toggleSelection && wand.SelectionButtonWasReleased()) || (toggleSelection && wand.SelectionButtonWasPressed())))
         {
             EndSelection();
         }
