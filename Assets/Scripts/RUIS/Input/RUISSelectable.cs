@@ -21,6 +21,13 @@ public class RUISSelectable : MonoBehaviour {
     private Vector3 selectorPositionAtSelection;
     private Quaternion selectorRotationAtSelection;
     private float distanceFromSelectionRayOrigin;
+    public float DistanceFromSelectionRayOrigin
+    {
+        get
+        {
+            return distanceFromSelectionRayOrigin;
+        }
+    }
 
     public bool clampToCertainDistance = false;
     public float distanceToClampTo = 1.0f;

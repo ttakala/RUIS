@@ -22,6 +22,13 @@ public class RUISWandSelector : MonoBehaviour {
     
     private RUISWand wand;
     private RUISSelectable selection;
+    public RUISSelectable Selection
+    {
+        get
+        {
+            return selection;
+        }
+    }
 
     private RUISSelectable highlightedObject;
 

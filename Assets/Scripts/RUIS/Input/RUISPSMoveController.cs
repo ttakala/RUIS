@@ -252,8 +252,7 @@ public class RUISPSMoveController : RUISWand {
 
     public override Color color { get { return psMoveWrapper.sphereColor[controllerId]; } set { SetColor(value); } }
 
-    //value between 0-255
-    public int triggerValue { get { return psMoveWrapper.valueT[controllerId]; } }
+    public float triggerValue { get { return psMoveWrapper.valueT[controllerId] / 255.0f; } }
 
     private Vector3 TransformPosition(Vector3 value)
     {
