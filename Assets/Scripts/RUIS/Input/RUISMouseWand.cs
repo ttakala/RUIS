@@ -2,14 +2,29 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISMouseWand : RUISWand {
-    public bool mouseButtonPressed = false;
-    public bool mouseButtonReleased = false;
+    bool mouseButtonPressed = false;
+    bool mouseButtonReleased = false;
+
+    RUISDisplayManager displayManager;
+
+    public void Awake()
+    {
+        displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
+
+        if (!displayManager)
+        {
+            Debug.LogError("RUISMouseWand requires a RUISDisplayManager in the scene!");
+        }
+    }
 
     public void Update()
     {
-        Ray wandRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        transform.position = wandRay.origin;
-        transform.rotation = Quaternion.LookRotation(wandRay.direction);
+        Ray wandRay = displayManager.ScreenPointToRay(Input.mousePosition);
+        if (wandRay.direction != Vector3.zero)
+        {
+            transform.position = wandRay.origin;
+            transform.rotation = Quaternion.LookRotation(wandRay.direction);
+        }
 
         mouseButtonPressed = Input.GetMouseButtonDown(0);
         mouseButtonReleased = Input.GetMouseButtonUp(0);
@@ -25,13 +40,8 @@ public class RUISMouseWand : RUISWand {
         return mouseButtonReleased;
     }
 
-    public override Vector3 GetVelocity()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public override Vector3 GetAngularVelocity()
     {
-        throw new System.NotImplementedException();
+        return Vector3.zero;
     }
 }

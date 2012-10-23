@@ -59,6 +59,19 @@ public class RUISDisplay : MonoBehaviour {
         {
             camera.associatedDisplay = this;
         }
+
+        if (isStereo && camera.GetComponent<RUISStereoCamera>() == null)
+        {
+            Debug.LogError("Display " + name + " marked as stereo but linked RUISCamera " + camera.name + " is mono. Switching to mono mode.");
+            isStereo = false;
+        }
+
+        if (!isStereo && camera.GetComponent<RUISMonoCamera>() == null)
+        {
+            Debug.LogError("Display " + name + " marked as mono but linked RUISCamera " + camera.name + " is stereo. Switching to side by side stereo");
+            isStereo = true;
+            stereoType = StereoType.SideBySide;
+        }
     }
 
     public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)
@@ -76,6 +89,45 @@ public class RUISDisplay : MonoBehaviour {
         else
         {
             Debug.LogWarning("Please set up a RUISCamera for display: " + name);
+        }
+    }
+
+    public Camera GetCameraForScreenPoint(Vector2 relativeScreenPoint)
+    {
+        if (relativeScreenPoint.x > rawResolutionX || relativeScreenPoint.y > rawResolutionY || relativeScreenPoint.y < 0) return null;
+
+        if (!isStereo)
+        {
+            return camera.GetComponent<RUISMonoCamera>().camera;
+        }
+        else
+        {
+            if (stereoType == StereoType.SideBySide)
+            {
+                if (relativeScreenPoint.x < rawResolutionX / 2)
+                {
+                    return camera.GetComponent<RUISStereoCamera>().leftCamera;
+                }
+                else
+                {
+                    return camera.GetComponent<RUISStereoCamera>().rightCamera;
+                }
+            }
+            else if (stereoType == StereoType.TopAndBottom)
+            {
+                if (relativeScreenPoint.y < rawResolutionY / 2)
+                {
+                    return camera.GetComponent<RUISStereoCamera>().rightCamera;
+                }
+                else
+                {
+                    return camera.GetComponent<RUISStereoCamera>().leftCamera;
+                }
+            }
+            else
+            {
+                return camera.GetComponent<RUISStereoCamera>().leftCamera;
+            }
         }
     }
 }

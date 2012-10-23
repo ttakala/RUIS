@@ -12,12 +12,20 @@ public class RUISDisplayManager : MonoBehaviour {
 
     public bool fullScreen;
 
-	// Use this for initialization
+    private float editorHeightScaler = 1;
+    private float editorWidthScaler = 1;
+
 	void Start () {
+        UpdateTotalResolution();
+
+        if (Application.isEditor)
+        {
+            CalculateEditorResolutions();
+        }
+
         InitDisplays();
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	}
 
@@ -49,6 +57,54 @@ public class RUISDisplayManager : MonoBehaviour {
 
             totalRawResolutionX += display.rawResolutionX;
             totalRawResolutionY = Mathf.Max(totalRawResolutionY, display.rawResolutionY);
+        }
+    }
+
+    public Ray ScreenPointToRay(Vector2 screenPoint)
+    {
+        int currentResolutionX = 0;
+        foreach (RUISDisplay display in displays)
+        {
+            
+            if (currentResolutionX + display.rawResolutionX >= screenPoint.x)
+            {
+                Camera camera = display.GetCameraForScreenPoint(new Vector2(screenPoint.x - currentResolutionX, screenPoint.y));
+                
+                if (camera)
+                {
+                    Debug.Log(camera.name);
+                    return camera.ScreenPointToRay(screenPoint);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            currentResolutionX += display.rawResolutionX;
+        }
+
+        return new Ray(Vector3.zero, Vector3.zero);
+    }
+
+    private void CalculateEditorResolutions()
+    {
+        int trueWidth = Screen.width;
+        int trueHeight = Screen.height;
+
+        Debug.Log(trueWidth + " " + trueHeight);
+
+        Debug.Log(totalRawResolutionX + " " + totalRawResolutionY);
+
+        editorWidthScaler = (float)trueWidth / totalRawResolutionX;
+        editorHeightScaler = (float)trueHeight / totalRawResolutionY;
+
+        Debug.Log(editorWidthScaler + " " + editorHeightScaler);
+
+        foreach (RUISDisplay display in displays)
+        {
+            display.resolutionX = (int)(display.resolutionX * editorWidthScaler);
+            display.resolutionY = (int)(display.resolutionY * editorHeightScaler);
         }
     }
 }

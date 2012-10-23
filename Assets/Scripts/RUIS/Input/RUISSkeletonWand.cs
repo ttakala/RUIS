@@ -30,11 +30,6 @@ public class RUISSkeletonWand : RUISWand {
         return mouseButtonReleased;
     }
 
-    public override Vector3 GetVelocity()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public override Vector3 GetAngularVelocity()
     {
         throw new System.NotImplementedException();

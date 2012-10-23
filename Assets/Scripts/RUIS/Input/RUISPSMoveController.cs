@@ -259,11 +259,6 @@ public class RUISPSMoveController : RUISWand {
         return coordinateSystem.ConvertMovePosition(value);
     }
 
-    public override Vector3 GetVelocity()
-    {
-        return handleVelocity;
-    }
-
     public override Vector3 GetAngularVelocity()
     {
         return angularVelocity;

@@ -2,11 +2,11 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISMonoCamera : RUISCamera {
-    Camera linkedCamera;
+    public Camera camera;
 
     public void Awake()
     {
-        linkedCamera = GetComponent<Camera>();
+        camera = GetComponent<Camera>();
     }
 
 	public new void Start () {
@@ -25,6 +25,7 @@ public class RUISMonoCamera : RUISCamera {
 
     public override void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight)
     {
-        linkedCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+        camera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
     }
+
 }

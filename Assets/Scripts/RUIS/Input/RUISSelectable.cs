@@ -40,9 +40,13 @@ public class RUISSelectable : MonoBehaviour {
     public bool maintainMomentumAfterRelease = true;
 
     private Vector3 latestVelocity = Vector3.zero;
+    private Vector3 lastPosition = Vector3.zero;
+
+    private Queue<Vector3> velocityBuffer;
 
     public void Awake()
     {
+        velocityBuffer = new Queue<Vector3>();
     }
 
     public void Start()
@@ -57,10 +61,16 @@ public class RUISSelectable : MonoBehaviour {
     {
         UpdateTransform(true);
 
-        if (rigidbody)
+        /*if (rigidbody)
         {
             latestVelocity = (rigidbody.velocity != Vector3.zero) ? rigidbody.velocity : latestVelocity;
-        }
+        }*/
+
+        latestVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
+        lastPosition = transform.position;
+
+        velocityBuffer.Enqueue(latestVelocity);
+        LimitBufferSize(velocityBuffer, 5);
     }
 
     public virtual void OnSelection(RUISWandSelector selector)
@@ -72,6 +82,8 @@ public class RUISSelectable : MonoBehaviour {
         selectorPositionAtSelection = selector.transform.position;
         selectorRotationAtSelection = selector.transform.rotation;
         distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude;
+
+        lastPosition = transform.position;
 
         if (rigidbody)
         {
@@ -94,7 +106,7 @@ public class RUISSelectable : MonoBehaviour {
 
         if (maintainMomentumAfterRelease && rigidbody && !rigidbody.isKinematic)
         {
-            rigidbody.AddForce(latestVelocity, ForceMode.VelocityChange);
+            rigidbody.AddForce(AverageBufferContent(velocityBuffer), ForceMode.VelocityChange);
 
             rigidbody.AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
         }

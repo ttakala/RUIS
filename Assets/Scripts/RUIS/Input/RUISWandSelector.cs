@@ -32,14 +32,6 @@ public class RUISWandSelector : MonoBehaviour {
 
     private RUISSelectable highlightedObject;
 
-    public Vector3 velocity
-    {
-        get
-        {
-            return wand.GetVelocity();
-        }
-    }
-
     public Vector3 angularVelocity
     {
         get
