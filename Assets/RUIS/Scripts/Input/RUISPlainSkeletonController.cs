@@ -23,6 +23,10 @@ public class RUISPlainSkeletonController : MonoBehaviour {
 
     private Vector3 skeletonPosition = Vector3.zero;
 
+    public bool updateRootPosition = true;
+    public bool updateJointPositions = true;
+    public bool updateJointRotations = true;
+
     void Awake()
     {
         if (skeletonManager == null)
@@ -62,7 +66,10 @@ public class RUISPlainSkeletonController : MonoBehaviour {
                 rightHand.localRotation = rightElbow.localRotation;
             }
 
-            transform.position = skeletonPosition;
+            if (updateRootPosition)
+            {
+                transform.position = skeletonPosition;
+            }
         }
 	}
 
@@ -70,12 +77,12 @@ public class RUISPlainSkeletonController : MonoBehaviour {
     {
         if (transformToUpdate == null) return;
 
-        if (jointToGet.positionConfidence >= 0.5f)
+        if (updateJointPositions && jointToGet.positionConfidence >= 0.5f)
         {
             transformToUpdate.localPosition = jointToGet.position - skeletonPosition;
         }
 
-        if (jointToGet.rotationConfidence >= 0.5f)
+        if (updateJointRotations && jointToGet.rotationConfidence >= 0.5f)
         {
             transformToUpdate.localRotation = jointToGet.rotation;
         }
@@ -84,7 +91,7 @@ public class RUISPlainSkeletonController : MonoBehaviour {
     //gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
     private void UpdateSkeletonPosition()
     {
-        if (skeletonManager.skeletons[playerId].torso.positionConfidence <= 0.5f)
+        if (skeletonManager.skeletons[playerId].torso.positionConfidence >= 0.5f)
         {
             skeletonPosition = skeletonManager.skeletons[playerId].torso.position;
         }

@@ -72,7 +72,6 @@ public class RUISDisplayManager : MonoBehaviour {
                 
                 if (camera)
                 {
-                    Debug.Log(camera.name);
                     return camera.ScreenPointToRay(screenPoint);
                 }
                 else
