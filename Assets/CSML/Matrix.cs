@@ -1679,13 +1679,13 @@ namespace CSML
             for (int k = 1; k < n; k++)
             {                
                 Matrix buf = (this * B); // DEBUG                
-                Complex buf2 = buf.Trace(); // DEBUG
+                //Complex buf2 = buf.Trace(); // DEBUG
                 alpha = ((double)1 / k) * buf.Trace();
                 B = alpha * Id - buf;
             }
 
-            Matrix buf3 = (this * B); // DEBUG                
-            Complex buf4 = buf3.Trace(); // DEBUG
+            //Matrix buf3 = (this * B); // DEBUG                
+            //Complex buf4 = buf3.Trace(); // DEBUG
             alpha = (this * B).Trace() / n;
             if (alpha != Complex.Zero)
                 return B / alpha;
@@ -2263,7 +2263,7 @@ namespace CSML
         {
 
             throw new NotImplementedException("Still buggy!");
-
+            /*
             if (!this.IsSquare())
                 throw new InvalidOperationException("Cannot perform QR iteration of non-square matrix.");
 
@@ -2283,7 +2283,7 @@ namespace CSML
                 }
             }
 
-            return T;
+            return T;*/
         }
 
         /// <summary>
@@ -2296,7 +2296,7 @@ namespace CSML
 
             throw new NotImplementedException("Still buggy!");
 
-            Matrix H = this.Clone();
+            /*Matrix H = this.Clone();
             int m = H.RowCount;
             int n = H.ColumnCount;
 
@@ -2312,7 +2312,7 @@ namespace CSML
                 this.Garow(c[k], s[k], 1, k + 1, k, k + 1);
             }
 
-            return new Matrix[] { GivProd(c, s, n), H, c, s };
+            return new Matrix[] { GivProd(c, s, n), H, c, s };*/
         }
 
         /// <summary>
@@ -2580,7 +2580,7 @@ namespace CSML
 
             for (int i = 1; i < n; i++)
             {
-                for (fi = 1; fi < n && this[i, (int)fi] != Complex.One; fi++) ;
+                for (fi = 1; fi < n && this[i, (int)fi] != Complex.One; fi++) { };
 
                 for (int j = i + 1; j <= n; j++)
                 {

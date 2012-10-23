@@ -306,7 +306,7 @@ public class NIInput : MonoBehaviour
     /// simply called the regular input
     public bool isGyroAvailable
     {
-        get { return Input.isGyroAvailable;  }
+        get { return false;  }
     }
 
     /// simply called the regular input
@@ -372,7 +372,7 @@ public class NIInput : MonoBehaviour
     /// simply called the regular input
     public bool eatKeyPressOnTextFieldFocus
     {
-        get { return Input.eatKeyPressOnTextFieldFocus; }
+        get { return false; }
     }
 
     /// simply called the regular input

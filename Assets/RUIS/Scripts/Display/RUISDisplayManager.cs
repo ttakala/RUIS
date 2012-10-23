@@ -91,14 +91,8 @@ public class RUISDisplayManager : MonoBehaviour {
         int trueWidth = Screen.width;
         int trueHeight = Screen.height;
 
-        Debug.Log(trueWidth + " " + trueHeight);
-
-        Debug.Log(totalRawResolutionX + " " + totalRawResolutionY);
-
         editorWidthScaler = (float)trueWidth / totalRawResolutionX;
         editorHeightScaler = (float)trueHeight / totalRawResolutionY;
-
-        Debug.Log(editorWidthScaler + " " + editorHeightScaler);
 
         foreach (RUISDisplay display in displays)
         {

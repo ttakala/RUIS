@@ -21,7 +21,7 @@ public class RUISCoordinateSystem : MonoBehaviour
     //private Quaternion kinectToRUISRotation = Quaternion.identity;
 
     private float kinectDistanceFromFloor = 0;
-    private Quaternion kinectYaw = Quaternion.identity;
+    //private Quaternion kinectYaw = Quaternion.identity;
 
     public bool applyMoveToKinect = true;
     public bool setKinectOriginToFloor = false;

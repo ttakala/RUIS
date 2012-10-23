@@ -770,7 +770,7 @@ namespace PSMoveSharp
         public void TrackAllHues()
         {
             const uint PICK_FOR_ME = (4<<24);
-            const uint DONT_TRACK = (2<<24);
+            //const uint DONT_TRACK = (2<<24);
             SendRequestPacket(ClientRequest.PSMoveClientRequestTrackHues, PICK_FOR_ME, PICK_FOR_ME, PICK_FOR_ME, PICK_FOR_ME);
         }
 
@@ -820,7 +820,7 @@ namespace PSMoveSharp
             _rwl.AcquireWriterLock(-1);
             
             int packet_length = NetworkReaderHelper.ReadInt32(ref buffer, 12);
-            int magic = NetworkReaderHelper.ReadInt32(ref buffer, 0);
+            //int magic = NetworkReaderHelper.ReadInt32(ref buffer, 0);
             int code = NetworkReaderHelper.ReadInt32(ref buffer, 8);
             uint packet_index = NetworkReaderHelper.ReadUint32(ref buffer, 16);
 			
@@ -847,7 +847,7 @@ namespace PSMoveSharp
                 byte[] slice = new byte[packet_length - 3];
                 int slice_num = NetworkReaderHelper.ReadByte(ref buffer, 20);
                 int num_slices = NetworkReaderHelper.ReadByte(ref buffer, 21);
-                int format = NetworkReaderHelper.ReadByte(ref buffer, 22);
+                //int format = NetworkReaderHelper.ReadByte(ref buffer, 22);
                 int row_height = 480 / num_slices;
                 int row_start = row_height * slice_num;
                 Array.Copy(buffer, 23, slice, 0, packet_length - 3);

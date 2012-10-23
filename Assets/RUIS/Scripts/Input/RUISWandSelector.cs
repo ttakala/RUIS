@@ -100,7 +100,7 @@ public class RUISWandSelector : MonoBehaviour {
         }
     }
 
-    public void LateUpdate()
+    void LateUpdate()
     {
         UpdateLineRenderer();
     }

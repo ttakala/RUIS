@@ -46,29 +46,29 @@ public class RUISDisplay : MonoBehaviour {
 
     public bool isStereo;
     public bool isHMD; //head-mounted display
-    public RUISCamera camera;
+    public RUISCamera linkedCamera;
     public StereoType stereoType;
 
     public void Awake()
     {
-        if (!camera)
+        if (!linkedCamera)
         {
             Debug.LogError("No camera attached to display: " + name);
         }
         else
         {
-            camera.associatedDisplay = this;
+            linkedCamera.associatedDisplay = this;
         }
 
-        if (isStereo && camera.GetComponent<RUISStereoCamera>() == null)
+        if (isStereo && linkedCamera.GetComponent<RUISStereoCamera>() == null)
         {
-            Debug.LogError("Display " + name + " marked as stereo but linked RUISCamera " + camera.name + " is mono. Switching to mono mode.");
+            Debug.LogError("Display " + name + " marked as stereo but linked RUISCamera " + linkedCamera.name + " is mono. Switching to mono mode.");
             isStereo = false;
         }
 
-        if (!isStereo && camera.GetComponent<RUISMonoCamera>() == null)
+        if (!isStereo && linkedCamera.GetComponent<RUISMonoCamera>() == null)
         {
-            Debug.LogError("Display " + name + " marked as mono but linked RUISCamera " + camera.name + " is stereo. Switching to side by side stereo");
+            Debug.LogError("Display " + name + " marked as mono but linked RUISCamera " + linkedCamera.name + " is stereo. Switching to side by side stereo");
             isStereo = true;
             stereoType = StereoType.SideBySide;
         }
@@ -82,9 +82,9 @@ public class RUISDisplay : MonoBehaviour {
         float relativeLeft = xCoordinate / totalRawResolution.x;
         float relativeBottom = 1.0f - relativeHeight;
 
-        if (camera)
+        if (linkedCamera)
         {
-            camera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+            linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
         }
         else
         {
@@ -98,7 +98,7 @@ public class RUISDisplay : MonoBehaviour {
 
         if (!isStereo)
         {
-            return camera.GetComponent<RUISMonoCamera>().camera;
+            return linkedCamera.GetComponent<RUISMonoCamera>().linkedCamera;
         }
         else
         {
@@ -106,27 +106,27 @@ public class RUISDisplay : MonoBehaviour {
             {
                 if (relativeScreenPoint.x < rawResolutionX / 2)
                 {
-                    return camera.GetComponent<RUISStereoCamera>().leftCamera;
+                    return linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
                 }
                 else
                 {
-                    return camera.GetComponent<RUISStereoCamera>().rightCamera;
+                    return linkedCamera.GetComponent<RUISStereoCamera>().rightCamera;
                 }
             }
             else if (stereoType == StereoType.TopAndBottom)
             {
                 if (relativeScreenPoint.y < rawResolutionY / 2)
                 {
-                    return camera.GetComponent<RUISStereoCamera>().rightCamera;
+                    return linkedCamera.GetComponent<RUISStereoCamera>().rightCamera;
                 }
                 else
                 {
-                    return camera.GetComponent<RUISStereoCamera>().leftCamera;
+                    return linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
                 }
             }
             else
             {
-                return camera.GetComponent<RUISStereoCamera>().leftCamera;
+                return linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
             }
         }
     }

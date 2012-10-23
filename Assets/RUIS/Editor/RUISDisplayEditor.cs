@@ -23,7 +23,7 @@ public class RUISDisplayEditor : Editor {
         resolutionY = serializedObject.FindProperty("resolutionY");
         isStereo = serializedObject.FindProperty("isStereo");
         isHMD = serializedObject.FindProperty("isHMD");
-        camera = serializedObject.FindProperty("camera");
+        camera = serializedObject.FindProperty("linkedCamera");
         stereoType = serializedObject.FindProperty("stereoType");
         useDoubleTheSpace = serializedObject.FindProperty("useDoubleTheSpace");
 

@@ -33,7 +33,6 @@ public class RUISSelectable : MonoBehaviour {
     public float distanceToClampTo = 1.0f;
     
     //for highlights
-    private bool isHighlighted = false;
     public Material highlightMaterial;
     public Material selectionMaterial;
 
@@ -118,7 +117,6 @@ public class RUISSelectable : MonoBehaviour {
 
     public virtual void OnSelectionHighlight()
     {
-        isHighlighted = true;
         AddMaterial(highlightMaterial);
     }
 

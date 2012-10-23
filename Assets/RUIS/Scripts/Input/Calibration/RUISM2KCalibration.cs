@@ -15,8 +15,6 @@ public class RUISM2KCalibration : MonoBehaviour {
     private PSMoveWrapper psMoveWrapper;
     private NIPlayerManagerCOMSelection kinectSelection;
     private GUIText statusText;
-    private GUITexture psEyeGUITexture;
-    private Texture2D psEyeTexture;
 
     private int numberOfSamplesTaken;
     public int minNumberOfSamplesToTake = 50;
@@ -42,18 +40,14 @@ public class RUISM2KCalibration : MonoBehaviour {
     public string xmlFilename = "testm2k.xml";
 
     List<GameObject> calibrationSpheres;
-    List<GameObject> moveCalibrationVisualizationCubes;
 
     private Vector3 floorNormal;
-
-    private bool showDebugInfo = false;
 
     public GameObject calibrationGameObjects;
     public GameObject calibrationReviewGameObjects;
 
     float totalErrorDistance = 0;
     float averageError = 0;
-    float errorStandardDeviation = 0;
 
     OpenNI.SceneAnalyzer sceneAnalyzer;
 
@@ -66,7 +60,6 @@ public class RUISM2KCalibration : MonoBehaviour {
         psMoveWrapper = GetComponent<PSMoveWrapper>();
         kinectSelection = GetComponent<NIPlayerManagerCOMSelection>();
         statusText = GetComponentInChildren<GUIText>();
-        psEyeGUITexture = GetComponentInChildren<GUITexture>();
 
         rawPSMoveSamples = new List<Vector3>();
         psMoveSamples = new List<Vector3>();
@@ -92,7 +85,6 @@ public class RUISM2KCalibration : MonoBehaviour {
 
 
         calibrationSpheres = new List<GameObject>();
-        moveCalibrationVisualizationCubes = new List<GameObject>();
 
         SetCalibrationReviewShowing(false);
 
@@ -224,8 +216,6 @@ public class RUISM2KCalibration : MonoBehaviour {
             totalErrorDistance = distance;
             averageError = distance / calibrationSpheres.Count;
 
-            errorStandardDeviation = MathUtil.CalculateStandardDeviation(errorMagnitudes);
-
             SetCalibrationReviewShowing(true);
         }
     }
@@ -324,8 +314,6 @@ public class RUISM2KCalibration : MonoBehaviour {
         {
             Debug.LogError("Mismatch in sample list lengths!");
         }
-
-        int matrixSize = Mathf.Max(4, numberOfSamplesTaken); ;
 
         Matrix moveMatrix = Matrix.Zeros(psMoveSamples.Count, 4);
         for (int i = 1; i <= psMoveSamples.Count; i++)
