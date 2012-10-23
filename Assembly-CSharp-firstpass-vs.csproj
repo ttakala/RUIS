@@ -46,7 +46,7 @@
   <ItemGroup>
      <Compile Include="Assets\Standard Assets\Character Controllers\Sources\Scripts\MouseLook.cs" />
  <Reference Include="OpenNI.Net">
- <HintPath>Assets\Plugins\OpenNI.Net.dll</HintPath>
+ <HintPath>Assets\OpenNI\OpenNI.Net.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

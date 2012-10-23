@@ -44,12 +44,12 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\OpenNI\Samples\Javascript assets\SmoothFollow.js" />
+     <Compile Include="Assets\OpenNI\Scripts\Samples\Javascript assets\SmoothFollow.js" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>
  <Reference Include="OpenNI.Net">
- <HintPath>Assets\Plugins\OpenNI.Net.dll</HintPath>
+ <HintPath>Assets\OpenNI\OpenNI.Net.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

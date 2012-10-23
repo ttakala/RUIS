@@ -44,19 +44,19 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Editor\OpenNI\NIEventLoggerInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NIInputInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NIOpenNISettingsManagerInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NIPlayerManagerCOMSelectionInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NIPlayerManagerInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NIPlayerManagerPoseSelectionInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NIQueryInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NISkeletonControllerInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NISkeletonTrackerInspector.cs" />
-     <Compile Include="Assets\Editor\OpenNI\NIUserPoseDetectorInspector.cs" />
-     <Compile Include="Assets\Editor\RUIS\RUISDisplayEditor.cs" />
-     <Compile Include="Assets\Editor\RUIS\RUISDisplayManagerEditor.cs" />
-     <Compile Include="Assets\Editor\RUIS\RUISInputEditor.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NIEventLoggerInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NIInputInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NIOpenNISettingsManagerInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NIPlayerManagerCOMSelectionInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NIPlayerManagerInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NIPlayerManagerPoseSelectionInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NIQueryInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NISkeletonControllerInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NISkeletonTrackerInspector.cs" />
+     <Compile Include="Assets\OpenNI\Editor\OpenNI\NIUserPoseDetectorInspector.cs" />
+     <Compile Include="Assets\RUIS\Editor\RUISDisplayEditor.cs" />
+     <Compile Include="Assets\RUIS\Editor\RUISDisplayManagerEditor.cs" />
+     <Compile Include="Assets\RUIS\Editor\RUISInputEditor.cs" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
  </Reference>
@@ -64,7 +64,7 @@
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>
  </Reference>
  <Reference Include="OpenNI.Net">
- <HintPath>Assets\Plugins\OpenNI.Net.dll</HintPath>
+ <HintPath>Assets\OpenNI\OpenNI.Net.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
