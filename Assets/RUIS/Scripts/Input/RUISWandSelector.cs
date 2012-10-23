@@ -19,6 +19,16 @@ public class RUISWandSelector : MonoBehaviour {
     public Transform headTransform;
 
     public bool toggleSelection;
+
+    public enum SelectionGrabType
+    {
+        SnapToWand,
+        RelativeToWand,
+        AlongSelectionRay
+    }
+
+    public SelectionGrabType positionSelectionGrabType = SelectionGrabType.SnapToWand;
+    public SelectionGrabType rotationSelectionGrabType = SelectionGrabType.SnapToWand;
     
     private RUISWand wand;
     private RUISSelectable selection;

@@ -26,7 +26,7 @@ public class ReelInSelection : MonoBehaviour {
             selection.distanceToClampTo = distanceClampedTo;
         }
 
-        if (!wandSelector.Selection || wandSelector.Selection.positionSelectionGrabType != RUISSelectable.SelectionGrabType.AlongSelectionRay)
+        if (!wandSelector.Selection || wandSelector.positionSelectionGrabType != RUISWandSelector.SelectionGrabType.AlongSelectionRay)
         {
             selection = null;
             return;

@@ -2,15 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class RUISSelectable : MonoBehaviour {
-    public enum SelectionGrabType
-    {
-        SnapToWand,
-        RelativeToWand,
-        AlongSelectionRay
-    }
-
-    public SelectionGrabType positionSelectionGrabType = SelectionGrabType.SnapToWand;
-    public SelectionGrabType rotationSelectionGrabType = SelectionGrabType.RelativeToWand;
 
     private bool rigidbodyWasKinematic;
     private RUISWandSelector selector;
@@ -132,34 +123,34 @@ public class RUISSelectable : MonoBehaviour {
         Vector3 newPosition = transform.position;
         Quaternion newRotation = transform.rotation;
 
-        switch (positionSelectionGrabType)
+        switch (selector.positionSelectionGrabType)
         {
-            case SelectionGrabType.SnapToWand:
+            case RUISWandSelector.SelectionGrabType.SnapToWand:
                 newPosition = selector.transform.position;
                 break;
-            case SelectionGrabType.RelativeToWand:
+            case RUISWandSelector.SelectionGrabType.RelativeToWand:
                 Vector3 selectorPositionChange = selector.transform.position - selectorPositionAtSelection;
                 newPosition = positionAtSelection + selectorPositionChange;
                 break;
-            case SelectionGrabType.AlongSelectionRay:
+            case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
                 float clampDistance = distanceFromSelectionRayOrigin;
                 if (clampToCertainDistance) clampDistance = distanceToClampTo;
                 newPosition = selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
                 break;
         }
 
-        switch (rotationSelectionGrabType)
+        switch (selector.rotationSelectionGrabType)
         {
-            case SelectionGrabType.SnapToWand:
+            case RUISWandSelector.SelectionGrabType.SnapToWand:
                 newRotation = selector.transform.rotation;
                 break;
-            case SelectionGrabType.RelativeToWand:
+            case RUISWandSelector.SelectionGrabType.RelativeToWand:
                 newRotation = rotationAtSelection;
-                Vector3 selectorRotationChange = (Quaternion.Inverse(selectorRotationAtSelection) * selector.transform.rotation).eulerAngles;
+                Quaternion selectorRotationChange = (Quaternion.Inverse(selectorRotationAtSelection) * selector.transform.rotation);
                 //transform.Rotate(selectorRotationChange, Space.World);
-                newRotation = newRotation * Quaternion.Euler(selectorRotationChange);
+                newRotation = selectorRotationChange * newRotation;//newRotation * selectorRotationChange;
                 break;
-            case SelectionGrabType.AlongSelectionRay:
+            case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
                 newRotation = Quaternion.LookRotation(selector.selectionRay.direction);
                 break;
         }
