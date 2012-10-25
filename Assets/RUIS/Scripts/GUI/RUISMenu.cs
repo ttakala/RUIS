@@ -47,17 +47,33 @@ public class RUISMenu : MonoBehaviour {
 
     void DrawWindow(int windowId)
     {
-        Debug.Log("baa");
-
         GUI.DragWindow();
         switch (currentWindow)
         {
             case mainWindow:
-                if (GUILayout.Button("Calibrate"))
+                if (GUILayout.Button("Configure keystoning"))
                 {
-                    Debug.Log("Should load calibration..");
-                    Application.LoadLevel("calibration");
-                    Debug.Log("Didn't load calibration..");
+                    currentWindow = keystoningWindow;
+                }
+
+                if (GUILayout.Button("PS Move"))
+                {
+
+                }
+
+                if (GUILayout.Button("Kinect"))
+                {
+
+                }
+                break;
+            case keystoningWindow:
+                if (GUILayout.Button("Activate keystone correction"))
+                {
+
+                }
+                if (GUILayout.Button("Back"))
+                {
+                    currentWindow = mainWindow;
                 }
                 break;
         }

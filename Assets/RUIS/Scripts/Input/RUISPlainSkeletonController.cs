@@ -37,6 +37,10 @@ public class RUISPlainSkeletonController : MonoBehaviour {
 
     public Vector3 rootSpeedScaling = Vector3.one;
 
+    public bool applyOriginalRootPosition = true;
+    private Vector3 originalRootPosition;
+    public Vector3 rootPositionOffset = Vector3.zero;
+
     void Awake()
     {
         if (skeletonManager == null)
@@ -45,6 +49,8 @@ public class RUISPlainSkeletonController : MonoBehaviour {
         }
 
         jointInitialRotations = new Dictionary<Transform, Quaternion>();
+
+        originalRootPosition = transform.localPosition;
     }
 
     void Start()
@@ -100,7 +106,9 @@ public class RUISPlainSkeletonController : MonoBehaviour {
 
             if (updateRootPosition)
             {
-                transform.position = Vector3.Scale(skeletonPosition, rootSpeedScaling);
+                Vector3 newRootPosition = skeletonPosition;
+                if (applyOriginalRootPosition) newRootPosition += originalRootPosition;
+                transform.localPosition = Vector3.Scale(newRootPosition + rootPositionOffset, rootSpeedScaling);
             }
         }
 	}

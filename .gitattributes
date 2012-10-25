@@ -85,6 +85,7 @@ Assets/RUIS/Resources/RUIS/Models/kinect.obj -text
 Assets/RUIS/Resources/RUIS/Models/wand.fbx -text
 Assets/RUIS/Resources/RUIS/Prefabs/Calibration/Calibration[!!-~]Sphere.prefab -text
 Assets/RUIS/Resources/RUIS/Prefabs/Calibration/MoveCalibrationCube.prefab -text
+Assets/RUIS/Resources/RUIS/Prefabs/Main[!!-~]RUIS/ConstructorSkeleton.prefab -text
 Assets/RUIS/Resources/RUIS/Prefabs/Main[!!-~]RUIS/MonoCamera.prefab -text
 Assets/RUIS/Resources/RUIS/Prefabs/Main[!!-~]RUIS/MoveController.prefab -text
 Assets/RUIS/Resources/RUIS/Prefabs/Main[!!-~]RUIS/RUIS.prefab -text
@@ -513,6 +514,7 @@ Library/metadata/83/83ff5fa0b3dbf744b93051a1c302ae12 -text
 Library/metadata/85/855139d2929bdea45870ab5cdc8d3a84 -text
 Library/metadata/86/861742c46b770f245829de5aa04ce8e1 -text
 Library/metadata/86/867bbb30c5653d24b85a933479d21e6f -text
+Library/metadata/86/86a23107ea4b92141b1e3b27393f8f48 -text
 Library/metadata/88/8882681a1a7071448a23e661591b9217 -text
 Library/metadata/89/89b56b02e840e704d933064fab7e5412 -text
 Library/metadata/8a/8a74fe42cf033ba44b806f8a53baec81 -text
@@ -759,6 +761,8 @@ Library/previews/82/8236ccf78e4bc304187d62682f67b2af -text
 Library/previews/83/83ff5fa0b3dbf744b93051a1c302ae12 -text
 Library/previews/83/83ff5fa0b3dbf744b93051a1c302ae12_/100002 -text
 Library/previews/85/855139d2929bdea45870ab5cdc8d3a84 -text
+Library/previews/86/86a23107ea4b92141b1e3b27393f8f48 -text
+Library/previews/86/86a23107ea4b92141b1e3b27393f8f48_/100026 -text
 Library/previews/89/89b56b02e840e704d933064fab7e5412 -text
 Library/previews/89/89b56b02e840e704d933064fab7e5412_/4300000 -text
 Library/previews/8b/8b9d9281d1e2db14d9b83062f10d7189 -text
