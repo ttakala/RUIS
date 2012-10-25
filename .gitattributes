@@ -52,6 +52,7 @@ Assets/RUIS/Examples/PhysicsScene/PhysicsScene.unity -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/BasicCube.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/Bullet.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/Environment.prefab -text
+Assets/RUIS/Examples/PhysicsScene/Prefabs/Gun.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/Pyramid.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/Racket.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/Wall.prefab -text
@@ -542,6 +543,7 @@ Library/metadata/97/97b050d43ac7c4d2b9f6cbb587650761 -text
 Library/metadata/97/97cef94cd6ca66243ad0c5bd9f7704b3 -text
 Library/metadata/98/983153594a876dc40934c28fe9c6d7f5 -text
 Library/metadata/99/99fb5231fbca9114dbdfed0e6fa0be1b -text
+Library/metadata/9a/9a4f8b8b3e7255f4a89012c83bf88dcd -text
 Library/metadata/9b/9bd9eaeebb2d2c24cb8248da9bdaba4f -text
 Library/metadata/9c/9c89ecdd0b22fd14e8a3c24caca75bb8 -text
 Library/metadata/9d/9d4133d5d30b644bd87802a347eaccbe -text
@@ -779,6 +781,8 @@ Library/previews/92/9228c188c10536d4e84a659ee1870072 -text
 Library/previews/97/9757a5adf4f043248a0c4ec44d43cb47 -text
 Library/previews/97/97b050d43ac7c4d2b9f6cbb587650761 -text
 Library/previews/99/99fb5231fbca9114dbdfed0e6fa0be1b -text
+Library/previews/9a/9a4f8b8b3e7255f4a89012c83bf88dcd -text
+Library/previews/9a/9a4f8b8b3e7255f4a89012c83bf88dcd_/100002 -text
 Library/previews/9d/9d4133d5d30b644bd87802a347eaccbe -text
 Library/previews/9d/9d4133d5d30b644bd87802a347eaccbe_/100000 -text
 Library/previews/9d/9d4133d5d30b644bd87802a347eaccbe_/100004 -text
