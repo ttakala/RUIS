@@ -12,15 +12,26 @@ public class RUISMenu : MonoBehaviour {
 
     bool isShowing = false;
 
+    bool ruisMenuButtonDefined = true;
+
 	// Use this for initialization
 	void Start () {
         displayManager = GetComponent<RUISDisplayManager>();
         inputManager = GetComponent<RUISInputManager>();
+
+        try
+        {
+            Input.GetButtonDown("RUISMenu");
+        }
+        catch (UnityException)
+        {
+            ruisMenuButtonDefined = false;
+        }
 	}
 
     void Update()
     {
-        if (Input.GetButtonDown("RUISMenu"))
+        if ((!ruisMenuButtonDefined && Input.GetKeyDown(KeyCode.F2)) || (ruisMenuButtonDefined && Input.GetButtonDown("RUISMenu")))
         {
             isShowing = !isShowing;
             currentWindow = mainWindow;
@@ -36,32 +47,17 @@ public class RUISMenu : MonoBehaviour {
 
     void DrawWindow(int windowId)
     {
+        Debug.Log("baa");
+
         GUI.DragWindow();
         switch (currentWindow)
         {
             case mainWindow:
-                if (GUILayout.Button("Configure keystoning"))
+                if (GUILayout.Button("Calibrate"))
                 {
-                    currentWindow = keystoningWindow;
-                }
-
-                if (GUILayout.Button("PS Move"))
-                {
-
-                }
-
-                if (GUILayout.Button("Kinect"))
-                {
-
-                }
-                break;
-            case keystoningWindow:
-                if (GUILayout.Button("Activate keystone correction"))
-                {
-
-                }
-                if(GUILayout.Button("Back")){
-                    currentWindow = mainWindow;
+                    Debug.Log("Should load calibration..");
+                    Application.LoadLevel("calibration");
+                    Debug.Log("Didn't load calibration..");
                 }
                 break;
         }

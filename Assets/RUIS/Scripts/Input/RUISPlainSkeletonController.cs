@@ -141,7 +141,8 @@ public class RUISPlainSkeletonController : MonoBehaviour {
 
     private void SaveInitialRotation(Transform bodyPart)
     {
-        jointInitialRotations[bodyPart] = GetInitialRotation(bodyPart);
+        if(bodyPart)
+            jointInitialRotations[bodyPart] = GetInitialRotation(bodyPart);
     }
 
     private Quaternion GetInitialRotation(Transform bodyPart)
