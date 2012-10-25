@@ -3,7 +3,6 @@ using System.Collections;
 
 public class RUISMenu : MonoBehaviour {
     private const int mainWindow = 0;
-    private const int keystoningWindow = 1;
     private int currentWindow = mainWindow;
     private Rect windowRect = new Rect(50, 50, 200, 200);
 
@@ -13,6 +12,10 @@ public class RUISMenu : MonoBehaviour {
     bool isShowing = false;
 
     bool ruisMenuButtonDefined = true;
+
+    float sliderValue = 0.5f;
+
+    bool isCalibrating = false;
 
 	// Use this for initialization
 	void Start () {
@@ -47,35 +50,24 @@ public class RUISMenu : MonoBehaviour {
 
     void DrawWindow(int windowId)
     {
-        GUI.DragWindow();
-        switch (currentWindow)
+        if (!isCalibrating)
         {
-            case mainWindow:
-                if (GUILayout.Button("Configure keystoning"))
-                {
-                    currentWindow = keystoningWindow;
-                }
-
-                if (GUILayout.Button("PS Move"))
-                {
-
-                }
-
-                if (GUILayout.Button("Kinect"))
-                {
-
-                }
-                break;
-            case keystoningWindow:
-                if (GUILayout.Button("Activate keystone correction"))
-                {
-
-                }
-                if (GUILayout.Button("Back"))
-                {
-                    currentWindow = mainWindow;
-                }
-                break;
+            switch (currentWindow)
+            {
+                case mainWindow:
+                    if (GUILayout.Button("Calibrate"))
+                    {
+                        Application.LoadLevel("calibration");
+                    }
+                    break;
+            }
         }
+        else
+        {
+            if(GUILayout.Button("End Calibration")){
+
+            }
+        }
+        GUI.DragWindow();
     }
 }
