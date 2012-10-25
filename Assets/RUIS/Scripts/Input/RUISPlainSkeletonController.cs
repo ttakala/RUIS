@@ -27,13 +27,45 @@ public class RUISPlainSkeletonController : MonoBehaviour {
     public bool updateJointPositions = true;
     public bool updateJointRotations = true;
 
+    public bool useHierarchicalModel = false;
+
+    public float minimumConfidenceToUpdate = 0.5f;
+
+    public float rotationDampening = 15f;
+
+    private Dictionary<Transform, Quaternion> jointInitialRotations;
+
+    public Vector3 rootSpeedScaling = Vector3.one;
+
     void Awake()
     {
         if (skeletonManager == null)
         {
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
         }
+
+        jointInitialRotations = new Dictionary<Transform, Quaternion>();
     }
+
+    void Start()
+    {
+        SaveInitialRotation(head);
+        SaveInitialRotation(torso);
+        SaveInitialRotation(rightShoulder);
+        SaveInitialRotation(rightElbow);
+        SaveInitialRotation(rightHand);
+        SaveInitialRotation(leftShoulder);
+        SaveInitialRotation(leftElbow);
+        SaveInitialRotation(leftHand);
+        SaveInitialRotation(rightHip);
+        SaveInitialRotation(rightKnee);
+        SaveInitialRotation(rightFoot);
+        SaveInitialRotation(leftHip);
+        SaveInitialRotation(leftKnee);
+        SaveInitialRotation(leftFoot);
+    }
+
+
 
 	void LateUpdate () {
         if (skeletonManager != null && skeletonManager.skeletons[playerId] != null)
@@ -68,7 +100,7 @@ public class RUISPlainSkeletonController : MonoBehaviour {
 
             if (updateRootPosition)
             {
-                transform.position = skeletonPosition;
+                transform.position = Vector3.Scale(skeletonPosition, rootSpeedScaling);
             }
         }
 	}
@@ -77,23 +109,43 @@ public class RUISPlainSkeletonController : MonoBehaviour {
     {
         if (transformToUpdate == null) return;
 
-        if (updateJointPositions && jointToGet.positionConfidence >= 0.5f)
+        if (updateJointPositions && jointToGet.positionConfidence >= minimumConfidenceToUpdate)
         {
             transformToUpdate.localPosition = jointToGet.position - skeletonPosition;
         }
 
-        if (updateJointRotations && jointToGet.rotationConfidence >= 0.5f)
+        if (updateJointRotations && jointToGet.rotationConfidence >= minimumConfidenceToUpdate)
         {
-            transformToUpdate.localRotation = jointToGet.rotation;
+            if (useHierarchicalModel)
+            {
+                Quaternion newRotation = transform.rotation * jointToGet.rotation * 
+                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
+
+                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDampening);
+            }
+            else
+            {
+                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDampening);
+            }
         }
     }
 
     //gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
     private void UpdateSkeletonPosition()
     {
-        if (skeletonManager.skeletons[playerId].torso.positionConfidence >= 0.5f)
+        if (skeletonManager.skeletons[playerId].torso.positionConfidence >= minimumConfidenceToUpdate)
         {
             skeletonPosition = skeletonManager.skeletons[playerId].torso.position;
         }
+    }
+
+    private void SaveInitialRotation(Transform bodyPart)
+    {
+        jointInitialRotations[bodyPart] = GetInitialRotation(bodyPart);
+    }
+
+    private Quaternion GetInitialRotation(Transform bodyPart)
+    {
+        return Quaternion.Inverse(transform.rotation) * bodyPart.rotation;
     }
 }

@@ -12,15 +12,19 @@ public class XMLUtil {
 
     public static XmlDocument LoadAndValidateXml(string xmlFilename, string schemaFilename, ValidationEventHandler validationEventHandler)
     {
+        XmlTextReader textReader = null;
+        XmlValidatingReader validatingReader = null;
+
+        FileStream fs = null;
         try
         {
-            XmlTextReader textReader = new XmlTextReader(xmlFilename);
-            XmlValidatingReader validatingReader = new XmlValidatingReader(textReader);
+            textReader = new XmlTextReader(xmlFilename);
+            validatingReader = new XmlValidatingReader(textReader);
 
             validatingReader.ValidationType = ValidationType.Schema;
             validatingReader.ValidationEventHandler += validationEventHandler;
 
-            FileStream fs = new FileStream(schemaFilename, FileMode.Open);
+            fs = new FileStream(schemaFilename, FileMode.Open);
             XmlSchema schema = XmlSchema.Read(fs, validationEventHandler);
 
             validatingReader.Schemas.Add(schema);
@@ -30,11 +34,18 @@ public class XMLUtil {
 
             Debug.Log("XML validation finished for " + xmlFilename + "!");
 
+            fs.Close();
+            validatingReader.Close();
+            textReader.Close();
+
             return result;
         }
         catch (FileNotFoundException e)
         {
             Debug.LogError("Could not find file: " + e.FileName);
+            if(fs != null) fs.Close();
+            if(validatingReader != null) validatingReader.Close();
+            if(textReader != null) textReader.Close();
             return null;
         }
     }

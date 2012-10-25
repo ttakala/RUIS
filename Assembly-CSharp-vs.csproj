@@ -105,6 +105,8 @@
      <Compile Include="Assets\PSMoveWrapper\PSEyeImageDisplay.cs" />
      <Compile Include="Assets\PSMoveWrapper\PSMoveClient.cs" />
      <Compile Include="Assets\PSMoveWrapper\PSMoveWrapper.cs" />
+     <Compile Include="Assets\RUIS\Examples\BowlingAlley\ResetBall.cs" />
+     <Compile Include="Assets\RUIS\Examples\BowlingAlley\SpawnBowlingPins.cs" />
      <Compile Include="Assets\RUIS\Examples\PhysicsScene\Scripts\ReelInSelection.cs" />
      <Compile Include="Assets\RUIS\Scripts\Display\RUISCamera.cs" />
      <Compile Include="Assets\RUIS\Scripts\Display\RUISDisplay.cs" />
