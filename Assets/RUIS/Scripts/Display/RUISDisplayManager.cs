@@ -24,9 +24,8 @@ public class RUISDisplayManager : MonoBehaviour {
         }
 
         InitDisplays();
-	}
-	
-	void Update () {
+
+        DisableUnlinkedCameras();
 	}
 
     public void InitDisplays()
@@ -98,6 +97,20 @@ public class RUISDisplayManager : MonoBehaviour {
         {
             display.resolutionX = (int)(display.resolutionX * editorWidthScaler);
             display.resolutionY = (int)(display.resolutionY * editorHeightScaler);
+        }
+    }
+
+    private void DisableUnlinkedCameras()
+    {
+        RUISCamera[] allCameras = FindObjectsOfType(typeof(RUISCamera)) as RUISCamera[];
+
+        foreach (RUISCamera ruisCamera in allCameras)
+        {
+            if (ruisCamera.associatedDisplay == null)
+            {
+                Debug.LogWarning("Disabling RUISCamera: " + ruisCamera.name + " because it isn't linked into a RUISDisplay.");
+                ruisCamera.gameObject.SetActiveRecursively(false);
+            }
         }
     }
 }

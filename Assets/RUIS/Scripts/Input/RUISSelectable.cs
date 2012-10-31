@@ -81,7 +81,7 @@ public class RUISSelectable : MonoBehaviour {
             rigidbody.isKinematic = true;
         }
 
-        AddMaterial(selectionMaterial);
+        AddMaterialToEverything(selectionMaterial);
 
         UpdateTransform(false);
     }
@@ -101,19 +101,19 @@ public class RUISSelectable : MonoBehaviour {
             rigidbody.AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
         }
 
-        RemoveMaterial();
+        RemoveMaterialFromEverything();
 
         this.selector = null;
     }
 
     public virtual void OnSelectionHighlight()
     {
-        AddMaterial(highlightMaterial);
+        AddMaterialToEverything(highlightMaterial);
     }
 
     public virtual void OnSelectionHighlightEnd()
     {
-        RemoveMaterial();
+        RemoveMaterialFromEverything();
     }
 
     protected virtual void UpdateTransform(bool safePhysics)
@@ -187,25 +187,49 @@ public class RUISSelectable : MonoBehaviour {
         return averagedContent;
     }
 
-    private void AddMaterial(Material material)
+    private void AddMaterial(Material m, Renderer r)
     {
-        Material[] newMaterials = new Material[renderer.materials.Length + 1];
-        for (int i = 0; i < renderer.materials.Length; i++)
+        if (m == null || r == null) return;
+
+        Material[] newMaterials = new Material[r.materials.Length + 1];
+        for (int i = 0; i < r.materials.Length; i++)
         {
-            newMaterials[i] = renderer.materials[i];
+            newMaterials[i] = r.materials[i];
         }
 
-        newMaterials[newMaterials.Length - 1] = material;
-        renderer.materials = newMaterials;
+        newMaterials[newMaterials.Length - 1] = m;
+        r.materials = newMaterials;
     }
 
-    private void RemoveMaterial()
+    private void RemoveMaterial(Renderer r)
     {
-        Material[] newMaterials = new Material[renderer.materials.Length - 1];
+        if (r == null) return;
+
+        Material[] newMaterials = new Material[r.materials.Length - 1];
         for (int i = 0; i < newMaterials.Length; i++)
         {
-            newMaterials[i] = renderer.materials[i];
+            newMaterials[i] = r.materials[i];
         }
-        renderer.materials = newMaterials;
+        r.materials = newMaterials;
+    }
+
+    private void AddMaterialToEverything(Material m)
+    {
+        AddMaterial(m, renderer);
+
+        foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
+        {
+            AddMaterial(m, childRenderer);
+        }
+    }
+
+    private void RemoveMaterialFromEverything()
+    {
+        RemoveMaterial(renderer);
+
+        foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
+        {
+            RemoveMaterial(childRenderer);
+        }
     }
 }

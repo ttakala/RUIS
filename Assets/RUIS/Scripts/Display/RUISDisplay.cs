@@ -49,6 +49,8 @@ public class RUISDisplay : MonoBehaviour {
     public RUISCamera linkedCamera;
     public StereoType stereoType;
 
+    private float aspectRatio;
+
     public void Awake()
     {
         if (!linkedCamera)
@@ -72,6 +74,8 @@ public class RUISDisplay : MonoBehaviour {
             isStereo = true;
             stereoType = StereoType.SideBySide;
         }
+
+        aspectRatio = resolutionX / resolutionY;
     }
 
     public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)
@@ -84,7 +88,8 @@ public class RUISDisplay : MonoBehaviour {
 
         if (linkedCamera)
         {
-            linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+            linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight, aspectRatio);
+            linkedCamera.associatedDisplay = this;
         }
         else
         {

@@ -4,6 +4,7 @@ using System.Collections;
 public abstract class RUISWand : MonoBehaviour {
     public abstract bool SelectionButtonWasPressed();
     public abstract bool SelectionButtonWasReleased();
+    public abstract bool SelectionButtonIsDown();
 
     public abstract Vector3 GetAngularVelocity();
 

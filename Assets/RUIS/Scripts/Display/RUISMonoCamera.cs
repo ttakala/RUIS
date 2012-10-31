@@ -23,9 +23,11 @@ public class RUISMonoCamera : RUISCamera {
         Debug.LogWarning("Keystone correction not yet implemented");
     }
 
-    public override void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight)
+    public override void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)
     {
         linkedCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+
+        linkedCamera.aspect = aspectRatio;
     }
 
 }

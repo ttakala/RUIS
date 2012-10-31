@@ -36,5 +36,5 @@ public abstract class RUISCamera : MonoBehaviour {
 
     protected abstract void ApplyKeystoneCorrection();
 
-    public abstract void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight);
+    public abstract void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio);
 }

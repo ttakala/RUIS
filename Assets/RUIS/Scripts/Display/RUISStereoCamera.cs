@@ -38,7 +38,7 @@ public class RUISStereoCamera : RUISCamera {
         Debug.LogWarning("Keystone correction not yet implemented");
     }
 
-    public override void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight)
+    public override void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)
     {
         if (associatedDisplay.stereoType == RUISDisplay.StereoType.SideBySide)
         {
@@ -55,5 +55,8 @@ public class RUISStereoCamera : RUISCamera {
             leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
             rightCamera.rect = new Rect(leftCamera.rect);
         }
+
+        leftCamera.aspect = aspectRatio;
+        rightCamera.aspect = aspectRatio;
     }
 }

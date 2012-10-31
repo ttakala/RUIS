@@ -6,8 +6,9 @@ public class RUISSkeletonWand : RUISWand {
     public Transform wandEndTransform;
 
     //simulate grab with mouse button for now
-    public bool mouseButtonPressed = false;
-    public bool mouseButtonReleased = false;
+    bool mouseButtonPressed = false;
+    bool mouseButtonReleased = false;
+    bool mouseButtonDown = false;
 
 	public void Update () {
         Vector3 wandPosition = wandEndTransform.position;
@@ -18,6 +19,7 @@ public class RUISSkeletonWand : RUISWand {
 
         mouseButtonPressed = Input.GetMouseButtonDown(0);
         mouseButtonReleased = Input.GetMouseButtonUp(0);
+        mouseButtonDown = Input.GetMouseButton(0);
 	}
 
     public override bool SelectionButtonWasPressed()
@@ -28,6 +30,11 @@ public class RUISSkeletonWand : RUISWand {
     public override bool SelectionButtonWasReleased()
     {
         return mouseButtonReleased;
+    }
+
+    public override bool SelectionButtonIsDown()
+    {
+        return mouseButtonDown;
     }
 
     public override Vector3 GetAngularVelocity()

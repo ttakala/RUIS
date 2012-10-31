@@ -4,6 +4,7 @@ using System.Collections;
 public class RUISMouseWand : RUISWand {
     bool mouseButtonPressed = false;
     bool mouseButtonReleased = false;
+    bool mouseButtonDown = false;
 
     RUISDisplayManager displayManager;
 
@@ -28,6 +29,7 @@ public class RUISMouseWand : RUISWand {
 
         mouseButtonPressed = Input.GetMouseButtonDown(0);
         mouseButtonReleased = Input.GetMouseButtonUp(0);
+        mouseButtonDown = Input.GetMouseButton(0);
     }
 
     public override bool SelectionButtonWasPressed()
@@ -38,6 +40,11 @@ public class RUISMouseWand : RUISWand {
     public override bool SelectionButtonWasReleased()
     {
         return mouseButtonReleased;
+    }
+
+    public override bool SelectionButtonIsDown()
+    {
+        return mouseButtonDown;
     }
 
     public override Vector3 GetAngularVelocity()

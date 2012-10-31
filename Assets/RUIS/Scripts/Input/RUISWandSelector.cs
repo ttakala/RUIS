@@ -18,7 +18,10 @@ public class RUISWandSelector : MonoBehaviour {
 
     public Transform headTransform;
 
-    public bool toggleSelection;
+    public bool toggleSelection = false;
+    public bool grabWhileButtonDown = true;
+
+    private bool selectionButtonReleasedAfterSelection = false;
 
     public enum SelectionGrabType
     {
@@ -68,45 +71,61 @@ public class RUISWandSelector : MonoBehaviour {
     public void Update()
     {
         GameObject selectionGameObject = CheckForSelection();
-        if (!selection && selectionGameObject)
+        if (!selection)
         {
-            RUISSelectable selectableObject = selectionGameObject.GetComponent<RUISSelectable>();
-            if (selectableObject && !selectableObject.isSelected)
+            if (selectionGameObject)
             {
-                if (selectableObject != highlightedObject)
+                RUISSelectable selectableObject = selectionGameObject.GetComponent<RUISSelectable>();
+                //also search in parents if we didn't find RUISSelectable on this gameobject to allow for multi-piece collider hierarchies
+                while (!selectableObject && selectionGameObject.transform.parent != null)
                 {
-                    if (highlightedObject != null) highlightedObject.OnSelectionHighlightEnd();
-
-                    selectableObject.OnSelectionHighlight();
-                    highlightedObject = selectableObject;
+                    selectionGameObject = selectionGameObject.transform.parent.gameObject;
+                    selectableObject = selectionGameObject.GetComponent<RUISSelectable>();
                 }
 
-                if (wand.SelectionButtonWasPressed())
+                if (selectableObject && !selectableObject.isSelected)
                 {
-                    selection = selectableObject;
-
-                    if (highlightedObject != null)
+                    if (selectableObject != highlightedObject)
                     {
-                        highlightedObject.OnSelectionHighlightEnd();
-                        highlightedObject = null;
+                        if (highlightedObject != null) highlightedObject.OnSelectionHighlightEnd();
+
+                        selectableObject.OnSelectionHighlight();
+                        highlightedObject = selectableObject;
                     }
 
-                    BeginSelection();
+                    if ((!grabWhileButtonDown && wand.SelectionButtonWasPressed()) || (grabWhileButtonDown && wand.SelectionButtonIsDown()))
+                    {
+                        selection = selectableObject;
+
+                        if (highlightedObject != null)
+                        {
+                            highlightedObject.OnSelectionHighlightEnd();
+                            highlightedObject = null;
+                        }
+
+                        BeginSelection();
+
+                        selectionButtonReleasedAfterSelection = false;
+                    }
                 }
             }
-        }
-        else if (selection && ((!toggleSelection && wand.SelectionButtonWasReleased()) || (toggleSelection && wand.SelectionButtonWasPressed())))
+
+            if (!selectionGameObject || !selectionGameObject.GetComponent<RUISSelectable>())
+            {
+                if (highlightedObject != null)
+                {
+                    highlightedObject.OnSelectionHighlightEnd();
+                    highlightedObject = null;
+                }
+            }
+        } 
+        else if ((!toggleSelection && wand.SelectionButtonWasReleased()) || (toggleSelection && wand.SelectionButtonWasReleased() && selectionButtonReleasedAfterSelection))
         {
             EndSelection();
         }
-
-        if (!selectionGameObject || !selectionGameObject.GetComponent<RUISSelectable>())
+        else if (wand.SelectionButtonWasReleased())
         {
-            if (highlightedObject != null)
-            {
-                highlightedObject.OnSelectionHighlightEnd();
-                highlightedObject = null;
-            }
+            selectionButtonReleasedAfterSelection = true;
         }
     }
 
