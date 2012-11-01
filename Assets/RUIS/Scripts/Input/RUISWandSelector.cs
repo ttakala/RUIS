@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [System.Serializable]
+[AddComponentMenu("RUIS/Input/RUISWandSelector")]
 public class RUISWandSelector : MonoBehaviour {
     public enum SelectionRayType {
         HeadToWand,

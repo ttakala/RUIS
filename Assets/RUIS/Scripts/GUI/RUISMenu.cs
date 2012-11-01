@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("RUIS/GUI/RUISMenu")]
 public class RUISMenu : MonoBehaviour {
     private const int mainWindow = 0;
     private int currentWindow = mainWindow;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[AddComponentMenu("RUIS/Input/RUISPlainSkeletonController")]
 public class RUISPlainSkeletonController : MonoBehaviour {
     public Transform head;
     public Transform torso;

@@ -63,15 +63,6 @@
      <Compile Include="Assets\OpenNI\Scripts\Main OpenNI\User selector\Base objects\NIPlayerCandidateObject.cs" />
      <Compile Include="Assets\OpenNI\Scripts\Main OpenNI\User selector\Base objects\NIPlayerManager.cs" />
      <Compile Include="Assets\OpenNI\Scripts\Main OpenNI\User selector\Base objects\NISelectedPlayer.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\Ball Hitting Sample\BallCreator.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\Ball Hitting Sample\JointSpeeder.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\Ball Hitting Sample\NICollider.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\Cursor examples\NIHandPositionInputPositionOnly.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\GUI examples\GUIExample.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\GUI examples\SkeletonGuiControl.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\LogoShower.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\Trackers\Exit pose\NIExitPoseDetector.cs" />
-     <Compile Include="Assets\OpenNI\Scripts\Samples\Trackers\Exit pose\NIExitPoseGestureFactory.cs" />
      <Compile Include="Assets\OpenNI\Scripts\Selectors\NIPlayerCOMCandidateObject.cs" />
      <Compile Include="Assets\OpenNI\Scripts\Selectors\NIPlayerManagerCOMSelection.cs" />
      <Compile Include="Assets\OpenNI\Scripts\Selectors\NIPlayerManagerPoseSelection.cs" />

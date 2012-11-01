@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[AddComponentMenu("RUIS/Input/RUISSelectable")]
 public class RUISSelectable : MonoBehaviour {
 
     private bool rigidbodyWasKinematic;

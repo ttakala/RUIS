@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
+
+[AddComponentMenu("RUIS/Input/RUISMouseWand")]
 public class RUISMouseWand : RUISWand {
     bool mouseButtonPressed = false;
     bool mouseButtonReleased = false;

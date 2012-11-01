@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("RUIS/Input/RUISSkeletonWand")]
 public class RUISSkeletonWand : RUISWand {
     public Transform wandStartTransform;
     public Transform wandEndTransform;
