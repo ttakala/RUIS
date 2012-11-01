@@ -56,14 +56,13 @@ public class RUISInputManager : MonoBehaviour
 
             textReader.Close();
 
+            Debug.Log("Imported Input Config");
         }
         catch (Exception e)
         {
             Debug.LogError(e.StackTrace);
             return false;
         }
-
-        Debug.Log("Imported Input Config");
 
         return true;
     }

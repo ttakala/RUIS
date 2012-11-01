@@ -28,7 +28,6 @@ public class RUISPSMoveController : RUISWand {
 
     public RUISCoordinateSystem coordinateSystem;
 
-    public bool copyColor = false;
     public Renderer whereToCopyColor;
 
 	public void Awake ()
@@ -84,7 +83,7 @@ public class RUISPSMoveController : RUISWand {
         }
 
 
-        if (copyColor && whereToCopyColor)
+        if (whereToCopyColor)
         {
             whereToCopyColor.material.color = color;
         }

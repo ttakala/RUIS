@@ -8,7 +8,8 @@ public class RUISM2KCalibration : MonoBehaviour {
         WaitingForSkeleton,
         WaitingForMovePress,
         Calibrating,
-        CalibrationReview
+        CalibrationReview,
+        CalibratingWithoutMove
     }
 
     private State currentState;
@@ -53,7 +54,9 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     public GameObject floorPlane;
     public GameObject kinectModelObject;
+    public GameObject psEyeModelObject;
 
+    public bool usePSMove = true;
 
     void Awake () {
         currentState = State.WaitingForSkeleton;
@@ -68,9 +71,16 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     void Start()
     {
-        psMoveWrapper.Connect();
+        if (usePSMove)
+        {
+            psMoveWrapper.Connect();
 
-        Debug.Log("Connecting to PS Move");
+            Debug.Log("Connecting to PS Move");
+        }
+        else
+        {
+            (FindObjectOfType(typeof(CameraTiltTextUpdater)) as CameraTiltTextUpdater).gameObject.SetActiveRecursively(false);
+        }
 
         sceneAnalyzer = new OpenNI.SceneAnalyzer((FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager).CurrentContext.BasicContext);
         sceneAnalyzer.StartGenerating();
@@ -124,6 +134,9 @@ public class RUISM2KCalibration : MonoBehaviour {
             case State.Calibrating:
                 DoCalibrating();
                 break;
+            case State.CalibratingWithoutMove:
+                DoCalibratingWithoutMove();
+                break;
             case State.CalibrationReview:
                 DoCalibrationReview();
                 break;
@@ -135,7 +148,14 @@ public class RUISM2KCalibration : MonoBehaviour {
         statusText.text = "Step inside the area";
         if (kinectSelection.GetNumberOfSelectedPlayers() >= 1)
         {
-            currentState = State.WaitingForMovePress;
+            if (usePSMove)
+            {
+                currentState = State.WaitingForMovePress;
+            }
+            else
+            {
+                currentState = State.CalibratingWithoutMove;
+            }
         }
     }
 
@@ -217,13 +237,48 @@ public class RUISM2KCalibration : MonoBehaviour {
             averageError = distance / calibrationSpheres.Count;
 
             SetCalibrationReviewShowing(true);
+
+            RUISPSMoveController controller = FindObjectOfType(typeof(RUISPSMoveController)) as RUISPSMoveController;
+            controller.controllerId = calibratingPSMoveControllerId;
+
+            psEyeModelObject.transform.position = coordinateSystem.ConvertMovePosition(Vector3.zero);
         }
+    }
+
+    float timeCalibratingWithoutMove = 0;
+    const float timeToCalibrate = 5;
+    private void DoCalibratingWithoutMove()
+    {
+        timeCalibratingWithoutMove += Time.deltaTime;
+
+        statusText.text = string.Format("Calibrating Kinect Coordinate System\nTime left: {0:0.0}", timeToCalibrate - timeCalibratingWithoutMove);
+
+        if (timeCalibratingWithoutMove >= timeToCalibrate)
+        {
+            currentState = State.CalibrationReview;
+
+            coordinateSystem.SetMoveToKinectTransforms(Matrix4x4.identity, Matrix4x4.identity);
+            coordinateSystem.SetKinectFloorNormal(floorNormal);
+            coordinateSystem.SaveXML(xmlFilename);
+
+            return;
+        }
+
+        UpdateFloorNormal();
     }
 
     private void DoCalibrationReview()
     {
-        statusText.text = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n", 
-                totalErrorDistance, averageError);
+        if (usePSMove)
+        {
+            statusText.text = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",
+                    totalErrorDistance, averageError);
+        }
+        else
+        {
+            statusText.text = string.Format("Calibration finished!\n\nNew Floor Normal: ({0:0.##}, {1:0.##},{2:0.##})\n",
+                coordinateSystem.kinectFloorNormal.x, coordinateSystem.kinectFloorNormal.y, coordinateSystem.kinectFloorNormal.z);
+        }
     }
 
     private void TakeSample()
@@ -247,9 +302,6 @@ public class RUISM2KCalibration : MonoBehaviour {
         psMoveSamples.Add(coordinateSystem.ConvertMovePosition(psMoveWrapper.handlePosition[calibratingPSMoveControllerId]));
         kinectSamples.Add(coordinateSystem.ConvertKinectPosition(jointPosition.Position));
 
-        Debug.Log("Hand position in skeleton manager: " + (FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager).skeletons[0].rightHand.position);
-        Debug.Log("Hand position in calibration script: " + coordinateSystem.ConvertKinectPosition(jointPosition.Position));
-
         numberOfSamplesTaken++;
         timeSinceLastSample = 0;
 
@@ -258,15 +310,11 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     private void UpdateFloorNormal()
     {
-        Debug.Log("Updating floor normal");
         coordinateSystem.ResetKinectFloorNormal();
 
         OpenNI.Plane3D floor = sceneAnalyzer.Floor;
         Vector3 newFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized;
         Vector3 newFloorPosition = coordinateSystem.ConvertKinectPosition(floor.Point);
-
-        Debug.Log("normal: " + newFloorNormal);
-        Debug.Log("position: " + newFloorPosition);
         
         /*OpenNI.SkeletonJointPosition torsoPosition;
         bool torsoSuccess = kinectSelection.GetPlayer(0).GetSkeletonJointPosition(OpenNI.SkeletonJoint.Torso, out torsoPosition);
@@ -290,13 +338,6 @@ public class RUISM2KCalibration : MonoBehaviour {
         //transform the point from Kinect's coordinate system rotation to Unity's rotation
         closestFloorPointToKinect = Quaternion.FromToRotation(newFloorNormal, Vector3.up)  * closestFloorPointToKinect;
         //closestFloorPointToKinect = new Vector3(0, closestFloorPointToKinect.magnitude, 0);
-
-        Debug.Log("closest: " + closestFloorPointToKinect);
-
-        GameObject projectionSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere) as GameObject;
-        projectionSphere.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-        projectionSphere.renderer.material.color = Color.red;
-        projectionSphere.transform.position = closestFloorPointToKinect;
 
         floorPlane.transform.position = closestFloorPointToKinect;
 

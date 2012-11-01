@@ -1,3 +1,15 @@
+/Assembly-CSharp-Editor-vs.csproj
+/Assembly-CSharp-Editor.csproj
+/Assembly-CSharp-firstpass-vs.csproj
+/Assembly-CSharp-firstpass.csproj
+/Assembly-CSharp-vs.csproj
+/Assembly-CSharp.csproj
+/Assembly-UnityScript-firstpass-vs.unityproj
+/Assembly-UnityScript-firstpass.unityproj
+Library/ScriptAssemblies/Assembly-CSharp-Editor.dll
+Library/ScriptAssemblies/Assembly-CSharp-Editor.dll.mdb
+Library/ScriptAssemblies/Assembly-CSharp.dll
+Library/ScriptAssemblies/Assembly-CSharp.dll.mdb
 /calibration.xml
 /trunk-csharp.sln
 /trunk-csharp.suo

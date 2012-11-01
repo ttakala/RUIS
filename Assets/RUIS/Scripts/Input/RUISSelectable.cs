@@ -52,11 +52,6 @@ public class RUISSelectable : MonoBehaviour {
     {
         UpdateTransform(true);
 
-        /*if (rigidbody)
-        {
-            latestVelocity = (rigidbody.velocity != Vector3.zero) ? rigidbody.velocity : latestVelocity;
-        }*/
-
         latestVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
         lastPosition = transform.position;
 

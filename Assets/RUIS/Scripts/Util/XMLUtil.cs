@@ -3,19 +3,20 @@ using System.Collections;
 using System.IO;
 using System.Xml;
 using System.Xml.Schema;
+using System.Text;
 
 public class XMLUtil {
-    public static XmlDocument LoadAndValidateXml(string xmlFilename, string schemaFilename)
+    public static XmlDocument LoadAndValidateXml(string xmlFilename, TextAsset schemaFile)
     {
-        return LoadAndValidateXml(xmlFilename, schemaFilename, new ValidationEventHandler(BasicValidationHandler));
+        return LoadAndValidateXml(xmlFilename, schemaFile, new ValidationEventHandler(BasicValidationHandler));
     }
 
-    public static XmlDocument LoadAndValidateXml(string xmlFilename, string schemaFilename, ValidationEventHandler validationEventHandler)
+    public static XmlDocument LoadAndValidateXml(string xmlFilename, TextAsset schemaFile, ValidationEventHandler validationEventHandler)
     {
         XmlTextReader textReader = null;
         XmlValidatingReader validatingReader = null;
 
-        FileStream fs = null;
+        MemoryStream fs = null;
         try
         {
             textReader = new XmlTextReader(xmlFilename);
@@ -24,7 +25,7 @@ public class XMLUtil {
             validatingReader.ValidationType = ValidationType.Schema;
             validatingReader.ValidationEventHandler += validationEventHandler;
 
-            fs = new FileStream(schemaFilename, FileMode.Open);
+            fs = new MemoryStream(Encoding.ASCII.GetBytes(schemaFile.text));
             XmlSchema schema = XmlSchema.Read(fs, validationEventHandler);
 
             validatingReader.Schemas.Add(schema);

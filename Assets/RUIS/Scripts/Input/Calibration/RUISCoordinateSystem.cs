@@ -7,12 +7,12 @@ using System.IO;
 public class RUISCoordinateSystem : MonoBehaviour
 {
     public string coordinateXmlFile = "calibration.xml";
-    private const string coordinateSchema = "calibration.xsd";
+    public TextAsset coordinateSchema;
     public bool loadFromXML = true;
 
     public float kinectToUnityScale = 0.001f;
 
-    private Vector3 kinectFloorNormal = Vector3.up;
+    public Vector3 kinectFloorNormal { get; private set; }
     private Quaternion kinectFloorRotator = Quaternion.identity;
 
     private Matrix4x4 moveToRUISTransform = Matrix4x4.identity;

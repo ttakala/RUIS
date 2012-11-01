@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: 39f3652b4dd29a34995a9e83aa278ad3
+guid: 067ced3baf1eb6348ad60316a981b267
 ModelImporter:
   fileIDToRecycleName:
-    4300000: default
+    4300000: Cube
   serializedVersion: 10
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
-    generateAnimations: 0
+    generateAnimations: 3
     bakeSimulation: 0
     splitAnimations: 1
     animationCompression: 1
@@ -34,7 +34,7 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 1
   textMetaNamesToFileIDs:
     //RootNode:
@@ -44,16 +44,12 @@ ModelImporter:
       data:
         first: 4
         second: 801a0600
-    default:
-      data:
-        first: 1
-        second: a2860100
-      data:
-        first: 4
-        second: 821a0600
       data:
         first: 23
         second: 60182300
       data:
         first: 33
         second: a05a3200
+      data:
+        first: 111
+        second: 605fa900
