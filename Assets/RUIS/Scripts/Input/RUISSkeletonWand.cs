@@ -6,10 +6,9 @@ public class RUISSkeletonWand : RUISWand {
     public Transform wandStartTransform;
     public Transform wandEndTransform;
 
-    //simulate grab with mouse button for now
-    bool mouseButtonPressed = false;
-    bool mouseButtonReleased = false;
-    bool mouseButtonDown = false;
+    public RUISGestureRecognizer gestureRecognizer;
+
+    public Color wandColor = Color.white;
 
 	public void Update () {
         Vector3 wandPosition = wandEndTransform.position;
@@ -18,28 +17,28 @@ public class RUISSkeletonWand : RUISWand {
         transform.position = wandPosition;
         transform.rotation = Quaternion.LookRotation(wandDirection);
 
-        mouseButtonPressed = Input.GetMouseButtonDown(0);
-        mouseButtonReleased = Input.GetMouseButtonUp(0);
-        mouseButtonDown = Input.GetMouseButton(0);
+        gestureRecognizer.GestureTriggered();
 	}
 
     public override bool SelectionButtonWasPressed()
     {
-        return mouseButtonPressed;
+        return gestureRecognizer.GestureTriggered();
     }
 
     public override bool SelectionButtonWasReleased()
     {
-        return mouseButtonReleased;
+        return gestureRecognizer.GestureTriggered();
     }
 
     public override bool SelectionButtonIsDown()
     {
-        return mouseButtonDown;
+        return gestureRecognizer.GestureTriggered();
     }
 
     public override Vector3 GetAngularVelocity()
     {
-        throw new System.NotImplementedException();
+        return Vector3.zero;
     }
+
+    public override Color color { get { return wandColor; } }
 }
