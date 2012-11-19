@@ -42,7 +42,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .066722393, y: .955741405, z: .622858584}
+  m_LocalPosition: {x: .0678744316, y: .168697834, z: -2.59764767}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -70,7 +70,8 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 29ef6c52109ccc84eb839082815b5f3f, type: 2}
+  - {fileID: 2100000, guid: 22997c885540a6442acc0c2274c40c68, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -96,7 +97,6 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   coordinateSystem: {fileID: 0}
-  copyColor: 0
   whereToCopyColor: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
@@ -109,7 +109,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44e1a29ec3e30941be432fcdcea38f7, type: 1}
   m_Name: 
   selectionRayType: 1
-  lineRenderer: {fileID: 12000000}
   selectionRayLength: 200
   selectionRayStartDistance: .200000003
   headTransform: {fileID: 0}

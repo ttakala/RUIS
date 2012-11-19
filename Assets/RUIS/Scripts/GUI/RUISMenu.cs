@@ -7,21 +7,16 @@ public class RUISMenu : MonoBehaviour {
     private int currentWindow = mainWindow;
     private Rect windowRect = new Rect(50, 50, 200, 200);
 
-    RUISDisplayManager displayManager;
-    RUISInputManager inputManager;
-
     bool isShowing = false;
 
     bool ruisMenuButtonDefined = true;
 
-    float sliderValue = 0.5f;
-
     bool isCalibrating = false;
+    int previousSceneId = -1;
 
 	// Use this for initialization
 	void Start () {
-        displayManager = GetComponent<RUISDisplayManager>();
-        inputManager = GetComponent<RUISInputManager>();
+        DontDestroyOnLoad(this);
 
         try
         {
@@ -58,6 +53,16 @@ public class RUISMenu : MonoBehaviour {
                 case mainWindow:
                     if (GUILayout.Button("Calibrate"))
                     {
+                        Debug.Log("Loading calibration screen.");
+
+                        gameObject.transform.parent = null;
+
+                        previousSceneId = Application.loadedLevel;
+
+                        isCalibrating = true;
+
+                        isShowing = false;
+
                         Application.LoadLevel("calibration");
                     }
                     break;
@@ -66,7 +71,11 @@ public class RUISMenu : MonoBehaviour {
         else
         {
             if(GUILayout.Button("End Calibration")){
+                Destroy(this);
 
+                Application.LoadLevel(previousSceneId);
+
+                isCalibrating = false;
             }
         }
         GUI.DragWindow();

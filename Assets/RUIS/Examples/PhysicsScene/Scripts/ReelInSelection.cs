@@ -4,7 +4,7 @@ using System.Collections;
 public class ReelInSelection : MonoBehaviour {
     public float reelSpeed = 1.0f;
     
-    RUISPSMoveController psMoveController;
+    RUISPSMoveWand psMoveController;
     RUISWandSelector wandSelector;
 
     RUISSelectable selection;
@@ -15,7 +15,7 @@ public class ReelInSelection : MonoBehaviour {
     float currentDistance = 1;
 
 	void Awake () {
-        psMoveController = GetComponent<RUISPSMoveController>();
+        psMoveController = GetComponent<RUISPSMoveWand>();
         wandSelector = GetComponent<RUISWandSelector>();
 	}
 

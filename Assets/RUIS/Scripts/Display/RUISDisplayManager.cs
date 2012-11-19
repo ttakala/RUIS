@@ -85,6 +85,18 @@ public class RUISDisplayManager : MonoBehaviour {
         return new Ray(Vector3.zero, Vector3.zero);
     }
 
+    public List<Vector2> WorldPointToScreenPoints(Vector3 worldPoint)
+    {
+        List<Vector2> screenPoints = new List<Vector2>();
+
+        foreach (RUISDisplay display in displays)
+        {
+            display.WorldPointToScreenPoints(worldPoint, ref screenPoints);
+        }
+
+        return screenPoints;
+    }
+
     private void CalculateEditorResolutions()
     {
         int trueWidth = Screen.width;

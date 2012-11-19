@@ -36,11 +36,8 @@ public class RUISPlainSkeletonController : MonoBehaviour {
 
     private Dictionary<Transform, Quaternion> jointInitialRotations;
 
-    public Vector3 rootSpeedScaling = Vector3.one;
-
     public bool applyOriginalRootPosition = true;
     private Vector3 originalRootPosition;
-    public Vector3 rootPositionOffset = Vector3.zero;
 
     void Awake()
     {
@@ -107,9 +104,9 @@ public class RUISPlainSkeletonController : MonoBehaviour {
 
             if (updateRootPosition)
             {
-                Vector3 newRootPosition = skeletonPosition;
+                Vector3 newRootPosition = skeletonManager.skeletons[playerId].root.position;
                 if (applyOriginalRootPosition) newRootPosition += originalRootPosition;
-                transform.localPosition = Vector3.Scale(newRootPosition + rootPositionOffset, rootSpeedScaling);
+                transform.localPosition = newRootPosition;
             }
         }
 	}

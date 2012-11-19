@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class RUISDisplay : MonoBehaviour {
     public enum StereoType
@@ -133,6 +133,25 @@ public class RUISDisplay : MonoBehaviour {
             {
                 return linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
             }
+        }
+    }
+
+    public void WorldPointToScreenPoints(Vector3 worldPoint, ref List<Vector2> screenPoints)
+    {
+        if (isStereo)
+        {
+            Vector3 leftCameraPoint = linkedCamera.GetComponent<RUISStereoCamera>().leftCamera.WorldToScreenPoint(worldPoint);
+            leftCameraPoint.y = rawResolutionY - leftCameraPoint.y;
+            screenPoints.Add(leftCameraPoint);
+            Vector3 rightCameraPoint = linkedCamera.GetComponent<RUISStereoCamera>().rightCamera.WorldToScreenPoint(worldPoint);
+            rightCameraPoint.y = rawResolutionY - rightCameraPoint.y;
+            screenPoints.Add(rightCameraPoint);
+        }
+        else
+        {
+            Vector3 screenPoint = linkedCamera.GetComponent<RUISMonoCamera>().linkedCamera.WorldToScreenPoint(worldPoint);
+            screenPoint.y = rawResolutionY - screenPoint.y;
+            screenPoints.Add(screenPoint);
         }
     }
 }

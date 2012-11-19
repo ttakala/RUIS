@@ -10,12 +10,18 @@ public class RUISM2KCalibrationCamera : MonoBehaviour {
     public float r = 2;
     public float rotationSpeed = 0.1f;
 
+    void Awake()
+    {
+        RUISM2KCalibration calibration = FindObjectOfType(typeof(RUISM2KCalibration)) as RUISM2KCalibration;
+        if (calibration.usePSMove)
+            gameObject.SetActiveRecursively(false);
+    }
+
     void Start()
     {
         currentTime = 0;
     }
 
-	// Update is called once per frame
 	void Update () {
         currentTime += Time.deltaTime;
         phi = currentTime * rotationSpeed;

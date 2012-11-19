@@ -5,6 +5,7 @@ using CSML;
 public class RUISM2KCalibration : MonoBehaviour {
     public enum State
     {
+        Start,
         WaitingForSkeleton,
         WaitingForMovePress,
         Calibrating,
@@ -36,7 +37,7 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     public RUISCoordinateSystem coordinateSystem;
 
-    public RUISPSMoveController moveController;
+    public RUISPSMoveWand moveController;
 
     public string xmlFilename = "testm2k.xml";
 
@@ -59,7 +60,7 @@ public class RUISM2KCalibration : MonoBehaviour {
     public bool usePSMove = true;
 
     void Awake () {
-        currentState = State.WaitingForSkeleton;
+        currentState = State.Start;
         psMoveWrapper = GetComponent<PSMoveWrapper>();
         kinectSelection = GetComponent<NIPlayerManagerCOMSelection>();
         statusText = GetComponentInChildren<GUIText>();
@@ -75,7 +76,7 @@ public class RUISM2KCalibration : MonoBehaviour {
         {
             psMoveWrapper.Connect();
 
-            Debug.Log("Connecting to PS Move");
+            psMoveWrapper.CameraFrameResume(4);
         }
         else
         {
@@ -125,6 +126,9 @@ public class RUISM2KCalibration : MonoBehaviour {
 
         switch (currentState)
         {
+            case State.Start:
+                DoStart();
+                break;
             case State.WaitingForSkeleton:
                 DoWaitingForSkeleton();
                 break;
@@ -142,6 +146,26 @@ public class RUISM2KCalibration : MonoBehaviour {
                 break;
         }
 	}
+
+    private float timeInStart = 0;
+    private const float timeToSpendInStart = 4.0f;
+    private void DoStart()
+    {
+        timeInStart += Time.deltaTime;
+        if (timeInStart >= timeToSpendInStart)
+        {
+            currentState = State.WaitingForSkeleton;
+        }
+
+        if (usePSMove)
+        {
+            statusText.text = "Calibration of PS Move and Kinect";
+        }
+        else
+        {
+            statusText.text = "Calibration of Kinect";
+        }
+    }
 
     private void DoWaitingForSkeleton()
     {
@@ -238,7 +262,7 @@ public class RUISM2KCalibration : MonoBehaviour {
 
             SetCalibrationReviewShowing(true);
 
-            RUISPSMoveController controller = FindObjectOfType(typeof(RUISPSMoveController)) as RUISPSMoveController;
+            RUISPSMoveWand controller = FindObjectOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand;
             controller.controllerId = calibratingPSMoveControllerId;
 
             psEyeModelObject.transform.position = coordinateSystem.ConvertMovePosition(Vector3.zero);

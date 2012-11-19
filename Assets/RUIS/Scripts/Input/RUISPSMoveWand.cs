@@ -3,7 +3,7 @@ using System.Collections;
 
 
 [AddComponentMenu("RUIS/Input/RUISPSMoveController")]
-public class RUISPSMoveController : RUISWand {
+public class RUISPSMoveWand : RUISWand {
     public enum SelectionButton
     {
         Trigger,
@@ -83,9 +83,12 @@ public class RUISPSMoveController : RUISWand {
         }
 
 
-        if (whereToCopyColor)
+        if (whereToCopyColor != null)
         {
-            whereToCopyColor.material.color = color;
+            foreach (Material mat in whereToCopyColor.materials)
+            {
+                mat.color = color;
+            }
         }
     }
 

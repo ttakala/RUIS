@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class MoveGun : MonoBehaviour {
-    RUISPSMoveController moveController;
+    RUISPSMoveWand moveController;
     public GameObject bulletPrefab;
     public Transform bulletSpawnSpot;
 
@@ -13,7 +13,7 @@ public class MoveGun : MonoBehaviour {
 
     void Awake()
     {
-        moveController = GetComponent<RUISPSMoveController>();
+        moveController = GetComponent<RUISPSMoveWand>();
     }
 
 	void Update () {

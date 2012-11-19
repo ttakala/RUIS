@@ -10,7 +10,7 @@ public class RUISWandSelector : MonoBehaviour {
     };
 
     public SelectionRayType selectionRayType = SelectionRayType.WandDirection;
-    public LineRenderer lineRenderer;
+    private LineRenderer lineRenderer;
     public float selectionRayLength = 200;
     public float selectionRayStartDistance = 0.2f;
     private Vector3 selectionRayStart;
@@ -63,6 +63,11 @@ public class RUISWandSelector : MonoBehaviour {
             Debug.LogError(name + ": RUISWandSelector requires a RUISWand");
         }
 
+        lineRenderer = GetComponent<LineRenderer>();
+    }
+
+    public void Start()
+    {
         if (lineRenderer)
         {
             lineRenderer.SetVertexCount(2);

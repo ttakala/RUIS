@@ -2,12 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 public class TestMoveFeatures : MonoBehaviour {
-    RUISPSMoveController psMoveController;
+    RUISPSMoveWand psMoveController;
     int rumbleAmount = 0;
 
     void Awake()
     {
-        psMoveController = GetComponent<RUISPSMoveController>();
+        psMoveController = GetComponent<RUISPSMoveWand>();
     }
 
 	// Use this for initialization

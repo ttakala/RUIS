@@ -23,13 +23,13 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer {
         }
         else if (pointTracker.averageSpeed < speedThreshold)
         {
-            Debug.Log("Starting Gesture!");
             gestureStarted = true;
             timeSinceStart = 0;
         }
         else
         {
             gestureStarted = false;
+            gestureProgress = 0;
         }
     }
 
@@ -37,7 +37,6 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer {
     {
         if (gestureProgress >= 1.0f)
         {
-            Debug.Log("TRIGGERING!");
             StartCoroutine(ResetTriggerAtEndOfFrame());
             return true;
         }

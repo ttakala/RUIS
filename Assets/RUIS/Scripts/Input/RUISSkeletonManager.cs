@@ -4,6 +4,26 @@ using System.Collections;
 public class RUISSkeletonManager : MonoBehaviour {
     RUISCoordinateSystem coordinateSystem;
 
+    public enum Joint
+    {
+        Root,
+        Head,
+        Torso,
+        LeftShoulder,
+        LeftElbow,
+        LeftHand,
+        RightShoulder,
+        RightElbow,
+        RightHand,
+        LeftHip,
+        LeftKnee,
+        LeftFoot,
+        RightHip,
+        RightKnee,
+        RightFoot,
+        None
+    }
+
     public class JointData
     {
         public Vector3 position = Vector3.zero;
@@ -14,6 +34,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 
     public class Skeleton
     {
+        public bool isTracking = false;
+        public JointData root = new JointData();
         public JointData head = new JointData();
         public JointData torso = new JointData();
         public JointData leftShoulder = new JointData();
@@ -34,9 +56,12 @@ public class RUISSkeletonManager : MonoBehaviour {
 
     public Skeleton[] skeletons = new Skeleton[4];
 
+    public Vector3 rootSpeedScaling = Vector3.one;
+
     void Awake()
     {
         playerManager = GetComponent<NIPlayerManager>();
+        
 
         if (coordinateSystem == null)
         {
@@ -57,6 +82,11 @@ public class RUISSkeletonManager : MonoBehaviour {
 	void Update () {
         for (int i = 0; i < playerManager.m_MaxNumberOfPlayers; i++)
         {
+            skeletons[i].isTracking = playerManager.GetPlayer(i).Tracking;
+
+            if (!skeletons[i].isTracking) continue;
+
+            UpdateRootData(i);
             UpdateJointData(OpenNI.SkeletonJoint.Head, i, ref skeletons[i].head);
             UpdateJointData(OpenNI.SkeletonJoint.Torso, i, ref skeletons[i].torso);
             UpdateJointData(OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons[i].leftShoulder);
@@ -74,6 +104,23 @@ public class RUISSkeletonManager : MonoBehaviour {
         }
 	}
 
+    private void UpdateRootData(int player)
+    {
+        OpenNI.SkeletonJointTransformation data;
+
+        if (!playerManager.GetPlayer(player).GetSkeletonJoint(OpenNI.SkeletonJoint.Torso, out data))
+        {
+            return;
+        }
+
+        Vector3 newRootPosition = coordinateSystem.ConvertKinectPosition(data.Position.Position);
+        newRootPosition = Vector3.Scale(newRootPosition, rootSpeedScaling);
+        skeletons[player].root.position = newRootPosition;
+        skeletons[player].root.positionConfidence = data.Position.Confidence;
+        skeletons[player].root.rotation = coordinateSystem.ConvertKinectRotation(data.Orientation);
+        skeletons[player].root.rotationConfidence = data.Orientation.Confidence;
+    }
+
     private void UpdateJointData(OpenNI.SkeletonJoint joint, int player, ref JointData jointData)
     {
         OpenNI.SkeletonJointTransformation data;
@@ -87,5 +134,45 @@ public class RUISSkeletonManager : MonoBehaviour {
         jointData.positionConfidence = data.Position.Confidence;
         jointData.rotation = coordinateSystem.ConvertKinectRotation(data.Orientation);
         jointData.rotationConfidence = data.Orientation.Confidence;
+    }
+
+    public JointData GetJointData(Joint joint, int player)
+    {
+        if (player >= playerManager.m_MaxNumberOfPlayers)
+            return null;
+
+        switch (joint)
+        {
+            case Joint.Head:
+                return skeletons[player].head;
+            case Joint.Torso:
+                return skeletons[player].torso;
+            case Joint.LeftShoulder:
+                return skeletons[player].leftShoulder;
+            case Joint.LeftElbow:
+                return skeletons[player].leftElbow;
+            case Joint.LeftHand:
+                return skeletons[player].leftHand;
+            case Joint.RightShoulder:
+                return skeletons[player].rightShoulder;
+            case Joint.RightElbow:
+                return skeletons[player].rightElbow;
+            case Joint.RightHand:
+                return skeletons[player].rightHand;
+            case Joint.LeftHip:
+                return skeletons[player].leftHip;
+            case Joint.LeftKnee:
+                return skeletons[player].leftKnee;
+            case Joint.LeftFoot:
+                return skeletons[player].leftFoot;
+            case Joint.RightHip:
+                return skeletons[player].rightHip;
+            case Joint.RightKnee:
+                return skeletons[player].rightKnee;
+            case Joint.RightFoot:
+                return skeletons[player].rightFoot;
+            default:
+                return null;
+        }
     }
 }

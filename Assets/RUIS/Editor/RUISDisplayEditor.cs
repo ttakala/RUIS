@@ -41,18 +41,18 @@ public class RUISDisplayEditor : Editor {
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(resolutionX, new GUIContent("Resolution X"));
-        EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y"));
+        EditorGUILayout.PropertyField(resolutionX, new GUIContent("Resolution X", "The width of the display"));
+        EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y", "The height of the display"));
         
-        EditorGUILayout.PropertyField(camera, new GUIContent("Attached Camera"));
+        EditorGUILayout.PropertyField(camera, new GUIContent("Attached Camera", "The RUISCamera that renders to this display"));
 
-        EditorGUILayout.PropertyField(isHMD, new GUIContent("Head-Mounted Display"));
+        EditorGUILayout.PropertyField(isHMD, new GUIContent("Head-Mounted Display", "Is this display a HMD?"));
 
-        EditorGUILayout.PropertyField(isStereo, new GUIContent("Stereo Display"));
+        EditorGUILayout.PropertyField(isStereo, new GUIContent("Stereo Display", "Is this display stereo?"));
         if (isStereo.boolValue)
         {
-            EditorGUILayout.PropertyField(stereoType, new GUIContent("Stereo Type"));
-            EditorGUILayout.PropertyField(useDoubleTheSpace, new GUIContent("Double the Space used"));
+            EditorGUILayout.PropertyField(stereoType, new GUIContent("Stereo Type", "The type of stereo to use"));
+            EditorGUILayout.PropertyField(useDoubleTheSpace, new GUIContent("Double the Space used", "Calculate the total resolution of the display based on stereo type. \nSideBySide: Double horizontal resolution \nTopAndBottom: Double vertical resolution."));
         }
 
         serializedObject.ApplyModifiedProperties();

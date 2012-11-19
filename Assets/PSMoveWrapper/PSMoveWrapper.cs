@@ -223,9 +223,7 @@ public class PSMoveWrapper : MonoBehaviour {
 	private static bool client_connected;
 
 	// Use this for initialization
-	void Awake () {
-		DontDestroyOnLoad(gameObject);
-		
+	void Awake () {		
 		if(!isFixedIP) {
 			ReadIPAddress();
 		}
@@ -814,25 +812,6 @@ public class PSMoveWrapper : MonoBehaviour {
 		
 		return finalImage.ToArray();
 	}
-
-    public Texture2D GetCameraTexture()
-    {
-        if (!isConnected || !isCameraResume)
-        {
-            return null;
-        }
-
-        PSMoveSharpState dummyState = new PSMoveSharpState();
-        List<byte[]> imageSlices = cameraFrameState.GetCameraFrameAndState(ref dummyState);
-        List<byte> imageBytes = new List<byte>();
-        foreach(byte[] slice in imageSlices){
-            imageBytes.AddRange(slice);
-        }
-
-        imageTex.LoadImage(imageBytes.ToArray());
-
-        return imageTex;
-    }
 	
 	
 	private void UpdateState() {

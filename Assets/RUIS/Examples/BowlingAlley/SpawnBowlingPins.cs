@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SpawnBowlingPins : MonoBehaviour {
     public GameObject bowlingPinsPrefab;
-    public RUISPSMoveController moveController;
+    public RUISPSMoveWand moveController;
 
     GameObject oldBowlingPins;
 	

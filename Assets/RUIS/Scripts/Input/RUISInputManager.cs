@@ -14,12 +14,10 @@ public class RUISInputManager : MonoBehaviour
     public int PSMovePort = 7899;
     public bool connectToPSMoveOnStartup = true;
     public PSMoveWrapper psMoveWrapper;
+    public int amountOfPSMoveControllers = 4;
+    public bool enableMoveCalibrationDuringPlay = false;
 
     public bool enableKinect = true;
-
-    public RUISInputManager()
-    {
-    }
 
     public void Awake()
     {
@@ -28,20 +26,52 @@ public class RUISInputManager : MonoBehaviour
             Import(filename);
         }
 
+
+        psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
         if (enablePSMove)
         {
-            psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
 
             if (psMoveWrapper && connectToPSMoveOnStartup)
             {
                 psMoveWrapper.Connect(PSMoveIP, PSMovePort);
             }
+
+            psMoveWrapper.enableDefaultInGameCalibrate = enableMoveCalibrationDuringPlay;
+
+            //disable all controllers that shouldn't be connected
+            foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
+            {
+                if (moveController.controllerId >= amountOfPSMoveControllers)
+                {
+                    Debug.LogWarning("Disabling PS Move Controller: " + moveController.name + "... Controller ID was too big!");
+                    moveController.gameObject.SetActiveRecursively(false);
+                }
+            }
         }
+        else
+        {
+            psMoveWrapper.gameObject.SetActiveRecursively(false);
+
+            foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
+            {
+                Debug.LogWarning("Disabling PS Move Controller: " + moveController.name + "... PS Move not enabled in InputManager!");
+                moveController.gameObject.SetActiveRecursively(false);
+            }
+        }
+
+        if (enableKinect)
+        {
+        }
+        else
+        {
+            transform.FindChild("Kinect").gameObject.SetActiveRecursively(false);
+            transform.FindChild("SkeletonManager").gameObject.SetActiveRecursively(false);
+        } 
     }
 
     public void OnApplicationQuit()
     {
-        if(psMoveWrapper && psMoveWrapper.isConnected)
+        if(enablePSMove && psMoveWrapper && psMoveWrapper.isConnected)
             psMoveWrapper.Disconnect(false);
     }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ResetBall : MonoBehaviour {
-    public RUISPSMoveController moveController;
+    public RUISPSMoveWand moveController;
     public Transform ballResetSpot;
 
     private bool shouldResetBall = true;

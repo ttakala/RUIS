@@ -42,7 +42,7 @@ public class RUISDisplayManagerEditor : Editor {
         //if there is only one display we want to give the user the opportunity to set fullscreen
         if (displays.arraySize == 1)
         {
-            PlayerSettings.defaultIsFullScreen = EditorGUILayout.Toggle("Full Screen", PlayerSettings.defaultIsFullScreen);
+            PlayerSettings.defaultIsFullScreen = EditorGUILayout.Toggle(new GUIContent("Full Screen", "Is this display full screen? Only available when using one display."), PlayerSettings.defaultIsFullScreen);
             fullScreen.boolValue = PlayerSettings.defaultIsFullScreen;
         }
         else
@@ -145,7 +145,6 @@ public class RUISDisplayManagerEditor : Editor {
         {
             if (!displayManager.displays.Contains(display))
             {
-                Debug.Log("found unparented display!");
                 displayToDestroy = display;
             }
         }
