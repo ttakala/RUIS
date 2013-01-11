@@ -62,7 +62,7 @@ public class RUISDisplay : MonoBehaviour {
             linkedCamera.associatedDisplay = this;
         }
 
-        if (isStereo && linkedCamera.GetComponent<RUISStereoCamera>() == null)
+        /*if (isStereo && linkedCamera == null)
         {
             Debug.LogError("Display " + name + " marked as stereo but linked RUISCamera " + linkedCamera.name + " is mono. Switching to mono mode.");
             isStereo = false;
@@ -73,7 +73,7 @@ public class RUISDisplay : MonoBehaviour {
             Debug.LogError("Display " + name + " marked as mono but linked RUISCamera " + linkedCamera.name + " is stereo. Switching to side by side stereo");
             isStereo = true;
             stereoType = StereoType.SideBySide;
-        }
+        }*/
 
         aspectRatio = resolutionX / resolutionY;
     }
@@ -101,22 +101,20 @@ public class RUISDisplay : MonoBehaviour {
     {
         if (isStereo)
         {
-            RUISStereoCamera stereoCam = linkedCamera.GetComponent<RUISStereoCamera>();
-            if (stereoCam.leftCamera.pixelRect.Contains(screenPoint))
+            if (linkedCamera.leftCamera.pixelRect.Contains(screenPoint))
             {
-                return stereoCam.leftCamera;
+                return linkedCamera.leftCamera;
             }
-            else if (stereoCam.rightCamera.pixelRect.Contains(screenPoint))
+            else if (linkedCamera.rightCamera.pixelRect.Contains(screenPoint))
             {
-                return stereoCam.rightCamera;
+                return linkedCamera.rightCamera;
             }
             else return null;
         }
         else
         {
-            RUISMonoCamera monoCam = linkedCamera.GetComponent<RUISMonoCamera>();
-            if(monoCam.linkedCamera.pixelRect.Contains(screenPoint)){
-                return monoCam.linkedCamera;
+            if(linkedCamera.centerCamera.pixelRect.Contains(screenPoint)){
+                return linkedCamera.centerCamera;
             } 
             else return null;
         }
@@ -127,19 +125,19 @@ public class RUISDisplay : MonoBehaviour {
         if (isStereo)
         {
             RUISDisplayManager.ScreenPoint leftCameraPoint = new RUISDisplayManager.ScreenPoint();
-            leftCameraPoint.camera = linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
+            leftCameraPoint.camera = linkedCamera.leftCamera;
             leftCameraPoint.coordinates = leftCameraPoint.camera.WorldToScreenPoint(worldPoint);
             screenPoints.Add(leftCameraPoint);
 
             RUISDisplayManager.ScreenPoint rightCameraPoint = new RUISDisplayManager.ScreenPoint();
-            rightCameraPoint.camera = linkedCamera.GetComponent<RUISStereoCamera>().rightCamera;
+            rightCameraPoint.camera = linkedCamera.rightCamera;
             rightCameraPoint.coordinates = rightCameraPoint.camera.WorldToScreenPoint(worldPoint);
             screenPoints.Add(rightCameraPoint);
         }
         else
         {
             RUISDisplayManager.ScreenPoint screenPoint = new RUISDisplayManager.ScreenPoint();
-            screenPoint.camera = linkedCamera.GetComponent<RUISMonoCamera>().linkedCamera;
+            screenPoint.camera = linkedCamera.centerCamera;
             screenPoint.coordinates = screenPoint.camera.WorldToScreenPoint(worldPoint);
             screenPoints.Add(screenPoint);
         }
