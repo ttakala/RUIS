@@ -97,60 +97,50 @@ public class RUISDisplay : MonoBehaviour {
         }
     }
 
-    public Camera GetCameraForScreenPoint(Vector2 relativeScreenPoint)
-    {
-        if (relativeScreenPoint.x > rawResolutionX || relativeScreenPoint.y > rawResolutionY || relativeScreenPoint.y < 0) return null;
-
-        if (!isStereo)
-        {
-            return linkedCamera.GetComponent<RUISMonoCamera>().linkedCamera;
-        }
-        else
-        {
-            if (stereoType == StereoType.SideBySide)
-            {
-                if (relativeScreenPoint.x < rawResolutionX / 2)
-                {
-                    return linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
-                }
-                else
-                {
-                    return linkedCamera.GetComponent<RUISStereoCamera>().rightCamera;
-                }
-            }
-            else if (stereoType == StereoType.TopAndBottom)
-            {
-                if (relativeScreenPoint.y < rawResolutionY / 2)
-                {
-                    return linkedCamera.GetComponent<RUISStereoCamera>().rightCamera;
-                }
-                else
-                {
-                    return linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
-                }
-            }
-            else
-            {
-                return linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
-            }
-        }
-    }
-
-    public void WorldPointToScreenPoints(Vector3 worldPoint, ref List<Vector2> screenPoints)
+    public Camera GetCameraForScreenPoint(Vector2 screenPoint)
     {
         if (isStereo)
         {
-            Vector3 leftCameraPoint = linkedCamera.GetComponent<RUISStereoCamera>().leftCamera.WorldToScreenPoint(worldPoint);
-            leftCameraPoint.y = rawResolutionY - leftCameraPoint.y;
+            RUISStereoCamera stereoCam = linkedCamera.GetComponent<RUISStereoCamera>();
+            if (stereoCam.leftCamera.pixelRect.Contains(screenPoint))
+            {
+                return stereoCam.leftCamera;
+            }
+            else if (stereoCam.rightCamera.pixelRect.Contains(screenPoint))
+            {
+                return stereoCam.rightCamera;
+            }
+            else return null;
+        }
+        else
+        {
+            RUISMonoCamera monoCam = linkedCamera.GetComponent<RUISMonoCamera>();
+            if(monoCam.linkedCamera.pixelRect.Contains(screenPoint)){
+                return monoCam.linkedCamera;
+            } 
+            else return null;
+        }
+    }
+
+    public void WorldPointToScreenPoints(Vector3 worldPoint, ref List<RUISDisplayManager.ScreenPoint> screenPoints)
+    {
+        if (isStereo)
+        {
+            RUISDisplayManager.ScreenPoint leftCameraPoint = new RUISDisplayManager.ScreenPoint();
+            leftCameraPoint.camera = linkedCamera.GetComponent<RUISStereoCamera>().leftCamera;
+            leftCameraPoint.coordinates = leftCameraPoint.camera.WorldToScreenPoint(worldPoint);
             screenPoints.Add(leftCameraPoint);
-            Vector3 rightCameraPoint = linkedCamera.GetComponent<RUISStereoCamera>().rightCamera.WorldToScreenPoint(worldPoint);
-            rightCameraPoint.y = rawResolutionY - rightCameraPoint.y;
+
+            RUISDisplayManager.ScreenPoint rightCameraPoint = new RUISDisplayManager.ScreenPoint();
+            rightCameraPoint.camera = linkedCamera.GetComponent<RUISStereoCamera>().rightCamera;
+            rightCameraPoint.coordinates = rightCameraPoint.camera.WorldToScreenPoint(worldPoint);
             screenPoints.Add(rightCameraPoint);
         }
         else
         {
-            Vector3 screenPoint = linkedCamera.GetComponent<RUISMonoCamera>().linkedCamera.WorldToScreenPoint(worldPoint);
-            screenPoint.y = rawResolutionY - screenPoint.y;
+            RUISDisplayManager.ScreenPoint screenPoint = new RUISDisplayManager.ScreenPoint();
+            screenPoint.camera = linkedCamera.GetComponent<RUISMonoCamera>().linkedCamera;
+            screenPoint.coordinates = screenPoint.camera.WorldToScreenPoint(worldPoint);
             screenPoints.Add(screenPoint);
         }
     }

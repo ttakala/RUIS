@@ -12,25 +12,37 @@ public class RUISDisplayManager : MonoBehaviour {
 
     public bool fullScreen;
 
-    private float editorHeightScaler = 1;
-    private float editorWidthScaler = 1;
+    public class ScreenPoint
+    {
+        public Vector2 coordinates;
+        public Camera camera;
+    }
 
 	void Start () {
-        UpdateTotalResolution();
+        CalculateTotalResolution();
 
         if (Application.isEditor)
         {
-            CalculateEditorResolutions();
+            UpdateResolutionsOnTheFly();
         }
 
-        InitDisplays();
+        UpdateDisplays();
 
         DisableUnlinkedCameras();
 	}
 
-    public void InitDisplays()
+    void Update()
     {
-        UpdateTotalResolution();
+        if (Screen.width != totalRawResolutionX || Screen.height != totalRawResolutionY)
+        {
+            UpdateResolutionsOnTheFly();
+            UpdateDisplays();
+        }
+    }
+
+    public void UpdateDisplays()
+    {
+        CalculateTotalResolution();
 
         int currentResolutionX = 0;
         foreach (RUISDisplay display in displays)
@@ -42,7 +54,7 @@ public class RUISDisplayManager : MonoBehaviour {
         Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, fullScreen);
     }
 
-    public void UpdateTotalResolution()
+    public void CalculateTotalResolution()
     {
         totalResolutionX = 0;
         totalResolutionY = 0;
@@ -61,33 +73,31 @@ public class RUISDisplayManager : MonoBehaviour {
 
     public Ray ScreenPointToRay(Vector2 screenPoint)
     {
-        int currentResolutionX = 0;
-        foreach (RUISDisplay display in displays)
+        //Debug.Log(Input.mousePosition);
+
+        Vector2 relativeScreenPoint = Vector2.zero;
+        RUISDisplay display = GetDisplayForScreenPoint(screenPoint);
+
+
+        if (display)
         {
+            //Debug.Log(display.name);
+
+            Camera camera = display.GetCameraForScreenPoint(screenPoint);
             
-            if (currentResolutionX + display.rawResolutionX >= screenPoint.x)
+            if (camera)
             {
-                Camera camera = display.GetCameraForScreenPoint(new Vector2(screenPoint.x - currentResolutionX, screenPoint.y));
-                
-                if (camera)
-                {
-                    return camera.ScreenPointToRay(screenPoint);
-                }
-                else
-                {
-                    break;
-                }
+                //Debug.Log(display.name + ": " + camera.name + ": " + camera.pixelRect);
+                return camera.ScreenPointToRay(screenPoint);
             }
-
-            currentResolutionX += display.rawResolutionX;
         }
-
+         
         return new Ray(Vector3.zero, Vector3.zero);
     }
 
-    public List<Vector2> WorldPointToScreenPoints(Vector3 worldPoint)
+    public List<ScreenPoint> WorldPointToScreenPoints(Vector3 worldPoint)
     {
-        List<Vector2> screenPoints = new List<Vector2>();
+        List<ScreenPoint> screenPoints = new List<ScreenPoint>();
 
         foreach (RUISDisplay display in displays)
         {
@@ -97,18 +107,49 @@ public class RUISDisplayManager : MonoBehaviour {
         return screenPoints;
     }
 
-    private void CalculateEditorResolutions()
+    public RUISDisplay GetDisplayForScreenPoint(Vector2 screenPoint/*, ref Vector2 relativeScreenPoint*/)
+    {
+        //relativeScreenPoint = Vector2.zero;
+
+         int currentResolutionX = 0;
+         foreach (RUISDisplay display in displays)
+         {
+
+             if (currentResolutionX + display.rawResolutionX >= screenPoint.x)
+             {
+                 //relativeScreenPoint = new Vector2(screenPoint.x - currentResolutionX, totalRawResolutionY - screenPoint.y);
+                 return display;
+             }
+
+             currentResolutionX += display.rawResolutionX;
+         }
+
+         return null;
+    }
+    /*
+    public Camera GetCameraForScreenPoint(Vector2 screenPoint)
+    {
+        Vector2 relativeScreenPoint = Vector2.zero;
+        RUISDisplay display = GetDisplayForScreenPoint(screenPoint);
+        //Debug.Log(relativeScreenPoint);
+        if (display)
+            return display.GetCameraForScreenPoint(relativeScreenPoint, totalRawResolutionY);
+        else
+            return null;
+    }*/
+
+    private void UpdateResolutionsOnTheFly()
     {
         int trueWidth = Screen.width;
         int trueHeight = Screen.height;
 
-        editorWidthScaler = (float)trueWidth / totalRawResolutionX;
-        editorHeightScaler = (float)trueHeight / totalRawResolutionY;
+        float widthScaler = (float)trueWidth / totalRawResolutionX;
+        float heightScaler = (float)trueHeight / totalRawResolutionY;
 
         foreach (RUISDisplay display in displays)
         {
-            display.resolutionX = (int)(display.resolutionX * editorWidthScaler);
-            display.resolutionY = (int)(display.resolutionY * editorHeightScaler);
+            display.resolutionX = (int)(display.resolutionX * widthScaler);
+            display.resolutionY = (int)(display.resolutionY * heightScaler);
         }
     }
 

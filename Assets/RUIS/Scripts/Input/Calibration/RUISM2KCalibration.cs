@@ -56,8 +56,13 @@ public class RUISM2KCalibration : MonoBehaviour {
     public GameObject floorPlane;
     public GameObject kinectModelObject;
     public GameObject psEyeModelObject;
+    public GUITexture kinectIcon;
+    public GUITexture moveIcon;
 
     public bool usePSMove = true;
+
+    public int resolutionX = 1280;
+    public int resolutionY = 800;
 
     void Awake () {
         currentState = State.Start;
@@ -68,6 +73,8 @@ public class RUISM2KCalibration : MonoBehaviour {
         rawPSMoveSamples = new List<Vector3>();
         psMoveSamples = new List<Vector3>();
         kinectSamples = new List<Vector3>();
+
+        Screen.SetResolution(resolutionX, resolutionY, Screen.fullScreen);
 	}
 
     void Start()
@@ -164,6 +171,7 @@ public class RUISM2KCalibration : MonoBehaviour {
         else
         {
             statusText.text = "Calibration of Kinect";
+            moveIcon.gameObject.SetActiveRecursively(false);
         }
     }
 

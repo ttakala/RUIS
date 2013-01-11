@@ -69,7 +69,7 @@ public class RUISSkeletonWand : RUISWand {
 
     public void OnGUI()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking) return;
+        /*if (!skeletonManager.skeletons[playerId].isTracking) return;
 
         float gestureProgress = gestureRecognizer.GetGestureProgress();
 
@@ -86,6 +86,7 @@ public class RUISSkeletonWand : RUISWand {
                 GUI.DrawTexture(new Rect(screenPoint.x - visualizerWidth / 2, screenPoint.y - visualizerHeight / 2, visualizerWidth, visualizerHeight), selectionVisualizers[selectionVisualizerIndex]);
             }
         }
+         */
     }
 
     public override bool SelectionButtonWasPressed()

@@ -74,8 +74,6 @@ Assets/RUIS/Resources/RUIS/Graphics/Materials/DefaultSelectionMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/MoveCalibrationCubeMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/SelectionRayMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/test_texture.mat -text
-Assets/RUIS/Resources/RUIS/Graphics/PSEyePlaceholder.pdn -text
-Assets/RUIS/Resources/RUIS/Graphics/PSEyePlaceholder.png -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer.pdn -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer1.png -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer2.png -text
@@ -87,6 +85,7 @@ Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer7.png -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer8.png -text
 Assets/RUIS/Resources/RUIS/Graphics/test_texture.png -text
 Assets/RUIS/Resources/RUIS/Models/Kinect/kinect.png -text
+Assets/RUIS/Resources/RUIS/Models/Kinect/kinect_icon.pdn -text
 Assets/RUIS/Resources/RUIS/Models/Kinect/kinect_icon.png -text
 Assets/RUIS/Resources/RUIS/Models/PS[!!-~]Eye/PSEYE.png -text
 Assets/RUIS/Resources/RUIS/Models/Skeleton/Materials/No[!!-~]Name.mat -text
@@ -110,8 +109,6 @@ Assets/RUIS/Resources/RUIS/Prefabs/Main[!!-~]RUIS/RUISDisplay.prefab -text
 Assets/RUIS/Resources/RUIS/Prefabs/Main[!!-~]RUIS/Skeleton.prefab -text
 Assets/RUIS/Resources/RUIS/Prefabs/Main[!!-~]RUIS/StereoCamera.prefab -text
 Assets/RUIS/Scenes/calibration.unity -text
-Assets/RUIS/Scenes/main.unity -text
-Assets/RUIS/Scenes/rotationtest.unity -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/3rd[!!-~]Person[!!-~]Controller.prefab -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/First[!!-~]Person[!!-~]Controller.prefab -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/PrototypeCharacter/Constructor.FBX -text
@@ -231,6 +228,7 @@ Library/cache/4d/4d975d3d02ba29549aa50aede12287d5 -text
 Library/cache/4e/4ee4b0a5b25363343844f6492ba44786 -text
 Library/cache/4f/4f2e122d91761fc4d835ced7a94e3874 -text
 Library/cache/4f/4f6890d2b32865c429c3122745ef070f -text
+Library/cache/4f/4fb7adfa15d72d2408194a64dffb1611 -text
 Library/cache/52/52c733ae498619048aef118d8a162f26 -text
 Library/cache/52/52ebe2e9f656b7f43b56246027429c2f -text
 Library/cache/53/531c14f8d5cdc4e5baa83ee6e16f783a -text
@@ -283,6 +281,7 @@ Library/cache/92/9228c188c10536d4e84a659ee1870072 -text
 Library/cache/92/9244d7b4f78374c43820db87b01e35a3 -text
 Library/cache/93/9370708b4cd86ce49b46babb8d7951c9 -text
 Library/cache/93/93bd7be59c73d74428f056a7904200ea -text
+Library/cache/94/94d1a4d86a04fc44bb90b1c0ebf2a49a -text
 Library/cache/95/951b89cecf0f4ea4bbaa1d67da80663d -text
 Library/cache/95/95ae3a9e4f3bff3479088f474425bebc -text
 Library/cache/96/96fe26bd7a47079498c05371e31517db -text
@@ -298,10 +297,8 @@ Library/cache/a1/a1e68c11aef429342bb01cdf1f7a7584 -text
 Library/cache/a2/a2501e8b35427754c8ee42919d0a002e -text
 Library/cache/a2/a2b280fd080b5f54286339e62b4bb78f -text
 Library/cache/a2/a2da16ffb48d06b42a51eb98e3f8f5db -text
-Library/cache/a6/a61ace3e41b0dd348a72c797ba1c9030 -text
 Library/cache/a7/a7b03fbead1e67a4cbb2ae1a759c7c20 -text
 Library/cache/a8/a806c25d34374854e83bdf44f07f3762 -text
-Library/cache/aa/aa18314310d0c5d4cb5bead7da1cdc02 -text
 Library/cache/aa/aa80931bd7ab78e4a8fe6d86c85f83aa -text
 Library/cache/ac/ac8f9cb0a3536804a83e11729e6a5252 -text
 Library/cache/ad/ad050dcd317a5eb4fa3d7f888c1c0b74 -text
@@ -309,6 +306,7 @@ Library/cache/b0/b020d87c51172ec4db943d84c5499b92 -text
 Library/cache/b1/b1510208da0e49e4ebcdbbc631fa29dd -text
 Library/cache/b1/b1af08926c7e0c34192ca37d5e117fa7 -text
 Library/cache/b2/b2330421b82a88a4d94454f741370eb5 -text
+Library/cache/b2/b2acc9eabbd9c784683c88f0eccb4e44 -text
 Library/cache/b2/b2cef4ba7bd2ad64d9172dfddd77ba25 -text
 Library/cache/b3/b365e6042890d4b1987423ed6bb8a08c -text
 Library/cache/b3/b377b4e4326528649bba1ef58d00bad4 -text
@@ -333,7 +331,6 @@ Library/cache/c5/c57b540354c983e43a9ce1934e0848ad -text
 Library/cache/c5/c594dcd6598b89b4d9a74152c2aaea77 -text
 Library/cache/c5/c5ab91ef4dc389e4093066e3e630e788 -text
 Library/cache/c5/c5d89d70136f83f47a4e537af89495d1 -text
-Library/cache/c7/c71a27ae15409164cba0a7f4b1031368 -text
 Library/cache/c8/c81df2918c80c054ca3d436e62090893 -text
 Library/cache/ca/ca2389caf997ce644be12a7e2648df17 -text
 Library/cache/ca/cab97e1efe2d6594980b10069a7ed975 -text
@@ -355,7 +352,6 @@ Library/cache/de/de494c11653e6bb409485c4cc41c787a -text
 Library/cache/de/de644bc516d770d45a123932d8766a95 -text
 Library/cache/df/dfec25c881aaf5e4abe40542cd327082 -text
 Library/cache/e0/e061ad6ae1e4a4d478c261b268ab5670 -text
-Library/cache/e1/e1dd7afbf63eabc4b982de7dc50d56e7 -text
 Library/cache/e3/e3174ae8362af1d40ac3fa342fd61303 -text
 Library/cache/e3/e3c3b9d542f99e24c81b33d84e080262 -text
 Library/cache/e4/e467bf48ddc629c44bfd826109b344d9 -text
@@ -366,7 +362,6 @@ Library/cache/e5/e5d2e82c2c0c8c043be5c3922421cff9 -text
 Library/cache/e6/e67cb20ccd0238240b1ae4050f9e5e5f -text
 Library/cache/e8/e815f0a8fcf2660468746ac2193df6bb -text
 Library/cache/e8/e828f8ea51bf8514f82a7faf40c1b7bd -text
-Library/cache/e8/e8964dcf7c3dcfd4282c55be59329b29 -text
 Library/cache/e9/e973263360315ef49953143c6bd5d536 -text
 Library/cache/e9/e996180dac2f0ad498556f7ec8051d9f -text
 Library/cache/ed/edfc3dd7e86ac294a8829596e0428f20 -text
@@ -380,6 +375,7 @@ Library/cache/f6/f6e5400de4dcb5f4c8239e5affa5210e -text
 Library/cache/f7/f781c091d1c8647c380d5230adfaee54 -text
 Library/cache/f8/f89f8a7d7dac6f14d8e33be7c1501ef4 -text
 Library/cache/f9/f9539f3975af37647a5b2fb1fb29504b -text
+Library/cache/f9/f9f7b84e3e3448740a271fa81471c3f3 -text
 Library/cache/fd/fd3abf3eb1fba9a419cfaa4ca87a4507 -text
 Library/cache/fd/fde95a1d4f9fe9a4199c89dde4e8b07e -text
 Library/cache/ff/ff91db6ab04741a4fb1434d6dd8479c3 -text
@@ -505,6 +501,7 @@ Library/metadata/4e/4e1b3df63b0df444c9d5d1e85087f541 -text
 Library/metadata/4e/4ee4b0a5b25363343844f6492ba44786 -text
 Library/metadata/4f/4f2e122d91761fc4d835ced7a94e3874 -text
 Library/metadata/4f/4f6890d2b32865c429c3122745ef070f -text
+Library/metadata/4f/4fb7adfa15d72d2408194a64dffb1611 -text
 Library/metadata/50/506c0085727fa7a47a749e5c27c65db2 -text
 Library/metadata/52/52c733ae498619048aef118d8a162f26 -text
 Library/metadata/52/52ebe2e9f656b7f43b56246027429c2f -text
@@ -582,6 +579,7 @@ Library/metadata/92/9228c188c10536d4e84a659ee1870072 -text
 Library/metadata/92/9244d7b4f78374c43820db87b01e35a3 -text
 Library/metadata/93/9370708b4cd86ce49b46babb8d7951c9 -text
 Library/metadata/93/93bd7be59c73d74428f056a7904200ea -text
+Library/metadata/94/94d1a4d86a04fc44bb90b1c0ebf2a49a -text
 Library/metadata/95/951b89cecf0f4ea4bbaa1d67da80663d -text
 Library/metadata/95/95ae3a9e4f3bff3479088f474425bebc -text
 Library/metadata/96/96fe26bd7a47079498c05371e31517db -text
@@ -603,11 +601,9 @@ Library/metadata/a2/a2501e8b35427754c8ee42919d0a002e -text
 Library/metadata/a2/a2b280fd080b5f54286339e62b4bb78f -text
 Library/metadata/a2/a2da16ffb48d06b42a51eb98e3f8f5db -text
 Library/metadata/a3/a3373d3fd9cfee844994b9a0a29a2e2d -text
-Library/metadata/a6/a61ace3e41b0dd348a72c797ba1c9030 -text
 Library/metadata/a6/a6fb2105c5a400d48b28da700224b52b -text
 Library/metadata/a7/a7b03fbead1e67a4cbb2ae1a759c7c20 -text
 Library/metadata/a8/a806c25d34374854e83bdf44f07f3762 -text
-Library/metadata/aa/aa18314310d0c5d4cb5bead7da1cdc02 -text
 Library/metadata/aa/aa80931bd7ab78e4a8fe6d86c85f83aa -text
 Library/metadata/ac/ac8f9cb0a3536804a83e11729e6a5252 -text
 Library/metadata/ad/ad050dcd317a5eb4fa3d7f888c1c0b74 -text
@@ -617,6 +613,7 @@ Library/metadata/b0/b020d87c51172ec4db943d84c5499b92 -text
 Library/metadata/b1/b1510208da0e49e4ebcdbbc631fa29dd -text
 Library/metadata/b1/b1af08926c7e0c34192ca37d5e117fa7 -text
 Library/metadata/b2/b2330421b82a88a4d94454f741370eb5 -text
+Library/metadata/b2/b2acc9eabbd9c784683c88f0eccb4e44 -text
 Library/metadata/b2/b2cef4ba7bd2ad64d9172dfddd77ba25 -text
 Library/metadata/b3/b365e6042890d4b1987423ed6bb8a08c -text
 Library/metadata/b3/b377b4e4326528649bba1ef58d00bad4 -text
@@ -648,7 +645,6 @@ Library/metadata/c5/c5ab91ef4dc389e4093066e3e630e788 -text
 Library/metadata/c5/c5d89d70136f83f47a4e537af89495d1 -text
 Library/metadata/c5/c5f6eba508c51da4c81b48cf0fd1b9ad -text
 Library/metadata/c6/c62e55ab32f5eb548bce385cb5619ffc -text
-Library/metadata/c7/c71a27ae15409164cba0a7f4b1031368 -text
 Library/metadata/c8/c81df2918c80c054ca3d436e62090893 -text
 Library/metadata/ca/ca2389caf997ce644be12a7e2648df17 -text
 Library/metadata/ca/ca49380a71a2bb64c830d06bd421b9d1 -text
@@ -678,7 +674,6 @@ Library/metadata/de/de644bc516d770d45a123932d8766a95 -text
 Library/metadata/de/deaba9ef2b552c944a2ab591a44db3f8 -text
 Library/metadata/df/dfec25c881aaf5e4abe40542cd327082 -text
 Library/metadata/e0/e061ad6ae1e4a4d478c261b268ab5670 -text
-Library/metadata/e1/e1dd7afbf63eabc4b982de7dc50d56e7 -text
 Library/metadata/e2/e266585e24afbdf4d985473dc943736c -text
 Library/metadata/e3/e3174ae8362af1d40ac3fa342fd61303 -text
 Library/metadata/e3/e3c3b9d542f99e24c81b33d84e080262 -text
@@ -691,7 +686,6 @@ Library/metadata/e6/e67cb20ccd0238240b1ae4050f9e5e5f -text
 Library/metadata/e7/e7d619f9a9b83d84ab3e7ca615cc4bcd -text
 Library/metadata/e8/e815f0a8fcf2660468746ac2193df6bb -text
 Library/metadata/e8/e828f8ea51bf8514f82a7faf40c1b7bd -text
-Library/metadata/e8/e8964dcf7c3dcfd4282c55be59329b29 -text
 Library/metadata/e8/e8f2bea7c7ed1374ca5abe2687e83f0c -text
 Library/metadata/e9/e973263360315ef49953143c6bd5d536 -text
 Library/metadata/e9/e996180dac2f0ad498556f7ec8051d9f -text
@@ -710,6 +704,7 @@ Library/metadata/f6/f6e5400de4dcb5f4c8239e5affa5210e -text
 Library/metadata/f7/f781c091d1c8647c380d5230adfaee54 -text
 Library/metadata/f8/f89f8a7d7dac6f14d8e33be7c1501ef4 -text
 Library/metadata/f9/f9539f3975af37647a5b2fb1fb29504b -text
+Library/metadata/f9/f9f7b84e3e3448740a271fa81471c3f3 -text
 Library/metadata/fa/fa9ba06454c7a3f4c9830bd191efd90a -text
 Library/metadata/fb/fb003bdbc35eb1f468474642018c3a26 -text
 Library/metadata/fd/fd3abf3eb1fba9a419cfaa4ca87a4507 -text
@@ -804,6 +799,7 @@ Library/previews/4d/4d024cf8e3a8c1a4bac42ecccb59a4a8_/100036 -text
 Library/previews/4d/4d024cf8e3a8c1a4bac42ecccb59a4a8_/100038 -text
 Library/previews/4d/4d024cf8e3a8c1a4bac42ecccb59a4a8_/100042 -text
 Library/previews/4f/4f6890d2b32865c429c3122745ef070f -text
+Library/previews/4f/4fb7adfa15d72d2408194a64dffb1611 -text
 Library/previews/50/506c0085727fa7a47a749e5c27c65db2 -text
 Library/previews/57/57c048b4096536246aa39319d227aabb -text
 Library/previews/59/592098c6b6f099a449bda0d6b237fdd0 -text
@@ -836,7 +832,6 @@ Library/previews/9a/9aeb8386bbfecf248ae6f02fa1ca4952_/100002 -text
 Library/previews/9d/9d4133d5d30b644bd87802a347eaccbe -text
 Library/previews/9d/9d4133d5d30b644bd87802a347eaccbe_/100000 -text
 Library/previews/9d/9d4133d5d30b644bd87802a347eaccbe_/100004 -text
-Library/previews/a6/a61ace3e41b0dd348a72c797ba1c9030 -text
 Library/previews/a6/a6fb2105c5a400d48b28da700224b52b -text
 Library/previews/a8/a806c25d34374854e83bdf44f07f3762 -text
 Library/previews/af/af3d0ff7852e3724e8359efc1fe5ef75 -text
@@ -869,43 +864,6 @@ Library/previews/e6/e67cb20ccd0238240b1ae4050f9e5e5f -text
 Library/previews/e7/e7d619f9a9b83d84ab3e7ca615cc4bcd -text
 Library/previews/eb/eb967e0e8c83cf743bcf736063dac9c7 -text
 Library/previews/fa/fa9ba06454c7a3f4c9830bd191efd90a -text
-Models/Examples/bat.blend -text
-Models/Examples/racket.blend -text
-Models/Examples/racket.blend1 -text
-Models/Examples/racket.blend2 -text
-Models/Skeleton/arm.blend -text
-Models/Skeleton/arm.blend1 -text
-Models/Skeleton/arm.blend2 -text
-Models/Skeleton/foot.blend -text
-Models/Skeleton/foot.blend1 -text
-Models/Skeleton/foot.blend2 -text
-Models/Skeleton/forearm.blend -text
-Models/Skeleton/forearm.blend1 -text
-Models/Skeleton/forearm.blend2 -text
-Models/Skeleton/head.blend -text
-Models/Skeleton/head.blend1 -text
-Models/Skeleton/head.blend2 -text
-Models/Skeleton/head.fbx -text
-Models/Skeleton/lefthand.blend -text
-Models/Skeleton/lefthand.blend1 -text
-Models/Skeleton/lefthand.blend2 -text
-Models/Skeleton/righthand.blend -text
-Models/Skeleton/righthand.blend1 -text
-Models/Skeleton/righthand.blend2 -text
-Models/Skeleton/shin.blend -text
-Models/Skeleton/shin.blend1 -text
-Models/Skeleton/shin.blend2 -text
-Models/Skeleton/thigh.blend -text
-Models/Skeleton/thigh.blend1 -text
-Models/Skeleton/thigh.blend2 -text
-Models/Skeleton/torso.blend -text
-Models/Skeleton/torso.blend1 -text
-Models/Skeleton/torso.blend2 -text
-Models/kinect.blend -text
-Models/kinect.obj -text
-Models/wand.blend -text
-Models/wand.blend1 -text
-Models/wand.blend2 -text
 /PSMove.unitypackage -text
 ProjectSettings/AudioManager.asset -text
 ProjectSettings/DynamicsManager.asset -text

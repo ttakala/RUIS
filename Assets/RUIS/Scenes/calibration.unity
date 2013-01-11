@@ -735,7 +735,7 @@ GameObject:
   - 4: {fileID: 592665128}
   - 131: {fileID: 592665129}
   m_Layer: 1
-  m_Name: PS Move
+  m_Name: PS Move Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -748,10 +748,10 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 592665127}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .289999992, y: .629999995, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 1}
   m_Children: []
-  m_Father: {fileID: 1151083955}
+  m_Father: {fileID: 1951725780}
 --- !u!131 &592665129
 GUITexture:
   m_ObjectHideFlags: 0
@@ -759,14 +759,14 @@ GUITexture:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 592665127}
   m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: a61ace3e41b0dd348a72c797ba1c9030, type: 1}
+  m_Texture: {fileID: 2800000, guid: 4fb7adfa15d72d2408194a64dffb1611, type: 1}
   m_Color: {r: .597014904, g: .597014904, b: .597014904, a: .501960814}
   m_PixelInset:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 100
-    height: 100
+    x: 110
+    y: 10
+    width: 70
+    height: 70
   m_LeftBorder: 0
   m_RightBorder: 0
   m_TopBorder: 0
@@ -926,7 +926,7 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   coordinateSystem: {fileID: 0}
-  whereToCopyColor: {fileID: 2100000, guid: 22997c885540a6442acc0c2274c40c68, type: 2}
+  whereToCopyColor: {fileID: 0}
 --- !u!1 &678814899
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,7 +1032,7 @@ Prefab:
     - target: {fileID: 11400000, guid: 364f944ed733aed4e85da36d8c07dab2, type: 2}
       propertyPath: whereToCopyColor
       value: 
-      objectReference: {fileID: 2100000, guid: 22997c885540a6442acc0c2274c40c68, type: 2}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 364f944ed733aed4e85da36d8c07dab2, type: 2}
   m_RootGameObject: {fileID: 658037520}
@@ -1080,7 +1080,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &829980329
 Transform:
   m_ObjectHideFlags: 0
@@ -1098,7 +1098,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 829980328}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f2e122d91761fc4d835ced7a94e3874, type: 1}
   m_Name: 
@@ -1465,7 +1465,7 @@ GUIText:
   m_TabSize: 4
   m_Font: {fileID: 12800000, guid: cab97e1efe2d6594980b10069a7ed975, type: 1}
   m_Material: {fileID: 2100000, guid: cab97e1efe2d6594980b10069a7ed975, type: 1}
-  m_FontSize: 30
+  m_FontSize: 20
   m_FontStyle: 0
   m_PixelCorrect: 1
 --- !u!114 &996223846
@@ -1556,10 +1556,10 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1040817633}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.300000012, y: .0299999993, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 1}
   m_Children: []
-  m_Father: {fileID: 1151083955}
+  m_Father: {fileID: 1951725780}
 --- !u!131 &1040817635
 GUITexture:
   m_ObjectHideFlags: 0
@@ -1571,10 +1571,10 @@ GUITexture:
   m_Color: {r: .597014904, g: .597014904, b: .597014904, a: .501960814}
   m_PixelInset:
     serializedVersion: 2
-    x: 128
-    y: 128
-    width: 256
-    height: 256
+    x: 20
+    y: 10
+    width: 70
+    height: 70
   m_LeftBorder: 0
   m_RightBorder: 0
   m_TopBorder: 0
@@ -1838,8 +1838,6 @@ Transform:
   - {fileID: 39981861}
   - {fileID: 1964078571}
   - {fileID: 1563402797}
-  - {fileID: 1040817634}
-  - {fileID: 592665128}
   - {fileID: 829980329}
   m_Father: {fileID: 0}
 --- !u!1 &1151783614
@@ -2612,7 +2610,7 @@ GUIText:
   m_TabSize: 4
   m_Font: {fileID: 12800000, guid: cab97e1efe2d6594980b10069a7ed975, type: 1}
   m_Material: {fileID: 2100000, guid: cab97e1efe2d6594980b10069a7ed975, type: 1}
-  m_FontSize: 30
+  m_FontSize: 23
   m_FontStyle: 0
   m_PixelCorrect: 1
 --- !u!1 &1736563028
@@ -2905,6 +2903,8 @@ Transform:
   m_Children:
   - {fileID: 887687670}
   - {fileID: 838978608}
+  - {fileID: 1040817634}
+  - {fileID: 592665128}
   - {fileID: 1731472546}
   - {fileID: 5806956}
   - {fileID: 996223844}
@@ -2925,14 +2925,18 @@ MonoBehaviour:
   calibrationSphere: {fileID: 100000, guid: 1f41274c93d59074eaa3d7a1a929adaa, type: 2}
   calibrationCube: {fileID: 100000, guid: 506c0085727fa7a47a749e5c27c65db2, type: 2}
   coordinateSystem: {fileID: 1951725785}
-  moveController: {fileID: 0}
+  moveController: {fileID: 658037526}
   xmlFilename: calibration.xml
   calibrationGameObjects: {fileID: 1151083954}
   calibrationReviewGameObjects: {fileID: 1681865921}
   floorPlane: {fileID: 462445544}
   kinectModelObject: {fileID: 838978607}
   psEyeModelObject: {fileID: 78422529}
+  kinectIcon: {fileID: 1040817635}
+  moveIcon: {fileID: 592665129}
   usePSMove: 1
+  resolutionX: 1280
+  resolutionY: 800
 --- !u!114 &1951725782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2944,7 +2948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ee4b0a5b25363343844f6492ba44786, type: 1}
   m_Name: 
   m_contextManager: {fileID: 0}
-  m_MaxNumberOfPlayers: 2
+  m_MaxNumberOfPlayers: 1
   m_numRetries: 0
   m_maxAllowedDistance: 100000
   m_failurePenalty: 10000
@@ -3054,7 +3058,6 @@ MonoBehaviour:
   coordinateXmlFile: calibration.xml
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 1}
   loadFromXML: 1
-  kinectToUnityScale: .00100000005
   applyMoveToKinect: 1
   setKinectOriginToFloor: 0
   applyKinectOffset: 0

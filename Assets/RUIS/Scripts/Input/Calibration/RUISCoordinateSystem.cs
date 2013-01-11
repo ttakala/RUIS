@@ -10,7 +10,8 @@ public class RUISCoordinateSystem : MonoBehaviour
     public TextAsset coordinateSchema;
     public bool loadFromXML = true;
 
-    public float kinectToUnityScale = 0.001f;
+    public const float kinectToUnityScale = 0.001f;
+    public const float moveToUnityScale = 0.1f;
 
     public Vector3 kinectFloorNormal { get; private set; }
     private Quaternion kinectFloorRotator = Quaternion.identity;
@@ -193,6 +194,9 @@ public class RUISCoordinateSystem : MonoBehaviour
     {
         //flip the z coordinate to get into unity's coordinate system
         Vector3 newPosition = new Vector3(position.x, position.y, -position.z);
+
+        newPosition *= moveToUnityScale;
+
         newPosition = moveToRUISTransform.MultiplyPoint3x4(newPosition);
 
         if (setKinectOriginToFloor)

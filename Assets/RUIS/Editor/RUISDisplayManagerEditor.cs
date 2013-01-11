@@ -111,7 +111,7 @@ public class RUISDisplayManagerEditor : Editor {
         }
 
         RUISDisplayManager displayManager = target as RUISDisplayManager;
-        displayManager.UpdateTotalResolution();
+        displayManager.CalculateTotalResolution();
         PlayerSettings.defaultScreenWidth = displayManager.totalRawResolutionX;
         PlayerSettings.defaultScreenHeight = displayManager.totalRawResolutionY;
         
