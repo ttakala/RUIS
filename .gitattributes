@@ -29,6 +29,14 @@ Assets/RUIS/Examples/BowlingAlley/Materials/FlagpoleMat.mat -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Material.mat -text
 Assets/RUIS/Examples/BowlingAlley/Materials/No[!!-~]Name.mat -text
 Assets/RUIS/Examples/BowlingAlley/bowlingalley.unity -text
+Assets/RUIS/Examples/Football/Graphics/Football_Player@t-pose_1.fbx -text
+Assets/RUIS/Examples/Football/Graphics/Materials/Football_Player_pittsburg_RED.tga -text
+Assets/RUIS/Examples/Football/Graphics/Materials/bedge_grunge.png -text
+Assets/RUIS/Examples/Football/Graphics/Materials/dark_Tire.pdn -text
+Assets/RUIS/Examples/Football/Graphics/Materials/dark_Tire.png -text
+Assets/RUIS/Examples/Football/Graphics/Materials/straws.png -text
+Assets/RUIS/Examples/Football/Graphics/nasa_hammer.fbx -text
+Assets/RUIS/Examples/Football/Resources/Football_Player@t-pose_1.fbm/Football_Player_pittsburg_white_black_10.tga -text
 Assets/RUIS/Examples/PhysicsScene/Flagpole.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Graphics/Materials/BasicCubeMaterial.mat -text
 Assets/RUIS/Examples/PhysicsScene/Graphics/Materials/FlagpoleMat.mat -text
