@@ -14,8 +14,17 @@ public class RUISCamera : MonoBehaviour {
 
     public RUISDisplay associatedDisplay;
 
+    private Rect normalizedScreenRect;
+    private float aspectRatio;
+
+    private bool oldStereoValue;
+    private RUISDisplay.StereoType oldStereoTypeValue;
+
 	public void Start () {
         centerCamera = camera;
+
+        oldStereoValue = associatedDisplay.isStereo;
+        oldStereoTypeValue = associatedDisplay.stereoType;
 
         if (!leftCamera || !rightCamera)
         {
@@ -26,17 +35,28 @@ public class RUISCamera : MonoBehaviour {
 	}
 	
 	public void Update () {
-        if (associatedDisplay.isStereo)
+        if (oldStereoValue != associatedDisplay.isStereo)
         {
-            centerCamera.enabled = false;
-            leftCamera.enabled = true;
-            rightCamera.enabled = true;
+            if (associatedDisplay.isStereo)
+            {
+                centerCamera.enabled = false;
+                leftCamera.enabled = true;
+                rightCamera.enabled = true;
+            }
+            else
+            {
+                centerCamera.enabled = true;
+                leftCamera.enabled = false;
+                rightCamera.enabled = false;
+            }
+
+            oldStereoValue = associatedDisplay.isStereo;
         }
-        else
+
+        if (oldStereoTypeValue != associatedDisplay.stereoType)
         {
-            centerCamera.enabled = true;
-            leftCamera.enabled = false;
-            rightCamera.enabled = false;
+            SetupCameraViewports(normalizedScreenRect.xMin, normalizedScreenRect.yMin, normalizedScreenRect.width, normalizedScreenRect.height, aspectRatio);
+            oldStereoTypeValue = associatedDisplay.stereoType;
         }
 
         if (isHeadTracking)
@@ -70,7 +90,10 @@ public class RUISCamera : MonoBehaviour {
 
     public void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)
     {
-        centerCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+        normalizedScreenRect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+        this.aspectRatio = aspectRatio;
+
+        centerCamera.rect = normalizedScreenRect;
         centerCamera.aspect = aspectRatio;
 
         if (associatedDisplay.stereoType == RUISDisplay.StereoType.SideBySide)

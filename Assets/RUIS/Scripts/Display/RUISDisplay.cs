@@ -5,8 +5,7 @@ public class RUISDisplay : MonoBehaviour {
     public enum StereoType
     {
         SideBySide,
-        TopAndBottom,
-        Alternate
+        TopAndBottom
     }
 
     public int resolutionX;
