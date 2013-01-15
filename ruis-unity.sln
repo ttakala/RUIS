@@ -9,8 +9,6 @@ Project("{92272307-80F7-C475-1255-341F7632B00E}") = "ruis-unity", "Assembly-CSha
 EndProject
 Project("{92272307-80F7-C475-1255-341F7632B00E}") = "ruis-unity", "Assembly-UnityScript-firstpass.unityproj", "{FF430300-3BFD-84B0-C0F7-25BB783874D9}"
 EndProject
-Project("{92272307-80F7-C475-1255-341F7632B00E}") = "ruis-unity", "Assembly-UnityScript.unityproj", "{FA52C0AB-B3D9-7746-D1DB-A4F3AF35E2EC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,15 +31,11 @@ Global
 		{FF430300-3BFD-84B0-C0F7-25BB783874D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF430300-3BFD-84B0-C0F7-25BB783874D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF430300-3BFD-84B0-C0F7-25BB783874D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA52C0AB-B3D9-7746-D1DB-A4F3AF35E2EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA52C0AB-B3D9-7746-D1DB-A4F3AF35E2EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA52C0AB-B3D9-7746-D1DB-A4F3AF35E2EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA52C0AB-B3D9-7746-D1DB-A4F3AF35E2EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-			GlobalSection(MonoDevelopProperties) = preSolution
+								GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
