@@ -23,8 +23,8 @@ public class RUISCamera : MonoBehaviour {
 	public void Start () {
         centerCamera = camera;
 
-        oldStereoValue = associatedDisplay.isStereo;
-        oldStereoTypeValue = associatedDisplay.stereoType;
+        UpdateStereo();
+        UpdateStereoType();
 
         if (!leftCamera || !rightCamera)
         {
@@ -37,26 +37,12 @@ public class RUISCamera : MonoBehaviour {
 	public void Update () {
         if (oldStereoValue != associatedDisplay.isStereo)
         {
-            if (associatedDisplay.isStereo)
-            {
-                centerCamera.enabled = false;
-                leftCamera.enabled = true;
-                rightCamera.enabled = true;
-            }
-            else
-            {
-                centerCamera.enabled = true;
-                leftCamera.enabled = false;
-                rightCamera.enabled = false;
-            }
-
-            oldStereoValue = associatedDisplay.isStereo;
+            UpdateStereo();
         }
 
         if (oldStereoTypeValue != associatedDisplay.stereoType)
         {
-            SetupCameraViewports(normalizedScreenRect.xMin, normalizedScreenRect.yMin, normalizedScreenRect.width, normalizedScreenRect.height, aspectRatio);
-            oldStereoTypeValue = associatedDisplay.stereoType;
+            UpdateStereoType();
         }
 
         if (isHeadTracking)
@@ -129,5 +115,29 @@ public class RUISCamera : MonoBehaviour {
             rightCamera.transform.localRotation = Quaternion.Euler(-rotation);
             leftCamera.transform.localRotation = Quaternion.Euler(rotation);
         }
+    }
+
+    private void UpdateStereo()
+    {
+        if (associatedDisplay.isStereo)
+        {
+            centerCamera.enabled = false;
+            leftCamera.enabled = true;
+            rightCamera.enabled = true;
+        }
+        else
+        {
+            centerCamera.enabled = true;
+            leftCamera.enabled = false;
+            rightCamera.enabled = false;
+        }
+
+        oldStereoValue = associatedDisplay.isStereo;
+    }
+
+    private void UpdateStereoType()
+    {
+        SetupCameraViewports(normalizedScreenRect.xMin, normalizedScreenRect.yMin, normalizedScreenRect.width, normalizedScreenRect.height, aspectRatio);
+        oldStereoTypeValue = associatedDisplay.stereoType;
     }
 }

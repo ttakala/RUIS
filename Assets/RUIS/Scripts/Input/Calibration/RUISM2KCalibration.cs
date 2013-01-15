@@ -64,6 +64,9 @@ public class RUISM2KCalibration : MonoBehaviour {
     public int resolutionX = 1280;
     public int resolutionY = 800;
 
+    public string psMoveIP;
+    public int psMovePort;
+
     void Awake () {
         currentState = State.Start;
         psMoveWrapper = GetComponent<PSMoveWrapper>();
@@ -81,7 +84,14 @@ public class RUISM2KCalibration : MonoBehaviour {
     {
         if (usePSMove)
         {
-            psMoveWrapper.Connect();
+            RUISMenu ruisMenu = FindObjectOfType(typeof(RUISMenu)) as RUISMenu;
+            if (ruisMenu)
+            {
+                psMoveIP = ruisMenu.psMoveIP;
+                psMovePort = ruisMenu.psMovePort;
+            }
+
+            psMoveWrapper.Connect(psMoveIP, psMovePort);
 
             psMoveWrapper.CameraFrameResume(4);
         }

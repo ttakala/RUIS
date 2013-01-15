@@ -14,6 +14,9 @@ public class RUISMenu : MonoBehaviour {
     bool isCalibrating = false;
     int previousSceneId = -1;
 
+    [HideInInspector] public string psMoveIP;
+    [HideInInspector] public int psMovePort;
+
 	// Use this for initialization
 	void Start () {
         DontDestroyOnLoad(this);
@@ -26,6 +29,10 @@ public class RUISMenu : MonoBehaviour {
         {
             ruisMenuButtonDefined = false;
         }
+
+        RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+        psMoveIP = inputManager.PSMoveIP;
+        psMovePort = inputManager.PSMovePort;
 	}
 
     void Update()
