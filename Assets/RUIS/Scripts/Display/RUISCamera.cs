@@ -21,6 +21,11 @@ public class RUISCamera : MonoBehaviour {
     private RUISDisplay.StereoType oldStereoTypeValue;
 
 	public void Start () {
+        if (!associatedDisplay)
+        {
+            return;
+        }
+
         centerCamera = camera;
 
         UpdateStereo();

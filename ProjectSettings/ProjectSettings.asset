@@ -13,8 +13,8 @@ PlayerSettings:
   companyName: Aalto University
   productName: RUIS
   AndroidLicensePublicKey: 
-  defaultScreenWidth: 1280
-  defaultScreenHeight: 720
+  defaultScreenWidth: 3840
+  defaultScreenHeight: 1080
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_RenderingPath: 1

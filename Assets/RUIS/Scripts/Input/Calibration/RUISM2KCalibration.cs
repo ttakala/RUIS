@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using CSML;
 
@@ -91,6 +92,7 @@ public class RUISM2KCalibration : MonoBehaviour {
                 psMovePort = ruisMenu.psMovePort;
             }
 
+            StartCoroutine("CheckForMoveConnection");
             psMoveWrapper.Connect(psMoveIP, psMovePort);
 
             psMoveWrapper.CameraFrameResume(4);
@@ -481,6 +483,15 @@ public class RUISM2KCalibration : MonoBehaviour {
         {
             calibrationReviewGameObjects.SetActiveRecursively(false);
             calibrationGameObjects.SetActiveRecursively(true);
+        }
+    }
+
+    private IEnumerator CheckForMoveConnection()
+    {
+        yield return new WaitForSeconds(5.0f);
+        if (!psMoveWrapper.isConnected)
+        {
+            Debug.LogError("Could not connect to PS Move server at: " + psMoveIP + ":" + psMovePort);
         }
     }
 }

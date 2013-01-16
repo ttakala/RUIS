@@ -33,10 +33,13 @@ public class RUISInputManager : MonoBehaviour
 
             if (psMoveWrapper && connectToPSMoveOnStartup)
             {
-                psMoveWrapper.Connect(PSMoveIP, PSMovePort);
-            }
+                StartCoroutine("CheckForMoveConnection");
 
-            psMoveWrapper.enableDefaultInGameCalibrate = enableMoveCalibrationDuringPlay;
+                psMoveWrapper.Connect(PSMoveIP, PSMovePort);
+
+                psMoveWrapper.enableDefaultInGameCalibrate = enableMoveCalibrationDuringPlay;
+
+            }
 
             //disable all controllers that shouldn't be connected
             foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
@@ -116,5 +119,14 @@ public class RUISInputManager : MonoBehaviour
 
 
         return true;
+    }
+
+    private IEnumerator CheckForMoveConnection()
+    {
+        yield return new WaitForSeconds(5.0f);
+        if (!psMoveWrapper.isConnected)
+        {
+            Debug.LogError("Could not connect to PS Move server at: " + PSMoveIP + ":" + PSMovePort);
+        }
     }
 }
