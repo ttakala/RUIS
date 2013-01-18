@@ -72,6 +72,17 @@ public class RUISInputManager : MonoBehaviour
         } 
     }
 
+    void Start()
+    {
+        //check whether the kinect camera is actually connected
+        OpenNISettingsManager settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
+        if (settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid) 
+        {
+            Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
+            BroadcastMessage("KinectNotConnected", SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
     public void OnApplicationQuit()
     {
         if(enablePSMove && psMoveWrapper && psMoveWrapper.isConnected)
