@@ -1027,9 +1027,9 @@ Transform:
   - {fileID: 664006733}
   - {fileID: 1287815135}
   - {fileID: 233382858}
-  - {fileID: 1327345448}
-  - {fileID: 1890760949}
   - {fileID: 886166537}
+  - {fileID: 1890760949}
+  - {fileID: 1327345448}
   m_Father: {fileID: 0}
 --- !u!1 &118030259
 GameObject:
