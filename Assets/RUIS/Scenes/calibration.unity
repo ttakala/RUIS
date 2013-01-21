@@ -318,7 +318,7 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1951725780}
     m_Modifications:
     - target: {fileID: 400000, guid: fb003bdbc35eb1f468474642018c3a26, type: 2}
       propertyPath: m_LocalPosition.x
@@ -2339,9 +2339,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 201dfe808b6332a48ae2b046739d106c, type: 1}
   m_Name: 
-  playerSelection: {fileID: 1951725782}
+  playerSelection: {fileID: 0}
   depthMapColor: {r: 1, g: 0, b: 0, a: 0}
   factor: 4
+  update: 1
 --- !u!1 &1570582882
 GameObject:
   m_ObjectHideFlags: 0
@@ -2350,6 +2351,8 @@ GameObject:
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 1570582883}
+  - 114: {fileID: 1570582884}
+  - 114: {fileID: 1570582885}
   m_Layer: 0
   m_Name: OpenNISettings
   m_TagString: Untagged
@@ -2370,7 +2373,35 @@ Transform:
   - {fileID: 1672110134}
   - {fileID: 1319481519}
   - {fileID: 1058547265}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1951725780}
+--- !u!114 &1570582884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1570582882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee4b0a5b25363343844f6492ba44786, type: 1}
+  m_Name: 
+  m_contextManager: {fileID: 0}
+  m_MaxNumberOfPlayers: 1
+  m_numRetries: 0
+  m_maxAllowedDistance: 100000
+  m_failurePenalty: 10000
+  m_minCOMChangeForFailure: 200
+  m_hysteresis: 100
+--- !u!114 &1570582885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1570582882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 1}
+  m_Name: 
+  rootSpeedScaling: {x: 1, y: 1, z: 1}
 --- !u!1 &1619936850
 GameObject:
   m_ObjectHideFlags: 0
@@ -2825,7 +2856,7 @@ Prefab:
     - target: {fileID: 11400000, guid: 26fb1af95c8dcf446ad45be1b7cf29b6, type: 2}
       propertyPath: playerSelector
       value: 
-      objectReference: {fileID: 1951725782}
+      objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 26fb1af95c8dcf446ad45be1b7cf29b6, type: 2}
       propertyPath: coordinateSystem
       value: 
@@ -2879,11 +2910,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 1951725780}
   - 114: {fileID: 1951725781}
-  - 114: {fileID: 1951725782}
   - 114: {fileID: 1951725783}
   - 120: {fileID: 1951725784}
   - 114: {fileID: 1951725785}
-  - 114: {fileID: 1951725786}
   m_Layer: 0
   m_Name: Calibration
   m_TagString: Untagged
@@ -2904,6 +2933,7 @@ Transform:
   - {fileID: 887687670}
   - {fileID: 838978608}
   - {fileID: 1040817634}
+  - {fileID: 1570582883}
   - {fileID: 592665128}
   - {fileID: 1731472546}
   - {fileID: 5806956}
@@ -2939,23 +2969,7 @@ MonoBehaviour:
   resolutionY: 800
   psMoveIP: 130.233.46.224
   psMovePort: 7899
---- !u!114 &1951725782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1951725779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ee4b0a5b25363343844f6492ba44786, type: 1}
-  m_Name: 
-  m_contextManager: {fileID: 0}
-  m_MaxNumberOfPlayers: 1
-  m_numRetries: 0
-  m_maxAllowedDistance: 100000
-  m_failurePenalty: 10000
-  m_minCOMChangeForFailure: 200
-  m_hysteresis: 100
+  userViewer: {fileID: 1563402798}
 --- !u!114 &1951725783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3064,17 +3078,6 @@ MonoBehaviour:
   setKinectOriginToFloor: 0
   applyKinectOffset: 0
   kinectOffset: {x: 0, y: 0, z: 0}
---- !u!114 &1951725786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1951725779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 1}
-  m_Name: 
-  rootSpeedScaling: {x: 1, y: 1, z: 1}
 --- !u!1 &1964078570
 GameObject:
   m_ObjectHideFlags: 0

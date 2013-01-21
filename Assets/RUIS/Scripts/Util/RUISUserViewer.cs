@@ -22,15 +22,18 @@ public class RUISUserViewer : MonoBehaviour {
     public Color depthMapColor;
     public int factor = 4;
 
+    public bool update = true;
+
 	void Start () {
         settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
-        depthGenerator = new OpenNI.DepthGenerator(settingsManager.CurrentContext.BasicContext);
 
-        if (settingsManager.CurrentContext.Depth == null)
+        if (!settingsManager.UserGenrator.Valid || settingsManager.CurrentContext.Depth == null)
         {
-            this.gameObject.SetActiveRecursively(false);
+            update = false;
             return;
         }
+
+        depthGenerator = new OpenNI.DepthGenerator(settingsManager.CurrentContext.BasicContext);        
 
         OpenNI.MapOutputMode mapOutputMode = settingsManager.CurrentContext.Depth.MapOutputMode;
         width = mapOutputMode.XRes / factor;
@@ -47,6 +50,7 @@ public class RUISUserViewer : MonoBehaviour {
 	}
 	
 	void Update () {
+        if (!update) return;
 
         settingsManager.CurrentContext.Depth.GetMetaData(metaData);
 
@@ -86,6 +90,8 @@ public class RUISUserViewer : MonoBehaviour {
 
     void OnGUI()
     {
+        if (!update) return;
+
         GUI.DrawTexture(new Rect(0, 0, Screen.width/2, Screen.height/2), texture, ScaleMode.StretchToFill, false);
     }
 

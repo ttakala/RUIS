@@ -68,6 +68,10 @@ public class RUISM2KCalibration : MonoBehaviour {
     public string psMoveIP;
     public int psMovePort;
 
+    public RUISUserViewer userViewer;
+
+    private bool kinectAvailable = true;
+
     void Awake () {
         currentState = State.Start;
         psMoveWrapper = GetComponent<PSMoveWrapper>();
@@ -83,6 +87,23 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     void Start()
     {
+
+        OpenNISettingsManager settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
+        if (settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid)
+        {
+            Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
+            kinectAvailable = false;
+            settingsManager.transform.parent.gameObject.SetActiveRecursively(false);
+
+            userViewer.gameObject.SetActiveRecursively(false);
+        }
+        else
+        {
+
+            sceneAnalyzer = new OpenNI.SceneAnalyzer((FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager).CurrentContext.BasicContext);
+            sceneAnalyzer.StartGenerating();
+        }
+
         if (usePSMove)
         {
             RUISMenu ruisMenu = FindObjectOfType(typeof(RUISMenu)) as RUISMenu;
@@ -104,8 +125,6 @@ public class RUISM2KCalibration : MonoBehaviour {
             (FindObjectOfType(typeof(CameraTiltTextUpdater)) as CameraTiltTextUpdater).gameObject.SetActiveRecursively(false);
         }
 
-        sceneAnalyzer = new OpenNI.SceneAnalyzer((FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager).CurrentContext.BasicContext);
-        sceneAnalyzer.StartGenerating();
 
         //moveController.gameObject.SetActiveRecursively(false);
 
@@ -129,6 +148,7 @@ public class RUISM2KCalibration : MonoBehaviour {
         {
             Debug.Log(v);
         }*/
+
     }
 
     void OnDestroy()
@@ -172,20 +192,27 @@ public class RUISM2KCalibration : MonoBehaviour {
     private const float timeToSpendInStart = 4.0f;
     private void DoStart()
     {
-        timeInStart += Time.deltaTime;
-        if (timeInStart >= timeToSpendInStart)
+        if (!kinectAvailable)
         {
-            currentState = State.WaitingForSkeleton;
-        }
-
-        if (usePSMove)
-        {
-            statusText.text = "Calibration of PS Move and Kinect";
+            statusText.text = "Could not connect to Kinect";
         }
         else
         {
-            statusText.text = "Calibration of Kinect";
-            moveIcon.gameObject.SetActiveRecursively(false);
+            timeInStart += Time.deltaTime;
+            if (timeInStart >= timeToSpendInStart)
+            {
+                currentState = State.WaitingForSkeleton;
+            }
+
+            if (usePSMove)
+            {
+                statusText.text = "Calibration of PS Move and Kinect";
+            }
+            else
+            {
+                statusText.text = "Calibration of Kinect";
+                moveIcon.gameObject.SetActiveRecursively(false);
+            }
         }
     }
 
