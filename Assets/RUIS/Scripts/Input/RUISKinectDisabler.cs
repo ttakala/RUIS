@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISKinectDisabler : MonoBehaviour {
-    public void KinectNotConnected()
+    public void KinectNotAvailable()
     {
         gameObject.SetActiveRecursively(false);
     }
