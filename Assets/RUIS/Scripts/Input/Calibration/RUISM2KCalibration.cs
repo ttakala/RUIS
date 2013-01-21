@@ -93,6 +93,8 @@ public class RUISM2KCalibration : MonoBehaviour {
             }
 
             StartCoroutine("CheckForMoveConnection");
+            psMoveWrapper.ipAddress = psMoveIP;
+            psMoveWrapper.port = psMovePort;
             psMoveWrapper.Connect(psMoveIP, psMovePort);
 
             psMoveWrapper.CameraFrameResume(4);

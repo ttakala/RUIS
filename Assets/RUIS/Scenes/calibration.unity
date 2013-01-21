@@ -2937,6 +2937,8 @@ MonoBehaviour:
   usePSMove: 1
   resolutionX: 1280
   resolutionY: 800
+  psMoveIP: 130.233.46.224
+  psMovePort: 7899
 --- !u!114 &1951725782
 MonoBehaviour:
   m_ObjectHideFlags: 0

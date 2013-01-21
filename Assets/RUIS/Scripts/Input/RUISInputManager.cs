@@ -40,35 +40,20 @@ public class RUISInputManager : MonoBehaviour
                 psMoveWrapper.enableDefaultInGameCalibrate = enableMoveCalibrationDuringPlay;
 
             }
-
-            //disable all controllers that shouldn't be connected
-            foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
-            {
-                if (moveController.controllerId >= amountOfPSMoveControllers)
-                {
-                    Debug.LogWarning("Disabling PS Move Controller: " + moveController.name + "... Controller ID was too big!");
-                    moveController.gameObject.SetActiveRecursively(false);
-                }
-            }
         }
         else
         {
             psMoveWrapper.gameObject.SetActiveRecursively(false);
-
-            foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
-            {
-                Debug.LogWarning("Disabling PS Move Controller: " + moveController.name + "... PS Move not enabled in InputManager!");
-                moveController.gameObject.SetActiveRecursively(false);
-            }
         }
+
+        DisableUnneededMoveWands();
 
         if (enableKinect)
         {
         }
         else
         {
-            transform.FindChild("Kinect").gameObject.SetActiveRecursively(false);
-            transform.FindChild("SkeletonManager").gameObject.SetActiveRecursively(false);
+            BroadcastMessage("KinectNotAvailable", SendMessageOptions.DontRequireReceiver);
         } 
     }
 
@@ -79,7 +64,7 @@ public class RUISInputManager : MonoBehaviour
         if (settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid) 
         {
             Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
-            BroadcastMessage("KinectNotConnected", SendMessageOptions.DontRequireReceiver);
+            BroadcastMessage("KinectNotAvailable", SendMessageOptions.DontRequireReceiver);
         }
     }
 
@@ -138,6 +123,28 @@ public class RUISInputManager : MonoBehaviour
         if (!psMoveWrapper.isConnected)
         {
             Debug.LogError("Could not connect to PS Move server at: " + PSMoveIP + ":" + PSMovePort);
+        }
+    }
+
+    private void DisableUnneededMoveWands()
+    {
+        foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
+        {
+            if (!enablePSMove || !psMoveWrapper.isConnected || moveController.controllerId >= amountOfPSMoveControllers)
+            {
+                Debug.LogWarning("Disabling PS Move Controller: " + moveController.name);
+                moveController.enabled = false;
+                RUISWandSelector wandSelector = moveController.GetComponent<RUISWandSelector>();
+                if (wandSelector)
+                {
+                    wandSelector.enabled = false;
+                    LineRenderer lineRenderer = wandSelector.GetComponent<LineRenderer>();
+                    if (lineRenderer)
+                    {
+                        lineRenderer.enabled = false;
+                    }
+                }
+            }
         }
     }
 }

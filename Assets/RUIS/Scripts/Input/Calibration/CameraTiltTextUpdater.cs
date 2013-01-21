@@ -10,9 +10,13 @@ public class CameraTiltTextUpdater : MonoBehaviour {
 	}
 	
 	void Update () {
-        if (psMoveWrapper.state != null)
+        if (psMoveWrapper.isConnected)
         {
             guiText.text = string.Format("PSMove camera pitch angle: {0}", Mathf.Rad2Deg * psMoveWrapper.state.gemStates[0].camera_pitch_angle);
+        }
+        else
+        {
+            guiText.text = string.Format("Unable to connect to Move.Me server at " + psMoveWrapper.ipAddress + ":" + psMoveWrapper.port);
         }
 	}
 }
