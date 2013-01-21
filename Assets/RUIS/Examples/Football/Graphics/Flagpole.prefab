@@ -171,7 +171,6 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 3
   coordinateSystem: {fileID: 0}
-  copyColor: 0
   whereToCopyColor: {fileID: 0}
 --- !u!160 &16000000
 InteractiveCloth:

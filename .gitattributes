@@ -32,6 +32,11 @@ Assets/RUIS/Examples/BowlingAlley/bowlingalley.unity -text
 Assets/RUIS/Examples/Football/Graphics/Football_Player@t-pose_1.fbm/Football_Player_pittsburg_white_black_10.tga -text
 Assets/RUIS/Examples/Football/Graphics/Football_Player@t-pose_1.fbx -text
 Assets/RUIS/Examples/Football/Graphics/Materials/Football_Player_pittsburg_RED.tga -text
+Assets/RUIS/Examples/Football/Graphics/Materials/Materials/aalto.png -text
+Assets/RUIS/Examples/Football/Graphics/Materials/Materials/bedge_grunge.png -text
+Assets/RUIS/Examples/Football/Graphics/Materials/Materials/dark_Tire.pdn -text
+Assets/RUIS/Examples/Football/Graphics/Materials/Materials/dark_Tire.png -text
+Assets/RUIS/Examples/Football/Graphics/Materials/Materials/straws.png -text
 Assets/RUIS/Examples/Football/Graphics/Materials/bedge_grunge.png -text
 Assets/RUIS/Examples/Football/Graphics/Materials/dark_Tire.pdn -text
 Assets/RUIS/Examples/Football/Graphics/Materials/dark_Tire.png -text
@@ -66,11 +71,13 @@ Assets/RUIS/Examples/Football/Graphics/Trees/BigTree_textures/normal_specular.pn
 Assets/RUIS/Examples/Football/Graphics/Trees/BigTree_textures/shadow.png -text
 Assets/RUIS/Examples/Football/Graphics/Trees/BigTree_textures/translucency_gloss.png -text
 Assets/RUIS/Examples/Football/Graphics/books.jpg -text
+Assets/RUIS/Examples/Football/Graphics/flag.blend -text
+Assets/RUIS/Examples/Football/Graphics/flag.png -text
+Assets/RUIS/Examples/Football/Graphics/flag_blender.blend -text
 Assets/RUIS/Examples/Football/Graphics/nasa_hammer.fbx -text
 Assets/RUIS/Examples/Football/Graphics/orientalRug.jpg -text
 Assets/RUIS/Examples/Football/Graphics/skin_box.jpg -text
 Assets/RUIS/Examples/Football/Resources/Football_Player@t-pose_1.fbm/Football_Player_pittsburg_white_black_10.tga -text
-Assets/RUIS/Examples/PhysicsScene/Flagpole.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Graphics/Materials/BasicCubeMaterial.mat -text
 Assets/RUIS/Examples/PhysicsScene/Graphics/Materials/FlagpoleMat.mat -text
 Assets/RUIS/Examples/PhysicsScene/Graphics/Materials/HighlightedCubeMaterial.mat -text
@@ -93,8 +100,6 @@ Assets/RUIS/Examples/PhysicsScene/Graphics/flag.blend -text
 Assets/RUIS/Examples/PhysicsScene/Graphics/flag.png -text
 Assets/RUIS/Examples/PhysicsScene/Graphics/flag_blender.blend -text
 Assets/RUIS/Examples/PhysicsScene/Graphics/nasa_hammer.fbx -text
-Assets/RUIS/Examples/PhysicsScene/Hammer.prefab -text
-Assets/RUIS/Examples/PhysicsScene/PhysicsScene.unity -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/BasicCube.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/Bullet.prefab -text
 Assets/RUIS/Examples/PhysicsScene/Prefabs/Environment.prefab -text
@@ -358,7 +363,6 @@ Library/cache/92/9244d7b4f78374c43820db87b01e35a3 -text
 Library/cache/93/9370708b4cd86ce49b46babb8d7951c9 -text
 Library/cache/93/93bd7be59c73d74428f056a7904200ea -text
 Library/cache/94/94d1a4d86a04fc44bb90b1c0ebf2a49a -text
-Library/cache/95/951b89cecf0f4ea4bbaa1d67da80663d -text
 Library/cache/95/95ae3a9e4f3bff3479088f474425bebc -text
 Library/cache/96/96b209bcf657ce547ad4b4d913d34224 -text
 Library/cache/96/96fe26bd7a47079498c05371e31517db -text
@@ -448,13 +452,13 @@ Library/cache/e0/e061ad6ae1e4a4d478c261b268ab5670 -text
 Library/cache/e2/e2d464a95a801b04d887dfdeab5d56b8 -text
 Library/cache/e3/e3174ae8362af1d40ac3fa342fd61303 -text
 Library/cache/e3/e3c3b9d542f99e24c81b33d84e080262 -text
-Library/cache/e4/e467bf48ddc629c44bfd826109b344d9 -text
 Library/cache/e4/e4f71b3101829144aa55927c8d15bc2e -text
 Library/cache/e5/e514f0033c03a4949b69bf9a5fe29bfe -text
 Library/cache/e5/e53c8c3dcc4ff59438bc9e86cb45c3f6 -text
 Library/cache/e5/e594618075d23fd4aaccc8cfc5236d43 -text
 Library/cache/e5/e5d2e82c2c0c8c043be5c3922421cff9 -text
 Library/cache/e6/e67cb20ccd0238240b1ae4050f9e5e5f -text
+Library/cache/e6/e6a82b315d897db4fbe38bfe35b4e890 -text
 Library/cache/e8/e815f0a8fcf2660468746ac2193df6bb -text
 Library/cache/e8/e828f8ea51bf8514f82a7faf40c1b7bd -text
 Library/cache/e9/e973263360315ef49953143c6bd5d536 -text
@@ -464,7 +468,6 @@ Library/cache/ed/edfc3dd7e86ac294a8829596e0428f20 -text
 Library/cache/ee/eeefe2dd1d7f9a643aabc84849cecbf1 -text
 Library/cache/ef/ef007e49e2147a14fa056cfd381b1cb9 -text
 Library/cache/f1/f1a96e9e861d8d242bf3805bf522e4be -text
-Library/cache/f1/f1dbb3849f170bc4696f6838da95a5cc -text
 Library/cache/f3/f332d29ca5ed72a48b5dd045e300e7c7 -text
 Library/cache/f4/f4fa692e2218bd74180d0acb5e58db12 -text
 Library/cache/f6/f6e5400de4dcb5f4c8239e5affa5210e -text
@@ -597,7 +600,6 @@ Library/metadata/33/33c8d167ff625774791e5706a13ca97b -text
 Library/metadata/34/34f103e8c692d3b4b89ff721cb530c74 -text
 Library/metadata/35/351181293e7760e49b12ee4e4b0baa40 -text
 Library/metadata/35/359fbdc094471ab4dbde5121335a2896 -text
-Library/metadata/35/35a08f0670e2d1a4db03bd3d5e63bc1e -text
 Library/metadata/36/364f944ed733aed4e85da36d8c07dab2 -text
 Library/metadata/36/3689016460d401e428f3febeeb77d62a -text
 Library/metadata/37/37457342b38bdc14698e16c8b973b9dc -text
@@ -660,7 +662,6 @@ Library/metadata/57/57c048b4096536246aa39319d227aabb -text
 Library/metadata/57/57e31ddbc93a4374e8a6da40f899699c -text
 Library/metadata/58/58cefced8c60edf4eb4e6012786be8e4 -text
 Library/metadata/59/592098c6b6f099a449bda0d6b237fdd0 -text
-Library/metadata/59/59449848dbbbab146864d84714cb1021 -text
 Library/metadata/59/59944fe7324236a46b99ac9f4016cfbd -text
 Library/metadata/59/59b3edfbf30d4324b8640090475ee917 -text
 Library/metadata/59/59ccf5c53cbab414f883ced5400a30e3 -text
@@ -702,7 +703,6 @@ Library/metadata/6b/6bcdf9924607a604e970432fbbcb6942 -text
 Library/metadata/6c/6ce6e55206d0dce4ea4651bc5b98e166 -text
 Library/metadata/6d/6d286b9779fbdf7478dd350d38f2beda -text
 Library/metadata/6d/6daefc9d9d6f81945a799b19be9843ff -text
-Library/metadata/6d/6dcb67be022139647acbd6c56ed7ab30 -text
 Library/metadata/6e/6eb9a3f4dddcf894788b4093077f9cb0 -text
 Library/metadata/6e/6ee9ef56f27574442bede8d6df97b1e4 -text
 Library/metadata/6f/6fad6e06135894d4da88e7273313f430 -text
@@ -764,7 +764,6 @@ Library/metadata/92/9244d7b4f78374c43820db87b01e35a3 -text
 Library/metadata/93/9370708b4cd86ce49b46babb8d7951c9 -text
 Library/metadata/93/93bd7be59c73d74428f056a7904200ea -text
 Library/metadata/94/94d1a4d86a04fc44bb90b1c0ebf2a49a -text
-Library/metadata/95/951b89cecf0f4ea4bbaa1d67da80663d -text
 Library/metadata/95/95ae3a9e4f3bff3479088f474425bebc -text
 Library/metadata/96/96341512aa57b384e825af3b21a21d15 -text
 Library/metadata/96/96b209bcf657ce547ad4b4d913d34224 -text
@@ -778,7 +777,6 @@ Library/metadata/98/9842f39fb2f153f4cba7fc3f1ef758dc -text
 Library/metadata/98/985e70e58a6b14e4ca5ab5b10519069b -text
 Library/metadata/99/99fb5231fbca9114dbdfed0e6fa0be1b -text
 Library/metadata/9a/9a02d14159872224f847abfce20aaa51 -text
-Library/metadata/9a/9a4f8b8b3e7255f4a89012c83bf88dcd -text
 Library/metadata/9a/9a59d4872d73b416f8e0c2c4ca57fbe2 -text
 Library/metadata/9a/9aeb8386bbfecf248ae6f02fa1ca4952 -text
 Library/metadata/9b/9b2238ef85cbb24408d4576ba33a228b -text
@@ -831,7 +829,6 @@ Library/metadata/b5/b5f8a02477de55a45a00c0438749f587 -text
 Library/metadata/b7/b732dc597c48ce14a84a241cd7df42de -text
 Library/metadata/b7/b7d1194aa90c96340b129e3e85063edb -text
 Library/metadata/b8/b81c8d64a41bc3943bc1dbc4f1c56f80 -text
-Library/metadata/b9/b9ea10d98b2d8634cbf6f1f8088bc509 -text
 Library/metadata/ba/ba3c41c2262bdeb42b59839ca33bce3c -text
 Library/metadata/ba/ba62e280d312a2645be1340ddf90dd17 -text
 Library/metadata/ba/ba978362fa4948446a93735aca6bbd7b -text
@@ -905,13 +902,13 @@ Library/metadata/e2/e2d464a95a801b04d887dfdeab5d56b8 -text
 Library/metadata/e2/e2f07580b4b1e494bbb0f616aa78f727 -text
 Library/metadata/e3/e3174ae8362af1d40ac3fa342fd61303 -text
 Library/metadata/e3/e3c3b9d542f99e24c81b33d84e080262 -text
-Library/metadata/e4/e467bf48ddc629c44bfd826109b344d9 -text
 Library/metadata/e4/e4f71b3101829144aa55927c8d15bc2e -text
 Library/metadata/e5/e514f0033c03a4949b69bf9a5fe29bfe -text
 Library/metadata/e5/e53c8c3dcc4ff59438bc9e86cb45c3f6 -text
 Library/metadata/e5/e594618075d23fd4aaccc8cfc5236d43 -text
 Library/metadata/e5/e5d2e82c2c0c8c043be5c3922421cff9 -text
 Library/metadata/e6/e67cb20ccd0238240b1ae4050f9e5e5f -text
+Library/metadata/e6/e6a82b315d897db4fbe38bfe35b4e890 -text
 Library/metadata/e7/e7d619f9a9b83d84ab3e7ca615cc4bcd -text
 Library/metadata/e8/e815f0a8fcf2660468746ac2193df6bb -text
 Library/metadata/e8/e828f8ea51bf8514f82a7faf40c1b7bd -text
@@ -930,11 +927,9 @@ Library/metadata/ef/ef007e49e2147a14fa056cfd381b1cb9 -text
 Library/metadata/ef/ef6baae9e408af340a81d61cd2090b4f -text
 Library/metadata/f0/f0cdbcafec503db40a9072ee66d0396a -text
 Library/metadata/f1/f1a96e9e861d8d242bf3805bf522e4be -text
-Library/metadata/f1/f1dbb3849f170bc4696f6838da95a5cc -text
 Library/metadata/f3/f32708abc28e563428828a172e7e754e -text
 Library/metadata/f3/f332d29ca5ed72a48b5dd045e300e7c7 -text
 Library/metadata/f3/f385e0e5469b553439b2e805074a2763 -text
-Library/metadata/f3/f390b7330a46f824681e56645fe55a55 -text
 Library/metadata/f4/f468d09fa19143f4eacf6132fb3e71bf -text
 Library/metadata/f4/f4fa692e2218bd74180d0acb5e58db12 -text
 Library/metadata/f6/f6cc32af949c1e94ea3b0ccd6d1ad306 -text
@@ -1061,8 +1056,6 @@ Library/previews/31/313e719dad4d1224da51f342e6203183 -text
 Library/previews/32/329ab039947f8fd44a0551d069a3d769 -text
 Library/previews/34/34f103e8c692d3b4b89ff721cb530c74 -text
 Library/previews/35/359fbdc094471ab4dbde5121335a2896 -text
-Library/previews/35/35a08f0670e2d1a4db03bd3d5e63bc1e -text
-Library/previews/35/35a08f0670e2d1a4db03bd3d5e63bc1e_/100000 -text
 Library/previews/36/364f944ed733aed4e85da36d8c07dab2 -text
 Library/previews/36/364f944ed733aed4e85da36d8c07dab2_/100002 -text
 Library/previews/37/37457342b38bdc14698e16c8b973b9dc -text
@@ -1124,8 +1117,6 @@ Library/previews/57/5743e4d89fd589f468501a56a59b05ff -text
 Library/previews/57/57c048b4096536246aa39319d227aabb -text
 Library/previews/59/592098c6b6f099a449bda0d6b237fdd0 -text
 Library/previews/59/592098c6b6f099a449bda0d6b237fdd0_/100004 -text
-Library/previews/59/59449848dbbbab146864d84714cb1021 -text
-Library/previews/59/59449848dbbbab146864d84714cb1021_/100008 -text
 Library/previews/59/59944fe7324236a46b99ac9f4016cfbd -text
 Library/previews/59/59944fe7324236a46b99ac9f4016cfbd_/4300000 -text
 Library/previews/59/59b3edfbf30d4324b8640090475ee917 -text
@@ -1178,7 +1169,6 @@ Library/previews/6a/6ac2e7dd8b349f74ab920754e887268a -text
 Library/previews/6a/6ac2e7dd8b349f74ab920754e887268a_/4300000 -text
 Library/previews/6d/6daefc9d9d6f81945a799b19be9843ff -text
 Library/previews/6d/6daefc9d9d6f81945a799b19be9843ff_/4300000 -text
-Library/previews/6d/6dcb67be022139647acbd6c56ed7ab30 -text
 Library/previews/6e/6eb9a3f4dddcf894788b4093077f9cb0 -text
 Library/previews/6e/6ee9ef56f27574442bede8d6df97b1e4 -text
 Library/previews/6f/6fad6e06135894d4da88e7273313f430 -text
@@ -1229,8 +1219,6 @@ Library/previews/98/9842f39fb2f153f4cba7fc3f1ef758dc -text
 Library/previews/98/985e70e58a6b14e4ca5ab5b10519069b -text
 Library/previews/99/99fb5231fbca9114dbdfed0e6fa0be1b -text
 Library/previews/9a/9a02d14159872224f847abfce20aaa51 -text
-Library/previews/9a/9a4f8b8b3e7255f4a89012c83bf88dcd -text
-Library/previews/9a/9a4f8b8b3e7255f4a89012c83bf88dcd_/100002 -text
 Library/previews/9a/9aeb8386bbfecf248ae6f02fa1ca4952 -text
 Library/previews/9a/9aeb8386bbfecf248ae6f02fa1ca4952_/100002 -text
 Library/previews/9b/9b2238ef85cbb24408d4576ba33a228b -text
@@ -1286,9 +1274,6 @@ Library/previews/b5/b5a9c88d04f1b5648b95b274ab960fc3 -text
 Library/previews/b7/b732dc597c48ce14a84a241cd7df42de -text
 Library/previews/b7/b732dc597c48ce14a84a241cd7df42de_/4300000 -text
 Library/previews/b8/b81c8d64a41bc3943bc1dbc4f1c56f80 -text
-Library/previews/b9/b9ea10d98b2d8634cbf6f1f8088bc509 -text
-Library/previews/b9/b9ea10d98b2d8634cbf6f1f8088bc509_/100006 -text
-Library/previews/b9/b9ea10d98b2d8634cbf6f1f8088bc509_/4300000 -text
 Library/previews/ba/ba3c41c2262bdeb42b59839ca33bce3c -text
 Library/previews/ba/bab94b9bb475ce9458840f837cd1884a -text
 Library/previews/bc/bc9858fd6436c384ca95fb08f349046f -text
@@ -1337,8 +1322,6 @@ Library/previews/ec/ec8e6ddd27fd9874aa6c4625074aeeec -text
 Library/previews/ed/eded88842debdf5428362c832441e003 -text
 Library/previews/ef/ef6baae9e408af340a81d61cd2090b4f -text
 Library/previews/f3/f32708abc28e563428828a172e7e754e -text
-Library/previews/f3/f390b7330a46f824681e56645fe55a55 -text
-Library/previews/f3/f390b7330a46f824681e56645fe55a55_/4300000 -text
 Library/previews/f4/f468d09fa19143f4eacf6132fb3e71bf -text
 Library/previews/f6/f6cc32af949c1e94ea3b0ccd6d1ad306 -text
 Library/previews/f7/f777c032ed7f4114f89cf9fcad4f1b4f -text
