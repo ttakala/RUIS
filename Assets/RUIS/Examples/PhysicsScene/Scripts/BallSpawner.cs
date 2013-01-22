@@ -11,7 +11,7 @@ public class BallSpawner : MonoBehaviour {
 	
 	void Update () {
 	    for(int i = 0; i < 4; i++){
-            if (psMoveWrapper.moveConnected[i] && psMoveWrapper.WasPressed(i, PSMoveWrapper.CIRCLE))
+            if (psMoveWrapper.sphereVisible[i] && psMoveWrapper.WasPressed(i, PSMoveWrapper.CIRCLE))
             {
                 Instantiate(ball, transform.position, transform.rotation);
             }

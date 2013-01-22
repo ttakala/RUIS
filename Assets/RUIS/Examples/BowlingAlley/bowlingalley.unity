@@ -119,7 +119,7 @@ MonoBehaviour:
   m_useSkeleton: 1
   m_initMirroring: 1
   m_recordingFilename: 
-  m_smoothingFactor: .5
+  m_smoothingFactor: .699999988
 --- !u!1001 &35156432
 Prefab:
   m_ObjectHideFlags: 0
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Name: 
   resolutionX: 1920
   resolutionY: 1080
-  useDoubleTheSpace: 0
+  useDoubleTheSpace: 1
   isStereo: 1
   isHMD: 0
   linkedCamera: {fileID: 2130508602}
@@ -423,7 +423,8 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 29ef6c52109ccc84eb839082815b5f3f, type: 2}
+  - {fileID: 2100000, guid: 22997c885540a6442acc0c2274c40c68, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -617,9 +618,9 @@ MonoBehaviour:
   monoCamera: {fileID: 0}
   totalResolutionX: 1920
   totalResolutionY: 1080
-  totalRawResolutionX: 1920
+  totalRawResolutionX: 3840
   totalRawResolutionY: 1080
-  fullScreen: 1
+  fullScreen: 0
 --- !u!1 &264758940
 GameObject:
   m_ObjectHideFlags: 0
@@ -1015,9 +1016,7 @@ MonoBehaviour:
   useHierarchicalModel: 0
   minimumConfidenceToUpdate: .5
   rotationDampening: 15
-  rootSpeedScaling: {x: 1, y: 1, z: 1}
   applyOriginalRootPosition: 1
-  rootPositionOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &494887990
 GameObject:
   m_ObjectHideFlags: 0
@@ -1194,6 +1193,10 @@ Prefab:
       propertyPath: setKinectOriginToFloor
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: loadFromTextFileInEditor
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1873374386}
@@ -1271,7 +1274,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44e1a29ec3e30941be432fcdcea38f7, type: 1}
   m_Name: 
   selectionRayType: 1
-  lineRenderer: {fileID: 672849886}
   selectionRayLength: 200
   selectionRayStartDistance: .200000003
   headTransform: {fileID: 0}
@@ -1293,7 +1295,6 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 1
   coordinateSystem: {fileID: 0}
-  copyColor: 0
   whereToCopyColor: {fileID: 0}
 --- !u!1 &743323970
 GameObject:
@@ -1831,7 +1832,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1187365847}
   m_Layer: 0
-  m_Name: OpenNISettings
+  m_Name: Kinect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1850,6 +1851,7 @@ Transform:
   - {fileID: 1923062094}
   - {fileID: 29598767}
   - {fileID: 2127119616}
+  - {fileID: 1778756276}
   m_Father: {fileID: 1643303985}
 --- !u!1 &1311770070
 GameObject:
@@ -2159,6 +2161,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1643303985}
   - 114: {fileID: 1643303986}
+  - 114: {fileID: 1873374388}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -2193,10 +2196,12 @@ MonoBehaviour:
   filename: inputConfig.txt
   loadFromTextFileInEditor: 0
   enablePSMove: 1
-  PSMoveIP: 130.233.46.217
+  PSMoveIP: 130.233.46.224
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
+  amountOfPSMoveControllers: 4
+  enableMoveCalibrationDuringPlay: 0
   enableKinect: 1
 --- !u!1 &1725478674
 GameObject:
@@ -2334,7 +2339,7 @@ Transform:
   m_LocalPosition: {x: -9.65089035, y: -1.50521469, z: -7.12974167}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1873374387}
+  m_Father: {fileID: 1187365847}
 --- !u!114 &1778756277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2364,6 +2369,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 1}
   m_Name: 
+  rootSpeedScaling: {x: 1, y: 1, z: 1}
 --- !u!1 &1873374386
 GameObject:
   m_ObjectHideFlags: 0
@@ -2372,8 +2378,6 @@ GameObject:
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 1873374387}
-  - 114: {fileID: 1873374388}
-  - 114: {fileID: 1873374389}
   m_Layer: 0
   m_Name: RUIS
   m_TagString: Untagged
@@ -2393,7 +2397,6 @@ Transform:
   m_Children:
   - {fileID: 1643303985}
   - {fileID: 155282878}
-  - {fileID: 1778756276}
   m_Father: {fileID: 0}
 --- !u!114 &1873374388
 MonoBehaviour:
@@ -2401,25 +2404,14 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7,
     type: 2}
   m_PrefabInternal: {fileID: 646044854}
-  m_GameObject: {fileID: 1873374386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58cefced8c60edf4eb4e6012786be8e4, type: 1}
-  m_Name: 
---- !u!114 &1873374389
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400020, guid: 7e2baee5779349340b6a78274c032bf7,
-    type: 2}
-  m_PrefabInternal: {fileID: 646044854}
-  m_GameObject: {fileID: 1873374386}
+  m_GameObject: {fileID: 1643303984}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1af08926c7e0c34192ca37d5e117fa7, type: 1}
   m_Name: 
   coordinateXmlFile: calibration.xml
+  coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 1}
   loadFromXML: 1
-  kinectToUnityScale: .00100000005
   applyMoveToKinect: 1
   setKinectOriginToFloor: 1
   applyKinectOffset: 0
@@ -2756,7 +2748,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44e1a29ec3e30941be432fcdcea38f7, type: 1}
   m_Name: 
   selectionRayType: 1
-  lineRenderer: {fileID: 2082664912}
   selectionRayLength: 200
   selectionRayStartDistance: .200000003
   headTransform: {fileID: 0}
@@ -2778,7 +2769,6 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   coordinateSystem: {fileID: 0}
-  copyColor: 0
   whereToCopyColor: {fileID: 0}
 --- !u!1 &2127119615
 GameObject:
@@ -2881,8 +2871,9 @@ GameObject:
   m_Component:
   - 4: {fileID: 2130508601}
   - 114: {fileID: 2130508602}
+  - 20: {fileID: 2130508603}
   m_Layer: 0
-  m_Name: StereoCamera
+  m_Name: RUISCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2910,13 +2901,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 2130508600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1a96e9e861d8d242bf3805bf522e4be, type: 1}
+  m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 1}
   m_Name: 
-  associatedDisplay: {fileID: 0}
-  eyeSeparation: .0500000007
-  zeroParallaxDistance: 0
+  centerCamera: {fileID: 2130508603}
   leftCamera: {fileID: 99348084}
   rightCamera: {fileID: 127038066}
+  eyeSeparation: .0599999987
+  zeroParallaxDistance: 0
+  associatedDisplay: {fileID: 0}
+--- !u!20 &2130508603
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 2000004, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 114984074}
+  m_GameObject: {fileID: 2130508600}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: .300000012
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 100
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_HDR: 0
 --- !u!1 &2141231518
 GameObject:
   m_ObjectHideFlags: 0
