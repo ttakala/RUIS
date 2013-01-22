@@ -63,6 +63,10 @@ Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Sources/Textures/SycamoreBar
 Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Sources/Textures/SycamoreLeaves1.psd -text
 Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Sources/Textures/SycamoreLeaves2.psd -text
 Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Sources/Textures/SycamoreLeaves3.psd -text
+Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Trees/BigTree_textures/diffuse.png -text
+Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Trees/BigTree_textures/normal_specular.png -text
+Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Trees/BigTree_textures/shadow.png -text
+Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Trees/BigTree_textures/translucency_gloss.png -text
 Assets/RUIS/Resources/RUIS/Editor/Textures/monodisplay.png -text
 Assets/RUIS/Resources/RUIS/Editor/Textures/stereodisplay.png -text
 Assets/RUIS/Resources/RUIS/Fonts/appleberry_with_cyrillic.ttf -text
