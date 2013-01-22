@@ -75,7 +75,7 @@ public class RUISM2KCalibration : MonoBehaviour {
     void Awake () {
         currentState = State.Start;
         psMoveWrapper = GetComponent<PSMoveWrapper>();
-        kinectSelection = GetComponent<NIPlayerManagerCOMSelection>();
+        kinectSelection = FindObjectOfType(typeof(NIPlayerManagerCOMSelection)) as NIPlayerManagerCOMSelection;
         statusText = GetComponentInChildren<GUIText>();
 
         rawPSMoveSamples = new List<Vector3>();
