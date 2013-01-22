@@ -1016,7 +1016,7 @@ MonoBehaviour:
   useHierarchicalModel: 0
   minimumConfidenceToUpdate: .5
   rotationDampening: 15
-  applyOriginalRootPosition: 1
+  applyOriginalRootPosition: 0
 --- !u!1 &494887990
 GameObject:
   m_ObjectHideFlags: 0

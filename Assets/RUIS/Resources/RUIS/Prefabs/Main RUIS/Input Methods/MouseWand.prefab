@@ -49,14 +49,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44e1a29ec3e30941be432fcdcea38f7, type: 1}
   m_Name: 
   selectionRayType: 1
-  lineRenderer: {fileID: 0}
   selectionRayLength: 200
   selectionRayStartDistance: .200000003
   headTransform: {fileID: 0}
   toggleSelection: 0
   grabWhileButtonDown: 1
   positionSelectionGrabType: 2
-  rotationSelectionGrabType: 2
+  rotationSelectionGrabType: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

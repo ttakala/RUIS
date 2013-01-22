@@ -9,7 +9,7 @@ public class ResetBall : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (shouldResetBall || moveController.crossButtonWasPressed)
+        if (shouldResetBall || moveController.moveButtonWasPressed)
         {
             transform.position = ballResetSpot.transform.position;
             transform.rotation = ballResetSpot.transform.rotation;
