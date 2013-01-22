@@ -60,11 +60,14 @@ public class RUISInputManager : MonoBehaviour
     void Start()
     {
         //check whether the kinect camera is actually connected
-        OpenNISettingsManager settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
-        if (settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid) 
+        if (enableKinect)
         {
-            Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
-            BroadcastMessage("KinectNotAvailable", SendMessageOptions.DontRequireReceiver);
+            OpenNISettingsManager settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
+            if (settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid)
+            {
+                Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
+                BroadcastMessage("KinectNotAvailable", SendMessageOptions.DontRequireReceiver);
+            }
         }
     }
 

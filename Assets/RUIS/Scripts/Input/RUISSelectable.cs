@@ -77,7 +77,8 @@ public class RUISSelectable : MonoBehaviour {
             rigidbody.isKinematic = true;
         }
 
-        AddMaterialToEverything(selectionMaterial);
+        if (selectionMaterial != null) ;
+            AddMaterialToEverything(selectionMaterial);
 
         UpdateTransform(false);
     }
@@ -97,19 +98,22 @@ public class RUISSelectable : MonoBehaviour {
             rigidbody.AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
         }
 
-        RemoveMaterialFromEverything();
+        if(selectionMaterial != null)
+            RemoveMaterialFromEverything();
 
         this.selector = null;
     }
 
     public virtual void OnSelectionHighlight()
     {
-        AddMaterialToEverything(highlightMaterial);
+        if(highlightMaterial != null)
+            AddMaterialToEverything(highlightMaterial);
     }
 
     public virtual void OnSelectionHighlightEnd()
     {
-        RemoveMaterialFromEverything();
+        if(highlightMaterial != null)
+            RemoveMaterialFromEverything();
     }
 
     protected virtual void UpdateTransform(bool safePhysics)
