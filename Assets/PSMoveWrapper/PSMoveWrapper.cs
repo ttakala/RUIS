@@ -462,11 +462,10 @@ public class PSMoveWrapper : MonoBehaviour {
 	}
 	
 	/// <summary>
-	/// Pause camera stream; Reset all move controllers; Disconnect;
-	/// If you just want to disconnect, call <c>Disconnect(false)</c>
+	/// Pause camera stream ; Disconnect;
 	/// </summary>
 	public void Disconnect() {
-		Disconnect(true);
+		Disconnect(false);
 	}
 	
 	public void Disconnect(bool isCleanUp) {
@@ -955,12 +954,12 @@ public class PSMoveWrapper : MonoBehaviour {
 	
 	
 	public void OnApplicationQuit() {
-		Disconnect();
+		Disconnect(false);
 	}
 
     public void OnDestroy()
     {
-        Disconnect();
+        Disconnect(false);
     }
 	
 	
