@@ -166,47 +166,10 @@ public class PSMoveWrapper : MonoBehaviour {
 	
 	#region for WasPressed and WasReleased
 	
-	private bool[] isCheckPressSquare;
-	private bool[] isCheckPressCross;
-	private bool[] isCheckPressCircle;
-	private bool[] isCheckPressTriangle;
-	private bool[] isCheckPressMove;
-	private bool[] isCheckPressStart;
-	private bool[] isCheckPressSelect;
-	private bool[] isCheckPressT;
-	
-	private bool[] isCheckPressNavUp;
-	private bool[] isCheckPressNavDown;
-	private bool[] isCheckPressNavLeft;
-	private bool[] isCheckPressNavRight;
-	private bool[] isCheckPressNavCross;
-	private bool[] isCheckPressNavCircle;
-	private bool[] isCheckPressNavL1;
-	private bool[] isCheckPressNavL2;
-	private bool[] isCheckPressNavL3;
-	
-	private bool[] isCheckReleaseSquare;
-	private bool[] isCheckReleaseCross;
-	private bool[] isCheckReleaseCircle;
-	private bool[] isCheckReleaseTriangle;
-	private bool[] isCheckReleaseMove;
-	private bool[] isCheckReleaseStart;
-	private bool[] isCheckReleaseSelect;
-	private bool[] isCheckReleaseT;
-	
-	private bool[] isCheckReleaseNavUp;
-	private bool[] isCheckReleaseNavDown;
-	private bool[] isCheckReleaseNavLeft;
-	private bool[] isCheckReleaseNavRight;
-	private bool[] isCheckReleaseNavCross;
-	private bool[] isCheckReleaseNavCircle;
-	private bool[] isCheckReleaseNavL1;
-	private bool[] isCheckReleaseNavL2;
-	private bool[] isCheckReleaseNavL3;
-	
-	private Dictionary<string, bool[]> dicIsButton = new Dictionary<string, bool[]>();
-	private Dictionary<string, bool[]> dicIsCheckPress = new Dictionary<string, bool[]>();
-	private Dictionary<string, bool[]> dicIsCheckRelease = new Dictionary<string, bool[]>();
+	private Dictionary<string, bool[]> dicButtonPressed = new Dictionary<string, bool[]>();
+	private Dictionary<string, bool[]> dicButtonPressedPreviousFrame = new Dictionary<string, bool[]>();
+    private Dictionary<string, bool[]> dicButtonWasPressed = new Dictionary<string, bool[]>();
+	private Dictionary<string, bool[]> dicButtonWasReleased = new Dictionary<string, bool[]>();
 	private bool[] isButtonT;
 	private bool[] isNavButtonL2;
 	
@@ -229,38 +192,43 @@ public class PSMoveWrapper : MonoBehaviour {
 		}
 		
 		DeclareArray();
-		PrepareButtonCheck();
 		imageTex =  new Texture2D(0,0);
 		finalImage = new List<Color32>();
 		
 	}
-	
-	void Update() {		
-		if(enableDefaultInGameCalibrate) {
-			if(isConnected) {
-				for(int i = 0; i < MAX_MOVE_NUM; i++) {
-					if(WasPressed(i, MOVE)) {
-						if(sphereColor[i] == new Color(0,0,0,1)) {
-							CalibrateAndTrack(i);
-						}
-						else {
-							CalibrateAndTrack(i, sphereColor[i]);
-						}
-					}
-					if(WasPressed(i, SELECT)) {
-						Reset(i);
-					}
-				}
-			}
-		}
-		
-	}
+
+    void Update()
+    {
+        if (isConnected)
+        {
+            if (enableDefaultInGameCalibrate)
+            {
+                for (int i = 0; i < MAX_MOVE_NUM; i++)
+                {
+                    if (WasPressed(i, MOVE))
+                    {
+                        if (sphereColor[i] == Color.black)
+                        {
+                            CalibrateAndTrack(i);
+                        }
+                        else
+                        {
+                            CalibrateAndTrack(i, sphereColor[i]);
+                        }
+                    }
+                }
+            }
+            SaveCurrentFrameButtons();
+            UpdateWasPressed();
+            UpdateWasReleased();
+            SavePreviousFrameButtons();
+        }
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		
 		if(isConnected) {
-			UpdateState();			
+			UpdateState();
 		}
 	}	
 	
@@ -318,23 +286,6 @@ public class PSMoveWrapper : MonoBehaviour {
 		sphereVisible = new bool[MAX_MOVE_NUM];
 		sphereRadiusValid = new bool[MAX_MOVE_NUM];
 		
-		isCheckPressSquare = new bool[MAX_MOVE_NUM];
-		isCheckPressCross = new bool[MAX_MOVE_NUM];
-		isCheckPressCircle = new bool[MAX_MOVE_NUM];
-		isCheckPressTriangle = new bool[MAX_MOVE_NUM];
-		isCheckPressMove = new bool[MAX_MOVE_NUM];
-		isCheckPressStart = new bool[MAX_MOVE_NUM];
-		isCheckPressSelect = new bool[MAX_MOVE_NUM];
-		isCheckPressT = new bool[MAX_MOVE_NUM];
-		
-		isCheckReleaseSquare = new bool[MAX_MOVE_NUM];
-		isCheckReleaseCross = new bool[MAX_MOVE_NUM];
-		isCheckReleaseCircle = new bool[MAX_MOVE_NUM];
-		isCheckReleaseTriangle = new bool[MAX_MOVE_NUM];
-		isCheckReleaseMove = new bool[MAX_MOVE_NUM];
-		isCheckReleaseStart = new bool[MAX_MOVE_NUM];
-		isCheckReleaseSelect = new bool[MAX_MOVE_NUM];
-		isCheckReleaseT = new bool[MAX_MOVE_NUM];
 		
 		isButtonT = new bool[MAX_MOVE_NUM];
 		
@@ -355,130 +306,147 @@ public class PSMoveWrapper : MonoBehaviour {
 		valueNavAnalogY = new int[MAX_NAV_NUM];
 		valueNavL2 = new int[MAX_NAV_NUM];
 		
-		isCheckPressNavUp = new bool[MAX_NAV_NUM];
-		isCheckPressNavDown = new bool[MAX_NAV_NUM];
-		isCheckPressNavLeft = new bool[MAX_NAV_NUM];
-		isCheckPressNavRight = new bool[MAX_NAV_NUM];
-		isCheckPressNavCross = new bool[MAX_NAV_NUM];
-		isCheckPressNavCircle = new bool[MAX_NAV_NUM];
-		isCheckPressNavL1 = new bool[MAX_NAV_NUM];
-		isCheckPressNavL2 = new bool[MAX_NAV_NUM];
-		isCheckPressNavL3 = new bool[MAX_NAV_NUM];
-		
-		isCheckReleaseNavUp = new bool[MAX_NAV_NUM];
-		isCheckReleaseNavDown = new bool[MAX_NAV_NUM];
-		isCheckReleaseNavLeft = new bool[MAX_NAV_NUM];
-		isCheckReleaseNavRight = new bool[MAX_NAV_NUM];
-		isCheckReleaseNavCross = new bool[MAX_NAV_NUM];
-		isCheckReleaseNavCircle = new bool[MAX_NAV_NUM];
-		isCheckReleaseNavL1 = new bool[MAX_NAV_NUM];
-		isCheckReleaseNavL2 = new bool[MAX_NAV_NUM];
-		isCheckReleaseNavL3 = new bool[MAX_NAV_NUM];
-		
 		isNavButtonL2 = new bool[MAX_NAV_NUM];
+
+        InitButtonArray(ref dicButtonPressed);
+        InitButtonArray(ref dicButtonPressedPreviousFrame);
+        InitButtonArray(ref dicButtonWasPressed);
+        InitButtonArray(ref dicButtonWasReleased);
 	}
+
+    private void InitButtonArray(ref Dictionary<string, bool[]>  buttonArray)
+    {
+        buttonArray[SQUARE] = new bool[MAX_MOVE_NUM];
+        buttonArray[CROSS] = new bool[MAX_MOVE_NUM];
+        buttonArray[CIRCLE] = new bool[MAX_MOVE_NUM];
+        buttonArray[TRIANGLE] = new bool[MAX_MOVE_NUM];
+        buttonArray[MOVE] = new bool[MAX_MOVE_NUM];
+        buttonArray[START] = new bool[MAX_MOVE_NUM];
+        buttonArray[SELECT] = new bool[MAX_MOVE_NUM];
+        buttonArray[T] = new bool[MAX_MOVE_NUM];
+        buttonArray[NAV_UP] = new bool[MAX_NAV_NUM];
+        buttonArray[NAV_DOWN] = new bool[MAX_NAV_NUM];
+        buttonArray[NAV_LEFT] = new bool[MAX_NAV_NUM];
+        buttonArray[NAV_RIGHT] = new bool[MAX_NAV_NUM];
+        buttonArray[NAV_CROSS] = new bool[MAX_NAV_NUM];
+        buttonArray[NAV_CIRCLE] = new bool[MAX_NAV_NUM];
+        buttonArray[NAV_L1] = new bool[MAX_NAV_NUM];
+        buttonArray[NAV_L2] = new bool[MAX_NAV_NUM];
+        buttonArray[NAV_L3] = new bool[MAX_NAV_NUM];
+    }
+
+    private void SavePreviousFrameButtons()
+    {
+        Array.Copy(dicButtonPressed[SQUARE], dicButtonPressedPreviousFrame[SQUARE], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[CROSS], dicButtonPressedPreviousFrame[CROSS], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[CIRCLE], dicButtonPressedPreviousFrame[CIRCLE], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[TRIANGLE], dicButtonPressedPreviousFrame[TRIANGLE], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[MOVE], dicButtonPressedPreviousFrame[MOVE], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[START], dicButtonPressedPreviousFrame[START], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[SELECT], dicButtonPressedPreviousFrame[SELECT], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[T], dicButtonPressedPreviousFrame[T], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_UP], dicButtonPressedPreviousFrame[NAV_UP], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_DOWN], dicButtonPressedPreviousFrame[NAV_DOWN], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_LEFT], dicButtonPressedPreviousFrame[NAV_LEFT], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_RIGHT], dicButtonPressedPreviousFrame[NAV_RIGHT], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_CROSS], dicButtonPressedPreviousFrame[NAV_CROSS], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_CIRCLE], dicButtonPressedPreviousFrame[NAV_CIRCLE], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_L1], dicButtonPressedPreviousFrame[NAV_L1], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_L2], dicButtonPressedPreviousFrame[NAV_L2], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_L3], dicButtonPressedPreviousFrame[NAV_L3], MAX_MOVE_NUM);
+    }
+
+    private void SaveCurrentFrameButtons()
+    {
+        dicButtonPressed[SQUARE] = isButtonSquare;
+        dicButtonPressed[CROSS] = isButtonCross;
+        dicButtonPressed[CIRCLE] = isButtonCircle;
+        dicButtonPressed[TRIANGLE] = isButtonTriangle;
+        dicButtonPressed[MOVE] = isButtonMove;
+        dicButtonPressed[START] = isButtonStart;
+        dicButtonPressed[SELECT] = isButtonSelect;
+        dicButtonPressed[T] = isButtonT;
+        dicButtonPressed[NAV_UP] = isNavUp;
+        dicButtonPressed[NAV_DOWN] = isNavDown;
+        dicButtonPressed[NAV_LEFT] = isNavLeft;
+        dicButtonPressed[NAV_RIGHT] = isNavRight;
+        dicButtonPressed[NAV_CROSS] = isNavButtonCross;
+        dicButtonPressed[NAV_CIRCLE] = isNavButtonCircle;
+        dicButtonPressed[NAV_L1] = isNavButtonL1;
+        dicButtonPressed[NAV_L2] = isNavButtonL2;
+        dicButtonPressed[NAV_L3] = isNavButtonL3;
+    }
+
+    private void UpdateWasPressed()
+    {
+        for (int i = 0; i < MAX_MOVE_NUM; i++)
+        {
+            dicButtonWasPressed[SQUARE][i] = CheckWasPressed(SQUARE, i);
+            dicButtonWasPressed[CROSS][i] = CheckWasPressed(CROSS, i);
+            dicButtonWasPressed[CIRCLE][i] = CheckWasPressed(CIRCLE, i);
+            dicButtonWasPressed[TRIANGLE][i] = CheckWasPressed(TRIANGLE, i);
+            dicButtonWasPressed[MOVE][i] = CheckWasPressed(MOVE, i);
+            dicButtonWasPressed[START][i] = CheckWasPressed(START, i);
+            dicButtonWasPressed[SELECT][i] = CheckWasPressed(SELECT, i);
+            dicButtonWasPressed[T][i] = CheckWasPressed(T, i);
+        }
+        for (int i = 0; i < MAX_NAV_NUM; i++)
+        {
+            dicButtonWasPressed[NAV_UP][i] = CheckWasPressed(NAV_UP, i);
+            dicButtonWasPressed[NAV_DOWN][i] = CheckWasPressed(NAV_DOWN, i);
+            dicButtonWasPressed[NAV_LEFT][i] = CheckWasPressed(NAV_LEFT, i);
+            dicButtonWasPressed[NAV_RIGHT][i] = CheckWasPressed(NAV_RIGHT, i);
+            dicButtonWasPressed[NAV_CROSS][i] = CheckWasPressed(NAV_CROSS, i);
+            dicButtonWasPressed[NAV_CIRCLE][i] = CheckWasPressed(NAV_CIRCLE, i);
+            dicButtonWasPressed[NAV_L1][i] = CheckWasPressed(NAV_L1, i);
+            dicButtonWasPressed[NAV_L2][i] = CheckWasPressed(NAV_L2, i);
+            dicButtonWasPressed[NAV_L3][i] = CheckWasPressed(NAV_L3, i);
+        }
+    }
+
+    private bool CheckWasPressed(string button, int controller)
+    {
+        /*bool pressed = dicButtonPressed[button][controller] && !dicButtonPressedPreviousFrame[button][controller];
+        if(pressed) Debug.Log(button + " was pressed!");*/
+        return dicButtonPressed[button][controller] && !dicButtonPressedPreviousFrame[button][controller];
+    }
+
+    private void UpdateWasReleased()
+    {
+        for (int i = 0; i < MAX_MOVE_NUM; i++)
+        {
+            dicButtonWasReleased[SQUARE][i] = CheckWasReleased(SQUARE, i);
+            dicButtonWasReleased[CROSS][i] = CheckWasReleased(CROSS, i);
+            dicButtonWasReleased[CIRCLE][i] = CheckWasReleased(CIRCLE, i);
+            dicButtonWasReleased[TRIANGLE][i] = CheckWasReleased(TRIANGLE, i);
+            dicButtonWasReleased[MOVE][i] = CheckWasReleased(MOVE, i);
+            dicButtonWasReleased[START][i] = CheckWasReleased(START, i);
+            dicButtonWasReleased[SELECT][i] = CheckWasReleased(SELECT, i);
+            dicButtonWasReleased[T][i] = CheckWasReleased(T, i);
+        }
+        for (int i = 0; i < MAX_NAV_NUM; i++)
+        {
+            dicButtonWasReleased[NAV_UP][i] = CheckWasReleased(NAV_UP, i);
+            dicButtonWasReleased[NAV_DOWN][i] = CheckWasReleased(NAV_DOWN, i);
+            dicButtonWasReleased[NAV_LEFT][i] = CheckWasReleased(NAV_LEFT, i);
+            dicButtonWasReleased[NAV_RIGHT][i] = CheckWasReleased(NAV_RIGHT, i);
+            dicButtonWasReleased[NAV_CROSS][i] = CheckWasReleased(NAV_CROSS, i);
+            dicButtonWasReleased[NAV_CIRCLE][i] = CheckWasReleased(NAV_CIRCLE, i);
+            dicButtonWasReleased[NAV_L1][i] = CheckWasReleased(NAV_L1, i);
+            dicButtonWasReleased[NAV_L2][i] = CheckWasReleased(NAV_L2, i);
+            dicButtonWasReleased[NAV_L3][i] = CheckWasReleased(NAV_L3, i);
+        }
+
+        //Debug.Log(dicButtonWasReleased[NAV_UP][0] + " " + dicButtonPressed[NAV_UP][0] + " " + dicButtonPressedPreviousFrame[NAV_UP][0]);
+    }
+
+    private bool CheckWasReleased(string button, int controller)
+    {
+        /*bool released = !dicButtonPressed[button][controller] && dicButtonPressedPreviousFrame[button][controller];
+        if(released) Debug.Log(button + " was released!");*/
+        return !dicButtonPressed[button][controller] && dicButtonPressedPreviousFrame[button][controller];
+    }
 	
-	private void PrepareButtonCheck() {
-		dicIsButton[SQUARE] = isButtonSquare;
-		dicIsCheckPress[SQUARE] = isCheckPressSquare;
-		dicIsCheckRelease[SQUARE] = isCheckReleaseSquare;
-		
-		dicIsButton[CROSS] = isButtonCross;
-		dicIsCheckPress[CROSS] = isCheckPressCross;
-		dicIsCheckRelease[CROSS] = isCheckReleaseCross;
-				
-		dicIsButton[CROSS] = isButtonCross;
-		dicIsCheckPress[CROSS] = isCheckPressCross;
-		dicIsCheckRelease[CROSS] = isCheckReleaseCross;
-				
-		dicIsButton[CIRCLE] = isButtonCircle;
-		dicIsCheckPress[CIRCLE] = isCheckPressCircle;
-		dicIsCheckRelease[CIRCLE] = isCheckReleaseCircle;
-		
-		dicIsButton[TRIANGLE] = isButtonTriangle;
-		dicIsCheckPress[TRIANGLE] = isCheckPressTriangle;
-		dicIsCheckRelease[TRIANGLE] = isCheckReleaseTriangle;
-		
-		dicIsButton[TRIANGLE] = isButtonTriangle;
-		dicIsCheckPress[TRIANGLE] = isCheckPressTriangle;
-		dicIsCheckRelease[TRIANGLE] = isCheckReleaseTriangle;
-		
-		dicIsButton[MOVE] = isButtonMove;
-		dicIsCheckPress[MOVE] = isCheckPressMove;
-		dicIsCheckRelease[MOVE] = isCheckReleaseMove;
-		
-		dicIsButton[START] = isButtonStart;
-		dicIsCheckPress[START] = isCheckPressStart;
-		dicIsCheckRelease[START] = isCheckReleaseStart;
-		
-		dicIsButton[SELECT] = isButtonSelect;
-		dicIsCheckPress[SELECT] = isCheckPressSelect;
-		dicIsCheckRelease[SELECT] = isCheckReleaseSelect;
-		
-		dicIsButton[T] = isButtonT;
-		dicIsCheckPress[T] = isCheckPressT;
-		dicIsCheckRelease[T] = isCheckReleaseT;
-		
-		dicIsButton[NAV_UP] = isNavUp;
-		dicIsCheckPress[NAV_UP] = isCheckPressNavUp;
-		dicIsCheckRelease[NAV_UP] = isCheckReleaseNavUp;
-	
-		dicIsButton[NAV_DOWN] = isNavDown;
-		dicIsCheckPress[NAV_DOWN] = isCheckPressNavDown;
-		dicIsCheckRelease[NAV_DOWN] = isCheckReleaseNavDown;
-		
-		dicIsButton[NAV_LEFT] = isNavLeft;
-		dicIsCheckPress[NAV_LEFT] = isCheckPressNavLeft;
-		dicIsCheckRelease[NAV_LEFT] = isCheckReleaseNavLeft;
-		
-		dicIsButton[NAV_RIGHT] = isNavRight;
-		dicIsCheckPress[NAV_RIGHT] = isCheckPressNavRight;
-		dicIsCheckRelease[NAV_RIGHT] = isCheckReleaseNavRight;
-		
-		dicIsButton[NAV_CROSS] = isNavButtonCross;
-		dicIsCheckPress[NAV_CROSS] = isCheckPressNavCross;
-		dicIsCheckRelease[NAV_CROSS] = isCheckReleaseNavCross;
-		
-		dicIsButton[NAV_CIRCLE] = isNavButtonCircle;
-		dicIsCheckPress[NAV_CIRCLE] = isCheckPressNavCircle;
-		dicIsCheckRelease[NAV_CIRCLE] = isCheckReleaseNavCircle;
-		
-		dicIsButton[NAV_L1] = isNavButtonL1;
-		dicIsCheckPress[NAV_L1] = isCheckPressNavL1;
-		dicIsCheckRelease[NAV_L1] = isCheckReleaseNavL1;
-		
-		dicIsButton[NAV_L2] = isNavButtonL2;
-		dicIsCheckPress[NAV_L2] = isCheckPressNavL2;
-		dicIsCheckRelease[NAV_L2] = isCheckReleaseNavL2;
-		
-		dicIsButton[NAV_L3] = isNavButtonL3;
-		dicIsCheckPress[NAV_L3] = isCheckPressNavL3;
-		dicIsCheckRelease[NAV_L3] = isCheckReleaseNavL3;
-		
-		
-		for(int i = 0; i < MAX_MOVE_NUM; i++) {
-			WasReleased(i, SQUARE);
-			WasReleased(i, CIRCLE);
-			WasReleased(i, CROSS);
-			WasReleased(i, TRIANGLE);
-			WasReleased(i, MOVE);
-			WasReleased(i, START);
-			WasReleased(i, SELECT);
-			WasReleased(i, T);
-		}
-		
-		for(int i = 0; i < MAX_NAV_NUM; i++) {
-			WasReleased(i, NAV_UP);
-			WasReleased(i, NAV_DOWN);
-			WasReleased(i, NAV_LEFT);
-			WasReleased(i, NAV_RIGHT);
-			WasReleased(i, NAV_CROSS);
-			WasReleased(i, NAV_CIRCLE);
-			WasReleased(i, NAV_L1);
-			WasReleased(i, NAV_L2);
-			WasReleased(i, NAV_L3);
-		}
-	}
 	
 	/// <summary>
 	/// the same as <c>Connect(ipAdress, port)"</c>.
@@ -921,6 +889,12 @@ public class PSMoveWrapper : MonoBehaviour {
 		navConnected[num] = ((state.navInfo.port_status[num] & 0x1)==0x1);
 		
 		PSMoveSharpNavPadData padData = state.padData[num];
+        /*string toPrint = num + " ";
+        foreach (ushort button in padData.button)
+        {
+            toPrint += button + " ";
+        }
+        Debug.Log(toPrint);*/
 		isNavUp[num] = (padData.button[PSMoveSharpConstants.offsetDigital1] & PSMoveSharpConstants.ctrlUp)!=0;
 		isNavDown[num] = (padData.button[PSMoveSharpConstants.offsetDigital1] & PSMoveSharpConstants.ctrlDown)!=0;
 		isNavLeft[num] = (padData.button[PSMoveSharpConstants.offsetDigital1] & PSMoveSharpConstants.ctrlLeft)!=0;
@@ -937,6 +911,7 @@ public class PSMoveWrapper : MonoBehaviour {
 	}
 	
 	/// <summary>
+    /// MODIFIED
 	/// whether a button was pressed after your last call. 
 	/// If you call it in every update loop, it will only return true once you pressed a button, and return false while you are holding it.
 	/// </summary>
@@ -950,23 +925,15 @@ public class PSMoveWrapper : MonoBehaviour {
 	/// A <see cref="System.Boolean"/>
 	/// </returns>
 	public bool WasPressed(int num, string button) {
-		if(!dicIsButton.ContainsKey(button)) {
+		if(!dicButtonWasPressed.ContainsKey(button)) {
 			return false;
 		}
-		if(dicIsButton[button][num]) {
-			if(dicIsCheckPress[button][num]) {
-				return false;
-			}
-			dicIsCheckPress[button][num] = true;
-			//Debug.Log("Pressed Square");
-			return true;
-		}
-		dicIsCheckPress[button][num] = false;
-		return false;
+        return dicButtonWasPressed[button][num];
 	}
 	
 	
 	/// <summary>
+    /// MODIFIED
 	///  whether a button was released after your last call. 
 	/// If you call it in every update loop, it will only return true once you released a button, and return false while its status remains.
 	/// </summary>
@@ -980,19 +947,10 @@ public class PSMoveWrapper : MonoBehaviour {
 	/// A <see cref="System.Boolean"/>
 	/// </returns>
 	public bool WasReleased(int num, string button) {
-		if(!dicIsButton.ContainsKey(button)) {
+		if(!dicButtonWasReleased.ContainsKey(button)) {
 			return false;
 		}
-		if(!dicIsButton[button][num]) {
-			if(dicIsCheckRelease[button][num]) {
-				return false;
-			}
-			dicIsCheckRelease[button][num] = true;
-			//Debug.Log("Released Square");
-			return true;
-		}
-		dicIsCheckRelease[button][num] = false;
-		return false;
+        return dicButtonWasReleased[button][num];
 	}
 	
 	

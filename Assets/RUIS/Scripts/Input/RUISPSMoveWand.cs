@@ -52,25 +52,7 @@ public class RUISPSMoveWand : RUISWand {
 	}
 	
 	void Update ()
-    {
-        squareButtonWasPressed = psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.SQUARE);
-        crossButtonWasPressed = psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.CROSS);
-        circleButtonWasPressed = psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.CIRCLE);
-        triangleButtonWasPressed = psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.TRIANGLE);
-        moveButtonWasPressed = psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.MOVE);
-        triggerButtonWasPressed = psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.T);
-        startButtonWasPressed = psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.START);
-        selectButtonWasPressed = psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.SELECT);
-
-        squareButtonWasReleased = psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.SQUARE);
-        crossButtonWasReleased = psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.CROSS);
-        circleButtonWasReleased = psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.CIRCLE);
-        triangleButtonWasReleased = psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.TRIANGLE);
-        moveButtonWasReleased = psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.MOVE);
-        triggerButtonWasReleased = psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.T);
-        startButtonWasReleased= psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.START);
-        selectButtonWasReleased = psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.SELECT);
-        
+    {        
         if (rigidbody)
         {
             rigidbody.MovePosition(position);
@@ -276,23 +258,23 @@ public class RUISPSMoveWand : RUISWand {
     public bool startButtonDown { get { return psMoveWrapper.isButtonStart[controllerId]; } }
     public bool selectButtonDown { get { return psMoveWrapper.isButtonSelect[controllerId]; } }
 
-    public bool squareButtonWasPressed { get; private set; }
-    public bool crossButtonWasPressed { get; private set; }
-    public bool circleButtonWasPressed { get; private set; }
-    public bool triangleButtonWasPressed { get; private set; }
-    public bool moveButtonWasPressed { get; private set; }
-    public bool triggerButtonWasPressed { get; private set; }
-    public bool startButtonWasPressed { get; private set; }
-    public bool selectButtonWasPressed { get; private set; }
+    public bool squareButtonWasPressed { get { return psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.SQUARE); } }
+    public bool crossButtonWasPressed { get { return psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.CROSS); } }
+    public bool circleButtonWasPressed { get { return psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.CIRCLE); } }
+    public bool triangleButtonWasPressed { get { return psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.TRIANGLE); } }
+    public bool moveButtonWasPressed { get { return psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.MOVE); } }
+    public bool triggerButtonWasPressed { get { return psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.T); } }
+    public bool startButtonWasPressed { get { return psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.START); } }
+    public bool selectButtonWasPressed { get { return psMoveWrapper.WasPressed(controllerId, PSMoveWrapper.SELECT); } }
 
-    public bool squareButtonWasReleased { get; private set; }
-    public bool crossButtonWasReleased { get; private set; }
-    public bool circleButtonWasReleased { get; private set; }
-    public bool triangleButtonWasReleased { get; private set; }
-    public bool moveButtonWasReleased { get; private set; }
-    public bool triggerButtonWasReleased { get; private set; }
-    public bool startButtonWasReleased { get; private set; }
-    public bool selectButtonWasReleased { get; private set; }
+    public bool squareButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.SQUARE); } }
+    public bool crossButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.CROSS); } }
+    public bool circleButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.CIRCLE); } }
+    public bool triangleButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.TRIANGLE); } }
+    public bool moveButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.MOVE); } }
+    public bool triggerButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.T); } }
+    public bool startButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.START); } }
+    public bool selectButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.SELECT); } }
 
     public override Color color { get { return psMoveWrapper.sphereColor[controllerId]; } set { SetColor(value); } }
 

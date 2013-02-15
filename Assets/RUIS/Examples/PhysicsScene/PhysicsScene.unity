@@ -2797,7 +2797,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: e944308dcd2baf5458d72e02bd0ddf31, type: 2}
+  - {fileID: 2100000, guid: f32230aa27025bf419a92df18e4e4461, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3534,7 +3534,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82b5953d600255e45beb5f6dc19d2d14, type: 1}
   m_Name: 
-  bulletPrefab: {fileID: 100000, guid: 6dcb67be022139647acbd6c56ed7ab30, type: 2}
+  bulletPrefab: {fileID: 100000, guid: 073b9ad5fa5ae6c4783373cfd9bbbe63, type: 2}
   bulletSpawnSpot: {fileID: 1873524091}
   bulletSpeed: 23.0400009
   shootingInterval: .100000001
@@ -4730,7 +4730,6 @@ GameObject:
   - 4: {fileID: 558869205}
   - 33: {fileID: 558869207}
   - 23: {fileID: 558869206}
-  - 111: {fileID: 558869208}
   m_Layer: 0
   m_Name: spray-bottle
   m_TagString: Untagged
@@ -4777,24 +4776,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 77544113}
   m_GameObject: {fileID: 558869204}
   m_Mesh: {fileID: 4300000, guid: fc8b38a35c659564e8cb92dedb6bcc9a, type: 3}
---- !u!111 &558869208
-Animation:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11100000, guid: fc8b38a35c659564e8cb92dedb6bcc9a,
-    type: 3}
-  m_PrefabInternal: {fileID: 77544113}
-  m_GameObject: {fileID: 558869204}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
-  m_UserAABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!1001 &571286523
 Prefab:
   m_ObjectHideFlags: 0
@@ -7656,7 +7637,7 @@ Transform:
   m_GameObject: {fileID: 944290314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: .0500000007, y: .0500000007, z: .0500000007}
   m_Children: []
   m_Father: {fileID: 1912875442}
 --- !u!23 &944290316
@@ -7687,7 +7668,7 @@ MeshFilter:
     type: 3}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 944290314}
-  m_Mesh: {fileID: 4300000, guid: b9ea10d98b2d8634cbf6f1f8088bc509, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 1169388fdbc2c9843bdca8c4893f04cf, type: 3}
 --- !u!1 &945837677
 GameObject:
   m_ObjectHideFlags: 0
