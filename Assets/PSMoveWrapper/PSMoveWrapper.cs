@@ -954,9 +954,14 @@ public class PSMoveWrapper : MonoBehaviour {
 	}
 	
 	
-	public void OnAplicationQuit() {
+	public void OnApplicationQuit() {
 		Disconnect();
 	}
+
+    public void OnDestroy()
+    {
+        Disconnect();
+    }
 	
 	
 	private void ReadIPAddress() {
