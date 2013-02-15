@@ -14,6 +14,7 @@ public class RUISMenu : MonoBehaviour {
     bool isCalibrating = false;
     int previousSceneId = -1;
 
+    [HideInInspector] public bool enablePSMove;
     [HideInInspector] public string psMoveIP;
     [HideInInspector] public int psMovePort;
 
@@ -31,6 +32,7 @@ public class RUISMenu : MonoBehaviour {
         }
 
         RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+        enablePSMove = inputManager.enablePSMove;
         psMoveIP = inputManager.PSMoveIP;
         psMovePort = inputManager.PSMovePort;
 	}

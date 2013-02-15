@@ -104,14 +104,17 @@ public class RUISM2KCalibration : MonoBehaviour {
             sceneAnalyzer.StartGenerating();
         }
 
+        RUISMenu ruisMenu = FindObjectOfType(typeof(RUISMenu)) as RUISMenu;
+        if (ruisMenu)
+        {
+            usePSMove = ruisMenu.enablePSMove;
+            psMoveIP = ruisMenu.psMoveIP;
+            psMovePort = ruisMenu.psMovePort;
+        }
+
         if (usePSMove)
         {
-            RUISMenu ruisMenu = FindObjectOfType(typeof(RUISMenu)) as RUISMenu;
-            if (ruisMenu)
-            {
-                psMoveIP = ruisMenu.psMoveIP;
-                psMovePort = ruisMenu.psMovePort;
-            }
+            
 
             StartCoroutine("CheckForMoveConnection");
             psMoveWrapper.ipAddress = psMoveIP;
