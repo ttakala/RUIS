@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [AddComponentMenu("RUIS/Input/RUISSkeletonWand")]
-public class RUISSkeletonWand : RUISWand {
+public class RUISSkeletonWand : RUISWand
+{
     public RUISSkeletonManager.Joint wandStart = RUISSkeletonManager.Joint.RightElbow;
     public RUISSkeletonManager.Joint wandEnd = RUISSkeletonManager.Joint.RightHand;
 
@@ -34,10 +35,15 @@ public class RUISSkeletonWand : RUISWand {
         selectionVisualizers = new Texture2D[8];
         for (int i = 0; i < amountOfSelectionVisualizerImages; i++)
         {
-            selectionVisualizers[i] = Resources.Load("RUIS/Graphics/Selection/visualizer" + (i+1)) as Texture2D;
+            selectionVisualizers[i] = Resources.Load("RUIS/Graphics/Selection/visualizer" + (i + 1)) as Texture2D;
         }
 
         displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
+
+        if (!gestureRecognizer)
+        {
+            Debug.LogWarning("Please set a gesture recognizer for wand: " + name + " if you want to use gestures.");
+        }
     }
 
     public void Update()
@@ -62,48 +68,50 @@ public class RUISSkeletonWand : RUISWand {
                 transform.rotation = endData.rotation;
             }
         }
-        
 
-        gestureRecognizer.GestureTriggered();
-	}
+        if (gestureRecognizer)
+            gestureRecognizer.GestureTriggered();
+    }
 
     public void OnGUI()
     {
-        /*if (!skeletonManager.skeletons[playerId].isTracking) return;
+        if (!skeletonManager.skeletons[playerId].isTracking) return;
 
         float gestureProgress = gestureRecognizer.GetGestureProgress();
 
-        if(gestureProgress >= visualizerThreshold)
+        if (gestureProgress >= visualizerThreshold)
         {
             float visualizerPhase = (gestureProgress - visualizerThreshold) / (1 - visualizerThreshold);
             int selectionVisualizerIndex = (int)(amountOfSelectionVisualizerImages * visualizerPhase);
             selectionVisualizerIndex = Mathf.Clamp(selectionVisualizerIndex, 0, amountOfSelectionVisualizerImages - 1);
 
-            List<Vector2> screenPoints = displayManager.WorldPointToScreenPoints(transform.position);
+            List<RUISDisplayManager.ScreenPoint> screenPoints = displayManager.WorldPointToScreenPoints(transform.position);
 
-            foreach (Vector2 screenPoint in screenPoints)
+            foreach (RUISDisplayManager.ScreenPoint screenPoint in screenPoints)
             {
-                GUI.DrawTexture(new Rect(screenPoint.x - visualizerWidth / 2, screenPoint.y - visualizerHeight / 2, visualizerWidth, visualizerHeight), selectionVisualizers[selectionVisualizerIndex]);
+                RUISGUI.DrawTextureViewportSafe(new Rect(screenPoint.coordinates.x - visualizerWidth / 2, screenPoint.coordinates.y - visualizerHeight / 2, visualizerWidth, visualizerHeight),
+                    screenPoint.camera, selectionVisualizers[selectionVisualizerIndex]);
+                //GUI.DrawTexture(new Rect(screenPoint.x - visualizerWidth / 2, screenPoint.y - visualizerHeight / 2, visualizerWidth, visualizerHeight), selectionVisualizers[selectionVisualizerIndex]);
             }
         }
-         */
+
     }
 
     public override bool SelectionButtonWasPressed()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking) return false;
+        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
         return gestureRecognizer.GestureTriggered();
     }
 
     public override bool SelectionButtonWasReleased()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking) return false;
+        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
         return gestureRecognizer.GestureTriggered();
     }
 
     public override bool SelectionButtonIsDown()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking) return false;
+        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
         return gestureRecognizer.GestureTriggered();
     }
 

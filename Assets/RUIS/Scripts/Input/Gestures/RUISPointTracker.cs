@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class RUISPointTracker : MonoBehaviour {
+public class RUISPointTracker : MonoBehaviour
+{
     public class PointData
     {
         public Vector3 position;
@@ -10,7 +11,8 @@ public class RUISPointTracker : MonoBehaviour {
         public float deltaTime;
         public Vector3 velocity;
 
-        public PointData(Vector3 position, Quaternion rotation, float deltaTime, PointData previous){
+        public PointData(Vector3 position, Quaternion rotation, float deltaTime, PointData previous)
+        {
             this.position = position;
             this.rotation = rotation;
             this.deltaTime = deltaTime;
@@ -24,22 +26,22 @@ public class RUISPointTracker : MonoBehaviour {
     Queue<PointData> points = new Queue<PointData>();
     PointData previousPoint = null;
 
-    public float updateInterval;
-    public int bufferSize;
+    public float updateInterval = 30;
+    public int bufferSize = 20;
 
     float timeSinceLastUpdate = 0;
 
     void Awake()
     {
-        cachedAverageSpeed = new CachedAverageSpeed(points);
-        cachedMaxVelocity = new CachedMaxVelocity(points);
+        cachedAverageSpeed = new CachedAverageSpeed(ref points);
+        cachedMaxVelocity = new CachedMaxVelocity(ref points);
     }
 
     void Update()
     {
         timeSinceLastUpdate += Time.deltaTime;
 
-        if (timeSinceLastUpdate < updateInterval) return;
+        if (timeSinceLastUpdate < updateInterval / 1000) return;
 
         PointData newPoint = new PointData(transform.position, transform.rotation, timeSinceLastUpdate, previousPoint);
         points.Enqueue(newPoint);
@@ -84,7 +86,7 @@ public class RUISPointTracker : MonoBehaviour {
     {
         Queue<PointData> valueList;
 
-        public CachedAverageSpeed(Queue<PointData> valueList)
+        public CachedAverageSpeed(ref Queue<PointData> valueList)
         {
             this.valueList = valueList;
         }
@@ -104,7 +106,7 @@ public class RUISPointTracker : MonoBehaviour {
     {
         Queue<PointData> valueList;
 
-        public CachedMaxVelocity(Queue<PointData> valueList)
+        public CachedMaxVelocity(ref Queue<PointData> valueList)
         {
             this.valueList = valueList;
         }
@@ -121,5 +123,5 @@ public class RUISPointTracker : MonoBehaviour {
         }
     }
 
-    
+
 }

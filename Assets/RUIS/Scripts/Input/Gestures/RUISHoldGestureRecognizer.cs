@@ -1,20 +1,23 @@
 using UnityEngine;
 using System.Collections;
 
-public class RUISHoldGestureRecognizer : RUISGestureRecognizer {
+public class RUISHoldGestureRecognizer : RUISGestureRecognizer
+{
     float gestureProgress = 0;
 
     public float holdLength = 2.0f;
-    public float speedThreshold = 0.05f;
+    public float speedThreshold = 0.25f;
 
     bool gestureStarted = false;
     float timeSinceStart;
 
-	void Start () {
-	
-	}
-	
-	void Update () {
+    void Start()
+    {
+
+    }
+
+    void Update()
+    {
         if (gestureStarted && pointTracker.averageSpeed < speedThreshold)
         {
             timeSinceStart += Time.deltaTime;
