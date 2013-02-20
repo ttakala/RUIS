@@ -45,6 +45,13 @@ public class RUISWandSelector : MonoBehaviour {
     }
 
     private RUISSelectable highlightedObject;
+    public RUISSelectable HighlightedObject
+    {
+        get
+        {
+            return highlightedObject;
+        }
+    }
 
     public Vector3 angularVelocity
     {

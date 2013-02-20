@@ -20,10 +20,18 @@ public class RUISSkeletonWand : RUISWand
     private const int amountOfSelectionVisualizerImages = 8;
     Texture2D[] selectionVisualizers;
 
-    public int visualizerWidth = 64;
-    public int visualizerHeight = 64;
+    public int visualizerWidth = 32;
+    public int visualizerHeight = 32;
 
     public float visualizerThreshold = 0.25f;
+
+    private RUISWandSelector wandSelector;
+
+    private bool isTracking = false;
+
+    public GameObject wandPositionVisualizer;
+
+    private RUISSelectable highlightStartObject;
 
     public void Awake()
     {
@@ -44,11 +52,41 @@ public class RUISSkeletonWand : RUISWand
         {
             Debug.LogWarning("Please set a gesture recognizer for wand: " + name + " if you want to use gestures.");
         }
+
+        wandSelector = GetComponent<RUISWandSelector>();
+
+        PlayerLost();
     }
 
     public void Update()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking) return;
+        if (!isTracking && skeletonManager.skeletons[playerId].isTracking)
+        {
+            PlayerFound();
+        }
+        else if (isTracking && !skeletonManager.skeletons[playerId].isTracking)
+        {
+            PlayerLost();
+        }
+        else if (!skeletonManager.skeletons[playerId].isTracking)
+        {
+            return;
+        }
+
+        if (!highlightStartObject && wandSelector.HighlightedObject)
+        {
+            highlightStartObject = wandSelector.HighlightedObject;
+            gestureRecognizer.EnableGesture();
+        }
+        else if (highlightStartObject && !wandSelector.HighlightedObject)
+        {
+            highlightStartObject = null;
+
+            if (!wandSelector.Selection)
+            {
+                gestureRecognizer.DisableGesture();
+            }
+        }
 
         visualizerThreshold = Mathf.Clamp01(visualizerThreshold);
 
@@ -68,14 +106,11 @@ public class RUISSkeletonWand : RUISWand
                 transform.rotation = endData.rotation;
             }
         }
-
-        if (gestureRecognizer)
-            gestureRecognizer.GestureTriggered();
     }
 
     public void OnGUI()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking) return;
+        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return;
 
         float gestureProgress = gestureRecognizer.GetGestureProgress();
 
@@ -100,13 +135,26 @@ public class RUISSkeletonWand : RUISWand
     public override bool SelectionButtonWasPressed()
     {
         if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
-        return gestureRecognizer.GestureTriggered();
+        if (gestureRecognizer.GestureTriggered() && highlightStartObject == wandSelector.HighlightedObject)
+        {
+            gestureRecognizer.ResetProgress();
+            Debug.Log("Pressed");
+            return true;
+        }
+
+        return false;
     }
 
     public override bool SelectionButtonWasReleased()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
-        return gestureRecognizer.GestureTriggered();
+        if (gestureRecognizer.GestureTriggered())
+        {
+            gestureRecognizer.ResetProgress();
+            Debug.Log("Released");
+            return true;
+        }
+
+        return false;
     }
 
     public override bool SelectionButtonIsDown()
@@ -121,4 +169,26 @@ public class RUISSkeletonWand : RUISWand
     }
 
     public override Color color { get { return wandColor; } }
+
+    private void PlayerFound()
+    {
+        isTracking = true;
+        gestureRecognizer.EnableGesture();
+        GetComponent<LineRenderer>().enabled = true;
+        if (wandPositionVisualizer)
+        {
+            wandPositionVisualizer.SetActiveRecursively(true);
+        }
+    }
+
+    private void PlayerLost()
+    {
+        isTracking = false;
+        gestureRecognizer.DisableGesture();
+        GetComponent<LineRenderer>().enabled = false;
+        if (wandPositionVisualizer)
+        {
+            wandPositionVisualizer.SetActiveRecursively(false);
+        }
+    }
 }

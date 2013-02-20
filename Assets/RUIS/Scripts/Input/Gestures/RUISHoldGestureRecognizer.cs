@@ -11,13 +11,17 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
     bool gestureStarted = false;
     float timeSinceStart;
 
+    bool enabled = false;
+
     void Start()
     {
-
+        ResetData();
     }
 
     void Update()
     {
+        if (!enabled) return;
+
         if (gestureStarted && pointTracker.averageSpeed < speedThreshold)
         {
             timeSinceStart += Time.deltaTime;
@@ -26,24 +30,17 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
         }
         else if (pointTracker.averageSpeed < speedThreshold)
         {
-            gestureStarted = true;
-            timeSinceStart = 0;
+            StartTiming();
         }
         else
         {
-            gestureStarted = false;
-            gestureProgress = 0;
+            ResetData();
         }
     }
 
     public override bool GestureTriggered()
     {
-        if (gestureProgress >= 1.0f)
-        {
-            StartCoroutine(ResetTriggerAtEndOfFrame());
-            return true;
-        }
-        else return false;
+        return gestureProgress >= 0.99f;
     }
 
     public override float GetGestureProgress()
@@ -51,19 +48,34 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
         return gestureProgress;
     }
 
-    bool alreadyResetting;
-    private IEnumerator ResetTriggerAtEndOfFrame()
+    public override void ResetProgress()
     {
-        if (alreadyResetting)
-            yield break;
+        timeSinceStart = 0;
+        gestureProgress = 0;
+    }
 
-        alreadyResetting = true;
+    private void StartTiming()
+    {
+        ResetData();
+        gestureStarted = true;
+    }
 
-        yield return new WaitForEndOfFrame();
-
+    private void ResetData()
+    {
         gestureStarted = false;
         gestureProgress = 0;
         timeSinceStart = 0;
-        alreadyResetting = false;
+    }
+
+    public override void EnableGesture()
+    {
+        enabled = true;
+        ResetData();
+    }
+
+    public override void DisableGesture()
+    {
+        enabled = false;
+        ResetData();
     }
 }
