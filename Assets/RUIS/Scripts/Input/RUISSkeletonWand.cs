@@ -138,7 +138,6 @@ public class RUISSkeletonWand : RUISWand
         if (gestureRecognizer.GestureTriggered() && highlightStartObject == wandSelector.HighlightedObject)
         {
             gestureRecognizer.ResetProgress();
-            Debug.Log("Pressed");
             return true;
         }
 
@@ -150,7 +149,6 @@ public class RUISSkeletonWand : RUISWand
         if (gestureRecognizer.GestureTriggered())
         {
             gestureRecognizer.ResetProgress();
-            Debug.Log("Released");
             return true;
         }
 
