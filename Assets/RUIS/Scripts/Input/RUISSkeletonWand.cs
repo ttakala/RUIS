@@ -32,6 +32,9 @@ public class RUISSkeletonWand : RUISWand
     public GameObject wandPositionVisualizer;
 
     private RUISSelectable highlightStartObject;
+	
+	// Tuukka:
+	private Quaternion tempRotation;
 
     public void Awake()
     {
@@ -95,16 +98,51 @@ public class RUISSkeletonWand : RUISWand
 
         if (endData.positionConfidence >= 0.5f)
         {
-            transform.localPosition = endData.position;
-
+			
+			// TUUKKA: Original code
+//            transform.localPosition = endData.position;
+//
+//            if (startData != null && startData.positionConfidence >= 0.5f)
+//            {
+//                transform.localRotation = Quaternion.LookRotation(endData.position - startData.position);
+//            }
+//            else if (endData.rotationConfidence >= 0.5f)
+//            {
+//                transform.localRotation = endData.rotation;
+//            }
+			
+			// First calculate local rotation
             if (startData != null && startData.positionConfidence >= 0.5f)
             {
-                transform.localRotation = Quaternion.LookRotation(endData.position - startData.position);
+                tempRotation = Quaternion.LookRotation(endData.position - startData.position);
             }
             else if (endData.rotationConfidence >= 0.5f)
             {
-                transform.localRotation = endData.rotation;
+                tempRotation = endData.rotation;
             }
+			
+			if (rigidbody)
+	        {
+				// TUUKKA:
+				if (transform.parent)
+				{
+					// If the wand has a parent, we need to apply its transformation first
+	            	rigidbody.MovePosition(transform.parent.TransformPoint(endData.position));
+	            	rigidbody.MoveRotation(transform.parent.rotation * tempRotation);
+				}
+				else
+				{
+	            	rigidbody.MovePosition(endData.position);
+	            	rigidbody.MoveRotation(tempRotation);
+				}
+	        }
+			else
+	        {
+				// If there is no rigidBody, then just change localPosition & localRotation
+				transform.localPosition = endData.position;
+	            transform.localRotation = tempRotation;
+	        }
+			
         }
     }
 

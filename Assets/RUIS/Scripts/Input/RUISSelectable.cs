@@ -46,17 +46,18 @@ public class RUISSelectable : MonoBehaviour {
 
     public void Update()
     {
+		// TUUKKA: *** Moved this from FixedUpdate to here because it created Zero velocities
+        UpdateTransform(true);
+		
+        latestVelocity = (transform.position - lastPosition) / Time.deltaTime;
+        lastPosition = transform.position;
+
+        velocityBuffer.Enqueue(latestVelocity);
+        LimitBufferSize(velocityBuffer, 2);
     }
 
     public void FixedUpdate()
     {
-        UpdateTransform(true);
-
-        latestVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
-        lastPosition = transform.position;
-
-        velocityBuffer.Enqueue(latestVelocity);
-        LimitBufferSize(velocityBuffer, 5);
     }
 
     public virtual void OnSelection(RUISWandSelector selector)
@@ -77,7 +78,7 @@ public class RUISSelectable : MonoBehaviour {
             rigidbody.isKinematic = true;
         }
 
-        if (selectionMaterial != null) ;
+        if (selectionMaterial != null)
             AddMaterialToEverything(selectionMaterial);
 
         UpdateTransform(false);
@@ -94,7 +95,6 @@ public class RUISSelectable : MonoBehaviour {
         if (maintainMomentumAfterRelease && rigidbody && !rigidbody.isKinematic)
         {
             rigidbody.AddForce(AverageBufferContent(velocityBuffer), ForceMode.VelocityChange);
-
             rigidbody.AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
         }
 
@@ -148,9 +148,9 @@ public class RUISSelectable : MonoBehaviour {
                 break;
             case RUISWandSelector.SelectionGrabType.RelativeToWand:
                 newRotation = rotationAtSelection;
-                Quaternion selectorRotationChange = (Quaternion.Inverse(selectorRotationAtSelection) * selector.transform.rotation);
-                //transform.Rotate(selectorRotationChange, Space.World);
-                newRotation = selectorRotationChange * newRotation;//newRotation * selectorRotationChange;
+				// Tuukka: 
+				Quaternion selectorRotationChange = Quaternion.Inverse(selectorRotationAtSelection) * rotationAtSelection;
+				newRotation = selector.transform.rotation * selectorRotationChange;
                 break;
             case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
                 newRotation = Quaternion.LookRotation(selector.selectionRay.direction);

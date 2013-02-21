@@ -25,8 +25,18 @@ public class RUISMouseWand : RUISWand {
         Ray wandRay = displayManager.ScreenPointToRay(Input.mousePosition);
         if (wandRay.direction != Vector3.zero)
         {
-            transform.position = wandRay.origin;
-            transform.rotation = Quaternion.LookRotation(wandRay.direction);
+			// TUUKKA:
+			if (rigidbody)
+        	{
+            	rigidbody.MovePosition(wandRay.origin);
+            	rigidbody.MoveRotation(Quaternion.LookRotation(wandRay.direction));
+			}
+			else
+			{
+				// TUUKKA: This was the original code 
+	            transform.position = wandRay.origin;
+	            transform.rotation = Quaternion.LookRotation(wandRay.direction);
+			}
         }
 
         mouseButtonPressed = Input.GetMouseButtonDown(0);

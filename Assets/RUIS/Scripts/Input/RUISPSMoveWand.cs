@@ -55,13 +55,29 @@ public class RUISPSMoveWand : RUISWand {
     {        
         if (rigidbody)
         {
-            rigidbody.MovePosition(position);
-            rigidbody.MoveRotation(qOrientation);
+			// TUUKKA:
+			if (transform.parent)
+			{
+				// If the wand has a parent, we need to apply its transformation first
+				// *** FIXME: If parent is scaled, then compound objects (Watering Bottle) get weird
+            	rigidbody.MovePosition(transform.parent.TransformPoint(position));
+            	rigidbody.MoveRotation(transform.parent.rotation * qOrientation);
+			}
+			else
+			{
+				// TUUKKA: This was the original code 
+            	rigidbody.MovePosition(position);
+            	rigidbody.MoveRotation(qOrientation);
+			}
         }
         else
         {
-            transform.position = position;
-            transform.rotation = qOrientation;
+			// If there is no rigidBody, then just change localPosition & localRotation
+			// TUUKKA:
+			transform.localPosition = position;
+            //transform.position = position;
+            transform.localRotation = qOrientation;
+            //transform.rotation = qOrientation;
         }
 
 
@@ -188,19 +204,36 @@ public class RUISPSMoveWand : RUISWand {
             return TransformPosition(psMoveWrapper.position[controllerId]);
         }
     }
-
+	
+	// THIS NOW RETURNS WORLD VELOCITY WHILE OTHERS (E.G. position) RETURN LOCAL VALUES
     public Vector3 velocity
     {
         get
         {
-            return TransformPosition(psMoveWrapper.velocity[controllerId]);
+			// If the wand has a parent, we need to apply its transformation first
+			if (transform.parent)
+				return transform.parent.TransformDirection(
+											TransformVelocity(psMoveWrapper.velocity[controllerId]));
+			else 
+				return TransformVelocity(psMoveWrapper.velocity[controllerId]);
+			// TUUKKA: TransformPosition??? This is the old version 
+            //return TransformPosition(psMoveWrapper.velocity[controllerId]);
         }
     }
+	
+	// THIS NOW RETURNS WORLD ACCELERATION WHILE OTHERS (E.G. position) RETURN LOCAL VALUES
     public Vector3 acceleration
     {
         get
         {
-            return TransformPosition(psMoveWrapper.acceleration[controllerId]);
+			// If the wand has a parent, we need to apply its transformation first
+			if (transform.parent)
+				return transform.parent.TransformDirection(
+											TransformVelocity(psMoveWrapper.acceleration[controllerId]));
+			else 
+				return TransformVelocity(psMoveWrapper.acceleration[controllerId]);
+			// TUUKKA: TransformPosition??? This is the old version 
+            //return TransformPosition(psMoveWrapper.acceleration[controllerId]);
         }
     }
 
@@ -218,18 +251,30 @@ public class RUISPSMoveWand : RUISWand {
             return coordinateSystem.ConvertMoveRotation(psMoveWrapper.qOrientation[controllerId]);
         }
     }
+	// THIS NOW RETURNS WORLD angularVelocity WHILE OTHERS (E.G. position) RETURN LOCAL VALUES
     public Vector3 angularVelocity
     {
         get
-        {
-            return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]);
+        {	
+			// If the wand has a parent, we need to apply its transformation first
+			if (transform.parent)
+				return transform.parent.TransformDirection(
+					coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]));
+			else 
+            	return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]);
         }
     }
+	// THIS NOW RETURNS WORLD angularAcceleration WHILE OTHERS (E.G. position) RETURN LOCAL VALUES
     public Vector3 angularAcceleration
     {
         get
         {
-            return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularAcceleration[controllerId]);
+			// If the wand has a parent, we need to apply its transformation first
+			if (transform.parent)
+				return transform.parent.TransformDirection(
+					coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularAcceleration[controllerId]));
+			else 
+            	return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularAcceleration[controllerId]);
         }
     }
 
@@ -284,7 +329,13 @@ public class RUISPSMoveWand : RUISWand {
     public override Color color { get { return psMoveWrapper.sphereColor[controllerId]; } set { SetColor(value); } }
 
     public float triggerValue { get { return psMoveWrapper.valueT[controllerId] / 255.0f; } }
-
+	
+	// TUUKKA:
+    private Vector3 TransformVelocity(Vector3 value)
+    {
+        return coordinateSystem.ConvertMoveVelocity(value);
+    }
+	
     private Vector3 TransformPosition(Vector3 value)
     {
         return coordinateSystem.ConvertMovePosition(value);

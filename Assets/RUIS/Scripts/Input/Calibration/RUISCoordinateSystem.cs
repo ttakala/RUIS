@@ -211,6 +211,19 @@ public class RUISCoordinateSystem : MonoBehaviour
 
         return newPosition;
     }
+	
+	// TUUKKA:
+	public Vector3 ConvertMoveVelocity(Vector3 velocity)
+    {
+        //flip the z coordinate to get into unity's coordinate system
+        Vector3 newVelocity = new Vector3(velocity.x, velocity.y, -velocity.z);
+
+        newVelocity *= moveToUnityScale;
+
+        newVelocity = moveToRUISTransform.MultiplyPoint3x4(newVelocity);
+
+        return newVelocity;
+    }
 
     public Quaternion ConvertMoveRotation(Quaternion rotation)
     {
