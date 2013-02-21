@@ -38,7 +38,6 @@ Assets/RUIS/Examples/PhysicsScene/Textures/books.jpg -text
 Assets/RUIS/Examples/PhysicsScene/Textures/dark_Tire.png -text
 Assets/RUIS/Examples/PhysicsScene/Textures/flag.png -text
 Assets/RUIS/Examples/PhysicsScene/Textures/orientalRug.jpg -text
-Assets/RUIS/Examples/PhysicsScene/Textures/skin_box.jpg -text
 Assets/RUIS/Examples/PhysicsScene/Textures/straws.png -text
 Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Sources/Textures/BigTree_bark_diffuse.jpg -text
 Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Sources/Textures/BigTree_bark_normal.jpg -text
@@ -78,6 +77,7 @@ Assets/RUIS/Resources/RUIS/Graphics/Materials/DefaultHighlightMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/DefaultSelectionMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/MoveCalibrationCubeMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/SelectionRayMaterial.mat -text
+Assets/RUIS/Resources/RUIS/Graphics/Materials/skin_box.jpg -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer.pdn -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer1.png -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer2.png -text
@@ -627,6 +627,7 @@ Library/metadata/60/60bca8f58a0b8478e946e6e86658cb29 -text
 Library/metadata/60/60e0369ad2956cc49908390b9bbe47a0 -text
 Library/metadata/61/6143414bcf8d80e4e912b9e84bd739ad -text
 Library/metadata/61/6165f77a9fda3ca4c89d9ae61650a0e9 -text
+Library/metadata/62/620a9b7d246cc70499f39b52874b18ce -text
 Library/metadata/62/620f96722a4f2194a94a1693a850c45f -text
 Library/metadata/62/62f146c240f749949ba790971ae0d6d7 -text
 Library/metadata/63/63a853f7c4f2f3c47812cda0cf8a51f7 -text
@@ -1065,6 +1066,7 @@ Library/previews/60/60e0369ad2956cc49908390b9bbe47a0 -text
 Library/previews/60/60e0369ad2956cc49908390b9bbe47a0_/100000 -text
 Library/previews/60/60e0369ad2956cc49908390b9bbe47a0_/100002 -text
 Library/previews/60/60e0369ad2956cc49908390b9bbe47a0_/100006 -text
+Library/previews/62/620a9b7d246cc70499f39b52874b18ce -text
 Library/previews/62/620f96722a4f2194a94a1693a850c45f -text
 Library/previews/62/62f146c240f749949ba790971ae0d6d7 -text
 Library/previews/62/62f146c240f749949ba790971ae0d6d7_/4300000 -text
