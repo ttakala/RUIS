@@ -43,7 +43,11 @@ public class RUISPointTracker : MonoBehaviour
 
         if (timeSinceLastUpdate < updateInterval / 1000) return;
 
-        PointData newPoint = new PointData(transform.position, transform.rotation, timeSinceLastUpdate, previousPoint);
+        PointData newPoint = new PointData(transform.localPosition, transform.localRotation, timeSinceLastUpdate, previousPoint);
+
+        //remove zero velocities just in case, in order for the speeds not to get polluted by nonexisting data
+        //if (newPoint.velocity == Vector3.zero) return;
+
         points.Enqueue(newPoint);
         previousPoint = newPoint;
 

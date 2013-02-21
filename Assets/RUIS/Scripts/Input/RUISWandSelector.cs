@@ -28,7 +28,8 @@ public class RUISWandSelector : MonoBehaviour {
     {
         SnapToWand,
         RelativeToWand,
-        AlongSelectionRay
+        AlongSelectionRay, 
+        DoNotGrab
     }
 
     public SelectionGrabType positionSelectionGrabType = SelectionGrabType.SnapToWand;
@@ -132,13 +133,17 @@ public class RUISWandSelector : MonoBehaviour {
                 }
             }
         } 
-        else if ((!toggleSelection && wand.SelectionButtonWasReleased()) || (toggleSelection && wand.SelectionButtonWasReleased() && selectionButtonReleasedAfterSelection))
-        {
-            EndSelection();
-        }
-        else if (wand.SelectionButtonWasReleased())
-        {
-            selectionButtonReleasedAfterSelection = true;
+        else if (wand.SelectionButtonWasReleased()){
+            if (!toggleSelection || 
+                (toggleSelection && selectionButtonReleasedAfterSelection) ||
+                !wand.IsSelectionButtonStandard())
+            {
+                EndSelection();
+            }
+            else
+            {
+                selectionButtonReleasedAfterSelection = true;
+            }
         }
     }
 

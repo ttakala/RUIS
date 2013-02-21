@@ -137,6 +137,8 @@ public class RUISSelectable : MonoBehaviour {
                 if (clampToCertainDistance) clampDistance = distanceToClampTo;
                 newPosition = selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
                 break;
+            case RUISWandSelector.SelectionGrabType.DoNotGrab:
+                break;
         }
 
         switch (selector.rotationSelectionGrabType)
@@ -152,6 +154,8 @@ public class RUISSelectable : MonoBehaviour {
                 break;
             case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
                 newRotation = Quaternion.LookRotation(selector.selectionRay.direction);
+                break;
+            case RUISWandSelector.SelectionGrabType.DoNotGrab:
                 break;
         }
 

@@ -49,6 +49,11 @@ public class RUISMouseWand : RUISWand {
         return mouseButtonDown;
     }
 
+    public override bool IsSelectionButtonStandard()
+    {
+        return true;
+    }
+
     public override Vector3 GetAngularVelocity()
     {
         return Vector3.zero;

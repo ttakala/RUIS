@@ -352,8 +352,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cc8f20f27ab81542b70f1880fbad4f0, type: 1}
   m_Name: 
   filename: inputConfig.txt
-  loadFromTextFileInEditor: 1
-  enablePSMove: 1
+  loadFromTextFileInEditor: 0
+  enablePSMove: 0
   PSMoveIP: 130.233.46.224
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1

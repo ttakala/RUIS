@@ -95,15 +95,15 @@ public class RUISSkeletonWand : RUISWand
 
         if (endData.positionConfidence >= 0.5f)
         {
-            transform.position = endData.position;
+            transform.localPosition = endData.position;
 
             if (startData != null && startData.positionConfidence >= 0.5f)
             {
-                transform.rotation = Quaternion.LookRotation(endData.position - startData.position);
+                transform.localRotation = Quaternion.LookRotation(endData.position - startData.position);
             }
             else if (endData.rotationConfidence >= 0.5f)
             {
-                transform.rotation = endData.rotation;
+                transform.localRotation = endData.rotation;
             }
         }
     }
@@ -135,7 +135,7 @@ public class RUISSkeletonWand : RUISWand
     public override bool SelectionButtonWasPressed()
     {
         if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
-        if (gestureRecognizer.GestureTriggered() && highlightStartObject == wandSelector.HighlightedObject)
+        if (gestureRecognizer.GestureTriggered() && wandSelector.HighlightedObject)
         {
             gestureRecognizer.ResetProgress();
             return true;
@@ -146,6 +146,7 @@ public class RUISSkeletonWand : RUISWand
 
     public override bool SelectionButtonWasReleased()
     {
+        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
         if (gestureRecognizer.GestureTriggered())
         {
             gestureRecognizer.ResetProgress();
@@ -159,6 +160,11 @@ public class RUISSkeletonWand : RUISWand
     {
         if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
         return gestureRecognizer.GestureTriggered();
+    }
+
+    public override bool IsSelectionButtonStandard()
+    {
+        return false;
     }
 
     public override Vector3 GetAngularVelocity()

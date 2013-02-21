@@ -176,6 +176,11 @@ public class RUISPSMoveWand : RUISWand {
         }
     }
 
+    public override bool IsSelectionButtonStandard()
+    {
+        return true;
+    }
+
     public Vector3 position
     {
         get
