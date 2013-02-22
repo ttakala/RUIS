@@ -46,7 +46,8 @@ public class RUISSelectable : MonoBehaviour {
     {
         if (transformHasBeenUpdated)
         {
-            latestVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
+            latestVelocity = (transform.position - lastPosition) 
+								/ Mathf.Max(Time.deltaTime, Time.fixedDeltaTime);
             lastPosition = transform.position;
 
             velocityBuffer.Enqueue(latestVelocity);

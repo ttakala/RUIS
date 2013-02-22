@@ -81,7 +81,7 @@ public class RUISSkeletonWand : RUISWand
             highlightStartObject = wandSelector.HighlightedObject;
             gestureRecognizer.EnableGesture();
         }
-        else if (highlightStartObject && !wandSelector.HighlightedObject)
+        else if (!wandSelector.HighlightedObject)
         {
             highlightStartObject = null;
 

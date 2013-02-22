@@ -1709,6 +1709,10 @@ Prefab:
       propertyPath: toggleSelection
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
+      propertyPath: bufferSize
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
   m_RootGameObject: {fileID: 2075998471}
@@ -6051,7 +6055,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -11499,7 +11503,7 @@ MonoBehaviour:
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
   enableMoveCalibrationDuringPlay: 0
-  enableKinect: 0
+  enableKinect: 1
 --- !u!114 &1525314273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12223,6 +12227,7 @@ GameObject:
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 1612188925}
+  - 114: {fileID: 1612188927}
   - 114: {fileID: 1612188926}
   m_Layer: 0
   m_Name: Kinect
@@ -12251,6 +12256,17 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1612188924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526a02a3548a87e439fb873def0646c9, type: 1}
+  m_Name: 
+--- !u!114 &1612188927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400016, guid: 7e2baee5779349340b6a78274c032bf7,
+    type: 2}
+  m_PrefabInternal: {fileID: 768030089}
   m_GameObject: {fileID: 1612188924}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -16148,7 +16164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5dba8c14fa8e6448b9a1a16d33fe05, type: 1}
   m_Name: 
   updateInterval: 5
-  bufferSize: 30
+  bufferSize: 20
 --- !u!114 &2075998476
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c5dba8c14fa8e6448b9a1a16d33fe05, type: 1}
   m_Name: 
   updateInterval: 5
-  bufferSize: 30
+  bufferSize: 20
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
