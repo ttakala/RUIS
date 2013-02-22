@@ -35,20 +35,31 @@ public class RUISSelectable : MonoBehaviour {
 
     private Queue<Vector3> velocityBuffer;
 
+    private bool transformHasBeenUpdated = false;
+
     public void Awake()
     {
         velocityBuffer = new Queue<Vector3>();
     }
 
+    public void Update()
+    {
+        if (transformHasBeenUpdated)
+        {
+            latestVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
+            lastPosition = transform.position;
+
+            velocityBuffer.Enqueue(latestVelocity);
+            LimitBufferSize(velocityBuffer, 2);
+
+            transformHasBeenUpdated = false;
+        }
+    }
+
     public void FixedUpdate()
     {
         UpdateTransform(true);
-
-        latestVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
-        lastPosition = transform.position;
-
-        velocityBuffer.Enqueue(latestVelocity);
-        LimitBufferSize(velocityBuffer, 2);
+        transformHasBeenUpdated = true;
     }
 
     public virtual void OnSelection(RUISWandSelector selector)
