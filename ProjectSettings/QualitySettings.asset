@@ -114,4 +114,7 @@ QualitySettings:
     lodBias: 2
     maximumLODLevel: 0
     excludedTargetPlatforms: []
-  m_PerPlatformDefaultQuality: {}
+  m_PerPlatformDefaultQuality:
+    FlashPlayer: 0
+    Standalone: 0
+    Web: 0

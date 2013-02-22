@@ -39,6 +39,7 @@ GameObject:
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 400004}
+  - 114: {fileID: 11400016}
   m_Layer: 0
   m_Name: Kinect
   m_TagString: Untagged
@@ -477,6 +478,16 @@ MonoBehaviour:
   setKinectOriginToFloor: 1
   applyKinectOffset: 0
   kinectOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &11400016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526a02a3548a87e439fb873def0646c9, type: 1}
+  m_Name: 
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1

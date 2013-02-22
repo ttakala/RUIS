@@ -26,6 +26,11 @@ public class RUISInputManager : MonoBehaviour
             Import(filename);
         }
 
+        if(!enableKinect)
+        {
+            Debug.Log("Disabling kinect!");
+            GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
+        } 
 
         psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
         if (enablePSMove)
@@ -43,18 +48,12 @@ public class RUISInputManager : MonoBehaviour
         }
         else
         {
-            psMoveWrapper.gameObject.SetActiveRecursively(false);
+            //psMoveWrapper.gameObject.SetActiveRecursively(false);
         }
 
         DisableUnneededMoveWands();
 
-        if (enableKinect)
-        {
-        }
-        else
-        {
-            BroadcastMessage("KinectNotAvailable", SendMessageOptions.DontRequireReceiver);
-        } 
+        
     }
 
     void Start()
@@ -66,7 +65,7 @@ public class RUISInputManager : MonoBehaviour
             if (settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid)
             {
                 Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
-                BroadcastMessage("KinectNotAvailable", SendMessageOptions.DontRequireReceiver);
+                GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
             }
         }
     }

@@ -40,24 +40,15 @@ public class RUISSelectable : MonoBehaviour {
         velocityBuffer = new Queue<Vector3>();
     }
 
-    public void Start()
+    public void FixedUpdate()
     {
-    }
-
-    public void Update()
-    {
-		// TUUKKA: *** Moved this from FixedUpdate to here because it created Zero velocities
         UpdateTransform(true);
-		
-        latestVelocity = (transform.position - lastPosition) / Time.deltaTime;
+
+        latestVelocity = (transform.position - lastPosition) / Time.fixedDeltaTime;
         lastPosition = transform.position;
 
         velocityBuffer.Enqueue(latestVelocity);
         LimitBufferSize(velocityBuffer, 2);
-    }
-
-    public void FixedUpdate()
-    {
     }
 
     public virtual void OnSelection(RUISWandSelector selector)

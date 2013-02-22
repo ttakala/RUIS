@@ -13,7 +13,7 @@ PlayerSettings:
   companyName: Aalto University
   productName: RUIS
   AndroidLicensePublicKey: 
-  defaultScreenWidth: 1920
+  defaultScreenWidth: 3840
   defaultScreenHeight: 1080
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
@@ -131,6 +131,7 @@ PlayerSettings:
   ps3BootCheckMaxSaveGameSizeKB: 128
   ps3TrophyCommSig: 
   ps3SaveGameSlots: 1
+  ps3EDATKeyFilePath: 
   ps3TrialMode: 0
   flashStrippingLevel: 2
   firstStreamedLevelWithResources: 0
