@@ -300,7 +300,7 @@ public class RUISPSMoveWand : RUISWand {
         }
     }
 
-    public bool squareButtonDown { get { return psMoveWrapper.isButtonSelect[controllerId]; } }
+    public bool squareButtonDown { get { return psMoveWrapper.isButtonSquare[controllerId]; } }
     public bool crossButtonDown { get { return psMoveWrapper.isButtonCross[controllerId]; } }
     public bool circleButtonDown { get { return psMoveWrapper.isButtonCircle[controllerId]; } }
     public bool triangleButtonDown { get { return psMoveWrapper.isButtonTriangle[controllerId]; } }
