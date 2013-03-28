@@ -47,6 +47,7 @@ public class RUISDisplay : MonoBehaviour {
     public bool isHMD; //head-mounted display
     public RUISCamera linkedCamera;
     public StereoType stereoType;
+    public bool isKeystoneCorrected = false;
 
     private float aspectRatio;
 
@@ -58,6 +59,7 @@ public class RUISDisplay : MonoBehaviour {
         }
         else
         {
+            linkedCamera.isKeystoneCorrected = isKeystoneCorrected;
             linkedCamera.associatedDisplay = this;
         }
 

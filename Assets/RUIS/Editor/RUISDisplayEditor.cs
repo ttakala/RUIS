@@ -9,6 +9,7 @@ public class RUISDisplayEditor : Editor {
     SerializedProperty resolutionY;
     SerializedProperty isStereo;
     SerializedProperty isHMD;
+    SerializedProperty isKeystoneCorrected;
     SerializedProperty camera;
     SerializedProperty stereoType;
     SerializedProperty useDoubleTheSpace;
@@ -23,6 +24,7 @@ public class RUISDisplayEditor : Editor {
         resolutionY = serializedObject.FindProperty("resolutionY");
         isStereo = serializedObject.FindProperty("isStereo");
         isHMD = serializedObject.FindProperty("isHMD");
+        isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
         camera = serializedObject.FindProperty("linkedCamera");
         stereoType = serializedObject.FindProperty("stereoType");
         useDoubleTheSpace = serializedObject.FindProperty("useDoubleTheSpace");
@@ -45,6 +47,8 @@ public class RUISDisplayEditor : Editor {
         EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y", "The height of the display"));
         
         EditorGUILayout.PropertyField(camera, new GUIContent("Attached Camera", "The RUISCamera that renders to this display"));
+
+        EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
 
         EditorGUILayout.PropertyField(isHMD, new GUIContent("Head-Mounted Display", "Is this display a HMD?"));
 

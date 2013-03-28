@@ -2,8 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISCamera : MonoBehaviour {
-    public bool isHeadTracking { get; private set; }
-    public bool isKeystoneCorrected { get; private set; }
+    [HideInInspector]
+    public bool isHeadTracking;
+    [HideInInspector]
+    public bool isKeystoneCorrected;
 
     public Camera centerCamera; //the camera used for mono rendering
     public Camera leftCamera;
@@ -17,12 +19,23 @@ public class RUISCamera : MonoBehaviour {
     private Rect normalizedScreenRect;
     private float aspectRatio;
 
+    public bool isStereo { get { return associatedDisplay.isStereo; } }
+
     private bool oldStereoValue;
     private RUISDisplay.StereoType oldStereoTypeValue;
+
+    RUISKeystoningConfiguration keystoningConfiguration;
+
+    public void Awake()
+    {
+        keystoningConfiguration = GetComponent<RUISKeystoningConfiguration>();
+    }
 
 	public void Start () {
         if (!associatedDisplay)
         {
+            Debug.LogError("Camera not associated to any display, disabling... " + name);
+            gameObject.SetActiveRecursively(false);
             return;
         }
 
@@ -40,6 +53,10 @@ public class RUISCamera : MonoBehaviour {
 	}
 	
 	public void Update () {
+        centerCamera.ResetProjectionMatrix();
+        leftCamera.ResetProjectionMatrix();
+        rightCamera.ResetProjectionMatrix();
+
         if (oldStereoValue != associatedDisplay.isStereo)
         {
             UpdateStereo();
@@ -77,6 +94,9 @@ public class RUISCamera : MonoBehaviour {
 
     private void ApplyKeystoneCorrection()
     {
+        centerCamera.projectionMatrix *= keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix();
+        leftCamera.projectionMatrix *= keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix();
+        rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
     }
 
     public void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)

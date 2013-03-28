@@ -12,6 +12,7 @@ GameObject:
   - 92: {fileID: 9200000}
   - 124: {fileID: 12400000}
   - 81: {fileID: 8100000}
+  - 114: {fileID: 11400006}
   m_Layer: 0
   m_Name: Right
   m_TagString: MainCamera
@@ -31,6 +32,7 @@ GameObject:
   - 92: {fileID: 9200002}
   - 124: {fileID: 12400002}
   - 81: {fileID: 8100002}
+  - 114: {fileID: 11400008}
   m_Layer: 0
   m_Name: Left
   m_TagString: MainCamera
@@ -48,6 +50,8 @@ GameObject:
   - 4: {fileID: 400004}
   - 114: {fileID: 11400000}
   - 20: {fileID: 2000004}
+  - 114: {fileID: 11400002}
+  - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: RUISCamera
   m_TagString: MainCamera
@@ -212,12 +216,64 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 1}
   m_Name: 
+  isHeadTracking: 0
+  isKeystoneCorrected: 0
   centerCamera: {fileID: 2000004}
   leftCamera: {fileID: 2000002}
   rightCamera: {fileID: 2000000}
   eyeSeparation: .0599999987
   zeroParallaxDistance: 0
   associatedDisplay: {fileID: 0}
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8af8d64889d860f41aa6d5aa893a4abf, type: 1}
+  m_Name: 
+  drawKeystoningGrid: 0
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111e10bcdeda4d6409e42aa621e49e98, type: 1}
+  m_Name: 
+  whichCamera: 0
+  keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
+  keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111e10bcdeda4d6409e42aa621e49e98, type: 1}
+  m_Name: 
+  whichCamera: 2
+  keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
+  keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111e10bcdeda4d6409e42aa621e49e98, type: 1}
+  m_Name: 
+  whichCamera: 1
+  keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
+  keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1

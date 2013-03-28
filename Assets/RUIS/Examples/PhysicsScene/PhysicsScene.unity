@@ -873,6 +873,8 @@ GameObject:
   - 4: {fileID: 115874248}
   - 114: {fileID: 115874250}
   - 20: {fileID: 115874249}
+  - 114: {fileID: 115874252}
+  - 114: {fileID: 115874251}
   m_Layer: 0
   m_Name: RUISCamera
   m_TagString: MainCamera
@@ -933,12 +935,40 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 1}
   m_Name: 
+  isHeadTracking: 0
+  isKeystoneCorrected: 0
   centerCamera: {fileID: 115874249}
   leftCamera: {fileID: 1697092112}
   rightCamera: {fileID: 966551114}
   eyeSeparation: .0599999987
   zeroParallaxDistance: 0
   associatedDisplay: {fileID: 0}
+--- !u!114 &115874251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400004, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 906430021}
+  m_GameObject: {fileID: 115874247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111e10bcdeda4d6409e42aa621e49e98, type: 1}
+  m_Name: 
+  whichCamera: 0
+  keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
+  keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
+--- !u!114 &115874252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 906430021}
+  m_GameObject: {fileID: 115874247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8af8d64889d860f41aa6d5aa893a4abf, type: 1}
+  m_Name: 
+  drawKeystoningGrid: 0
 --- !u!1 &117002799
 GameObject:
   m_ObjectHideFlags: 0
@@ -2107,6 +2137,7 @@ MonoBehaviour:
   isHMD: 0
   linkedCamera: {fileID: 115874250}
   stereoType: 1
+  isKeystoneCorrected: 1
 --- !u!1 &271038095
 GameObject:
   m_ObjectHideFlags: 0
@@ -6057,6 +6088,10 @@ Prefab:
       propertyPath: enableKinect
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: isKeystoneCorrected
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
@@ -7774,6 +7809,7 @@ GameObject:
   - 92: {fileID: 966551116}
   - 124: {fileID: 966551117}
   - 81: {fileID: 966551115}
+  - 114: {fileID: 966551118}
   m_Layer: 0
   m_Name: Right
   m_TagString: MainCamera
@@ -7845,6 +7881,20 @@ Behaviour:
   m_PrefabInternal: {fileID: 906430021}
   m_GameObject: {fileID: 966551112}
   m_Enabled: 1
+--- !u!114 &966551118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400006, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 906430021}
+  m_GameObject: {fileID: 966551112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111e10bcdeda4d6409e42aa621e49e98, type: 1}
+  m_Name: 
+  whichCamera: 2
+  keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
+  keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
 --- !u!1 &970513147
 GameObject:
   m_ObjectHideFlags: 0
@@ -13088,6 +13138,7 @@ GameObject:
   - 92: {fileID: 1697092114}
   - 124: {fileID: 1697092115}
   - 81: {fileID: 1697092113}
+  - 114: {fileID: 1697092116}
   m_Layer: 0
   m_Name: Left
   m_TagString: MainCamera
@@ -13159,6 +13210,20 @@ Behaviour:
   m_PrefabInternal: {fileID: 906430021}
   m_GameObject: {fileID: 1697092110}
   m_Enabled: 1
+--- !u!114 &1697092116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400008, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 906430021}
+  m_GameObject: {fileID: 1697092110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 111e10bcdeda4d6409e42aa621e49e98, type: 1}
+  m_Name: 
+  whichCamera: 1
+  keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
+  keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
 --- !u!1 &1702763855
 GameObject:
   m_ObjectHideFlags: 0
