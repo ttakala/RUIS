@@ -73,21 +73,15 @@ public class RUISDisplayManager : MonoBehaviour {
 
     public Ray ScreenPointToRay(Vector2 screenPoint)
     {
-        //Debug.Log(Input.mousePosition);
-
-        Vector2 relativeScreenPoint = Vector2.zero;
         RUISDisplay display = GetDisplayForScreenPoint(screenPoint);
 
 
         if (display)
         {
-            //Debug.Log(display.name);
-
             Camera camera = display.GetCameraForScreenPoint(screenPoint);
             
             if (camera)
-            {
-                //Debug.Log(display.name + ": " + camera.name + ": " + camera.pixelRect);
+            {   
                 return camera.ScreenPointToRay(screenPoint);
             }
         }

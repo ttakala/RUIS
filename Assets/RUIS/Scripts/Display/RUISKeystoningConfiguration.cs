@@ -12,6 +12,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
     Camera cameraUnderModification = null;
     int draggedCornerIndex = -1;
 
+    [HideInInspector]
     public bool drawKeystoningGrid = false;
 
     public RUISKeystoning.KeystoningSpecification centerCameraKeystoningSpec { get { return centerSpec; } }
@@ -22,6 +23,8 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 
     public RUISKeystoning.KeystoningSpecification rightCameraKeystoningSpec { get { return rightSpec; } }
     private RUISKeystoning.KeystoningSpecification rightSpec;
+
+    public bool isEditing = false;
 
 	void Awake () {
         ruisCamera = GetComponent<RUISCamera>();
@@ -36,6 +39,8 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 	}
 	
 	void Update () {
+        if (!isEditing) return;
+
 	    if(Input.GetMouseButtonDown(0)){
             //figure out if we should start dragging some corner
             Camera camUnderClick = ruisCamera.associatedDisplay.GetCameraForScreenPoint(Input.mousePosition);
@@ -96,5 +101,18 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         centerSpec = RUISKeystoning.Optimize(ruisCamera.centerCamera, centerCameraCorners);
         leftSpec = RUISKeystoning.Optimize(ruisCamera.leftCamera, leftCameraCorners);
         rightSpec = RUISKeystoning.Optimize(ruisCamera.rightCamera, rightCameraCorners);
+    }
+
+    public void StartEditing()
+    {
+        isEditing = true;
+    }
+
+    public void EndEditing()
+    {
+        Optimize();
+        isEditing = false;
+        drawKeystoningGrid = false;
+        ResetDrag();
     }
 }

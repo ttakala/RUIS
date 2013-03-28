@@ -11,7 +11,7 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
     bool gestureStarted = false;
     float timeSinceStart;
 
-    bool enabled = false;
+    bool gestureEnabled = false;
 
     void Start()
     {
@@ -20,7 +20,7 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
 
     void Update()
     {
-        if (!enabled) return;
+        if (!gestureEnabled) return;
 
         if (gestureStarted && pointTracker.averageSpeed < speedThreshold)
         {
@@ -69,13 +69,13 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
 
     public override void EnableGesture()
     {
-        enabled = true;
+        gestureEnabled = true;
         ResetData();
     }
 
     public override void DisableGesture()
     {
-        enabled = false;
+        gestureEnabled = false;
         ResetData();
     }
 }

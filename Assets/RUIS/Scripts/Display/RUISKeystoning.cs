@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISKeystoning {
-    private const float maxCornerSelectionDistance = 0.2f;
+    private const float maxCornerSelectionDistance = 0.05f;
 
     public class KeystoningSpecification
     {
@@ -127,7 +127,6 @@ public class RUISKeystoning {
             for (int i = 0; i < 4; i++)
             {
                 float newDist = Vector2.Distance(toPosition, corners[i]);
-                Debug.Log(newDist);
                 if (newDist < closestDist)
                 {
                     closestDist = newDist;

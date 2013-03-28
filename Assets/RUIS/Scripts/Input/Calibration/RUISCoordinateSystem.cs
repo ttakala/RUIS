@@ -98,7 +98,6 @@ public class RUISCoordinateSystem : MonoBehaviour
         if (kinectDistanceFromFloorElement != null)
         {
             kinectDistanceFromFloor = float.Parse(kinectDistanceFromFloorElement.Attributes["value"].Value);
-            Debug.Log(kinectDistanceFromFloor);
         }
 
         return true;

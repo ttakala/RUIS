@@ -3895,6 +3895,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af8d64889d860f41aa6d5aa893a4abf, type: 1}
   m_Name: 
   drawKeystoningGrid: 0
+  isEditing: 0
 --- !u!114 &695711505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5077,6 +5078,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af8d64889d860f41aa6d5aa893a4abf, type: 1}
   m_Name: 
   drawKeystoningGrid: 0
+  isEditing: 0
 --- !u!114 &898102234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7723,6 +7725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af8d64889d860f41aa6d5aa893a4abf, type: 1}
   m_Name: 
   drawKeystoningGrid: 0
+  isEditing: 0
 --- !u!114 &1303112906
 MonoBehaviour:
   m_ObjectHideFlags: 0

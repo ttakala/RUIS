@@ -3,20 +3,29 @@ using System.Collections;
 
 [AddComponentMenu("RUIS/GUI/RUISMenu")]
 public class RUISMenu : MonoBehaviour {
-    private const int mainWindow = 0;
-    private int currentWindow = mainWindow;
+    private enum MenuState
+    {
+        Main,
+        Calibrating,
+        KeystoneCorrecting
+    }
+
+    private MenuState menuState = MenuState.Main;
+
+    private int currentWindow = 0;
     private Rect windowRect = new Rect(50, 50, 200, 200);
 
     bool isShowing = false;
 
     bool ruisMenuButtonDefined = true;
 
-    bool isCalibrating = false;
     int previousSceneId = -1;
 
     [HideInInspector] public bool enablePSMove;
     [HideInInspector] public string psMoveIP;
     [HideInInspector] public int psMovePort;
+
+    bool isEditingKeystones = false;
 
 	// Use this for initialization
 	void Start () {
@@ -42,7 +51,6 @@ public class RUISMenu : MonoBehaviour {
         if ((!ruisMenuButtonDefined && Input.GetKeyDown(KeyCode.F2)) || (ruisMenuButtonDefined && Input.GetButtonDown("RUISMenu")))
         {
             isShowing = !isShowing;
-            currentWindow = mainWindow;
         }
     }
 
@@ -55,38 +63,74 @@ public class RUISMenu : MonoBehaviour {
 
     void DrawWindow(int windowId)
     {
-        if (!isCalibrating)
-        {
-            switch (currentWindow)
-            {
-                case mainWindow:
-                    if (GUILayout.Button("Calibrate"))
-                    {
-                        Debug.Log("Loading calibration screen.");
+        switch(menuState){
+            case MenuState.Main:
+                if (GUILayout.Button("Calibrate Coordinate System"))
+                {
+                    Debug.Log("Loading calibration screen.");
 
-                        gameObject.transform.parent = null;
+                    gameObject.transform.parent = null;
 
-                        previousSceneId = Application.loadedLevel;
+                    previousSceneId = Application.loadedLevel;
 
-                        isCalibrating = true;
+                    menuState = MenuState.Calibrating;
 
-                        isShowing = false;
+                    isShowing = false;
 
-                        Application.LoadLevel("calibration");
-                    }
-                    break;
-            }
+                    Application.LoadLevel("calibration");
+                }
+                if (GUILayout.Button("Keystone Configuration"))
+                {
+                    SwitchKeystoneEditingState();
+                    menuState = MenuState.KeystoneCorrecting;
+                }
+                break;
+            case MenuState.Calibrating:
+                if(GUILayout.Button("End Calibration")){
+                    Destroy(this.gameObject);
+
+                    Application.LoadLevel(previousSceneId);
+                }
+                break;
+            case MenuState.KeystoneCorrecting:
+                if (GUILayout.Button("Toggle Keystoning Grid"))
+                {
+                    ToggleKeystoneGridState();
+                }
+
+                if (GUILayout.Button("End Keystone Configuration"))
+                {
+                    SwitchKeystoneEditingState();
+                    menuState = MenuState.Main;
+                }
+                break;
         }
-        else
-        {
-            if(GUILayout.Button("End Calibration")){
-                Destroy(this);
 
-                Application.LoadLevel(previousSceneId);
-
-                isCalibrating = false;
-            }
-        }
         GUI.DragWindow();
+    }
+
+    private void SwitchKeystoneEditingState()
+    {
+        foreach (RUISKeystoningConfiguration keystoningConfiguration in FindObjectsOfType(typeof(RUISKeystoningConfiguration)) as RUISKeystoningConfiguration[])
+        {
+            if (isEditingKeystones)
+            {
+                keystoningConfiguration.EndEditing();
+            }
+            else
+            {
+                keystoningConfiguration.StartEditing();
+            }
+        }
+
+        isEditingKeystones = !isEditingKeystones;
+    }
+
+    private void ToggleKeystoneGridState()
+    {
+        foreach (RUISKeystoningConfiguration keystoningConfiguration in FindObjectsOfType(typeof(RUISKeystoningConfiguration)) as RUISKeystoningConfiguration[])
+        {
+            keystoningConfiguration.drawKeystoningGrid = !keystoningConfiguration.drawKeystoningGrid;
+        }
     }
 }
