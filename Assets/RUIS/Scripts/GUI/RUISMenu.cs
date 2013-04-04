@@ -7,7 +7,7 @@ public class RUISMenu : MonoBehaviour {
     {
         Main,
         Calibrating,
-        KeystoneCorrecting
+        EditingDisplays
     }
 
     private MenuState menuState = MenuState.Main;
@@ -79,10 +79,10 @@ public class RUISMenu : MonoBehaviour {
 
                     Application.LoadLevel("calibration");
                 }
-                if (GUILayout.Button("Keystone Configuration"))
+                if (GUILayout.Button("Display Configuration"))
                 {
                     SwitchKeystoneEditingState();
-                    menuState = MenuState.KeystoneCorrecting;
+                    menuState = MenuState.EditingDisplays;
                 }
                 break;
             case MenuState.Calibrating:
@@ -92,13 +92,14 @@ public class RUISMenu : MonoBehaviour {
                     Application.LoadLevel(previousSceneId);
                 }
                 break;
-            case MenuState.KeystoneCorrecting:
-                if (GUILayout.Button("Toggle Keystoning Grid"))
-                {
-                    ToggleKeystoneGridState();
+            case MenuState.EditingDisplays:
+                if(GUILayout.Button("Save Configurations")){
+                    (FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager).SaveDisplaysToXML();
                 }
-
-                if (GUILayout.Button("End Keystone Configuration"))
+                if(GUILayout.Button("Load Old Configurations")){
+                    (FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager).LoadDisplaysFromXML();
+                }
+                if (GUILayout.Button("End Display Editing"))
                 {
                     SwitchKeystoneEditingState();
                     menuState = MenuState.Main;

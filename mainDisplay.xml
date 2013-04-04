@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ns2:ruisDisplay xmlns:ns2="http://ruisystem.net/display">
+  <centerKeystone>
+    <topLeft x="0" y="1" />
+    <topRight x="0.9456829" y="0.9323986" />
+    <bottomRight x="0.9395019" y="0.130839" />
+    <bottomLeft x="0" y="0" />
+  </centerKeystone>
+  <leftKeystone>
+    <topLeft x="0" y="1" />
+    <topRight x="1" y="1" />
+    <bottomRight x="1" y="0" />
+    <bottomLeft x="0" y="0" />
+  </leftKeystone>
+  <rightKeystone>
+    <topLeft x="0" y="1" />
+    <topRight x="1" y="1" />
+    <bottomRight x="1" y="0" />
+    <bottomLeft x="0" y="0" />
+  </rightKeystone>
+</ns2:ruisDisplay>

@@ -1,7 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml;
+using System.Xml.Schema;
 
 public class RUISDisplay : MonoBehaviour {
+    public TextAsset displaySchema;
+    public string xmlFilename = "defaultDisplay.xml";
+
     public enum StereoType
     {
         SideBySide,
@@ -142,5 +148,36 @@ public class RUISDisplay : MonoBehaviour {
             screenPoint.coordinates = screenPoint.camera.WorldToScreenPoint(worldPoint);
             screenPoints.Add(screenPoint);
         }
+    }
+
+    public bool LoadFromXML()
+    {
+        XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(xmlFilename, displaySchema);
+        if (xmlDoc == null)
+        {
+            return false;
+        }
+
+        //load oblique frustum stuff
+
+        linkedCamera.LoadKeystoningFromXML(xmlDoc);
+
+        return true;
+    }
+
+    public bool SaveToXML()
+    {
+        XmlDocument xmlDoc = new XmlDocument();
+
+        xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
+
+        XmlElement displayRootElement = xmlDoc.CreateElement("ns2", "ruisDisplay", "http://ruisystem.net/display");
+        xmlDoc.AppendChild(displayRootElement);
+
+        linkedCamera.SaveKeystoningToXML(displayRootElement);
+
+        XMLUtil.SaveXmlToFile(xmlFilename, xmlDoc);
+
+        return true;
     }
 }

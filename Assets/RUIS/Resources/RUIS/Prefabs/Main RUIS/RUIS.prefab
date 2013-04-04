@@ -361,7 +361,7 @@ MonoBehaviour:
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
   enableMoveCalibrationDuringPlay: 0
-  enableKinect: 1
+  enableKinect: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -454,13 +454,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4612a60126cf507449c3adb9239c9cf5, type: 1}
   m_Name: 
+  displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
+  xmlFilename: defaultDisplay.xml
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 1
-  isStereo: 1
+  isStereo: 0
   isHMD: 0
   linkedCamera: {fileID: 0}
   stereoType: 0
+  isKeystoneCorrected: 0
 --- !u!114 &11400014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -517,7 +520,7 @@ MonoBehaviour:
   monoCamera: {fileID: 0}
   totalResolutionX: 1920
   totalResolutionY: 1080
-  totalRawResolutionX: 3840
+  totalRawResolutionX: 1920
   totalRawResolutionY: 1080
   fullScreen: 0
 --- !u!1001 &100100000

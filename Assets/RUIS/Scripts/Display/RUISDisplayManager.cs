@@ -19,6 +19,7 @@ public class RUISDisplayManager : MonoBehaviour {
     }
 
 	void Start () {
+
         CalculateTotalResolution();
 
         if (Application.isEditor)
@@ -29,6 +30,9 @@ public class RUISDisplayManager : MonoBehaviour {
         UpdateDisplays();
 
         DisableUnlinkedCameras();
+
+
+        LoadDisplaysFromXML();
 	}
 
     void Update()
@@ -158,6 +162,27 @@ public class RUISDisplayManager : MonoBehaviour {
                 Debug.LogWarning("Disabling RUISCamera: " + ruisCamera.name + " because it isn't linked into a RUISDisplay.");
                 ruisCamera.gameObject.SetActiveRecursively(false);
             }
+        }
+    }
+
+    public void LoadDisplaysFromXML(bool refresh = false)
+    {
+        foreach (RUISDisplay display in displays)
+        {
+            display.LoadFromXML();
+        }
+
+        if (refresh)
+        {
+            UpdateDisplays();
+        }
+    }
+
+    public void SaveDisplaysToXML()
+    {
+        foreach (RUISDisplay display in displays)
+        {
+            display.SaveToXML();
         }
     }
 }

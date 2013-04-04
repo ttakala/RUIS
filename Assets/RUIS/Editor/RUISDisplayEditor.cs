@@ -5,6 +5,9 @@ using UnityEditor;
 [CustomEditor(typeof(RUISDisplay))]
 [CanEditMultipleObjects]
 public class RUISDisplayEditor : Editor {
+    SerializedProperty xmlFilename;
+    SerializedProperty displaySchema;
+
     SerializedProperty resolutionX;
     SerializedProperty resolutionY;
     SerializedProperty isStereo;
@@ -20,6 +23,9 @@ public class RUISDisplayEditor : Editor {
 
     void OnEnable()
     {
+        xmlFilename = serializedObject.FindProperty("xmlFilename");
+        displaySchema = serializedObject.FindProperty("displaySchema");
+
         resolutionX = serializedObject.FindProperty("resolutionX");
         resolutionY = serializedObject.FindProperty("resolutionY");
         isStereo = serializedObject.FindProperty("isStereo");
@@ -42,6 +48,9 @@ public class RUISDisplayEditor : Editor {
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+
+        EditorGUILayout.PropertyField(displaySchema, new GUIContent("XML Schema", "Do not modify this unless you know what you're doing"));
+        EditorGUILayout.PropertyField(xmlFilename, new GUIContent("XML filename", "The XML file with the display specifications"));
 
         EditorGUILayout.PropertyField(resolutionX, new GUIContent("Resolution X", "The width of the display"));
         EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y", "The height of the display"));

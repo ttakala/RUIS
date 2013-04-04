@@ -1,16 +1,19 @@
 using UnityEngine;
 using System.Collections;
+using System.Xml;
+using System.Xml.Schema;
 
 public class RUISKeystoning {
     private const float maxCornerSelectionDistance = 0.05f;
+    private const int amountOfParameters = 12;
 
     public class KeystoningSpecification
     {
-        public float a, b, d, e, f, h, i, j;
+        public float a, b, c, d, e, f, g, h, i, j, m, n;
 
         public KeystoningSpecification()
         {
-            b = d = e = h = i = j = 0;
+            b = c = d = e = g = h = i = j = m = n = 0;
             a = f = 1;
         }
 
@@ -18,29 +21,37 @@ public class RUISKeystoning {
         {
             this.a = other.a;
             this.b = other.b;
+            this.c = other.c;
             this.d = other.d;
             this.e = other.e;
             this.f = other.f;
+            this.g = other.g;
             this.h = other.h;
             this.i = other.i;
             this.j = other.j;
+            this.m = other.m;
+            this.n = other.n;
         }
 
         public Matrix4x4 GetMatrix(){
             Matrix4x4 keystone = new Matrix4x4();
-            // a b 0 d
-            // e f 0 h
-            // m n 1 0
-            // 0 0 0 1
+            // a b c d
+            // e f g h
+            // i j 1 0
+            // m n 0 1
             keystone[0, 0] = a;
             keystone[0, 1] = b;
+            keystone[0, 2] = c;
             keystone[0, 3] = d;
             keystone[1, 0] = e;
             keystone[1, 1] = f;
+            keystone[1, 2] = g;
             keystone[1, 3] = h;
             keystone[2, 0] = i;
             keystone[2, 1] = j;
             keystone[2, 2] = 1;
+            keystone[3, 0] = m;
+            keystone[3, 1] = n;
             keystone[3, 3] = 1;
 
             return keystone;
@@ -59,22 +70,34 @@ public class RUISKeystoning {
                     newSpec.b += modification;
                     break;
                 case 2:
-                    newSpec.d += modification;
+                    newSpec.c += modification;
                     break;
                 case 3:
-                    newSpec.e += modification;
+                    newSpec.d += modification;
                     break;
                 case 4:
-                    newSpec.f += modification;
+                    newSpec.e += modification;
                     break;
                 case 5:
-                    newSpec.h += modification;
+                    newSpec.f += modification;
                     break;
                 case 6:
-                    newSpec.i += modification;
+                    newSpec.g += modification;
                     break;
                 case 7:
+                    newSpec.h += modification;
+                    break;
+                case 8:
+                    newSpec.i += modification;
+                    break;
+                case 9:
                     newSpec.j += modification;
+                    break;
+                case 10:
+                    newSpec.m += modification;
+                    break;
+                case 11:
+                    newSpec.n += modification;
                     break;
             }
 
@@ -93,6 +116,42 @@ public class RUISKeystoning {
             corners[1] = new Vector2(1, 1);
             corners[2] = new Vector2(1, 0);
             corners[3] = new Vector2(0, 0);
+        }
+
+        public KeystoningCorners(XmlNode xmlNode) : this()
+        {
+            Debug.Log(xmlNode.InnerXml);
+            corners[0] = GetVector2FromXmlNode(xmlNode.SelectSingleNode("topLeft"));
+            corners[1] = GetVector2FromXmlNode(xmlNode.SelectSingleNode("topRight"));
+            corners[2] = GetVector2FromXmlNode(xmlNode.SelectSingleNode("bottomRight"));
+            corners[3] = GetVector2FromXmlNode(xmlNode.SelectSingleNode("bottomLeft"));
+        }
+
+        public Vector2 GetVector2FromXmlNode(XmlNode xmlNode){
+            return new Vector2(float.Parse(xmlNode.Attributes["x"].Value), float.Parse(xmlNode.Attributes["y"].Value));
+        }
+
+        public void SaveToXML(XmlElement xmlElement)
+        {
+            XmlElement topLeft = xmlElement.OwnerDocument.CreateElement("topLeft");
+            topLeft.SetAttribute("x", corners[0].x.ToString());
+            topLeft.SetAttribute("y", corners[0].y.ToString());
+            xmlElement.AppendChild(topLeft);
+
+            XmlElement topRight = xmlElement.OwnerDocument.CreateElement("topRight");
+            topRight.SetAttribute("x", corners[1].x.ToString());
+            topRight.SetAttribute("y", corners[1].y.ToString());
+            xmlElement.AppendChild(topRight);
+
+            XmlElement bottomRight = xmlElement.OwnerDocument.CreateElement("bottomRight");
+            bottomRight.SetAttribute("x", corners[2].x.ToString());
+            bottomRight.SetAttribute("y", corners[2].y.ToString());
+            xmlElement.AppendChild(bottomRight);
+
+            XmlElement bottomLeft = xmlElement.OwnerDocument.CreateElement("bottomLeft");
+            bottomLeft.SetAttribute("x", corners[3].x.ToString());
+            bottomLeft.SetAttribute("y", corners[3].y.ToString());
+            xmlElement.AppendChild(bottomLeft);
         }
 
         public Vector2 this[int i]
@@ -148,8 +207,8 @@ public class RUISKeystoning {
     public static KeystoningSpecification Optimize(Camera camera, KeystoningCorners corners)
     {
         KeystoningSpecification spec = new KeystoningSpecification();
-        spec.a = 1;
-        spec.f = 1;
+
+        //Debug.Log(spec.GetMatrix());
 
         //save all the relevant world points that we use for optimizing the keystoning matrix
         camera.ResetProjectionMatrix();
@@ -175,13 +234,14 @@ public class RUISKeystoning {
         Debug.Log("--------------------------------------------------------------");*/
 
         float stepSize = 0.1f;
-        float[] grad = new float[8];
+        float[] grad = new float[amountOfParameters];
 
+        float currentValue = 0;
         while (stepSize > 0.000001f)
         {
             // compute gradient
 
-            float currentValue = CalcValue(spec, camera, originalProjectionMatrix, corners, worldPoints);
+            currentValue = CalcValue(spec, camera, originalProjectionMatrix, corners, worldPoints);
             /*;
 
             Debug.Log("**********************************************");
@@ -192,28 +252,27 @@ public class RUISKeystoning {
             Debug.Log("**********************************************");
             */
             //Debug.Log(currentValue);
-            grad[0] = CalcValue(spec.ModifyWithStep(0, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
-            grad[1] = CalcValue(spec.ModifyWithStep(1, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
-            grad[2] = CalcValue(spec.ModifyWithStep(2, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
-            grad[3] = CalcValue(spec.ModifyWithStep(3, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
-            grad[4] = CalcValue(spec.ModifyWithStep(4, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
-            grad[5] = CalcValue(spec.ModifyWithStep(5, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
-            grad[6] = CalcValue(spec.ModifyWithStep(6, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
-            grad[7] = CalcValue(spec.ModifyWithStep(7, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
+            for (int i = 0; i < amountOfParameters; i++)
+            {
+                grad[i] = CalcValue(spec.ModifyWithStep(i, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
+            }
+
             // step in direction of gradient with length of stepSize
             float gradSquaredLength = 0;
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < amountOfParameters; i++)
             {
                 gradSquaredLength += grad[i] * grad[i];
             }
             float gradLength = Mathf.Sqrt((float)gradSquaredLength);
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < amountOfParameters; i++)
             {
                 spec = spec.ModifyWithStep(i, -stepSize * grad[i] / gradLength);
             }
-            stepSize *= 0.99f;
+            stepSize *= 0.98f;
         }
 
+        //Debug.Log("final: " + spec.GetMatrix());
+        //Debug.Log("currentValue: " + currentValue);
         return spec;
     }
 

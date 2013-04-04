@@ -198,6 +198,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4612a60126cf507449c3adb9239c9cf5, type: 1}
   m_Name: 
+  displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
+  xmlFilename: defaultDisplay.xml
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 1
@@ -647,6 +649,14 @@ Prefab:
       propertyPath: isKeystoneCorrected
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: xmlFilename
+      value: defaultDisplay.xml
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: displaySchema
+      value: 
+      objectReference: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1873374386}
@@ -3088,6 +3098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af8d64889d860f41aa6d5aa893a4abf, type: 1}
   m_Name: 
   drawKeystoningGrid: 0
+  isEditing: 0
 --- !u!1 &2141231518
 GameObject:
   m_ObjectHideFlags: 0

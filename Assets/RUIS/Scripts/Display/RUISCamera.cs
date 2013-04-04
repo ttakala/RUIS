@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Xml;
 
 public class RUISCamera : MonoBehaviour {
     [HideInInspector]
@@ -95,6 +96,7 @@ public class RUISCamera : MonoBehaviour {
     private void ApplyKeystoneCorrection()
     {
         centerCamera.projectionMatrix *= keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix();
+        //Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
         leftCamera.projectionMatrix *= keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix();
         rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
     }
@@ -164,5 +166,15 @@ public class RUISCamera : MonoBehaviour {
     {
         SetupCameraViewports(normalizedScreenRect.xMin, normalizedScreenRect.yMin, normalizedScreenRect.width, normalizedScreenRect.height, aspectRatio);
         oldStereoTypeValue = associatedDisplay.stereoType;
+    }
+
+    public void LoadKeystoningFromXML(XmlDocument xmlDoc)
+    {
+        keystoningConfiguration.LoadFromXML(xmlDoc);
+    }
+
+    public void SaveKeystoningToXML(XmlElement displayXmlElement)
+    {
+        keystoningConfiguration.SaveToXML(displayXmlElement);
     }
 }

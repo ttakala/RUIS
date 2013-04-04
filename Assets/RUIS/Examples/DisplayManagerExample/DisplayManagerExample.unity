@@ -4158,6 +4158,30 @@ Prefab:
       propertyPath: isKeystoneCorrected
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: displaySchema
+      value: 
+      objectReference: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
+    - target: {fileID: 11400000, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: xmlFilename
+      value: hugeStereo.xml
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400018, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: displaySchema
+      value: 
+      objectReference: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
+    - target: {fileID: 11400018, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: xmlFilename
+      value: mainDisplay.xml
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: displaySchema
+      value: 
+      objectReference: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
+    - target: {fileID: 11400002, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: xmlFilename
+      value: mini.xml
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d94c6e27c0db1994889737c587593074, type: 2}
   m_RootGameObject: {fileID: 231584585}
@@ -6632,6 +6656,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4612a60126cf507449c3adb9239c9cf5, type: 1}
   m_Name: 
+  displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
+  xmlFilename: mini.xml
   resolutionX: 320
   resolutionY: 320
   useDoubleTheSpace: 0
@@ -10226,6 +10252,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4612a60126cf507449c3adb9239c9cf5, type: 1}
   m_Name: 
+  displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
+  xmlFilename: mainDisplay.xml
   resolutionX: 1280
   resolutionY: 800
   useDoubleTheSpace: 1
@@ -10634,6 +10662,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4612a60126cf507449c3adb9239c9cf5, type: 1}
   m_Name: 
+  displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 1}
+  xmlFilename: hugeStereo.xml
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0

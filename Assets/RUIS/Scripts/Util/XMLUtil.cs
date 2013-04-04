@@ -6,6 +6,16 @@ using System.Xml.Schema;
 using System.Text;
 
 public class XMLUtil {
+    public static void SaveXmlToFile(string xmlFilename, XmlDocument xmlDocument)
+    {
+        FileStream xmlFileStream = File.Open(xmlFilename, FileMode.Create);
+        StreamWriter streamWriter = new StreamWriter(xmlFileStream);
+        xmlDocument.Save(streamWriter);
+        streamWriter.Flush();
+        streamWriter.Close();
+        xmlFileStream.Close();
+    }
+
     public static XmlDocument LoadAndValidateXml(string xmlFilename, TextAsset schemaFile)
     {
         return LoadAndValidateXml(xmlFilename, schemaFile, new ValidationEventHandler(BasicValidationHandler));
