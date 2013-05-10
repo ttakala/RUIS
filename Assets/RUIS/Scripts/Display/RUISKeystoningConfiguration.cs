@@ -137,8 +137,8 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         
 		ruisCamera.keystoningCamera.transform.position = ruisCamera.KeystoningHeadTrackerPosition;
 		centerSpec = RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, centerCameraCorners);
-        leftSpec = RUISKeystoning.Optimize(ruisCamera.leftCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, leftCameraCorners);
-        rightSpec = RUISKeystoning.Optimize(ruisCamera.rightCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, rightCameraCorners);
+        leftSpec = RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, leftCameraCorners);
+        rightSpec = RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, rightCameraCorners);
 		
 		ruisCamera.keystoningCamera.gameObject.SetActiveRecursively(false);
     }

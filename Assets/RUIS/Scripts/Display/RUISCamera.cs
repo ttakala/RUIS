@@ -94,6 +94,7 @@ public class RUISCamera : MonoBehaviour {
 		if (copyHeadTrackerPosition && headTracker != null)
         {
             transform.localPosition = headTracker.transform.position;
+            transform.localRotation = headTracker.transform.rotation;
         }
 		
 		if(DEBUG)
@@ -117,13 +118,13 @@ public class RUISCamera : MonoBehaviour {
 		} 
 		else 
 		{
-		    //Matrix4x4[] projectionMatrices = GetProjectionMatricesWithoutKeystoning();
-		    //centerCamera.projectionMatrix = projectionMatrices[0];
-		    //leftCamera.projectionMatrix = projectionMatrices[1];
-		    //rightCamera.projectionMatrix = projectionMatrices[2];
+		    Matrix4x4[] projectionMatrices = GetProjectionMatricesWithoutKeystoning();
+		    centerCamera.projectionMatrix = projectionMatrices[0];
+		    leftCamera.projectionMatrix = projectionMatrices[1];
+		    rightCamera.projectionMatrix = projectionMatrices[2];
 
-            centerCamera.projectionMatrix = CreateKeystoningObliqueFrustum();
-            transform.position = KeystoningHeadTrackerPosition;
+            /*centerCamera.projectionMatrix = CreateKeystoningObliqueFrustum();
+            transform.position = KeystoningHeadTrackerPosition;*/
 
 		    if (associatedDisplay.isKeystoneCorrected)
 		    {

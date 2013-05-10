@@ -30,6 +30,8 @@ public class RUISDisplayEditor : Editor {
     private Texture2D monoDisplayTexture;
     private Texture2D stereoDisplayTexture;
 
+    RUISDisplayManager displayManager;
+
     void OnEnable()
     {
         xmlFilename = serializedObject.FindProperty("xmlFilename");
@@ -60,6 +62,8 @@ public class RUISDisplayEditor : Editor {
 
         monoDisplayTexture = Resources.Load("RUIS/Editor/Textures/monodisplay") as Texture2D;
         stereoDisplayTexture = Resources.Load("RUIS/Editor/Textures/stereodisplay") as Texture2D;
+
+        displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
     }
 
     public void OnGUI()
@@ -131,7 +135,9 @@ public class RUISDisplayEditor : Editor {
 
         EditorGUILayout.EndHorizontal();
 
-
+        displayManager.CalculateTotalResolution();
+        PlayerSettings.defaultScreenWidth = displayManager.totalRawResolutionX;
+        PlayerSettings.defaultScreenHeight = displayManager.totalRawResolutionY;
     }
 
 }

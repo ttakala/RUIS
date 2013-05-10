@@ -24,14 +24,14 @@ public class RUISHeadTracker : MonoBehaviour {
     {
         get
         {
-            return eyeCenterPosition - rotation * Vector3.right * eyeSeparation;
+            return EyeCenterPosition - rotation * Vector3.right * eyeSeparation / 2;
         }
     }
     public Vector3 RightEyePosition
     {
         get
         {
-            return eyeCenterPosition + rotation * Vector3.right * eyeSeparation;
+            return EyeCenterPosition + rotation * Vector3.right * eyeSeparation / 2;
         }
     }
 
@@ -61,7 +61,7 @@ public class RUISHeadTracker : MonoBehaviour {
         }*/
 	}
 
-    void OnDrawGizmosSelected()
+    void OnDrawGizmos()
     {
         Color originalColor = Gizmos.color;
 
