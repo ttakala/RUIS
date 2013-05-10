@@ -141,7 +141,6 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         rightSpec = RUISKeystoning.Optimize(ruisCamera.rightCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, rightCameraCorners);
 		
 		ruisCamera.keystoningCamera.gameObject.SetActiveRecursively(false);
-		Debug.Log (centerSpec.ToString());
     }
 
     public void StartEditing()
@@ -166,7 +165,5 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         centerSpec = new RUISKeystoning.KeystoningSpecification();
         leftSpec = new RUISKeystoning.KeystoningSpecification();
         rightSpec = new RUISKeystoning.KeystoningSpecification();
-		
-		Debug.Log ("reset: " + centerSpec.ToString ());
     }
 }

@@ -5,7 +5,7 @@ using System.Xml.Schema;
 
 public class RUISKeystoning {
     private const float maxCornerSelectionDistance = 0.05f;
-    private const int amountOfParameters = 12;
+    private const int amountOfParameters = 8;
 
     public class KeystoningSpecification
     {
@@ -33,8 +33,8 @@ public class RUISKeystoning {
             this.h = other.h;
             this.i = other.i;
             this.j = other.j;
-            this.m = other.m;
-            this.n = other.n;
+            //this.m = other.m;
+            //this.n = other.n;
         }
 
         public Matrix4x4 GetMatrix(){
@@ -54,8 +54,8 @@ public class RUISKeystoning {
             keystone[2, 0] = i;
             keystone[2, 1] = j;
             keystone[2, 2] = 1;
-            keystone[3, 0] = m;
-            keystone[3, 1] = n;
+            //keystone[3, 0] = m;
+            //keystone[3, 1] = n;
             keystone[3, 3] = 1;
 
             return keystone;
@@ -73,36 +73,39 @@ public class RUISKeystoning {
                 case 1:
                     newSpec.b += modification;
                     break;
+                
                 case 2:
-                    newSpec.c += modification;
-                    break;
-                case 3:
                     newSpec.d += modification;
                     break;
-                case 4:
+                case 3:
                     newSpec.e += modification;
                     break;
-                case 5:
+                case 4:
                     newSpec.f += modification;
                     break;
-                case 6:
-                    newSpec.g += modification;
-                    break;
-                case 7:
+                
+                case 5:
                     newSpec.h += modification;
                     break;
-                case 8:
+                
+                case 6:
                     newSpec.i += modification;
                     break;
-                case 9:
+                case 7:
                     newSpec.j += modification;
                     break;
-                case 10:
+                case 8:
+                    newSpec.c += modification;
+                    break;
+                case 9:
+                    newSpec.g += modification;
+                    break;
+                /*case 10:
                     newSpec.m += modification;
                     break;
                 case 11:
                     newSpec.n += modification;
-                    break;
+                    break;*/
             }
 
             return newSpec;
@@ -230,14 +233,14 @@ public class RUISKeystoning {
         Debug.Log("--------------------------------------------------------------");*/
 
         float stepSize = 0.1f;
-        float[] grad = new float[amountOfParameters];
+        float[] grad = new float[amountOfParameters-2];
 
         float currentValue = 0;
         while (stepSize > 0.000001f)
         {
             // compute gradient
 
-            currentValue = CalcValue(spec, camera, originalProjectionMatrix, corners, display);
+            currentValue = CalcValue(spec, camera, originalProjectionMatrix, corners, display, true);
             /*;
 
             Debug.Log("**********************************************");
@@ -248,9 +251,36 @@ public class RUISKeystoning {
             Debug.Log("**********************************************");
             */
             //Debug.Log(currentValue);
+            for (int i = 0; i < amountOfParameters-2; i++)
+            {
+                grad[i] = CalcValue(spec.ModifyWithStep(i, 0.1f * stepSize), camera, originalProjectionMatrix, corners, display, true) - currentValue;
+            }
+
+            // step in direction of gradient with length of stepSize
+            float gradSquaredLength = 0;
+            for (int i = 0; i < amountOfParameters-2; i++)
+            {
+                gradSquaredLength += grad[i] * grad[i];
+            }
+            float gradLength = Mathf.Sqrt((float)gradSquaredLength);
+            for (int i = 0; i < amountOfParameters-2; i++)
+            {
+                spec = spec.ModifyWithStep(i, -stepSize * grad[i] / gradLength);
+            }
+            stepSize *= 0.99f;
+        }
+        
+        stepSize = 0.1f;
+        grad = new float[amountOfParameters];
+        currentValue = 0;
+        while (stepSize > 0.000001f)
+        {
+            // compute gradient
+
+            currentValue = CalcValue(spec, camera, originalProjectionMatrix, corners, display, false);
             for (int i = 0; i < amountOfParameters; i++)
             {
-                grad[i] = CalcValue(spec.ModifyWithStep(i, 0.1f * stepSize), camera, originalProjectionMatrix, corners, display) - currentValue;
+                grad[i] = CalcValue(spec.ModifyWithStep(i, 0.1f * stepSize), camera, originalProjectionMatrix, corners, display, false) - currentValue;
             }
 
             // step in direction of gradient with length of stepSize
@@ -266,14 +296,14 @@ public class RUISKeystoning {
             }
             stepSize *= 0.99f;
         }
-
+        
         //Debug.Log("final: " + spec.GetMatrix());
         //Debug.Log("currentValue: " + currentValue);
         return spec;
     }
 
     //compares projected world points to the expected corner points and calculates the total square distance
-    private static float CalcValue(KeystoningSpecification spec, Camera camera, Matrix4x4 originalProjectionMatrix, KeystoningCorners corners, RUISDisplay display)//, Vector3[] worldPoints)
+    private static float CalcValue(KeystoningSpecification spec, Camera camera, Matrix4x4 originalProjectionMatrix, KeystoningCorners corners, RUISDisplay display, bool firstPhase)//, Vector3[] worldPoints)
     {
         //Debug.Log(CreateKeystonedMatrix(a, b, d, e, f, h, m, n));
         camera.projectionMatrix = originalProjectionMatrix * spec.GetMatrix();
@@ -294,14 +324,16 @@ public class RUISKeystoning {
         newPoints[4] = camera.WorldToViewportPoint(display.displayCenterPosition);
 
         float distanceFromCorners = 0; // sum of squared distances
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < (firstPhase ? 3 : 4); i++)
         {
             distanceFromCorners += (corners[i] - newPoints[i]).sqrMagnitude;
             //distanceFromCorners += (corners[i] - newPoints[i+4]).sqrMagnitude;
         }
 
-        Vector2 diagonalCenter = corners.GetDiagonalCenter();
-        distanceFromCorners += (diagonalCenter - newPoints[4]).sqrMagnitude;
+        if(!firstPhase){
+            Vector2 diagonalCenter = corners.GetDiagonalCenter();
+            distanceFromCorners += (diagonalCenter - newPoints[4]).sqrMagnitude;
+        }
         //distanceFromCorners += (diagonalCenter - newPoints[9]).sqrMagnitude;
 
         return distanceFromCorners;
