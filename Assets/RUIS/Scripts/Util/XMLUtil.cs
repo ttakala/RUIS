@@ -16,6 +16,29 @@ public class XMLUtil {
         xmlFileStream.Close();
     }
 
+    public static Vector2 GetVector2FromXmlNode(XmlNode xmlNode)
+    {
+        return new Vector2(float.Parse(xmlNode.Attributes["x"].Value), float.Parse(xmlNode.Attributes["y"].Value));
+    }
+
+    public static void WriteVector2ToXmlElement(XmlElement element, Vector2 vector)
+    {
+        element.SetAttribute("x", vector.x.ToString());
+        element.SetAttribute("y", vector.y.ToString());
+    }
+
+    public static Vector3 GetVector3FromXmlNode(XmlNode xmlNode)
+    {   
+        return new Vector3(float.Parse(xmlNode.Attributes["x"].Value), float.Parse(xmlNode.Attributes["y"].Value), float.Parse(xmlNode.Attributes["z"].Value));
+    }
+
+    public static void WriteVector3ToXmlElement(XmlElement element, Vector3 vector)
+    {
+        element.SetAttribute("x", vector.x.ToString());
+        element.SetAttribute("y", vector.y.ToString());
+        element.SetAttribute("z", vector.z.ToString());
+    }
+
     public static XmlDocument LoadAndValidateXml(string xmlFilename, TextAsset schemaFile)
     {
         return LoadAndValidateXml(xmlFilename, schemaFile, new ValidationEventHandler(BasicValidationHandler));

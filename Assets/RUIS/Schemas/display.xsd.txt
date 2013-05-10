@@ -6,6 +6,9 @@
 	
 	<complexType name="DisplayType">
 		<sequence>
+			<element name="displayCenterPosition" type="tns:Vector3"/>
+			<element name="displayUp" type="tns:Vector3"/>
+			<element name="displayNormal" type="tns:Vector3"/>
 			<element name="centerKeystone" type="tns:KeystoningCorners"/>
 			<element name="leftKeystone" type="tns:KeystoningCorners"/>
 			<element name="rightKeystone" type="tns:KeystoningCorners"/>
@@ -24,5 +27,11 @@
 	<complexType name="Vector2">
 		<attribute name="x" type="float" use="required" />
 		<attribute name="y" type="float" use="required" />
+	</complexType>
+
+	<complexType name="Vector3">
+		<attribute name="x" type="float" use="required" />
+		<attribute name="y" type="float" use="required" />
+		<attribute name="z" type="float" use="required" />
 	</complexType>
 </schema>

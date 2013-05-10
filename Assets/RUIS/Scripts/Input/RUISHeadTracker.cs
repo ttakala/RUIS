@@ -6,31 +6,71 @@ public class RUISHeadTracker : MonoBehaviour {
     public Vector3 trackerPositionOffset;
     public Vector3 trackerRotationOffset;
 
-    List<RUISCamera> linkedCameras = new List<RUISCamera>();
-    //we have to record the original relative camera positions (compared to the head tracker position)
-    //in order to be able to keep them once we start moving
-    Dictionary<RUISCamera, Vector3> linkedCameraPositions = new Dictionary<RUISCamera, Vector3>();
-    Dictionary<RUISCamera, Quaternion> linkedCameraRotations = new Dictionary<RUISCamera, Quaternion>();
+    private Quaternion rotation = Quaternion.identity;
+
+    public float eyeSeparation = 0.06f;
+
+    public Vector3 defaultPosition;
+
+    private Vector3 eyeCenterPosition;
+    public Vector3 EyeCenterPosition
+    {
+        get
+        {
+            return eyeCenterPosition;
+        }
+    }
+    public Vector3 LeftEyePosition
+    {
+        get
+        {
+            return eyeCenterPosition - rotation * Vector3.right * eyeSeparation;
+        }
+    }
+    public Vector3 RightEyePosition
+    {
+        get
+        {
+            return eyeCenterPosition + rotation * Vector3.right * eyeSeparation;
+        }
+    }
 
     void Awake()
     {
-        linkedCameras = new List<RUISCamera>(GetComponentsInChildren<RUISCamera>() as RUISCamera[]);
+        //linkedCameras = new List<RUISCamera>(GetComponentsInChildren<RUISCamera>() as RUISCamera[]);
     }
 
 	void Start () {
-        foreach (RUISCamera camera in linkedCameras)
-        {
-            camera.SetupHeadTracking();
-            linkedCameraPositions.Add(camera, camera.transform.position);
-            linkedCameraRotations.Add(camera, camera.transform.rotation);
-        }
 	}
 	
 	void LateUpdate () {
-        foreach (RUISCamera camera in linkedCameras)
+        if (transformFromTracker != null)
+        {
+            eyeCenterPosition = transformFromTracker.position + trackerPositionOffset;
+            rotation = transformFromTracker.rotation;
+        }
+        else
+        {
+            eyeCenterPosition = defaultPosition;
+            rotation = Quaternion.identity;
+        }
+        /*foreach (RUISCamera camera in linkedCameras)
         {
             camera.transform.position = transform.position + linkedCameraPositions[camera] + transformFromTracker.position + trackerPositionOffset;
             camera.transform.rotation = transform.rotation * linkedCameraRotations[camera] * (transformFromTracker.rotation * Quaternion.Euler(trackerRotationOffset));
-        }
+        }*/
 	}
+
+    void OnDrawGizmosSelected()
+    {
+        Color originalColor = Gizmos.color;
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(LeftEyePosition, 0.05f);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(RightEyePosition, 0.05f);
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(eyeCenterPosition - rotation * Vector3.up * 0.2f, eyeCenterPosition + rotation * Vector3.up * 0.2f);
+        Gizmos.color = originalColor;
+    }
 }

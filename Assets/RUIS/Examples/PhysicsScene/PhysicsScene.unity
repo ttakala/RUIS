@@ -888,8 +888,8 @@ Transform:
   m_PrefabParentObject: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
   m_PrefabInternal: {fileID: 906430021}
   m_GameObject: {fileID: 115874247}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .331291735, y: 2.100564, z: -7.53147316}
+  m_LocalRotation: {x: .153633326, y: 0, z: 0, w: .988127947}
+  m_LocalPosition: {x: -.0780088603, y: 3.45358896, z: -6.08553886}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1697092111}
@@ -943,6 +943,9 @@ MonoBehaviour:
   eyeSeparation: .0599999987
   zeroParallaxDistance: 0
   associatedDisplay: {fileID: 0}
+  near: .300000012
+  far: 1000
+  fieldOfView: 60
 --- !u!114 &115874251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2140,7 +2143,12 @@ MonoBehaviour:
   isHMD: 0
   linkedCamera: {fileID: 115874250}
   stereoType: 1
+  isObliqueFrustum: 0
   isKeystoneCorrected: 1
+  displayCenterPosition: {x: 0, y: 0, z: 0}
+  displayWidth: 2
+  displayHeight: 1
+  displayNormal: {x: 0, y: 0, z: -1}
 --- !u!1 &271038095
 GameObject:
   m_ObjectHideFlags: 0
@@ -7261,19 +7269,19 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalPosition.x
-      value: .331291735
+      value: -.0780088603
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.100564
+      value: 3.45358896
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -7.53147316
+      value: -6.08553886
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: .153633326
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalRotation.y
@@ -7285,7 +7293,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: .988127947
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
@@ -15735,10 +15743,10 @@ MonoBehaviour:
   - {fileID: 261858358}
   stereoCamera: {fileID: 0}
   monoCamera: {fileID: 0}
-  totalResolutionX: 1280
-  totalResolutionY: 720
-  totalRawResolutionX: 1280
-  totalRawResolutionY: 720
+  totalResolutionX: 1920
+  totalResolutionY: 1080
+  totalRawResolutionX: 1920
+  totalRawResolutionY: 1080
   fullScreen: 0
 --- !u!1 &2060023669
 GameObject:

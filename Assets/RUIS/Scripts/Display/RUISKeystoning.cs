@@ -16,7 +16,11 @@ public class RUISKeystoning {
             b = c = d = e = g = h = i = j = m = n = 0;
             a = f = 1;
         }
-
+		
+		public string ToString(){
+			return GetMatrix().ToString();
+		}
+		
         private KeystoningSpecification(KeystoningSpecification other)
         {
             this.a = other.a;
@@ -120,37 +124,30 @@ public class RUISKeystoning {
 
         public KeystoningCorners(XmlNode xmlNode) : this()
         {
-            Debug.Log(xmlNode.InnerXml);
-            corners[0] = GetVector2FromXmlNode(xmlNode.SelectSingleNode("topLeft"));
-            corners[1] = GetVector2FromXmlNode(xmlNode.SelectSingleNode("topRight"));
-            corners[2] = GetVector2FromXmlNode(xmlNode.SelectSingleNode("bottomRight"));
-            corners[3] = GetVector2FromXmlNode(xmlNode.SelectSingleNode("bottomLeft"));
+            corners[0] = XMLUtil.GetVector2FromXmlNode(xmlNode.SelectSingleNode("topLeft"));
+            corners[1] = XMLUtil.GetVector2FromXmlNode(xmlNode.SelectSingleNode("topRight"));
+            corners[2] = XMLUtil.GetVector2FromXmlNode(xmlNode.SelectSingleNode("bottomRight"));
+            corners[3] = XMLUtil.GetVector2FromXmlNode(xmlNode.SelectSingleNode("bottomLeft"));
         }
 
-        public Vector2 GetVector2FromXmlNode(XmlNode xmlNode){
-            return new Vector2(float.Parse(xmlNode.Attributes["x"].Value), float.Parse(xmlNode.Attributes["y"].Value));
-        }
+        
 
         public void SaveToXML(XmlElement xmlElement)
         {
             XmlElement topLeft = xmlElement.OwnerDocument.CreateElement("topLeft");
-            topLeft.SetAttribute("x", corners[0].x.ToString());
-            topLeft.SetAttribute("y", corners[0].y.ToString());
+            XMLUtil.WriteVector2ToXmlElement(topLeft, corners[0]);
             xmlElement.AppendChild(topLeft);
 
             XmlElement topRight = xmlElement.OwnerDocument.CreateElement("topRight");
-            topRight.SetAttribute("x", corners[1].x.ToString());
-            topRight.SetAttribute("y", corners[1].y.ToString());
+            XMLUtil.WriteVector2ToXmlElement(topRight, corners[1]); 
             xmlElement.AppendChild(topRight);
 
             XmlElement bottomRight = xmlElement.OwnerDocument.CreateElement("bottomRight");
-            bottomRight.SetAttribute("x", corners[2].x.ToString());
-            bottomRight.SetAttribute("y", corners[2].y.ToString());
+            XMLUtil.WriteVector2ToXmlElement(bottomRight, corners[2]); 
             xmlElement.AppendChild(bottomRight);
 
             XmlElement bottomLeft = xmlElement.OwnerDocument.CreateElement("bottomLeft");
-            bottomLeft.SetAttribute("x", corners[3].x.ToString());
-            bottomLeft.SetAttribute("y", corners[3].y.ToString());
+            XMLUtil.WriteVector2ToXmlElement(bottomLeft, corners[3]); 
             xmlElement.AppendChild(bottomLeft);
         }
 
@@ -204,16 +201,15 @@ public class RUISKeystoning {
 
 
 
-    public static KeystoningSpecification Optimize(Camera camera, KeystoningCorners corners)
+    public static KeystoningSpecification Optimize(Camera camera, Matrix4x4 originalProjectionMatrix, RUISDisplay display, KeystoningCorners corners)
     {
         KeystoningSpecification spec = new KeystoningSpecification();
 
         //Debug.Log(spec.GetMatrix());
 
         //save all the relevant world points that we use for optimizing the keystoning matrix
-        camera.ResetProjectionMatrix();
-        Matrix4x4 originalProjectionMatrix = camera.projectionMatrix;
-        Vector3[] worldPoints = new Vector3[10];
+        camera.projectionMatrix = originalProjectionMatrix;
+        /*Vector3[] worldPoints = new Vector3[10];
         worldPoints[0] = camera.ViewportToWorldPoint(new Vector3(0, 1, camera.nearClipPlane));
         worldPoints[1] = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
         worldPoints[2] = camera.ViewportToWorldPoint(new Vector3(1, 0, camera.nearClipPlane));
@@ -224,7 +220,7 @@ public class RUISKeystoning {
         worldPoints[7] = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.farClipPlane));
         worldPoints[8] = camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, camera.nearClipPlane));
         worldPoints[9] = camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, camera.farClipPlane));
-
+        */
         /*Debug.Log("---------------------------------------------------------------");
         foreach (Vector3 worldPoint in worldPoints)
         {
@@ -241,7 +237,7 @@ public class RUISKeystoning {
         {
             // compute gradient
 
-            currentValue = CalcValue(spec, camera, originalProjectionMatrix, corners, worldPoints);
+            currentValue = CalcValue(spec, camera, originalProjectionMatrix, corners, display);
             /*;
 
             Debug.Log("**********************************************");
@@ -254,7 +250,7 @@ public class RUISKeystoning {
             //Debug.Log(currentValue);
             for (int i = 0; i < amountOfParameters; i++)
             {
-                grad[i] = CalcValue(spec.ModifyWithStep(i, 0.1f * stepSize), camera, originalProjectionMatrix, corners, worldPoints) - currentValue;
+                grad[i] = CalcValue(spec.ModifyWithStep(i, 0.1f * stepSize), camera, originalProjectionMatrix, corners, display) - currentValue;
             }
 
             // step in direction of gradient with length of stepSize
@@ -268,7 +264,7 @@ public class RUISKeystoning {
             {
                 spec = spec.ModifyWithStep(i, -stepSize * grad[i] / gradLength);
             }
-            stepSize *= 0.98f;
+            stepSize *= 0.99f;
         }
 
         //Debug.Log("final: " + spec.GetMatrix());
@@ -277,29 +273,36 @@ public class RUISKeystoning {
     }
 
     //compares projected world points to the expected corner points and calculates the total square distance
-    private static float CalcValue(KeystoningSpecification spec, Camera camera, Matrix4x4 originalProjectionMatrix, KeystoningCorners corners, Vector3[] worldPoints)
+    private static float CalcValue(KeystoningSpecification spec, Camera camera, Matrix4x4 originalProjectionMatrix, KeystoningCorners corners, RUISDisplay display)//, Vector3[] worldPoints)
     {
         //Debug.Log(CreateKeystonedMatrix(a, b, d, e, f, h, m, n));
         camera.projectionMatrix = originalProjectionMatrix * spec.GetMatrix();
 
 
         
-        Vector2[] newPoints = new Vector2[worldPoints.Length];
+        /*Vector2[] newPoints = new Vector2[worldPoints.Length];
         for(int i = 0; i < worldPoints.Length; i++)
         {
             newPoints[i] = camera.WorldToViewportPoint(worldPoints[i]);
-        }
+        }*/
+
+        Vector2[] newPoints = new Vector2[5];
+        newPoints[0] = camera.WorldToViewportPoint(display.TopLeftPosition);
+        newPoints[1] = camera.WorldToViewportPoint(display.TopRightPosition);
+        newPoints[2] = camera.WorldToViewportPoint(display.BottomRightPosition);
+        newPoints[3] = camera.WorldToViewportPoint(display.BottomLeftPosition);
+        newPoints[4] = camera.WorldToViewportPoint(display.displayCenterPosition);
 
         float distanceFromCorners = 0; // sum of squared distances
         for (int i = 0; i < 4; i++)
         {
             distanceFromCorners += (corners[i] - newPoints[i]).sqrMagnitude;
-            distanceFromCorners += (corners[i] - newPoints[i+4]).sqrMagnitude;
+            //distanceFromCorners += (corners[i] - newPoints[i+4]).sqrMagnitude;
         }
 
         Vector2 diagonalCenter = corners.GetDiagonalCenter();
-        distanceFromCorners += (diagonalCenter - newPoints[8]).sqrMagnitude;
-        distanceFromCorners += (diagonalCenter - newPoints[9]).sqrMagnitude;
+        distanceFromCorners += (diagonalCenter - newPoints[4]).sqrMagnitude;
+        //distanceFromCorners += (diagonalCenter - newPoints[9]).sqrMagnitude;
 
         return distanceFromCorners;
     }

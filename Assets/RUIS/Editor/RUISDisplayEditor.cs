@@ -10,13 +10,22 @@ public class RUISDisplayEditor : Editor {
 
     SerializedProperty resolutionX;
     SerializedProperty resolutionY;
+    SerializedProperty displayWidth;
+    SerializedProperty displayHeight;
+
     SerializedProperty isStereo;
     SerializedProperty isHMD;
+    SerializedProperty isObliqueFrustum;
     SerializedProperty isKeystoneCorrected;
     SerializedProperty camera;
     SerializedProperty stereoType;
     SerializedProperty useDoubleTheSpace;
     GUIStyle displayBoxStyle;
+
+    SerializedProperty displayCenterPosition;
+    SerializedProperty displayNormal;
+    SerializedProperty displayUp;
+    
 
     private Texture2D monoDisplayTexture;
     private Texture2D stereoDisplayTexture;
@@ -28,12 +37,20 @@ public class RUISDisplayEditor : Editor {
 
         resolutionX = serializedObject.FindProperty("resolutionX");
         resolutionY = serializedObject.FindProperty("resolutionY");
+        displayWidth = serializedObject.FindProperty("width");
+        displayHeight = serializedObject.FindProperty("height");
+
         isStereo = serializedObject.FindProperty("isStereo");
         isHMD = serializedObject.FindProperty("isHMD");
+        isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
         isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
         camera = serializedObject.FindProperty("linkedCamera");
         stereoType = serializedObject.FindProperty("stereoType");
         useDoubleTheSpace = serializedObject.FindProperty("useDoubleTheSpace");
+
+        displayCenterPosition = serializedObject.FindProperty("displayCenterPosition");
+        displayNormal = serializedObject.FindProperty("displayNormalInternal");
+        displayUp = serializedObject.FindProperty("displayUpInternal");
 
         displayBoxStyle = new GUIStyle();
         displayBoxStyle.normal.textColor = Color.white;
@@ -45,17 +62,35 @@ public class RUISDisplayEditor : Editor {
         stereoDisplayTexture = Resources.Load("RUIS/Editor/Textures/stereodisplay") as Texture2D;
     }
 
+    public void OnGUI()
+    {
+    }
+
     public override void OnInspectorGUI()
     {
+
+
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(displaySchema, new GUIContent("XML Schema", "Do not modify this unless you know what you're doing"));
         EditorGUILayout.PropertyField(xmlFilename, new GUIContent("XML filename", "The XML file with the display specifications"));
 
-        EditorGUILayout.PropertyField(resolutionX, new GUIContent("Resolution X", "The width of the display"));
-        EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y", "The height of the display"));
+        EditorGUILayout.PropertyField(resolutionX, new GUIContent("Resolution X", "The pixel width of the display"));
+        EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y", "The pixel height of the display"));
         
         EditorGUILayout.PropertyField(camera, new GUIContent("Attached Camera", "The RUISCamera that renders to this display"));
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.PropertyField(displayWidth, new GUIContent("Display Width", "The real-world width of the display"));
+        EditorGUILayout.PropertyField(displayHeight, new GUIContent("Display Height", "The real-world height of the display"));
+        EditorGUILayout.PropertyField(displayCenterPosition, new GUIContent("Display Center Position", "The location of the screen center in Unity coordinates"));
+        EditorGUILayout.PropertyField(displayNormal, new GUIContent("Display Normal Vector", "The normal vector of the display (will be normalized)"));
+        EditorGUILayout.PropertyField(displayUp, new GUIContent("Display Up Vector", "The up vector of the display (will be normalized)"));
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Oblique Frustum", "Should the projection matrix be skewed to use this display as a head tracked viewport"));
 
         EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
 
@@ -95,5 +130,8 @@ public class RUISDisplayEditor : Editor {
         GUILayout.Box(boxText, displayBoxStyle, GUILayout.Width(optimalWidth), GUILayout.Height(optimalHeight));
 
         EditorGUILayout.EndHorizontal();
+
+
     }
+
 }

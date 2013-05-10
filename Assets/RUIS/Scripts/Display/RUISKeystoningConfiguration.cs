@@ -132,9 +132,16 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 
     private void Optimize()
     {
-        centerSpec = RUISKeystoning.Optimize(ruisCamera.centerCamera, centerCameraCorners);
-        leftSpec = RUISKeystoning.Optimize(ruisCamera.leftCamera, leftCameraCorners);
-        rightSpec = RUISKeystoning.Optimize(ruisCamera.rightCamera, rightCameraCorners);
+		
+		ruisCamera.keystoningCamera.gameObject.SetActiveRecursively(true);
+        
+		ruisCamera.keystoningCamera.transform.position = ruisCamera.KeystoningHeadTrackerPosition;
+		centerSpec = RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, centerCameraCorners);
+        leftSpec = RUISKeystoning.Optimize(ruisCamera.leftCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, leftCameraCorners);
+        rightSpec = RUISKeystoning.Optimize(ruisCamera.rightCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, rightCameraCorners);
+		
+		ruisCamera.keystoningCamera.gameObject.SetActiveRecursively(false);
+		Debug.Log (centerSpec.ToString());
     }
 
     public void StartEditing()
@@ -148,5 +155,18 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         isEditing = false;
         drawKeystoningGrid = false;
         ResetDrag();
+    }
+
+    public void ResetConfiguration()
+    {
+        centerCameraCorners = new RUISKeystoning.KeystoningCorners();
+        leftCameraCorners = new RUISKeystoning.KeystoningCorners();
+        rightCameraCorners = new RUISKeystoning.KeystoningCorners();
+
+        centerSpec = new RUISKeystoning.KeystoningSpecification();
+        leftSpec = new RUISKeystoning.KeystoningSpecification();
+        rightSpec = new RUISKeystoning.KeystoningSpecification();
+		
+		Debug.Log ("reset: " + centerSpec.ToString ());
     }
 }

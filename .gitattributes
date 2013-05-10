@@ -69,7 +69,7 @@ Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Trees/BigTree_textures/trans
 Assets/RUIS/Resources/RUIS/Editor/Textures/monodisplay.png -text
 Assets/RUIS/Resources/RUIS/Editor/Textures/stereodisplay.png -text
 Assets/RUIS/Resources/RUIS/Fonts/appleberry_with_cyrillic.ttf -text
-Assets/RUIS/Resources/RUIS/Graphics/Keystoning/keystoning.png -text
+Assets/RUIS/Resources/RUIS/Graphics/Displays/Keystoning/keystoning.png -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/CalibrationCubeMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/CalibrationFloorMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/CalibrationSkeletonMaterial.mat -text
@@ -229,8 +229,10 @@ Library/cache/3c/3cc8f20f27ab81542b70f1880fbad4f0 -text
 Library/cache/3e/3eb5907c4930c8e48bc3c6aae4f33ad5 -text
 Library/cache/3f/3f93e2219025b9d468b9ce88637e5804 -text
 Library/cache/40/40889ad3f5144ee47a2bcddb2c5057ba -text
+Library/cache/41/41f84bad1ab652941a559954216a5cdc -text
 Library/cache/44/44117ed576f5ee846aacea5b224126a4 -text
 Library/cache/45/454f0e7feebf07d4987a9e21603fead9 -text
+Library/cache/45/45ba2df9af6cb4249b262aa2807a3ae1 -text
 Library/cache/46/4612a60126cf507449c3adb9239c9cf5 -text
 Library/cache/48/481d9efd570f87f4ea0e72723be9f4d0 -text
 Library/cache/48/48774b264ea8ded42a89e426e342e233 -text
@@ -283,6 +285,7 @@ Library/cache/6a/6a80beaec07f0aa45adfa8d462563de0 -text
 Library/cache/6b/6bcdf9924607a604e970432fbbcb6942 -text
 Library/cache/6d/6d286b9779fbdf7478dd350d38f2beda -text
 Library/cache/6e/6eb9a3f4dddcf894788b4093077f9cb0 -text
+Library/cache/6f/6f0959afb2706e245bafbba10751a531 -text
 Library/cache/71/71ea3ac4ce817cc408976ccd806b2fdd -text
 Library/cache/73/73604ae94aea741dfa9b7732c8994b19 -text
 Library/cache/75/757f5e3b61ecf1a48b894f315589bf67 -text
@@ -416,6 +419,7 @@ Library/cache/e5/e514f0033c03a4949b69bf9a5fe29bfe -text
 Library/cache/e5/e53c8c3dcc4ff59438bc9e86cb45c3f6 -text
 Library/cache/e5/e594618075d23fd4aaccc8cfc5236d43 -text
 Library/cache/e5/e5d2e82c2c0c8c043be5c3922421cff9 -text
+Library/cache/e6/e61eeaca7a8e9c349bc73da712758c08 -text
 Library/cache/e6/e67cb20ccd0238240b1ae4050f9e5e5f -text
 Library/cache/e6/e6a82b315d897db4fbe38bfe35b4e890 -text
 Library/cache/e8/e815f0a8fcf2660468746ac2193df6bb -text
@@ -429,6 +433,8 @@ Library/cache/ef/ef007e49e2147a14fa056cfd381b1cb9 -text
 Library/cache/f0/f0779b8cf70eb0b48926196d27e57450 -text
 Library/cache/f1/f1a96e9e861d8d242bf3805bf522e4be -text
 Library/cache/f3/f332d29ca5ed72a48b5dd045e300e7c7 -text
+Library/cache/f4/f41cd62156b3f5c48ae2df99681acdb0 -text
+Library/cache/f4/f44ac750e3ef69a47b89c878c2513c36 -text
 Library/cache/f6/f6e5400de4dcb5f4c8239e5affa5210e -text
 Library/cache/f7/f777c032ed7f4114f89cf9fcad4f1b4f -text
 Library/cache/f7/f781c091d1c8647c380d5230adfaee54 -text
@@ -466,6 +472,7 @@ Library/metadata/05/0544525f5d229024cae5b57cf2f8dee5 -text
 Library/metadata/05/059ac28065ced5d40ad3dadcd5635514 -text
 Library/metadata/05/05aba9f308687b5488803eaabdcca968 -text
 Library/metadata/06/067ced3baf1eb6348ad60316a981b267 -text
+Library/metadata/06/06dc576bee526a94eafd5a098a7aff8a -text
 Library/metadata/07/073b9ad5fa5ae6c4783373cfd9bbbe63 -text
 Library/metadata/07/07f9b092f7324f140b81490744a50473 -text
 Library/metadata/08/08555196d319682459fc85f281a0463a -text
@@ -577,11 +584,13 @@ Library/metadata/3f/3f93e2219025b9d468b9ce88637e5804 -text
 Library/metadata/3f/3fd0953e2b4e1fa4582821caf4254c61 -text
 Library/metadata/40/40889ad3f5144ee47a2bcddb2c5057ba -text
 Library/metadata/41/414b82bd5b4919b4e9431339279e9f1f -text
+Library/metadata/41/41f84bad1ab652941a559954216a5cdc -text
 Library/metadata/42/4250abc3e1e397f4096aa870b823dbd7 -text
 Library/metadata/42/42fabd838f7338b418d1354a9528d86e -text
 Library/metadata/44/44117ed576f5ee846aacea5b224126a4 -text
 Library/metadata/44/449b48f7eb5d87a4baaa5fb73f875a59 -text
 Library/metadata/45/454f0e7feebf07d4987a9e21603fead9 -text
+Library/metadata/45/45ba2df9af6cb4249b262aa2807a3ae1 -text
 Library/metadata/46/4612a60126cf507449c3adb9239c9cf5 -text
 Library/metadata/48/481d9efd570f87f4ea0e72723be9f4d0 -text
 Library/metadata/48/486c4be82875c3c40819753980a9b063 -text
@@ -662,6 +671,7 @@ Library/metadata/6d/6d286b9779fbdf7478dd350d38f2beda -text
 Library/metadata/6d/6daefc9d9d6f81945a799b19be9843ff -text
 Library/metadata/6e/6eb9a3f4dddcf894788b4093077f9cb0 -text
 Library/metadata/6e/6ee9ef56f27574442bede8d6df97b1e4 -text
+Library/metadata/6f/6f0959afb2706e245bafbba10751a531 -text
 Library/metadata/6f/6fad6e06135894d4da88e7273313f430 -text
 Library/metadata/70/703d35e643322e443babff27dc8909b3 -text
 Library/metadata/71/71ea3ac4ce817cc408976ccd806b2fdd -text
@@ -857,6 +867,7 @@ Library/metadata/e5/e514f0033c03a4949b69bf9a5fe29bfe -text
 Library/metadata/e5/e53c8c3dcc4ff59438bc9e86cb45c3f6 -text
 Library/metadata/e5/e594618075d23fd4aaccc8cfc5236d43 -text
 Library/metadata/e5/e5d2e82c2c0c8c043be5c3922421cff9 -text
+Library/metadata/e6/e61eeaca7a8e9c349bc73da712758c08 -text
 Library/metadata/e6/e67cb20ccd0238240b1ae4050f9e5e5f -text
 Library/metadata/e6/e6a82b315d897db4fbe38bfe35b4e890 -text
 Library/metadata/e6/e6b94ab1f9bacf742a522ab820fe8ec0 -text
@@ -880,6 +891,8 @@ Library/metadata/f3/f32708abc28e563428828a172e7e754e -text
 Library/metadata/f3/f332d29ca5ed72a48b5dd045e300e7c7 -text
 Library/metadata/f3/f385e0e5469b553439b2e805074a2763 -text
 Library/metadata/f3/f3caf6a0ca88d294e970166e3009e543 -text
+Library/metadata/f4/f41cd62156b3f5c48ae2df99681acdb0 -text
+Library/metadata/f4/f44ac750e3ef69a47b89c878c2513c36 -text
 Library/metadata/f4/f468d09fa19143f4eacf6132fb3e71bf -text
 Library/metadata/f6/f6e5400de4dcb5f4c8239e5affa5210e -text
 Library/metadata/f7/f777c032ed7f4114f89cf9fcad4f1b4f -text
@@ -910,6 +923,7 @@ Library/previews/05/0544525f5d229024cae5b57cf2f8dee5 -text
 Library/previews/05/059ac28065ced5d40ad3dadcd5635514 -text
 Library/previews/06/067ced3baf1eb6348ad60316a981b267 -text
 Library/previews/06/067ced3baf1eb6348ad60316a981b267_/4300000 -text
+Library/previews/06/06dc576bee526a94eafd5a098a7aff8a -text
 Library/previews/07/073b9ad5fa5ae6c4783373cfd9bbbe63 -text
 Library/previews/08/08555196d319682459fc85f281a0463a -text
 Library/previews/09/098e6912988dd484583a229f785821ac -text
@@ -1269,6 +1283,7 @@ ProjectSettings/ProjectSettings.asset -text
 ProjectSettings/QualitySettings.asset -text
 ProjectSettings/TagManager.asset -text
 ProjectSettings/TimeManager.asset -text
+Temp/__EditModeScene -text
 /Unity-csharp.sln -text
 /Unity-csharp.suo -text
 /Unity.sln -text

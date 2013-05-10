@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ns2:ruisDisplay xmlns:ns2="http://ruisystem.net/display">
   <centerKeystone>
-    <topLeft x="0.07132209" y="0.9035199" />
+    <topLeft x="0" y="1" />
     <topRight x="1" y="1" />
     <bottomRight x="1" y="0" />
-    <bottomLeft x="0.1539048" y="0.07379075" />
+    <bottomLeft x="0" y="0" />
   </centerKeystone>
   <leftKeystone>
     <topLeft x="0" y="1" />

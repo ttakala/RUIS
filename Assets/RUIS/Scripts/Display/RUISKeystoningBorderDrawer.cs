@@ -98,7 +98,7 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
             GL.LoadOrtho();
 
             GL.Begin(GL.TRIANGLE_STRIP);
-                GL.Vertex3(0, -0.02f, 0);
+                GL.Vertex3(-0.02f, -0.02f, 0);
                 DrawVertex(corners[3]);
                 GL.Vertex3(corners[3].x, -0.02f, 0);
                 DrawVertex(corners[2]);
@@ -107,21 +107,21 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
             GL.End();
 
             GL.Begin(GL.TRIANGLE_STRIP);
-                GL.Vertex3(0, 1, 0);
+                GL.Vertex3(-0.02f, 1.02f, 0);
                 DrawVertex(corners[0]);
-                GL.Vertex3(0, corners[0].y, 0);
+                GL.Vertex3(-0.02f, corners[0].y, 0);
                 DrawVertex(corners[3]);
-                GL.Vertex3(0, corners[3].y, 0);
-                GL.Vertex3(0, -0.02f, 0);
+                GL.Vertex3(-0.02f, corners[3].y, 0);
+                GL.Vertex3(-0.02f, -0.02f, 0);
             GL.End();
 
             GL.Begin(GL.TRIANGLE_STRIP);
-                GL.Vertex3(1.02f, 1, 0);
+                GL.Vertex3(1.02f, 1.02f, 0);
                 DrawVertex(corners[1]);
-                GL.Vertex3(corners[1].x, 1, 0);
+                GL.Vertex3(corners[1].x, 1.02f, 0);
                 DrawVertex(corners[0]);
-                GL.Vertex3(corners[0].x, 1, 0);
-                GL.Vertex3(0, 1, 0);
+                GL.Vertex3(corners[0].x, 1.02f, 0);
+                GL.Vertex3(-0.02f, 1.02f, 0);
             GL.End();
 
             GL.Begin(GL.TRIANGLE_STRIP);
@@ -130,7 +130,7 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
                 GL.Vertex3(1.02f, corners[2].y, 0);
                 DrawVertex(corners[1]);
                 GL.Vertex3(1.02f, corners[1].y, 0);
-                GL.Vertex3(1.02f, 1, 0);
+                GL.Vertex3(1.02f, 1.02f, 0);
             GL.End();
 
         GL.PopMatrix();

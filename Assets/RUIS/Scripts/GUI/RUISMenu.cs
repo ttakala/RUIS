@@ -93,6 +93,13 @@ public class RUISMenu : MonoBehaviour {
                 }
                 break;
             case MenuState.EditingDisplays:
+                if (GUILayout.Button("Reset Keystoning"))
+                {
+                    foreach (RUISKeystoningConfiguration keystoningConfiguration in FindObjectsOfType(typeof(RUISKeystoningConfiguration)) as RUISKeystoningConfiguration[])
+                    {
+                        keystoningConfiguration.ResetConfiguration();
+                    }
+                }
                 if(GUILayout.Button("Save Configurations")){
                     (FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager).SaveDisplaysToXML();
                 }
