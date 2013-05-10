@@ -6,7 +6,11 @@ public class RUISHeadTracker : MonoBehaviour {
     public Vector3 trackerPositionOffset;
     public Vector3 trackerRotationOffset;
 
-    private Quaternion rotation = Quaternion.identity;
+    public Quaternion rotation
+    {
+        get;
+        private set;
+    }
 
     public float eyeSeparation = 0.06f;
 

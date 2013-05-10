@@ -29,6 +29,7 @@ public class RUISCoordinateSystem : MonoBehaviour
     public bool applyKinectOffset = false;
 
     public Vector3 kinectOffset = Vector3.zero;
+    public float kinectYaw = 0;
 
     void Start()
     {
