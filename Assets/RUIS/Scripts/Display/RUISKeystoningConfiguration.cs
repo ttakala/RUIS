@@ -25,6 +25,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
     public RUISKeystoning.KeystoningSpecification rightCameraKeystoningSpec { get { return rightSpec; } }
     private RUISKeystoning.KeystoningSpecification rightSpec;
 
+    [HideInInspector]
     public bool isEditing = false;
 
 	void Awake () {

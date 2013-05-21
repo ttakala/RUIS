@@ -84,21 +84,33 @@ public class RUISDisplayEditor : Editor {
         
         EditorGUILayout.PropertyField(camera, new GUIContent("Attached Camera", "The RUISCamera that renders to this display"));
 
-        EditorGUILayout.Space();
-
-        EditorGUILayout.PropertyField(displayWidth, new GUIContent("Display Width", "The real-world width of the display"));
-        EditorGUILayout.PropertyField(displayHeight, new GUIContent("Display Height", "The real-world height of the display"));
-        EditorGUILayout.PropertyField(displayCenterPosition, new GUIContent("Display Center Position", "The location of the screen center in Unity coordinates"));
-        EditorGUILayout.PropertyField(displayNormal, new GUIContent("Display Normal Vector", "The normal vector of the display (will be normalized)"));
-        EditorGUILayout.PropertyField(displayUp, new GUIContent("Display Up Vector", "The up vector of the display (will be normalized)"));
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Oblique Frustum", "Should the projection matrix be skewed to use this display as a head tracked viewport"));
-
-        EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
+        
 
         EditorGUILayout.PropertyField(isHMD, new GUIContent("Head-Mounted Display", "Is this display a HMD?"));
+
+        if (!isHMD.boolValue)
+        {
+
+            EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked View", "Should the projection matrix be skewed to use this display as a head tracked viewport"));
+
+            EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(displayWidth, new GUIContent("Display Width", "The real-world width of the display"));
+            EditorGUILayout.PropertyField(displayHeight, new GUIContent("Display Height", "The real-world height of the display"));
+            EditorGUILayout.PropertyField(displayCenterPosition, new GUIContent("Display Center Position", "The location of the screen center in Unity coordinates"));
+            EditorGUILayout.PropertyField(displayNormal, new GUIContent("Display Normal Vector", "The normal vector of the display (will be normalized)"));
+            EditorGUILayout.PropertyField(displayUp, new GUIContent("Display Up Vector", "The up vector of the display (will be normalized)"));
+
+            EditorGUILayout.Space();
+        }
+        else
+        {
+            isObliqueFrustum.boolValue = false;
+            isKeystoneCorrected.boolValue = false;
+        }
+        
 
         EditorGUILayout.PropertyField(isStereo, new GUIContent("Stereo Display", "Is this display stereo?"));
         if (isStereo.boolValue)

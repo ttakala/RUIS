@@ -36,9 +36,6 @@ public class RUISPlainSkeletonController : MonoBehaviour {
 
     private Dictionary<Transform, Quaternion> jointInitialRotations;
 
-    public bool applyOriginalRootPosition = true;
-    private Vector3 originalRootPosition;
-
     void Awake()
     {
         if (skeletonManager == null)
@@ -47,8 +44,6 @@ public class RUISPlainSkeletonController : MonoBehaviour {
         }
 
         jointInitialRotations = new Dictionary<Transform, Quaternion>();
-
-        originalRootPosition = transform.localPosition;
     }
 
     void Start()
@@ -105,7 +100,6 @@ public class RUISPlainSkeletonController : MonoBehaviour {
             if (updateRootPosition)
             {
                 Vector3 newRootPosition = skeletonManager.skeletons[playerId].root.position;
-                if (applyOriginalRootPosition) newRootPosition += originalRootPosition;
                 transform.localPosition = newRootPosition;
             }
         }

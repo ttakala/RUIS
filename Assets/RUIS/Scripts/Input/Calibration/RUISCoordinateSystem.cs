@@ -26,7 +26,6 @@ public class RUISCoordinateSystem : MonoBehaviour
 
     public bool applyMoveToKinect = true;
     public bool setKinectOriginToFloor = false;
-    public bool applyKinectOffset = false;
 
     public Vector3 kinectOffset = Vector3.zero;
     public float kinectYawOffset = 0;
@@ -205,11 +204,8 @@ public class RUISCoordinateSystem : MonoBehaviour
         {
             newPosition.y += kinectDistanceFromFloor;
         }
-
-        if (applyKinectOffset)
-        {
-            newPosition += kinectOffset;
-        }
+            
+        newPosition += kinectOffset;
 
         return newPosition;
     }
@@ -277,10 +273,7 @@ public class RUISCoordinateSystem : MonoBehaviour
             newPosition.y += kinectDistanceFromFloor;
         }
 
-        if (applyKinectOffset)
-        {
-            newPosition += kinectOffset;
-        }
+        newPosition += kinectOffset;
 
         return newPosition;
     }
