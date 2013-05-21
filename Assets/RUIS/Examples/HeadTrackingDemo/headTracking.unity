@@ -42057,7 +42057,8 @@ MonoBehaviour:
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
   enableMoveCalibrationDuringPlay: 0
-  enableKinect: 0
+  enableKinect: 1
+  maxNumberOfKinectPlayers: 2
 --- !u!114 &1997726945
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,6 +18,7 @@ public class RUISInputManager : MonoBehaviour
     public bool enableMoveCalibrationDuringPlay = false;
 
     public bool enableKinect = true;
+    public int maxNumberOfKinectPlayers = 2;
 
     public void Awake()
     {
@@ -26,11 +27,15 @@ public class RUISInputManager : MonoBehaviour
             Import(filename);
         }
 
-        if(!enableKinect)
+        if (!enableKinect)
         {
             Debug.Log("Disabling kinect!");
             GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
-        } 
+        }
+        else
+        {
+            GetComponentInChildren<NIPlayerManagerCOMSelection>().m_MaxNumberOfPlayers = maxNumberOfKinectPlayers;
+        }
 
         psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
         if (enablePSMove)

@@ -19,6 +19,7 @@ public class RUISInputManagerEditor : Editor {
     SerializedProperty amountOfPSMoveControllers;
 
     SerializedProperty kinectEnabled;
+    SerializedProperty maxNumberOfKinectPlayers;
 
     void OnEnable()
     {
@@ -35,6 +36,7 @@ public class RUISInputManagerEditor : Editor {
         amountOfPSMoveControllers = serializedObject.FindProperty("amountOfPSMoveControllers");
 
         kinectEnabled = serializedObject.FindProperty("enableKinect");
+        maxNumberOfKinectPlayers = serializedObject.FindProperty("maxNumberOfKinectPlayers");
     }
 
     public override void OnInspectorGUI()
@@ -77,11 +79,10 @@ public class RUISInputManagerEditor : Editor {
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(psMoveEnabled, new GUIContent("PS Move Enabled"));
 
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.Space();
-        EditorGUILayout.BeginVertical();
         if (psMoveEnabled.boolValue)
         {
+            EditorGUI.indentLevel += 2;
+
             EditorGUILayout.PropertyField(psMoveIp, new GUIContent("PS Move IP"));
             EditorGUILayout.PropertyField(psMovePort, new GUIContent("PS Move Port"));
 
@@ -91,13 +92,21 @@ public class RUISInputManagerEditor : Editor {
 
             EditorGUILayout.PropertyField(amountOfPSMoveControllers, new GUIContent("Max amount of controllers connected", "Maximum amount of controllers connected. All RUISPSMoveControllers with a controller id outside of the range will get disabled to prevent accidents."));
             amountOfPSMoveControllers.intValue = Mathf.Clamp(amountOfPSMoveControllers.intValue, 0, 4);
+
+            EditorGUI.indentLevel -= 2;
         }
-        EditorGUILayout.EndVertical();
-        EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space();
 
         EditorGUILayout.PropertyField(kinectEnabled, new GUIContent("Kinect Enabled"));
+        if (kinectEnabled.boolValue)
+        {
+            EditorGUI.indentLevel += 2;
+
+            EditorGUILayout.PropertyField(maxNumberOfKinectPlayers, new GUIContent("Max Kinect Players"));
+
+            EditorGUI.indentLevel -= 2;
+        }
 
 
         serializedObject.ApplyModifiedProperties();
