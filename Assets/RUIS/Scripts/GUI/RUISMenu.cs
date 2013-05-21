@@ -84,6 +84,9 @@ public class RUISMenu : MonoBehaviour {
                     SwitchKeystoneEditingState();
                     menuState = MenuState.EditingDisplays;
                 }
+				if(GUILayout.Button ("Resize Screen")){
+					(FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager).UpdateDisplays();
+				}
                 break;
             case MenuState.Calibrating:
                 if(GUILayout.Button("End Calibration")){

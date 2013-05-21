@@ -37,7 +37,7 @@ public class RUISDisplayManager : MonoBehaviour {
 
     void Update()
     {
-        if (Screen.width != totalRawResolutionX || Screen.height != totalRawResolutionY)
+        if (Application.isEditor && (Screen.width != totalRawResolutionX || Screen.height != totalRawResolutionY))
         {
             UpdateResolutionsOnTheFly();
             UpdateDisplays();

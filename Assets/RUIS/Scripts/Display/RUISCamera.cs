@@ -33,16 +33,17 @@ public class RUISCamera : MonoBehaviour {
     public float far = 1000;
     public float fieldOfView = 60;
 
-    public bool copyHeadTrackerPosition = true;
     public RUISHeadTracker headTracker;
 	public Vector3 KeystoningHeadTrackerPosition {
         get
         {
+			if(headTracker){
+				return headTracker.defaultPosition;
+			}
+			
             return associatedDisplay.displayCenterPosition + associatedDisplay.DisplayNormal;
         }
 	}
-	
-	public bool DEBUG = true;
 
     public void Awake()
     {
@@ -53,7 +54,7 @@ public class RUISCamera : MonoBehaviour {
         if (!associatedDisplay)
         {
             Debug.LogError("Camera not associated to any display, disabling... " + name);
-            gameObject.SetActiveRecursively(false);
+            gameObject.SetActive(false);
             return;
         }
 
@@ -69,13 +70,23 @@ public class RUISCamera : MonoBehaviour {
 
         SetupCameraTransforms();
 		
+		centerCamera.worldToCameraMatrix = Matrix4x4.identity;
+		leftCamera.worldToCameraMatrix = Matrix4x4.identity;
+		rightCamera.worldToCameraMatrix = Matrix4x4.identity;
+		keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;
 		//keystoningCamera.transform.position = KeystoningHeadTrackerPosition;
-		keystoningCamera.gameObject.SetActiveRecursively(false);
+		keystoningCamera.gameObject.SetActive(false);
 	}
 	
 	public void Update () {
-        
-
+		/*if(transform.parent){
+        	centerCamera.worldToCameraMatrix = transform.parent.localToWorldMatrix;
+			leftCamera.worldToCameraMatrix = transform.parent.localToWorldMatrix;
+			rightCamera.worldToCameraMatrix = transform.parent.localToWorldMatrix;
+			
+			
+		}*/
+			
         if (oldStereoValue != associatedDisplay.isStereo)
         {
             UpdateStereo();
@@ -91,46 +102,19 @@ public class RUISCamera : MonoBehaviour {
 
     public void LateUpdate()
     {
-		if (copyHeadTrackerPosition && headTracker != null)
-        {
-            transform.localPosition = headTracker.EyeCenterPosition;
-            //transform.localRotation = headTracker.rotation;
-        }
 		
-		if(DEBUG)
-		{
-			centerCamera.fov = fieldOfView;
-			leftCamera.fov = fieldOfView;
-			rightCamera.fov = fieldOfView;
-			
-			centerCamera.near = near;
-			leftCamera.near = near;
-			rightCamera.near = near;
-			
-			centerCamera.far = far;
-			leftCamera.far = far;
-			rightCamera.far = far;
-			
-			
-			centerCamera.ResetProjectionMatrix();
-			leftCamera.ResetProjectionMatrix();
-			rightCamera.ResetProjectionMatrix();
-		} 
-		else 
-		{
-		    Matrix4x4[] projectionMatrices = GetProjectionMatricesWithoutKeystoning();
-		    centerCamera.projectionMatrix = projectionMatrices[0];
-		    leftCamera.projectionMatrix = projectionMatrices[1];
-		    rightCamera.projectionMatrix = projectionMatrices[2];
+	    Matrix4x4[] projectionMatrices = GetProjectionMatricesWithoutKeystoning();
+	    centerCamera.projectionMatrix = projectionMatrices[0];
+	    leftCamera.projectionMatrix = projectionMatrices[1];
+	    rightCamera.projectionMatrix = projectionMatrices[2];
 
-            /*centerCamera.projectionMatrix = CreateKeystoningObliqueFrustum();
-            transform.position = KeystoningHeadTrackerPosition;*/
+        /*centerCamera.projectionMatrix = CreateKeystoningObliqueFrustum();
+        transform.position = KeystoningHeadTrackerPosition;*/
 
-		    if (associatedDisplay.isKeystoneCorrected)
-		    {
-		        ApplyKeystoneCorrection();
-		    }
-		}
+	    if (associatedDisplay.isKeystoneCorrected)
+	    {
+	        ApplyKeystoneCorrection();
+	    }
     }
 
     public Matrix4x4[] GetProjectionMatricesWithoutKeystoning()
@@ -168,16 +152,18 @@ public class RUISCamera : MonoBehaviour {
             float top = (Vector3.Dot(vu, vc) * near) / eyedistance;
             Matrix4x4 projectionMatrix = CreateFrustum(left, right, bottom, top, near, far);
 
-            Matrix4x4 M = Matrix4x4.identity;
-            M.SetColumn(0, vr);
-            M.SetColumn(1, vu);
-            M.SetColumn(2, vn);
+            Matrix4x4 rotation = Matrix4x4.identity;
+            rotation.SetRow(0, vr);
+            rotation.SetRow(1, vu);
+            rotation.SetRow(2, vn);
+		
+            Matrix4x4 translation = Matrix4x4.identity;
+            translation.SetColumn(3, -trackerCoordinates);
+            translation[3, 3] = 1;
+		 
+            return projectionMatrix * rotation * translation;
 
-            Matrix4x4 T = Matrix4x4.identity;
-            T.SetColumn(3, trackerCoordinates);
-            T[3, 3] = 1;
-
-            return projectionMatrix;
+            //return projectionMatrix;
 
         /*Vector3 camToDisplay = associatedDisplay.displayCenterPosition - trackerCoordinates;
         float dd = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
@@ -204,65 +190,6 @@ public class RUISCamera : MonoBehaviour {
         Matrix4x4 C = Camera(trackerCoordinates.x, trackerCoordinates.y, trackerCoordinates.z, eyeProjWallX, eyeProjWallY, eyeProjWallZ, associatedDisplay.DisplayUp.x, associatedDisplay.DisplayUp.y, associatedDisplay.DisplayUp.z);
 
         return CreateDefaultFrustum() * B * C;*/
-    }
-
-    private Matrix4x4 Camera(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ) {
-         float z0 = eyeX - centerX;
-         float z1 = eyeY - centerY;
-         float z2 = eyeZ - centerZ;
-         float mag = Mathf.Sqrt(z0*z0 + z1*z1 + z2*z2);
-
-         if (mag != 0) {
-         z0 /= mag;
-         z1 /= mag;
-         z2 /= mag;
-         }
-
-         float y0 = upX;
-         float y1 = upY;
-         float y2 = upZ;
-
-         float x0 = y1*z2 - y2*z1;
-         float x1 = -y0*z2 + y2*z0;
-         float x2 = y0*z1 - y1*z0;
-
-         y0 = z1*x2 - z2*x1;
-         y1 = -z0*x2 + z2*x0;
-         y2 = z0*x1 - z1*x0;
-
-         mag = Mathf.Sqrt(x0*x0 + x1*x1 + x2*x2);
-         if (mag != 0) {
-         x0 /= mag;
-         x1 /= mag;
-         x2 /= mag;
-         }
-
-         mag = Mathf.Sqrt(y0*y0 + y1*y1 + y2*y2);
-         if (mag != 0) {
-             y0 /= mag; 
-             y1 /= mag;
-             y2 /= mag;
-         }
-
-         // just does an apply to the main matrix,
-         // since that'll be copied out on endCamera
-         Matrix4x4 camera = Matrix4x4.identity;
-         camera[0, 0] = x0;
-         camera[0, 1] = x1;
-         camera[0, 2] = x2;
-         camera[1, 0] = y0;
-         camera[1, 1] = y1;
-         camera[1, 2] = y2;
-         camera[2, 0] = z0;
-         camera[2, 1] = z1;
-         camera[2, 2] = z2;
-
-         Matrix4x4 translation = Matrix4x4.identity;
-         translation[0, 3] = -eyeX;
-         translation[1, 3] = -eyeY;
-         translation[2, 3] = -eyeY;
-
-         return camera * translation;
     }
 
     public Matrix4x4 CreateDefaultFrustum()

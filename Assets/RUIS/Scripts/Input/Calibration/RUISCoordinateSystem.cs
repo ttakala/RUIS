@@ -29,7 +29,7 @@ public class RUISCoordinateSystem : MonoBehaviour
     public bool applyKinectOffset = false;
 
     public Vector3 kinectOffset = Vector3.zero;
-    public float kinectYaw = 0;
+    public float kinectYawOffset = 0;
 
     void Start()
     {
@@ -199,6 +199,8 @@ public class RUISCoordinateSystem : MonoBehaviour
 
         newPosition = moveToRUISTransform.MultiplyPoint3x4(newPosition);
 
+        newPosition = Quaternion.Euler(0, kinectYawOffset, 0) * newPosition;
+
         if (setKinectOriginToFloor)
         {
             newPosition.y += kinectDistanceFromFloor;
@@ -222,6 +224,8 @@ public class RUISCoordinateSystem : MonoBehaviour
 
         newVelocity = moveToRUISTransform.MultiplyPoint3x4(newVelocity);
 
+        newVelocity = Quaternion.Euler(0, kinectYawOffset, 0) * newVelocity;
+
         return newVelocity;
     }
 
@@ -238,6 +242,8 @@ public class RUISCoordinateSystem : MonoBehaviour
             newRotation = moveToKinectRotation * newRotation;
         }
 
+        newRotation = Quaternion.Euler(0, kinectYawOffset, 0) * newRotation;
+
         /*if (applyKinectToRUIS)
         {
             rotation *= kinectYaw;
@@ -252,6 +258,7 @@ public class RUISCoordinateSystem : MonoBehaviour
         newVelocity.x = -newVelocity.x;
         newVelocity.y = -newVelocity.y;
         newVelocity = moveToKinectRotation * newVelocity;
+        newVelocity = Quaternion.Euler(0, kinectYawOffset, 0) * newVelocity;
         return newVelocity;
     }
 
@@ -263,7 +270,7 @@ public class RUISCoordinateSystem : MonoBehaviour
         newPosition.y = position.Y;
         newPosition.z = -position.Z;
 
-        newPosition = kinectToUnityScale * (kinectFloorRotator * newPosition);
+        newPosition = kinectToUnityScale * (Quaternion.Euler(0, kinectYawOffset, 0) * kinectFloorRotator * newPosition);
 
         if (setKinectOriginToFloor)
         {
@@ -290,6 +297,7 @@ public class RUISCoordinateSystem : MonoBehaviour
         newRotation.x = -newRotation.x;
         newRotation.y = -newRotation.y;
 
+        newRotation = Quaternion.Euler(0, kinectYawOffset, 0) * newRotation;
         //if (applyKinectToRUIS) result *= kinectYaw;
 
         return newRotation;

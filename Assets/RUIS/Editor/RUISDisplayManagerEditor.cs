@@ -56,8 +56,8 @@ public class RUISDisplayManagerEditor : Editor {
             displays.arraySize++;
             SerializedProperty newDisplayProperty = displays.GetArrayElementAtIndex(displays.arraySize - 1);
             GameObject newDisplay = Instantiate(displayPrefab) as GameObject;
-            newDisplay.name = "New Display";
-            newDisplay.GetComponent<RUISDisplay>().xmlFilename = newDisplay.name + " " + displays.arraySize;
+            newDisplay.name = "NewDisplay";
+            newDisplay.GetComponent<RUISDisplay>().xmlFilename = newDisplay.name + displays.arraySize + ".xml";
             newDisplay.transform.parent = (target as RUISDisplayManager).transform;
             newDisplayProperty.objectReferenceValue = newDisplay;
         }

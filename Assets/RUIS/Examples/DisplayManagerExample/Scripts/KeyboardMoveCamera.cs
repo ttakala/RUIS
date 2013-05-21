@@ -3,6 +3,7 @@ using System.Collections;
 
 public class KeyboardMoveCamera : MonoBehaviour {
     public float movementScaler = 1;
+	public float rotationScaler = 180f;
 
 	// Use this for initialization
 	void Start () {
@@ -21,5 +22,8 @@ public class KeyboardMoveCamera : MonoBehaviour {
         {
             transform.Translate(-transform.up * Time.deltaTime * movementScaler);
         }
+		transform.Rotate (transform.up * (Input.GetKey (KeyCode.Z) ? -1 : 0) * Time.deltaTime * rotationScaler);
+		transform.Rotate (transform.up * (Input.GetKey (KeyCode.C) ? 1 : 0) * Time.deltaTime * rotationScaler);
 	}
+	
 }

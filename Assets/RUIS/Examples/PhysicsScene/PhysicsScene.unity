@@ -894,6 +894,7 @@ Transform:
   m_Children:
   - {fileID: 1697092111}
   - {fileID: 966551113}
+  - {fileID: 235097808}
   m_Father: {fileID: 0}
 --- !u!20 &115874249
 Camera:
@@ -912,8 +913,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .300000012
-  far clip plane: 1000
+  near clip plane: .100000001
+  far clip plane: 500
   field of view: 60
   orthographic: 0
   orthographic size: 100
@@ -940,12 +941,16 @@ MonoBehaviour:
   centerCamera: {fileID: 115874249}
   leftCamera: {fileID: 1697092112}
   rightCamera: {fileID: 966551114}
-  eyeSeparation: .0599999987
+  keystoningCamera: {fileID: 235097809}
+  eyeSeparation: .0639000013
   zeroParallaxDistance: 0
   associatedDisplay: {fileID: 0}
-  near: .300000012
-  far: 1000
+  near: .100000001
+  far: 500
   fieldOfView: 60
+  copyHeadTrackerPosition: 1
+  headTracker: {fileID: 0}
+  DEBUG: 0
 --- !u!114 &115874251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2027,6 +2032,62 @@ Light:
   m_ShadowAngle: 0
   m_IndirectIntensity: 1
   m_AreaSize: {x: 1, y: 1}
+--- !u!1 &235097807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100006, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
+  m_PrefabInternal: {fileID: 906430021}
+  serializedVersion: 3
+  m_Component:
+  - 4: {fileID: 235097808}
+  - 20: {fileID: 235097809}
+  m_Layer: 0
+  m_Name: KeystoningCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &235097808
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400006, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
+  m_PrefabInternal: {fileID: 906430021}
+  m_GameObject: {fileID: 235097807}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 115874248}
+--- !u!20 &235097809
+Camera:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 2000006, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 906430021}
+  m_GameObject: {fileID: 235097807}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: .300000012
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 100
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_HDR: 0
 --- !u!1 &245074949
 GameObject:
   m_ObjectHideFlags: 0
@@ -2146,9 +2207,10 @@ MonoBehaviour:
   isObliqueFrustum: 0
   isKeystoneCorrected: 1
   displayCenterPosition: {x: 0, y: 0, z: 0}
-  displayWidth: 2
-  displayHeight: 1
-  displayNormal: {x: 0, y: 0, z: -1}
+  displayNormalInternal: {x: 0, y: 0, z: -1}
+  displayUpInternal: {x: 0, y: 1, z: 0}
+  width: 2
+  height: 1.5
 --- !u!1 &271038095
 GameObject:
   m_ObjectHideFlags: 0
@@ -6093,7 +6155,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enablePSMove
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
@@ -11557,7 +11619,7 @@ MonoBehaviour:
   m_Name: 
   filename: inputConfig.txt
   loadFromTextFileInEditor: 0
-  enablePSMove: 0
+  enablePSMove: 1
   PSMoveIP: 130.233.46.224
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
@@ -11583,6 +11645,7 @@ MonoBehaviour:
   setKinectOriginToFloor: 1
   applyKinectOffset: 0
   kinectOffset: {x: 0, y: 0, z: 0}
+  kinectYawOffset: 0
 --- !u!1 &1542308321
 GameObject:
   m_ObjectHideFlags: 0

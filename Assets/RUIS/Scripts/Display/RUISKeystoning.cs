@@ -4,8 +4,8 @@ using System.Xml;
 using System.Xml.Schema;
 
 public class RUISKeystoning {
-    private const float maxCornerSelectionDistance = 0.05f;
-    private const int amountOfParameters = 8;
+    private const float maxCornerSelectionDistance = 0.2f;
+    private const int amountOfParameters = 10;
 
     public class KeystoningSpecification
     {
@@ -204,9 +204,9 @@ public class RUISKeystoning {
 
 
 
-    public static KeystoningSpecification Optimize(Camera camera, Matrix4x4 originalProjectionMatrix, RUISDisplay display, KeystoningCorners corners)
+    public static float Optimize(Camera camera, Matrix4x4 originalProjectionMatrix, RUISDisplay display, KeystoningCorners corners, ref KeystoningSpecification spec)
     {
-        KeystoningSpecification spec = new KeystoningSpecification();
+        spec = spec != null ? spec : new KeystoningSpecification();
 
         //Debug.Log(spec.GetMatrix());
 
@@ -236,12 +236,12 @@ public class RUISKeystoning {
         float[] grad = new float[amountOfParameters-2];
 
         float currentValue = 0;
-        while (stepSize > 0.000001f)
+        /*while (stepSize > 0.000001f)
         {
             // compute gradient
 
             currentValue = CalcValue(spec, camera, originalProjectionMatrix, corners, display, true);
-            /*;
+            
 
             Debug.Log("**********************************************");
             foreach (Vector3 worldPoint in worldPoints)
@@ -249,7 +249,7 @@ public class RUISKeystoning {
                 Debug.Log(camera.WorldToViewportPoint(worldPoint));
             }
             Debug.Log("**********************************************");
-            */
+            
             //Debug.Log(currentValue);
             for (int i = 0; i < amountOfParameters-2; i++)
             {
@@ -269,11 +269,11 @@ public class RUISKeystoning {
             }
             stepSize *= 0.99f;
         }
-        
-        stepSize = 0.1f;
+        */
+        stepSize = 0.001f;
         grad = new float[amountOfParameters];
         currentValue = 0;
-        while (stepSize > 0.000001f)
+        for(int iterations = 0; iterations < 10; iterations++)
         {
             // compute gradient
 
@@ -294,12 +294,12 @@ public class RUISKeystoning {
             {
                 spec = spec.ModifyWithStep(i, -stepSize * grad[i] / gradLength);
             }
-            stepSize *= 0.99f;
+            stepSize *= 0.8f;
         }
         
         //Debug.Log("final: " + spec.GetMatrix());
         //Debug.Log("currentValue: " + currentValue);
-        return spec;
+        return currentValue;
     }
 
     //compares projected world points to the expected corner points and calculates the total square distance
@@ -316,23 +316,29 @@ public class RUISKeystoning {
             newPoints[i] = camera.WorldToViewportPoint(worldPoints[i]);
         }*/
 
-        Vector2[] newPoints = new Vector2[5];
+        Vector2[] newPoints = new Vector2[10];
         newPoints[0] = camera.WorldToViewportPoint(display.TopLeftPosition);
         newPoints[1] = camera.WorldToViewportPoint(display.TopRightPosition);
         newPoints[2] = camera.WorldToViewportPoint(display.BottomRightPosition);
         newPoints[3] = camera.WorldToViewportPoint(display.BottomLeftPosition);
         newPoints[4] = camera.WorldToViewportPoint(display.displayCenterPosition);
+		newPoints[5] = camera.WorldToViewportPoint(display.TopLeftPosition + (display.TopLeftPosition - camera.transform.position) * 10);
+        newPoints[6] = camera.WorldToViewportPoint(display.TopRightPosition + (display.TopRightPosition - camera.transform.position) * 10);
+        newPoints[7] = camera.WorldToViewportPoint(display.BottomRightPosition + (display.BottomRightPosition - camera.transform.position) * 10);
+        newPoints[8] = camera.WorldToViewportPoint(display.BottomLeftPosition + (display.BottomLeftPosition - camera.transform.position) * 10);
+        newPoints[9] = camera.WorldToViewportPoint(display.displayCenterPosition + (display.displayCenterPosition - camera.transform.position) * 10);
 
         float distanceFromCorners = 0; // sum of squared distances
         for (int i = 0; i < (firstPhase ? 3 : 4); i++)
         {
             distanceFromCorners += (corners[i] - newPoints[i]).sqrMagnitude;
-            //distanceFromCorners += (corners[i] - newPoints[i+4]).sqrMagnitude;
+            distanceFromCorners += (corners[i] - newPoints[i+5]).sqrMagnitude;
         }
 
         if(!firstPhase){
             Vector2 diagonalCenter = corners.GetDiagonalCenter();
             distanceFromCorners += (diagonalCenter - newPoints[4]).sqrMagnitude;
+			distanceFromCorners += (diagonalCenter - newPoints[9]).sqrMagnitude;
         }
         //distanceFromCorners += (diagonalCenter - newPoints[9]).sqrMagnitude;
 

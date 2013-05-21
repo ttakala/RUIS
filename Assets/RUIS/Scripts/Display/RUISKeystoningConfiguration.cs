@@ -76,7 +76,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         {
             ResetDrag();
 
-            Optimize();
+            //Optimize();
         }
 
         if (currentlyDragging != null)
@@ -86,8 +86,10 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
             newPos.y = Mathf.Clamp01(newPos.y);
             currentlyDragging[draggedCornerIndex] = newPos;
 
-            Optimize();
+            //Optimize();
         }
+		
+		Optimize ();
 	}
 
     public bool LoadFromXML(XmlDocument xmlDoc)
@@ -100,8 +102,16 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 
         XmlNode rightCornerElement = xmlDoc.GetElementsByTagName("rightKeystone").Item(0);
         rightCameraCorners = new RUISKeystoning.KeystoningCorners(rightCornerElement);
-
-        Optimize();
+		
+		
+		//crunch the optimization when loading
+		float error = 1;
+		int iterations = 0;
+		while(error > 0.000001f && iterations < 10000){
+			float newError = Optimize ();
+			error = newError;
+			iterations++;
+		}
 
         return true;
     }
@@ -130,17 +140,20 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         draggedCornerIndex = -1;
     }
 
-    private void Optimize()
+    private float Optimize()
     {
 		
 		ruisCamera.keystoningCamera.gameObject.SetActiveRecursively(true);
         
 		ruisCamera.keystoningCamera.transform.position = ruisCamera.KeystoningHeadTrackerPosition;
-		centerSpec = RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, centerCameraCorners);
-        leftSpec = RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, leftCameraCorners);
-        rightSpec = RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, rightCameraCorners);
+		float totalError = 0;
+		totalError += RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, centerCameraCorners, ref centerSpec);
+        totalError += RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, leftCameraCorners, ref leftSpec);
+        totalError += RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, rightCameraCorners, ref rightSpec);
 		
 		ruisCamera.keystoningCamera.gameObject.SetActiveRecursively(false);
+		
+		return totalError;
     }
 
     public void StartEditing()
