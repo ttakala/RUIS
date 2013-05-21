@@ -62,6 +62,9 @@ public class RUISDisplay : MonoBehaviour {
     public float width = 2;
     public float height = 1.5f;
 
+    public float horizontalFOV = 60;
+    public float verticalFOV = 40;
+
     public Vector3 DisplayNormal
     {
         get

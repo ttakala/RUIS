@@ -12751,7 +12751,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 647502500}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .74000001, y: 0, z: 0}
+  m_LocalPosition: {x: .74000001, y: 1.3004818, z: -.949717522}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 511039507}
@@ -13696,13 +13696,15 @@ MonoBehaviour:
   isHMD: 0
   linkedCamera: {fileID: 1033043171}
   stereoType: 0
-  isObliqueFrustum: 1
+  isObliqueFrustum: 0
   isKeystoneCorrected: 0
   displayCenterPosition: {x: 1.5, y: 1.5, z: -1.5}
   displayNormalInternal: {x: -1, y: 0, z: 0}
   displayUpInternal: {x: 0, y: 1, z: 0}
   width: 3
   height: 3
+  horizontalFOV: 60
+  verticalFOV: 40
 --- !u!1 &694192067
 GameObject:
   m_ObjectHideFlags: 0
@@ -17661,7 +17663,6 @@ MonoBehaviour:
   associatedDisplay: {fileID: 0}
   near: .100000001
   far: 500
-  fieldOfView: 60
   headTracker: {fileID: 511039509}
 --- !u!20 &898102232
 Camera:
@@ -20891,7 +20892,6 @@ MonoBehaviour:
   associatedDisplay: {fileID: 0}
   near: .100000001
   far: 500
-  fieldOfView: 60
   headTracker: {fileID: 511039509}
 --- !u!1 &1034720874
 GameObject:
@@ -40810,13 +40810,15 @@ MonoBehaviour:
   isHMD: 0
   linkedCamera: {fileID: 898102231}
   stereoType: 0
-  isObliqueFrustum: 1
+  isObliqueFrustum: 0
   isKeystoneCorrected: 0
   displayCenterPosition: {x: 0, y: 1.5, z: 0}
   displayNormalInternal: {x: 0, y: 0, z: -1}
   displayUpInternal: {x: 0, y: 1, z: 0}
   width: 3
   height: 3
+  horizontalFOV: 60
+  verticalFOV: 40
 --- !u!1 &1928169449
 GameObject:
   m_ObjectHideFlags: 0

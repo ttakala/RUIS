@@ -12,6 +12,8 @@ public class RUISDisplayEditor : Editor {
     SerializedProperty resolutionY;
     SerializedProperty displayWidth;
     SerializedProperty displayHeight;
+    SerializedProperty horizontalFOV;
+    SerializedProperty verticalFOV;
 
     SerializedProperty isStereo;
     SerializedProperty isHMD;
@@ -41,6 +43,8 @@ public class RUISDisplayEditor : Editor {
         resolutionY = serializedObject.FindProperty("resolutionY");
         displayWidth = serializedObject.FindProperty("width");
         displayHeight = serializedObject.FindProperty("height");
+        horizontalFOV = serializedObject.FindProperty("horizontalFOV");
+        verticalFOV = serializedObject.FindProperty("verticalFOV");
 
         isStereo = serializedObject.FindProperty("isStereo");
         isHMD = serializedObject.FindProperty("isHMD");
@@ -81,6 +85,9 @@ public class RUISDisplayEditor : Editor {
 
         EditorGUILayout.PropertyField(resolutionX, new GUIContent("Resolution X", "The pixel width of the display"));
         EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y", "The pixel height of the display"));
+
+        EditorGUILayout.PropertyField(horizontalFOV, new GUIContent("Horizontal Field of View", "The horizontal FOV of the display if not using a head tracked view"));
+        EditorGUILayout.PropertyField(verticalFOV, new GUIContent("Vertical Field of View", "The vertical FOV of the display if not using a head tracked view"));
         
         EditorGUILayout.PropertyField(camera, new GUIContent("Attached Camera", "The RUISCamera that renders to this display"));
 

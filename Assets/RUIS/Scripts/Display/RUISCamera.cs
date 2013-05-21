@@ -31,7 +31,6 @@ public class RUISCamera : MonoBehaviour {
 
     public float near = 0.3f;
     public float far = 1000;
-    public float fieldOfView = 60;
 
     public RUISHeadTracker headTracker;
 	public Vector3 KeystoningHeadTrackerPosition {
@@ -70,22 +69,20 @@ public class RUISCamera : MonoBehaviour {
 
         SetupCameraTransforms();
 		
-		centerCamera.worldToCameraMatrix = Matrix4x4.identity;
+		/*centerCamera.worldToCameraMatrix = Matrix4x4.identity;
 		leftCamera.worldToCameraMatrix = Matrix4x4.identity;
 		rightCamera.worldToCameraMatrix = Matrix4x4.identity;
-		keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;
+		keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;*/
 		//keystoningCamera.transform.position = KeystoningHeadTrackerPosition;
 		keystoningCamera.gameObject.SetActive(false);
 	}
 	
 	public void Update () {
-		/*if(transform.parent){
-        	centerCamera.worldToCameraMatrix = transform.parent.localToWorldMatrix;
-			leftCamera.worldToCameraMatrix = transform.parent.localToWorldMatrix;
-			rightCamera.worldToCameraMatrix = transform.parent.localToWorldMatrix;
-			
-			
-		}*/
+		if(transform.parent){
+        	/*centerCamera.worldToCameraMatrix = transform.parent.worldToLocalMatrix;
+            leftCamera.worldToCameraMatrix = transform.parent.worldToLocalMatrix;
+            rightCamera.worldToCameraMatrix = transform.parent.worldToLocalMatrix;*/
+		}
 			
         if (oldStereoValue != associatedDisplay.isStereo)
         {
@@ -194,9 +191,9 @@ public class RUISCamera : MonoBehaviour {
 
     public Matrix4x4 CreateDefaultFrustum()
     {
-        float right = -Mathf.Tan(fieldOfView / 2 * Mathf.Deg2Rad) * near;
+        float right = -Mathf.Tan(associatedDisplay.horizontalFOV / 2 * Mathf.Deg2Rad) * near;
         float left = -right;
-        float top = right * aspectRatio;
+        float top = -Mathf.Tan(associatedDisplay.verticalFOV / 2 * Mathf.Deg2Rad) * near;
         float bottom = -top;
 
         return CreateFrustum(right, left, top, bottom, near, far);
