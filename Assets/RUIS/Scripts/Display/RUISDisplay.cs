@@ -50,6 +50,7 @@ public class RUISDisplay : MonoBehaviour {
     }
 
     public bool isStereo;
+    public float eyeSeparation = 0.06f;
     public bool isHMD; //head-mounted display
     public RUISCamera linkedCamera;
     public StereoType stereoType;

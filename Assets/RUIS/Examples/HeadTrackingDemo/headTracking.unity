@@ -9877,11 +9877,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6165f77a9fda3ca4c89d9ae61650a0e9, type: 3}
   m_Name: 
-  transformFromTracker: {fileID: 132692837}
+  positionFromTracker: {fileID: 0}
+  rotationFromTracker: {fileID: 0}
   trackerPositionOffset: {x: 0, y: 0, z: 0}
   trackerRotationOffset: {x: 0, y: 0, z: 0}
-  eyeSeparation: .0639000013
   defaultPosition: {x: 0, y: 1.5, z: -1.5}
+  defaultRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &511225827
 GameObject:
   m_ObjectHideFlags: 0
@@ -12764,7 +12765,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 647502500}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e61eeaca7a8e9c349bc73da712758c08, type: 3}
   m_Name: 
@@ -13693,10 +13694,11 @@ MonoBehaviour:
   resolutionY: 768
   useDoubleTheSpace: 1
   isStereo: 1
+  eyeSeparation: .0599999987
   isHMD: 0
   linkedCamera: {fileID: 1033043171}
   stereoType: 0
-  isObliqueFrustum: 0
+  isObliqueFrustum: 1
   isKeystoneCorrected: 0
   displayCenterPosition: {x: 1.5, y: 1.5, z: -1.5}
   displayNormalInternal: {x: -1, y: 0, z: 0}
@@ -17658,8 +17660,6 @@ MonoBehaviour:
   leftCamera: {fileID: 1889411142}
   rightCamera: {fileID: 1019923188}
   keystoningCamera: {fileID: 786305669}
-  eyeSeparation: .0639000013
-  zeroParallaxDistance: 0
   associatedDisplay: {fileID: 0}
   near: .100000001
   far: 500
@@ -20887,8 +20887,6 @@ MonoBehaviour:
   leftCamera: {fileID: 856176656}
   rightCamera: {fileID: 277719617}
   keystoningCamera: {fileID: 238400115}
-  eyeSeparation: .0639000013
-  zeroParallaxDistance: 0
   associatedDisplay: {fileID: 0}
   near: .100000001
   far: 500
@@ -40807,10 +40805,11 @@ MonoBehaviour:
   resolutionY: 768
   useDoubleTheSpace: 1
   isStereo: 1
+  eyeSeparation: .0599999987
   isHMD: 0
   linkedCamera: {fileID: 898102231}
   stereoType: 0
-  isObliqueFrustum: 0
+  isObliqueFrustum: 1
   isKeystoneCorrected: 0
   displayCenterPosition: {x: 0, y: 1.5, z: 0}
   displayNormalInternal: {x: 0, y: 0, z: -1}
@@ -42057,7 +42056,7 @@ MonoBehaviour:
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
   enableMoveCalibrationDuringPlay: 0
-  enableKinect: 1
+  enableKinect: 0
   maxNumberOfKinectPlayers: 2
 --- !u!114 &1997726945
 MonoBehaviour:

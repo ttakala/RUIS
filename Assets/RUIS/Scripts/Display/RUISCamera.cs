@@ -13,9 +13,6 @@ public class RUISCamera : MonoBehaviour {
     public Camera rightCamera;
 	public Camera keystoningCamera;
 
-    public float eyeSeparation = 0.06f;
-    public float zeroParallaxDistance = 0;
-
     [HideInInspector]
     public RUISDisplay associatedDisplay;
 
@@ -69,10 +66,7 @@ public class RUISCamera : MonoBehaviour {
 
         SetupCameraTransforms();
 		
-		/*centerCamera.worldToCameraMatrix = Matrix4x4.identity;
-		leftCamera.worldToCameraMatrix = Matrix4x4.identity;
-		rightCamera.worldToCameraMatrix = Matrix4x4.identity;
-		keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;*/
+		keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;
 		//keystoningCamera.transform.position = KeystoningHeadTrackerPosition;
 		keystoningCamera.gameObject.SetActive(false);
 	}
@@ -99,6 +93,12 @@ public class RUISCamera : MonoBehaviour {
 
     public void LateUpdate()
     {
+        centerCamera.ResetProjectionMatrix();
+        leftCamera.ResetProjectionMatrix();
+        rightCamera.ResetProjectionMatrix();
+
+        SetupCameraTransforms();
+        
 		
 	    Matrix4x4[] projectionMatrices = GetProjectionMatricesWithoutKeystoning();
 	    centerCamera.projectionMatrix = projectionMatrices[0];
@@ -107,6 +107,13 @@ public class RUISCamera : MonoBehaviour {
 
         /*centerCamera.projectionMatrix = CreateKeystoningObliqueFrustum();
         transform.position = KeystoningHeadTrackerPosition;*/
+
+        if (associatedDisplay.isObliqueFrustum)
+        {
+            centerCamera.worldToCameraMatrix = Matrix4x4.identity;
+            leftCamera.worldToCameraMatrix = Matrix4x4.identity;
+            rightCamera.worldToCameraMatrix = Matrix4x4.identity;
+        }
 
 	    if (associatedDisplay.isKeystoneCorrected)
 	    {
@@ -118,9 +125,10 @@ public class RUISCamera : MonoBehaviour {
     {
         if (associatedDisplay.isObliqueFrustum && headTracker)
         {
-            return new Matrix4x4[] { CreateProjectionMatrix(headTracker.EyeCenterPosition), 
-                                     CreateProjectionMatrix(headTracker.LeftEyePosition),
-                                     CreateProjectionMatrix(headTracker.RightEyePosition) };
+            Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
+            return new Matrix4x4[] { CreateProjectionMatrix(eyePositions[0]), 
+                                     CreateProjectionMatrix(eyePositions[1]),
+                                     CreateProjectionMatrix(eyePositions[2]) };
         }
         else
         {
@@ -271,17 +279,17 @@ public class RUISCamera : MonoBehaviour {
 
     public void SetupCameraTransforms()
     {
-        float halfEyeSeparation = eyeSeparation / 2;
+        float halfEyeSeparation = associatedDisplay.eyeSeparation / 2;
         leftCamera.transform.localPosition = new Vector3(-halfEyeSeparation, 0, 0);
         rightCamera.transform.localPosition = new Vector3(halfEyeSeparation, 0, 0);
 
-        if (zeroParallaxDistance > 0)
+        /*if (zeroParallaxDistance > 0)
         {
             float angle = Mathf.Acos(halfEyeSeparation / Mathf.Sqrt(Mathf.Pow(halfEyeSeparation, 2) + Mathf.Pow(zeroParallaxDistance, 2)));
             Vector3 rotation = new Vector3(0, angle, 0);
             rightCamera.transform.localRotation = Quaternion.Euler(-rotation);
             leftCamera.transform.localRotation = Quaternion.Euler(rotation);
-        }
+        }*/
     }
 
     private void UpdateStereo()

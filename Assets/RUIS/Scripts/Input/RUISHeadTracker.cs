@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class RUISHeadTracker : MonoBehaviour {
-    public Transform transformFromTracker;
+    public Transform positionFromTracker;
+    public Transform rotationFromTracker;
     public Vector3 trackerPositionOffset;
     public Vector3 trackerRotationOffset;
 
@@ -12,9 +13,8 @@ public class RUISHeadTracker : MonoBehaviour {
         private set;
     }
 
-    public float eyeSeparation = 0.06f;
-
     public Vector3 defaultPosition;
+    public Vector3 defaultRotation;
 
     private Vector3 eyeCenterPosition;
     public Vector3 EyeCenterPosition
@@ -22,20 +22,6 @@ public class RUISHeadTracker : MonoBehaviour {
         get
         {
             return eyeCenterPosition;
-        }
-    }
-    public Vector3 LeftEyePosition
-    {
-        get
-        {
-            return EyeCenterPosition - rotation * Vector3.right * eyeSeparation / 2;
-        }
-    }
-    public Vector3 RightEyePosition
-    {
-        get
-        {
-            return EyeCenterPosition + rotation * Vector3.right * eyeSeparation / 2;
         }
     }
 
@@ -48,33 +34,38 @@ public class RUISHeadTracker : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
-        if (transformFromTracker != null)
+        if (positionFromTracker != null)
         {
-            eyeCenterPosition = transformFromTracker.position + trackerPositionOffset;
-            rotation = transformFromTracker.rotation;
+            eyeCenterPosition = positionFromTracker.position + trackerPositionOffset;
         }
         else
         {
             eyeCenterPosition = defaultPosition;
-            rotation = Quaternion.identity;
         }
-        /*foreach (RUISCamera camera in linkedCameras)
+
+        if (rotationFromTracker != null)
         {
-            camera.transform.position = transform.position + linkedCameraPositions[camera] + transformFromTracker.position + trackerPositionOffset;
-            camera.transform.rotation = transform.rotation * linkedCameraRotations[camera] * (transformFromTracker.rotation * Quaternion.Euler(trackerRotationOffset));
-        }*/
+            rotation = rotationFromTracker.rotation * Quaternion.Euler(trackerRotationOffset);
+        }
+        else
+        {
+            rotation = Quaternion.Euler(defaultRotation);
+        }
 	}
 
-    void OnDrawGizmos()
+    private Vector3 GetLeftEyePosition(float eyeSeparation)
     {
-        Color originalColor = Gizmos.color;
+        return EyeCenterPosition - rotation * Vector3.right * eyeSeparation / 2;
+    }
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(LeftEyePosition, 0.05f);
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(RightEyePosition, 0.05f);
-        Gizmos.color = Color.white;
-        Gizmos.DrawLine(eyeCenterPosition - rotation * Vector3.up * 0.2f, eyeCenterPosition + rotation * Vector3.up * 0.2f);
-        Gizmos.color = originalColor;
+    // Returns the eye positions in slots {center, left, right}
+    public Vector3[] GetEyePositions(float eyeSeparation)
+    {
+        Vector3 leftEye = GetLeftEyePosition(eyeSeparation);
+        return new Vector3[] {
+            EyeCenterPosition,
+            leftEye,
+            EyeCenterPosition + (EyeCenterPosition - leftEye)
+        };
     }
 }

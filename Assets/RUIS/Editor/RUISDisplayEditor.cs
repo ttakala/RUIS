@@ -20,6 +20,7 @@ public class RUISDisplayEditor : Editor {
     SerializedProperty isObliqueFrustum;
     SerializedProperty isKeystoneCorrected;
     SerializedProperty camera;
+    SerializedProperty eyeSeparation;
     SerializedProperty stereoType;
     SerializedProperty useDoubleTheSpace;
     GUIStyle displayBoxStyle;
@@ -51,6 +52,7 @@ public class RUISDisplayEditor : Editor {
         isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
         isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
         camera = serializedObject.FindProperty("linkedCamera");
+        eyeSeparation = serializedObject.FindProperty("eyeSeparation");
         stereoType = serializedObject.FindProperty("stereoType");
         useDoubleTheSpace = serializedObject.FindProperty("useDoubleTheSpace");
 
@@ -122,6 +124,7 @@ public class RUISDisplayEditor : Editor {
         EditorGUILayout.PropertyField(isStereo, new GUIContent("Stereo Display", "Is this display stereo?"));
         if (isStereo.boolValue)
         {
+            EditorGUILayout.PropertyField(eyeSeparation, new GUIContent("Eye Separation", "Eye separation for the stereo image"));
             EditorGUILayout.PropertyField(stereoType, new GUIContent("Stereo Type", "The type of stereo to use"));
             EditorGUILayout.PropertyField(useDoubleTheSpace, new GUIContent("Double the Space used", "Calculate the total resolution of the display based on stereo type. \nSideBySide: Double horizontal resolution \nTopAndBottom: Double vertical resolution."));
         }

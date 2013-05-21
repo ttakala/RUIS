@@ -76,7 +76,7 @@ public class XMLUtil {
         }
         catch (FileNotFoundException e)
         {
-            Debug.LogError("Could not find file: " + e.FileName);
+            Debug.LogWarning("Could not find file: " + e.FileName);
             if(fs != null) fs.Close();
             if(validatingReader != null) validatingReader.Close();
             if(textReader != null) textReader.Close();
