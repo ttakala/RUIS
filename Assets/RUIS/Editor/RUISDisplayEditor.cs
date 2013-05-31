@@ -88,6 +88,16 @@ public class RUISDisplayEditor : Editor {
         EditorGUILayout.PropertyField(resolutionX, new GUIContent("Resolution X", "The pixel width of the display"));
         EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y", "The pixel height of the display"));
 
+        EditorGUILayout.PropertyField(isStereo, new GUIContent("Stereo Display", "Is this display stereo?"));
+        if (isStereo.boolValue)
+        {
+            EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(eyeSeparation, new GUIContent("Eye Separation", "Eye separation for the stereo image"));
+            EditorGUILayout.PropertyField(stereoType, new GUIContent("Stereo Type", "The type of stereo to use"));
+            EditorGUILayout.PropertyField(useDoubleTheSpace, new GUIContent("Double the Space used", "Calculate the total resolution of the display based on stereo type. \nSideBySide: Double horizontal resolution \nTopAndBottom: Double vertical resolution."));
+            EditorGUI.indentLevel--;
+        }
+
         EditorGUILayout.PropertyField(horizontalFOV, new GUIContent("Horizontal Field of View", "The horizontal FOV of the display if not using a head tracked view"));
         EditorGUILayout.PropertyField(verticalFOV, new GUIContent("Vertical Field of View", "The vertical FOV of the display if not using a head tracked view"));
         
@@ -99,20 +109,20 @@ public class RUISDisplayEditor : Editor {
 
         if (!isHMD.boolValue)
         {
+            EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
 
             EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked View", "Should the projection matrix be skewed to use this display as a head tracked viewport"));
 
-            EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
-
-            EditorGUILayout.Space();
-
-            EditorGUILayout.PropertyField(displayWidth, new GUIContent("Display Width", "The real-world width of the display"));
-            EditorGUILayout.PropertyField(displayHeight, new GUIContent("Display Height", "The real-world height of the display"));
-            EditorGUILayout.PropertyField(displayCenterPosition, new GUIContent("Display Center Position", "The location of the screen center in Unity coordinates"));
-            EditorGUILayout.PropertyField(displayNormal, new GUIContent("Display Normal Vector", "The normal vector of the display (will be normalized)"));
-            EditorGUILayout.PropertyField(displayUp, new GUIContent("Display Up Vector", "The up vector of the display (will be normalized)"));
-
-            EditorGUILayout.Space();
+            if (isObliqueFrustum.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(displayWidth, new GUIContent("Display Width", "The real-world width of the display"));
+                EditorGUILayout.PropertyField(displayHeight, new GUIContent("Display Height", "The real-world height of the display"));
+                EditorGUILayout.PropertyField(displayCenterPosition, new GUIContent("Display Center Position", "The location of the screen center in Unity coordinates"));
+                EditorGUILayout.PropertyField(displayNormal, new GUIContent("Display Normal Vector", "The normal vector of the display (will be normalized)"));
+                EditorGUILayout.PropertyField(displayUp, new GUIContent("Display Up Vector", "The up vector of the display (will be normalized)"));
+                EditorGUI.indentLevel--;
+            }
         }
         else
         {
@@ -121,13 +131,7 @@ public class RUISDisplayEditor : Editor {
         }
         
 
-        EditorGUILayout.PropertyField(isStereo, new GUIContent("Stereo Display", "Is this display stereo?"));
-        if (isStereo.boolValue)
-        {
-            EditorGUILayout.PropertyField(eyeSeparation, new GUIContent("Eye Separation", "Eye separation for the stereo image"));
-            EditorGUILayout.PropertyField(stereoType, new GUIContent("Stereo Type", "The type of stereo to use"));
-            EditorGUILayout.PropertyField(useDoubleTheSpace, new GUIContent("Double the Space used", "Calculate the total resolution of the display based on stereo type. \nSideBySide: Double horizontal resolution \nTopAndBottom: Double vertical resolution."));
-        }
+        
 
         serializedObject.ApplyModifiedProperties();
 

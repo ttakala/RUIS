@@ -44,6 +44,9 @@ public class RUISCamera : MonoBehaviour {
     public void Awake()
     {
         keystoningConfiguration = GetComponent<RUISKeystoningConfiguration>();
+
+
+        centerCamera = camera;
     }
 
 	public void Start () {
@@ -54,7 +57,6 @@ public class RUISCamera : MonoBehaviour {
             return;
         }
 
-        centerCamera = camera;
 
         UpdateStereo();
         UpdateStereoType();
@@ -249,7 +251,7 @@ public class RUISCamera : MonoBehaviour {
         rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
     }
 
-    public void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)
+    virtual public void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)
     {
         normalizedScreenRect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
         this.aspectRatio = aspectRatio;
@@ -277,7 +279,7 @@ public class RUISCamera : MonoBehaviour {
         rightCamera.aspect = aspectRatio;
     }
 
-    public void SetupCameraTransforms()
+    private void SetupCameraTransforms()
     {
         float halfEyeSeparation = associatedDisplay.eyeSeparation / 2;
         leftCamera.transform.localPosition = new Vector3(-halfEyeSeparation, 0, 0);

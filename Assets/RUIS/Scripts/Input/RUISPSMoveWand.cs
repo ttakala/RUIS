@@ -30,6 +30,8 @@ public class RUISPSMoveWand : RUISWand {
 
     public Renderer whereToCopyColor;
 
+    public RUISPSMoveWand wandAtRelativeOrigin;
+
 	public void Awake ()
     {
         if (psMoveWrapper == null)
@@ -53,31 +55,18 @@ public class RUISPSMoveWand : RUISWand {
 	
 	void Update ()
     {        
-        if (rigidbody)
-        {
-			// TUUKKA:
-			if (transform.parent)
-			{
-				// If the wand has a parent, we need to apply its transformation first
-				// *** FIXME: If parent is scaled, then compound objects (Watering Bottle) get weird
-            	rigidbody.MovePosition(transform.parent.TransformPoint(position));
-            	rigidbody.MoveRotation(transform.parent.rotation * qOrientation);
-			}
-			else
-			{
-				// TUUKKA: This was the original code 
-            	rigidbody.MovePosition(position);
-            	rigidbody.MoveRotation(qOrientation);
-			}
-        }
-        else
-        {
-			// If there is no rigidBody, then just change localPosition & localRotation
-			// TUUKKA:
-			transform.localPosition = position;
-            //transform.position = position;
+        
+        if(!rigidbody){
+            if (wandAtRelativeOrigin)
+            {
+                transform.localPosition = position - wandAtRelativeOrigin.position;
+            }
+            else
+            {
+                transform.localPosition = position;
+            }
+
             transform.localRotation = qOrientation;
-            //transform.rotation = qOrientation;
         }
 
 
@@ -86,6 +75,29 @@ public class RUISPSMoveWand : RUISWand {
             foreach (Material mat in whereToCopyColor.materials)
             {
                 mat.color = color;
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (rigidbody)
+        {
+            Vector3 relativePosition = wandAtRelativeOrigin ? position - wandAtRelativeOrigin.position : position;
+
+            // TUUKKA:
+            if (transform.parent)
+            {
+                // If the wand has a parent, we need to apply its transformation first
+                // *** FIXME: If parent is scaled, then compound objects (Watering Bottle) get weird
+                rigidbody.MovePosition(transform.parent.TransformPoint(relativePosition));
+                rigidbody.MoveRotation(transform.parent.rotation * qOrientation);
+            }
+            else
+            {
+                // TUUKKA: This was the original code 
+                rigidbody.MovePosition(relativePosition);
+                rigidbody.MoveRotation(qOrientation);
             }
         }
     }

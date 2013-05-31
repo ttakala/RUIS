@@ -14,8 +14,8 @@ PlayerSettings:
   productName: RUIS
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  defaultScreenWidth: 4096
-  defaultScreenHeight: 768
+  defaultScreenWidth: 1280
+  defaultScreenHeight: 800
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
   m_RenderingPath: 1
@@ -32,7 +32,7 @@ PlayerSettings:
   useOSAutorotation: 1
   use32BitDisplayBuffer: 0
   use24BitDepthBuffer: 0
-  defaultIsFullScreen: 0
+  defaultIsFullScreen: 1
   runInBackground: 0
   captureSingleScreen: 0
   Override IPod Music: 0

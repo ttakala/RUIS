@@ -20,6 +20,8 @@ public class RUISInputManager : MonoBehaviour
     public bool enableKinect = true;
     public int maxNumberOfKinectPlayers = 2;
 
+    public RUISPSMoveWand[] moveControllers;
+
     public void Awake()
     {
         if (!Application.isEditor || loadFromTextFileInEditor)
@@ -71,6 +73,16 @@ public class RUISInputManager : MonoBehaviour
             {
                 Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
                 GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
+            }
+        }
+
+        if (enablePSMove)
+        {
+            RUISPSMoveWand[] controllers = GetComponentsInChildren<RUISPSMoveWand>();
+            moveControllers = new RUISPSMoveWand[controllers.Length];
+            foreach (RUISPSMoveWand controller in controllers)
+            {
+                moveControllers[controller.controllerId] = controller;
             }
         }
     }
@@ -153,5 +165,15 @@ public class RUISInputManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public RUISPSMoveWand GetMoveWand(int i)
+    {
+        if (i < 0 || i + 1 > amountOfPSMoveControllers)
+        {
+            return null;
+        }
+
+        return moveControllers[i];
     }
 }

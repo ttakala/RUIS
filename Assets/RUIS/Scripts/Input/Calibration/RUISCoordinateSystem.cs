@@ -27,8 +27,8 @@ public class RUISCoordinateSystem : MonoBehaviour
     public bool applyMoveToKinect = true;
     public bool setKinectOriginToFloor = false;
 
-    public Vector3 kinectOffset = Vector3.zero;
-    public float kinectYawOffset = 0;
+    public Vector3 positionOffset = Vector3.zero;
+    public float yawOffset = 0;
 
     void Start()
     {
@@ -198,14 +198,14 @@ public class RUISCoordinateSystem : MonoBehaviour
 
         newPosition = moveToRUISTransform.MultiplyPoint3x4(newPosition);
 
-        newPosition = Quaternion.Euler(0, kinectYawOffset, 0) * newPosition;
+        newPosition = Quaternion.Euler(0, yawOffset, 0) * newPosition;
 
         if (setKinectOriginToFloor)
         {
             newPosition.y += kinectDistanceFromFloor;
         }
             
-        newPosition += kinectOffset;
+        newPosition += positionOffset;
 
         return newPosition;
     }
@@ -220,7 +220,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 
         newVelocity = moveToRUISTransform.MultiplyPoint3x4(newVelocity);
 
-        newVelocity = Quaternion.Euler(0, kinectYawOffset, 0) * newVelocity;
+        newVelocity = Quaternion.Euler(0, yawOffset, 0) * newVelocity;
 
         return newVelocity;
     }
@@ -238,7 +238,7 @@ public class RUISCoordinateSystem : MonoBehaviour
             newRotation = moveToKinectRotation * newRotation;
         }
 
-        newRotation = Quaternion.Euler(0, kinectYawOffset, 0) * newRotation;
+        newRotation = Quaternion.Euler(0, yawOffset, 0) * newRotation;
 
         /*if (applyKinectToRUIS)
         {
@@ -254,7 +254,7 @@ public class RUISCoordinateSystem : MonoBehaviour
         newVelocity.x = -newVelocity.x;
         newVelocity.y = -newVelocity.y;
         newVelocity = moveToKinectRotation * newVelocity;
-        newVelocity = Quaternion.Euler(0, kinectYawOffset, 0) * newVelocity;
+        newVelocity = Quaternion.Euler(0, yawOffset, 0) * newVelocity;
         return newVelocity;
     }
 
@@ -266,14 +266,14 @@ public class RUISCoordinateSystem : MonoBehaviour
         newPosition.y = position.Y;
         newPosition.z = -position.Z;
 
-        newPosition = kinectToUnityScale * (Quaternion.Euler(0, kinectYawOffset, 0) * kinectFloorRotator * newPosition);
+        newPosition = kinectToUnityScale * (Quaternion.Euler(0, yawOffset, 0) * kinectFloorRotator * newPosition);
 
         if (setKinectOriginToFloor)
         {
             newPosition.y += kinectDistanceFromFloor;
         }
 
-        newPosition += kinectOffset;
+        newPosition += positionOffset;
 
         return newPosition;
     }
@@ -290,7 +290,7 @@ public class RUISCoordinateSystem : MonoBehaviour
         newRotation.x = -newRotation.x;
         newRotation.y = -newRotation.y;
 
-        newRotation = Quaternion.Euler(0, kinectYawOffset, 0) * newRotation;
+        newRotation = Quaternion.Euler(0, yawOffset, 0) * newRotation;
         //if (applyKinectToRUIS) result *= kinectYaw;
 
         return newRotation;

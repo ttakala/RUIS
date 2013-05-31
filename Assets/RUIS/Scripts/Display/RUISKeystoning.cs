@@ -17,7 +17,7 @@ public class RUISKeystoning {
             a = f = 1;
         }
 		
-		public string ToString(){
+		override public string ToString(){
 			return GetMatrix().ToString();
 		}
 		
