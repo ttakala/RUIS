@@ -1932,8 +1932,8 @@ namespace CSML
                         this.SwapRows(j, m);
                     }
 
-                    if (this[j, j] == 0)
-                        throw new DivideByZeroException("Warning: Matrix close to singular.");
+                    //if (this[j, j] == 0) // Tuukka
+                    //    throw new DivideByZeroException("Warning: Matrix close to singular.");
                 }
 
                 #endregion              
@@ -1948,6 +1948,9 @@ namespace CSML
 
                 for (int i = j + 1; i <= n; i++)
                 {
+					
+                    if (this[j, j] == 0) // Tuukka
+                        throw new DivideByZeroException("Warning: Matrix close to singular.");
                     this[i, j] = this[i, j] / this[j, j];
                 }
             }
