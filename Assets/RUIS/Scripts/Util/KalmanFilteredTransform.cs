@@ -7,13 +7,13 @@ public class KalmanFilteredTransform : MonoBehaviour {
 	private KalmanFilter filterRot;
 	
 	private double[] measuredPos = {0, 0, 0};
-	private double[] measuredRot = {1, 0, 0, 0};
+	private double[] measuredRot = {0, 0, 0, 1};
 	
 	private Vector3 inputPos;
 	private Quaternion inputRot;
 	
 	private double[] pos = {0, 0, 0};
-	private double[] rot = {1, 0, 0, 0};
+	private double[] rot = {0, 0, 0, 1};
 	
 	private Transform outputTransform;
 	public Transform inputTransform;
@@ -36,6 +36,11 @@ public class KalmanFilteredTransform : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(!filterInFixedUpdate) {
+			if(!inputTransform)
+			{
+				Debug.LogError("ERROR: inputTransform is None! Set it in the inspector.");
+				return;	
+			}
 			if(inputInLocalCoordinates) {
 				inputPos  = inputTransform.localPosition;
 				inputRot  = inputTransform.localRotation;
@@ -80,7 +85,15 @@ public class KalmanFilteredTransform : MonoBehaviour {
 	
 	void FixedUpdate() {
 		
+		if(!inputTransform)
+		{
+			Debug.LogError("ERROR: inputTransform is None! Set it in the inspector.");
+			return;	
+		}
+		
 		if(filterInFixedUpdate) {
+			
+			
 			if(inputInLocalCoordinates) {
 				inputPos  = inputTransform.localPosition;
 				inputRot  = inputTransform.localRotation;
