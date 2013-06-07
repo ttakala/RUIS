@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   Class for simple Kalman filtering
+Authors    :   Tuukka Takala, derived from Peter Abeles' EJML Kalman class
+Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System;
 using CSML;
