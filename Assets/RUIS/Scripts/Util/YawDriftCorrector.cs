@@ -41,6 +41,7 @@ public class YawDriftCorrector : MonoBehaviour {
 	private RUISPSMoveWand compassMove;
 	
 	
+	public float correctionRate = 0.1f;
 	
 	RUISInputManager inputManager;
 	
@@ -185,7 +186,7 @@ public class YawDriftCorrector : MonoBehaviour {
 				break;
 		}
 		
-		float normalizedT = Mathf.Clamp01(deltaT * 0.1f);
+		float normalizedT = Mathf.Clamp01(deltaT * correctionRate);
 		if(normalizedT != 0)
 			finalDifference = Quaternion.Lerp(finalDifference, filteredYawDifference, 
 											  normalizedT );
