@@ -15,11 +15,12 @@ public class RUISInputManagerEditor : Editor {
     SerializedProperty connectToMoveOnStartup;
     SerializedProperty psMoveIp;
     SerializedProperty psMovePort;
-    SerializedProperty psMoveCalibrationEnabled;
+    SerializedProperty inGameMoveCalibration;
     SerializedProperty amountOfPSMoveControllers;
 
     SerializedProperty kinectEnabled;
     SerializedProperty maxNumberOfKinectPlayers;
+	SerializedProperty floorDetectionOnSceneStart;
 
     void OnEnable()
     {
@@ -32,11 +33,12 @@ public class RUISInputManagerEditor : Editor {
         connectToMoveOnStartup = serializedObject.FindProperty("connectToPSMoveOnStartup");
         psMoveIp = serializedObject.FindProperty("PSMoveIP");
         psMovePort = serializedObject.FindProperty("PSMovePort");
-        psMoveCalibrationEnabled = serializedObject.FindProperty("enableMoveCalibrationDuringPlay");
+        inGameMoveCalibration = serializedObject.FindProperty("enableMoveCalibrationDuringPlay");
         amountOfPSMoveControllers = serializedObject.FindProperty("amountOfPSMoveControllers");
 
         kinectEnabled = serializedObject.FindProperty("enableKinect");
         maxNumberOfKinectPlayers = serializedObject.FindProperty("maxNumberOfKinectPlayers");
+		floorDetectionOnSceneStart = serializedObject.FindProperty("kinectFloorDetection");
     }
 
     public override void OnInspectorGUI()
@@ -83,12 +85,12 @@ public class RUISInputManagerEditor : Editor {
         {
             EditorGUI.indentLevel += 2;
 
-            EditorGUILayout.PropertyField(psMoveIp, new GUIContent("PS Move IP"));
+            EditorGUILayout.PropertyField(psMoveIp, new GUIContent("PS Move IP", "PS Move IP address"));
             EditorGUILayout.PropertyField(psMovePort, new GUIContent("PS Move Port"));
 
             EditorGUILayout.PropertyField(connectToMoveOnStartup, new GUIContent("Auto-connect to Move.Me", "Connect to the Move.me server on startup."));
 
-            EditorGUILayout.PropertyField(psMoveCalibrationEnabled, new GUIContent("Enable PS Move Calibration", "Enables the default Move Calibration by pressing the home button. Caution: Recalibration may change the coordinate system!"));
+            EditorGUILayout.PropertyField(inGameMoveCalibration, new GUIContent("In-game Move calibration", "Enables the default Move Calibration by pressing the home button. Caution: Recalibration may change the coordinate system! Recommended setting is to keep this unchecked."));
 
             EditorGUILayout.PropertyField(amountOfPSMoveControllers, new GUIContent("Max amount of controllers connected", "Maximum amount of controllers connected. All RUISPSMoveControllers with a controller id outside of the range will get disabled to prevent accidents."));
             amountOfPSMoveControllers.intValue = Mathf.Clamp(amountOfPSMoveControllers.intValue, 0, 4);
@@ -103,8 +105,9 @@ public class RUISInputManagerEditor : Editor {
         {
             EditorGUI.indentLevel += 2;
 
-            EditorGUILayout.PropertyField(maxNumberOfKinectPlayers, new GUIContent("Max Kinect Players"));
-
+            EditorGUILayout.PropertyField(maxNumberOfKinectPlayers, new GUIContent("Max Kinect Players", "Number of concurrently tracked skeletons"));
+			EditorGUILayout.PropertyField(floorDetectionOnSceneStart, new GUIContent("Floor Detection On Scene Start", "Kinect tries to detect floor and adjusts the coordinate system automatically when the scene is run."));
+			
             EditorGUI.indentLevel -= 2;
         }
 

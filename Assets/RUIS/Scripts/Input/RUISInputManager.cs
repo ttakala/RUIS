@@ -19,7 +19,13 @@ public class RUISInputManager : MonoBehaviour
 
     public bool enableKinect = true;
     public int maxNumberOfKinectPlayers = 2;
-
+    public bool kinectFloorDetection = true;
+	
+	private RUISCoordinateSystem coordinateSystem = null;
+    private OpenNI.SceneAnalyzer sceneAnalyzer = null;
+	private RUISM2KCalibration moveKinectCalibration;
+	//private bool usingExistingSceneAnalyzer = false;
+	
     public RUISPSMoveWand[] moveControllers;
 
     public void Awake()
@@ -74,6 +80,13 @@ public class RUISInputManager : MonoBehaviour
                 Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
                 GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
             }
+			else // Tuukka:
+			{
+				if(kinectFloorDetection)
+				{
+					StartFloorDetection();
+				}
+			}
         }
 
         if (enablePSMove)
@@ -92,6 +105,32 @@ public class RUISInputManager : MonoBehaviour
         if(enablePSMove && psMoveWrapper && psMoveWrapper.isConnected)
             psMoveWrapper.Disconnect(false);
     }
+	
+	public void StartFloorDetection()
+	{
+		if (enableKinect)
+		{
+			kinectFloorDetection = true;
+			
+			moveKinectCalibration = FindObjectOfType(typeof(RUISM2KCalibration)) as RUISM2KCalibration;
+			if(!moveKinectCalibration)
+			{
+				if(sceneAnalyzer == null)
+				{
+					sceneAnalyzer = new OpenNI.SceneAnalyzer((FindObjectOfType(typeof(OpenNISettingsManager)) 
+															as OpenNISettingsManager).CurrentContext.BasicContext);
+					sceneAnalyzer.StartGenerating();
+					Debug.Log ("Creating sceneAnalyzer");
+				}
+			}
+			else
+	    		StartCoroutine("attemptStartingSceneAnalyzer");
+			
+	    	StartCoroutine("attemptUpdatingFloorNormal");
+		}
+		else
+			Debug.LogError("Kinect is not enabled! You can enable it from RUIS InputManager.");
+	}
 
     public bool Import(string filename)
     {
@@ -144,7 +183,69 @@ public class RUISInputManager : MonoBehaviour
             Debug.LogError("Could not connect to PS Move server at: " + PSMoveIP + ":" + PSMovePort);
         }
     }
-
+	
+    private IEnumerator attemptStartingSceneAnalyzer()
+    {
+        if (kinectFloorDetection)
+        {	
+        	yield return new WaitForSeconds(2.0f);
+			
+			if(sceneAnalyzer == null)
+			{
+				Debug.Log ("Using existing sceneAnalyzer");
+				sceneAnalyzer = moveKinectCalibration.sceneAnalyzer;
+				//usingExistingSceneAnalyzer = true;
+				//if(!sceneAnalyzer.IsGenerating) // Seems to be always on
+	    		//	sceneAnalyzer.StartGenerating();
+			}
+		}
+	}
+	
+    private IEnumerator attemptUpdatingFloorNormal()
+    {
+        if (kinectFloorDetection)
+        {
+        	yield return new WaitForSeconds(5.0f);
+			coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
+            if (!coordinateSystem)
+            {
+                Debug.LogError("Could not find coordinate system!");
+            }
+			else if(sceneAnalyzer == null)
+				Debug.LogError("Failed to access OpenNI sceneAnalyzer!");
+			else
+			{
+				Debug.Log ("Updating Kinect floor normal");
+				coordinateSystem.ResetKinectFloorNormal();
+				coordinateSystem.ResetKinectDistanceFromFloor();
+		
+		        OpenNI.Plane3D floor = sceneAnalyzer.Floor;
+		        Vector3 newFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized;
+		        Vector3 newFloorPosition = coordinateSystem.ConvertKinectPosition(floor.Point);
+		        
+		        //Project the position of the kinect camera onto the floor
+		        //http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
+		        //http://en.wikipedia.org/wiki/Plane_(geometry)
+		        float d = newFloorNormal.x * newFloorPosition.x + newFloorNormal.y * newFloorPosition.y + newFloorNormal.z * newFloorPosition.z;
+		        Vector3 closestFloorPointToKinect = new Vector3(newFloorNormal.x, newFloorNormal.y, newFloorNormal.z);
+		        closestFloorPointToKinect = (closestFloorPointToKinect * d) / closestFloorPointToKinect.sqrMagnitude;
+		
+		        //transform the point from Kinect's coordinate system rotation to Unity's rotation
+		        closestFloorPointToKinect = Quaternion.FromToRotation(newFloorNormal, Vector3.up)  * closestFloorPointToKinect;
+		
+		        //floorPlane.transform.position = closestFloorPointToKinect;
+		
+		
+		        coordinateSystem.SetKinectFloorNormal(newFloorNormal);
+		        //floorNormal = newFloorNormal.normalized;
+		        coordinateSystem.SetKinectDistanceFromFloor(closestFloorPointToKinect.magnitude);
+				
+				//if(!usingExistingSceneAnalyzer)
+				//	sceneAnalyzer.StopGenerating();
+			}
+        }
+    }
+	
     private void DisableUnneededMoveWands()
     {
         foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
@@ -169,7 +270,7 @@ public class RUISInputManager : MonoBehaviour
 
     public RUISPSMoveWand GetMoveWand(int i)
     {
-        if (i < 0 || i + 1 > amountOfPSMoveControllers)
+        if (i < 0 || i + 1 > amountOfPSMoveControllers || i >= moveControllers.Length)
         {
             return null;
         }
