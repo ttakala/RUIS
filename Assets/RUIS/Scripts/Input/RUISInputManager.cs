@@ -193,7 +193,7 @@ public class RUISInputManager : MonoBehaviour
 			if(sceneAnalyzer == null)
 			{
 				Debug.Log ("Using existing sceneAnalyzer");
-				sceneAnalyzer = moveKinectCalibration.sceneAnalyzer;
+				//sceneAnalyzer = moveKinectCalibration.sceneAnalyzer;
 				//usingExistingSceneAnalyzer = true;
 				//if(!sceneAnalyzer.IsGenerating) // Seems to be always on
 	    		//	sceneAnalyzer.StartGenerating();
