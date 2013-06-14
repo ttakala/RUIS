@@ -1734,6 +1734,10 @@ Prefab:
       propertyPath: moveWand
       value: 
       objectReference: {fileID: 188606430}
+    - target: {fileID: 11400010, guid: d910fab798ea7a14ebd086836278137a, type: 2}
+      propertyPath: characterPivotType
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d910fab798ea7a14ebd086836278137a, type: 2}
   m_RootGameObject: {fileID: 798947576}
@@ -16725,7 +16729,7 @@ MonoBehaviour:
   kinectPlayerId: 0
   moveControllerId: 0
   characterPivot: {fileID: 0}
-  ignorePitchAndRollInTranslation: 1
+  ignorePitchAndRoll: 1
 --- !u!54 &798947580
 Rigidbody:
   m_ObjectHideFlags: 0

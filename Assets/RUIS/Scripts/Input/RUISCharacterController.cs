@@ -16,7 +16,7 @@ public class RUISCharacterController : MonoBehaviour {
     public int moveControllerId;
     public Transform characterPivot;
 
-    public bool ignorePitchAndRollInTranslation = true;
+    public bool ignorePitchAndRoll = true;
 
     private RUISInputManager inputManager;
     private RUISSkeletonManager skeletonManager;
@@ -79,7 +79,7 @@ public class RUISCharacterController : MonoBehaviour {
                 break;
         }
 
-        if (ignorePitchAndRollInTranslation)
+        if (ignorePitchAndRoll)
         {
             characterForward.y = 0;
             characterForward.Normalize();
