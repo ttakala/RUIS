@@ -36,7 +36,7 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
     public float minimumConfidenceToUpdate = 0.5f;
 
-    public float rotationDampening = 15f;
+    public float rotationDamping = 15f;
 
     private Dictionary<Transform, Quaternion> jointInitialRotations;
     private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
@@ -57,6 +57,12 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
     void Start()
     {
+        rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, Vector3.right) * rightShoulder.rotation;
+        leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, Vector3.left) * leftShoulder.rotation;
+        rightHip.rotation = FindFixingRotation(rightHip.position, rightKnee.position, Vector3.down) * rightKnee.rotation;
+        leftHip.rotation = FindFixingRotation(leftHip.position, leftKnee.position, Vector3.down) * leftKnee.rotation;
+
+
         SaveInitialRotation(root);
         SaveInitialRotation(head);
         SaveInitialRotation(torso);
@@ -136,8 +142,9 @@ public class RUISPlainSkeletonController : MonoBehaviour
                     Vector3 kinectHipAverage = (skeletonManager.skeletons[playerId].rightHip.position + skeletonManager.skeletons[playerId].leftHip.position) / 2;
                     Vector3 kinectHipAverageToTorso = skeletonManager.skeletons[playerId].torso.position - kinectHipAverage;
                     // torso.localPosition = skeletonManager.skeletons[playerId].torso.position - kinectHipAverageToTorso + modelOriginalHipAverageToTorso;
-                    /*
-                     *ForceUpdatePosition(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
+                    
+                    /*ForceUpdatePosition(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
+                    //ForceUpdatePosition(ref rightElbow, skeletonManager.skeletons[playerId].rightElbow);
                     ForceUpdatePosition(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
                     ForceUpdatePosition(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
                     ForceUpdatePosition(ref leftHip, skeletonManager.skeletons[playerId].leftHip);*/
@@ -150,7 +157,12 @@ public class RUISPlainSkeletonController : MonoBehaviour
                 transform.localPosition = newRootPosition;
             }
 
-
+            //Debug.Log(Vector3.Distance(skeletonManager.skeletons[playerId].rightElbow.position, rightElbow.position) + " " +
+            //          Vector3.Distance(skeletonManager.skeletons[playerId].leftKnee.position, leftKnee.position));
+            Debug.DrawLine(skeletonManager.skeletons[playerId].rightElbow.position, rightElbow.position, Color.red);
+            Debug.DrawLine(skeletonManager.skeletons[playerId].leftElbow.position, leftElbow.position, Color.red);
+            Debug.DrawLine(skeletonManager.skeletons[playerId].rightKnee.position, rightKnee.position, Color.red);
+            Debug.DrawLine(skeletonManager.skeletons[playerId].leftKnee.position, leftKnee.position, Color.red);
         }
     }
 
@@ -169,12 +181,11 @@ public class RUISPlainSkeletonController : MonoBehaviour
             {
                 Quaternion newRotation = transform.rotation * jointToGet.rotation *
                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-
-                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDampening);
+                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDamping);
             }
             else
             {
-                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDampening);
+                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDamping);
             }
         }
     }
@@ -265,5 +276,11 @@ public class RUISPlainSkeletonController : MonoBehaviour
         float newScale = playerLength / modelLength;
         torso.localScale = new Vector3(newScale, newScale, newScale);
         return newScale;
+    }
+
+    private Quaternion FindFixingRotation(Vector3 fromJoint, Vector3 toJoint, Vector3 wantedDirection)
+    {
+        Vector3 boneVector = toJoint - fromJoint;
+        return Quaternion.FromToRotation(boneVector, wantedDirection);
     }
 }
