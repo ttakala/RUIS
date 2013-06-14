@@ -86,15 +86,17 @@ public class RUISPlainSkeletonController : MonoBehaviour {
             UpdateTransform(ref rightKnee, skeletonManager.skeletons[playerId].rightKnee);
             UpdateTransform(ref rightFoot, skeletonManager.skeletons[playerId].rightFoot);
 
-
-            if (leftHand != null)
+            if (!useHierarchicalModel)
             {
-                leftHand.localRotation = leftElbow.localRotation;
-            }
+                if (leftHand != null)
+                {
+                    leftHand.localRotation = leftElbow.localRotation;
+                }
 
-            if (rightHand != null)
-            {
-                rightHand.localRotation = rightElbow.localRotation;
+                if (rightHand != null)
+                {
+                    rightHand.localRotation = rightElbow.localRotation;
+                }
             }
 
             if (updateRootPosition)

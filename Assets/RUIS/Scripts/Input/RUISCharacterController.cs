@@ -59,7 +59,7 @@ public class RUISCharacterController : MonoBehaviour {
         rigidbody.MoveRotation(Quaternion.Euler(eulerRotation) * transform.rotation);
     }
 
-    public void TranslateInCharacterCoordinates(Vector3 worldCoordinates)
+    public Vector3 TransformDirection(Vector3 directionInCharacterCoordinates)
     {
         Vector3 characterForward = Vector3.forward;
 
@@ -75,7 +75,7 @@ public class RUISCharacterController : MonoBehaviour {
                 characterForward = skeletonManager.skeletons[kinectPlayerId].torso.rotation * Vector3.forward;
                 break;
             case CharacterPivotType.MoveController:
-                characterForward = inputManager.GetMoveWand(moveControllerId).qOrientation * characterForward;
+                characterForward = inputManager.GetMoveWand(moveControllerId).qOrientation * Vector3.forward;
                 break;
         }
 
@@ -87,7 +87,8 @@ public class RUISCharacterController : MonoBehaviour {
 
         characterForward = transform.TransformDirection(characterForward);
 
-        rigidbody.MovePosition(transform.position + Quaternion.FromToRotation(Vector3.forward, characterForward) * worldCoordinates);
+
+        return Quaternion.FromToRotation(Vector3.forward, characterForward) * directionInCharacterCoordinates;
     }
 
     private Vector3 GetPivotPositionInTrackerCoordinates()
