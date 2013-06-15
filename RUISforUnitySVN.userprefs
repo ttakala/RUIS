@@ -1,0 +1,19 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Oculus RUIS\RUISRiftCamera.cs">
+    <Files>
+      <File FileName="Assets\Oculus RUIS\RUISHeadTracker.cs" Line="14" Column="1" />
+      <File FileName="Assets\RUIS\Scripts\Util\YawDriftCorrector.cs" Line="1" Column="1" />
+      <File FileName="Assets\RUIS\Scripts\CharacterController\RUISCharacterLocomotionControl.cs" Line="1" Column="1" />
+      <File FileName="Assets\RUIS\Scripts\Util\KalmanFilteredTransform.cs" Line="1" Column="1" />
+      <File FileName="Assets\Oculus RUIS\RUISMoveHeadTrackerForRift.cs" Line="1" Column="1" />
+      <File FileName="Assets\RUIS\Scripts\Display\RUISCamera.cs" Line="1" Column="1" />
+      <File FileName="Assets\Oculus RUIS\RUISRiftCamera.cs" Line="1" Column="1" />
+      <File FileName="Assets\RUIS\Editor\RUISInputManagerEditor.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

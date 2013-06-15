@@ -12,72 +12,76 @@ using System.Collections;
 
 public class YawDriftCorrector : MonoBehaviour {
 
-	public enum CompassSource{
+	public enum CompassSource
+	{
 	    Kinect = 0,
-	    PSMove = 1
+	    PSMove = 1,
+		InputTransform = 2
 	};
 	
-	public enum DriftingRotation{
+	public enum DriftingRotation
+	{
 	    OculusRift = 0,
-	    InputTransform = 1
+		RazerHydra = 1,
+	    InputTransform = 2
 	};
 	
 	public DriftingRotation driftingSensor = DriftingRotation.OculusRift;
 	
-	public int oculusID = 0;
-	OVRCameraController oculusCamController;
-	public Transform inputTransform;
+	public int oculusID = 0; //
+	OVRCameraController oculusCamController; //
+	
+	public Transform driftingTransform;
 	
 	
-	public CompassSource    compass = CompassSource.PSMove;
+	public CompassSource compass = CompassSource.PSMove;
 	
-	public int kinectSkeletonID = 0;
-	private RUISSkeletonManager skeletonManager;
+	public int kinectPlayerID = 0; //
+	private RUISSkeletonManager skeletonManager; //
 	public RUISSkeletonManager.Joint compassJoint = RUISSkeletonManager.Joint.Torso;
 	public bool correctOnlyWhenFacingForward = true;
 	private RUISSkeletonManager.JointData compassData;
 	
-	public int PSMoveID = 0;
+	public int PSMoveID = 0; //
 	private RUISPSMoveWand compassMove;
 	
+	public Transform compassTransform;
 	
-	public float correctionRate = 0.1f;
+	public float driftCorrectionRate = 0.1f;
 	
-	RUISInputManager inputManager;
+	RUISInputManager inputManager; //
 	
 	private Quaternion driftingRot = new Quaternion(0, 0, 0, 1);
 	private Quaternion rotationDifference = new Quaternion(0, 0, 0, 1);
 	private Quaternion filteredYawDifference = new Quaternion(0, 0, 0, 1);
-	private Quaternion finalDifference = new Quaternion(0, 0, 0, 1);
+	private Quaternion finalYawDifference = new Quaternion(0, 0, 0, 1);
 	
 	private Vector3 driftingEuler;
 	private Vector3 compassEuler;
-	private Vector3 yawDirection;
+	private Vector3 yawDifferenceDirection;
 	private Quaternion driftingYaw;
 	private Quaternion compassYaw;
 	
-	private KalmanFilter filterRot;
+	private KalmanFilter filterDrift;
 	
-	private double[] measuredVector = {0, 0};
+	private double[] measuredDrift = {0, 0};
 	
-	private double[] filteredVector = {0, 0};
+	private double[] filteredDrift = {0, 0};
 	
 	public bool filterInFixedUpdate = false;
 	
-	public float filterNoiseCovariance = 3000;
+	public float driftNoiseCovariance = 3000;
 	
-	public GameObject inputDirectionVisualizer;
+	public GameObject driftingDirectionVisualizer;
 	public GameObject compassDirectionVisualizer;
-	public GameObject outputDirectionVisualizer;
-	public Transform visualizerPosition;
+	public GameObject correctedDirectionVisualizer;
+	public Transform driftVisualizerPosition;
 	
     public void Awake()
     {
-		filterRot = new KalmanFilter();
-		filterRot.initialize(2,2);
+		filterDrift = new KalmanFilter();
+		filterDrift.initialize(2,2);
 		
-		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
-		oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
 	}
 	
 	
@@ -90,12 +94,20 @@ public class YawDriftCorrector : MonoBehaviour {
 		        {
 		            skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 		        }
+				if(!skeletonManager)
+					Debug.LogError("RUISSkeletonManager script is missing from this scene!");
 				break;
 			case CompassSource.PSMove:
-			
+				inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+				if(!inputManager)
+					Debug.LogError("RUISInputManager script is missing from this scene!");
 				break;
 		}
 		
+		if(driftingSensor == DriftingRotation.InputTransform && !driftingTransform)
+			Debug.LogError("driftingTransform is none, you need to set it from the inspector!");
+		
+		oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
 	}
 	
 	// Update is called once per frame
@@ -134,41 +146,46 @@ public class YawDriftCorrector : MonoBehaviour {
 				if(OVRDevice.IsSensorPresent(oculusID))
 				{
 					OVRDevice.GetOrientation(oculusID, ref driftingRot);
-					inputDirectionVisualizer.transform.rotation = driftingRot;
 					if(oculusCamController)
 					{
-						oculusCamController.SetYRotation(-finalDifference.eulerAngles.y);
+						// In the future OVR SDK oculusCamController will have oculusID?
+						oculusCamController.SetYRotation(-finalYawDifference.eulerAngles.y);
 					}
 				}
 				break;
+			case DriftingRotation.RazerHydra:
+				// TODO
+				//driftingRot = hydraRotation;
+				break;
 			case DriftingRotation.InputTransform:
-
-				if(inputTransform) // if(inputManager)
+				if(driftingTransform)
 				{
-					driftingRot = inputTransform.rotation; //inputManager.GetMoveWand(2).qOrientation;
-					inputDirectionVisualizer.transform.rotation = driftingRot;
+					driftingRot = driftingTransform.rotation;
 				}
 				break;
 		}
+		
+		if(driftingDirectionVisualizer != null)
+			driftingDirectionVisualizer.transform.rotation = driftingRot;
 		
 		driftingEuler = driftingRot.eulerAngles;
 		
 		switch(compass) 
 		{
 			case CompassSource.Kinect:
-		        if (!skeletonManager || !skeletonManager.skeletons[kinectSkeletonID].isTracking)
+		        if (!skeletonManager || !skeletonManager.skeletons[kinectPlayerID].isTracking)
 		        {
 		            break;
 		        }
 				else 
 				{
-					compassData = skeletonManager.GetJointData(compassJoint, kinectSkeletonID);
+					compassData = skeletonManager.GetJointData(compassJoint, kinectPlayerID);
 				
 					// First check for high confidence value
 		            if (compassData != null && compassData.rotationConfidence >= 1.0f) 
 					{
 						updateDifferenceKalman( compassData.rotation.eulerAngles, 
-												driftingEuler, deltaT );
+												driftingEuler, deltaT 			 );
 		            }
 				}
 				break;
@@ -180,24 +197,31 @@ public class YawDriftCorrector : MonoBehaviour {
 					if(compassMove)
 					{
 						updateDifferenceKalman( compassMove.qOrientation.eulerAngles, 
-												driftingRot.eulerAngles, deltaT );
+												driftingEuler, deltaT 				 );
 					}
 				}
 				break;
+			case CompassSource.InputTransform:
+				if(compassTransform != null)
+					updateDifferenceKalman( compassTransform.rotation.eulerAngles, 
+											driftingEuler, deltaT 				 );
+				break;
 		}
 		
-		float normalizedT = Mathf.Clamp01(deltaT * correctionRate);
+		float normalizedT = Mathf.Clamp01(deltaT * driftCorrectionRate);
 		if(normalizedT != 0)
-			finalDifference = Quaternion.Lerp(finalDifference, filteredYawDifference, 
+			finalYawDifference = Quaternion.Lerp(finalYawDifference, filteredYawDifference, 
 											  normalizedT );
 		
-		outputDirectionVisualizer.transform.rotation = Quaternion.Euler(
+		if(correctedDirectionVisualizer != null)
+			correctedDirectionVisualizer.transform.rotation = Quaternion.Euler(
 											new Vector3(driftingEuler.x, 
 														(360 + driftingEuler.y 
-															 - finalDifference.eulerAngles.y)%360, 
+															 - finalYawDifference.eulerAngles.y)%360, 
 														driftingEuler.z));
 		//driftingRotation*Quaternion.Inverse(finalDifference);
-		outputDirectionVisualizer.transform.position = visualizerPosition.position;
+		if(correctedDirectionVisualizer != null && driftVisualizerPosition != null)
+			correctedDirectionVisualizer.transform.position = driftVisualizerPosition.position;
 	}
 	
 	private void updateDifferenceKalman(Vector3 compassEuler, Vector3 driftingEuler, float deltaT)
@@ -210,28 +234,33 @@ public class YawDriftCorrector : MonoBehaviour {
 		if(compass != CompassSource.Kinect || (	  !correctOnlyWhenFacingForward 
 											   || (compassYaw*Vector3.forward).z >= 0))
 		{
-            compassDirectionVisualizer.transform.rotation = compassYaw;
-			compassDirectionVisualizer.transform.position = visualizerPosition.position;
-			inputDirectionVisualizer.transform.position   = visualizerPosition.position;
+			if(compassDirectionVisualizer != null)
+			{
+	            compassDirectionVisualizer.transform.rotation = compassYaw;
+				if(driftVisualizerPosition != null)
+					compassDirectionVisualizer.transform.position = driftVisualizerPosition.position;
+			}
+			if(driftingDirectionVisualizer != null && driftVisualizerPosition != null)
+				driftingDirectionVisualizer.transform.position   = driftVisualizerPosition.position;
 		
 			// Yaw gets unstable when pitch is near poles so disregard those cases
 			if(	  (driftingEuler.x < 60 || driftingEuler.x > 300)
 			   && ( compassEuler.x < 60 ||  compassEuler.x > 300)) 
 			{
 				rotationDifference = driftingYaw * Quaternion.Inverse(compassYaw);
-				yawDirection = rotationDifference*Vector3.forward;
+				yawDifferenceDirection = rotationDifference*Vector3.forward;
 			
 				// 2D vector rotated by yaw difference has continuous components
-				measuredVector[0] = yawDirection.x;
-				measuredVector[1] = yawDirection.z;
+				measuredDrift[0] = yawDifferenceDirection.x;
+				measuredDrift[1] = yawDifferenceDirection.z;
 				
-				filterRot.setR(deltaT * filterNoiseCovariance);
-			    filterRot.predict();
-			    filterRot.update(measuredVector);
-				filteredVector = filterRot.getState();
+				filterDrift.setR(deltaT * driftNoiseCovariance);
+			    filterDrift.predict();
+			    filterDrift.update(measuredDrift);
+				filteredDrift = filterDrift.getState();
 				filteredYawDifference = 
-								Quaternion.LookRotation(new Vector3((float) filteredVector[0], 0, 
-																	(float) filteredVector[1])   );
+								Quaternion.LookRotation(new Vector3((float) filteredDrift[0], 0, 
+																	(float) filteredDrift[1])   );
 			}
 		}
 	}

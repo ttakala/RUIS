@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   Custom editor script for RUISInputManager
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Mikael Matveinen, Tuukka Takala. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using UnityEditor;
 using System.Collections;

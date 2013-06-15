@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   Comprehensive virtual reality camera class
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Mikael Matveinen, Tuukka Takala. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 using System.Xml;
@@ -71,6 +80,25 @@ public class RUISCamera : MonoBehaviour {
 		keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;
 		//keystoningCamera.transform.position = KeystoningHeadTrackerPosition;
 		keystoningCamera.gameObject.SetActive(false);
+		
+		if(associatedDisplay)
+		{
+			if(associatedDisplay.isObliqueFrustum && !headTracker)
+				Debug.LogError("RUISHeadTracker is none, you need to set it from the inspector!");
+			if(associatedDisplay.isObliqueFrustum && headTracker)
+			{
+		        Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
+				Vector3 camToDisplay = associatedDisplay.displayCenterPosition - eyePositions[0];
+        		float distanceFromPlane = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
+				print(camToDisplay + " " + eyePositions[0] + " " + distanceFromPlane);
+	            if(distanceFromPlane == 0)
+					Debug.LogError(  "In " + headTracker.gameObject.name + " GameObject's "
+								   + "RUISHeadTracker script, you have set defaultPosition to " 
+								   + "lie on the display plane of " 
+								   + associatedDisplay.gameObject.name + ". The defaultPosition "
+								   + "needs to be apart from the display!");
+			}
+		}
 	}
 	
 	public void Update () {
@@ -128,6 +156,7 @@ public class RUISCamera : MonoBehaviour {
         if (associatedDisplay.isObliqueFrustum && headTracker)
         {
             Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
+			//print (eyePositions[0] + " " + eyePositions[1] + " " + eyePositions[2] );
             return new Matrix4x4[] { CreateProjectionMatrix(eyePositions[0]), 
                                      CreateProjectionMatrix(eyePositions[1]),
                                      CreateProjectionMatrix(eyePositions[2]) };
