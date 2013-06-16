@@ -9301,6 +9301,10 @@ Prefab:
       propertyPath: isStereo
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: enablePSMove
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1440372051}
@@ -20092,6 +20096,18 @@ Prefab:
     - target: {fileID: 100300, guid: d910fab798ea7a14ebd086836278137a, type: 2}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: d910fab798ea7a14ebd086836278137a, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: d910fab798ea7a14ebd086836278137a, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400018, guid: d910fab798ea7a14ebd086836278137a, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11400004, guid: d910fab798ea7a14ebd086836278137a, type: 2}
@@ -41384,7 +41400,7 @@ MonoBehaviour:
   defaultPosition: {x: 0, y: 0, z: -2}
   skeletonManager: {fileID: 0}
   headPositionInput: 1
-  headRotationInput: 1
+  headRotationInput: 0
   riftMagnetometerMode: 0
   oculusID: 0
   positionPlayerID: 0
@@ -41401,16 +41417,16 @@ MonoBehaviour:
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
-  filterPosition: 1
+  filterPosition: 0
   positionNoiseCovariance: 500
-  filterRotation: 0
+  filterRotation: 1
   rotationNoiseCovariance: 500
   externalDriftCorrection: 1
   compass: 1
   compassPlayerID: 0
   compassJoint: 2
   correctOnlyWhenFacingForward: 1
-  compassPSMoveID: 1
+  compassPSMoveID: 0
   compassTransform: {fileID: 0}
   driftCorrectionRate: .100000001
   driftNoiseCovariance: 3000

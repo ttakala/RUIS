@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   Class for managing input devices of RUIS
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Mikael Matveinen, Tuukka Takala. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 using System.IO;
@@ -37,7 +46,7 @@ public class RUISInputManager : MonoBehaviour
 
         if (!enableKinect)
         {
-            Debug.Log("Disabling kinect!");
+            Debug.Log("Kinect is disabled from RUISInputManager.");
             GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
         }
         else
@@ -61,6 +70,7 @@ public class RUISInputManager : MonoBehaviour
         }
         else
         {
+			Debug.Log("PS Move is disabled from RUISInputManager.");
             //psMoveWrapper.gameObject.SetActiveRecursively(false);
         }
 
@@ -270,12 +280,17 @@ public class RUISInputManager : MonoBehaviour
 
     public RUISPSMoveWand GetMoveWand(int i)
     {
-        if (i < 0 || i + 1 > amountOfPSMoveControllers || i >= moveControllers.Length)
-        {
-			Debug.LogError("RUISPSMoveWand with ID " + i + "was not found in RUISInputManager");
-            return null;
-        }
+		if(psMoveWrapper.isConnected)
+		{
+	        if (i < 0 || i + 1 > amountOfPSMoveControllers || i >= moveControllers.Length)
+	        {
+				Debug.LogError("RUISPSMoveWand with ID " + i + " was not found in RUISInputManager");
+	            return null;
+	        }
 
-        return moveControllers[i];
+        	return moveControllers[i];
+		}
+		else
+			return null;
     }
 }

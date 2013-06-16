@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   Inspector behaviour for RUISCharacterController script
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Mikael Matveinen, Tuukka Takala. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
@@ -30,10 +39,10 @@ public class RUISCharacterControllerEditor : Editor
             case (int)RUISCharacterController.CharacterPivotType.KinectHead:
             case (int)RUISCharacterController.CharacterPivotType.KinectHip:
             case (int)RUISCharacterController.CharacterPivotType.KinectCOM:
-                EditorGUILayout.PropertyField(kinectPlayerId, new GUIContent("Kinect Player Id"));
+                EditorGUILayout.PropertyField(kinectPlayerId, new GUIContent("Kinect Player ID", "Between 0 and 3"));
                 break;
             case (int)RUISCharacterController.CharacterPivotType.MoveController:
-                EditorGUILayout.PropertyField(moveControllerId, new GUIContent("Move Controller Id"));
+                EditorGUILayout.PropertyField(moveControllerId, new GUIContent("PS Move ID", "Between 0 and 3"));
                 break;
         }
 

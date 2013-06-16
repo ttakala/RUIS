@@ -33,7 +33,8 @@ public class RUISHeadTracker : MonoBehaviour
 	    Kinect = 0,
 	    PSMove = 1,
 	    RazerHydra = 2,
-		InputTransform = 3
+		InputTransform = 3,
+		None = 4
 	};
 	
 	public enum HeadRotationSource
@@ -41,8 +42,8 @@ public class RUISHeadTracker : MonoBehaviour
 	    Kinect = 0,
 	    PSMove = 1,
 	    RazerHydra = 2,
-		OculusRift = 3,
-		InputTransform = 4
+		InputTransform = 3,
+		None = 4
 	};
 	
 	public enum RiftMagnetometer
@@ -60,6 +61,7 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	public int oculusID = 0;
 	OVRCameraController oculusCamController;
+	bool useOculusRiftRotation = false;
 	
     public int positionPlayerID = 0;
     public int rotationPlayerID = 0;
@@ -190,9 +192,22 @@ public class RUISHeadTracker : MonoBehaviour
 		if(headRotationInput == HeadRotationSource.InputTransform && !rotationInput)
 			Debug.LogError("headRotationInput is none, you need to set it from the inspector!");
 		
-		oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
-		if(headRotationInput == HeadRotationSource.OculusRift && !oculusCamController)
-			Debug.LogError("OVRCameraController script is missing from this scene!");
+		oculusCamController = gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
+		
+		if(oculusCamController)
+		{
+			useOculusRiftRotation = true;
+			Debug.Log("OVRCameraController script detected in a child object of this " + gameObject.name
+					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
+					+ "trackers when you remove the OVRCameraController component from the child object(s).");
+		}
+		else
+		{
+			useOculusRiftRotation = false;
+		}
+		//oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
+		//if(headRotationInput == HeadRotationSource.OculusRift && !oculusCamController)
+		//	Debug.LogError("OVRCameraController script is missing from this scene!");
 	}
 		
 	void Update () 
@@ -244,10 +259,10 @@ public class RUISHeadTracker : MonoBehaviour
 		
 		switch(headRotationInput) 
 		{
-			case HeadRotationSource.OculusRift:
+			//case HeadRotationSource.OculusRift:
 		        // In this case rotation is applied by OVRCameraController which should be parented
 				// under this GameObject
-				break;
+			//	break;
 			case HeadRotationSource.Kinect:
 		        if (   skeletonManager 
 					&& skeletonManager.skeletons[rotationPlayerID].torso.rotationConfidence >= 1)
@@ -297,22 +312,18 @@ public class RUISHeadTracker : MonoBehaviour
 		
 		
 		if(	   !externalDriftCorrection // Kinect and PSMove do not need drift correction
-			|| headRotationInput == HeadRotationSource.Kinect 
-			|| headRotationInput == HeadRotationSource.PSMove)
+			|| (!useOculusRiftRotation && headRotationInput == HeadRotationSource.Kinect)
+			|| (!useOculusRiftRotation && headRotationInput == HeadRotationSource.PSMove))
 			transform.localRotation = tempLocalRotation;
 		else
 		{
 			// Yaw Drift Corrector invocations in Update()
 			//if(!filterInFixedUpdate) 
 			//{
-			doYawFiltering(tempLocalRotation, Time.deltaTime);
-			transform.localRotation = 
-				Quaternion.Euler(new Vector3(driftingEuler.x, 
-											 (360 + driftingEuler.y 
-												  - finalYawDifference.eulerAngles.y)%360, 
-											 driftingEuler.z)							  );
+			transform.localRotation = driftCorrectedRotation(tempLocalRotation, Time.deltaTime);
 			//}
 		}
+		
 	}
 	
 	void FixedUpdate() 
@@ -320,15 +331,10 @@ public class RUISHeadTracker : MonoBehaviour
 		// Yaw Drift Corrector invocations in FixedUpdate()
 		// Kinect and PSMove do not need drift correction
 		//if(	   filterInFixedUpdate && externalDriftCorrection 
-		//	&& headRotationInput != HeadRotationSource.Kinect 
-		//	&& headRotationInput != HeadRotationSource.PSMove)
+		//	&& (useOculusRiftRotation || headRotationInput != HeadRotationSource.Kinect) 
+		//	&& (useOculusRiftRotation || headRotationInput != HeadRotationSource.PSMove))
 		//{
-		//	doYawFiltering(tempLocalRotation, Time.deltaTime);
-		//	transform.localRotation = 
-		//		Quaternion.Euler(new Vector3(driftingEuler.x, 
-		//									 (360 + driftingEuler.y 
-		//										  - finalYawDifference.eulerAngles.y)%360, 
-		//									 driftingEuler.z)							  );
+		//transform.localRotation = driftCorrectedRotation(tempLocalRotation, Time.fixedDeltaTime);
 		//}
 	}
 	
@@ -341,34 +347,37 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	public void ResetOrientation()
 	{
-		switch(headRotationInput) 
-		{
-			case HeadRotationSource.OculusRift:
-				OVRDevice.ResetOrientation(0);
-				break;
-			case HeadRotationSource.Kinect:
-		        if (skeletonManager)
-		        {
-					jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID);
-					// Torso is most stable joint
-					rotationOffsetKinect = // Fix for Kinect2: below takes rotation from torso
-						Quaternion.Inverse(
-							skeletonManager.skeletons[rotationPlayerID].torso.rotation).eulerAngles;
-		        }
-				break;
-			case HeadRotationSource.PSMove:
-		        if (inputManager)
-		        {
-					posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
-					if(posePSMove)
-						rotationOffsetPSMove = Quaternion.Inverse(posePSMove.qOrientation).eulerAngles;
-				}
-				break;
-			case HeadRotationSource.RazerHydra:
-				// TODO
-				// rotationOffsetHydra = Quaternion.Inverse(hydraRotation).eulerAngles;
-				break;
-		}
+		if(useOculusRiftRotation)
+			OVRDevice.ResetOrientation(oculusID);
+		else // TODO: What about compass ??
+			switch(headRotationInput) 
+			{
+				//case HeadRotationSource.OculusRift:
+				//	OVRDevice.ResetOrientation(oculusID);
+				//	break;
+				case HeadRotationSource.Kinect:
+			        if (skeletonManager)
+			        {
+						jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID);
+						// Torso is most stable joint
+						rotationOffsetKinect = // Fix for Kinect2: below takes rotation from torso
+							Quaternion.Inverse(
+								skeletonManager.skeletons[rotationPlayerID].torso.rotation).eulerAngles;
+			        }
+					break;
+				case HeadRotationSource.PSMove:
+			        if (inputManager)
+			        {
+						posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
+						if(posePSMove)
+							rotationOffsetPSMove = Quaternion.Inverse(posePSMove.qOrientation).eulerAngles;
+					}
+					break;
+				case HeadRotationSource.RazerHydra:
+					// TODO
+					// rotationOffsetHydra = Quaternion.Inverse(hydraRotation).eulerAngles;
+					break;
+			}
 	}
 	
 	// Beginning of methods that are needed by RUISCamera's oblique frustum creation
@@ -390,14 +399,26 @@ public class RUISHeadTracker : MonoBehaviour
 	// End of methods that are needed by RUISCamera's oblique frustum creation
 	
 	// Beginning of Yaw Drift Corrector methods
+	private Quaternion driftCorrectedRotation(Quaternion driftedRotation, float deltaT)
+	{
+		doYawFiltering(driftedRotation, deltaT);
+		// driftingEuler and finalYawDifference are private members set in doYawFiltering()
+		return Quaternion.Euler(new Vector3( driftingEuler.x, 
+											 (360 + driftingEuler.y 
+												  - finalYawDifference.eulerAngles.y)%360, 
+											 driftingEuler.z)							  );
+	}
+	
+	
 	private void doYawFiltering(Quaternion driftingOrientation, float deltaT)
 	{
 		// If the Rift is HeadRotationSource, its rotation is not stored in measuredHeadRotation
 		// in the Update() like with the other sources
-		if(headRotationInput == HeadRotationSource.OculusRift)
+		if(useOculusRiftRotation)
 		{
 			if(OVRDevice.IsSensorPresent(oculusID))
 			{
+				// Get driftingRot from the Rift
 				OVRDevice.GetOrientation(oculusID, ref driftingRot);
 				if(oculusCamController) 
 				{
