@@ -57,11 +57,18 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
     void Start()
     {
-        rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, Vector3.right) * rightShoulder.rotation;
-        leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, Vector3.left) * leftShoulder.rotation;
-        rightHip.rotation = FindFixingRotation(rightHip.position, rightKnee.position, Vector3.down) * rightKnee.rotation;
-        leftHip.rotation = FindFixingRotation(leftHip.position, leftKnee.position, Vector3.down) * leftKnee.rotation;
+        if (useHierarchicalModel)
+        {
+            rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, Vector3.right) * rightShoulder.rotation;
+            leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, Vector3.left) * leftShoulder.rotation;
+            rightHip.rotation = FindFixingRotation(rightHip.position, rightKnee.position, Vector3.down) * rightKnee.rotation;
+            leftHip.rotation = FindFixingRotation(leftHip.position, leftKnee.position, Vector3.down) * leftKnee.rotation;
 
+            /*Vector3 assumedRootPos = (rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4;
+            Vector3 realRootPos = root.position;
+            root.localPosition = root.localPosition + (realRootPos - assumedRootPos);
+            Debug.Log(realRootPos - assumedRootPos);*/
+        }
 
         SaveInitialRotation(root);
         SaveInitialRotation(head);
@@ -143,11 +150,11 @@ public class RUISPlainSkeletonController : MonoBehaviour
                     Vector3 kinectHipAverageToTorso = skeletonManager.skeletons[playerId].torso.position - kinectHipAverage;
                     // torso.localPosition = skeletonManager.skeletons[playerId].torso.position - kinectHipAverageToTorso + modelOriginalHipAverageToTorso;
                     
-                    /*ForceUpdatePosition(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
+                    ForceUpdatePosition(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
                     //ForceUpdatePosition(ref rightElbow, skeletonManager.skeletons[playerId].rightElbow);
                     ForceUpdatePosition(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
                     ForceUpdatePosition(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
-                    ForceUpdatePosition(ref leftHip, skeletonManager.skeletons[playerId].leftHip);*/
+                    ForceUpdatePosition(ref leftHip, skeletonManager.skeletons[playerId].leftHip);
                 }
             }
 
@@ -274,7 +281,7 @@ public class RUISPlainSkeletonController : MonoBehaviour
                                  Vector3.Distance(skeletonManager.skeletons[playerId].leftShoulder.position, skeletonManager.skeletons[playerId].leftHip.position)) / 2;
 
         float newScale = playerLength / modelLength;
-        torso.localScale = new Vector3(newScale, newScale, newScale);
+        root.localScale = new Vector3(newScale, newScale, newScale);
         return newScale;
     }
 

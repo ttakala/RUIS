@@ -52,7 +52,7 @@ public class RUISM2KCalibration : MonoBehaviour {
     float totalErrorDistance = 0;
     float averageError = 0;
 
-    OpenNI.SceneAnalyzer sceneAnalyzer;
+    public OpenNI.SceneAnalyzer sceneAnalyzer;
 
     public GameObject floorPlane;
     public GameObject kinectModelObject;
