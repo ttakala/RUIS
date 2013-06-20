@@ -13,6 +13,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour {
 
     public float maxHeightChange = 5f;
     public float maxPositionChange = 10f;
+    public float colliderRadiusTweaker = 1.5f;
 
 	void Start () {
         skeletonManager = skeletonController.skeletonManager;
@@ -26,7 +27,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour {
         Vector3 newPos = torsoPos;
         newPos.y = torsoPos.y / 2;
 
-        collider.height = Mathf.Lerp(collider.height, torsoPos.y - collider.radius, maxHeightChange * Time.fixedDeltaTime);
+        collider.height = Mathf.Lerp(collider.height, torsoPos.y - collider.radius * colliderRadiusTweaker, maxHeightChange * Time.fixedDeltaTime);
         transform.localPosition = Vector3.Lerp(transform.localPosition, newPos, maxPositionChange * Time.fixedDeltaTime);
 	}
 }
