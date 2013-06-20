@@ -25,7 +25,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400004}
   m_Layer: 0
-  m_Name: RUIS
+  m_Name: DisplayManagerExampleRUIS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -480,6 +480,7 @@ MonoBehaviour:
   enableMoveCalibrationDuringPlay: 0
   enableKinect: 1
   maxNumberOfKinectPlayers: 1
+  kinectFloorDetection: 1
   moveControllers: []
 --- !u!114 &11400022
 MonoBehaviour:

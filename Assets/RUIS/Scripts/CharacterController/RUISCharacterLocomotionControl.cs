@@ -13,7 +13,6 @@ using System.Collections;
 [RequireComponent(typeof(RUISCharacterController))]
 [RequireComponent(typeof(Rigidbody))]
 public class RUISCharacterLocomotionControl : MonoBehaviour {
-    RigidbodyFPSController fpsController;
     RUISCharacterController characterController;
     RUISCharacterStabilizingCollider stabilizingCollider;
 	
