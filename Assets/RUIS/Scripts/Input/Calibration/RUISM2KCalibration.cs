@@ -93,9 +93,9 @@ public class RUISM2KCalibration : MonoBehaviour {
         {
             Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
             kinectAvailable = false;
-            settingsManager.transform.parent.gameObject.SetActiveRecursively(false);
+            settingsManager.transform.parent.gameObject.SetActive(false);
 
-            userViewer.gameObject.SetActiveRecursively(false);
+            userViewer.gameObject.SetActive(false);
         }
         else
         {
@@ -125,7 +125,7 @@ public class RUISM2KCalibration : MonoBehaviour {
         }
         else
         {
-            (FindObjectOfType(typeof(CameraTiltTextUpdater)) as CameraTiltTextUpdater).gameObject.SetActiveRecursively(false);
+            (FindObjectOfType(typeof(CameraTiltTextUpdater)) as CameraTiltTextUpdater).gameObject.SetActive(false);
         }
 
 
@@ -214,7 +214,7 @@ public class RUISM2KCalibration : MonoBehaviour {
             else
             {
                 statusText.text = "Calibration of Kinect";
-                moveIcon.gameObject.SetActiveRecursively(false);
+                moveIcon.gameObject.SetActive(false);
             }
         }
     }
@@ -286,7 +286,7 @@ public class RUISM2KCalibration : MonoBehaviour {
             
             CalculateTransformation();
 
-            moveController.gameObject.SetActiveRecursively(true);
+            moveController.gameObject.SetActive(true);
 
 
             float distance = 0;
@@ -508,13 +508,13 @@ public class RUISM2KCalibration : MonoBehaviour {
     {
         if (showing)
         {
-            calibrationGameObjects.SetActiveRecursively(false);
-            calibrationReviewGameObjects.SetActiveRecursively(true);
+            calibrationGameObjects.SetActive(false);
+            calibrationReviewGameObjects.SetActive(true);
         }
         else
         {
-            calibrationReviewGameObjects.SetActiveRecursively(false);
-            calibrationGameObjects.SetActiveRecursively(true);
+            calibrationReviewGameObjects.SetActive(false);
+            calibrationGameObjects.SetActive(true);
         }
     }
 

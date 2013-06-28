@@ -41,9 +41,6 @@ public class RUISPlainSkeletonController : MonoBehaviour
     private Dictionary<Transform, Quaternion> jointInitialRotations;
     private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
 
-    Vector3 modelHipAverage;
-    Vector3 modelOriginalHipAverageToTorso;
-    Vector3 originalRootPosition;
 
     float torsoOffset = 0.0f;
     float torsoScale = 1.0f;
@@ -63,16 +60,13 @@ public class RUISPlainSkeletonController : MonoBehaviour
     {
         if (useHierarchicalModel)
         {
-            rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, Vector3.right) * rightShoulder.rotation;
-            leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, Vector3.left) * leftShoulder.rotation;
-            rightHip.rotation = FindFixingRotation(rightHip.position, rightKnee.position, Vector3.down) * rightKnee.rotation;
-            leftHip.rotation = FindFixingRotation(leftHip.position, leftKnee.position, Vector3.down) * leftKnee.rotation;
+            rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, transform.right) * rightShoulder.rotation;
+            leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, -transform.right) * leftShoulder.rotation;
+            rightHip.rotation = FindFixingRotation(rightHip.position, rightKnee.position, -transform.up) * rightKnee.rotation;
+            leftHip.rotation = FindFixingRotation(leftHip.position, leftKnee.position, -transform.up) * leftKnee.rotation;
 
-            originalRootPosition = root.localPosition;
             Vector3 assumedRootPos = (rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4;
             Vector3 realRootPos = torso.position;
-            //torso.localPosition = torso.localPosition + (assumedRootPos - realRootPos);
-            Debug.Log(realRootPos - assumedRootPos);
             torsoOffset = (realRootPos - assumedRootPos).y;
         }
 
@@ -106,9 +100,6 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
         SaveInitialDistance(rightShoulder, rightHip);
         SaveInitialDistance(leftShoulder, leftHip);
-
-        modelHipAverage = (rightHip.position + leftHip.position) / 2;
-        modelOriginalHipAverageToTorso = torso.position - modelHipAverage;
     }
 
 
@@ -151,21 +142,10 @@ public class RUISPlainSkeletonController : MonoBehaviour
                 if (scaleHierarchicalModelBones)
                 {
                     UpdateBoneScalings();
-                    //ForceUpdatePosition(ref torso, skeletonManager.skeletons[playerId].torso);
-                    Vector3 kinectHipAverage = (skeletonManager.skeletons[playerId].rightHip.position + skeletonManager.skeletons[playerId].leftHip.position) / 2;
-                    Vector3 kinectHipAverageToTorso = skeletonManager.skeletons[playerId].torso.position - kinectHipAverage;
-                    //kinectHipAverageToTorso.x = 0;
-                    //kinectHipAverageToTorso.z = 0;
 
-                    Vector3 modelHipAverage = (leftHip.position + rightHip.position) / 2;
-                    Vector3 modelHipAverageToTorso = torso.position - modelHipAverage;
-                    //modelHipAverageToTorso.x = 0;
-                    //modelHipAverageToTorso.z = 0;
-
-                    Vector3 newModelTorsoPos = modelHipAverage + modelHipAverageToTorso.normalized * kinectHipAverageToTorso.magnitude;
-                    //torso.position = transform.TransformPoint(newModelTorsoPos);
-
-                    torso.position = transform.TransformPoint(skeletonManager.skeletons[playerId].torso.position - skeletonPosition - torso.transform.right * torsoOffset * torsoScale);
+                    Vector3 torsoDirection = skeletonManager.skeletons[playerId].torso.rotation * Vector3.down;
+                    torso.position = transform.TransformPoint(skeletonManager.skeletons[playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
+                    
                     ForceUpdatePosition(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
                     ForceUpdatePosition(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
                     ForceUpdatePosition(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
@@ -178,13 +158,6 @@ public class RUISPlainSkeletonController : MonoBehaviour
                 Vector3 newRootPosition = skeletonManager.skeletons[playerId].root.position;
                 transform.localPosition = newRootPosition;
             }
-
-            //Debug.Log(Vector3.Distance(skeletonManager.skeletons[playerId].rightElbow.position, rightElbow.position) + " " +
-            //          Vector3.Distance(skeletonManager.skeletons[playerId].leftKnee.position, leftKnee.position));
-            Debug.DrawLine(skeletonManager.skeletons[playerId].rightElbow.position, rightElbow.position, Color.red);
-            Debug.DrawLine(skeletonManager.skeletons[playerId].leftElbow.position, leftElbow.position, Color.red);
-            Debug.DrawLine(skeletonManager.skeletons[playerId].rightKnee.position, rightKnee.position, Color.red);
-            Debug.DrawLine(skeletonManager.skeletons[playerId].leftKnee.position, leftKnee.position, Color.red);
         }
     }
 
@@ -246,14 +219,6 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
     private void UpdateBoneScalings()
     {
-        //scale torso based on torso - right shoulder
-        //scale right shoulder based on right shoulder - right elbow
-        /*float modelUpperArmLength = jointInitialDistances[rightShoulder];
-        float playerUpperArmLength = Vector3.Distance(skeletonManager.skeletons[playerId].rightShoulder.position, skeletonManager.skeletons[playerId].rightElbow.position);
-        Debug.Log("lengths: " + modelUpperArmLength + ", " + playerUpperArmLength);
-        float newScale = playerUpperArmLength / modelUpperArmLength;
-        rightShoulder.localScale = new Vector3(newScale, newScale, newScale);
-        */
         torsoScale = UpdateTorsoScale();
 
         {

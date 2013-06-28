@@ -33,13 +33,13 @@ public class RUISSelectable : MonoBehaviour {
     private Vector3 latestVelocity = Vector3.zero;
     private Vector3 lastPosition = Vector3.zero;
 
-    private Queue<Vector3> velocityBuffer;
+    private List<Vector3> velocityBuffer;
 
     private bool transformHasBeenUpdated = false;
 
     public void Awake()
     {
-        velocityBuffer = new Queue<Vector3>();
+        velocityBuffer = new List<Vector3>();
     }
 
     public void Update()
@@ -50,7 +50,7 @@ public class RUISSelectable : MonoBehaviour {
 								/ Mathf.Max(Time.deltaTime, Time.fixedDeltaTime);
             lastPosition = transform.position;
 
-            velocityBuffer.Enqueue(latestVelocity);
+            velocityBuffer.Add(latestVelocity);
             LimitBufferSize(velocityBuffer, 2);
 
             transformHasBeenUpdated = false;
@@ -174,22 +174,26 @@ public class RUISSelectable : MonoBehaviour {
         }
     }
 
-    private void LimitBufferSize(Queue<Vector3> buffer, int maxSize)
+
+    private void LimitBufferSize(List<Vector3> buffer, int maxSize)
     {
         while (buffer.Count >= maxSize)
         {
-            buffer.Dequeue();
+            buffer.RemoveAt(0);
         }
     }
 
-    private Vector3 AverageBufferContent(Queue<Vector3> buffer)
+    private Vector3 AverageBufferContent(List<Vector3> buffer)
     {
-        int startingBufferSize = buffer.Count;
+        if (buffer.Count == 0) return Vector3.zero;
+
         Vector3 averagedContent = new Vector3();
-        while (buffer.Count > 0)
+        foreach (Vector3 v in buffer)
         {
-            averagedContent += buffer.Dequeue() / startingBufferSize;
+            averagedContent += v;
         }
+
+        averagedContent = averagedContent / buffer.Count;
 
         return averagedContent;
     }

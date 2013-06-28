@@ -362,6 +362,7 @@ Library/metadata/52/52ebe2e9f656b7f43b56246027429c2f -text
 Library/metadata/53/531c14f8d5cdc4e5baa83ee6e16f783a -text
 Library/metadata/53/535a514753a59a042b7930b59f6142dd -text
 Library/metadata/54/54216e9ed42974e30967824b7f0b2806 -text
+Library/metadata/54/54b680361e9218047bb18cb4a6312739 -text
 Library/metadata/55/5510cec2247d4854289882c577fab77d -text
 Library/metadata/57/5743e4d89fd589f468501a56a59b05ff -text
 Library/metadata/57/575cb7dc5eb8ea94e8f0ab6fde7e92f2 -text
@@ -422,6 +423,7 @@ Library/metadata/6f/6fad6e06135894d4da88e7273313f430 -text
 Library/metadata/70/700ec7db7ac6ff24f9f4a3d4cd157910 -text
 Library/metadata/70/703d35e643322e443babff27dc8909b3 -text
 Library/metadata/71/71ea3ac4ce817cc408976ccd806b2fdd -text
+Library/metadata/72/725d292227850ab4f94799e193a59452 -text
 Library/metadata/73/73604ae94aea741dfa9b7732c8994b19 -text
 Library/metadata/73/7393794f8c1a7764a9149583dc2cfa03 -text
 Library/metadata/75/757f5e3b61ecf1a48b894f315589bf67 -text
@@ -456,6 +458,7 @@ Library/metadata/84/8452023c842a1bb4d8ab5c53085740d6 -text
 Library/metadata/84/84eb02806c0028b4e9d44cfe55f33a1a -text
 Library/metadata/85/855139d2929bdea45870ab5cdc8d3a84 -text
 Library/metadata/85/859d6d3fcffe1bb41ac06f93d267fc9d -text
+Library/metadata/85/859eca7402e25e94fab4fdf0aad9a034 -text
 Library/metadata/86/861742c46b770f245829de5aa04ce8e1 -text
 Library/metadata/86/8619015675705434a8d74b228676b99c -text
 Library/metadata/86/867bbb30c5653d24b85a933479d21e6f -text
@@ -479,6 +482,7 @@ Library/metadata/8c/8c4b58590d9bff8469df78af9f8df04e -text
 Library/metadata/8c/8cfe463cf40a92249aefc592d180673c -text
 Library/metadata/8f/8f003946303c3454c8eadfc1dfe79892 -text
 Library/metadata/8f/8f4842111471239409e2cbac03cabb1d -text
+Library/metadata/8f/8f50a725d9d4cc64ab64187c23e642f6 -text
 Library/metadata/8f/8fc0d37b2a4d8654ea8ae902d2b77eda -text
 Library/metadata/8f/8fcb7f0cb69b100458b58825f7dfecf2 -text
 Library/metadata/8f/8ffcf9962e3fc3d4fb2b95abb72a1de7 -text
@@ -501,6 +505,7 @@ Library/metadata/96/96b209bcf657ce547ad4b4d913d34224 -text
 Library/metadata/96/96fe26bd7a47079498c05371e31517db -text
 Library/metadata/97/97b050d43ac7c4d2b9f6cbb587650761 -text
 Library/metadata/97/97cef94cd6ca66243ad0c5bd9f7704b3 -text
+Library/metadata/97/97ddcab1c5f76ec4299ad0fc906ab15e -text
 Library/metadata/98/981b5bce7fc4a2d43a2169710da4b892 -text
 Library/metadata/98/983153594a876dc40934c28fe9c6d7f5 -text
 Library/metadata/98/985e70e58a6b14e4ca5ab5b10519069b -text
@@ -615,6 +620,7 @@ Library/metadata/cf/cf46a9ac366156149bdf52eed68b707b -text
 Library/metadata/cf/cf8c8ec11ec8634478681e5ba3bc590c -text
 Library/metadata/d0/d0b36c1096d08b0469505356d9ba2e89 -text
 Library/metadata/d1/d1178924d1a79be4189aca3068145d94 -text
+Library/metadata/d2/d231127ae337c7c40a492768550cf970 -text
 Library/metadata/d2/d23f8c2cfdb095b4b9a8053d4e9f38ba -text
 Library/metadata/d2/d274217134840c34199cee3c64b4232b -text
 Library/metadata/d2/d2c31250a045436429ab8ad0029b179d -text
@@ -663,6 +669,7 @@ Library/metadata/e8/e804c45cbfefca841b88e4d9f23ada01 -text
 Library/metadata/e8/e815f0a8fcf2660468746ac2193df6bb -text
 Library/metadata/e8/e828f8ea51bf8514f82a7faf40c1b7bd -text
 Library/metadata/e8/e8f2bea7c7ed1374ca5abe2687e83f0c -text
+Library/metadata/e9/e93e58b94355a5442a1dfa164630f6d3 -text
 Library/metadata/e9/e973263360315ef49953143c6bd5d536 -text
 Library/metadata/e9/e996180dac2f0ad498556f7ec8051d9f -text
 Library/metadata/eb/eb967e0e8c83cf743bcf736063dac9c7 -text
@@ -723,9 +730,11 @@ ProjectSettings/TimeManager.asset -text
 /Unity.sln -text
 /Unity.userprefs -text
 /controllablecharacter.unitypackage -text
+/headtracker.unitypackage -text
 /inputConfig.txt -text
 /inputConfig.xml -text
 /inputConfig.xsd -text
+/jumpgesture.unitypackage -text
 /m2k.xml -text
 obj/Debug/Assembly-CSharp-Editor-vs.csproj.FileListAbsolute.txt -text
 obj/Debug/Assembly-CSharp-Editor.dll -text
@@ -742,4 +751,5 @@ obj/Debug/ResolveAssemblyReference.cache -text
 /ruis-unity-csharp.sln -text
 /ruis-unity-csharp.suo -text
 /ruis-unity.sln -text
+/ruis.unitypackage -text
 /test.xml -text

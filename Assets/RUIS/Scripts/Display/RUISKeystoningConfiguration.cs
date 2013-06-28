@@ -144,7 +144,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
     private float Optimize()
     {
 		
-		ruisCamera.keystoningCamera.gameObject.SetActiveRecursively(true);
+		ruisCamera.keystoningCamera.gameObject.SetActive(true);
         
 		ruisCamera.keystoningCamera.transform.position = ruisCamera.KeystoningHeadTrackerPosition;
 		float totalError = 0;
@@ -152,7 +152,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         totalError += RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, leftCameraCorners, ref leftSpec);
         totalError += RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, rightCameraCorners, ref rightSpec);
 		
-		ruisCamera.keystoningCamera.gameObject.SetActiveRecursively(false);
+		ruisCamera.keystoningCamera.gameObject.SetActive(false);
 		
 		return totalError;
     }

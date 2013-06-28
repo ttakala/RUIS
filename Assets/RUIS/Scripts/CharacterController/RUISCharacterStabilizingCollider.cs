@@ -9,7 +9,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour {
     RUISSkeletonManager skeletonManager;
     int playerId;
 
-    private CapsuleCollider collider;
+    private CapsuleCollider capsuleCollider;
 
     public float maxHeightChange = 5f;
     public float maxPositionChange = 10f;
@@ -19,7 +19,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour {
         skeletonManager = skeletonController.skeletonManager;
         playerId = skeletonController.playerId;
 
-        collider = GetComponent<CapsuleCollider>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
 	}
 	
 	void FixedUpdate () {
@@ -27,7 +27,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour {
         Vector3 newPos = torsoPos;
         newPos.y = torsoPos.y / 2;
 
-        collider.height = Mathf.Lerp(collider.height, torsoPos.y - collider.radius * colliderRadiusTweaker, maxHeightChange * Time.fixedDeltaTime);
+        capsuleCollider.height = Mathf.Lerp(capsuleCollider.height, torsoPos.y - capsuleCollider.radius * colliderRadiusTweaker, maxHeightChange * Time.fixedDeltaTime);
         transform.localPosition = Vector3.Lerp(transform.localPosition, newPos, maxPositionChange * Time.fixedDeltaTime);
 	}
 }

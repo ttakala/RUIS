@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(RUISPointTracker))]
 public class RUISHoldGestureRecognizer : RUISGestureRecognizer
 {
     float gestureProgress = 0;
@@ -12,6 +13,13 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
     float timeSinceStart;
 
     bool gestureEnabled = false;
+
+    RUISPointTracker pointTracker;
+
+    void Awake()
+    {
+        pointTracker = GetComponent<RUISPointTracker>();
+    }
 
     void Start()
     {

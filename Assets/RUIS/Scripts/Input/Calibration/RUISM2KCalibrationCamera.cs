@@ -14,7 +14,7 @@ public class RUISM2KCalibrationCamera : MonoBehaviour {
     {
         RUISM2KCalibration calibration = FindObjectOfType(typeof(RUISM2KCalibration)) as RUISM2KCalibration;
         if (calibration.usePSMove)
-            gameObject.SetActiveRecursively(false);
+            gameObject.SetActive(false);
     }
 
     void Start()

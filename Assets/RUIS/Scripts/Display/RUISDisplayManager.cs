@@ -160,7 +160,7 @@ public class RUISDisplayManager : MonoBehaviour {
             if (ruisCamera.associatedDisplay == null)
             {
                 Debug.LogWarning("Disabling RUISCamera: " + ruisCamera.name + " because it isn't linked into a RUISDisplay.");
-                ruisCamera.gameObject.SetActiveRecursively(false);
+                ruisCamera.gameObject.SetActive(false);
             }
         }
     }

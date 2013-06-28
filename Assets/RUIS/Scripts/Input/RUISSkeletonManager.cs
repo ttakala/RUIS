@@ -143,6 +143,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 
         switch (joint)
         {
+            case Joint.Root:
+                return skeletons[player].root;
             case Joint.Head:
                 return skeletons[player].head;
             case Joint.Torso:

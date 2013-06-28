@@ -14,11 +14,10 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody))]
 public class RUISCharacterLocomotionControl : MonoBehaviour {
     RUISCharacterController characterController;
-    RUISCharacterStabilizingCollider stabilizingCollider;
 	
 	public KeyCode turnRightKey = KeyCode.E;
-	public KeyCode turnLeftKey = KeyCode.Q;
-	
+    public KeyCode turnLeftKey = KeyCode.Q;
+
     public float rotationScaler = 60.0f;
 
     public float speed = 2.0f;
@@ -30,17 +29,31 @@ public class RUISCharacterLocomotionControl : MonoBehaviour {
 	
 	public bool usePSNavigationController = true;
 	public int PSNaviControllerID = 0;
-	
+
+    public float jumpStrength = 10f;
+
+    private RUISJumpGestureRecognizer jumpGesture;
+
 	// TUUKKA
 	PSMoveWrapper moveWrapper;
 
-	void Start () {
+    bool shouldJump = false;
+
+	void Awake () {
         characterController = GetComponent<RUISCharacterController>();
-        stabilizingCollider = GetComponentInChildren<RUISCharacterStabilizingCollider>();
+        jumpGesture = GetComponentInChildren<RUISJumpGestureRecognizer>();
 		
 		// TUUKKA
 		moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
 	}
+
+    void Update()
+    {
+        if (Input.GetButtonDown("Jump") || JumpGestureTriggered())
+        {
+            shouldJump = true;
+        }
+    }
 	
 	void FixedUpdate () {
         //characterController.ApplyForceInCharacterDirection(translation);
@@ -65,10 +78,10 @@ public class RUISCharacterLocomotionControl : MonoBehaviour {
 						targetVelocity += new Vector3(0, 0, -((float) verti)/128f*(1 + extraSpeed));
 					//if(Mathf.Abs(horiz) > 20)
 					//	targetVelocity += new Vector3(((float) horiz)/128f*(1 + extraSpeed), 0, 0);
-					if(Mathf.Abs(horiz) > 10)
-					{
-						characterController.RotateAroundCharacterPivot(new Vector3(0, 100*((float) horiz)/128f * Time.fixedDeltaTime, 0));
-					}
+                    if (Mathf.Abs(horiz) > 10)
+                    {
+                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f * Time.fixedDeltaTime, 0));
+                    }
 				}
 			}
 			else
@@ -101,6 +114,18 @@ public class RUISCharacterLocomotionControl : MonoBehaviour {
             characterController.RotateAroundCharacterPivot(new Vector3(0, rotationScaler * Time.fixedDeltaTime, 0));
         }
 
-        //if(
+
+        if (shouldJump)
+        {
+            rigidbody.AddForce(new Vector3(0, jumpStrength * rigidbody.mass, 0), ForceMode.Impulse);
+            shouldJump = false;
+        }
 	}
+
+    bool JumpGestureTriggered()
+    {
+        if (jumpGesture == null) return false;
+
+        return jumpGesture.GestureTriggered();
+    }
 }

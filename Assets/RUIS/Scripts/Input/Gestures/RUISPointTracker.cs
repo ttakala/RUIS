@@ -10,12 +10,15 @@ public class RUISPointTracker : MonoBehaviour
         public Quaternion rotation;
         public float deltaTime;
         public Vector3 velocity;
+        public float startTime;
 
-        public PointData(Vector3 position, Quaternion rotation, float deltaTime, PointData previous)
+        public PointData(Vector3 position, Quaternion rotation, float deltaTime, float startTime, PointData previous)
         {
             this.position = position;
             this.rotation = rotation;
             this.deltaTime = deltaTime;
+            this.startTime = startTime;
+
             if (previous != null)
             {
                 velocity = (position - previous.position) / deltaTime;
@@ -23,11 +26,10 @@ public class RUISPointTracker : MonoBehaviour
         }
     }
 
-    Queue<PointData> points = new Queue<PointData>();
+    List<PointData> points = new List<PointData>();
     PointData previousPoint = null;
 
-    public float updateInterval = 30;
-    public int bufferSize = 20;
+    public float bufferLength = 0.1f;
 
     float timeSinceLastUpdate = 0;
 
@@ -35,23 +37,27 @@ public class RUISPointTracker : MonoBehaviour
     {
         cachedAverageSpeed = new CachedAverageSpeed(ref points);
         cachedMaxVelocity = new CachedMaxVelocity(ref points);
+        cachedAverageVelocity = new CachedAverageVelocity(ref points);
     }
 
     void Update()
     {
         timeSinceLastUpdate += Time.deltaTime;
 
-        if (timeSinceLastUpdate < updateInterval / 1000) return;
-
-        PointData newPoint = new PointData(transform.localPosition, transform.localRotation, timeSinceLastUpdate, previousPoint);
+        PointData newPoint = new PointData(transform.localPosition, transform.localRotation, timeSinceLastUpdate, Time.timeSinceLevelLoad, previousPoint);
 
         //remove zero velocities just in case, in order for the speeds not to get polluted by nonexisting data
         //if (newPoint.velocity == Vector3.zero) return;
 
-        points.Enqueue(newPoint);
+        points.Add(newPoint);
         previousPoint = newPoint;
 
-        if (points.Count > bufferSize) points.Dequeue();
+        while (points[points.Count-1].startTime - points[0].startTime >= bufferLength)
+        {
+            points.RemoveAt(0);
+        }
+
+        //if (points.Count > bufferSize) points.RemoveAt(0);
 
         InvalidateCaches();
 
@@ -64,6 +70,7 @@ public class RUISPointTracker : MonoBehaviour
     {
         cachedAverageSpeed.Invalidate();
         cachedMaxVelocity.Invalidate();
+        cachedAverageVelocity.Invalidate();
     }
 
     private CachedAverageSpeed cachedAverageSpeed;
@@ -84,13 +91,22 @@ public class RUISPointTracker : MonoBehaviour
         }
     }
 
+    private CachedAverageVelocity cachedAverageVelocity;
+    public Vector3 averageVelocity
+    {
+        get
+        {
+            return cachedAverageVelocity.GetValue();
+        }
+    }
+
 
 
     public class CachedAverageSpeed : CachedValue<float>
     {
-        Queue<PointData> valueList;
+        List<PointData> valueList;
 
-        public CachedAverageSpeed(ref Queue<PointData> valueList)
+        public CachedAverageSpeed(ref List<PointData> valueList)
         {
             this.valueList = valueList;
         }
@@ -108,9 +124,9 @@ public class RUISPointTracker : MonoBehaviour
 
     public class CachedMaxVelocity : CachedValue<Vector3>
     {
-        Queue<PointData> valueList;
+        List<PointData> valueList;
 
-        public CachedMaxVelocity(ref Queue<PointData> valueList)
+        public CachedMaxVelocity(ref List<PointData> valueList)
         {
             this.valueList = valueList;
         }
@@ -124,6 +140,26 @@ public class RUISPointTracker : MonoBehaviour
             }
 
             return maxVelocity;
+        }
+    }
+
+    public class CachedAverageVelocity : CachedValue<Vector3>
+    {
+        List<PointData> valueList;
+
+        public CachedAverageVelocity(ref List<PointData> valueList)
+        {
+            this.valueList = valueList;
+        }
+
+        protected override Vector3 CalculateValue()
+        {
+            Vector3 velocity = Vector3.zero;
+            foreach (PointData data in valueList)
+            {
+                velocity += data.velocity;
+            }
+            return velocity / valueList.Count;
         }
     }
 

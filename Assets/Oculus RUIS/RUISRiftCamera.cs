@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISRiftCamera : RUISCamera {
-	void Awake () 
+	new void Awake () 
     {
         leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
         rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
@@ -13,15 +13,15 @@ public class RUISRiftCamera : RUISCamera {
         }
 	}
 
-    void Start()
+    new void Start()
     {
     }
 
-    void Update()
+    new void Update()
     {
     }
 
-    void LateUpdate()
+    new void LateUpdate()
     {
     }
 	

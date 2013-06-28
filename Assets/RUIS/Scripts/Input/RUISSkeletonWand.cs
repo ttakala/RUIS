@@ -219,7 +219,7 @@ public class RUISSkeletonWand : RUISWand
         GetComponent<LineRenderer>().enabled = true;
         if (wandPositionVisualizer)
         {
-            wandPositionVisualizer.SetActiveRecursively(true);
+            wandPositionVisualizer.SetActive(true);
         }
     }
 
@@ -230,7 +230,7 @@ public class RUISSkeletonWand : RUISWand
         GetComponent<LineRenderer>().enabled = false;
         if (wandPositionVisualizer)
         {
-            wandPositionVisualizer.SetActiveRecursively(false);
+            wandPositionVisualizer.SetActive(false);
         }
     }
 }
