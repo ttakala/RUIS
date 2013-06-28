@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   A display used by RUIS in the display configurations, allows e.g. multiple displays & stereoscopy
+Authors    :   Mikael Matveinen
+Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;

@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   The functionality for selectable objects, just add this to an object along with a collider to make it selectable
+Authors    :   Tuukka Takala, Mikael Matveinen
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections.Generic;
 

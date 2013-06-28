@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   A class to manage the Kinect depth map image to also the skeleton on top of the user
+Authors    :   Mikael Matveinen
+Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System;
 using System.Collections;

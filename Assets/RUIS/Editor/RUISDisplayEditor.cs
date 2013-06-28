@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   Inspector behavior for a RUISDisplay
+Authors    :   Mikael Matveinen
+Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 using UnityEditor;
@@ -129,9 +138,6 @@ public class RUISDisplayEditor : Editor {
             isObliqueFrustum.boolValue = false;
             isKeystoneCorrected.boolValue = false;
         }
-        
-
-        
 
         serializedObject.ApplyModifiedProperties();
 

@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   An internal class used to test out different quaternion rotation modifications
+Authors    :   Mikael Matveinen
+Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 

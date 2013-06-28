@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   The main class used for coordinate system transforms between different input systems and Unity
+Authors    :   Tuukka Takala, Mikael Matveinen
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections.Generic;
 using System.Xml;

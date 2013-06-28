@@ -1,7 +1,15 @@
+/*****************************************************************************
+
+Content    :   Some utility functions for GUI drawing, should probably not be used in regular VR applications..
+Authors    :   Mikael Matveinen
+Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 
-//a bunch of GUI functions that are supposed to be called in OnGUI
 public class RUISGUI {
     public static void DrawTextureViewportSafe(Rect where, Camera camera, Texture texture, bool flipYCoordinate = true)
     {

@@ -1,3 +1,12 @@
+/*****************************************************************************
+
+Content    :   Script to grow the PhysicsScene tree when hit by water particles
+Authors    :   Tuukka Takala
+Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 
