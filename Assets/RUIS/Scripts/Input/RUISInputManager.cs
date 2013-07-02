@@ -11,9 +11,11 @@ using UnityEngine;
 using System.Collections;
 using System.IO;
 using System;
+using System.Xml;
 
 public class RUISInputManager : MonoBehaviour
 {
+    public TextAsset xmlSchema;
     public string filename = "inputConfig.txt";
 
     public bool loadFromTextFileInEditor = false;
@@ -144,44 +146,96 @@ public class RUISInputManager : MonoBehaviour
 
     public bool Import(string filename)
     {
-        try
+        XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(filename, xmlSchema);
+        if (xmlDoc == null)
         {
-            TextReader textReader = new StreamReader(filename);
-
-            PSMoveIP = textReader.ReadLine();
-            PSMovePort = int.Parse(textReader.ReadLine());
-
-            textReader.Close();
-
-            Debug.Log("Imported Input Config");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e.StackTrace);
             return false;
         }
+
+        XmlNode inputManagerNode = xmlDoc.GetElementsByTagName("ruisInputManager", "ns2").Item(0);
+        Debug.Log(inputManagerNode);
+        XmlNode psMoveNode = xmlDoc.GetElementsByTagName("PSMoveSettings").Item(0);
+        enablePSMove = bool.Parse(psMoveNode.SelectSingleNode("enabled").Attributes["value"].Value);
+        PSMoveIP = psMoveNode.SelectSingleNode("ip").Attributes["value"].Value;
+        PSMovePort = int.Parse(psMoveNode.SelectSingleNode("port").Attributes["value"].Value);
+        connectToPSMoveOnStartup = bool.Parse(psMoveNode.SelectSingleNode("autoConnect").Attributes["value"].Value);
+        enableMoveCalibrationDuringPlay = bool.Parse(psMoveNode.SelectSingleNode("enableInGameCalibration").Attributes["value"].Value);
+        amountOfPSMoveControllers = int.Parse(psMoveNode.SelectSingleNode("maxControllers").Attributes["value"].Value);
+
+        XmlNode kinectNode = xmlDoc.GetElementsByTagName("KinectSettings").Item(0);
+        enableKinect = bool.Parse(kinectNode.SelectSingleNode("enabled").Attributes["value"].Value);
+        maxNumberOfKinectPlayers = int.Parse(kinectNode.SelectSingleNode("maxPlayers").Attributes["value"].Value);
+        kinectFloorDetection = bool.Parse(kinectNode.SelectSingleNode("floorDetection").Attributes["value"].Value);
 
         return true;
     }
 
     public bool Export(string filename)
     {
-        try
-        {
-            TextWriter textWriter = new StreamWriter(filename);
+        XmlDocument xmlDoc = new XmlDocument();
 
-            textWriter.WriteLine(PSMoveIP);
-            textWriter.WriteLine(PSMovePort);
+        xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
 
-            textWriter.Close();
-        }
-        catch (Exception e)
-        {
-            Debug.LogError(e.StackTrace);
-            return false;
-        }
+        XmlElement inputManagerRootElement = xmlDoc.CreateElement("ns2", "ruisInputManager", "http://ruisystem.net/ruisInputManager");
+        xmlDoc.AppendChild(inputManagerRootElement);
+
+        XmlElement psMoveSettingsElement = xmlDoc.CreateElement("PSMoveSettings");
+        inputManagerRootElement.AppendChild(psMoveSettingsElement);
+
+        XmlElement psMoveEnabledElement = xmlDoc.CreateElement("enabled");
+        psMoveEnabledElement.SetAttribute("value", enablePSMove.ToString());
+        psMoveSettingsElement.AppendChild(psMoveEnabledElement);
+
+        XmlElement psMoveIPElement = xmlDoc.CreateElement("ip");
+        psMoveIPElement.SetAttribute("value", PSMoveIP.ToString());
+        psMoveSettingsElement.AppendChild(psMoveIPElement);
+
+        XmlElement psMovePortElement = xmlDoc.CreateElement("port");
+        psMovePortElement.SetAttribute("value", PSMovePort.ToString());
+        psMoveSettingsElement.AppendChild(psMovePortElement);
+
+        XmlElement psMoveAutoConnectElement = xmlDoc.CreateElement("autoConnect");
+        psMoveAutoConnectElement.SetAttribute("value", connectToPSMoveOnStartup.ToString());
+        psMoveSettingsElement.AppendChild(psMoveAutoConnectElement);
+
+        XmlElement psMoveEnableInGameCalibration = xmlDoc.CreateElement("enableInGameCalibration");
+        psMoveEnableInGameCalibration.SetAttribute("value", enableMoveCalibrationDuringPlay.ToString());
+        psMoveSettingsElement.AppendChild(psMoveEnableInGameCalibration);
+
+        XmlElement psMoveMaxControllersElement = xmlDoc.CreateElement("maxControllers");
+        psMoveMaxControllersElement.SetAttribute("value", amountOfPSMoveControllers.ToString());
+        psMoveSettingsElement.AppendChild(psMoveMaxControllersElement);
 
 
+
+        XmlElement kinectSettingsElement = xmlDoc.CreateElement("KinectSettings");
+        inputManagerRootElement.AppendChild(kinectSettingsElement);
+
+        XmlElement kinectEnabledElement = xmlDoc.CreateElement("enabled");
+        kinectEnabledElement.SetAttribute("value", enableKinect.ToString());
+        kinectSettingsElement.AppendChild(kinectEnabledElement);
+
+        XmlElement maxKinectPlayersElement = xmlDoc.CreateElement("maxPlayers");
+        maxKinectPlayersElement.SetAttribute("value", maxNumberOfKinectPlayers.ToString());
+        kinectSettingsElement.AppendChild(maxKinectPlayersElement);
+
+        XmlElement kinectFloorDetectionElement = xmlDoc.CreateElement("floorDetection");
+        kinectFloorDetectionElement.SetAttribute("value", kinectFloorDetection.ToString());
+        kinectSettingsElement.AppendChild(kinectFloorDetectionElement);
+
+        /*
+        XmlElement displayUpElement = xmlDoc.CreateElement("displayUp");
+        XMLUtil.WriteVector3ToXmlElement(displayUpElement, displayUpInternal);
+        inputManagerRootElement.AppendChild(displayUpElement);
+
+        XmlElement displayNormalElement = xmlDoc.CreateElement("displayNormal");
+        XMLUtil.WriteVector3ToXmlElement(displayNormalElement, displayNormalInternal);
+        inputManagerRootElement.AppendChild(displayNormalElement);
+
+        linkedCamera.SaveKeystoningToXML(inputManagerRootElement);
+        */
+        XMLUtil.SaveXmlToFile(filename, xmlDoc);
+        
         return true;
     }
 

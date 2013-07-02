@@ -491,7 +491,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3cc8f20f27ab81542b70f1880fbad4f0, type: 3}
   m_Name: 
-  filename: inputConfig.txt
+  xmlSchema: {fileID: 4900000, guid: a07a36ac9f438794596e1ee51310972d, type: 3}
+  filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 1
   PSMoveIP: 130.233.46.224
@@ -499,9 +500,10 @@ MonoBehaviour:
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
-  enableMoveCalibrationDuringPlay: 0
+  enableMoveCalibrationDuringPlay: 1
   enableKinect: 0
-  maxNumberOfKinectPlayers: 2
+  maxNumberOfKinectPlayers: 1
+  kinectFloorDetection: 1
   moveControllers: []
 --- !u!114 &11400004
 MonoBehaviour:
@@ -597,12 +599,12 @@ MonoBehaviour:
   m_Name: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
-  resolutionX: 1920
-  resolutionY: 1080
+  resolutionX: 1280
+  resolutionY: 800
   useDoubleTheSpace: 1
   isStereo: 0
   eyeSeparation: .0599999987
-  isHMD: 0
+  isHMD: 1
   linkedCamera: {fileID: 0}
   stereoType: 0
   isObliqueFrustum: 0

@@ -16,6 +16,7 @@ using System.Collections;
 public class RUISInputManagerEditor : Editor {
     RUISInputManager inputConfig;
 
+    SerializedProperty xmlSchema;
     SerializedProperty filename;
 
     SerializedProperty loadFromTextFileInEditor;
@@ -35,6 +36,7 @@ public class RUISInputManagerEditor : Editor {
     {
         inputConfig = target as RUISInputManager;
 
+        xmlSchema = serializedObject.FindProperty("xmlSchema");
         filename = serializedObject.FindProperty("filename");
 
         psMoveEnabled = serializedObject.FindProperty("enablePSMove");
@@ -55,8 +57,6 @@ public class RUISInputManagerEditor : Editor {
         serializedObject.Update();
 
         EditorGUILayout.Space();
-
-        EditorGUILayout.PropertyField(filename, new GUIContent("Filename"));
 
         EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Import from XML"))
@@ -82,7 +82,9 @@ public class RUISInputManagerEditor : Editor {
                 }
             }
         EditorGUILayout.EndHorizontal();
-        
+
+        EditorGUILayout.PropertyField(filename, new GUIContent("Filename"));
+        EditorGUILayout.PropertyField(xmlSchema, new GUIContent("XML Schema"));
 
         EditorGUILayout.PropertyField(loadFromTextFileInEditor, new GUIContent("Load from File in Editor", "Load PSMove IP and Port from " + filename.stringValue + " while in editor. Otherwise use the values specified here. Outside the editor the applicable values are loaded from the external file."));
 
@@ -126,7 +128,7 @@ public class RUISInputManagerEditor : Editor {
 
     private bool Import()
     {
-        string filename = EditorUtility.OpenFilePanel("Import Input Configuration", null, "txt");
+        string filename = EditorUtility.OpenFilePanel("Import Input Configuration", null, "xml");
         if (filename.Length != 0)
         {
             return inputConfig.Import(filename);
@@ -139,7 +141,7 @@ public class RUISInputManagerEditor : Editor {
 
     private bool Export()
     {
-        string filename = EditorUtility.SaveFilePanel("Export Input Configuration", null, "inputConfig", "txt");
+        string filename = EditorUtility.SaveFilePanel("Export Input Configuration", null, "inputConfig", "xml");
         if (filename.Length != 0)
             return inputConfig.Export(filename);
         else

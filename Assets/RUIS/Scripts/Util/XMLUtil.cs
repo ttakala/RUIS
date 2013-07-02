@@ -95,8 +95,8 @@ public class XMLUtil {
 
     private static void BasicValidationHandler(object sender, ValidationEventArgs args)
     {
-        Debug.Log("VALIDATION ERROR!");
-        Debug.Log(string.Format("\tSeverity:{0}", args.Severity));
-        Debug.Log(string.Format("\tMessage:{0}", args.Message));
+        Debug.LogWarning("VALIDATION ERROR!");
+        Debug.LogWarning(string.Format("\tSeverity:{0}", args.Severity));
+        Debug.LogWarning(string.Format("\tMessage:{0}", args.Message));
     }
 }
