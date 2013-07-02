@@ -16,7 +16,8 @@ public class RUISMenu : MonoBehaviour {
     {
         Main,
         Calibrating,
-        EditingDisplays
+        EditingDisplays,
+        EditingInputConfiguration
     }
 
     private MenuState menuState = MenuState.Main;
@@ -36,9 +37,10 @@ public class RUISMenu : MonoBehaviour {
 
     bool isEditingKeystones = false;
 
+    RUISInputManager inputManager;
+
 	// Use this for initialization
 	void Start () {
-        DontDestroyOnLoad(this);
 
         try
         {
@@ -49,7 +51,7 @@ public class RUISMenu : MonoBehaviour {
             ruisMenuButtonDefined = false;
         }
 
-        RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+        inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
         enablePSMove = inputManager.enablePSMove;
         psMoveIP = inputManager.PSMoveIP;
         psMovePort = inputManager.PSMovePort;
@@ -76,6 +78,8 @@ public class RUISMenu : MonoBehaviour {
             case MenuState.Main:
                 if (GUILayout.Button("Calibrate Coordinate System"))
                 {
+                    DontDestroyOnLoad(this);
+
                     Debug.Log("Loading calibration screen.");
 
                     gameObject.transform.parent = null;
@@ -92,6 +96,10 @@ public class RUISMenu : MonoBehaviour {
                 {
                     SwitchKeystoneEditingState();
                     menuState = MenuState.EditingDisplays;
+                }
+                if (GUILayout.Button("Input Configuration"))
+                {
+                    menuState = MenuState.EditingInputConfiguration;
                 }
 				if(GUILayout.Button ("Resize Screen")){
 					(FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager).UpdateDisplays();
@@ -121,6 +129,27 @@ public class RUISMenu : MonoBehaviour {
                 if (GUILayout.Button("End Display Editing"))
                 {
                     SwitchKeystoneEditingState();
+                    menuState = MenuState.Main;
+                }
+                break;
+            case MenuState.EditingInputConfiguration:
+                string togglePSMoveText = inputManager.enablePSMove ? "Disable PS Move" : "Enable PS Move";
+                if (GUILayout.Button(togglePSMoveText))
+                {
+                    inputManager.enablePSMove = !inputManager.enablePSMove;
+                }
+                string toggleKinectText = inputManager.enableKinect ? "Disable Kinect" : "Enable Kinect";
+                if (GUILayout.Button(toggleKinectText))
+                {
+                    inputManager.enableKinect = !inputManager.enableKinect;
+                }
+                if (GUILayout.Button("Save Configuration & Restart Scene"))
+                {
+                    inputManager.Export(inputManager.filename);
+                    Application.LoadLevel(Application.loadedLevel);
+                }
+                if (GUILayout.Button("End Input Configuration Editing"))
+                {
                     menuState = MenuState.Main;
                 }
                 break;

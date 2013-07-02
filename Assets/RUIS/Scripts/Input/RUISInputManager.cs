@@ -9,6 +9,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System;
 using System.Xml;
@@ -43,7 +44,11 @@ public class RUISInputManager : MonoBehaviour
     {
         if (!Application.isEditor || loadFromTextFileInEditor)
         {
-            Import(filename);
+            if (!Import(filename))
+            {
+                Debug.LogError("Could not load input configuration file. Creating file based on current settings.");
+                Export(filename);
+            }
         }
 
         if (!enableKinect)
@@ -153,7 +158,6 @@ public class RUISInputManager : MonoBehaviour
         }
 
         XmlNode inputManagerNode = xmlDoc.GetElementsByTagName("ruisInputManager", "ns2").Item(0);
-        Debug.Log(inputManagerNode);
         XmlNode psMoveNode = xmlDoc.GetElementsByTagName("PSMoveSettings").Item(0);
         enablePSMove = bool.Parse(psMoveNode.SelectSingleNode("enabled").Attributes["value"].Value);
         PSMoveIP = psMoveNode.SelectSingleNode("ip").Attributes["value"].Value;
@@ -312,9 +316,12 @@ public class RUISInputManager : MonoBehaviour
 	
     private void DisableUnneededMoveWands()
     {
+        List<RUISPSMoveWand> childWands = new List<RUISPSMoveWand>(GetComponentsInChildren<RUISPSMoveWand>());
+
+
         foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
         {
-            if (!enablePSMove || !psMoveWrapper.isConnected || moveController.controllerId >= amountOfPSMoveControllers)
+            if (!childWands.Contains(moveController) && (!enablePSMove || !psMoveWrapper.isConnected || moveController.controllerId >= amountOfPSMoveControllers))
             {
                 Debug.LogWarning("Disabling PS Move Controller: " + moveController.name);
                 moveController.enabled = false;

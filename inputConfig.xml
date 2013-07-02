@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ns2:ruisInputManager xmlns:ns2="http://ruisystem.net/ruisInputManager">
   <PSMoveSettings>
-    <enabled value="True" />
+    <enabled value="False" />
     <ip value="130.233.46.224" />
     <port value="7899" />
     <autoConnect value="True" />
