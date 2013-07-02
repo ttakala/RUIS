@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   Class for locomotion of Kinect controlled character
-Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -12,10 +12,11 @@ using System.Collections;
 
 [RequireComponent(typeof(RUISCharacterController))]
 [RequireComponent(typeof(Rigidbody))]
-public class RUISCharacterLocomotionControl : MonoBehaviour {
+public class RUISCharacterLocomotionControl : MonoBehaviour
+{
     RUISCharacterController characterController;
-	
-	public KeyCode turnRightKey = KeyCode.E;
+
+    public KeyCode turnRightKey = KeyCode.E;
     public KeyCode turnLeftKey = KeyCode.Q;
 
     public float rotationScaler = 60.0f;
@@ -26,26 +27,28 @@ public class RUISCharacterLocomotionControl : MonoBehaviour {
     //public bool canJump = true;
     //public float jumpHeight = 2.0f;
     //private bool grounded = false;
-	
-	public bool usePSNavigationController = true;
-	public int PSNaviControllerID = 0;
+
+    public bool usePSNavigationController = true;
+    public int PSNaviControllerID = 0;
+	public bool strafeInsteadTurning = false;
 
     public float jumpStrength = 10f;
 
     private RUISJumpGestureRecognizer jumpGesture;
 
-	// TUUKKA
-	PSMoveWrapper moveWrapper;
+    // TUUKKA
+    PSMoveWrapper moveWrapper;
 
     bool shouldJump = false;
 
-	void Awake () {
+    void Awake()
+    {
         characterController = GetComponent<RUISCharacterController>();
         jumpGesture = GetComponentInChildren<RUISJumpGestureRecognizer>();
-		
-		// TUUKKA
-		moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
-	}
+
+        // TUUKKA
+        moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
+    }
 
     void Update()
     {
@@ -53,61 +56,91 @@ public class RUISCharacterLocomotionControl : MonoBehaviour {
         {
             shouldJump = true;
         }
+		
+		// Check if jumping with PS Move Navigation controller
+		if (usePSNavigationController && moveWrapper && moveWrapper.isConnected)
+        {
+            if (PSNaviControllerID < moveWrapper.navConnected.Length && PSNaviControllerID >= 0)
+            {
+                if (moveWrapper.navConnected[PSNaviControllerID])
+                {
+                    if(moveWrapper.WasPressed(PSNaviControllerID, "NavL1"))
+                    	shouldJump = true;
+					
+                }
+            }
+		}
     }
-	
-	void FixedUpdate () {
+
+    void FixedUpdate()
+    {
         //characterController.ApplyForceInCharacterDirection(translation);
 
         Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 		
-		if(PSNaviControllerID < 0)
-		{
-			Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
-							+ " which is incorrect value: It must be positive!");
-		}
-		else if(moveWrapper && moveWrapper.isConnected)
-		{
-			if(PSNaviControllerID < moveWrapper.navConnected.Length)
-			{
-				if(moveWrapper.navConnected[PSNaviControllerID])
-				{
-					int horiz = moveWrapper.valueNavAnalogX[PSNaviControllerID];
-					int verti = moveWrapper.valueNavAnalogY[PSNaviControllerID];
-					float extraSpeed = ((float) moveWrapper.valueNavL2[PSNaviControllerID])/255f;
-					if(Mathf.Abs(verti) > 20)
-						targetVelocity += new Vector3(0, 0, -((float) verti)/128f*(1 + extraSpeed));
-					//if(Mathf.Abs(horiz) > 20)
-					//	targetVelocity += new Vector3(((float) horiz)/128f*(1 + extraSpeed), 0, 0);
-                    if (Mathf.Abs(horiz) > 10)
-                    {
-                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f * Time.fixedDeltaTime, 0));
-                    }
-				}
-			}
-			else
-			{
-				Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
-								+ " which is too big value: It must be below 7.");
-			}
-		}
-		
+		// Check if moving with PS Move Navigation controller
+        if (PSNaviControllerID < 0)
+        {
+            Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
+                            + " which is incorrect value: It must be positive!");
+        }
+        else if (usePSNavigationController && moveWrapper && moveWrapper.isConnected)
+        {
+            if (PSNaviControllerID < moveWrapper.navConnected.Length)
+            {
+                if (moveWrapper.navConnected[PSNaviControllerID])
+                {
+                    int horiz = moveWrapper.valueNavAnalogX[PSNaviControllerID];
+                    int verti = moveWrapper.valueNavAnalogY[PSNaviControllerID];
+                    float extraSpeed = ((float)moveWrapper.valueNavL2[PSNaviControllerID]) / 255f;
+                    if (Mathf.Abs(verti) > 20)
+                        targetVelocity += new Vector3(0, 0, -((float)verti) / 128f * (1 + extraSpeed));
+                    //if(Mathf.Abs(horiz) > 20)
+                    //	targetVelocity += new Vector3(((float) horiz)/128f*(1 + extraSpeed), 0, 0);
+					
+					if(strafeInsteadTurning)
+					{
+	                    if (Mathf.Abs(horiz) > 20)
+	                        targetVelocity += new Vector3(((float)horiz) / 128f * (1 + extraSpeed), 0, 0);
+					}
+					else
+					{
+	                    if (Mathf.Abs(horiz) > 10)
+	                    {
+	                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f * Time.fixedDeltaTime, 0));
+	                    }
+					}
+                }
+            }
+            else
+            {
+                Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
+                                + " which is too big value: It must be below 7.");
+            }
+        }
+
         targetVelocity = characterController.TransformDirection(targetVelocity);
         targetVelocity *= speed;
 
         Vector3 velocity = rigidbody.velocity;
         Vector3 velocityChange = (targetVelocity - velocity);
-        velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-        velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+		
+		// TUUKKA:
         velocityChange.y = 0;
+		velocityChange = Vector3.ClampMagnitude(velocityChange, maxVelocityChange);
+        //velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+        //velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+        //velocityChange.y = 0;
+		
         rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
 
         rigidbody.AddForce(new Vector3(0, -gravity * rigidbody.mass, 0));
-        
-				
+
+
         if (Input.GetKey(KeyCode.Q))
         {
             characterController.RotateAroundCharacterPivot(new Vector3(0, -rotationScaler * Time.fixedDeltaTime, 0));
-			
+
         }
         else if (Input.GetKey(KeyCode.E))
         {
@@ -120,7 +153,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour {
             rigidbody.AddForce(new Vector3(0, jumpStrength * rigidbody.mass, 0), ForceMode.Impulse);
             shouldJump = false;
         }
-	}
+    }
 
     bool JumpGestureTriggered()
     {
