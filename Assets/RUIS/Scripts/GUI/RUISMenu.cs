@@ -104,6 +104,10 @@ public class RUISMenu : MonoBehaviour {
 				if(GUILayout.Button ("Resize Screen")){
 					(FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager).UpdateDisplays();
 				}
+                if (GUILayout.Button("Quit Application"))
+                {
+                    Application.Quit();
+                }
                 break;
             case MenuState.Calibrating:
                 if(GUILayout.Button("End Calibration")){

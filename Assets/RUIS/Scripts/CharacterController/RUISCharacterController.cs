@@ -10,7 +10,8 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 
-public class RUISCharacterController : MonoBehaviour {
+public class RUISCharacterController : MonoBehaviour
+{
     public enum CharacterPivotType
     {
         KinectHip,
@@ -30,14 +31,29 @@ public class RUISCharacterController : MonoBehaviour {
     private RUISInputManager inputManager;
     private RUISSkeletonManager skeletonManager;
 
-	void Awake () {
+    public LayerMask groundLayers;
+    public float groundedErrorTweaker = 0.05f;
+
+    public bool grounded { get; private set; }
+
+    private RUISCharacterStabilizingCollider stabilizingCollider;
+
+    void Awake()
+    {
         inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
-	}
-	
-	void Update () {
-	
-	}
+        stabilizingCollider = GetComponentInChildren<RUISCharacterStabilizingCollider>();
+    }
+
+    void Update()
+    {
+        Vector3 raycastPosition = stabilizingCollider ? stabilizingCollider.transform.position : transform.position;
+
+        float distanceToRaycast = stabilizingCollider ? stabilizingCollider.colliderHeight / 2 : 1.5f;
+        distanceToRaycast += groundedErrorTweaker;
+
+        grounded = Physics.Raycast(raycastPosition, -transform.up, distanceToRaycast, groundLayers.value);
+    }
 
     public void RotateAroundCharacterPivot(Vector3 eulerRotation)
     {
@@ -97,7 +113,7 @@ public class RUISCharacterController : MonoBehaviour {
         characterForward = transform.TransformDirection(characterForward);
 
 
-        return Quaternion.FromToRotation(Vector3.forward, characterForward) * directionInCharacterCoordinates;
+        return Quaternion.LookRotation(characterForward, transform.up) * directionInCharacterCoordinates;
     }
 
     private Vector3 GetPivotPositionInTrackerCoordinates()
@@ -117,7 +133,8 @@ public class RUISCharacterController : MonoBehaviour {
         return Vector3.zero;
     }
 
-    public void OnDrawGizmosSelected(){
+    public void OnDrawGizmosSelected()
+    {
         if (!Application.isPlaying)
             return;
         Vector3 pivotPosition = GetPivotPositionInTrackerCoordinates();

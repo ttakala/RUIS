@@ -19,6 +19,8 @@ public class RUISCharacterControllerEditor : Editor
     SerializedProperty kinectPlayerId;
     SerializedProperty moveControllerId;
     SerializedProperty ignorePitchAndRoll;
+    SerializedProperty groundLayers;
+    SerializedProperty groundedErrorTweaker;
 
     public void OnEnable()
     {
@@ -26,6 +28,8 @@ public class RUISCharacterControllerEditor : Editor
         kinectPlayerId = serializedObject.FindProperty("kinectPlayerId");
         moveControllerId = serializedObject.FindProperty("moveControllerId");
         ignorePitchAndRoll = serializedObject.FindProperty("ignorePitchAndRoll");
+        groundLayers = serializedObject.FindProperty("groundLayers");
+        groundedErrorTweaker = serializedObject.FindProperty("groundedErrorTweaker");
     }
 
     public override void OnInspectorGUI()
@@ -47,6 +51,10 @@ public class RUISCharacterControllerEditor : Editor
         }
 
         EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent("Ignore Pitch and Roll", "Should the pitch and roll values of the pivot rotation be taken into account when transforming directions into character coordinates?"));
+
+        EditorGUILayout.PropertyField(groundLayers, new GUIContent("Ground Layers", "The layers to take into account when checking whether the character is grounded"));
+
+        EditorGUILayout.PropertyField(groundedErrorTweaker, new GUIContent("Grounded error tweaker", "This value can be adjusted to allow for some leniency in the checks whether the character is grounded"));
 
         serializedObject.ApplyModifiedProperties();
     }

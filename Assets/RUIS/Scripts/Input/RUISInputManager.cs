@@ -176,6 +176,10 @@ public class RUISInputManager : MonoBehaviour
 
     public bool Export(string filename)
     {
+        /*
+  <GestureSettings>
+	<jumpEnabled value="False" />
+  </GestureSettings> */
         XmlDocument xmlDoc = new XmlDocument();
 
         xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");

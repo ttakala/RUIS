@@ -69,10 +69,10 @@ public class RUISPlainSkeletonController : MonoBehaviour
     {
         if (useHierarchicalModel)
         {
-            rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, transform.right) * rightShoulder.rotation;
-            leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, -transform.right) * leftShoulder.rotation;
-            rightHip.rotation = FindFixingRotation(rightHip.position, rightKnee.position, -transform.up) * rightKnee.rotation;
-            leftHip.rotation = FindFixingRotation(leftHip.position, leftKnee.position, -transform.up) * leftKnee.rotation;
+            rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightHand.position, transform.right) * rightShoulder.rotation;
+            leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftHand.position, -transform.right) * leftShoulder.rotation;
+            rightHip.rotation = FindFixingRotation(rightHip.position, rightFoot.position, -transform.up) * rightHip.rotation;
+            leftHip.rotation = FindFixingRotation(leftHip.position, leftFoot.position, -transform.up) * leftHip.rotation;
 
             Vector3 assumedRootPos = (rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4;
             Vector3 realRootPos = torso.position;
