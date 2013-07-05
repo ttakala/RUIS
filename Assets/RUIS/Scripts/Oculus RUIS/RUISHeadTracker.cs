@@ -73,6 +73,11 @@ public class RUISHeadTracker : MonoBehaviour
     public int rotationPSMoveID = 0;
 	private RUISPSMoveWand posePSMove;
 	
+	private Vector3	sensitivity = new Vector3( 0.001f, 0.001f, 0.001f );
+	public SixenseHands	positionRazerID = SixenseHands.LEFT;
+	public SixenseHands	rotationRazerID = SixenseHands.LEFT;
+	SixenseInput.Controller poseRazer;
+	
 	public Transform positionInput;
 	public Transform rotationInput;
 	
@@ -109,7 +114,8 @@ public class RUISHeadTracker : MonoBehaviour
 	{
 	    Kinect = 0,
 	    PSMove = 1,
-		InputTransform = 2
+		RazerHydra = 2,
+		InputTransform = 3
 	};
 	
 	public CompassSource compass = CompassSource.PSMove;
@@ -122,9 +128,15 @@ public class RUISHeadTracker : MonoBehaviour
 	public int compassPSMoveID = 0;
 	private RUISPSMoveWand compassPSMove;
 	
+	public SixenseHands	compassRazerID = SixenseHands.LEFT;
+	SixenseInput.Controller compassRazer;
+	
 	public Transform compassTransform;
 	
-	public float driftCorrectionRate = 0.1f;
+	public float driftCorrectionRateKinect    = 0.01f;
+	public float driftCorrectionRatePSMove    = 0.1f;
+	public float driftCorrectionRateHydra     = 0.1f;
+	public float driftCorrectionRateTransform = 0.1f;
 	
 	private Quaternion driftingRot = new Quaternion(0, 0, 0, 1);
 	private Quaternion rotationDifference = new Quaternion(0, 0, 0, 1);
@@ -234,8 +246,12 @@ public class RUISHeadTracker : MonoBehaviour
 				}
 				break;
 			case HeadPositionSource.RazerHydra:
-				// TODO
-				// measuredHeadPosition = hydraPosition + hydraRotation * positionOffsetHydra;
+				poseRazer = SixenseInput.GetController(positionRazerID);
+				if(poseRazer != null && poseRazer.Enabled)
+					measuredHeadPosition = new Vector3( poseRazer.Position.x * sensitivity.x,
+														poseRazer.Position.y * sensitivity.y,
+														poseRazer.Position.z * sensitivity.z  ) 
+											+ poseRazer.Rotation * positionOffsetHydra;
 				break;
 			case HeadPositionSource.InputTransform:
 				if(positionInput)
@@ -285,8 +301,9 @@ public class RUISHeadTracker : MonoBehaviour
 				}
 				break;
 			case HeadRotationSource.RazerHydra:
-				// TODO
-				// measuredHeadRotation = hydraRotation * Quaternion.Euler(rotationOffsetHydra);
+				poseRazer = SixenseInput.GetController(rotationRazerID);
+				if(poseRazer  != null && poseRazer.Enabled)
+					measuredHeadRotation = poseRazer.Rotation * Quaternion.Euler(rotationOffsetHydra);
 				break;
 			case HeadRotationSource.InputTransform:
 				if(rotationInput)
@@ -374,8 +391,9 @@ public class RUISHeadTracker : MonoBehaviour
 					}
 					break;
 				case HeadRotationSource.RazerHydra:
-					// TODO
-					// rotationOffsetHydra = Quaternion.Inverse(hydraRotation).eulerAngles;
+					poseRazer = SixenseInput.GetController(rotationRazerID);
+					if(poseRazer != null && poseRazer.Enabled)
+						rotationOffsetHydra = Quaternion.Inverse(poseRazer.Rotation).eulerAngles;
 					break;
 			}
 	}
@@ -435,6 +453,7 @@ public class RUISHeadTracker : MonoBehaviour
 		
 		driftingEuler = driftingRot.eulerAngles;
 		
+		float driftCorrectionRate = 0.1f;
 		switch(compass) 
 		{
 			case CompassSource.Kinect:
@@ -449,27 +468,43 @@ public class RUISHeadTracker : MonoBehaviour
 					// First check for high confidence value
 		            if (compassData != null && compassData.rotationConfidence >= 1.0f) 
 					{
+						driftCorrectionRate = driftCorrectionRateKinect;
 						updateDifferenceKalman( compassData.rotation.eulerAngles, 
 												driftingEuler, deltaT 			 );
 		            }
 				}
 				break;
+			
 			case CompassSource.PSMove:
-				
 		        if (inputManager)
 		        {
 					compassPSMove = inputManager.GetMoveWand(compassPSMoveID);
 					if(compassPSMove)
 					{
+						driftCorrectionRate = driftCorrectionRatePSMove;
 						updateDifferenceKalman( compassPSMove.qOrientation.eulerAngles, 
 												driftingEuler, deltaT 				 );
 					}
 				}
 				break;
+			
+			case CompassSource.RazerHydra:
+				compassRazer = SixenseInput.GetController(compassRazerID);
+				if(compassRazer != null && compassRazer.Enabled)
+				{
+					driftCorrectionRate = driftCorrectionRateHydra;
+					updateDifferenceKalman( compassRazer.Rotation.eulerAngles,
+											driftingEuler, deltaT 				 );
+				}
+				break;
+			
 			case CompassSource.InputTransform:
 				if(compassTransform != null)
+				{
+					driftCorrectionRate = driftCorrectionRateTransform;
 					updateDifferenceKalman( compassTransform.rotation.eulerAngles, 
 											driftingEuler, deltaT 				 );
+				}
 				break;
 		}
 		

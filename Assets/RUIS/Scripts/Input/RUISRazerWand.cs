@@ -16,7 +16,7 @@ public class RUISRazerWand : RUISWand {
 	public SixenseHands	controller;
 	SixenseInput.Controller razer;
 	
-	private Vector3	Sensitivity = new Vector3( 0.001f, 0.001f, 0.001f );
+	private Vector3	sensitivity = new Vector3( 0.001f, 0.001f, 0.001f );
 
     private Vector3 positionUpdate;
     private Vector3 rotationUpdate;
@@ -194,9 +194,9 @@ public class RUISRazerWand : RUISWand {
         {
 			if(razer == null || !razer.Enabled)
 				return Vector3.zero;
-            return new Vector3( razer.Position.x * Sensitivity.x,
-								razer.Position.y * Sensitivity.y,
-								razer.Position.z * Sensitivity.z );
+            return new Vector3( razer.Position.x * sensitivity.x,
+								razer.Position.y * sensitivity.y,
+								razer.Position.z * sensitivity.z );
         }
     }
 	

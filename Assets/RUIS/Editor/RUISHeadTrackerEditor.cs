@@ -31,6 +31,8 @@ public class RUISHeadTrackerEditor : Editor
     SerializedProperty rotationJoint;
     SerializedProperty positionPSMoveID;
     SerializedProperty rotationPSMoveID;
+	SerializedProperty positionRazerID;
+	SerializedProperty rotationRazerID;
     SerializedProperty positionInput;
     SerializedProperty rotationInput;
     SerializedProperty positionOffsetKinect;
@@ -49,9 +51,13 @@ public class RUISHeadTrackerEditor : Editor
     SerializedProperty compassJoint;
     SerializedProperty correctOnlyWhenFacingForward;
     SerializedProperty compassPSMoveID;
+	SerializedProperty compassRazerID;
     SerializedProperty compassTransform;
-    SerializedProperty driftCorrectionRate;
-    SerializedProperty driftNoiseCovariance;
+	SerializedProperty driftCorrectionRateKinect;
+	SerializedProperty driftCorrectionRatePSMove;
+	SerializedProperty driftCorrectionRateHydra;
+	SerializedProperty driftCorrectionRateTransform;
+    //SerializedProperty driftNoiseCovariance;
     SerializedProperty driftingDirectionVisualizer;
     SerializedProperty compassDirectionVisualizer;
     SerializedProperty correctedDirectionVisualizer;
@@ -71,6 +77,8 @@ public class RUISHeadTrackerEditor : Editor
 	    rotationJoint = serializedObject.FindProperty("rotationJoint");
 	    positionPSMoveID = serializedObject.FindProperty("positionPSMoveID");
 	    rotationPSMoveID = serializedObject.FindProperty("rotationPSMoveID");
+		positionRazerID = serializedObject.FindProperty("positionRazerID");
+		rotationRazerID = serializedObject.FindProperty("rotationRazerID");
 	    positionInput = serializedObject.FindProperty("positionInput");
 	    rotationInput = serializedObject.FindProperty("rotationInput");
 	    positionOffsetKinect = serializedObject.FindProperty("positionOffsetKinect");
@@ -89,9 +97,13 @@ public class RUISHeadTrackerEditor : Editor
 	    compassJoint = serializedObject.FindProperty("compassJoint");
 	    correctOnlyWhenFacingForward = serializedObject.FindProperty("correctOnlyWhenFacingForward");
 	    compassPSMoveID = serializedObject.FindProperty("compassPSMoveID");
+		compassRazerID = serializedObject.FindProperty("compassRazerID");
 	    compassTransform = serializedObject.FindProperty("compassTransform");
-	    driftCorrectionRate = serializedObject.FindProperty("driftCorrectionRate");
-	    driftNoiseCovariance = serializedObject.FindProperty("driftNoiseCovariance");
+		driftCorrectionRateKinect 		= serializedObject.FindProperty("driftCorrectionRateKinect");
+		driftCorrectionRatePSMove 		= serializedObject.FindProperty("driftCorrectionRatePSMove");
+		driftCorrectionRateHydra 		= serializedObject.FindProperty("driftCorrectionRateHydra");
+		driftCorrectionRateTransform 	= serializedObject.FindProperty("driftCorrectionRateTransform");
+	    //driftNoiseCovariance = serializedObject.FindProperty("driftNoiseCovariance");
 	    driftingDirectionVisualizer = serializedObject.FindProperty("driftingDirectionVisualizer");
 	    compassDirectionVisualizer = serializedObject.FindProperty("compassDirectionVisualizer");
 	    correctedDirectionVisualizer = serializedObject.FindProperty("correctedDirectionVisualizer");
@@ -115,17 +127,21 @@ public class RUISHeadTrackerEditor : Editor
                 EditorGUILayout.PropertyField(positionPlayerID, new GUIContent("Kinect Player Id", "Between 0 and 3"));
                 EditorGUILayout.PropertyField(positionJoint, new GUIContent("Joint", "Head is the best joint for tracking head position"));
                 EditorGUILayout.PropertyField(positionOffsetKinect, new GUIContent("Position Offset", "Position offset from tracked joint to the center "
-																			+ "of eyes. With Kinect zero vector is usually the best choice."));
+																			+ "of eyes. With Kinect, zero vector is usually the best choice."));
                 break;
             case (int)RUISHeadTracker.HeadPositionSource.PSMove:
                 EditorGUILayout.PropertyField(positionPSMoveID, new GUIContent("PS Move ID", "Between 0 and 3"));
                 EditorGUILayout.PropertyField(positionOffsetPSMove, new GUIContent("Position Offset", "Position offset from tracked PS Move sphere to "
-																			+ "center of eyes in local coordinates of the Move controller. "
+																			+ "the center of eyes in local coordinates of the Move controller. "
 																			+ "Set these values according to where and in which orientation "
 																			+ "the Move is attached to your head."));
                 break;
             case (int)RUISHeadTracker.HeadPositionSource.RazerHydra:
-				EditorGUILayout.LabelField("Razer Hydra support coming soon");
+			    EditorGUILayout.PropertyField(positionRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
+                EditorGUILayout.PropertyField(positionOffsetHydra, new GUIContent("Position Offset", "Position offset from tracked Razer Hydra "
+																			+ "controller to the center of eyes in local coordinates of the Razer "
+																			+ "Hydra. Set these values according to where and in which orientation "
+																			+ "the Razer Hydra is attached to your head."));
 				break;
             case (int)RUISHeadTracker.HeadPositionSource.InputTransform:
                 EditorGUILayout.PropertyField(positionInput, new GUIContent("Input Transform", "All other position trackers are supported "
@@ -168,6 +184,9 @@ public class RUISHeadTrackerEditor : Editor
 			EditorGUILayout.LabelField("Rotation Tracker:    Oculus Rift", EditorStyles.boldLabel);
         	EditorGUI.indentLevel += 2;
 			
+        	EditorGUILayout.PropertyField(oculusID, new GUIContent("Oculus Rift ID", "Choose which Rift is the source of the head tracking. "
+																	+ "Leave this to 0 (multiple Rifts are not supported yet)."));
+			
         	EditorGUILayout.PropertyField(riftMagnetometerMode, new GUIContent("Rift Drift Correction", "Choose whether Oculus Rift's "
 																	+ "magnetometer is used and how it is calibrated."));
         	EditorGUI.indentLevel += 2;
@@ -203,19 +222,23 @@ public class RUISHeadTrackerEditor : Editor
 																				"for head tracking! Currently OpenNI's head joint rotation " +
 																				"is always the same as torso rotation, except its tracking " +
 																				"fails more often."));
-	                EditorGUILayout.PropertyField(rotationOffsetKinect, new GUIContent("Rotation Offset", "Rotation offset between tracked "
-																				+ "joint's rotation and head's look rotation. With Kinect "
+	                EditorGUILayout.PropertyField(rotationOffsetKinect, new GUIContent("Rotation Offset", "Tracked joint's rotation "
+																				+ "in head's local coordinate system. With Kinect "
 																				+ "zero vector is usually the best choice."));
 	                break;
 	            case (int)RUISHeadTracker.HeadRotationSource.PSMove:
 	                EditorGUILayout.PropertyField(rotationPSMoveID, new GUIContent("PS Move ID", "Between 0 and 3"));
-	                EditorGUILayout.PropertyField(rotationOffsetPSMove, new GUIContent("Rotation Offset", "Rotation offset between tracked "
-																				+ "PS Move controller's rotation and head's look rotation. "
-																				+ "Set these values according to the orientation "
+	                EditorGUILayout.PropertyField(rotationOffsetPSMove, new GUIContent("Rotation Offset", "Tracked PS Move controller's "
+																				+ "rotation in head's local coordinate system. "
+																				+ "Set these euler angles according to the orientation "
 																				+ "in which Move is attached to your head."));
 	                break;
 	            case (int)RUISHeadTracker.HeadRotationSource.RazerHydra:
-					EditorGUILayout.LabelField("Razer Hydra support coming soon");
+	                EditorGUILayout.PropertyField(rotationRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
+	                EditorGUILayout.PropertyField(rotationOffsetHydra, new GUIContent("Rotation Offset", "Tracked Razer Hydra controller's "
+																				+ "rotation in head's local coordinate system. "
+																				+ "Set these euler angles according to the orientation "
+																				+ "in which the Razer Hydra is attached to your head."));
 					break;
 	            case (int)RUISHeadTracker.HeadRotationSource.InputTransform:
 	                EditorGUILayout.PropertyField(rotationInput, new GUIContent("Input Transform", "All other rotation trackers are supported "
@@ -245,11 +268,6 @@ public class RUISHeadTrackerEditor : Editor
 		{
 	        EditorGUI.indentLevel += 2;
 			
-	        EditorGUILayout.PropertyField(driftCorrectionRate, new GUIContent("Correction Rate", "Positive values only. How fast the "
-																				+ "drifting rotation is shifted towards the compass' rotation. "
-																				+ "Default of 0.1 is good, but if you use Kinect as a compass, "
-																				+ "you might want to adjust this to suit your liking."));
-			
 	        EditorGUILayout.PropertyField(compass, new GUIContent("Compass Tracker", "Tracker that will be used to correct the yaw drift of "
 																	+ "Rotation Tracker"));
 			
@@ -268,14 +286,31 @@ public class RUISHeadTrackerEditor : Editor
 																				+ "and you want to improve drift correction by ignoring OpenNI's "
 																				+ "tracking errors where the player is detected falsely "
 																				+ "standing backwards (happens often)."));
+			        EditorGUILayout.PropertyField(driftCorrectionRateKinect, new GUIContent("Correction Rate", "Positive values only. How fast "
+																				+ "the drifting rotation is shifted towards the compass' "
+																				+ "rotation. Kinect tracked skeleton is quite inaccurate as a " 
+																				+ "compass, so 0.01 might be good. You might want to adjust this "
+																				+ "to suit your liking."));
 	                break;
 	            case (int)RUISHeadTracker.CompassSource.PSMove:
 	                EditorGUILayout.PropertyField(compassPSMoveID, new GUIContent("PS Move ID", "Between 0 and 3"));
+			        EditorGUILayout.PropertyField(driftCorrectionRatePSMove, new GUIContent("Correction Rate", "Positive values only. How fast "
+																				+ "the drifting rotation is shifted towards the compass' "
+																				+ "rotation. Default of 0.1 is good."));
+	                break;
+	            case (int)RUISHeadTracker.CompassSource.RazerHydra:
+	                EditorGUILayout.PropertyField(compassRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
+			        EditorGUILayout.PropertyField(driftCorrectionRateHydra, new GUIContent("Correction Rate", "Positive values only. How fast "
+																				+ "the drifting rotation is shifted towards the compass' "
+																				+ "rotation. Default of 0.1 is good."));
 	                break;
 	            case (int)RUISHeadTracker.CompassSource.InputTransform:
 	                EditorGUILayout.PropertyField(compassTransform, new GUIContent("Input Transform", "Drift correction via all other trackers "
 																				+ "is supported through this transform. Drag and drop here a "
 																				+ "transform whose rotation cannot drift."));
+			        EditorGUILayout.PropertyField(driftCorrectionRateTransform, new GUIContent("Correction Rate", "Positive values only. How fast "
+																				+ "the drifting rotation is shifted towards the compass' "
+																				+ "rotation."));
 					break;
 	        }
 			
