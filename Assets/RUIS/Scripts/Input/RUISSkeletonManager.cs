@@ -63,7 +63,9 @@ public class RUISSkeletonManager : MonoBehaviour {
     }
 
     NIPlayerManager playerManager;
-
+	
+	public readonly int skeletonsHardwareLimit = 4;
+	
     public Skeleton[] skeletons = new Skeleton[4];
 
     public Vector3 rootSpeedScaling = Vector3.one;
@@ -150,6 +152,12 @@ public class RUISSkeletonManager : MonoBehaviour {
     {
         if (player >= playerManager.m_MaxNumberOfPlayers)
             return null;
+		
+		if (player < 0)
+		{
+			Debug.LogError("player argument should be non-negative!");
+			return null;
+		}
 
         switch (joint)
         {
@@ -187,4 +195,5 @@ public class RUISSkeletonManager : MonoBehaviour {
                 return null;
         }
     }
+	
 }

@@ -347,7 +347,7 @@ public class RUISInputManager : MonoBehaviour
     {
 		if(psMoveWrapper.isConnected)
 		{
-	        if (i < 0 || i + 1 > amountOfPSMoveControllers || i >= moveControllers.Length)
+	        if (i < 0 || i >= amountOfPSMoveControllers || i >= moveControllers.Length)
 	        {
 				Debug.LogError("RUISPSMoveWand with ID " + i + " was not found in RUISInputManager");
 	            return null;

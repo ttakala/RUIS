@@ -19,6 +19,13 @@ public class RUISHeadTrackerEditor : Editor
 	OVRCameraController oculusCamController;
 	bool riftFound = false;
 	
+	GameObject skeletonManagerGameObject;
+	int maxKinectSkeletons = 4;
+	int maxPSMoveControllers = 4;
+	float minNoiseCovariance = 0.001f;
+	float minDriftCorrectionRate = 0.001f;
+	float maxDriftCorrectionRate = 1000;
+	
     SerializedProperty defaultPosition;
     SerializedProperty skeletonManager;
     SerializedProperty headPositionInput;
@@ -41,10 +48,25 @@ public class RUISHeadTrackerEditor : Editor
     SerializedProperty rotationOffsetKinect;
     SerializedProperty rotationOffsetPSMove;
     SerializedProperty rotationOffsetHydra;
-    SerializedProperty filterPosition;
-    SerializedProperty positionNoiseCovariance;
-    SerializedProperty filterRotation;
-    SerializedProperty rotationNoiseCovariance;
+	SerializedProperty filterPositionKinect;
+	SerializedProperty filterPositionPSMove;
+	SerializedProperty filterPositionHydra;
+	SerializedProperty filterPositionTransform;
+	SerializedProperty positionNoiseCovarianceKinect;
+	SerializedProperty positionNoiseCovariancePSMove;
+	SerializedProperty positionNoiseCovarianceHydra;
+	SerializedProperty positionNoiseCovarianceTransform;
+	SerializedProperty filterRotationKinect;
+	SerializedProperty filterRotationPSMove;
+	SerializedProperty filterRotationHydra;
+	SerializedProperty filterRotationTransform;
+	SerializedProperty rotationNoiseCovarianceKinect;
+	SerializedProperty rotationNoiseCovariancePSMove;
+	SerializedProperty rotationNoiseCovarianceHydra;
+	SerializedProperty rotationNoiseCovarianceTransform;
+	SerializedProperty isRazerBaseMobile;
+	SerializedProperty hydraBasePositionOffsetKinect;
+	SerializedProperty hydraBaseRotationOffsetKinect;
     SerializedProperty externalDriftCorrection;
     SerializedProperty compass;
     SerializedProperty compassPlayerID;
@@ -58,6 +80,7 @@ public class RUISHeadTrackerEditor : Editor
 	SerializedProperty driftCorrectionRateHydra;
 	SerializedProperty driftCorrectionRateTransform;
     //SerializedProperty driftNoiseCovariance;
+	SerializedProperty enableVisualizers;
     SerializedProperty driftingDirectionVisualizer;
     SerializedProperty compassDirectionVisualizer;
     SerializedProperty correctedDirectionVisualizer;
@@ -65,6 +88,15 @@ public class RUISHeadTrackerEditor : Editor
 
     public void OnEnable()
     {
+		skeletonManagerGameObject = GameObject.Find("SkeletonManager");
+		
+		if(skeletonManagerGameObject != null)
+		{
+			RUISSkeletonManager playerManager = skeletonManagerGameObject.GetComponent<RUISSkeletonManager>();
+			if(playerManager != null)
+				maxKinectSkeletons = playerManager.skeletonsHardwareLimit;
+		}
+		
 		defaultPosition = serializedObject.FindProperty("defaultPosition");
 	    skeletonManager = serializedObject.FindProperty("skeletonManager");
 	    headPositionInput = serializedObject.FindProperty("headPositionInput");
@@ -87,10 +119,25 @@ public class RUISHeadTrackerEditor : Editor
 	    rotationOffsetKinect = serializedObject.FindProperty("rotationOffsetKinect");
 	    rotationOffsetPSMove = serializedObject.FindProperty("rotationOffsetPSMove");
 	    rotationOffsetHydra = serializedObject.FindProperty("rotationOffsetHydra");
-	    filterPosition = serializedObject.FindProperty("filterPosition");
-	    positionNoiseCovariance = serializedObject.FindProperty("positionNoiseCovariance");
-	    filterRotation = serializedObject.FindProperty("filterRotation");
-	    rotationNoiseCovariance = serializedObject.FindProperty("rotationNoiseCovariance");
+		filterPositionKinect = serializedObject.FindProperty("filterPositionKinect");
+		filterPositionPSMove = serializedObject.FindProperty("filterPositionPSMove");
+		filterPositionHydra = serializedObject.FindProperty("filterPositionHydra");
+		filterPositionTransform = serializedObject.FindProperty("filterPositionTransform");
+		positionNoiseCovarianceKinect = serializedObject.FindProperty("positionNoiseCovarianceKinect");
+		positionNoiseCovariancePSMove = serializedObject.FindProperty("positionNoiseCovariancePSMove");
+		positionNoiseCovarianceHydra = serializedObject.FindProperty("positionNoiseCovarianceHydra");
+		positionNoiseCovarianceTransform = serializedObject.FindProperty("positionNoiseCovarianceTransform");
+		filterRotationKinect = serializedObject.FindProperty("filterRotationKinect");
+		filterRotationPSMove = serializedObject.FindProperty("filterRotationPSMove");
+		filterRotationHydra = serializedObject.FindProperty("filterRotationHydra");
+		filterRotationTransform = serializedObject.FindProperty("filterRotationTransform");
+		rotationNoiseCovarianceKinect = serializedObject.FindProperty("rotationNoiseCovarianceKinect");
+		rotationNoiseCovariancePSMove = serializedObject.FindProperty("rotationNoiseCovariancePSMove");
+		rotationNoiseCovarianceHydra = serializedObject.FindProperty("rotationNoiseCovarianceHydra");
+		rotationNoiseCovarianceTransform = serializedObject.FindProperty("rotationNoiseCovarianceTransform");
+		isRazerBaseMobile = serializedObject.FindProperty("isRazerBaseMobile");
+		hydraBasePositionOffsetKinect = serializedObject.FindProperty("hydraBasePositionOffsetKinect");
+		hydraBaseRotationOffsetKinect = serializedObject.FindProperty("hydraBaseRotationOffsetKinect");
 	    externalDriftCorrection = serializedObject.FindProperty("externalDriftCorrection");
 	    compass = serializedObject.FindProperty("compass");
 	    compassPlayerID = serializedObject.FindProperty("compassPlayerID");
@@ -104,6 +151,7 @@ public class RUISHeadTrackerEditor : Editor
 		driftCorrectionRateHydra 		= serializedObject.FindProperty("driftCorrectionRateHydra");
 		driftCorrectionRateTransform 	= serializedObject.FindProperty("driftCorrectionRateTransform");
 	    //driftNoiseCovariance = serializedObject.FindProperty("driftNoiseCovariance");
+		enableVisualizers = serializedObject.FindProperty("enableVisualizers");
 	    driftingDirectionVisualizer = serializedObject.FindProperty("driftingDirectionVisualizer");
 	    compassDirectionVisualizer = serializedObject.FindProperty("compassDirectionVisualizer");
 	    correctedDirectionVisualizer = serializedObject.FindProperty("correctedDirectionVisualizer");
@@ -124,40 +172,89 @@ public class RUISHeadTrackerEditor : Editor
         switch (headPositionInput.enumValueIndex)
         {
             case (int)RUISHeadTracker.HeadPositionSource.Kinect:
+				positionPlayerID.intValue = Mathf.Clamp(positionPlayerID.intValue, 0, maxKinectSkeletons - 1);
+				if(positionNoiseCovarianceKinect.floatValue < minNoiseCovariance)
+					positionNoiseCovarianceKinect.floatValue = minNoiseCovariance;
                 EditorGUILayout.PropertyField(positionPlayerID, new GUIContent("Kinect Player Id", "Between 0 and 3"));
                 EditorGUILayout.PropertyField(positionJoint, new GUIContent("Joint", "Head is the best joint for tracking head position"));
                 EditorGUILayout.PropertyField(positionOffsetKinect, new GUIContent("Position Offset", "Position offset from tracked joint to the center "
 																			+ "of eyes. With Kinect, zero vector is usually the best choice."));
+		        EditorGUILayout.PropertyField(filterPositionKinect, new GUIContent("Filter Position", "Enables simple Kalman filtering for position "
+																						+ "tracking. Only recommended for Kinect."));
+		        EditorGUILayout.PropertyField(positionNoiseCovarianceKinect, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+																						+ "a bigger value means smoother results but a slower "
+																						+ "response to changes."));
                 break;
             case (int)RUISHeadTracker.HeadPositionSource.PSMove:
+				positionPSMoveID.intValue = Mathf.Clamp(positionPSMoveID.intValue, 0, maxPSMoveControllers - 1);
+				if(positionNoiseCovariancePSMove.floatValue < minNoiseCovariance)
+					positionNoiseCovariancePSMove.floatValue = minNoiseCovariance;
                 EditorGUILayout.PropertyField(positionPSMoveID, new GUIContent("PS Move ID", "Between 0 and 3"));
                 EditorGUILayout.PropertyField(positionOffsetPSMove, new GUIContent("Position Offset", "Position offset from tracked PS Move sphere to "
 																			+ "the center of eyes in local coordinates of the Move controller. "
 																			+ "Set these values according to where and in which orientation "
 																			+ "the Move is attached to your head."));
+		        EditorGUILayout.PropertyField(filterPositionPSMove, new GUIContent("Filter Position", "Enables simple Kalman filtering for position "
+																						+ "tracking. Only recommended for Kinect."));
+		        EditorGUILayout.PropertyField(positionNoiseCovariancePSMove, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+																						+ "a bigger value means smoother results but a slower "
+																						+ "response to changes."));
                 break;
             case (int)RUISHeadTracker.HeadPositionSource.RazerHydra:
+				if(positionNoiseCovarianceHydra.floatValue < minNoiseCovariance)
+					positionNoiseCovarianceHydra.floatValue = minNoiseCovariance;
 			    EditorGUILayout.PropertyField(positionRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
                 EditorGUILayout.PropertyField(positionOffsetHydra, new GUIContent("Position Offset", "Position offset from tracked Razer Hydra "
 																			+ "controller to the center of eyes in local coordinates of the Razer "
 																			+ "Hydra. Set these values according to where and in which orientation "
 																			+ "the Razer Hydra is attached to your head."));
+		        EditorGUILayout.PropertyField(isRazerBaseMobile, new GUIContent("Mobile Base", "Enable this if the Razer Hydra base station is "
+																			+ "attached to something that is moving (e.g. Kinect tracked player's belt)"));
+				
+				if(isRazerBaseMobile.boolValue)
+				{
+        			EditorGUI.indentLevel += 2;
+			        EditorGUILayout.PropertyField(hydraBasePositionOffsetKinect, new GUIContent("Base Position Offset", "Position offset from the tracked "
+																							+ "Transform to the Razer Hydra base station in local coordinates "
+																							+ "of the tracked Transform. Set these values according to where "
+																							+ "and in which orientation the Razer Hydra base station is "
+																							+ "attached to the tracked Transform."));
+			        EditorGUILayout.PropertyField(hydraBaseRotationOffsetKinect, new GUIContent("Base Rotation Offset", "Tracked Razer Hydra base station's "
+																				+ "rotation in the tracked Transform's local coordinate system. "
+																				+ "Set these euler angles according to the orientation in which "
+																				+ "Razer Hydra base station is attached to the tracked Transform."));
+        			EditorGUI.indentLevel -= 2;
+					
+				}
+				
+		        EditorGUILayout.PropertyField(filterPositionHydra, new GUIContent("Filter Position", "Enables simple Kalman filtering for position "
+																						+ "tracking. Only recommended for Kinect."));
+		        EditorGUILayout.PropertyField(positionNoiseCovarianceHydra, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+																						+ "a bigger value means smoother results but a slower "
+																						+ "response to changes."));
 				break;
             case (int)RUISHeadTracker.HeadPositionSource.InputTransform:
+				if(positionNoiseCovarianceTransform.floatValue < minNoiseCovariance)
+					positionNoiseCovarianceTransform.floatValue = minNoiseCovariance;
                 EditorGUILayout.PropertyField(positionInput, new GUIContent("Input Transform", "All other position trackers are supported "
 																			+ "through this transform. Drag and drop here a transform "
 																			+ "whose position is controlled by a tracking device."));
+		        EditorGUILayout.PropertyField(filterPositionTransform, new GUIContent("Filter Position", "Enables simple Kalman filtering for position "
+																						+ "tracking. Only recommended for Kinect."));
+		        EditorGUILayout.PropertyField(positionNoiseCovarianceTransform, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+																						+ "a bigger value means smoother results but a slower "
+																						+ "response to changes."));
 				break;
         }
 		
-		if(headPositionInput.enumValueIndex != (int)RUISHeadTracker.HeadPositionSource.None)
-		{
-	        EditorGUILayout.PropertyField(filterPosition, new GUIContent("Filter Position", "Enables simple Kalman filtering for position "
-																					+ "tracking. Only recommended for Kinect."));
-	        EditorGUILayout.PropertyField(positionNoiseCovariance, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
-																					+ "a bigger value means smoother results but a slower "
-																					+ "response to changes."));
-		}
+//		if(headPositionInput.enumValueIndex != (int)RUISHeadTracker.HeadPositionSource.None)
+//		{
+//	        EditorGUILayout.PropertyField(filterPosition, new GUIContent("Filter Position", "Enables simple Kalman filtering for position "
+//																					+ "tracking. Only recommended for Kinect."));
+//	        EditorGUILayout.PropertyField(positionNoiseCovariance, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+//																					+ "a bigger value means smoother results but a slower "
+//																					+ "response to changes."));
+//		}
 				
         EditorGUI.indentLevel -= 2;
 		
@@ -217,6 +314,9 @@ public class RUISHeadTrackerEditor : Editor
 	        switch (headRotationInput.enumValueIndex)
 	        {
 	            case (int)RUISHeadTracker.HeadRotationSource.Kinect:
+					rotationPlayerID.intValue = Mathf.Clamp(rotationPlayerID.intValue, 0, maxKinectSkeletons - 1);
+					if(rotationNoiseCovarianceKinect.floatValue < minNoiseCovariance)
+						rotationNoiseCovarianceKinect.floatValue = minNoiseCovariance;
 	                EditorGUILayout.PropertyField(rotationPlayerID, new GUIContent("Kinect Player ID", "Between 0 and 3"));
 	                EditorGUILayout.PropertyField(rotationJoint, new GUIContent("Joint", "ATTENTION: Torso has most stable joint rotation " +
 																				"for head tracking! Currently OpenNI's head joint rotation " +
@@ -225,36 +325,63 @@ public class RUISHeadTrackerEditor : Editor
 	                EditorGUILayout.PropertyField(rotationOffsetKinect, new GUIContent("Rotation Offset", "Tracked joint's rotation "
 																				+ "in head's local coordinate system. With Kinect "
 																				+ "zero vector is usually the best choice."));
+			        EditorGUILayout.PropertyField(filterRotationKinect, new GUIContent("Filter Rotation", "Enables simple Kalman filtering for rotation "
+																				+ "tracking. Only recommended for Kinect."));
+			        EditorGUILayout.PropertyField(rotationNoiseCovarianceKinect, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+																				+ "a bigger value means smoother results but a slower "
+																				+ "response to changes."));
 	                break;
 	            case (int)RUISHeadTracker.HeadRotationSource.PSMove:
+					rotationPSMoveID.intValue = Mathf.Clamp(rotationPSMoveID.intValue, 0, maxPSMoveControllers - 1);
+					if(rotationNoiseCovariancePSMove.floatValue < minNoiseCovariance)
+						rotationNoiseCovariancePSMove.floatValue = minNoiseCovariance;
 	                EditorGUILayout.PropertyField(rotationPSMoveID, new GUIContent("PS Move ID", "Between 0 and 3"));
 	                EditorGUILayout.PropertyField(rotationOffsetPSMove, new GUIContent("Rotation Offset", "Tracked PS Move controller's "
 																				+ "rotation in head's local coordinate system. "
 																				+ "Set these euler angles according to the orientation "
 																				+ "in which Move is attached to your head."));
+			        EditorGUILayout.PropertyField(filterRotationPSMove, new GUIContent("Filter Rotation", "Enables simple Kalman filtering for rotation "
+																				+ "tracking. Only recommended for Kinect."));
+			        EditorGUILayout.PropertyField(rotationNoiseCovariancePSMove, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+																				+ "a bigger value means smoother results but a slower "
+																				+ "response to changes."));
 	                break;
 	            case (int)RUISHeadTracker.HeadRotationSource.RazerHydra:
+					if(rotationNoiseCovarianceHydra.floatValue < minNoiseCovariance)
+						rotationNoiseCovarianceHydra.floatValue = minNoiseCovariance;
 	                EditorGUILayout.PropertyField(rotationRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
 	                EditorGUILayout.PropertyField(rotationOffsetHydra, new GUIContent("Rotation Offset", "Tracked Razer Hydra controller's "
 																				+ "rotation in head's local coordinate system. "
 																				+ "Set these euler angles according to the orientation "
 																				+ "in which the Razer Hydra is attached to your head."));
+			        EditorGUILayout.PropertyField(filterRotationHydra, new GUIContent("Filter Rotation", "Enables simple Kalman filtering for rotation "
+																				+ "tracking. Only recommended for Kinect."));
+			        EditorGUILayout.PropertyField(rotationNoiseCovarianceHydra, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+																				+ "a bigger value means smoother results but a slower "
+																				+ "response to changes."));
 					break;
 	            case (int)RUISHeadTracker.HeadRotationSource.InputTransform:
+					if(rotationNoiseCovarianceTransform.floatValue < minNoiseCovariance)
+						rotationNoiseCovarianceTransform.floatValue = minNoiseCovariance;
 	                EditorGUILayout.PropertyField(rotationInput, new GUIContent("Input Transform", "All other rotation trackers are supported "
 																				+ "through this transform. Drag and drop here a transform "
 																				+ "whose rotation is controlled by a tracking device."));
+			        EditorGUILayout.PropertyField(filterRotationTransform, new GUIContent("Filter Rotation", "Enables simple Kalman filtering for rotation "
+																				+ "tracking. Only recommended for Kinect."));
+			        EditorGUILayout.PropertyField(rotationNoiseCovarianceTransform, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+																				+ "a bigger value means smoother results but a slower "
+																				+ "response to changes."));
 					break;
 	        }
 			
-			if(headRotationInput.enumValueIndex != (int)RUISHeadTracker.HeadRotationSource.None)
-			{
-		        EditorGUILayout.PropertyField(filterRotation, new GUIContent("Filter Rotation", "Enables simple Kalman filtering for rotation "
-																						+ "tracking. Only recommended for Kinect."));
-		        EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
-																						+ "a bigger value means smoother results but a slower "
-																						+ "response to changes."));
-			}
+//			if(headRotationInput.enumValueIndex != (int)RUISHeadTracker.HeadRotationSource.None)
+//			{
+//		        EditorGUILayout.PropertyField(filterRotation, new GUIContent("Filter Rotation", "Enables simple Kalman filtering for rotation "
+//																			+ "tracking. Only recommended for Kinect."));
+//		        EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Filter Strength", "Noise covariance of Kalman filtering: " 
+//																			+ "a bigger value means smoother results but a slower "
+//																			+ "response to changes."));
+//			}
 		}
 		
         EditorGUI.indentLevel -= 2;
@@ -274,6 +401,8 @@ public class RUISHeadTrackerEditor : Editor
 	        switch (compass.enumValueIndex)
 	        {
 	            case (int)RUISHeadTracker.CompassSource.Kinect:
+					compassPlayerID.intValue = Mathf.Clamp(compassPlayerID.intValue, 0, maxKinectSkeletons - 1);
+					driftCorrectionRateKinect.floatValue = Mathf.Clamp(driftCorrectionRateKinect.floatValue, minDriftCorrectionRate, maxDriftCorrectionRate);
 	                EditorGUILayout.PropertyField(compassPlayerID, new GUIContent("Kinect Player ID", "Between 0 and 3"));
 	                EditorGUILayout.PropertyField(compassJoint, new GUIContent("Joint", "ATTENTION: Torso has most stable joint rotation " +
 																				"for drift correction! Currently OpenNI's head joint rotation " +
@@ -293,18 +422,22 @@ public class RUISHeadTrackerEditor : Editor
 																				+ "to suit your liking."));
 	                break;
 	            case (int)RUISHeadTracker.CompassSource.PSMove:
+					compassPSMoveID.intValue = Mathf.Clamp(compassPSMoveID.intValue, 0, maxPSMoveControllers - 1);
+					driftCorrectionRatePSMove.floatValue = Mathf.Clamp(driftCorrectionRatePSMove.floatValue, minDriftCorrectionRate, maxDriftCorrectionRate);
 	                EditorGUILayout.PropertyField(compassPSMoveID, new GUIContent("PS Move ID", "Between 0 and 3"));
 			        EditorGUILayout.PropertyField(driftCorrectionRatePSMove, new GUIContent("Correction Rate", "Positive values only. How fast "
 																				+ "the drifting rotation is shifted towards the compass' "
 																				+ "rotation. Default of 0.1 is good."));
 	                break;
 	            case (int)RUISHeadTracker.CompassSource.RazerHydra:
+					driftCorrectionRateHydra.floatValue = Mathf.Clamp(driftCorrectionRateHydra.floatValue, minDriftCorrectionRate, maxDriftCorrectionRate);
 	                EditorGUILayout.PropertyField(compassRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
 			        EditorGUILayout.PropertyField(driftCorrectionRateHydra, new GUIContent("Correction Rate", "Positive values only. How fast "
 																				+ "the drifting rotation is shifted towards the compass' "
 																				+ "rotation. Default of 0.1 is good."));
 	                break;
 	            case (int)RUISHeadTracker.CompassSource.InputTransform:
+					driftCorrectionRateTransform.floatValue = Mathf.Clamp(driftCorrectionRateTransform.floatValue, minDriftCorrectionRate, maxDriftCorrectionRate);
 	                EditorGUILayout.PropertyField(compassTransform, new GUIContent("Input Transform", "Drift correction via all other trackers "
 																				+ "is supported through this transform. Drag and drop here a "
 																				+ "transform whose rotation cannot drift."));
@@ -316,15 +449,20 @@ public class RUISHeadTrackerEditor : Editor
 			
        		EditorGUILayout.Space();
 			EditorGUILayout.LabelField("Optional visualizers:");
-	        EditorGUILayout.PropertyField(driftingDirectionVisualizer, new GUIContent("Drifter Rotation Visualizer", "Drag and drop a Game "
-																						+ "Object here to visualize rotation from Rotation Tracker"));
-	        EditorGUILayout.PropertyField(compassDirectionVisualizer, new GUIContent("Compass Yaw Visualizer", "Drag and drop a Game Object "
-																						+ "here to visualize yaw rotation from Compass Tracker"));
-	        EditorGUILayout.PropertyField(correctedDirectionVisualizer, new GUIContent("Corrected Rotation Visualizer", "Drag and drop a Game "
-																						+ "Object here to visualize the final, corrected rotation"));
-	        EditorGUILayout.PropertyField(driftVisualizerPosition, new GUIContent("Visualizer Position", "Drag and drop a Transform here "
-																						+ "that defines the position where the above three "
-																						+ "visualizers will appear"));
+	        EditorGUILayout.PropertyField(enableVisualizers, new GUIContent("Enable Visualizers", "Below visualizers are optional and meant to"
+																						+ "illustrate the performance of the drift correction."));
+			if(enableVisualizers.boolValue)
+			{
+		        EditorGUILayout.PropertyField(driftingDirectionVisualizer, new GUIContent("Drifter Rotation Visualizer", "Drag and drop a Game "
+																							+ "Object here to visualize rotation from Rotation Tracker"));
+		        EditorGUILayout.PropertyField(compassDirectionVisualizer, new GUIContent("Compass Yaw Visualizer", "Drag and drop a Game Object "
+																							+ "here to visualize yaw rotation from Compass Tracker"));
+		        EditorGUILayout.PropertyField(correctedDirectionVisualizer, new GUIContent("Corrected Rotation Visualizer", "Drag and drop a Game "
+																							+ "Object here to visualize the final, corrected rotation"));
+		        EditorGUILayout.PropertyField(driftVisualizerPosition, new GUIContent("Visualizer Position", "Drag and drop a Transform here "
+																							+ "that defines the position where the above three "
+																							+ "visualizers will appear"));
+			}
 			
         	EditorGUI.indentLevel -= 2;
 		}
