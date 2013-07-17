@@ -37,6 +37,10 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
     private RUISJumpGestureRecognizer jumpGesture;
 
     // TUUKKA
+	public bool useRazerHydra = true;
+	public SixenseHands razerHydraID = SixenseHands.RIGHT;
+	SixenseInput.Controller razerController;
+	
     PSMoveWrapper moveWrapper;
 
     bool shouldJump = false;
@@ -47,6 +51,12 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         jumpGesture = GetComponentInChildren<RUISJumpGestureRecognizer>();
 
         // TUUKKA
+		if(useRazerHydra && Object.FindObjectOfType(typeof(SixenseInput)) == null)
+			Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
+							+	"character locomotion controls, but your scene is missing "
+							+	"SixenseInput script.");
+		
+		
         moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
     }
 
@@ -56,6 +66,17 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         {
             shouldJump = true;
         }
+		
+        // TUUKKA
+		if(useRazerHydra)
+		{
+			razerController = SixenseInput.GetController(razerHydraID);
+			if(razerController != null && razerController.Enabled)
+			{
+				if(razerController.GetButtonDown(SixenseButtons.BUMPER))
+					shouldJump = true;
+			}
+		}
 		
 		// Check if jumping with PS Move Navigation controller
 		if (usePSNavigationController && moveWrapper && moveWrapper.isConnected)
@@ -107,7 +128,8 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 					{
 	                    if (Mathf.Abs(horiz) > 10)
 	                    {
-	                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f * Time.fixedDeltaTime, 0));
+	                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f 
+																							  * Time.fixedDeltaTime, 0));
 	                    }
 					}
                 }
@@ -118,6 +140,32 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                                 + " which is too big value: It must be below 7.");
             }
         }
+		
+        // TUUKKA
+		if(useRazerHydra) // Check if moving with Razer Hydra controller
+		{
+			razerController = SixenseInput.GetController(razerHydraID);
+			if(razerController != null && razerController.Enabled)
+			{
+                    float extraSpeed = razerController.Trigger; 
+                    if (Mathf.Abs(razerController.JoystickY) > 0.15f)
+                        targetVelocity += new Vector3(0, 0, razerController.JoystickY * (1 + extraSpeed));
+					
+					if(strafeInsteadTurning)
+					{
+	                    if (Mathf.Abs(razerController.JoystickX) > 0.15f)
+	                        targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed), 0, 0);
+					}
+					else
+					{
+	                    if (Mathf.Abs(razerController.JoystickX) > 0.075f)
+	                    {
+	                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * razerController.JoystickX 
+																							  * Time.fixedDeltaTime, 0));
+	                    }
+					}
+			}
+		}
 
         targetVelocity = characterController.TransformDirection(targetVelocity);
         targetVelocity *= speed;
@@ -125,7 +173,6 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         Vector3 velocity = rigidbody.velocity;
         Vector3 velocityChange = (targetVelocity - velocity);
 		
-		// TUUKKA:
         velocityChange.y = 0;
 		velocityChange = Vector3.ClampMagnitude(velocityChange, maxVelocityChange);
         //velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);

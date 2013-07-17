@@ -12,6 +12,8 @@ using System.Collections;
 
 public class RUISRazerWand : RUISWand {
 	
+	RUISHeadTracker headTracker;
+	
 	public SixenseButtons selectionButton = SixenseButtons.BUMPER;
 	public SixenseHands	controller;
 	SixenseInput.Controller razer;
@@ -21,31 +23,27 @@ public class RUISRazerWand : RUISWand {
     private Vector3 positionUpdate;
     private Vector3 rotationUpdate;
 	
+	private Vector3 movingBasePosition = new Vector3(0,0,0);
+	private Quaternion movingBaseRotation = Quaternion.identity;
+	
 	private Quaternion previousRotation;
 	private Vector3 angularVelocity;
 	
     public Color wandColor = Color.white;
     public override Color color { get { return wandColor; } }
-	
-    public RUISCoordinateSystem coordinateSystem;
 
     public Renderer whereToCopyColor;
 
-    public RUISPSMoveWand wandAtRelativeOrigin;
-
 	public void Awake ()
     {
-        if (coordinateSystem == null)
-        {
-            coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-            if (!coordinateSystem)
-            {
-                Debug.LogError("Could not find coordinate system!");
-            }
-        }
-		
 		previousRotation = Quaternion.identity;
 		angularVelocity = Vector3.zero;
+	}
+	
+	
+	public void Start ()
+    {
+		headTracker = Object.FindObjectOfType(typeof(RUISHeadTracker)) as RUISHeadTracker;
 	}
 	
 	void Update ()
@@ -53,17 +51,25 @@ public class RUISRazerWand : RUISWand {
         
 		razer = SixenseInput.GetController( controller );
 		
-        if(!rigidbody){
-            if (wandAtRelativeOrigin)
-            {
-                transform.localPosition = position - wandAtRelativeOrigin.position;
-            }
-            else
-            {
-                transform.localPosition = position;
-            }
-
-            transform.localRotation = qOrientation;
+		
+        if(!rigidbody)
+		{
+			
+			if(		headTracker 
+				&&  headTracker.headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
+				&&	headTracker.isRazerBaseMobile												  )
+			{
+				movingBasePosition = headTracker.hydraBasePosition;
+				movingBaseRotation = headTracker.hydraBaseRotation;
+			}
+			else
+			{
+				movingBasePosition = Vector3.zero;
+				movingBaseRotation = Quaternion.identity;
+			}
+			
+            transform.localPosition = movingBaseRotation * position + movingBasePosition;
+            transform.localRotation = movingBaseRotation * qOrientation;
         }
 
 
@@ -80,21 +86,19 @@ public class RUISRazerWand : RUISWand {
     {
         if (rigidbody)
         {
-            Vector3 relativePosition = wandAtRelativeOrigin ? position - wandAtRelativeOrigin.position : position;
-
             // TUUKKA:
             if (transform.parent)
             {
                 // If the wand has a parent, we need to apply its transformation first
                 // *** FIXME: If parent is scaled, then compound objects (Watering Bottle) get weird
-                rigidbody.MovePosition(transform.parent.TransformPoint(relativePosition));
-                rigidbody.MoveRotation(transform.parent.rotation * qOrientation);
+                rigidbody.MovePosition(transform.parent.TransformPoint(movingBaseRotation * position + movingBasePosition));
+                rigidbody.MoveRotation(transform.parent.rotation * movingBaseRotation * qOrientation);
             }
             else
             {
                 // TUUKKA: This was the original code 
-                rigidbody.MovePosition(relativePosition);
-                rigidbody.MoveRotation(qOrientation);
+                rigidbody.MovePosition(movingBaseRotation * position + movingBasePosition);
+                rigidbody.MoveRotation(movingBaseRotation * qOrientation);
             }
         }
 		

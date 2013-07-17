@@ -77,7 +77,7 @@ public class KalmanFilter
 	  state = new Double[dimenX];
 	  for(int i = 0; i<state.Length; ++i)
 	  		state[i] = 0;
-  }
+    }
 
     /**
      * Specify the kinematics model of the Kalman filter.  This must be called
@@ -98,7 +98,12 @@ public class KalmanFilter
         this.Q = Q;
         this.H = H;
     }
-    
+
+	public void reset()
+	{
+		initialize(state.Length, y.RowCount);
+	}
+	
     /**
      * The prior state estimate and covariance.
      *

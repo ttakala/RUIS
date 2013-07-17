@@ -35,11 +35,9 @@ public class RUISPSMoveWand : RUISWand {
     private Vector3 positionUpdate;
     private Vector3 rotationUpdate;
 
-    public RUISCoordinateSystem coordinateSystem;
+    protected RUISCoordinateSystem coordinateSystem;
 
     public Renderer whereToCopyColor;
-
-    public RUISPSMoveWand wandAtRelativeOrigin;
 
 	public void Awake ()
     {
@@ -57,7 +55,7 @@ public class RUISPSMoveWand : RUISWand {
             coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
             if (!coordinateSystem)
             {
-                Debug.LogError("Could not find coordinate system!");
+                Debug.LogError("Could not find RUISCoordinateSystem script! It should be located in RUIS->InputManager.");
             }
         }
 	}
@@ -65,16 +63,9 @@ public class RUISPSMoveWand : RUISWand {
 	void Update ()
     {        
         
-        if(!rigidbody){
-            if (wandAtRelativeOrigin)
-            {
-                transform.localPosition = position - wandAtRelativeOrigin.position;
-            }
-            else
-            {
-                transform.localPosition = position;
-            }
-
+        if(!rigidbody)
+		{
+            transform.localPosition = position;
             transform.localRotation = qOrientation;
         }
 
@@ -92,20 +83,18 @@ public class RUISPSMoveWand : RUISWand {
     {
         if (rigidbody)
         {
-            Vector3 relativePosition = wandAtRelativeOrigin ? position - wandAtRelativeOrigin.position : position;
-
             // TUUKKA:
             if (transform.parent)
             {
                 // If the wand has a parent, we need to apply its transformation first
                 // *** FIXME: If parent is scaled, then compound objects (Watering Bottle) get weird
-                rigidbody.MovePosition(transform.parent.TransformPoint(relativePosition));
+                rigidbody.MovePosition(transform.parent.TransformPoint(position));
                 rigidbody.MoveRotation(transform.parent.rotation * qOrientation);
             }
             else
             {
                 // TUUKKA: This was the original code 
-                rigidbody.MovePosition(relativePosition);
+                rigidbody.MovePosition(position);
                 rigidbody.MoveRotation(qOrientation);
             }
         }

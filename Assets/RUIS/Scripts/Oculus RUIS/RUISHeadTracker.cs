@@ -34,6 +34,9 @@ public class RUISHeadTracker : MonoBehaviour
 	RUISInputManager inputManager;
     public RUISSkeletonManager skeletonManager;
 	
+	// Three enums are needed if we support more devices in the future...
+	// Some devices provide only location or rotation. Some devices have
+	// drifting rotations (e.g. Oculus Rift)  and cannot be used as a compass.
 	public enum HeadPositionSource
 	{
 	    Kinect = 0,
@@ -48,6 +51,15 @@ public class RUISHeadTracker : MonoBehaviour
 	    Kinect = 0,
 	    PSMove = 1,
 	    RazerHydra = 2,
+		InputTransform = 3,
+		None = 4
+	};
+	
+	public enum CompassSource
+	{
+	    Kinect = 0,
+	    PSMove = 1,
+		RazerHydra = 2,
 		InputTransform = 3,
 		None = 4
 	};
@@ -73,9 +85,25 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	public RazerHydraBase mobileRazerBase = RazerHydraBase.Kinect;
 	
+	public bool pickRotationSource = false;
+	
+	/// <summary>
+	/// (Filtered) rotation of tracker WITHOUT yaw drift correction 
+	/// </summary>
+	public Quaternion rawRotation {get; private set;}
+	/// <summary>
+	/// (Filtered) rotation of tracker that includes yaw drift correction 
+	/// </summary>
+	public Quaternion localRotation {get; private set;}
+	/// <summary>
+	/// (Filtered) position of tracker
+	/// </summary>
+	public Vector3 localPosition {get; private set;}
+	
 	public int oculusID = 0;
 	OVRCameraController oculusCamController;
 	bool useOculusRiftRotation = false;
+	public KeyCode resetKey;
 	
     public int positionPlayerID = 0;
     public int rotationPlayerID = 0;
@@ -92,18 +120,27 @@ public class RUISHeadTracker : MonoBehaviour
 	public SixenseHands	rotationRazerID = SixenseHands.LEFT;
 	SixenseInput.Controller poseRazer;
 	public bool isRazerBaseMobile = false;
-	protected Vector3 hydraBasePosition = new Vector3(0, 0, 0);
-	protected Quaternion hydraBaseRotation = Quaternion.identity;
+	public Vector3 hydraBasePosition {get; private set;}
+	public Quaternion hydraBaseRotation {get; private set;}
 	private Vector3 hydraTempVector = new Vector3(0, 0, 0);
 	private Quaternion hydraTempRotation = Quaternion.identity;
 	public int hydraBaseKinectPlayerID = 0;
 	public RUISSkeletonManager.Joint hydraBaseJoint = RUISSkeletonManager.Joint.Torso;
-	public Vector3 hydraBasePositionOffsetKinect  = new Vector3(0, 0, 0);
-	public Vector3 hydraBaseRotationOffsetKinect  = new Vector3(0, 0, 0);
+	public Transform hydraBaseInput;
+	public Vector3 hydraBasePositionOffsetKinect  = new Vector3(0, -0.3f, 0.1f);
+	public Vector3 hydraBaseRotationOffsetKinect  = new Vector3(90, 0, 0);
 	private KalmanFilter hydraBaseFilterPos;
-	private KalmanFilter hydraBaseFilterRot;
-	public float hydraBasePositionCovariance = 500;
-	public float hydraBaseRotationCovariance = 500;
+	//private KalmanFilter hydraBaseFilterRot;
+	private KalmanFilteredRotation hydraBaseKalmanRot = new KalmanFilteredRotation();
+	public bool filterHydraBasePose = true;
+	public bool filterHydraBasePoseKinect = true;
+	public bool filterHydraBasePoseTransform = true;
+	public float hydraBasePositionCovariance = 100;
+	public float hydraBaseRotationCovariance = 1000;
+	public float hydraBasePositionCovarianceKinect = 100;
+	public float hydraBaseRotationCovarianceKinect = 1000;
+	public float hydraBasePositionCovarianceTransform = 100;
+	public float hydraBaseRotationCovarianceTransform = 1000;
 	
 	public Transform positionInput;
 	public Transform rotationInput;
@@ -112,12 +149,12 @@ public class RUISHeadTracker : MonoBehaviour
 	// user needs to know each controllers' local coordinate system
 	public Vector3 positionOffsetKinect = new Vector3(0, 0, 0);
 	public Vector3 positionOffsetPSMove = new Vector3(0, 0, 0);
-	public Vector3 positionOffsetHydra  = new Vector3(0, 0, 0);
+	public Vector3 positionOffsetHydra  = new Vector3(-0.1f, 0, 0);
 	
 	// Rift has its own methods for rotation offsetting
 	public Vector3 rotationOffsetKinect = new Vector3(0, 0, 0);
 	public Vector3 rotationOffsetPSMove = new Vector3(0, 0, 0);
-	public Vector3 rotationOffsetHydra  = new Vector3(0, 0, 0);
+	public Vector3 rotationOffsetHydra  = new Vector3(90, 0, 0);
 	
 	public bool filterPosition = false;
 	public bool filterPositionKinect = true;
@@ -139,10 +176,11 @@ public class RUISHeadTracker : MonoBehaviour
 	public bool filterRotationPSMove = false;
 	public bool filterRotationHydra = false;
 	public bool filterRotationTransform = false;
-	private KalmanFilter filterRot;
-	private double[] measuredRot = {0, 0, 0, 1};
+	private KalmanFilteredRotation filterRot = new KalmanFilteredRotation();
 	private Quaternion measuredHeadRotation = new Quaternion(0, 0, 0, 1);
-	private double[] filteredRot = {0, 0, 0};
+//	private KalmanFilter filterRot;
+//	private double[] measuredRot = {0, 0, 0, 1};
+//	private double[] filteredRot = {0, 0, 0};
 	public float rotationNoiseCovariance = 500;
 	public float rotationNoiseCovarianceKinect    = 500;
 	public float rotationNoiseCovariancePSMove    = 1;
@@ -153,15 +191,9 @@ public class RUISHeadTracker : MonoBehaviour
 	// Beginning of Yaw Drift Corrector members
 	public bool externalDriftCorrection = true;
 	
-	public enum CompassSource
-	{
-	    Kinect = 0,
-	    PSMove = 1,
-		RazerHydra = 2,
-		InputTransform = 3
-	};
-	
 	public CompassSource compass = CompassSource.PSMove;
+	
+	public bool compassIsPositionTracker = true;
 	
 	public int compassPlayerID = 0;
 	public RUISSkeletonManager.Joint compassJoint = RUISSkeletonManager.Joint.Torso;
@@ -176,12 +208,15 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	public Transform compassTransform;
 	
-	public float driftCorrectionRateKinect    = 0.01f;
+	public Vector3 compassRotationOffsetKinect = new Vector3(0, 0, 0);
+	public Vector3 compassRotationOffsetPSMove = new Vector3(0, 0, 0);
+	public Vector3 compassRotationOffsetHydra  = new Vector3(90, 0, 0);
+	
+	public float driftCorrectionRateKinect    = 0.08f;
 	public float driftCorrectionRatePSMove    = 0.1f;
 	public float driftCorrectionRateHydra     = 0.1f;
 	public float driftCorrectionRateTransform = 0.1f;
 	
-	private Quaternion driftingRot = new Quaternion(0, 0, 0, 1);
 	private Quaternion rotationDifference = new Quaternion(0, 0, 0, 1);
 	private Quaternion filteredYawDifference = new Quaternion(0, 0, 0, 1);
 	private Quaternion finalYawDifference = new Quaternion(0, 0, 0, 1);
@@ -200,7 +235,7 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	//public bool filterInFixedUpdate = false;
 	
-	public float driftNoiseCovariance = 3000;
+	public float driftNoiseCovariance = 1000;
 	
 	public bool enableVisualizers = false;
 	public GameObject driftingDirectionVisualizer;
@@ -211,16 +246,20 @@ public class RUISHeadTracker : MonoBehaviour
 	
     void Awake()
     {
+		localPosition = Vector3.zero;
+		localRotation = Quaternion.identity;
+		rawRotation = Quaternion.identity;
+		
 		filterPos = new KalmanFilter();
 		filterPos.initialize(3,3);
-		filterRot = new KalmanFilter();
-		filterRot.initialize(4,4);
+//		filterRot = new KalmanFilter();
+//		filterRot.initialize(4,4);
 		
 		// Mobile Razer Hydra base filtering
 		hydraBaseFilterPos = new KalmanFilter();
 		hydraBaseFilterPos.initialize(3,3);
-		hydraBaseFilterRot = new KalmanFilter();
-		hydraBaseFilterRot.initialize(4,4);
+//		hydraBaseFilterRot = new KalmanFilter();
+//		hydraBaseFilterRot.initialize(4,4);
 		
 		// Yaw Drift Corrector invocations in Awake()
 		filterDrift = new KalmanFilter();
@@ -229,10 +268,30 @@ public class RUISHeadTracker : MonoBehaviour
 		transform.localPosition = defaultPosition;
 		eyeCenterPosition = defaultPosition;
 		measuredHeadPosition = defaultPosition;
+		
+		hydraBasePosition = new Vector3(0, 0, 0);
+		hydraBaseRotation = Quaternion.identity;
     }
 		
 	void Start()
     {
+		oculusCamController = gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
+		
+		if(oculusCamController)
+		{
+			useOculusRiftRotation = true;
+			Debug.Log("OVRCameraController script detected in a child object of this " + gameObject.name
+					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
+					+ "trackers when you remove the OVRCameraController component from the child object(s).");
+		}
+		else
+		{
+			useOculusRiftRotation = false;
+		}
+		//oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
+		//if(headRotationInput == HeadRotationSource.OculusRift && !oculusCamController)
+		//	Debug.LogError("OVRCameraController script is missing from this scene!");
+		
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(		!inputManager
 			&&  (	headPositionInput == HeadPositionSource.PSMove
@@ -278,33 +337,157 @@ public class RUISHeadTracker : MonoBehaviour
 		}
 		
 		if(headPositionInput == HeadPositionSource.InputTransform && !positionInput)
-			Debug.LogError("headPositionInput is none, you need to set it from the inspector!");
+			Debug.LogError("Position tracker's Input Transform is none, you need to set it in Unity inspector!");
 		
-		if(headRotationInput == HeadRotationSource.InputTransform && !rotationInput)
-			Debug.LogError("headRotationInput is none, you need to set it from the inspector!");
+		if(headRotationInput == HeadRotationSource.InputTransform && !rotationInput && !useOculusRiftRotation)
+			Debug.LogError("Rotation tracker's Input Transform is none, you need to set it in Unity inspector!");
 		
-		oculusCamController = gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
+		if(headPositionInput == HeadPositionSource.Kinect && positionJoint == RUISSkeletonManager.Joint.None)
+			Debug.LogError(	 "Your settings indicate that you want to track position with a "
+						   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		
-		if(oculusCamController)
+		if(		headRotationInput == HeadRotationSource.Kinect && rotationJoint == RUISSkeletonManager.Joint.None
+			&&	!useOculusRiftRotation																			 )
+			Debug.LogError(	 "Your settings indicate that you want to track rotation with a "
+						   + "Kinect joint, but you have left its value to None in Unity inspector!");
+		
+		if(		externalDriftCorrection && compass == CompassSource.Kinect && compassJoint == RUISSkeletonManager.Joint.None
+			&&  !compassIsPositionTracker && (useOculusRiftRotation || headRotationInput == HeadRotationSource.InputTransform))
+			Debug.LogError(	 "Your settings indicate that you want to do yaw drift correction with a "
+						   + "Kinect joint, but you have left its value to None in Unity inspector!");
+		
+		if(		externalDriftCorrection && compass == CompassSource.InputTransform && !compassTransform 
+			&&  !compassIsPositionTracker && (useOculusRiftRotation || headRotationInput == HeadRotationSource.InputTransform))
+			Debug.LogError("Yaw drift corrector's Input Transform is none, you need to set it in Unity inspector!");
+		
+		if(externalDriftCorrection && compassIsPositionTracker && headPositionInput == HeadPositionSource.None)
+			Debug.LogError(		"Position Tracker is set to None, but in 'Yaw Drift Correction' you have enabled "
+							+	"'Use Position Tracker'!");
+		
+		if(isRazerBaseMobile && (	headPositionInput == HeadPositionSource.RazerHydra
+								 || headRotationInput == HeadRotationSource.RazerHydra
+								 || compass == CompassSource.RazerHydra				  ))
 		{
-			useOculusRiftRotation = true;
-			Debug.Log("OVRCameraController script detected in a child object of this " + gameObject.name
-					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
-					+ "trackers when you remove the OVRCameraController component from the child object(s).");
+			if(mobileRazerBase == RazerHydraBase.InputTransform && hydraBaseInput == null)
+				Debug.LogError(	 "Your settings indicate that you want to track Razer Hydra base station with a "
+							   + "custom Input Transform, but you have left its value to None in Unity inspector!");
+			if(mobileRazerBase == RazerHydraBase.Kinect && hydraBaseJoint == RUISSkeletonManager.Joint.None)
+				Debug.LogError(	 "Your settings indicate that you want to track Razer Hydra base station with a "
+							   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		}
-		else
-		{
-			useOculusRiftRotation = false;
-		}
-		//oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
-		//if(headRotationInput == HeadRotationSource.OculusRift && !oculusCamController)
-		//	Debug.LogError("OVRCameraController script is missing from this scene!");
+		
 	}
 		
 	void Update () 
 	{
-		if(isRazerBaseMobile)
+		// Lets reduce the amount of required if clauses by setting the following:
+		if(!externalDriftCorrection)
+			compass = CompassSource.None;
+		if(useOculusRiftRotation)
+			headRotationInput = HeadRotationSource.None;
+		else if(	headRotationInput == HeadRotationSource.Kinect
+				||  headRotationInput == HeadRotationSource.PSMove
+				||  headRotationInput == HeadRotationSource.RazerHydra
+				||  headRotationInput == HeadRotationSource.None	  )
+			compass = CompassSource.None; // The above rotation sources do not need yaw drift correction
+		if(		headPositionInput != HeadPositionSource.RazerHydra
+			 && headRotationInput != HeadRotationSource.RazerHydra
+			 && compass != CompassSource.RazerHydra					)
 		{
+			isRazerBaseMobile = false; // If Razer Hydra is not used as a source then this can be false
+		}
+		
+		// Reset view if necessary
+		bool checkRazer = false;
+		bool checkPSMove = false;
+		
+		// Reset view: Is PS Move used for tracking?
+		if (inputManager)
+        {
+			if(headPositionInput == HeadPositionSource.PSMove)
+			{
+				posePSMove = inputManager.GetMoveWand(positionPSMoveID);
+				checkPSMove = true;
+			}
+			else if(compass == CompassSource.PSMove)
+			{
+				posePSMove = inputManager.GetMoveWand(compassPSMoveID);
+				checkPSMove = true;
+			}
+			else if(headRotationInput == HeadRotationSource.PSMove)
+			{
+				posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
+				checkPSMove = true;
+			}
+		}
+		
+		// Reset view: Is Razer Hydra used for tracking?
+		if(headPositionInput == HeadPositionSource.RazerHydra)
+		{
+			poseRazer = SixenseInput.GetController(positionRazerID);
+			checkRazer = true;
+		}
+		else if(compass == CompassSource.RazerHydra)
+		{
+			poseRazer = SixenseInput.GetController(compassRazerID);
+			checkRazer = true;
+		}
+		else if(headRotationInput == HeadRotationSource.RazerHydra)
+		{
+			poseRazer = SixenseInput.GetController(rotationRazerID);
+			checkRazer = true;
+		}
+		
+		// Reset view: Check if reset view button was pressed
+		if(checkPSMove && posePSMove != null)
+		{
+			if(posePSMove.moveButtonWasPressed)
+				ResetOrientation();
+		}
+		if(checkRazer && poseRazer != null && poseRazer.Enabled)
+		{
+			if(		poseRazer.GetButton(SixenseButtons.BUMPER)
+				&&  poseRazer.GetButtonDown(SixenseButtons.START) )
+				ResetOrientation();
+		}
+		if(Input.GetKeyDown(resetKey))
+			ResetOrientation();
+		
+		/* If we are using Razer Hydra and it's attached to a moving object (i.e. the user), 
+		   lets calculate the position and rotation of the base station */
+		if(isRazerBaseMobile) // In the beginning of the method we coupled this to tracker sources
+		{
+			// Adjust hydraBasePositionOffset and hydraBaseRotationOffset if BUMPER button is down
+			if(headPositionInput == HeadPositionSource.RazerHydra)
+				poseRazer = SixenseInput.GetController(positionRazerID);
+			else if(headRotationInput == HeadRotationSource.RazerHydra)
+				poseRazer = SixenseInput.GetController(rotationRazerID);
+			else if(compass == CompassSource.RazerHydra)
+				poseRazer = SixenseInput.GetController(compassRazerID);
+			if(poseRazer != null && poseRazer.Enabled && poseRazer.GetButton(SixenseButtons.BUMPER))
+			{
+				if(Mathf.Abs(poseRazer.JoystickX) > 0.1f)
+				{
+					if(mobileRazerBase == RazerHydraBase.Kinect)
+						hydraBasePositionOffsetKinect.x    += 0.5f*Time.deltaTime*poseRazer.JoystickX;
+				}
+				if(Mathf.Abs(poseRazer.JoystickY) > 0.1f)
+				{
+					if(mobileRazerBase == RazerHydraBase.Kinect)
+						hydraBasePositionOffsetKinect.y    += 0.5f*Time.deltaTime*poseRazer.JoystickY;
+				}
+				if(poseRazer.GetButton(SixenseButtons.THREE))
+				{
+					if(mobileRazerBase == RazerHydraBase.Kinect)
+						hydraBaseRotationOffsetKinect.x += 60*Time.deltaTime;
+				}
+				if(poseRazer.GetButton(SixenseButtons.ONE))
+				{
+					if(mobileRazerBase == RazerHydraBase.Kinect)
+						hydraBaseRotationOffsetKinect.x -= 60*Time.deltaTime;
+				}
+			}
+			
 			switch(mobileRazerBase)
 			{
 				case RazerHydraBase.Kinect:
@@ -312,38 +495,96 @@ public class RUISHeadTracker : MonoBehaviour
 				        {
 							jointData = skeletonManager.GetJointData(hydraBaseJoint, hydraBaseKinectPlayerID);
 							if(		skeletonManager.skeletons[hydraBaseKinectPlayerID].isTracking
-								&&  jointData != null && jointData.positionConfidence >= 0.5f	 )
+								&&  jointData != null)
 							{
-								hydraTempVector = jointData.position + jointData.rotation * hydraBasePositionOffsetKinect;
-								measuredPos[0] = hydraTempVector.x;
-								measuredPos[1] = hydraTempVector.y;
-								measuredPos[2] = hydraTempVector.z;
-								hydraBaseFilterPos.setR(Time.deltaTime * hydraBasePositionCovariance);
-							    hydraBaseFilterPos.predict();
-							    hydraBaseFilterPos.update(measuredPos);
-								filteredPos = hydraBaseFilterPos.getState();
-								hydraBasePosition = new Vector3(  (float) filteredPos[0], 
-																  (float) filteredPos[1],
-																  (float) filteredPos[2] );
+								// Kinect + Oculus Rift related heuristics
+								bool useHeuristics = false;
+								if(useOculusRiftRotation)
+								{
+									if(OVRDevice.IsSensorPresent(oculusID))
+									{
+										if(OVRDevice.GetOrientation(oculusID, ref tempLocalRotation))
+										{
+											if(Quaternion.Angle(localRotation, jointData.rotation) > 90)
+											{
+												hydraTempVector = jointData.position + Quaternion.Euler(0, localRotation.y, 0) * hydraBasePositionOffsetKinect;
+												hydraTempRotation = Quaternion.Euler(0, localRotation.y, 0) * Quaternion.Euler(hydraBaseRotationOffsetKinect);
+												useHeuristics = true;
+											}
+										}
+									}
+								}
 						
-								hydraTempRotation = jointData.rotation * Quaternion.Euler(hydraBaseRotationOffsetKinect);
-								measuredRot[0] = hydraTempRotation.x;
-								measuredRot[1] = hydraTempRotation.y;
-								measuredRot[2] = hydraTempRotation.z;
-								measuredRot[3] = hydraTempRotation.w;
-								hydraBaseFilterRot.setR(Time.deltaTime * hydraBaseRotationCovariance);
-							    hydraBaseFilterRot.predict();
-							    hydraBaseFilterRot.update(measuredRot);
-								filteredRot = hydraBaseFilterRot.getState();
-								hydraBaseRotation = new Quaternion( (float) filteredRot[0], (float) filteredRot[1], 
-																	(float) filteredRot[2], (float) filteredRot[3] );
+								if(!useHeuristics)
+								{
+									hydraTempVector = jointData.position + jointData.rotation * hydraBasePositionOffsetKinect;
+									hydraTempRotation = jointData.rotation * Quaternion.Euler(hydraBaseRotationOffsetKinect);
+								}
+								filterHydraBasePose = filterHydraBasePoseKinect;
+								hydraBasePositionCovariance = hydraBasePositionCovarianceKinect + (1.0f - jointData.positionConfidence)*2000;
+								hydraBaseRotationCovariance = hydraBaseRotationCovarianceKinect + (1.0f - jointData.rotationConfidence)*2000;
 							}
 				        }
 					break;
 				case RazerHydraBase.InputTransform:
-			
+					if(hydraBaseInput)
+					{
+						hydraTempVector = hydraBaseInput.position;
+						hydraTempRotation = hydraBaseInput.rotation;
+						filterHydraBasePose = filterHydraBasePoseTransform;
+						hydraBasePositionCovariance = hydraBasePositionCovarianceTransform;
+						hydraBaseRotationCovariance = hydraBaseRotationCovarianceTransform;
+					}
 					break;
+				default:
+					filterHydraBasePose = false;
+					break;
+			}								
+			if(filterHydraBasePose)
+			{
+				measuredPos[0] = hydraTempVector.x;
+				measuredPos[1] = hydraTempVector.y;
+				measuredPos[2] = hydraTempVector.z;
+				hydraBaseFilterPos.setR(Time.deltaTime * hydraBasePositionCovariance);
+			    hydraBaseFilterPos.predict();
+			    hydraBaseFilterPos.update(measuredPos);
+				filteredPos = hydraBaseFilterPos.getState();
+				hydraBasePosition = new Vector3(  (float) filteredPos[0], 
+												  (float) filteredPos[1],
+												  (float) filteredPos[2] );
 			}
+			else
+				hydraBasePosition = hydraTempVector;
+//			float normalizedT = Mathf.Clamp01(Time.deltaTime * 5);
+//			if(normalizedT != 0)
+//				hydraBasePosition = Vector3.Lerp(hydraBasePosition, hydraTempVector, normalizedT );
+			
+			if(filterHydraBasePose)
+			{
+//				measuredRot[0] = hydraTempRotation.x;
+//				measuredRot[1] = hydraTempRotation.y;
+//				measuredRot[2] = hydraTempRotation.z;
+//				measuredRot[3] = hydraTempRotation.w;
+//				hydraBaseFilterRot.setR(Time.deltaTime * hydraBaseRotationCovariance);
+//			    hydraBaseFilterRot.predict();
+//			    hydraBaseFilterRot.update(measuredRot);
+//				filteredRot = hydraBaseFilterRot.getState();
+//				hydraBaseRotation = new Quaternion( (float) filteredRot[0], (float) filteredRot[1], 
+//													(float) filteredRot[2], (float) filteredRot[3] );
+				
+				hydraBaseKalmanRot.rotationNoiseCovariance = hydraBaseRotationCovariance;
+				hydraBaseRotation = hydraBaseKalmanRot.Update(hydraTempRotation, Time.deltaTime);
+			}
+			else
+				hydraBaseRotation = hydraTempRotation;		
+//			normalizedT = Mathf.Clamp01(Time.deltaTime * 5);
+//			if(normalizedT != 0)
+//				hydraBaseRotation = Quaternion.Lerp(hydraBaseRotation, hydraTempRotation, normalizedT);
+		}
+		else
+		{
+			hydraBasePosition = new Vector3(0, 0, 0);
+			hydraBaseRotation = Quaternion.identity;
 		}
 		
 		switch(headPositionInput) 
@@ -358,7 +599,8 @@ public class RUISHeadTracker : MonoBehaviour
 					// Most stable joint:
 					if(jointData != null && skeletonManager.skeletons[positionPlayerID].torso.positionConfidence >= 1)
 						measuredHeadPosition = jointData.position // Fix for Kinect2: below takes rotation from torso
-							+ skeletonManager.skeletons[positionPlayerID].torso.rotation * positionOffsetKinect;
+							- skeletonManager.skeletons[positionPlayerID].torso.rotation 
+											* Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect)) * positionOffsetKinect;
 		        }
 				break;
 			case HeadPositionSource.PSMove:
@@ -368,7 +610,9 @@ public class RUISHeadTracker : MonoBehaviour
 					positionNoiseCovariance = positionNoiseCovariancePSMove;
 					posePSMove = inputManager.GetMoveWand(positionPSMoveID);
 					if(posePSMove)
-						measuredHeadPosition = posePSMove.position + posePSMove.qOrientation * positionOffsetPSMove;
+						measuredHeadPosition = posePSMove.position 
+										- posePSMove.qOrientation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove)) 
+																										* positionOffsetPSMove;
 				}
 				break;
 			case HeadPositionSource.RazerHydra:
@@ -380,7 +624,8 @@ public class RUISHeadTracker : MonoBehaviour
 					measuredHeadPosition = new Vector3( poseRazer.Position.x * sensitivity.x,
 														poseRazer.Position.y * sensitivity.y,
 														poseRazer.Position.z * sensitivity.z  ) 
-											+ poseRazer.Rotation * positionOffsetHydra;
+											- poseRazer.Rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetHydra))
+																										* positionOffsetHydra;
 					if(isRazerBaseMobile)
 						measuredHeadPosition = hydraBasePosition + hydraBaseRotation*measuredHeadPosition;
 				}
@@ -393,6 +638,9 @@ public class RUISHeadTracker : MonoBehaviour
 					measuredHeadPosition = positionInput.position;
 				}
 				break;
+			case HeadPositionSource.None:
+				filterPosition = false;
+				break;
 		}
 		
         if (filterPosition)
@@ -404,87 +652,120 @@ public class RUISHeadTracker : MonoBehaviour
 		    filterPos.predict();
 		    filterPos.update(measuredPos);
 			filteredPos = filterPos.getState();
-			transform.localPosition = new Vector3((float) filteredPos[0], (float) filteredPos[1], (float) filteredPos[2]);
+			localPosition = new Vector3((float) filteredPos[0], (float) filteredPos[1], (float) filteredPos[2]);
+			transform.localPosition = localPosition;
         }
-		else 
-			transform.localPosition = measuredHeadPosition;
-		
-		switch(headRotationInput) 
+		else
 		{
-			//case HeadRotationSource.OculusRift:
-		        // In this case rotation is applied by OVRCameraController which should be parented
-				// under this GameObject
-			//	break;
-			case HeadRotationSource.Kinect:
-		        if (   skeletonManager 
-					&& skeletonManager.skeletons[rotationPlayerID].torso.rotationConfidence >= 1)
-		        {
-					filterRotation = filterRotationKinect;
-					rotationNoiseCovariance = rotationNoiseCovarianceKinect;
-					jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID);
-					// Most stable joint:
-					if(jointData != null && jointData.rotationConfidence >= 1)
-						measuredHeadRotation = jointData.rotation * Quaternion.Euler(rotationOffsetKinect);
-		        }
-				break;
-			case HeadRotationSource.PSMove:
-		        if (inputManager)
-		        {
-					filterRotation = filterRotationPSMove;
-					rotationNoiseCovariance = rotationNoiseCovariancePSMove;
-					posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
-					if(posePSMove)
-						measuredHeadRotation = posePSMove.qOrientation * Quaternion.Euler(rotationOffsetPSMove);
-				}
-				break;
-			case HeadRotationSource.RazerHydra:
-				poseRazer = SixenseInput.GetController(rotationRazerID);
-				if(poseRazer  != null && poseRazer.Enabled)
-				{
-					filterRotation = filterRotationHydra;
-					rotationNoiseCovariance = rotationNoiseCovarianceHydra;
-					measuredHeadRotation = poseRazer.Rotation * Quaternion.Euler(rotationOffsetHydra);
-					if(isRazerBaseMobile)
-						measuredHeadRotation = hydraBaseRotation * measuredHeadRotation;
-				}
-				break;
-			case HeadRotationSource.InputTransform:
-				if(rotationInput)
-				{
-					filterRotation = filterRotationTransform;
-					rotationNoiseCovariance = rotationNoiseCovarianceTransform;
-					measuredHeadRotation = rotationInput.rotation;
-				}
-				break;
+			//if((localPosition - measuredHeadPosition).magnitude > 0.3f)
+			//	Debug.LogError("aa " + (localPosition - measuredHeadPosition).magnitude + "locR " 
+			///           + localRotation + "bPos " + hydraBasePosition+ "bRot " + hydraBaseRotation);
+			//else print ("ok " + (localPosition - measuredHeadPosition).magnitude + "locR "
+			//            + localRotation + "bPos " + hydraBasePosition+ "bRot " + hydraBaseRotation);
+			localPosition = measuredHeadPosition;
+			transform.localPosition = measuredHeadPosition;
 		}
 		
-        if (filterRotation)
-        {
-			measuredRot[0] = measuredHeadRotation.x;
-			measuredRot[1] = measuredHeadRotation.y;
-			measuredRot[2] = measuredHeadRotation.z;
-			measuredRot[3] = measuredHeadRotation.w;
-			filterRot.setR(Time.deltaTime * rotationNoiseCovariance);
-		    filterRot.predict();
-		    filterRot.update(measuredRot);
-			filteredRot = filterRot.getState();
-			tempLocalRotation = new Quaternion((float) filteredRot[0], (float) filteredRot[1], 
-													 (float) filteredRot[2], (float) filteredRot[3] );
-        }
-		else 
-			tempLocalRotation = measuredHeadRotation;
+		// Determine whether rotation source is Oculus Rift or some other device
+		if(useOculusRiftRotation)
+		{
+			if(OVRDevice.IsSensorPresent(oculusID))
+			{
+				if(!OVRDevice.GetOrientation(oculusID, ref tempLocalRotation))
+					tempLocalRotation = Quaternion.identity;
+				
+			}
+		}
+		else
+		{
+			switch(headRotationInput) 
+			{
+				//case HeadRotationSource.OculusRift:
+			        // In this case rotation is applied by OVRCameraController which should be parented
+					// under this GameObject
+				//	break;
+				case HeadRotationSource.Kinect:
+			        if (   skeletonManager 
+						&& skeletonManager.skeletons[rotationPlayerID].torso.rotationConfidence >= 1)
+			        {
+						filterRotation = filterRotationKinect;
+						rotationNoiseCovariance = rotationNoiseCovarianceKinect;
+						jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID);
+						// Most stable joint:
+						if(jointData != null && jointData.rotationConfidence >= 1)
+							measuredHeadRotation = jointData.rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect));
+			        }
+					break;
+				case HeadRotationSource.PSMove:
+			        if (inputManager)
+			        {
+						filterRotation = filterRotationPSMove;
+						rotationNoiseCovariance = rotationNoiseCovariancePSMove;
+						posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
+						if(posePSMove)
+							measuredHeadRotation = posePSMove.qOrientation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove));
+					}
+					break;
+				case HeadRotationSource.RazerHydra:
+					poseRazer = SixenseInput.GetController(rotationRazerID);
+					if(poseRazer  != null && poseRazer.Enabled)
+					{
+						filterRotation = filterRotationHydra;
+						rotationNoiseCovariance = rotationNoiseCovarianceHydra;
+						measuredHeadRotation = poseRazer.Rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetHydra));
+						if(isRazerBaseMobile)
+							measuredHeadRotation = hydraBaseRotation * measuredHeadRotation;
+					}
+					break;
+				case HeadRotationSource.InputTransform:
+					if(rotationInput)
+					{
+						filterRotation = filterRotationTransform;
+						rotationNoiseCovariance = rotationNoiseCovarianceTransform;
+						measuredHeadRotation = rotationInput.rotation;
+					}
+					break;
+				case HeadRotationSource.None:
+					filterRotation = false;
+					break;
+			}
+			
+	        if (filterRotation)
+	        {
+//				measuredRot[0] = measuredHeadRotation.x;
+//				measuredRot[1] = measuredHeadRotation.y;
+//				measuredRot[2] = measuredHeadRotation.z;
+//				measuredRot[3] = measuredHeadRotation.w;
+//				filterRot.setR(Time.deltaTime * rotationNoiseCovariance);
+//			    filterRot.predict();
+//			    filterRot.update(measuredRot);
+//				filteredRot = filterRot.getState();
+//				tempLocalRotation = new Quaternion(	(float) filteredRot[0], (float) filteredRot[1], 
+//													(float) filteredRot[2], (float) filteredRot[3] );
+				
+				filterRot.rotationNoiseCovariance = rotationNoiseCovariance;
+				tempLocalRotation = filterRot.Update(measuredHeadRotation, Time.deltaTime);
+	        }
+			else 
+				tempLocalRotation = measuredHeadRotation;
+		}
 		
+		rawRotation = tempLocalRotation;
 		
-		if(	   !externalDriftCorrection // Kinect and PSMove do not need drift correction
-			|| (!useOculusRiftRotation && headRotationInput == HeadRotationSource.Kinect)
-			|| (!useOculusRiftRotation && headRotationInput == HeadRotationSource.PSMove))
-			transform.localRotation = tempLocalRotation;
+		// Do yaw drift correction for rotation source if that option is enabled and necessary
+		if(	   !externalDriftCorrection
+			|| compass == CompassSource.None )
+		{
+			localRotation = rawRotation;
+			transform.localRotation = rawRotation;
+		}
 		else
 		{
 			// Yaw Drift Corrector invocations in Update()
 			//if(!filterInFixedUpdate) 
 			//{
-			transform.localRotation = driftCorrectedRotation(tempLocalRotation, Time.deltaTime);
+			localRotation = driftCorrectedRotation(tempLocalRotation, Time.deltaTime);
+			transform.localRotation = localRotation;
 			//}
 		}
 		
@@ -509,56 +790,77 @@ public class RUISHeadTracker : MonoBehaviour
 		// End of invocations that are needed by RUISCamera's oblique frustum creation
 	}
 	
+	/// <summary>
+	/// Resets Oculus Rift orientation and yaw drift correction
+	/// </summary>
 	public void ResetOrientation()
 	{
+		if(externalDriftCorrection) 
+			filterDrift.reset(); // Reset yaw filter correction to zero
+		
 		if(useOculusRiftRotation)
+		{
+			finalYawDifference = Quaternion.identity;
 			OVRDevice.ResetOrientation(oculusID);
-		else // TODO: What about compass ??
-			switch(headRotationInput) 
-			{
-				//case HeadRotationSource.OculusRift:
-				//	OVRDevice.ResetOrientation(oculusID);
-				//	break;
-				case HeadRotationSource.Kinect:
-			        if (skeletonManager)
-			        {
-						jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID);
-						// Torso is most stable joint
-						if(jointData != null)
-							rotationOffsetKinect = Quaternion.Inverse(jointData.rotation).eulerAngles;
-			        }
-					break;
-				case HeadRotationSource.PSMove:
-			        if (inputManager)
-			        {
-						posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
-						if(posePSMove)
-							rotationOffsetPSMove = Quaternion.Inverse(posePSMove.qOrientation).eulerAngles;
-					}
-					break;
-				case HeadRotationSource.RazerHydra:
-					poseRazer = SixenseInput.GetController(rotationRazerID);
-					if(poseRazer != null && poseRazer.Enabled)
-					{
-						if(isRazerBaseMobile)
-							;
-						else
-							rotationOffsetHydra = Quaternion.Inverse(poseRazer.Rotation).eulerAngles;
-					}
-					break;
-			}
+		}
 	}
 	
+	/// <summary>
+	/// Sets the Rotation Tracker's rotation offset (euler angles) to the source 
+	/// rotation's current value. The resulting rotation offset will be correct
+	/// if the tracked object (e.g. head) is oriented along Unity world coordinates,
+	/// i.e. the tracked object is "looking" into +Z-direction while its "top" is
+	/// pointing into +Y-direction.
+	/// </summary>
+	public Vector3 CalibrateRotationOffset()
+	{
+		filterRot.Reset();
+		switch(headRotationInput)
+		{
+			case HeadRotationSource.Kinect:
+		        if (skeletonManager)
+		        {
+					jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID);
+					if(jointData != null)
+					{
+						rotationOffsetKinect = jointData.rotation.eulerAngles;
+						return rotationOffsetKinect;
+					}
+		        }
+				break;
+			case HeadRotationSource.PSMove:
+		        if (inputManager)
+		        {
+					posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
+					if(posePSMove)
+					{
+						rotationOffsetPSMove = posePSMove.qOrientation.eulerAngles;
+						return rotationOffsetPSMove;
+					}
+				}
+				break;
+			case HeadRotationSource.RazerHydra:
+				poseRazer = SixenseInput.GetController(rotationRazerID);
+				if(poseRazer != null && poseRazer.Enabled)
+				{
+					rotationOffsetHydra = poseRazer.Rotation.eulerAngles;
+					return rotationOffsetHydra;
+				}
+				break;
+		}
+		return Vector3.zero;
+	}
+		
 	// Beginning of methods that are needed by RUISCamera's oblique frustum creation
 	private Vector3 GetLeftEyePosition(float eyeSeparation)
     { 
         return EyeCenterPosition - transform.localRotation * Vector3.right * eyeSeparation / 2;
     }
 
-	/**
-	 *  This method is needed if this tracker is used as a head tracker.
-	 * 	Returns the eye positions as a Vector3 list: [center, left, right]
-	 */
+	/// <summary>
+	/// This method is needed if this tracker is used as a head tracker.
+	///	Returns the eye positions as a Vector3 list: [center, left, right]
+	/// </summary>
     public Vector3[] GetEyePositions(float eyeSeparation)
     {
         Vector3 leftEye = GetLeftEyePosition(eyeSeparation);
@@ -584,14 +886,11 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	private void doYawFiltering(Quaternion driftingOrientation, float deltaT)
 	{
-		// If the Rift is HeadRotationSource, its rotation is not stored in measuredHeadRotation
-		// in the Update() like with the other sources
+		// If the Rift is HeadRotationSource, we need to apply the yaw correction to it
 		if(useOculusRiftRotation)
 		{
 			if(OVRDevice.IsSensorPresent(oculusID))
 			{
-				// Get driftingRot from the Rift
-				OVRDevice.GetOrientation(oculusID, ref driftingRot);
 				if(oculusCamController) 
 				{
 					// In the future OVR SDK oculusCamController will have oculusID?
@@ -599,13 +898,38 @@ public class RUISHeadTracker : MonoBehaviour
 				}
 			}
 		}
-		else
-			driftingRot = driftingOrientation;
 		
-		if(enableVisualizers && driftingDirectionVisualizer != null)
-			driftingDirectionVisualizer.transform.rotation = driftingRot;
+		driftingEuler = driftingOrientation.eulerAngles;
 		
-		driftingEuler = driftingRot.eulerAngles;
+		// You can set compassIsPositionTracker to true in a script and it will work as
+		// expected, but if you return it to false, it doesn't remember what the compass
+		// was before setting it to true
+//		if(compassIsPositionTracker)
+//		{
+//			if(headPositionInput == HeadPositionSource.None)
+//				return; // Don't do yaw drift correction in this case
+//			
+//			switch(headPositionInput) 
+//			{
+//				case HeadPositionSource.Kinect:
+//					compass = CompassSource.Kinect; 
+//					compassPlayerID = positionPlayerID;
+//					compassJoint = positionJoint;
+//					break;
+//				case HeadPositionSource.PSMove:
+//					compass = CompassSource.PSMove;
+//					compassPSMoveID = positionPSMoveID;
+//					break;
+//				case HeadPositionSource.RazerHydra:
+//					compass = CompassSource.RazerHydra; 
+//					compassRazerID = positionRazerID;
+//					break;
+//				case HeadPositionSource.InputTransform:
+//					compass = CompassSource.InputTransform;
+//					compassTransform = positionInput;
+//					break;
+//			}
+//		}
 		
 		float driftCorrectionRate = 0.1f;
 		switch(compass) 
@@ -623,7 +947,8 @@ public class RUISHeadTracker : MonoBehaviour
 		            if (compassData != null && compassData.rotationConfidence >= 1.0f) 
 					{
 						driftCorrectionRate = driftCorrectionRateKinect;
-						updateDifferenceKalman( compassData.rotation.eulerAngles, 
+						updateDifferenceKalman( (compassData.rotation 
+													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetKinect))).eulerAngles, 
 												driftingEuler, deltaT 			 );
 		            }
 				}
@@ -636,7 +961,8 @@ public class RUISHeadTracker : MonoBehaviour
 					if(compassPSMove)
 					{
 						driftCorrectionRate = driftCorrectionRatePSMove;
-						updateDifferenceKalman( compassPSMove.qOrientation.eulerAngles, 
+						updateDifferenceKalman( (compassPSMove.qOrientation 
+													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetPSMove))).eulerAngles, 
 												driftingEuler, deltaT 				 );
 					}
 				}
@@ -647,8 +973,14 @@ public class RUISHeadTracker : MonoBehaviour
 				if(compassRazer != null && compassRazer.Enabled)
 				{
 					driftCorrectionRate = driftCorrectionRateHydra;
-					updateDifferenceKalman( compassRazer.Rotation.eulerAngles,
-											driftingEuler, deltaT 				 );
+					if(isRazerBaseMobile)
+						updateDifferenceKalman((hydraBaseRotation * compassRazer.Rotation 
+													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetHydra))).eulerAngles,
+												driftingEuler, deltaT 				 				 	);
+					else
+						updateDifferenceKalman( (compassRazer.Rotation 
+													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetHydra))).eulerAngles,
+												driftingEuler, deltaT 				 );
 				}
 				break;
 			
@@ -656,11 +988,8 @@ public class RUISHeadTracker : MonoBehaviour
 				if(compassTransform != null)
 				{
 					driftCorrectionRate = driftCorrectionRateTransform;
-					if(isRazerBaseMobile)
-						;
-					else
-						updateDifferenceKalman( compassTransform.rotation.eulerAngles, 
-												driftingEuler, deltaT 				 );
+					updateDifferenceKalman( compassTransform.rotation.eulerAngles, 
+											driftingEuler, deltaT 				 );
 				}
 				break;
 		}
@@ -669,24 +998,37 @@ public class RUISHeadTracker : MonoBehaviour
 		if(normalizedT != 0)
 			finalYawDifference = Quaternion.Lerp(finalYawDifference, filteredYawDifference, 
 											  normalizedT );
+		// TODO: REMOVE THIS ***
+//		if(finalYawDifference.x*finalYawDifference.x + finalYawDifference.y*finalYawDifference.y
+//			+ finalYawDifference.z*finalYawDifference.z + finalYawDifference.w*finalYawDifference.w < 0.3)
+//			Debug.LogError("LERP:ing quaternions was a bad idea: " + finalYawDifference);
 		
 		if(enableVisualizers)
 		{
+			if(driftingDirectionVisualizer != null)
+				driftingDirectionVisualizer.transform.rotation = driftingOrientation;
 			if(correctedDirectionVisualizer != null)
 				correctedDirectionVisualizer.transform.rotation = Quaternion.Euler(
 												new Vector3(driftingEuler.x, 
 															(360 + driftingEuler.y 
 																 - finalYawDifference.eulerAngles.y)%360, 
 															driftingEuler.z));
-			if(correctedDirectionVisualizer != null && driftVisualizerPosition != null)
-				correctedDirectionVisualizer.transform.position = driftVisualizerPosition.position;
+			if(driftVisualizerPosition != null)
+			{
+				if(driftingDirectionVisualizer != null)
+					driftingDirectionVisualizer.transform.position = driftVisualizerPosition.position;
+				if(compassDirectionVisualizer != null)
+					compassDirectionVisualizer.transform.position = driftVisualizerPosition.position;
+				if(correctedDirectionVisualizer != null)
+					correctedDirectionVisualizer.transform.position = driftVisualizerPosition.position;
+			}
 		}
 	}
 	
 	private void updateDifferenceKalman(Vector3 compassEuler, Vector3 driftingEuler, float deltaT)
 	{
-		driftingYaw = Quaternion.Euler(new Vector3(0, driftingEuler.y, 0));
-		compassYaw  = Quaternion.Euler(new Vector3(0, compassEuler.y, 0));
+		driftingYaw = Quaternion.Euler(0, driftingEuler.y, 0);
+		compassYaw  = Quaternion.Euler(0, compassEuler.y, 0);
 		
 		// If Kinect is used for drift correction, it can be set to apply correction only when
 		// skeleton is facing the sensor
@@ -698,11 +1040,7 @@ public class RUISHeadTracker : MonoBehaviour
 				if(compassDirectionVisualizer != null)
 				{
 		            compassDirectionVisualizer.transform.rotation = compassYaw;
-					if(driftVisualizerPosition != null)
-						compassDirectionVisualizer.transform.position = driftVisualizerPosition.position;
 				}
-				if(driftingDirectionVisualizer != null && driftVisualizerPosition != null)
-					driftingDirectionVisualizer.transform.position = driftVisualizerPosition.position;
 			}
 		
 			// Yaw gets unstable when pitch is near poles so disregard those cases

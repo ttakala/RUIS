@@ -10,19 +10,17 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 
-public class KalmanFilteredTransform : MonoBehaviour {
-	
+public class KalmanFilteredTransform : MonoBehaviour
+{
 	private KalmanFilter filterPos;
-	private KalmanFilter filterRot;
+	private KalmanFilteredRotation filterRot = new KalmanFilteredRotation();
 	
 	private double[] measuredPos = {0, 0, 0};
-	private double[] measuredRot = {0, 0, 0, 1};
 	
 	private Vector3 inputPos;
 	private Quaternion inputRot;
 	
 	private double[] pos = {0, 0, 0};
-	private double[] rot = {0, 0, 0, 1};
 	
 	private Transform outputTransform;
 	public Transform inputTransform;
@@ -34,27 +32,30 @@ public class KalmanFilteredTransform : MonoBehaviour {
 	public float rotationNoiseCovariance = 100;
 	
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		outputTransform = transform;
 		filterPos = new KalmanFilter();
 		filterPos.initialize(3,3);
-		filterRot = new KalmanFilter();
-		filterRot.initialize(4,4);
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(!filterInFixedUpdate) {
+	void Update ()
+	{
+		if(!filterInFixedUpdate)
+		{
 			if(!inputTransform)
 			{
 				Debug.LogError("ERROR: inputTransform is None! Set it in the inspector.");
 				return;	
 			}
-			if(inputInLocalCoordinates) {
+			if(inputInLocalCoordinates)
+			{
 				inputPos  = inputTransform.localPosition;
 				inputRot  = inputTransform.localRotation;
 			}
-			else {
+			else
+			{
 				inputPos  = inputTransform.position;
 				inputRot  = inputTransform.rotation;
 			}
@@ -67,32 +68,37 @@ public class KalmanFilteredTransform : MonoBehaviour {
 		    filterPos.update(measuredPos);
 			pos = filterPos.getState();
 			
-			measuredRot[0] = inputRot.x;
-			measuredRot[1] = inputRot.y;
-			measuredRot[2] = inputRot.z;
-			measuredRot[3] = inputRot.w;
-			filterRot.setR(Time.deltaTime * rotationNoiseCovariance);
-		    filterRot.predict();
-		    filterRot.update(measuredRot);
-			rot = filterRot.getState();
+//			measuredRot[0] = inputRot.x;
+//			measuredRot[1] = inputRot.y;
+//			measuredRot[2] = inputRot.z;
+//			measuredRot[3] = inputRot.w;
+//			filterRot.setR(Time.deltaTime * rotationNoiseCovariance);
+//		    filterRot.predict();
+//		    filterRot.update(measuredRot);
+//			rot = filterRot.getState();
 			
-			if(rigidbody == null) {
-				if(inputInLocalCoordinates) {
+			filterRot.rotationNoiseCovariance = rotationNoiseCovariance;
+			filterRot.Update(inputRot, Time.deltaTime);
+			
+			if(rigidbody == null)
+			{
+				if(inputInLocalCoordinates)
+				{
 
 					outputTransform.localPosition = new Vector3((float) pos[0], (float) pos[1], (float) pos[2]);
-					outputTransform.localRotation = new Quaternion ((float) rot[0], (float) rot[1], 
-										   	  					    (float) rot[2], (float) rot[3]);
+					outputTransform.localRotation = filterRot.rotationState;
 				}
-				else {
+				else
+				{
 					outputTransform.position = new Vector3((float) pos[0], (float) pos[1], (float) pos[2]);
-					outputTransform.rotation = new Quaternion ((float) rot[0], (float) rot[1], 
-										   	  				   (float) rot[2], (float) rot[3]);
+					outputTransform.rotation = filterRot.rotationState;
 				}
 			}
 		}
 	}
 	
-	void FixedUpdate() {
+	void FixedUpdate() 
+	{
 		
 		if(!inputTransform)
 		{
@@ -100,15 +106,16 @@ public class KalmanFilteredTransform : MonoBehaviour {
 			return;	
 		}
 		
-		if(filterInFixedUpdate) {
-			
-			
-			if(inputInLocalCoordinates) {
+		if(filterInFixedUpdate) 
+		{
+			if(inputInLocalCoordinates) 
+			{
 				inputPos  = inputTransform.localPosition;
 				inputRot  = inputTransform.localRotation;
 				
 			}
-			else {
+			else 
+			{
 				inputPos  = inputTransform.position;
 				inputRot  = inputTransform.rotation;
 			}
@@ -121,30 +128,36 @@ public class KalmanFilteredTransform : MonoBehaviour {
 		    filterPos.update(measuredPos);
 			pos = filterPos.getState();
 			
-			measuredRot[0] = inputRot.x;
-			measuredRot[1] = inputRot.y;
-			measuredRot[2] = inputRot.z;
-			measuredRot[3] = inputRot.w;
-			filterRot.setR(Time.fixedDeltaTime * rotationNoiseCovariance);
-		    filterRot.predict();
-		    filterRot.update(measuredRot);
-			rot = filterRot.getState();
+//			measuredRot[0] = inputRot.x;
+//			measuredRot[1] = inputRot.y;
+//			measuredRot[2] = inputRot.z;
+//			measuredRot[3] = inputRot.w;
+//			filterRot.setR(Time.fixedDeltaTime * rotationNoiseCovariance);
+//		    filterRot.predict();
+//		    filterRot.update(measuredRot);
+//			rot = filterRot.getState();
+			
+			filterRot.rotationNoiseCovariance = rotationNoiseCovariance;
+			filterRot.Update(inputRot, Time.fixedDeltaTime);
 
-			if(rigidbody == null) {
-				if(inputInLocalCoordinates) {
+			if(rigidbody == null)
+			{
+				if(inputInLocalCoordinates)
+				{
 					outputTransform.localPosition = new Vector3((float) pos[0], (float) pos[1], (float) pos[2]);
-					outputTransform.localRotation = new Quaternion ((float) rot[0], (float) rot[1], 
-										   	  					    (float) rot[2], (float) rot[3]);
+					outputTransform.localRotation = filterRot.rotationState;
 				}
-				else {
+				else
+				{
 					outputTransform.position = new Vector3((float) pos[0], (float) pos[1], (float) pos[2]);
-					outputTransform.rotation = new Quaternion ((float) rot[0], (float) rot[1], 
-										   	  				   (float) rot[2], (float) rot[3]);
+					outputTransform.rotation = filterRot.rotationState;
 				}
 			}
 		}
-		if(rigidbody != null) {
-			if(inputInLocalCoordinates) {
+		if(rigidbody != null)
+		{
+			if(inputInLocalCoordinates)
+			{
 				/* // Below does not work
 				if(!(   outputTransform.localPosition.x == (float) pos[0] 
 					 && outputTransform.localPosition.y == (float) pos[1] 
@@ -163,21 +176,20 @@ public class KalmanFilteredTransform : MonoBehaviour {
 				*/
 				
 				outputTransform.localPosition = new Vector3((float) pos[0], (float) pos[1], (float) pos[2]);
-				outputTransform.localRotation = new Quaternion ((float) rot[0], (float) rot[1], 
-									   	  					    (float) rot[2], (float) rot[3]);
+				outputTransform.localRotation = filterRot.rotationState;
 			}
-			else {
+			else
+			{
 				if(!(   outputTransform.position.x == (float) pos[0] 
 					 && outputTransform.position.y == (float) pos[1] 
 					 && outputTransform.position.z == (float) pos[2]))
 					rigidbody.MovePosition(new Vector3((float) pos[0], (float) pos[1], (float) pos[2]));
 				
-				if(!(   outputTransform.rotation.x == (float) rot[0] 
-					 && outputTransform.rotation.y == (float) rot[1] 
-					 && outputTransform.rotation.z == (float) rot[2] 
-					 && outputTransform.rotation.w == (float) rot[3]))
-					rigidbody.MoveRotation(new Quaternion ((float) rot[0], (float) rot[1], 
-												   	  	   (float) rot[2], (float) rot[3]));
+				if(!(   outputTransform.rotation.x == filterRot.rotationState.x
+					 && outputTransform.rotation.y == filterRot.rotationState.y
+					 && outputTransform.rotation.z == filterRot.rotationState.z
+					 && outputTransform.rotation.w == filterRot.rotationState.w))
+					rigidbody.MoveRotation(filterRot.rotationState);
 			}
 		}
 	}
