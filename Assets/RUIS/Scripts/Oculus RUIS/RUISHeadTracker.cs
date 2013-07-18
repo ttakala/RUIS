@@ -124,11 +124,14 @@ public class RUISHeadTracker : MonoBehaviour
 	public Quaternion hydraBaseRotation {get; private set;}
 	private Vector3 hydraTempVector = new Vector3(0, 0, 0);
 	private Quaternion hydraTempRotation = Quaternion.identity;
+	public Vector3 hydraAtRotationTrackerOffset = new Vector3(90, 0, 0);
 	public int hydraBaseKinectPlayerID = 0;
 	public RUISSkeletonManager.Joint hydraBaseJoint = RUISSkeletonManager.Joint.Torso;
 	public Transform hydraBaseInput;
 	public Vector3 hydraBasePositionOffsetKinect  = new Vector3(0, -0.3f, 0.1f);
 	public Vector3 hydraBaseRotationOffsetKinect  = new Vector3(90, 0, 0);
+	public bool inferBaseRotationFromRotationTrackerKinect = true;
+	public bool inferBaseRotationFromRotationTrackerTransform = false;
 	private KalmanFilter hydraBaseFilterPos;
 	//private KalmanFilter hydraBaseFilterRot;
 	private KalmanFilteredRotation hydraBaseKalmanRot = new KalmanFilteredRotation();
@@ -497,43 +500,79 @@ public class RUISHeadTracker : MonoBehaviour
 							if(		skeletonManager.skeletons[hydraBaseKinectPlayerID].isTracking
 								&&  jointData != null)
 							{
-								// Kinect + Oculus Rift related heuristics
-								bool useHeuristics = false;
-								if(useOculusRiftRotation)
+								filterHydraBasePose = filterHydraBasePoseKinect;
+								hydraBasePositionCovariance = hydraBasePositionCovarianceKinect 
+																+ Mathf.Clamp01(1.0f - jointData.positionConfidence)*2000;
+								hydraBaseRotationCovariance = hydraBaseRotationCovarianceKinect;
+
+								if(		inferBaseRotationFromRotationTrackerKinect 
+									&&  headRotationInput != HeadRotationSource.RazerHydra)
 								{
-									if(OVRDevice.IsSensorPresent(oculusID))
+									// Assuming that poseRazer is attached to Rotation Tracker
+									if(poseRazer  != null && poseRazer.Enabled)
 									{
-										if(OVRDevice.GetOrientation(oculusID, ref tempLocalRotation))
-										{
-											if(Quaternion.Angle(localRotation, jointData.rotation) > 90)
-											{
-												hydraTempVector = jointData.position + Quaternion.Euler(0, localRotation.y, 0) * hydraBasePositionOffsetKinect;
-												hydraTempRotation = Quaternion.Euler(0, localRotation.y, 0) * Quaternion.Euler(hydraBaseRotationOffsetKinect);
-												useHeuristics = true;
-											}
-										}
+										// Offset-adjusted Razer Hydra rotation in offset-adjusted base station coordinate
+										// system: Rotation from base to Razer Hydra
+										tempLocalRotation = Quaternion.Euler(hydraBaseRotationOffsetKinect)
+															* poseRazer.Rotation
+															* Quaternion.Inverse(Quaternion.Euler(hydraAtRotationTrackerOffset));
+								
+										// Subtract above rotation from Rotation Tracker's rotation (drift corrected, if enabled)
+										hydraTempRotation = localRotation * Quaternion.Inverse(tempLocalRotation);
+								
+										// Get yaw rotation of above, result is the base station's yaw in Unity world coordinates
+										hydraTempRotation = Quaternion.Euler(0, hydraTempRotation.eulerAngles.y, 0) ;
+								
+										// hydraTempVector will become hydraBasePosition after filtering
+										hydraTempVector = jointData.position + hydraTempRotation * hydraBasePositionOffsetKinect;
+								
+										// Apply base station offset to hydraTempRotation, that will become hydraBaseRotation
+										hydraTempRotation = hydraTempRotation * Quaternion.Euler(hydraBaseRotationOffsetKinect);
 									}
 								}
-						
-								if(!useHeuristics)
+								else
 								{
-									hydraTempVector = jointData.position + jointData.rotation * hydraBasePositionOffsetKinect;
+									hydraTempVector   = jointData.position + jointData.rotation * hydraBasePositionOffsetKinect;
 									hydraTempRotation = jointData.rotation * Quaternion.Euler(hydraBaseRotationOffsetKinect);
+									hydraBaseRotationCovariance += Mathf.Clamp01(1.0f - jointData.rotationConfidence)*2000;
 								}
-								filterHydraBasePose = filterHydraBasePoseKinect;
-								hydraBasePositionCovariance = hydraBasePositionCovarianceKinect + (1.0f - jointData.positionConfidence)*2000;
-								hydraBaseRotationCovariance = hydraBaseRotationCovarianceKinect + (1.0f - jointData.rotationConfidence)*2000;
+						
 							}
 				        }
 					break;
 				case RazerHydraBase.InputTransform:
 					if(hydraBaseInput)
 					{
-						hydraTempVector = hydraBaseInput.position;
-						hydraTempRotation = hydraBaseInput.rotation;
 						filterHydraBasePose = filterHydraBasePoseTransform;
 						hydraBasePositionCovariance = hydraBasePositionCovarianceTransform;
 						hydraBaseRotationCovariance = hydraBaseRotationCovarianceTransform;
+					
+						if(		inferBaseRotationFromRotationTrackerTransform 
+							&&  headRotationInput != HeadRotationSource.RazerHydra)
+						{
+							// Assuming that poseRazer is attached to Rotation Tracker
+							if(poseRazer  != null && poseRazer.Enabled)
+							{
+								// Offset-adjusted Razer Hydra rotation in base station coordinate
+								// system: Rotation from base to Razer Hydra
+								tempLocalRotation =   poseRazer.Rotation
+													* Quaternion.Inverse(Quaternion.Euler(hydraAtRotationTrackerOffset));
+						
+								// Subtract above rotation from Rotation Tracker's rotation (drift corrected, if enabled)
+								hydraTempRotation = localRotation * Quaternion.Inverse(tempLocalRotation);
+						
+								// Get yaw rotation of above, result is the base station's yaw in Unity world coordinates
+								hydraTempRotation = Quaternion.Euler(0, hydraTempRotation.eulerAngles.y, 0) ;
+						
+								// hydraTempVector will become hydraBasePosition after filtering
+								hydraTempVector = hydraBaseInput.position;
+							}
+						}
+						else
+						{
+							hydraTempVector   = hydraBaseInput.position;
+							hydraTempRotation = hydraBaseInput.rotation;
+						}
 					}
 					break;
 				default:

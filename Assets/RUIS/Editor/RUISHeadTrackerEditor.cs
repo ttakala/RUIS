@@ -74,6 +74,9 @@ public class RUISHeadTrackerEditor : Editor
 	SerializedProperty hydraBaseKinectPlayerID;	
 	SerializedProperty filterHydraBasePoseKinect;
 	SerializedProperty filterHydraBasePoseTransform;
+	SerializedProperty inferBaseRotationFromRotationTrackerKinect;
+	SerializedProperty inferBaseRotationFromRotationTrackerTransform;
+	SerializedProperty hydraAtRotationTrackerOffset;
 	SerializedProperty hydraBasePositionOffsetKinect;
 	SerializedProperty hydraBaseRotationOffsetKinect;
 	SerializedProperty hydraBasePositionCovarianceKinect;
@@ -161,6 +164,9 @@ public class RUISHeadTrackerEditor : Editor
 		hydraBaseInput = serializedObject.FindProperty("hydraBaseInput");
 		filterHydraBasePoseKinect = serializedObject.FindProperty("filterHydraBasePoseKinect");
 		filterHydraBasePoseTransform = serializedObject.FindProperty("filterHydraBasePoseTransform");
+		inferBaseRotationFromRotationTrackerKinect = serializedObject.FindProperty("inferBaseRotationFromRotationTrackerKinect");
+		inferBaseRotationFromRotationTrackerTransform = serializedObject.FindProperty("inferBaseRotationFromRotationTrackerTransform");
+		hydraAtRotationTrackerOffset = serializedObject.FindProperty("hydraAtRotationTrackerOffset");
 		hydraBasePositionOffsetKinect = serializedObject.FindProperty("hydraBasePositionOffsetKinect");
 		hydraBaseRotationOffsetKinect = serializedObject.FindProperty("hydraBaseRotationOffsetKinect");
 		hydraBasePositionCovarianceKinect = serializedObject.FindProperty("hydraBasePositionCovarianceKinect");
@@ -704,7 +710,6 @@ public class RUISHeadTrackerEditor : Editor
 		
 		if(isRazerBaseMobile.boolValue)
 		{
-	       	EditorGUILayout.Space();
 			
     		EditorGUILayout.PropertyField(mobileRazerBase, new GUIContent("Razer Base Tracker", "The tracker onto which the Razer Hydra "
 																		+ "base station is attached to"));
@@ -733,18 +738,36 @@ public class RUISHeadTrackerEditor : Editor
 			        EditorGUILayout.PropertyField(hydraBaseRotationOffsetKinect, new GUIContent("Base Rotation Offset", "Razer Hydra "
 																		+ "base station's rotation in the tracked joint's local coordinate "
 																		+ "system. Set these euler angles according to the orientation in which "
-																		+ "Razer Hydra base station is attached to the tracked joint."));
+																		+ "Razer Hydra base station is attached to the tracked joint. "
+																		+ "IT IS IMPORTANT THAT THIS PARAMETER IS CORRECT."));
+					EditorGUILayout.PropertyField(inferBaseRotationFromRotationTrackerKinect, new GUIContent("Use Rotation Tracker", "If the "
+																		+ "above Position Tracker or Compass Razer Hydra is attached to the "
+																		+ "Rotation Tracker (e.g. Oculus Rift), then use them together to "
+																		+ "calculate the base station's rotation. Recommended for "
+																		+ "Kinect."));
+					if(inferBaseRotationFromRotationTrackerKinect.boolValue)
+					{
+						EditorGUI.indentLevel += 1;
+						EditorGUILayout.PropertyField(hydraAtRotationTrackerOffset, new GUIContent("Razer Hydra Rotation Offset", "Tracked "
+																		+ "Razer Hydra controller's rotation in tracked object's local coordinate "
+																		+ "system. Set these euler angles according to the orientation in which "
+																		+ "the Razer Hydra is attached to the tracked object (head etc.). "
+																		+ "IT IS IMPORTANT THAT THIS PARAMETER IS CORRECT."));
+						EditorGUI.indentLevel -= 1;
+					
+					}
 					EditorGUILayout.PropertyField(filterHydraBasePoseKinect, new GUIContent("Filter Tracking", "Enables simple "
 																		+ "Kalman filtering for position and rotation tracking of the Razer "
 																		+ "Hydra base station. Recommended for Kinect."));
-					EditorGUI.BeginDisabledGroup(!filterHydraBasePoseKinect.boolValue);
-					EditorGUILayout.PropertyField(hydraBasePositionCovarianceKinect, new GUIContent("Filter Position Strength", "Position " 
+					if(filterHydraBasePoseKinect.boolValue)
+					{
+						EditorGUILayout.PropertyField(hydraBasePositionCovarianceKinect, new GUIContent("Filter Position Strength", "Position " 
 																		+ "noise covariance of Kalman filtering: a bigger value means "
 																		+ "smoother results but a slower response to changes."));
-					EditorGUILayout.PropertyField(hydraBaseRotationCovarianceKinect, new GUIContent("Filter Rotation Strength", "Rotation " 
+						EditorGUILayout.PropertyField(hydraBaseRotationCovarianceKinect, new GUIContent("Filter Rotation Strength", "Rotation " 
 																		+ "noise covariance of Kalman filtering: a bigger value means "
 																		+ "smoother results but a slower response to changes."));
-					EditorGUI.EndDisabledGroup();
+					}
 				break;
 			
 				case (int) RUISHeadTracker.RazerHydraBase.InputTransform:
@@ -755,18 +778,34 @@ public class RUISHeadTrackerEditor : Editor
 					EditorGUILayout.PropertyField(hydraBaseInput, new GUIContent("Input Transform", "All other trackers are supported "
 																		+ "through this transform. Drag and drop here a transform "
 																		+ "whose position and rotation is controlled by a tracking device."));
+				
+					EditorGUILayout.PropertyField(inferBaseRotationFromRotationTrackerTransform, new GUIContent("Use Rotation Tracker", "If the "
+																		+ "above Position Tracker or Compass Razer Hydra is attached to the "
+																		+ "Rotation Tracker (e.g. Oculus Rift), then use them together to "
+																		+ "calculate the base station's rotation."));
+					if(inferBaseRotationFromRotationTrackerTransform.boolValue)
+					{
+						EditorGUI.indentLevel += 1;
+						EditorGUILayout.PropertyField(hydraAtRotationTrackerOffset, new GUIContent("Razer Hydra Rotation Offset", "Tracked "
+																		+ "Razer Hydra controller's rotation in tracked object's local coordinate "
+																		+ "system. Set these euler angles according to the orientation in which "
+																		+ "the Razer Hydra is attached to the tracked object (head etc.). "
+																		+ "IT IS IMPORTANT THAT THIS PARAMETER IS CORRECT."));
+						EditorGUI.indentLevel -= 1;
+					
+					}
 					EditorGUILayout.PropertyField(filterHydraBasePoseTransform, new GUIContent("Filter Tracking", "Enables simple "
 																		+ "Kalman filtering for position and rotation tracking of the Razer "
 																		+ "Hydra base station."));
-					EditorGUI.BeginDisabledGroup(!filterHydraBasePoseTransform.boolValue);
-					EditorGUILayout.PropertyField(hydraBasePositionCovarianceTransform, new GUIContent("Filter Position Strength", "Position " 
+					if(filterHydraBasePoseTransform.boolValue)
+					{
+						EditorGUILayout.PropertyField(hydraBasePositionCovarianceTransform, new GUIContent("Filter Position Strength", "Position " 
 																		+ "noise covariance of Kalman filtering: a bigger value means "
 																		+ "smoother results but a slower response to changes."));
-					EditorGUILayout.PropertyField(hydraBaseRotationCovarianceTransform, new GUIContent("Filter Rotation Strength", "Rotation " 
+						EditorGUILayout.PropertyField(hydraBaseRotationCovarianceTransform, new GUIContent("Filter Rotation Strength", "Rotation " 
 																		+ "noise covariance of Kalman filtering: a bigger value means "
 																		+ "smoother results but a slower response to changes."));
-
-					EditorGUI.EndDisabledGroup();
+					}
 				break;
 			}
 			EditorGUI.indentLevel -= 2;

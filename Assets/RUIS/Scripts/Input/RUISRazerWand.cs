@@ -54,10 +54,9 @@ public class RUISRazerWand : RUISWand {
 		
         if(!rigidbody)
 		{
-			
+			// isRazerBaseMobile is false if Razer Hydra is not position, rotation, or compass source in headTracker
 			if(		headTracker 
-				&&  headTracker.headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
-				&&	headTracker.isRazerBaseMobile												  )
+				&&	headTracker.isRazerBaseMobile )
 			{
 				movingBasePosition = headTracker.hydraBasePosition;
 				movingBaseRotation = headTracker.hydraBaseRotation;
