@@ -15,6 +15,7 @@ public class RUISPlainSkeletonController : MonoBehaviour
 {
     public Transform root;
     public Transform head;
+    public Transform neck;
     public Transform torso;
     public Transform rightShoulder;
     public Transform rightElbow;
@@ -50,9 +51,14 @@ public class RUISPlainSkeletonController : MonoBehaviour
     private Dictionary<Transform, Quaternion> jointInitialRotations;
     private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
 
+    [HideInInspector]
+    public float torsoOffset = 0.0f;
+    [HideInInspector]
+    public float torsoScale = 1.0f;
 
-    float torsoOffset = 0.0f;
-    float torsoScale = 1.0f;
+    public float neckHeightTweaker = 0.0f;
+    public float forearmLengthRatio = 1.0f;
+    private Vector3 neckOriginalLocalPosition;
 
     void Awake()
     {
@@ -69,14 +75,19 @@ public class RUISPlainSkeletonController : MonoBehaviour
     {
         if (useHierarchicalModel)
         {
-            rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightHand.position, transform.right) * rightShoulder.rotation;
-            leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftHand.position, -transform.right) * leftShoulder.rotation;
+            rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, transform.right) * rightShoulder.rotation;
+            leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, -transform.right) * leftShoulder.rotation;
             rightHip.rotation = FindFixingRotation(rightHip.position, rightFoot.position, -transform.up) * rightHip.rotation;
             leftHip.rotation = FindFixingRotation(leftHip.position, leftFoot.position, -transform.up) * leftHip.rotation;
 
             Vector3 assumedRootPos = (rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4;
             Vector3 realRootPos = torso.position;
             torsoOffset = (realRootPos - assumedRootPos).y;
+
+            if (neck)
+            {
+                neckOriginalLocalPosition = neck.localPosition;
+            }
         }
 
         SaveInitialRotation(root);
@@ -107,9 +118,10 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
         SaveInitialDistance(torso, head);
 
-        SaveInitialDistance(rightShoulder, rightHip);
-        SaveInitialDistance(leftShoulder, leftHip);
+        SaveInitialDistance(rightShoulder, leftShoulder);
+        SaveInitialDistance(rightHip, leftHip);
     }
+
 
 
 
@@ -167,7 +179,11 @@ public class RUISPlainSkeletonController : MonoBehaviour
                 Vector3 newRootPosition = skeletonManager.skeletons[playerId].root.position;
                 transform.localPosition = newRootPosition;
             }
+
         }
+
+
+        TweakNeckHeight();
     }
 
     private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet)
@@ -232,12 +248,12 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
         {
             float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[playerId].rightShoulder, skeletonManager.skeletons[playerId].rightElbow, torsoScale);
-            UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[playerId].rightElbow, skeletonManager.skeletons[playerId].rightHand, rightArmCumulativeScale);
+            UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[playerId].rightElbow, skeletonManager.skeletons[playerId].rightHand, rightArmCumulativeScale / forearmLengthRatio);
         }
 
         {
             float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[playerId].leftShoulder, skeletonManager.skeletons[playerId].leftElbow, torsoScale);
-            UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[playerId].leftElbow, skeletonManager.skeletons[playerId].leftHand, leftArmCumulativeScale);
+            UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[playerId].leftElbow, skeletonManager.skeletons[playerId].leftHand, leftArmCumulativeScale / forearmLengthRatio);
         }
 
         {
@@ -266,13 +282,13 @@ public class RUISPlainSkeletonController : MonoBehaviour
     {
         //average hip to shoulder length and compare it to the one found in the model - scale accordingly
         //we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
-        float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, rightHip)] +
-                            jointInitialDistances[new KeyValuePair<Transform, Transform>(leftShoulder, leftHip)]) / 2;
-        float playerLength = (Vector3.Distance(skeletonManager.skeletons[playerId].rightShoulder.position, skeletonManager.skeletons[playerId].rightHip.position) +
-                                 Vector3.Distance(skeletonManager.skeletons[playerId].leftShoulder.position, skeletonManager.skeletons[playerId].leftHip.position)) / 2;
+        float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
+                            jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
+        float playerLength = (Vector3.Distance(skeletonManager.skeletons[playerId].rightShoulder.position, skeletonManager.skeletons[playerId].leftShoulder.position) +
+                                Vector3.Distance(skeletonManager.skeletons[playerId].rightHip.position, skeletonManager.skeletons[playerId].leftHip.position)) / 2;
 
         float newScale = playerLength / modelLength;
-        root.localScale = new Vector3(newScale, newScale, newScale);
+        torso.localScale = new Vector3(newScale, newScale, newScale);
         return newScale;
     }
 
@@ -280,5 +296,11 @@ public class RUISPlainSkeletonController : MonoBehaviour
     {
         Vector3 boneVector = toJoint - fromJoint;
         return Quaternion.FromToRotation(boneVector, wantedDirection);
+    }
+
+    private void TweakNeckHeight()
+    {
+        if (!neck) return;
+        neck.localPosition = neckOriginalLocalPosition - neck.InverseTransformDirection(Vector3.up) * neckHeightTweaker;
     }
 }

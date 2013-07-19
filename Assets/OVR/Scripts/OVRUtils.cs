@@ -19,7 +19,7 @@ using System.Collections.Generic;
 //-------------------------------------------------------------------------------------
 // ***** OVRUtils
 //
-// OVRUtils holds many static utility functions that can be used by any script.
+// OVRUtils holds misc. static utility functions that can be used by any script.
 //
 
 public class OVRUtils
@@ -39,6 +39,53 @@ public class OVRUtils
 		gameObject.transform.localRotation = xfrm.rotation;
 		gameObject.transform.localScale    = xfrm.localScale;
 	}
+	
+	// Blit - Copies one render texture onto another through a material
+	// flip will flip the render horizontally
+	public void Blit (RenderTexture source, RenderTexture dest, Material m, bool flip) 
+	{
+		Material material = m;
+		
+		// Make the destination texture the target for all rendering
+		RenderTexture.active = dest;  		
+		
+		// Assign the source texture to a property from a shader
+		source.SetGlobalShaderProperty ("_MainTex");	
+		
+		// Set up the simple Matrix
+		GL.PushMatrix ();
+		GL.LoadOrtho ();
+		for(int i = 0; i < material.passCount; i++)
+		{
+			material.SetPass(i);
+			DrawQuad(flip);
+		}
+		GL.PopMatrix ();
+	}
+	
+	// DrawQuad
+	public void DrawQuad(bool flip)
+	{
+		GL.Begin (GL.QUADS);
+		
+		if(flip == true)
+		{
+			GL.TexCoord2( 0.0f, 1.0f ); GL.Vertex3( 0.0f, 0.0f, 0.1f );
+			GL.TexCoord2( 1.0f, 1.0f ); GL.Vertex3( 1.0f, 0.0f, 0.1f );
+			GL.TexCoord2( 1.0f, 0.0f ); GL.Vertex3( 1.0f, 1.0f, 0.1f );
+			GL.TexCoord2( 0.0f, 0.0f ); GL.Vertex3( 0.0f, 1.0f, 0.1f );
+		}
+		else
+		{
+			GL.TexCoord2( 0.0f, 0.0f ); GL.Vertex3( 0.0f, 0.0f, 0.1f );
+			GL.TexCoord2( 1.0f, 0.0f ); GL.Vertex3( 1.0f, 0.0f, 0.1f );
+			GL.TexCoord2( 1.0f, 1.0f ); GL.Vertex3( 1.0f, 1.0f, 0.1f );
+			GL.TexCoord2( 0.0f, 1.0f ); GL.Vertex3( 0.0f, 1.0f, 0.1f );
+		}
+		
+		GL.End();
+	}
+	
 }
 
 

@@ -12,8 +12,7 @@ using System.Collections;
 
 //assumes kinect ground is at Y = 0
 [RequireComponent(typeof(CapsuleCollider))]
-public class RUISCharacterStabilizingCollider : MonoBehaviour
-{
+public class RUISCharacterStabilizingCollider : MonoBehaviour {
     public RUISPlainSkeletonController skeletonController;
 
     RUISSkeletonManager skeletonManager;
@@ -42,18 +41,16 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         }
     }
 
-    void Start()
-    {
+	void Start () {
         skeletonManager = skeletonController.skeletonManager;
         playerId = skeletonController.playerId;
 
         capsuleCollider = GetComponent<CapsuleCollider>();
         defaultColliderHeight = capsuleCollider.height;
         defaultColliderPosition = transform.localPosition;
-    }
-
-    void FixedUpdate()
-    {
+	}
+	
+	void FixedUpdate () {
         if (!skeletonManager.skeletons[playerId].isTracking)
         {
             colliderHeight = defaultColliderHeight;
@@ -67,7 +64,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         newPos.y = torsoPos.y / 2;
 
         colliderHeight = Mathf.Lerp(capsuleCollider.height, torsoPos.y - capsuleCollider.radius * colliderRadiusTweaker, maxHeightChange * Time.fixedDeltaTime);
-
+        
         transform.localPosition = Vector3.Lerp(transform.localPosition, newPos, maxPositionChange * Time.fixedDeltaTime);
-    }
+	}
 }

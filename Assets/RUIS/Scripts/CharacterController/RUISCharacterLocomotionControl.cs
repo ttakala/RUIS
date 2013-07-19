@@ -36,6 +36,10 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 
     private RUISJumpGestureRecognizer jumpGesture;
 
+	public float forwardSpeed { get; private set; }
+    public float strafeSpeed { get; private set; }
+    public float direction { get; private set; }
+	
     // TUUKKA
 	public bool useRazerHydra = true;
 	public SixenseHands razerHydraID = SixenseHands.RIGHT;
@@ -62,7 +66,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Jump") || JumpGestureTriggered())
+        if (characterController.grounded && (Input.GetButtonDown("Jump") || JumpGestureTriggered()))
         {
             shouldJump = true;
         }
@@ -97,8 +101,10 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
     {
         //characterController.ApplyForceInCharacterDirection(translation);
 
-        Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+		direction = 0;
 		
+        Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
 		// Check if moving with PS Move Navigation controller
         if (PSNaviControllerID < 0)
         {
@@ -128,6 +134,10 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 					{
 	                    if (Mathf.Abs(horiz) > 10)
 	                    {
+							if (horiz > 0)
+                                direction = 1;
+                            else
+                                direction = -1;
 	                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f 
 																							  * Time.fixedDeltaTime, 0));
 	                    }
@@ -167,6 +177,9 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 			}
 		}
 
+		forwardSpeed = targetVelocity.z;
+        strafeSpeed = targetVelocity.x;
+		
         targetVelocity = characterController.TransformDirection(targetVelocity);
         targetVelocity *= speed;
 

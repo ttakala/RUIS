@@ -34,8 +34,6 @@ public class OVRCamera : OVRComponent
 	// PRIVATE MEMBERS
 	// If CameraTextureScale is not 1.0f, we will render to this texture 
 	private RenderTexture	CameraTexture	  	= null;
-	// Default material, just blit texture over to final buffer
-	private Material		BlitMaterial		= null;	
 	// Color only material, used for drawing quads on-screen
 	private Material 		ColorOnlyMaterial   = null;
 	private Color			QuadColor 			= Color.red;
@@ -68,20 +66,7 @@ public class OVRCamera : OVRComponent
 	new void Awake()
 	{
 		base.Awake ();
-		
-		// Material used to blit from one render texture to another
-		if(BlitMaterial == null)
-		{
-			BlitMaterial = new Material (
-				"Shader \"BlitCopy\" {\n" +
-				"	SubShader { Pass {\n" +
-				" 		ZTest Off Cull Off ZWrite Off Fog { Mode Off }\n" +
-				"		SetTexture [_MainTex] { combine texture}"	+
-				"	}}\n" +
-				"Fallback Off }"
-			);
-		}
-		
+				
 		// Material used for drawing color only polys into a render texture
 		// Used by Latency tester
 		if(ColorOnlyMaterial == null)
@@ -124,14 +109,11 @@ public class OVRCamera : OVRComponent
 		{
 			int w = (int)(Screen.width / 2.0f * CameraTextureScale);
 			int h = (int)(Screen.height * CameraTextureScale);
-			CameraTexture = new RenderTexture(  w, h, 24); // 24 bit colorspace
+			CameraTexture = new RenderTexture(  w, h, 24);
 			
-			// NOTE: MSAA TEXTURES NOT AVAILABLE YET
-			// This value should be the default for MSAA textures
-			// CameraTexture.antiAliasing = 4; 
-			// Set it within the project
 #if MSAA_ENABLED
-			CameraTexture.antiAliasing = QualitySettings.antiAliasing;
+			// NOTE: AA on RenderTexture not available yet
+			//CameraTexture.antiAliasing = QualitySettings.antiAliasing;
 #endif
 		}
 	}
@@ -181,62 +163,40 @@ public class OVRCamera : OVRComponent
 	
 	// OnRenderImage
 	void  OnRenderImage (RenderTexture source, RenderTexture destination)
-	{		
-		bool flipImage = false;
+	{	
+		Graphics.Blit(source, destination);
 		
-		// Test for flip: If we are in WindowsEditor or WindowsPlayer, we
-		// will make sure to set the flip, since the flip is meant for
-		// DirectX. The next version of the integration will remove this 
-		// code in favor of flipping in the shader
-		if ( (Application.platform == RuntimePlatform.WindowsEditor) ||
-    		 (Application.platform == RuntimePlatform.WindowsPlayer) )
-		{
-			flipImage = true;
-		}
-		
-		Camera cam = gameObject.camera;
-
 		// Use either source input or CameraTexutre, if it exists
 		RenderTexture SourceTexture = source;
 		
 		if (CameraTexture != null)
-		{
 			SourceTexture = CameraTexture;
-			flipImage = false; // If MSAA is on, this will be true
-		}
-		else
-		{
-			// Check if quality settings are set
-			if( (QualitySettings.antiAliasing == 0) ||
-			    (cam.actualRenderingPath == RenderingPath.DeferredLighting) )
-			{
-				flipImage = false; // If MSAA is on, this will be true
-			}
-		}
-				
+		
 		// Replace null material with lens correction material
 		Material material = null;
 		
 		if(CameraController.LensCorrection == true)
 		{
 			if(CameraController.Chromatic == true)
-				material = GetComponent<OVRLensCorrection>().GetMaterial_CA();
+				material = GetComponent<OVRLensCorrection>().GetMaterial_CA(CameraController.PortraitMode);
 			else
-				material = GetComponent<OVRLensCorrection>().GetMaterial();				
+				material = GetComponent<OVRLensCorrection>().GetMaterial(CameraController.PortraitMode);				
 		}
 		
-		// Draw to final destination
-#if MSAA_ENABLED
-		// todo: re-visit how to target final back buffer when MSAA on render
-		// targets are enabled in future Unity 4x release
-		Blit(SourceTexture, null, material, flipImage);
-#else
-		Blit(SourceTexture, destination, material, flipImage);
-		//Graphics.Blit(SourceTexture, destination, material);
-#endif
+		if(material!= null)
+		{
+			// Render with distortion
+			Graphics.Blit(SourceTexture, destination, material);
+		}
+		else
+		{
+			// Pass through
+			Graphics.Blit(SourceTexture, destination);			
+		}
+			
 		// Run latency test by drawing out quads to the destination buffer
 		LatencyTest(destination);
-		
+
 	}
 	#endregion
 	
@@ -254,14 +214,29 @@ public class OVRCamera : OVRComponent
 			// This is useful if we want to track the current location of
 			// of the head.
 			// TODO: Future support for x and z, and possibly change to a quaternion
+			// NOTE: This calculation is one frame behind 
 			if(CameraController.TrackerRotatesY == true)
 			{
+				
 				Vector3 a = gameObject.camera.transform.rotation.eulerAngles;
 				a.x = 0; 
 				a.z = 0;
 				gameObject.transform.parent.transform.eulerAngles = a;
 			}
-				
+			/*
+			else
+			{
+				// We will still rotate the CameraController in the y axis
+				// based on the fact that we have a Y rotation being passed 
+				// in from above that still needs to take place (this functionality
+				// may be better suited to be calculated one level up)
+				Vector3 a = Vector3.zero;
+				float y = 0.0f;
+				CameraController.GetYRotation(ref y);
+				a.y = y;
+				gameObject.transform.parent.transform.eulerAngles = a;
+			}
+			*/	
 			// Read shared data from CameraController	
 			if(CameraController != null)
 			{				
@@ -305,59 +280,7 @@ public class OVRCamera : OVRComponent
 		// Adjust neck by taking eye position and transforming through q
 		gameObject.camera.transform.position += q * EyePosition;		
 	}
-	
-	// Blit - Copies one render texture onto another through a material
-	// flip will flip the render horizontally
-	void Blit (RenderTexture source, RenderTexture dest, Material m, bool flip) 
-	{
-		Material material = m;
-		
-		// Default to blitting material if one doesn't get passed in
-		if(material == null)
-			material = BlitMaterial;
-		
-		// Make the destination texture the target for all rendering
-		RenderTexture.active = dest;  		
-		
-		// Assign the source texture to a property from a shader
-		source.SetGlobalShaderProperty ("_MainTex");	
-		
-		// Set up the simple Matrix
-		GL.PushMatrix ();
-		GL.LoadOrtho ();
-		for(int i = 0; i < material.passCount; i++)
-		{
-			material.SetPass(i);
-			DrawQuad(flip);
-		}
-		GL.PopMatrix ();
-	}
-	
-	// DrawQuad
-	void DrawQuad(bool flip)
-	{
-		GL.Begin (GL.QUADS);
-		
-		if(flip == true)
-		{
-			GL.TexCoord2( 0.0f, 1.0f ); GL.Vertex3( 0.0f, 0.0f, 0.1f );
-			GL.TexCoord2( 1.0f, 1.0f ); GL.Vertex3( 1.0f, 0.0f, 0.1f );
-			GL.TexCoord2( 1.0f, 0.0f ); GL.Vertex3( 1.0f, 1.0f, 0.1f );
-			GL.TexCoord2( 0.0f, 0.0f ); GL.Vertex3( 0.0f, 1.0f, 0.1f );
-		}
-		else
-		{
-			GL.TexCoord2( 0.0f, 0.0f ); GL.Vertex3( 0.0f, 0.0f, 0.1f );
-			GL.TexCoord2( 1.0f, 0.0f ); GL.Vertex3( 1.0f, 0.0f, 0.1f );
-			GL.TexCoord2( 1.0f, 1.0f ); GL.Vertex3( 1.0f, 1.0f, 0.1f );
-			GL.TexCoord2( 0.0f, 1.0f ); GL.Vertex3( 0.0f, 1.0f, 0.1f );
-		}
-		
-		GL.End();
-	}
-	
 
-	
 	// LatencyTest
 	void LatencyTest(RenderTexture dest)
 	{
@@ -408,9 +331,25 @@ public class OVRCamera : OVRComponent
 		// if one wants to use a skybox with the Rift it must be implemented 
 		// manually		
 		gameObject.camera.ResetProjectionMatrix();
-    	Matrix4x4 tm = Matrix4x4.identity;
-    	tm.SetColumn (3, new Vector4 (offset.x, offset.y, 0.0f, 1));
-    	gameObject.camera.projectionMatrix = tm * gameObject.camera.projectionMatrix;
+		Matrix4x4 om = Matrix4x4.identity;
+    	om.SetColumn (3, new Vector4 (offset.x, offset.y, 0.0f, 1));
+
+		// Rotate -90.0 for portrait mode
+		if(CameraController != null && CameraController.PortraitMode == true)
+		{
+			// Create a rotation matrix
+			Vector3 t    = Vector3.zero;
+			Quaternion r = Quaternion.Euler(0.0f, 0.0f, -90.0f);
+			Vector3 s    = Vector3.one;
+    		Matrix4x4 pm = Matrix4x4.TRS(t, r, s);
+			
+			gameObject.camera.projectionMatrix = pm * om * gameObject.camera.projectionMatrix;
+		}
+		else
+		{
+			gameObject.camera.projectionMatrix = om * gameObject.camera.projectionMatrix;
+		}
+		
 	}
 	#endregion
 	

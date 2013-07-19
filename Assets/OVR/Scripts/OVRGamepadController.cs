@@ -106,12 +106,12 @@ public class OVRGamepadController : MonoBehaviour
 	// Awake
 	void Awake () 
 	{	
-		GPC_Available = GPC_Initialize();
 	}
 	
  	// Start
 	void Start()
     {
+		GPC_Available = GPC_Initialize();
     }
 	
 	// Update

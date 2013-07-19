@@ -86,6 +86,9 @@ class OculusBuild
     }
 #endif
 	
+
+// Since the editor is not on Linux, we do not need to expose anything in this class
+	
 	
 }
 
@@ -110,6 +113,19 @@ class OculusBuildDemo
 		BuildPipeline.BuildPlayer(scenes, "Mac_OculusUnityDemoScene.app", BuildTarget.StandaloneOSXIntel, BuildOptions.None);
     }
 	
+	static void PerformBuildStandaloneLinux ()
+	{
+		string[] scenes = { "Assets/Tuscany/Scenes/VRDemo_Tuscany.unity" };
+		BuildPipeline.BuildPlayer(scenes, "Linux_OculusUnityDemoScene.app", BuildTarget.StandaloneLinux, BuildOptions.None);
+    }
+	
+	static void PerformBuildStandaloneLinux64 ()
+	{
+		string[] scenes = { "Assets/Tuscany/Scenes/VRDemo_Tuscany.unity" };
+		BuildPipeline.BuildPlayer(scenes, "Linux_OculusUnityDemoScene.app", BuildTarget.StandaloneLinux64, BuildOptions.None);
+    }
+
+	//---------------------------------------------
 	static void PerformBuildStandaloneWindowsRun ()
 	{
 		string[] scenes = { "Assets/Tuscany/Scenes/VRDemo_Tuscany.unity" };

@@ -39,6 +39,7 @@ Assets/Plugins/OculusPlugin.bundle/Contents/MacOS/OculusPlugin -text
 Assets/Plugins/OculusPlugin.bundle/Contents/Resources/en.lproj/InfoPlist.strings -text
 Assets/Plugins/OculusPlugin.dll -text
 Assets/Plugins/x86_64/OculusPlugin.dll -text
+Assets/Plugins/x86_64/libOculusPlugin.so -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Alley.physicMaterial -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Ball.physicMaterial -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Pin.physicMaterial -text
@@ -251,6 +252,7 @@ Library/metadata/1f/1fdc5018dfd5118449ec952805169555 -text
 Library/metadata/20/201dfe808b6332a48ae2b046739d106c -text
 Library/metadata/20/20f111830d230c3479d1a42b3199633e -text
 Library/metadata/21/2149fbf0fa8596e42bbb95bf7a9c36c9 -text
+Library/metadata/21/215b5852f5592444792473066d0fac2e -text
 Library/metadata/21/21a277db56ca2c44bab7f639af5f687a -text
 Library/metadata/22/221dea5009545904e9f1cdec386ce0a0 -text
 Library/metadata/22/22237a73ede8af5408df25dd7f8ba696 -text
@@ -270,6 +272,7 @@ Library/metadata/23/23fb41a273b08cf4bb643d6fcce05159 -text
 Library/metadata/24/242b984244ef12d478a22afa767ef59e -text
 Library/metadata/24/249885367dd2ba945b18e238a0ca49ad -text
 Library/metadata/25/25c83c068c7b61947b71d0fc42cf1aa1 -text
+Library/metadata/26/2657edab8bf15334fb4b3866031359c1 -text
 Library/metadata/26/26fb1af95c8dcf446ad45be1b7cf29b6 -text
 Library/metadata/27/271509f11e7230745aef7a35e8321bf4 -text
 Library/metadata/28/2829fa8cde1d9d44cb40de83d0526f60 -text
@@ -386,6 +389,7 @@ Library/metadata/5d/5db79e10800f47845a64072890915b7d -text
 Library/metadata/5d/5dcf0138122292642912bc5a97ad1be4 -text
 Library/metadata/5e/5e12ddfc723ae4943b408b82f3e071a1 -text
 Library/metadata/5e/5e540f33e69ff5647b0f7125b2acde1d -text
+Library/metadata/5e/5eaf86f26e687da4299210f94cfec7b0 -text
 Library/metadata/5e/5ec6fd3d2c6ada34691b55c84be55007 -text
 Library/metadata/5f/5f32776e6f3e6464191e1cc146b4eaf5 -text
 Library/metadata/60/601a226414c41fd4db442aaec69771f3 -text
@@ -404,6 +408,7 @@ Library/metadata/63/63d8e8be6dc285f4d8e1ece3efae0de6 -text
 Library/metadata/64/645727418686e6249a358ffccafea45e -text
 Library/metadata/64/64ce76f827a71b44da62c30c0b506fd2 -text
 Library/metadata/65/6506ca368b04aa045b28eec1a3a880dc -text
+Library/metadata/65/6525924b1c78f4b4cb7daadbececd60a -text
 Library/metadata/65/658561a5b7ee04846b6226879248114c -text
 Library/metadata/66/661c903790cd5b6489ed5d6acc47ed66 -text
 Library/metadata/66/66cdd4c15e98b4140938bded9a2cd0b0 -text
@@ -560,6 +565,8 @@ Library/metadata/ae/ae2d8281b0d18e0459cf702d385ac17d -text
 Library/metadata/af/af3d0ff7852e3724e8359efc1fe5ef75 -text
 Library/metadata/af/af851fe4169351d49b2a9365e2e76d7f -text
 Library/metadata/b0/b020d87c51172ec4db943d84c5499b92 -text
+Library/metadata/b0/b06eebf0d4870da4ba7a56b3465db62f -text
+Library/metadata/b0/b084b3639de80d34780b29bf6ce7d6ee -text
 Library/metadata/b0/b0b36ef5bf6e99444abddbe99819ac71 -text
 Library/metadata/b1/b1510208da0e49e4ebcdbbc631fa29dd -text
 Library/metadata/b1/b1af08926c7e0c34192ca37d5e117fa7 -text
@@ -605,6 +612,7 @@ Library/metadata/c5/c5ab91ef4dc389e4093066e3e630e788 -text
 Library/metadata/c5/c5d89d70136f83f47a4e537af89495d1 -text
 Library/metadata/c5/c5f6eba508c51da4c81b48cf0fd1b9ad -text
 Library/metadata/c6/c62e55ab32f5eb548bce385cb5619ffc -text
+Library/metadata/c6/c65da56006ab4e84b819bee309d60a8c -text
 Library/metadata/c6/c68181afcca5b40408b43dc84a70baf6 -text
 Library/metadata/c8/c81df2918c80c054ca3d436e62090893 -text
 Library/metadata/c8/c8df947a743dbe249849490063ad3025 -text
