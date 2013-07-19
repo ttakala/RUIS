@@ -10,6 +10,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/RUIS/Examples/HeadTrackingDemo/headTracking.unity
   - enabled: 1
-    path: Assets/RUIS/Scripts/Oculus RUIS/riftdemo.unity
+    path: Assets/RUIS/Examples/RiftDemo/riftdemo.unity
   - enabled: 1
     path: Assets/RUIS/Scenes/calibration.unity

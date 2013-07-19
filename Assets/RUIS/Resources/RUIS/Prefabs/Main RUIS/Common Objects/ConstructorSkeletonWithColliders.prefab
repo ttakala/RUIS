@@ -1653,7 +1653,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   root: {fileID: 400006}
-  head: {fileID: 400080}
+  head: {fileID: 400092}
+  neck: {fileID: 400080}
   torso: {fileID: 400104}
   rightShoulder: {fileID: 400062}
   rightElbow: {fileID: 400096}
@@ -1677,6 +1678,10 @@ MonoBehaviour:
   maxScaleFactor: .00999999978
   minimumConfidenceToUpdate: .5
   rotationDamping: 15
+  torsoOffset: 0
+  torsoScale: 1
+  neckHeightTweaker: 0
+  forearmLengthRatio: 1
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

@@ -2054,7 +2054,7 @@ MonoBehaviour:
   ignorePitchAndRoll: 1
   groundLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   groundedErrorTweaker: .0500000007
 --- !u!114 &11400014
 MonoBehaviour:
@@ -2111,7 +2111,7 @@ MonoBehaviour:
   m_Name: 
   defaultPosition: {x: 0, y: 0, z: 0}
   skeletonManager: {fileID: 0}
-  headPositionInput: 1
+  headPositionInput: 0
   headRotationInput: 0
   riftMagnetometerMode: 0
   mobileRazerBase: 0
@@ -2127,11 +2127,14 @@ MonoBehaviour:
   positionRazerID: 1
   rotationRazerID: 1
   isRazerBaseMobile: 0
+  hydraAtRotationTrackerOffset: {x: 90, y: 0, z: 0}
   hydraBaseKinectPlayerID: 0
   hydraBaseJoint: 2
   hydraBaseInput: {fileID: 0}
   hydraBasePositionOffsetKinect: {x: 0, y: -.300000012, z: .100000001}
   hydraBaseRotationOffsetKinect: {x: 90, y: 0, z: 0}
+  inferBaseRotationFromRotationTrackerKinect: 1
+  inferBaseRotationFromRotationTrackerTransform: 0
   filterHydraBasePose: 1
   filterHydraBasePoseKinect: 1
   filterHydraBasePoseTransform: 1
@@ -2145,11 +2148,11 @@ MonoBehaviour:
   rotationInput: {fileID: 0}
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
-  positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetHydra: {x: -.100000001, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
-  rotationOffsetHydra: {x: 0, y: 0, z: 0}
-  filterPosition: 1
+  rotationOffsetHydra: {x: 90, y: 0, z: 0}
+  filterPosition: 0
   filterPositionKinect: 1
   filterPositionPSMove: 0
   filterPositionHydra: 0
@@ -2170,12 +2173,12 @@ MonoBehaviour:
   rotationNoiseCovarianceHydra: 1
   rotationNoiseCovarianceTransform: 500
   externalDriftCorrection: 1
-  compass: 1
+  compass: 0
   compassIsPositionTracker: 1
   compassPlayerID: 0
-  compassJoint: 2
+  compassJoint: 1
   correctOnlyWhenFacingForward: 1
-  compassPSMoveID: 1
+  compassPSMoveID: 0
   compassRazerID: 1
   compassTransform: {fileID: 0}
   compassRotationOffsetKinect: {x: 0, y: 0, z: 0}
@@ -2185,7 +2188,7 @@ MonoBehaviour:
   driftCorrectionRatePSMove: .100000001
   driftCorrectionRateHydra: .100000001
   driftCorrectionRateTransform: .100000001
-  driftNoiseCovariance: 3000
+  driftNoiseCovariance: 1000
   enableVisualizers: 0
   driftingDirectionVisualizer: {fileID: 0}
   compassDirectionVisualizer: {fileID: 0}

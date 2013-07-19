@@ -1945,13 +1945,36 @@ MonoBehaviour:
   headPositionInput: 1
   headRotationInput: 0
   riftMagnetometerMode: 0
+  mobileRazerBase: 0
+  pickRotationSource: 0
   oculusID: 0
+  resetKey: 0
   positionPlayerID: 0
   rotationPlayerID: 0
   positionJoint: 1
   rotationJoint: 2
   positionPSMoveID: 1
   rotationPSMoveID: 0
+  positionRazerID: 1
+  rotationRazerID: 1
+  isRazerBaseMobile: 0
+  hydraAtRotationTrackerOffset: {x: 90, y: 0, z: 0}
+  hydraBaseKinectPlayerID: 0
+  hydraBaseJoint: 2
+  hydraBaseInput: {fileID: 0}
+  hydraBasePositionOffsetKinect: {x: 0, y: -.300000012, z: .100000001}
+  hydraBaseRotationOffsetKinect: {x: 90, y: 0, z: 0}
+  inferBaseRotationFromRotationTrackerKinect: 1
+  inferBaseRotationFromRotationTrackerTransform: 0
+  filterHydraBasePose: 1
+  filterHydraBasePoseKinect: 1
+  filterHydraBasePoseTransform: 1
+  hydraBasePositionCovariance: 100
+  hydraBaseRotationCovariance: 1000
+  hydraBasePositionCovarianceKinect: 100
+  hydraBaseRotationCovarianceKinect: 1000
+  hydraBasePositionCovarianceTransform: 100
+  hydraBaseRotationCovarianceTransform: 1000
   positionInput: {fileID: 0}
   rotationInput: {fileID: 0}
   positionOffsetKinect: {x: 0, y: 0, z: 0}
@@ -1961,18 +1984,43 @@ MonoBehaviour:
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
   filterPosition: 1
+  filterPositionKinect: 1
+  filterPositionPSMove: 0
+  filterPositionHydra: 0
+  filterPositionTransform: 0
   positionNoiseCovariance: 500
+  positionNoiseCovarianceKinect: 500
+  positionNoiseCovariancePSMove: 1
+  positionNoiseCovarianceHydra: 1
+  positionNoiseCovarianceTransform: 500
   filterRotation: 0
+  filterRotationKinect: 1
+  filterRotationPSMove: 0
+  filterRotationHydra: 0
+  filterRotationTransform: 0
   rotationNoiseCovariance: 500
+  rotationNoiseCovarianceKinect: 500
+  rotationNoiseCovariancePSMove: 1
+  rotationNoiseCovarianceHydra: 1
+  rotationNoiseCovarianceTransform: 500
   externalDriftCorrection: 1
   compass: 1
+  compassIsPositionTracker: 1
   compassPlayerID: 0
   compassJoint: 2
   correctOnlyWhenFacingForward: 1
   compassPSMoveID: 1
+  compassRazerID: 1
   compassTransform: {fileID: 0}
-  driftCorrectionRate: .100000001
+  compassRotationOffsetKinect: {x: 0, y: 0, z: 0}
+  compassRotationOffsetPSMove: {x: 0, y: 0, z: 0}
+  compassRotationOffsetHydra: {x: 90, y: 0, z: 0}
+  driftCorrectionRateKinect: .0799999982
+  driftCorrectionRatePSMove: .100000001
+  driftCorrectionRateHydra: .100000001
+  driftCorrectionRateTransform: .100000001
   driftNoiseCovariance: 3000
+  enableVisualizers: 0
   driftingDirectionVisualizer: {fileID: 0}
   compassDirectionVisualizer: {fileID: 0}
   correctedDirectionVisualizer: {fileID: 0}
@@ -2009,7 +2057,10 @@ MonoBehaviour:
   maxVelocityChange: 10
   usePSNavigationController: 1
   PSNaviControllerID: 0
+  strafeInsteadTurning: 0
   jumpStrength: 10
+  useRazerHydra: 1
+  razerHydraID: 2
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2021,7 +2072,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   root: {fileID: 400022}
-  head: {fileID: 400050}
+  head: {fileID: 400088}
+  neck: {fileID: 400050}
   torso: {fileID: 400012}
   rightShoulder: {fileID: 400108}
   rightElbow: {fileID: 400096}
@@ -2045,6 +2097,10 @@ MonoBehaviour:
   maxScaleFactor: .00999999978
   minimumConfidenceToUpdate: .5
   rotationDamping: 15
+  torsoOffset: 0
+  torsoScale: 1
+  neckHeightTweaker: 0
+  forearmLengthRatio: 1
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2080,6 +2136,10 @@ MonoBehaviour:
   moveControllerId: 0
   characterPivot: {fileID: 0}
   ignorePitchAndRoll: 1
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  groundedErrorTweaker: .0500000007
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2102,10 +2162,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
+  CameraRootPosition: {x: 0, y: 1, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: 0, z: 0}
+  UsePlayerEyeHeight: 0
   FollowOrientation: {fileID: 400120}
   TrackerRotatesY: 0
+  PortraitMode: 0
   PredictionOn: 1
   CallInPreRender: 0
   WireMode: 0

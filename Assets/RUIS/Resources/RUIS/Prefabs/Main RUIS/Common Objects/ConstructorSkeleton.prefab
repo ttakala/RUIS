@@ -1605,7 +1605,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   root: {fileID: 400026}
-  head: {fileID: 400020}
+  head: {fileID: 400072}
+  neck: {fileID: 400020}
   torso: {fileID: 400028}
   rightShoulder: {fileID: 400032}
   rightElbow: {fileID: 400110}
@@ -1629,6 +1630,10 @@ MonoBehaviour:
   maxScaleFactor: .00999999978
   minimumConfidenceToUpdate: .5
   rotationDamping: 15
+  torsoOffset: 0
+  torsoScale: 1
+  neckHeightTweaker: 0
+  forearmLengthRatio: 1
 --- !u!137 &13700000
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
