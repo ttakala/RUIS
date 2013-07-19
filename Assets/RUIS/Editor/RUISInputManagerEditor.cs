@@ -31,6 +31,8 @@ public class RUISInputManagerEditor : Editor {
     SerializedProperty kinectEnabled;
     SerializedProperty maxNumberOfKinectPlayers;
 	SerializedProperty floorDetectionOnSceneStart;
+	
+	SerializedProperty enableRazerHydra;
 
     void OnEnable()
     {
@@ -50,6 +52,8 @@ public class RUISInputManagerEditor : Editor {
         kinectEnabled = serializedObject.FindProperty("enableKinect");
         maxNumberOfKinectPlayers = serializedObject.FindProperty("maxNumberOfKinectPlayers");
 		floorDetectionOnSceneStart = serializedObject.FindProperty("kinectFloorDetection");
+		
+		enableRazerHydra = serializedObject.FindProperty("enableRazerHydra");
     }
 
     public override void OnInspectorGUI()
@@ -110,7 +114,9 @@ public class RUISInputManagerEditor : Editor {
         }
 
         EditorGUILayout.Space();
-
+		EditorGUILayout.PropertyField(enableRazerHydra, new GUIContent("Razer Hydra Enabled"));
+		
+        EditorGUILayout.Space();
         EditorGUILayout.PropertyField(kinectEnabled, new GUIContent("Kinect Enabled"));
         if (kinectEnabled.boolValue)
         {

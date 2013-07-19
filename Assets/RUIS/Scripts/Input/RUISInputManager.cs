@@ -33,6 +33,9 @@ public class RUISInputManager : MonoBehaviour
     public int maxNumberOfKinectPlayers = 2;
     public bool kinectFloorDetection = true;
 	
+    public bool enableRazerHydra = true;
+	private SixenseInput sixense;
+	
 	private RUISCoordinateSystem coordinateSystem = null;
     private OpenNI.SceneAnalyzer sceneAnalyzer = null;
 	private RUISM2KCalibration moveKinectCalibration;
@@ -82,7 +85,8 @@ public class RUISInputManager : MonoBehaviour
         }
 
         DisableUnneededMoveWands();
-
+		
+		DisableUnneededRazerHydraWands();
         
     }
 
@@ -115,6 +119,24 @@ public class RUISInputManager : MonoBehaviour
                 moveControllers[controller.controllerId] = controller;
             }
         }
+		
+		sixense = FindObjectOfType(typeof(SixenseInput)) as SixenseInput;
+		if(enableRazerHydra)
+		{
+			if(sixense == null)
+				Debug.LogError(		"Could not connect with Razer Hydra! Your RUIS InputManager settings indicate "
+								+ 	"that you want to use Razer Hydra, but this scene does not have a gameobject "
+								+	"with SixenseInput script, which is required. Add SixenseInput prefab "
+								+	"into the scene.");
+			// IsBaseConnected() seems to crash Unity at least when called here
+//			else if(!SixenseInput.IsBaseConnected(0)) // TODO: *** Apparently there can be multiple bases
+//				Debug.LogError(		"Could not connect with Razer Hydra! Check the USB connection.");
+		}
+		else
+		{
+//			if(sixense != null)
+//				sixense.enabled = false;
+		}
     }
 
     public void OnApplicationQuit()
@@ -322,12 +344,11 @@ public class RUISInputManager : MonoBehaviour
     {
         List<RUISPSMoveWand> childWands = new List<RUISPSMoveWand>(GetComponentsInChildren<RUISPSMoveWand>());
 
-
         foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
         {
             if (!childWands.Contains(moveController) && (!enablePSMove || !psMoveWrapper.isConnected || moveController.controllerId >= amountOfPSMoveControllers))
             {
-                Debug.LogWarning("Disabling PS Move Controller: " + moveController.name);
+                Debug.LogWarning("Disabling PS Move wand: " + moveController.name);
                 moveController.enabled = false;
                 RUISWandSelector wandSelector = moveController.GetComponent<RUISWandSelector>();
                 if (wandSelector)
@@ -339,6 +360,18 @@ public class RUISInputManager : MonoBehaviour
                         lineRenderer.enabled = false;
                     }
                 }
+            }
+        }
+    }
+	
+	private void DisableUnneededRazerHydraWands()
+    {
+        foreach (RUISRazerWand hydraWand in FindObjectsOfType(typeof(RUISRazerWand)) as RUISRazerWand[])
+        {
+            if (!enableRazerHydra)
+            {
+                Debug.LogWarning("Disabling Razer Hydra wand: " + hydraWand.name);
+				hydraWand.gameObject.SetActive(false);
             }
         }
     }

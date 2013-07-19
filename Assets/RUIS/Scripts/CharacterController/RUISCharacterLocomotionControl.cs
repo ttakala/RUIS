@@ -2,7 +2,7 @@
 
 Content    :   Class for locomotion of Kinect controlled character
 Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -15,7 +15,8 @@ using System.Collections;
 public class RUISCharacterLocomotionControl : MonoBehaviour
 {
     RUISCharacterController characterController;
-
+	RUISInputManager inputManager;
+	
     public KeyCode turnRightKey = KeyCode.E;
     public KeyCode turnLeftKey = KeyCode.Q;
 
@@ -54,15 +55,31 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         characterController = GetComponent<RUISCharacterController>();
         jumpGesture = GetComponentInChildren<RUISJumpGestureRecognizer>();
 
-        // TUUKKA
-		if(useRazerHydra && Object.FindObjectOfType(typeof(SixenseInput)) == null)
-			Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
-							+	"character locomotion controls, but your scene is missing "
-							+	"SixenseInput script.");
-		
-		
         moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
+	
     }
+	
+	void Start()
+	{
+		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+		
+		if(useRazerHydra && inputManager && !inputManager.enableRazerHydra)
+		{
+			useRazerHydra = false;
+			Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
+							+	"character locomotion controls, but you have disabled Razer "
+							+	"Hydra from RUIS InputManager.");
+		}
+		
+		if(usePSNavigationController && inputManager && !inputManager.enablePSMove)
+		{
+			usePSNavigationController = false;
+			Debug.LogError(		"Your settings indicate that you want to use PS Navigation "
+							+	"controller for character locomotion controls, but you have "
+							+	"disabled PS Move from RUIS InputManager.");
+		}
+		
+	}
 
     void Update()
     {
@@ -71,7 +88,6 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
             shouldJump = true;
         }
 		
-        // TUUKKA
 		if(useRazerHydra)
 		{
 			razerController = SixenseInput.GetController(razerHydraID);

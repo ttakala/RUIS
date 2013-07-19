@@ -323,20 +323,20 @@ public class RUISHeadTracker : MonoBehaviour
 			     || (externalDriftCorrection && compass == CompassSource.Kinect)))
 			Debug.LogError("RUISSkeletonManager script is missing from this scene!");
 		
-		if(Object.FindObjectOfType(typeof(SixenseInput)) == null)
+		if(inputManager && !inputManager.enableRazerHydra)
 		{
 			if(headPositionInput == HeadPositionSource.RazerHydra)
 				Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
-								+	"position tracking, but your scene is missing SixenseInput "
-								+	"script.");
+								+	"position tracking, but you have disabled Razer Hydra from RUIS "
+								+	"InputManager.");
 			if(headRotationInput == HeadRotationSource.RazerHydra)
 				Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
-								+	"rotation tracking, but your scene is missing SixenseInput "
-								+	"script.");
+								+	"rotation tracking, but you have disabled Razer Hydra from RUIS "
+								+	"InputManager.");
 			if(externalDriftCorrection && compass == CompassSource.RazerHydra)
 				Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
-								+	"yaw drift correction, but your scene is missing SixenseInput "
-								+	"script.");
+								+	"yaw drift correction, but you have disabled Razer Hydra from RUIS "
+								+	"InputManager.");
 		}
 		
 		if(headPositionInput == HeadPositionSource.InputTransform && !positionInput)
