@@ -323,7 +323,9 @@ public class RUISHeadTrackerEditor : Editor
 																	+ "Leave this to 0 (multiple Rifts are not supported yet)."));
 			
         	EditorGUILayout.PropertyField(riftMagnetometerMode, new GUIContent("Rift Drift Correction", "Choose whether Oculus Rift's "
-																	+ "magnetometer is used and how it is calibrated."));
+																	+ "magnetometer is calibrated at the beginning of the scene (for yaw "
+																	+ "drift correction). It can always be (re)calibrated in-game with the "
+																	+ "buttons defined in RUISOculusHUD component of RUISMenu."));
         	EditorGUI.indentLevel += 2;
 	        switch (riftMagnetometerMode.enumValueIndex)
 	        {

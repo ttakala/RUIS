@@ -57,15 +57,13 @@ public class KalmanFilteredRotation {
 			measuredRotation.y = -measuredRotation.y;
 			measuredRotation.z = -measuredRotation.z;
 			measuredRotation.w = -measuredRotation.w;
-			//Debug.LogError("meas rot " + measuredRotation + " last meas " + lastState);
 		}
-		//else Debug.Log("meas rot " + measuredRotation + " last meas " + lastState);
 		
-		// TODO: REMOVE ***
-		if( Mathf.Abs(measuredRotation.x - (float)measurement[0]) + Mathf.Abs(measuredRotation.y - (float)measurement[1]) + 
-			Mathf.Abs(measuredRotation.z - (float)measurement[2]) + Mathf.Abs(measuredRotation.w - (float)measurement[3]) > 1.0f)
-			Debug.LogError("diff diff " + (measuredRotation) + " current: diff " + measurement[0] + " " + measurement[1]
-							+ " " + measurement[2] + " " + measurement[3]);
+		// Discontinuity between last two measured quaternions
+//		if( Mathf.Abs(measuredRotation.x - (float)measurement[0]) + Mathf.Abs(measuredRotation.y - (float)measurement[1]) + 
+//			Mathf.Abs(measuredRotation.z - (float)measurement[2]) + Mathf.Abs(measuredRotation.w - (float)measurement[3]) > 1.0f)
+//			Debug.LogError("diff diff " + (measuredRotation) + " current: diff " + measurement[0] + " " + measurement[1]
+//							+ " " + measurement[2] + " " + measurement[3]);
 		
 		lastMeasurement = measuredRotation;
 		
