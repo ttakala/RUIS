@@ -194,4 +194,17 @@ public class RUISDisplayManager : MonoBehaviour {
             display.SaveToXML();
         }
     }
+
+    public RUISDisplay GetOculusRiftDisplay()
+    {
+        foreach (RUISDisplay display in displays)
+        {
+            if (display.linkedCamera.GetComponent<RUISRiftCamera>() != null)
+            {
+                return display;
+            }
+        }
+
+        return null;
+    }
 }

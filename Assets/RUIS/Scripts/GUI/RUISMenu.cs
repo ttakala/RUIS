@@ -39,6 +39,10 @@ public class RUISMenu : MonoBehaviour {
 
     RUISInputManager inputManager;
 
+    public bool oculusRiftMenu = false;
+    RUISDisplayManager displayManager;
+    RUISDisplay riftDisplay;
+
 	// Use this for initialization
 	void Start () {
 
@@ -55,6 +59,18 @@ public class RUISMenu : MonoBehaviour {
         enablePSMove = inputManager.enablePSMove;
         psMoveIP = inputManager.PSMoveIP;
         psMovePort = inputManager.PSMovePort;
+
+
+        displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
+        riftDisplay = displayManager.GetOculusRiftDisplay();
+        Debug.Log(riftDisplay.linkedCamera.leftCamera.name);
+        if (oculusRiftMenu)
+        {
+            Debug.Log("pixelrect " + (riftDisplay.linkedCamera.leftCamera.pixelRect.x + riftDisplay.resolutionX / 4 - 100));
+            Debug.Log("riftDisplay.resolutionX / 2: " + (riftDisplay.resolutionX / 4));
+            windowRect = new Rect(riftDisplay.linkedCamera.leftCamera.pixelRect.x + riftDisplay.resolutionX / 4 - 200, riftDisplay.resolutionY / 2 - 100, 200, 200);
+                        //new Rect(220, 400, 200, 200);
+        }
 	}
 
     void Update()
@@ -70,6 +86,16 @@ public class RUISMenu : MonoBehaviour {
         if (!isShowing) return;
 
         windowRect = GUILayout.Window(currentWindow, windowRect, DrawWindow, "RUIS");
+
+        if (oculusRiftMenu)
+        {
+            if (riftDisplay)
+            {
+                float offset = riftDisplay.resolutionX / 2;
+                Rect temp = GUILayout.Window(currentWindow + 1, new Rect(windowRect.x + offset, windowRect.y, windowRect.width, windowRect.height), DrawWindow, "RUIS");
+                windowRect = new Rect(temp.x - offset, temp.y, temp.width, temp.height);
+            }
+        }
     }
 
     void DrawWindow(int windowId)
@@ -147,6 +173,12 @@ public class RUISMenu : MonoBehaviour {
                 {
                     inputManager.enableKinect = !inputManager.enableKinect;
                 }
+                string toggleRazerHydraText = inputManager.enablePSMove ? "Disable Razer Hydra" : "Enable Razer Hydra";
+                if (GUILayout.Button(toggleRazerHydraText))
+                {
+                    inputManager.enablePSMove = !inputManager.enablePSMove;
+                }
+
                 if (GUILayout.Button("Save Configuration & Restart Scene"))
                 {
                     inputManager.Export(inputManager.filename);

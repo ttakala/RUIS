@@ -8,6 +8,7 @@
 		<sequence>
 			<element name="PSMoveSettings" type="tns:PSMoveSettingsType"/>
 			<element name="KinectSettings" type="tns:KinectSettingsType"/>
+			<element name="RazerSettings" type="tns:RazerSettingsType"/>
 		</sequence>
 	</complexType>
 
@@ -27,6 +28,12 @@
 			<element name="enabled" type="boolean"/>
 			<element name="maxPlayers" type="int"/>
 			<element name="floorDetection" type="boolean"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="RazerSettingsType">
+		<sequence>
+			<element name="enabled" type="boolean"/>
 		</sequence>
 	</complexType>
 </schema>

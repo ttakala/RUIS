@@ -193,6 +193,9 @@ public class RUISInputManager : MonoBehaviour
         maxNumberOfKinectPlayers = int.Parse(kinectNode.SelectSingleNode("maxPlayers").Attributes["value"].Value);
         kinectFloorDetection = bool.Parse(kinectNode.SelectSingleNode("floorDetection").Attributes["value"].Value);
 
+        XmlNode razerNode = xmlDoc.GetElementsByTagName("RazerSettings").Item(0);
+        enableRazerHydra = bool.Parse(razerNode.SelectSingleNode("enabled").Attributes["value"].Value);
+
         return true;
     }
 
@@ -252,6 +255,15 @@ public class RUISInputManager : MonoBehaviour
         XmlElement kinectFloorDetectionElement = xmlDoc.CreateElement("floorDetection");
         kinectFloorDetectionElement.SetAttribute("value", kinectFloorDetection.ToString());
         kinectSettingsElement.AppendChild(kinectFloorDetectionElement);
+
+
+
+        XmlElement razerSettingsElement = xmlDoc.CreateElement("RazerSettings");
+        inputManagerRootElement.AppendChild(razerSettingsElement);
+
+        XmlElement razerEnabledElement = xmlDoc.CreateElement("enabled");
+        razerEnabledElement.SetAttribute("value", enableRazerHydra.ToString());
+        razerSettingsElement.AppendChild(razerEnabledElement);
 
         /*
         XmlElement displayUpElement = xmlDoc.CreateElement("displayUp");

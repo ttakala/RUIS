@@ -3722,6 +3722,7 @@ MonoBehaviour:
   enablePSMove: 0
   psMoveIP: 
   psMovePort: 0
+  oculusRiftMenu: 1
 --- !u!4 &180230448
 Transform:
   m_ObjectHideFlags: 0
@@ -4952,6 +4953,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
       propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
+      propertyPath: oculusRiftMenu
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -17297,10 +17302,10 @@ MonoBehaviour:
   - {fileID: 182071551}
   stereoCamera: {fileID: 0}
   monoCamera: {fileID: 0}
-  totalResolutionX: 1920
-  totalResolutionY: 1080
-  totalRawResolutionX: 1920
-  totalRawResolutionY: 1080
+  totalResolutionX: 1280
+  totalResolutionY: 800
+  totalRawResolutionX: 1280
+  totalRawResolutionY: 800
   fullScreen: 1
 --- !u!1 &807479872
 GameObject:
@@ -42329,6 +42334,7 @@ MonoBehaviour:
   enableKinect: 1
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
+  enableRazerHydra: 1
   moveControllers: []
 --- !u!1 &1915309723
 GameObject:

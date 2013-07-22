@@ -13,4 +13,7 @@
     <maxPlayers value="1" />
     <floorDetection value="True" />
   </KinectSettings>
+  <RazerSettings>
+    <enabled value="True" />
+  </RazerSettings>
 </ns2:ruisInputManager>
