@@ -16,6 +16,13 @@ using System.Xml;
 
 public class RUISInputManager : MonoBehaviour
 {
+    public enum RiftMagnetometer
+    {
+        Off = 0,
+        ManualCalibration = 1,
+        AutomaticCalibration = 2
+    };
+
     public TextAsset xmlSchema;
     public string filename = "inputConfig.txt";
 
@@ -42,6 +49,9 @@ public class RUISInputManager : MonoBehaviour
 	//private bool usingExistingSceneAnalyzer = false;
 	
     public RUISPSMoveWand[] moveControllers;
+
+    public RiftMagnetometer riftMagnetometerMode = RiftMagnetometer.Off;
+    public int oculusID = 0;
 
     public void Awake()
     {
@@ -137,6 +147,30 @@ public class RUISInputManager : MonoBehaviour
 //			if(sixense != null)
 //				sixense.enabled = false;
 		}
+
+        OVRCameraController oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
+        if (oculusCamController && OVRDevice.IsSensorPresent(oculusID))
+        {
+            RUISOculusHUD ruisOculusHUD = FindObjectOfType(typeof(RUISOculusHUD)) as RUISOculusHUD;
+            if (riftMagnetometerMode == RiftMagnetometer.AutomaticCalibration)
+            {
+                if (ruisOculusHUD)
+                    ruisOculusHUD.StartAutoCalibration();
+                else
+                    Debug.LogError("Your settings indicate that you want to start automatic yaw drift correction "
+                                   + "process for Oculus Rift in the beginning of the scene, but no RUISOculusHUD "
+                                   + "script is found!");
+            }
+            if (riftMagnetometerMode == RiftMagnetometer.ManualCalibration)
+            {
+                if (ruisOculusHUD)
+                    ruisOculusHUD.StartManualCalibration();
+                else
+                    Debug.LogError("Your settings indicate that you want to start manual yaw drift correction "
+                                   + "process for Oculus Rift in the beginning of the scene, but no RUISOculusHUD "
+                                   + "script is found!");
+            }
+        }
     }
 
     public void OnApplicationQuit()
@@ -195,6 +229,10 @@ public class RUISInputManager : MonoBehaviour
 
         XmlNode razerNode = xmlDoc.GetElementsByTagName("RazerSettings").Item(0);
         enableRazerHydra = bool.Parse(razerNode.SelectSingleNode("enabled").Attributes["value"].Value);
+
+        XmlNode riftDriftNode = xmlDoc.GetElementsByTagName("OculusDriftSettings").Item(0);
+        string magnetometerMode = riftDriftNode.SelectSingleNode("magnetometerDriftCorrection").Attributes["value"].Value;
+        riftMagnetometerMode = (RiftMagnetometer)System.Enum.Parse(typeof(RiftMagnetometer), magnetometerMode);
 
         return true;
     }
@@ -264,6 +302,15 @@ public class RUISInputManager : MonoBehaviour
         XmlElement razerEnabledElement = xmlDoc.CreateElement("enabled");
         razerEnabledElement.SetAttribute("value", enableRazerHydra.ToString());
         razerSettingsElement.AppendChild(razerEnabledElement);
+
+
+
+        XmlElement riftDriftSettingsElement = xmlDoc.CreateElement("OculusDriftSettings");
+        inputManagerRootElement.AppendChild(riftDriftSettingsElement);
+
+        XmlElement magnetometerDriftCorrectionElement = xmlDoc.CreateElement("magnetometerDriftCorrection");
+        magnetometerDriftCorrectionElement.SetAttribute("value", System.Enum.GetName(typeof(RiftMagnetometer), riftMagnetometerMode));
+        riftDriftSettingsElement.AppendChild(magnetometerDriftCorrectionElement);
 
         /*
         XmlElement displayUpElement = xmlDoc.CreateElement("displayUp");

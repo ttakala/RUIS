@@ -3701,6 +3701,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 180230448}
   - 114: {fileID: 180230447}
+  - 114: {fileID: 180230449}
   m_Layer: 0
   m_Name: RUISMenu
   m_TagString: Untagged
@@ -3734,6 +3735,21 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+--- !u!114 &180230449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: f88ad6ed838405246839ef2f7181f999,
+    type: 2}
+  m_PrefabInternal: {fileID: 239310209}
+  m_GameObject: {fileID: 180230446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c339b1cb7928e394780a844ae49e70d6, type: 3}
+  m_Name: 
+  autoCalibrateKey: 286
+  manualCalibrateKey: 287
+  showCompassKey: 289
+  textFont: {fileID: 12800000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
 --- !u!1 &181162672
 GameObject:
   m_ObjectHideFlags: 0
@@ -9464,7 +9480,6 @@ MonoBehaviour:
   skeletonManager: {fileID: 0}
   headPositionInput: 0
   headRotationInput: 0
-  riftMagnetometerMode: 0
   mobileRazerBase: 0
   pickRotationSource: 0
   oculusID: 0
@@ -13757,6 +13772,34 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: forceLegStartPosition
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: torsoBlendWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: rightArmBlendWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: leftArmBlendWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400032, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: Chromatic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: rightLegBlendWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: leftLegBlendWeight
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 1456062743}
@@ -17302,10 +17345,10 @@ MonoBehaviour:
   - {fileID: 182071551}
   stereoCamera: {fileID: 0}
   monoCamera: {fileID: 0}
-  totalResolutionX: 1280
-  totalResolutionY: 800
-  totalRawResolutionX: 1280
-  totalRawResolutionY: 800
+  totalResolutionX: 1920
+  totalResolutionY: 1080
+  totalRawResolutionX: 1920
+  totalRawResolutionY: 1080
   fullScreen: 1
 --- !u!1 &807479872
 GameObject:
@@ -26238,6 +26281,10 @@ Prefab:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
   m_RootGameObject: {fileID: 117002799}
@@ -27532,7 +27579,7 @@ Renderer:
     type: 2}
   m_PrefabInternal: {fileID: 1222544068}
   m_GameObject: {fileID: 1287815134}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
@@ -35976,7 +36023,7 @@ MonoBehaviour:
   CallInPreRender: 0
   WireMode: 0
   LensCorrection: 1
-  Chromatic: 1
+  Chromatic: 0
   BackgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
   NearClipPlane: .0500000007
   FarClipPlane: 1000
@@ -41504,6 +41551,10 @@ Prefab:
       propertyPath: loadFromTextFileInEditor
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: riftMagnetometerMode
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1659611844}
@@ -42336,6 +42387,8 @@ MonoBehaviour:
   kinectFloorDetection: 1
   enableRazerHydra: 1
   moveControllers: []
+  riftMagnetometerMode: 0
+  oculusID: 0
 --- !u!1 &1915309723
 GameObject:
   m_ObjectHideFlags: 0

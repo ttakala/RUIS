@@ -16,4 +16,7 @@
   <RazerSettings>
     <enabled value="True" />
   </RazerSettings>
+  <OculusDriftSettings>
+    <magnetometerDriftCorrection value="Off" />
+  </OculusDriftSettings>
 </ns2:ruisInputManager>

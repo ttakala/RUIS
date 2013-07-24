@@ -54,22 +54,15 @@ public class RUISHeadTracker : MonoBehaviour
 		InputTransform = 3,
 		None = 4
 	};
-	
-	public enum CompassSource
-	{
-	    Kinect = 0,
-	    PSMove = 1,
-		RazerHydra = 2,
-		InputTransform = 3,
-		None = 4
-	};
-	
-	public enum RiftMagnetometer
-	{
-	    Off = 0,
-	    ManualCalibration = 1,
-		AutomaticCalibration = 2
-	};
+
+    public enum CompassSource
+    {
+        Kinect = 0,
+        PSMove = 1,
+        RazerHydra = 2,
+        InputTransform = 3,
+        None = 4
+    };
 	
 	public enum RazerHydraBase
 	{
@@ -80,8 +73,6 @@ public class RUISHeadTracker : MonoBehaviour
 	public HeadPositionSource headPositionInput = HeadPositionSource.Kinect;
 	
 	public HeadRotationSource headRotationInput = HeadRotationSource.Kinect;
-	
-	public RiftMagnetometer riftMagnetometerMode = RiftMagnetometer.Off;
 	
 	public RazerHydraBase mobileRazerBase = RazerHydraBase.Kinect;
 	
@@ -278,7 +269,7 @@ public class RUISHeadTracker : MonoBehaviour
 		
 	void Start()
     {
-		oculusCamController = gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
+		
 		
 		if(oculusCamController)
 		{
@@ -377,29 +368,6 @@ public class RUISHeadTracker : MonoBehaviour
 			if(mobileRazerBase == RazerHydraBase.Kinect && hydraBaseJoint == RUISSkeletonManager.Joint.None)
 				Debug.LogError(	 "Your settings indicate that you want to track Razer Hydra base station with a "
 							   + "Kinect joint, but you have left its value to None in Unity inspector!");
-		}
-		
-		if(oculusCamController && OVRDevice.IsSensorPresent(oculusID))
-		{
-			RUISOculusHUD ruisOculusHUD = FindObjectOfType(typeof(RUISOculusHUD)) as RUISOculusHUD;
-			if(riftMagnetometerMode == RiftMagnetometer.AutomaticCalibration)
-			{
-				if(ruisOculusHUD)
-					ruisOculusHUD.StartAutoCalibration();
-				else
-					Debug.LogError(	 "Your settings indicate that you want to start automatic yaw drift correction "
-								   + "process for Oculus Rift in the beginning of the scene, but no RUISOculusHUD "
-								   + "script is found!");
-			}
-			if(riftMagnetometerMode == RiftMagnetometer.ManualCalibration)
-			{
-				if(ruisOculusHUD)
-					ruisOculusHUD.StartManualCalibration();
-				else
-					Debug.LogError(	 "Your settings indicate that you want to start manual yaw drift correction "
-								   + "process for Oculus Rift in the beginning of the scene, but no RUISOculusHUD "
-								   + "script is found!");
-			}
 		}
 	}
 		

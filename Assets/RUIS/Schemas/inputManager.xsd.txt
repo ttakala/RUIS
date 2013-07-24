@@ -9,6 +9,7 @@
 			<element name="PSMoveSettings" type="tns:PSMoveSettingsType"/>
 			<element name="KinectSettings" type="tns:KinectSettingsType"/>
 			<element name="RazerSettings" type="tns:RazerSettingsType"/>
+			<element name="OculusDriftSettings" type="tns:OculusDriftSettingsType"/>
 		</sequence>
 	</complexType>
 
@@ -34,6 +35,12 @@
 	<complexType name="RazerSettingsType">
 		<sequence>
 			<element name="enabled" type="boolean"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="OculusDriftSettingsType">
+		<sequence>
+			<element name="magnetometerDriftCorrection" type="string"/>
 		</sequence>
 	</complexType>
 </schema>

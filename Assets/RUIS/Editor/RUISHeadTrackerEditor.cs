@@ -31,7 +31,6 @@ public class RUISHeadTrackerEditor : Editor
     SerializedProperty skeletonManager;
     SerializedProperty headPositionInput;
     SerializedProperty headRotationInput;
-    SerializedProperty riftMagnetometerMode;
 	SerializedProperty pickRotationSource;
     SerializedProperty oculusID;
 	SerializedProperty resetKey;
@@ -121,8 +120,7 @@ public class RUISHeadTrackerEditor : Editor
 	    skeletonManager = serializedObject.FindProperty("skeletonManager");
 	    headPositionInput = serializedObject.FindProperty("headPositionInput");
 	    headRotationInput = serializedObject.FindProperty("headRotationInput");
-	    riftMagnetometerMode = serializedObject.FindProperty("riftMagnetometerMode"); //
-		pickRotationSource = serializedObject.FindProperty("pickRotationSource");
+        pickRotationSource = serializedObject.FindProperty("pickRotationSource");
 	    oculusID = serializedObject.FindProperty("oculusID"); //
 		resetKey = serializedObject.FindProperty("resetKey");
 	    positionPlayerID = serializedObject.FindProperty("positionPlayerID");
@@ -322,22 +320,6 @@ public class RUISHeadTrackerEditor : Editor
         	EditorGUILayout.PropertyField(oculusID, new GUIContent("Oculus Rift ID", "Choose which Rift is the source of the head tracking. "
 																	+ "Leave this to 0 (multiple Rifts are not supported yet)."));
 			
-        	EditorGUILayout.PropertyField(riftMagnetometerMode, new GUIContent("Rift Drift Correction", "Choose whether Oculus Rift's "
-																	+ "magnetometer is calibrated at the beginning of the scene (for yaw "
-																	+ "drift correction). It can always be (re)calibrated in-game with the "
-																	+ "buttons defined in RUISOculusHUD component of RUISMenu."));
-        	EditorGUI.indentLevel += 2;
-	        switch (riftMagnetometerMode.enumValueIndex)
-	        {
-				
-	            case (int) RUISHeadTracker.RiftMagnetometer.AutomaticCalibration:
-					break;
-	            case (int) RUISHeadTracker.RiftMagnetometer.ManualCalibration:
-					break;
-	            case (int) RUISHeadTracker.RiftMagnetometer.Off:
-					break;
-			}
-        	EditorGUI.indentLevel -= 2;
 			
 			EditorStyles.textField.wordWrap = true;
 			EditorGUILayout.TextArea("OVRCameraController script detected in a child object of this " + headTrackerScript.gameObject.name

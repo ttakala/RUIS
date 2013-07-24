@@ -34,6 +34,8 @@ public class RUISInputManagerEditor : Editor {
 	
 	SerializedProperty enableRazerHydra;
 
+    SerializedProperty riftMagnetometerMode;
+
     void OnEnable()
     {
         inputConfig = target as RUISInputManager;
@@ -54,6 +56,8 @@ public class RUISInputManagerEditor : Editor {
 		floorDetectionOnSceneStart = serializedObject.FindProperty("kinectFloorDetection");
 		
 		enableRazerHydra = serializedObject.FindProperty("enableRazerHydra");
+
+        riftMagnetometerMode = serializedObject.FindProperty("riftMagnetometerMode");
     }
 
     public override void OnInspectorGUI()
@@ -127,6 +131,13 @@ public class RUISInputManagerEditor : Editor {
 			
             EditorGUI.indentLevel -= 2;
         }
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.PropertyField(riftMagnetometerMode, new GUIContent("Rift Drift Correction", "Choose whether Oculus Rift's "
+                                                                    + "magnetometer is calibrated at the beginning of the scene (for yaw "
+                                                                    + "drift correction). It can always be (re)calibrated in-game with the "
+                                                                    + "buttons defined in RUISOculusHUD component of RUISMenu."));
 
 
         serializedObject.ApplyModifiedProperties();

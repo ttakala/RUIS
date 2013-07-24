@@ -314,6 +314,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     private void ApplyCounteringRotationToLimbRoot(BoneTriplet torsoBone, BoneTriplet limbRootBone)
     {
+        //boneTriplet.blendedTransform.localRotation = Quaternion.Slerp(boneTriplet.kinectTransform.localRotation, boneTriplet.mecanimTransform.localRotation, blendWeight);
+
         float limbRootBlendWeight = GetBlendWeight(limbRootBone.bodypartClassification);
         
         //first set the global rotation so that it matches
@@ -322,7 +324,10 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
         //then apply the yaw to turn the limb to the same general direction as the torso
         Quaternion kinectToMecanimYaw = CalculateKinectToMecanimYaw();
         kinectToMecanimYaw = Quaternion.Slerp(Quaternion.identity, kinectToMecanimYaw, limbRootBlendWeight);
-        limbRootBone.blendedTransform.rotation = limbRootBone.blendedTransform.rotation * Quaternion.AngleAxis(kinectToMecanimYaw.eulerAngles.x, limbRootBone.blendedTransform.InverseTransformDirection(transform.up));//* newLocalRotation * Quaternion.Inverse(limbRootBone.blendedTransform.rotation) * limbRootBone.blendedTransform.rotation;
+
+        float angles = Vector3.Angle(Vector3.up, kinectToMecanimYaw * Vector3.up);
+            
+        limbRootBone.blendedTransform.rotation = limbRootBone.blendedTransform.rotation * Quaternion.AngleAxis(angles, limbRootBone.blendedTransform.InverseTransformDirection(transform.up));//* newLocalRotation * Quaternion.Inverse(limbRootBone.blendedTransform.rotation) * limbRootBone.blendedTransform.rotation;
     }
 
     private Quaternion CalculateKinectToMecanimYaw()
@@ -335,10 +340,10 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
         kinectTorsoUp.Normalize();
         Quaternion kinectTorsoRotation = Quaternion.LookRotation(kinectTorsoForward, kinectTorsoUp);
 
-        Vector3 mecanimTorsoForward = torsoRoot.mecanimTransform.forward;
+        Vector3 mecanimTorsoForward = -transform.right;
         mecanimTorsoForward.y = 0;
         mecanimTorsoForward.Normalize();
-        Vector3 mecanimTorsoUp = torsoRoot.mecanimTransform.up;
+        Vector3 mecanimTorsoUp = transform.forward;
         mecanimTorsoUp.y = 0;
         mecanimTorsoUp.Normalize();
         Quaternion mecanimTorsoRotation = Quaternion.LookRotation(mecanimTorsoForward, mecanimTorsoUp);
@@ -350,5 +355,11 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
     private bool IsLimbRoot(BoneTriplet bone)
     {
         return bone == headRoot || bone == rightArmRoot || bone == leftArmRoot || bone == rightLegRoot || bone == leftLegRoot;
+    }
+
+    private bool IsPartOfLimb(BoneTriplet bone)
+    {
+        return bone.bodypartClassification == BodypartClassification.RightLeg ||
+               bone.bodypartClassification == BodypartClassification.LeftLeg;
     }
 }
