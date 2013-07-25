@@ -37,6 +37,11 @@ public class RUISCharacterController : MonoBehaviour
     public bool grounded { get; private set; }
 
     private RUISCharacterStabilizingCollider stabilizingCollider;
+	
+	public bool dynamicFriction = false;
+	public PhysicMaterial dynamicMaterial;
+	private PhysicMaterial originalMaterial;
+	private Collider colliderComponent;
 
     void Awake()
     {
@@ -44,7 +49,44 @@ public class RUISCharacterController : MonoBehaviour
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
         stabilizingCollider = GetComponentInChildren<RUISCharacterStabilizingCollider>();
     }
-
+	
+    void Start()
+    {
+		
+		if(stabilizingCollider)
+		{
+			colliderComponent = stabilizingCollider.gameObject.collider;
+			if(colliderComponent)
+			{
+				if(colliderComponent.material)
+					originalMaterial = colliderComponent.material;
+				else
+				{
+					colliderComponent.material = new PhysicMaterial();
+					originalMaterial = colliderComponent.material;
+				}
+				
+				if(dynamicMaterial == null)
+				{
+					dynamicMaterial = new PhysicMaterial();
+					
+					dynamicMaterial.dynamicFriction = 0;
+					dynamicMaterial.staticFriction = 0;
+					dynamicMaterial.frictionCombine = PhysicMaterialCombine.Minimum;
+					
+					if(colliderComponent.material)
+					{
+						dynamicMaterial.bounceCombine = originalMaterial.bounceCombine;
+						dynamicMaterial.bounciness = originalMaterial.bounciness;
+						dynamicMaterial.staticFriction2 = originalMaterial.staticFriction2;
+						dynamicMaterial.dynamicFriction2 = originalMaterial.dynamicFriction2;
+						dynamicMaterial.frictionDirection2 = originalMaterial.frictionDirection2;
+					}
+				}
+			}
+		}
+	}
+	
     void Update()
     {
         Vector3 raycastPosition = stabilizingCollider ? stabilizingCollider.transform.position : transform.position;
@@ -53,7 +95,34 @@ public class RUISCharacterController : MonoBehaviour
         distanceToRaycast += groundedErrorTweaker;
 
         grounded = Physics.Raycast(raycastPosition, -transform.up, distanceToRaycast, groundLayers.value);
+	
     }
+	
+	void FixedUpdate()
+	{
+	
+		if(dynamicFriction && stabilizingCollider)
+		{
+			colliderComponent = stabilizingCollider.gameObject.collider;
+			if(colliderComponent)
+			{
+				if(colliderComponent.material)
+				{
+					
+					if(grounded)
+					{
+						colliderComponent.material = originalMaterial;
+					}
+					else
+					{
+						colliderComponent.material = dynamicMaterial; 
+					}
+					Debug.LogError(colliderComponent.material.dynamicFriction + " " + colliderComponent.material.staticFriction 
+						+ " " + colliderComponent.material.frictionCombine);
+				}
+			}
+		}
+	}
 
     public void RotateAroundCharacterPivot(Vector3 eulerRotation)
     {

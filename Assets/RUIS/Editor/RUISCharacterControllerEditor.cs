@@ -21,6 +21,8 @@ public class RUISCharacterControllerEditor : Editor
     SerializedProperty ignorePitchAndRoll;
     SerializedProperty groundLayers;
     SerializedProperty groundedErrorTweaker;
+	SerializedProperty dynamicFriction;
+	SerializedProperty dynamicMaterial;
 
     public void OnEnable()
     {
@@ -30,6 +32,8 @@ public class RUISCharacterControllerEditor : Editor
         ignorePitchAndRoll = serializedObject.FindProperty("ignorePitchAndRoll");
         groundLayers = serializedObject.FindProperty("groundLayers");
         groundedErrorTweaker = serializedObject.FindProperty("groundedErrorTweaker");
+        dynamicFriction = serializedObject.FindProperty("dynamicFriction");
+        dynamicMaterial = serializedObject.FindProperty("dynamicMaterial");
     }
 
     public override void OnInspectorGUI()
@@ -50,12 +54,26 @@ public class RUISCharacterControllerEditor : Editor
                 break;
         }
 
-        EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent("Ignore Pitch and Roll", "Should the pitch and roll values of the pivot rotation be taken into account when transforming directions into character coordinates?"));
+        EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent("Ignore Pitch and Roll", "Should the pitch and roll values of the pivot "
+																		+ "rotation be taken into account when transforming directions into character coordinates?"));
 
         EditorGUILayout.PropertyField(groundLayers, new GUIContent("Ground Layers", "The layers to take into account when checking whether the character is grounded"));
 
-        EditorGUILayout.PropertyField(groundedErrorTweaker, new GUIContent("Grounded error tweaker", "This value can be adjusted to allow for some leniency in the checks whether the character is grounded"));
-
+        EditorGUILayout.PropertyField(groundedErrorTweaker, new GUIContent("Grounded error tweaker", "This value can be adjusted to allow for some leniency in the "
+																		+ "checks whether the character is grounded"));
+		
+        EditorGUILayout.PropertyField(dynamicFriction, new GUIContent(  "Dynamic Friction", "Enable this if you want the character collider to switch "
+																	  + "to a different Physics Material whenever the character is not grounded. We "
+																	  + "recommend that you enable this."));
+		
+		if(dynamicFriction.boolValue)
+		{
+			EditorGUI.indentLevel += 2;
+	        EditorGUILayout.PropertyField(dynamicMaterial, new GUIContent(  "Dynamic Material", "We recommend that you leave this to None. Then a "
+																		  + "frictionless material will be used and the character won't be able to "
+																		  + "climb walls with friction, and he will slide down steep hills." ));
+			EditorGUI.indentLevel -= 2;
+		}
         serializedObject.ApplyModifiedProperties();
     }
 }

@@ -205,8 +205,6 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 						break;
 				}
 			}
-			else Debug.LogError("FALSE " + (closestMatch != null) + " " + inputManager.kinectDriftCorrectionPreferred + " " + closestMatch.useOculusRiftRotation + " " + applyKinectDriftCorrectionPreference);
-				
 		}
 		
 		
