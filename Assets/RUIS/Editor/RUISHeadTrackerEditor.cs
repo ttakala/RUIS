@@ -117,7 +117,7 @@ public class RUISHeadTrackerEditor : Editor
 		}
 		
 		defaultPosition = serializedObject.FindProperty("defaultPosition");
-	    skeletonManager = serializedObject.FindProperty("skeletonManager");
+	    //skeletonManager = serializedObject.FindProperty("skeletonManager");
 	    headPositionInput = serializedObject.FindProperty("headPositionInput");
 	    headRotationInput = serializedObject.FindProperty("headRotationInput");
         pickRotationSource = serializedObject.FindProperty("pickRotationSource");
@@ -200,7 +200,7 @@ public class RUISHeadTrackerEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(defaultPosition, new GUIContent("Default Position (meters)", "Head position before tracking starts"));
-        EditorGUILayout.PropertyField(skeletonManager, new GUIContent("skeletonManager", "Can be None"));
+        //EditorGUILayout.PropertyField(skeletonManager, new GUIContent("skeletonManager", "Can be None"));
 		
 		
 		if(!riftFound)

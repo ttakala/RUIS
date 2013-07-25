@@ -93,7 +93,7 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	public int oculusID = 0;
 	OVRCameraController oculusCamController;
-	bool useOculusRiftRotation = false;
+	public bool useOculusRiftRotation = false;
 	public KeyCode resetKey;
 	
     public int positionPlayerID = 0;
@@ -265,18 +265,12 @@ public class RUISHeadTracker : MonoBehaviour
 		
 		hydraBasePosition = new Vector3(0, 0, 0);
 		hydraBaseRotation = Quaternion.identity;
-    }
 		
-	void Start()
-    {
-		
+		oculusCamController = gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
 		
 		if(oculusCamController)
 		{
 			useOculusRiftRotation = true;
-			Debug.Log("OVRCameraController script detected in a child object of this " + gameObject.name
-					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
-					+ "trackers when you remove the OVRCameraController component from the child object(s).");
 		}
 		else
 		{
@@ -285,7 +279,10 @@ public class RUISHeadTracker : MonoBehaviour
 		//oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
 		//if(headRotationInput == HeadRotationSource.OculusRift && !oculusCamController)
 		//	Debug.LogError("OVRCameraController script is missing from this scene!");
+    }
 		
+	void Start()
+    {
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(		!inputManager
 			&&  (	headPositionInput == HeadPositionSource.PSMove
@@ -369,6 +366,11 @@ public class RUISHeadTracker : MonoBehaviour
 				Debug.LogError(	 "Your settings indicate that you want to track Razer Hydra base station with a "
 							   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		}
+		
+		if(oculusCamController && Application.isEditor)
+			Debug.Log("OVRCameraController script detected in a child object of this " + gameObject.name
+					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
+					+ "trackers when you remove the OVRCameraController component from the child object(s).");
 	}
 		
 	void Update () 

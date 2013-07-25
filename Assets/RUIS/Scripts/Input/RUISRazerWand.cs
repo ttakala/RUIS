@@ -15,7 +15,7 @@ public class RUISRazerWand : RUISWand {
 	RUISHeadTracker headTracker;
 	
 	public SixenseButtons selectionButton = SixenseButtons.BUMPER;
-	public SixenseHands	controller;
+	public SixenseHands	controller = SixenseHands.LEFT;
 	SixenseInput.Controller razer;
 	
 	private Vector3	sensitivity = new Vector3( 0.001f, 0.001f, 0.001f );
@@ -43,7 +43,21 @@ public class RUISRazerWand : RUISWand {
 	
 	public void Start ()
     {
-		headTracker = Object.FindObjectOfType(typeof(RUISHeadTracker)) as RUISHeadTracker;
+		// Try to find RUISTracker that uses Razer Hydra in some way
+		RUISHeadTracker[] trackers = Object.FindObjectsOfType(typeof(RUISHeadTracker)) as RUISHeadTracker[];
+		for(int i = 0; i < trackers.Length; ++i)
+		{
+			// Below complicated clauses make sure that this is a properly configured Razer Hydra tracker
+			if(		trackers[i].headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
+				||	(	trackers[i].headRotationInput == RUISHeadTracker.HeadRotationSource.RazerHydra
+					 &&	!trackers[i].useOculusRiftRotation)
+				||	(	trackers[i].compass == RUISHeadTracker.CompassSource.RazerHydra
+					 && trackers[i].externalDriftCorrection
+					 && (	trackers[i].useOculusRiftRotation 
+						 || trackers[i].headRotationInput == RUISHeadTracker.HeadRotationSource.InputTransform )))
+				if(trackers[i].isRazerBaseMobile) // Found a Razer Hydra tracker that claims to have mobile base
+					headTracker = Object.FindObjectOfType(typeof(RUISHeadTracker)) as RUISHeadTracker;
+		}
 	}
 	
 	void Update ()

@@ -51,16 +51,6 @@ public class RUISOculusHUD : MonoBehaviour
 	
 	void Awake()
 	{
-		// Find camera controller
-		OVRCameraController[] CameraControllers;
-		CameraControllers = FindObjectsOfType(typeof(OVRCameraController)) as OVRCameraController[];
-		
-		if(CameraControllers.Length == 0)
-			Debug.LogWarning("OVRMainMenu: No OVRCameraController attached.");
-		else if (CameraControllers.Length > 1)
-			Debug.LogWarning("OVRMainMenu: More then 1 OVRCameraController attached.");
-		else
-			CameraController = CameraControllers[0];
 		
 		magCal.autoCalibrationKey 	= autoCalibrateKey;
 		magCal.manualCalibrationKey = manualCalibrateKey;
@@ -72,6 +62,17 @@ public class RUISOculusHUD : MonoBehaviour
 	{
 		// Set the GUI target 
 		GUIRenderObject = GameObject.Instantiate(Resources.Load("OVRGUIObjectMain")) as GameObject;
+		
+		// Find camera controller
+		OVRCameraController[] CameraControllers;
+		CameraControllers = FindObjectsOfType(typeof(OVRCameraController)) as OVRCameraController[];
+		
+		if(CameraControllers.Length == 0)
+			Debug.LogWarning("OVRMainMenu: No OVRCameraController attached.");
+		else if (CameraControllers.Length > 1)
+			Debug.LogWarning("OVRMainMenu: More then 1 OVRCameraController attached.");
+		else
+			CameraController = CameraControllers[0];
 		
 		if(GUIRenderObject != null)
 		{

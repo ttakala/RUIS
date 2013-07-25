@@ -39,6 +39,7 @@ public class RUISInputManager : MonoBehaviour
     public bool enableKinect = true;
     public int maxNumberOfKinectPlayers = 2;
     public bool kinectFloorDetection = true;
+	public bool kinectDriftCorrectionPreferred = false;
 	
     public bool enableRazerHydra = true;
 	private SixenseInput sixense;
