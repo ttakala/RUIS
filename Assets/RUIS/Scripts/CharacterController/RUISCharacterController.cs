@@ -35,26 +35,32 @@ public class RUISCharacterController : MonoBehaviour
     public float groundedErrorTweaker = 0.05f;
 
     public bool grounded { get; private set; }
+    public bool colliding { get; private set; }
+	private bool wasColliding = false;
 
     private RUISCharacterStabilizingCollider stabilizingCollider;
 	
-	public bool dynamicFriction = false;
+	public bool dynamicFriction = true;
 	public PhysicMaterial dynamicMaterial;
 	private PhysicMaterial originalMaterial;
 	private Collider colliderComponent;
+    public float lastJumpTime { get; set; }
 
     void Awake()
     {
         inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
         stabilizingCollider = GetComponentInChildren<RUISCharacterStabilizingCollider>();
+		lastJumpTime = 0;
     }
 	
     void Start()
     {
+		colliding = false;
+		grounded = false;
 		
 		if(stabilizingCollider)
-		{
+		{	
 			colliderComponent = stabilizingCollider.gameObject.collider;
 			if(colliderComponent)
 			{
@@ -100,25 +106,31 @@ public class RUISCharacterController : MonoBehaviour
 	
 	void FixedUpdate()
 	{
-	
-		if(dynamicFriction && stabilizingCollider)
+		if(wasColliding)
+			colliding = true;
+		else
+			colliding = false;
+		wasColliding = false;
+		
+		if(stabilizingCollider)
 		{
-			colliderComponent = stabilizingCollider.gameObject.collider;
-			if(colliderComponent)
+			if(dynamicFriction)
 			{
-				if(colliderComponent.material)
+				colliderComponent = stabilizingCollider.gameObject.collider;
+				if(colliderComponent)
 				{
-					
-					if(grounded)
+					if(colliderComponent.material)
 					{
-						colliderComponent.material = originalMaterial;
+						
+						if(grounded && (Time.fixedTime - lastJumpTime) > 1)
+						{
+							colliderComponent.material = originalMaterial;
+						}
+						else
+						{
+							colliderComponent.material = dynamicMaterial; 
+						}
 					}
-					else
-					{
-						colliderComponent.material = dynamicMaterial; 
-					}
-					Debug.LogError(colliderComponent.material.dynamicFriction + " " + colliderComponent.material.staticFriction 
-						+ " " + colliderComponent.material.frictionCombine);
 				}
 			}
 		}
@@ -134,21 +146,21 @@ public class RUISCharacterController : MonoBehaviour
         }
 
         pivotPosition = transform.TransformPoint(pivotPosition);
-        Debug.Log("pivotPosition: " + pivotPosition);
+        //Debug.Log("pivotPosition: " + pivotPosition);
         //Debug.DrawLine(pivotPosition, transform.position, Color.blue);
 
         Vector3 positionDiff = pivotPosition - transform.position;
         //Debug.Log("old: " + positionDiff);
         //positionDiff.y = 0;
-        Debug.DrawLine(pivotPosition - positionDiff, pivotPosition, Color.red);
+        //Debug.DrawLine(pivotPosition - positionDiff, pivotPosition, Color.red);
 
         positionDiff = Quaternion.Euler(eulerRotation) * positionDiff;
         //Debug.DrawLine(transform.position, pivotPosition, Color.red);
-        Debug.DrawLine(pivotPosition - positionDiff, pivotPosition, Color.green);
+        //Debug.DrawLine(pivotPosition - positionDiff, pivotPosition, Color.green);
 
         //Debug.Log("new: " + positionDiff);
         Vector3 newPosition = pivotPosition - positionDiff;
-        Debug.DrawLine(transform.position, newPosition, Color.yellow);
+        //Debug.DrawLine(transform.position, newPosition, Color.yellow);
         rigidbody.MovePosition(newPosition);
         rigidbody.MoveRotation(Quaternion.Euler(eulerRotation) * transform.rotation);
     }
@@ -211,4 +223,15 @@ public class RUISCharacterController : MonoBehaviour
 
         Gizmos.DrawLine(transform.position, pivotPosition);
     }
+	
+	
+	void OnCollisionStay(Collision other)
+	{
+		// Check if collider belongs to groundLayers
+		//if((groundLayers.value & (1 << other.gameObject.layer)) > 0)
+		//{
+		wasColliding = true;
+		//Debug.LogError(other.gameObject.name);
+		//}
+	}
 }

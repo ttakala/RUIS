@@ -32,6 +32,8 @@ public class RUISCharacterLocomotionEditor : Editor {
 	SerializedProperty razerHydraID;
 	
     SerializedProperty jumpStrength;
+	SerializedProperty jumpSpeedEffect;
+	SerializedProperty aerialMobility;
 
     public void OnEnable()
     {
@@ -47,18 +49,27 @@ public class RUISCharacterLocomotionEditor : Editor {
         jumpStrength = serializedObject.FindProperty("jumpStrength");
 		useRazerHydra = serializedObject.FindProperty("useRazerHydra");
 		razerHydraID = serializedObject.FindProperty("razerHydraID");
+		jumpSpeedEffect = serializedObject.FindProperty("jumpSpeedEffect");
+		aerialMobility = serializedObject.FindProperty("aerialMobility");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
+		
+		if(jumpSpeedEffect.floatValue < 0)
+			jumpSpeedEffect.floatValue = 0;
+		
         EditorGUILayout.PropertyField(turnRightKey, new GUIContent("Turn Right Key", "Which key is used to rotate the character to rigth"));
         EditorGUILayout.PropertyField(turnLeftKey, new GUIContent("Turn Left Key", "Which key is used to rotate the character to left"));
         EditorGUILayout.PropertyField(rotationScaler, new GUIContent("Rotation Speed", "How fast is the character rotating when pressing turn key"));
-        EditorGUILayout.PropertyField(speed, new GUIContent("Speed", "How fast is the character moving with Input.GetAxis()"));
+        EditorGUILayout.PropertyField(speed, new GUIContent("Moving Speed", "How fast is the character moving with Input.GetAxis()"));
         EditorGUILayout.PropertyField(maxVelocityChange, new GUIContent("Max Velocity Change", "How fast character can change existing velocity (e.g. sliding)"));
 		EditorGUILayout.PropertyField(jumpStrength, new GUIContent("Jump Strength", "Mass-invariant impulse force that is applied when jumping"));
+		EditorGUILayout.PropertyField(jumpSpeedEffect, new GUIContent("Speed Effect on Jump", "How much speed effects the jump strength. Value 0 means no effect, "
+																	+ "value 1 means double strength when moving at max speed and so on."));
+		EditorGUILayout.PropertyField(aerialMobility, new GUIContent("Aerial Mobility", "At which rate the character can change his velocity while jumping "
+																	+ "or airborne."));
 		
         EditorGUILayout.PropertyField(useRazerHydra, new GUIContent("Use Razer Hydra", "Enable walking with a Razer Hydra controller"));
 		

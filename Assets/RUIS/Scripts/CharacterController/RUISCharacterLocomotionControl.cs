@@ -34,12 +34,27 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 	public bool strafeInsteadTurning = false;
 
     public float jumpStrength = 10f;
+	public float jumpSpeedEffect = 0;
+	public float aerialMobility = 0.1f;
+	
+    private Vector3 velocity;
+    private Vector3 velocityChange;
+	private bool airborne = false;
+	private bool grounded = true;
+	private bool colliding = true;
+	private Vector3 accumulatedAirboneVelocity = new Vector3(0, 0, 0);
+	private Vector3 jumpTimeVelocity = new Vector3(0, 0, 0);
+	
+	
+	float extraSpeed = 0;
+	private float timeSinceJump = 0;
 
     private RUISJumpGestureRecognizer jumpGesture;
 
 	public float forwardSpeed { get; private set; }
     public float strafeSpeed { get; private set; }
     public float direction { get; private set; }
+    public bool jump { get; private set; }
 	
     // TUUKKA
 	public bool useRazerHydra = true;
@@ -49,6 +64,8 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
     PSMoveWrapper moveWrapper;
 
     bool shouldJump = false;
+
+    private float animationBlendStrength = 10.0f;
 
     void Awake()
     {
@@ -83,7 +100,12 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 
     void Update()
     {
-        if (characterController.grounded && (Input.GetButtonDown("Jump") || JumpGestureTriggered()))
+        jump = false;
+
+        if(characterController == null || !characterController.grounded)
+			return;
+        
+        if ((Input.GetButtonDown("Jump") || JumpGestureTriggered()))
         {
             shouldJump = true;
         }
@@ -111,17 +133,50 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                 }
             }
 		}
+
+        if (shouldJump)
+        {
+            jump = true;
+        }
     }
 
     void FixedUpdate()
     {
         //characterController.ApplyForceInCharacterDirection(translation);
 
-		direction = 0;
+        direction = 0;
 		
+		if(characterController != null)
+		{
+			grounded  = characterController.grounded;
+			colliding = characterController.colliding;
+		}
+		
+		if(grounded || colliding)
+		{
+			airborne = false;
+			accumulatedAirboneVelocity = Vector3.zero;
+		}
+		else
+		{
+			timeSinceJump += Time.fixedDeltaTime;
+			if(!airborne)
+			{
+				jumpTimeVelocity = rigidbody.velocity;
+				timeSinceJump = 0;
+			}
+			airborne = true;
+		}
+			
         Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-		// Check if moving with PS Move Navigation controller
+        {
+            extraSpeed = Input.GetAxis("Sprint");
+			if(!airborne)
+	            targetVelocity *= 1 + extraSpeed;
+        }
+
+        // Check if moving with PS Move Navigation controller
         if (PSNaviControllerID < 0)
         {
             Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
@@ -135,29 +190,30 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                 {
                     int horiz = moveWrapper.valueNavAnalogX[PSNaviControllerID];
                     int verti = moveWrapper.valueNavAnalogY[PSNaviControllerID];
-                    float extraSpeed = ((float)moveWrapper.valueNavL2[PSNaviControllerID]) / 255f;
+					if(!airborne)
+	                    extraSpeed = ((float)moveWrapper.valueNavL2[PSNaviControllerID]) / 255f;
+					else
+						extraSpeed = 0;
                     if (Mathf.Abs(verti) > 20)
                         targetVelocity += new Vector3(0, 0, -((float)verti) / 128f * (1 + extraSpeed));
-                    //if(Mathf.Abs(horiz) > 20)
-                    //	targetVelocity += new Vector3(((float) horiz)/128f*(1 + extraSpeed), 0, 0);
-					
-					if(strafeInsteadTurning)
-					{
-	                    if (Mathf.Abs(horiz) > 20)
-	                        targetVelocity += new Vector3(((float)horiz) / 128f * (1 + extraSpeed), 0, 0);
-					}
-					else
-					{
-	                    if (Mathf.Abs(horiz) > 10)
-	                    {
-							if (horiz > 0)
+
+                    if (strafeInsteadTurning)
+                    {
+                        if (Mathf.Abs(horiz) > 20)
+                            targetVelocity += new Vector3(((float)horiz) / 128f * (1 + extraSpeed), 0, 0);
+                    }
+                    else
+                    {
+                        if (Mathf.Abs(horiz) > 10)
+                        {
+                            if (horiz > 0)
                                 direction = 1;
                             else
                                 direction = -1;
-	                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f 
-																							  * Time.fixedDeltaTime, 0));
-	                    }
-					}
+                            characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f
+                                                                                              * Time.fixedDeltaTime, 0));
+                        }
+                    }
                 }
             }
             else
@@ -166,49 +222,81 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                                 + " which is too big value: It must be below 7.");
             }
         }
-		
-        // TUUKKA
-		if(useRazerHydra) // Check if moving with Razer Hydra controller
-		{
-			razerController = SixenseInput.GetController(razerHydraID);
-			if(razerController != null && razerController.Enabled)
-			{
-                    float extraSpeed = razerController.Trigger; 
-                    if (Mathf.Abs(razerController.JoystickY) > 0.15f)
-                        targetVelocity += new Vector3(0, 0, razerController.JoystickY * (1 + extraSpeed));
-					
-					if(strafeInsteadTurning)
-					{
-	                    if (Mathf.Abs(razerController.JoystickX) > 0.15f)
-	                        targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed), 0, 0);
-					}
-					else
-					{
-	                    if (Mathf.Abs(razerController.JoystickX) > 0.075f)
-	                    {
-	                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * razerController.JoystickX 
-																							  * Time.fixedDeltaTime, 0));
-	                    }
-					}
-			}
-		}
 
-		forwardSpeed = targetVelocity.z;
-        strafeSpeed = targetVelocity.x;
+        // TUUKKA
+        if (useRazerHydra) // Check if moving with Razer Hydra controller
+        {
+            razerController = SixenseInput.GetController(razerHydraID);
+            if (razerController != null && razerController.Enabled)
+            {
+				if(!airborne)
+	                extraSpeed = razerController.Trigger;
+				else
+					extraSpeed = 0;
+				
+                if (Mathf.Abs(razerController.JoystickY) > 0.15f)
+                    targetVelocity += new Vector3(0, 0, razerController.JoystickY * (1 + extraSpeed));
+
+                if (strafeInsteadTurning)
+                {
+                    if (Mathf.Abs(razerController.JoystickX) > 0.15f)
+                        targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed), 0, 0);
+                }
+                else
+                {
+                    if (Mathf.Abs(razerController.JoystickX) > 0.075f)
+                    {
+                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * razerController.JoystickX
+                                                                                          * Time.fixedDeltaTime, 0));
+                    }
+                }
+            }
+        }
 		
+		targetVelocity = Vector3.ClampMagnitude(targetVelocity, 2);
+
+        forwardSpeed = Mathf.Lerp(forwardSpeed, targetVelocity.z, Time.deltaTime * animationBlendStrength);
+        strafeSpeed = Mathf.Lerp(strafeSpeed, targetVelocity.x, Time.deltaTime * animationBlendStrength);
+		
+		float inputStrength = targetVelocity.magnitude;
         targetVelocity = characterController.TransformDirection(targetVelocity);
         targetVelocity *= speed;
 
-        Vector3 velocity = rigidbody.velocity;
-        Vector3 velocityChange = (targetVelocity - velocity);
-		
+        velocity = rigidbody.velocity;
+        velocityChange = (targetVelocity - velocity);
+
         velocityChange.y = 0;
-		velocityChange = Vector3.ClampMagnitude(velocityChange, maxVelocityChange);
-        //velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-        //velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-        //velocityChange.y = 0;
+        velocityChange = Vector3.ClampMagnitude(velocityChange, maxVelocityChange);
 		
-        rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+		if(!airborne)
+		{
+        	rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+		}
+		else
+		{
+			// Below is very hacky ***
+			accumulatedAirboneVelocity += aerialMobility*targetVelocity;
+			Vector3 temp = new Vector3(jumpTimeVelocity.x, 0, jumpTimeVelocity.z);
+			velocityChange = temp.normalized*Vector3.Dot(accumulatedAirboneVelocity, temp.normalized);
+			if(Vector3.Dot(velocityChange, temp) > 0)
+			{
+				accumulatedAirboneVelocity -= velocityChange;
+				accumulatedAirboneVelocity = Vector3.ClampMagnitude(accumulatedAirboneVelocity, speed);
+			}
+			else
+			{
+				accumulatedAirboneVelocity = Vector3.ClampMagnitude(accumulatedAirboneVelocity, speed);
+				
+				jumpTimeVelocity *= Mathf.Clamp01(1-0.1f*timeSinceJump);
+				
+			}
+			
+			velocityChange = jumpTimeVelocity + accumulatedAirboneVelocity - velocity;
+        	velocityChange.y = 0;
+        	velocityChange = Vector3.ClampMagnitude(velocityChange, maxVelocityChange);
+			
+			rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+		}
 
         rigidbody.AddForce(new Vector3(0, -gravity * rigidbody.mass, 0));
 
@@ -226,9 +314,14 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 
         if (shouldJump)
         {
-            rigidbody.AddForce(new Vector3(0, jumpStrength * rigidbody.mass, 0), ForceMode.Impulse);
+            rigidbody.AddForce(new Vector3(0, Mathf.Sqrt((1 + 0.5f*Mathf.Abs(forwardSpeed)*jumpSpeedEffect) * jumpStrength) 
+																			* rigidbody.mass, 0), ForceMode.Impulse);
+			if(characterController)
+				characterController.lastJumpTime = Time.fixedTime;
+			
             shouldJump = false;
         }
+		
     }
 
     bool JumpGestureTriggered()
