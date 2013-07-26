@@ -16,6 +16,7 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer {
     public float requiredUpwardVelocity = 1.0f;
     public float timeBetweenJumps = 1.0f;
     public float feetHeightThreshold = 0.1f;
+    public float requiredConfidence = 1.0f;
 
     public enum State
     {
@@ -109,6 +110,12 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer {
 
     private void DoWaitingForJump()
     {
+        if (skeletonManager.skeletons[playerId].leftFoot.positionConfidence < requiredConfidence ||
+            skeletonManager.skeletons[playerId].rightFoot.positionConfidence < requiredConfidence)
+        {
+            return;
+        }
+
         leftFootHeight = skeletonManager.skeletons[playerId].leftFoot.position;
         rightFootHeight = skeletonManager.skeletons[playerId].rightFoot.position;
 

@@ -244,6 +244,8 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
     private void UpdateBoneScalings()
     {
+        if (!ConfidenceGoodEnoughForScaling()) return;
+
         torsoScale = UpdateTorsoScale();
 
         {
@@ -302,5 +304,13 @@ public class RUISPlainSkeletonController : MonoBehaviour
     {
         if (!neck) return;
         neck.localPosition = neckOriginalLocalPosition - neck.InverseTransformDirection(Vector3.up) * neckHeightTweaker;
+    }
+
+    public bool ConfidenceGoodEnoughForScaling()
+    {
+        return skeletonManager.skeletons[playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate || 
+               skeletonManager.skeletons[playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate  ||
+               skeletonManager.skeletons[playerId].rightHip.positionConfidence < minimumConfidenceToUpdate      || 
+               skeletonManager.skeletons[playerId].leftHip.positionConfidence < minimumConfidenceToUpdate;
     }
 }

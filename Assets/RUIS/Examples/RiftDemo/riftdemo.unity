@@ -3020,6 +3020,7 @@ MonoBehaviour:
   requiredUpwardVelocity: .800000012
   timeBetweenJumps: 1
   feetHeightThreshold: .200000003
+  requiredConfidence: 1
 --- !u!114 &145589108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9483,6 +9484,7 @@ MonoBehaviour:
   mobileRazerBase: 0
   pickRotationSource: 0
   oculusID: 0
+  useOculusRiftRotation: 0
   resetKey: 0
   positionPlayerID: 0
   rotationPlayerID: 0
@@ -42385,6 +42387,7 @@ MonoBehaviour:
   enableKinect: 1
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
+  kinectDriftCorrectionPreferred: 0
   enableRazerHydra: 1
   moveControllers: []
   riftMagnetometerMode: 0
