@@ -54,6 +54,8 @@ public class RUISInputManager : MonoBehaviour
     public RiftMagnetometer riftMagnetometerMode = RiftMagnetometer.Off;
     public int oculusID = 0;
 
+    public bool jumpGestureEnabled = true;
+
     public void Awake()
     {
         if (!Application.isEditor || loadFromTextFileInEditor)
@@ -114,7 +116,7 @@ public class RUISInputManager : MonoBehaviour
             }
 			else // Tuukka:
 			{
-				if(kinectFloorDetection)
+				if(kinectFloorDetection && !enablePSMove)
 				{
 					StartFloorDetection();
 				}
@@ -227,6 +229,7 @@ public class RUISInputManager : MonoBehaviour
         enableKinect = bool.Parse(kinectNode.SelectSingleNode("enabled").Attributes["value"].Value);
         maxNumberOfKinectPlayers = int.Parse(kinectNode.SelectSingleNode("maxPlayers").Attributes["value"].Value);
         kinectFloorDetection = bool.Parse(kinectNode.SelectSingleNode("floorDetection").Attributes["value"].Value);
+        jumpGestureEnabled = bool.Parse(kinectNode.SelectSingleNode("jumpGestureEnabled").Attributes["value"].Value);
 
         XmlNode razerNode = xmlDoc.GetElementsByTagName("RazerSettings").Item(0);
         enableRazerHydra = bool.Parse(razerNode.SelectSingleNode("enabled").Attributes["value"].Value);
@@ -234,6 +237,7 @@ public class RUISInputManager : MonoBehaviour
         XmlNode riftDriftNode = xmlDoc.GetElementsByTagName("OculusDriftSettings").Item(0);
         string magnetometerMode = riftDriftNode.SelectSingleNode("magnetometerDriftCorrection").Attributes["value"].Value;
         riftMagnetometerMode = (RiftMagnetometer)System.Enum.Parse(typeof(RiftMagnetometer), magnetometerMode);
+        kinectDriftCorrectionPreferred = bool.Parse(riftDriftNode.SelectSingleNode("kinectDriftCorrectionIfAvailable").Attributes["value"].Value);
 
         return true;
     }
@@ -295,6 +299,10 @@ public class RUISInputManager : MonoBehaviour
         kinectFloorDetectionElement.SetAttribute("value", kinectFloorDetection.ToString());
         kinectSettingsElement.AppendChild(kinectFloorDetectionElement);
 
+        XmlElement jumpGestureElement = xmlDoc.CreateElement("jumpGestureEnabled");
+        jumpGestureElement.SetAttribute("value", jumpGestureEnabled.ToString());
+        kinectSettingsElement.AppendChild(jumpGestureElement);
+
 
 
         XmlElement razerSettingsElement = xmlDoc.CreateElement("RazerSettings");
@@ -312,6 +320,11 @@ public class RUISInputManager : MonoBehaviour
         XmlElement magnetometerDriftCorrectionElement = xmlDoc.CreateElement("magnetometerDriftCorrection");
         magnetometerDriftCorrectionElement.SetAttribute("value", System.Enum.GetName(typeof(RiftMagnetometer), riftMagnetometerMode));
         riftDriftSettingsElement.AppendChild(magnetometerDriftCorrectionElement);
+
+        XmlElement kinectDriftCorrectionElement = xmlDoc.CreateElement("kinectDriftCorrectionIfAvailable");
+        kinectDriftCorrectionElement.SetAttribute("value", kinectDriftCorrectionPreferred.ToString());
+        riftDriftSettingsElement.AppendChild(kinectDriftCorrectionElement);
+
 
         /*
         XmlElement displayUpElement = xmlDoc.CreateElement("displayUp");
@@ -340,7 +353,7 @@ public class RUISInputManager : MonoBehaviour
 	
     private IEnumerator attemptStartingSceneAnalyzer()
     {
-        if (kinectFloorDetection)
+        if (kinectFloorDetection && !enablePSMove)
         {	
         	yield return new WaitForSeconds(2.0f);
 			
@@ -357,7 +370,7 @@ public class RUISInputManager : MonoBehaviour
 	
     private IEnumerator attemptUpdatingFloorNormal()
     {
-        if (kinectFloorDetection)
+        if (kinectFloorDetection && !enablePSMove)
         {
         	yield return new WaitForSeconds(5.0f);
 			coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
