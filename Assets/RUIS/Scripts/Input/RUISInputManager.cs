@@ -114,8 +114,8 @@ public class RUISInputManager : MonoBehaviour
                 Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
                 GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
             }
-			else // Tuukka:
-			{
+			else 
+			{	// If PSMove is enabled, it's better to load the floor normal from XML (if such exists)
 				if(kinectFloorDetection && !enablePSMove)
 				{
 					StartFloorDetection();
@@ -353,7 +353,7 @@ public class RUISInputManager : MonoBehaviour
 	
     private IEnumerator attemptStartingSceneAnalyzer()
     {
-        if (kinectFloorDetection && !enablePSMove)
+        if(kinectFloorDetection)
         {	
         	yield return new WaitForSeconds(2.0f);
 			
@@ -370,7 +370,7 @@ public class RUISInputManager : MonoBehaviour
 	
     private IEnumerator attemptUpdatingFloorNormal()
     {
-        if (kinectFloorDetection && !enablePSMove)
+        if(kinectFloorDetection)
         {
         	yield return new WaitForSeconds(5.0f);
 			coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;

@@ -142,7 +142,7 @@ public class RUISHeadTracker : MonoBehaviour
 	// Position offsets are in the input source coordinate system, therefore
 	// user needs to know each controllers' local coordinate system
 	public Vector3 positionOffsetKinect = new Vector3(0, 0, 0);
-	public Vector3 positionOffsetPSMove = new Vector3(0, 0, 0);
+	public Vector3 positionOffsetPSMove = new Vector3(0, 0.12f, 0);
 	public Vector3 positionOffsetHydra  = new Vector3(-0.1f, 0, 0);
 	
 	// Rift has its own methods for rotation offsetting

@@ -253,6 +253,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
             }
         }
 		
+		// Limit of two comes from [0,1] + extraSpeed
 		targetVelocity = Vector3.ClampMagnitude(targetVelocity, 2);
 
         forwardSpeed = Mathf.Lerp(forwardSpeed, targetVelocity.z, Time.deltaTime * animationBlendStrength);
@@ -266,7 +267,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         velocityChange = (targetVelocity - velocity);
 
         velocityChange.y = 0;
-        velocityChange = Vector3.ClampMagnitude(velocityChange, maxVelocityChange);
+        velocityChange = Vector3.ClampMagnitude(velocityChange, Time.deltaTime * maxVelocityChange);
 		
 		if(!airborne)
 		{
@@ -293,7 +294,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 			
 			velocityChange = jumpTimeVelocity + accumulatedAirboneVelocity - velocity;
         	velocityChange.y = 0;
-        	velocityChange = Vector3.ClampMagnitude(velocityChange, maxVelocityChange);
+        	velocityChange = Vector3.ClampMagnitude(velocityChange, Time.deltaTime * maxVelocityChange);
 			
 			rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
 		}

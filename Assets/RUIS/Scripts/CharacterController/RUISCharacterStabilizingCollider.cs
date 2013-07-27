@@ -54,7 +54,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	
 	void FixedUpdate () 
 	{
-        if (!skeletonManager.skeletons[playerId].isTracking)
+        if (!skeletonManager || !skeletonManager.skeletons[playerId].isTracking)
         {
             colliderHeight = defaultColliderHeight;
             transform.localPosition = defaultColliderPosition;
