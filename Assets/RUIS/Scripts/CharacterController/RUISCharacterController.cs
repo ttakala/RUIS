@@ -169,16 +169,17 @@ public class RUISCharacterController : MonoBehaviour
     {
         Vector3 characterForward = Vector3.forward;
 
+        
         switch (characterPivotType)
         {
             case CharacterPivotType.KinectHip:
-                characterForward = skeletonManager.skeletons[kinectPlayerId].leftHip.rotation * Vector3.forward;
+                characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].leftHip.rotation * Vector3.forward : Vector3.forward;
                 break;
             case CharacterPivotType.KinectHead:
-                characterForward = skeletonManager.skeletons[kinectPlayerId].head.rotation * Vector3.forward;
+                characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].head.rotation * Vector3.forward : Vector3.forward;
                 break;
             case CharacterPivotType.KinectCOM:
-                characterForward = skeletonManager.skeletons[kinectPlayerId].torso.rotation * Vector3.forward;
+                characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].torso.rotation * Vector3.forward : Vector3.forward;
                 break;
             case CharacterPivotType.MoveController:
                 characterForward = inputManager.GetMoveWand(moveControllerId).qOrientation * Vector3.forward;
