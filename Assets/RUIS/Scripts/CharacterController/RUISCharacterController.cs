@@ -203,13 +203,29 @@ public class RUISCharacterController : MonoBehaviour
         switch (characterPivotType)
         {
             case CharacterPivotType.KinectHip:
-                return skeletonManager.skeletons[kinectPlayerId].leftHip.position;
+			{
+				if(skeletonManager && skeletonManager.skeletons[kinectPlayerId] != null)
+                	return skeletonManager.skeletons[kinectPlayerId].leftHip.position;
+				break;
+			}
             case CharacterPivotType.KinectHead:
-                return skeletonManager.skeletons[kinectPlayerId].head.position;
+			{
+				if(skeletonManager && skeletonManager.skeletons[kinectPlayerId] != null)
+                	return skeletonManager.skeletons[kinectPlayerId].head.position;
+				break;
+			}
             case CharacterPivotType.KinectCOM:
-                return skeletonManager.skeletons[kinectPlayerId].torso.position;
+			{
+				if(skeletonManager && skeletonManager.skeletons[kinectPlayerId] != null)
+	                return skeletonManager.skeletons[kinectPlayerId].torso.position;
+				break;
+			}
             case CharacterPivotType.MoveController:
-                return inputManager.GetMoveWand(moveControllerId).handlePosition;
+			{
+				if(inputManager.GetMoveWand(moveControllerId))
+	                return inputManager.GetMoveWand(moveControllerId).handlePosition;
+				break;
+			}
         }
 
         return Vector3.zero;

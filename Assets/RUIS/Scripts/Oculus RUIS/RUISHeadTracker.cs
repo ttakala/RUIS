@@ -371,6 +371,20 @@ public class RUISHeadTracker : MonoBehaviour
 			Debug.Log("OVRCameraController script detected in a child object of this " + gameObject.name
 					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
 					+ "trackers when you remove the OVRCameraController component from the child object(s).");
+		
+		if(useOculusRiftRotation && inputManager)
+		{
+			if(		(inputManager.enableKinect 		&& headPositionInput == HeadPositionSource.Kinect)
+				||	(inputManager.enableRazerHydra 	&& headPositionInput == HeadPositionSource.RazerHydra)
+				||	(inputManager.enablePSMove 		&& headPositionInput == HeadPositionSource.PSMove)
+				||	headPositionInput == HeadPositionSource.InputTransform								  )
+			{
+				oculusCamController.NeckPosition 		= Vector3.zero;
+				oculusCamController.EyeCenterPosition 	= Vector3.zero;
+				Debug.Log(	"Head position tracker found, setting NeckPosition and EyeCenterPosition to zero from "
+						  + "OVRCameraController.");
+			}
+		}
 	}
 		
 	void Update () 

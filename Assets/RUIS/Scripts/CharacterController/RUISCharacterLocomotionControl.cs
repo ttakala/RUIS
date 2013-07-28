@@ -259,7 +259,6 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         forwardSpeed = Mathf.Lerp(forwardSpeed, targetVelocity.z, Time.deltaTime * animationBlendStrength);
         strafeSpeed = Mathf.Lerp(strafeSpeed, targetVelocity.x, Time.deltaTime * animationBlendStrength);
 		
-		float inputStrength = targetVelocity.magnitude;
         targetVelocity = characterController.TransformDirection(targetVelocity);
         targetVelocity *= speed;
 
@@ -299,20 +298,16 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 			rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
 		}
 
-        rigidbody.AddForce(new Vector3(0, -gravity * rigidbody.mass, 0));
-
-
-        if (Input.GetKey(KeyCode.Q))
-        {
+        //rigidbody.AddForce(new Vector3(0, -gravity * rigidbody.mass, 0));
+		
+		float turnMagnitude = Input.GetAxis("Right Analog Stick");
+		if(Input.GetKey(KeyCode.Q))
             characterController.RotateAroundCharacterPivot(new Vector3(0, -rotationScaler * Time.fixedDeltaTime, 0));
-
-        }
-        else if (Input.GetKey(KeyCode.E))
-        {
+        else if(Input.GetKey(KeyCode.E))
             characterController.RotateAroundCharacterPivot(new Vector3(0, rotationScaler * Time.fixedDeltaTime, 0));
-        }
-
-
+		else if(turnMagnitude != 0)
+			characterController.RotateAroundCharacterPivot(new Vector3(0, turnMagnitude * rotationScaler * Time.fixedDeltaTime, 0));
+		
         if (shouldJump)
         {
             rigidbody.AddForce(new Vector3(0, Mathf.Sqrt((1 + 0.5f*Mathf.Abs(forwardSpeed)*jumpSpeedEffect) * jumpStrength) 

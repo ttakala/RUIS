@@ -120,6 +120,18 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
         SaveInitialDistance(rightShoulder, leftShoulder);
         SaveInitialDistance(rightHip, leftHip);
+		
+		RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+		if(inputManager && !inputManager.enableKinect)
+		{
+			Debug.Log("Kinect is not enabled. Disabling RUISPlainSkeletonController script from Kinect-controlled GameObject " + gameObject.name + ".");
+			MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+			foreach(MonoBehaviour script in scripts)
+			{
+				if(script.GetType().Equals(typeof(RUISPlainSkeletonController)))
+					script.enabled = false;
+			}
+		}
     }
 
 
@@ -166,7 +178,7 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
                     Vector3 torsoDirection = skeletonManager.skeletons[playerId].torso.rotation * Vector3.down;
                     torso.position = transform.TransformPoint(skeletonManager.skeletons[playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
-                    
+
                     ForceUpdatePosition(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
                     ForceUpdatePosition(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
                     ForceUpdatePosition(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
@@ -308,9 +320,9 @@ public class RUISPlainSkeletonController : MonoBehaviour
 
     public bool ConfidenceGoodEnoughForScaling()
     {
-        return skeletonManager.skeletons[playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate || 
-               skeletonManager.skeletons[playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate  ||
-               skeletonManager.skeletons[playerId].rightHip.positionConfidence < minimumConfidenceToUpdate      || 
+        return skeletonManager.skeletons[playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
+               skeletonManager.skeletons[playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
+               skeletonManager.skeletons[playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
                skeletonManager.skeletons[playerId].leftHip.positionConfidence < minimumConfidenceToUpdate;
     }
 }

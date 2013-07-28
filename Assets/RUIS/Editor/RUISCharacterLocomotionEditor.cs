@@ -21,7 +21,6 @@ public class RUISCharacterLocomotionEditor : Editor {
     SerializedProperty rotationScaler;
 
     SerializedProperty speed;
-    SerializedProperty gravity;
     SerializedProperty maxVelocityChange;
 
     SerializedProperty usePSNavigationController;
@@ -41,7 +40,6 @@ public class RUISCharacterLocomotionEditor : Editor {
         turnLeftKey = serializedObject.FindProperty("turnLeftKey");
         rotationScaler = serializedObject.FindProperty("rotationScaler");
         speed = serializedObject.FindProperty("speed");
-        gravity = serializedObject.FindProperty("gravity");
         maxVelocityChange = serializedObject.FindProperty("maxVelocityChange");
         usePSNavigationController = serializedObject.FindProperty("usePSNavigationController");
         PSNaviControllerID = serializedObject.FindProperty("PSNaviControllerID");

@@ -433,6 +433,7 @@ public class RUISInputManager : MonoBehaviour
                         lineRenderer.enabled = false;
                     }
                 }
+				moveController.gameObject.SetActive(false);
             }
         }
     }
