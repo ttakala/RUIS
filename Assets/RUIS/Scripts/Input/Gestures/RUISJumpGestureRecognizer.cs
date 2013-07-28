@@ -11,7 +11,8 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(RUISPointTracker))]
-public class RUISJumpGestureRecognizer : RUISGestureRecognizer {
+public class RUISJumpGestureRecognizer : RUISGestureRecognizer
+{
     public int playerId = 0;
     public float requiredUpwardVelocity = 1.0f;
     public float timeBetweenJumps = 1.0f;
@@ -27,15 +28,18 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer {
     public State currentState { get; private set; }
 
 
-    private float timeCounter = 0;    
+    private float timeCounter = 0;
     private bool gestureEnabled = true;
 
-    
+
     public Vector3 leftFootHeight { get; private set; }
     public Vector3 rightFootHeight { get; private set; }
 
     private RUISSkeletonManager skeletonManager;
     private RUISPointTracker pointTracker;
+
+    private bool previousIsTracking = false;
+    private bool isTrackingBufferTimeFinished = false;
 
     public void Awake()
     {
@@ -46,20 +50,36 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer {
 
     public void Update()
     {
-        if (!gestureEnabled) return;
+        if (!skeletonManager) return;
 
-            switch (currentState)
-            {
-                case State.WaitingForJump:
-                    DoWaitingForJump();
-                    break;
-                case State.Jumping:
-                    DoJumping();
-                    break;
-                case State.AfterJump:
-                    DoAfterJump();
-                    break;
-            }
+        bool currentIsTracking = skeletonManager.skeletons[playerId].isTracking;
+
+        if (!currentIsTracking)
+        {
+            previousIsTracking = false;
+            isTrackingBufferTimeFinished = false;
+            return;
+        } else if (currentIsTracking != previousIsTracking)
+        {
+            StartCoroutine("StartCountdownTillGestureEnable");
+        }
+
+        previousIsTracking = currentIsTracking;
+
+        if (!gestureEnabled || !isTrackingBufferTimeFinished) return;
+
+        switch (currentState)
+        {
+            case State.WaitingForJump:
+                DoWaitingForJump();
+                break;
+            case State.Jumping:
+                DoJumping();
+                break;
+            case State.AfterJump:
+                DoAfterJump();
+                break;
+        }
     }
 
     public override bool GestureTriggered()
@@ -125,5 +145,12 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer {
             timeCounter = 0;
             return;
         }
+    }
+
+    private IEnumerator StartCountdownTillGestureEnable()
+    {
+        yield return new WaitForSeconds(3.0f);
+
+        isTrackingBufferTimeFinished = true;
     }
 }
