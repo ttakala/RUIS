@@ -21,8 +21,8 @@ public class RUISMenu : MonoBehaviour {
         EditingInputConfiguration
     }
 	
-	public int fontSize = 20;
-	public float stereoOffset = -200;
+	public int fontSize = 14;
+	public float stereoOffset = -110;
 	
     private MenuState menuState = MenuState.Main;
 

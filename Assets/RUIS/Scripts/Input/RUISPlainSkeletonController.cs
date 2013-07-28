@@ -124,13 +124,13 @@ public class RUISPlainSkeletonController : MonoBehaviour
 		RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(inputManager && !inputManager.enableKinect)
 		{
-			Debug.Log("Kinect is not enabled. Disabling RUISPlainSkeletonController script from Kinect-controlled GameObject " + gameObject.name + ".");
-			MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
-			foreach(MonoBehaviour script in scripts)
-			{
-				if(script.GetType().Equals(typeof(RUISPlainSkeletonController)))
-					script.enabled = false;
-			}
+//			Debug.Log("Kinect is not enabled. Disabling RUISPlainSkeletonController script from Kinect-controlled GameObject " + gameObject.name + ".");
+//			MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+//			foreach(MonoBehaviour script in scripts)
+//			{
+//				if(script.GetType().Equals(typeof(RUISPlainSkeletonController)))
+//					script.enabled = false;
+//			}
 		}
     }
 

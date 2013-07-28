@@ -345,15 +345,15 @@ public class PSMoveWrapper : MonoBehaviour {
         Array.Copy(dicButtonPressed[START], dicButtonPressedPreviousFrame[START], MAX_MOVE_NUM);
         Array.Copy(dicButtonPressed[SELECT], dicButtonPressedPreviousFrame[SELECT], MAX_MOVE_NUM);
         Array.Copy(dicButtonPressed[T], dicButtonPressedPreviousFrame[T], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_UP], dicButtonPressedPreviousFrame[NAV_UP], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_DOWN], dicButtonPressedPreviousFrame[NAV_DOWN], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_LEFT], dicButtonPressedPreviousFrame[NAV_LEFT], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_RIGHT], dicButtonPressedPreviousFrame[NAV_RIGHT], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_CROSS], dicButtonPressedPreviousFrame[NAV_CROSS], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_CIRCLE], dicButtonPressedPreviousFrame[NAV_CIRCLE], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_L1], dicButtonPressedPreviousFrame[NAV_L1], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_L2], dicButtonPressedPreviousFrame[NAV_L2], MAX_MOVE_NUM);
-        Array.Copy(dicButtonPressed[NAV_L3], dicButtonPressedPreviousFrame[NAV_L3], MAX_MOVE_NUM);
+        Array.Copy(dicButtonPressed[NAV_UP], dicButtonPressedPreviousFrame[NAV_UP], MAX_NAV_NUM);
+        Array.Copy(dicButtonPressed[NAV_DOWN], dicButtonPressedPreviousFrame[NAV_DOWN], MAX_NAV_NUM);
+        Array.Copy(dicButtonPressed[NAV_LEFT], dicButtonPressedPreviousFrame[NAV_LEFT], MAX_NAV_NUM);
+        Array.Copy(dicButtonPressed[NAV_RIGHT], dicButtonPressedPreviousFrame[NAV_RIGHT], MAX_NAV_NUM);
+        Array.Copy(dicButtonPressed[NAV_CROSS], dicButtonPressedPreviousFrame[NAV_CROSS], MAX_NAV_NUM);
+        Array.Copy(dicButtonPressed[NAV_CIRCLE], dicButtonPressedPreviousFrame[NAV_CIRCLE], MAX_NAV_NUM);
+        Array.Copy(dicButtonPressed[NAV_L1], dicButtonPressedPreviousFrame[NAV_L1], MAX_NAV_NUM);
+        Array.Copy(dicButtonPressed[NAV_L2], dicButtonPressedPreviousFrame[NAV_L2], MAX_NAV_NUM);
+        Array.Copy(dicButtonPressed[NAV_L3], dicButtonPressedPreviousFrame[NAV_L3], MAX_NAV_NUM);
     }
 
     private void SaveCurrentFrameButtons()

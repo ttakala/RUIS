@@ -21,6 +21,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
     public KeyCode turnLeftKey = KeyCode.Q;
 
     public float rotationScaler = 60.0f;
+	private float turnMagnitude = 0;
 
     public float speed = 2.0f;
     public float gravity = 10.0f; // Is this the best place to apply gravity to RUISCharacterController?
@@ -128,8 +129,9 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                 if (moveWrapper.navConnected[PSNaviControllerID])
                 {
                     if(moveWrapper.WasPressed(PSNaviControllerID, "NavL1"))
+					{
                     	shouldJump = true;
-					
+					}
                 }
             }
 		}
@@ -145,6 +147,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         //characterController.ApplyForceInCharacterDirection(translation);
 
         direction = 0;
+		turnMagnitude = 0;
 		
 		if(characterController != null)
 		{
@@ -214,6 +217,11 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                                                                                               * Time.fixedDeltaTime, 0));
                         }
                     }
+					
+					if(moveWrapper.isNavButtonCross[PSNaviControllerID])
+						turnMagnitude -= 1;
+					if(moveWrapper.isNavButtonCircle[PSNaviControllerID])
+						turnMagnitude += 1;
                 }
             }
             else
@@ -300,12 +308,14 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 
         //rigidbody.AddForce(new Vector3(0, -gravity * rigidbody.mass, 0));
 		
-		float turnMagnitude = Input.GetAxis("Right Analog Stick");
-		if(Input.GetKey(KeyCode.Q))
-            characterController.RotateAroundCharacterPivot(new Vector3(0, -rotationScaler * Time.fixedDeltaTime, 0));
-        else if(Input.GetKey(KeyCode.E))
-            characterController.RotateAroundCharacterPivot(new Vector3(0, rotationScaler * Time.fixedDeltaTime, 0));
-		else if(turnMagnitude != 0)
+		turnMagnitude += Input.GetAxis("Right Analog Stick");
+		
+		if(Input.GetKey(turnLeftKey))
+            turnMagnitude -= 1;
+        if(Input.GetKey(turnRightKey))
+            turnMagnitude += 1;
+			
+		if(turnMagnitude != 0)
 			characterController.RotateAroundCharacterPivot(new Vector3(0, turnMagnitude * rotationScaler * Time.fixedDeltaTime, 0));
 		
         if (shouldJump)

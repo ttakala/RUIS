@@ -42,7 +42,7 @@ public class RUISInputManager : MonoBehaviour
 	public bool kinectDriftCorrectionPreferred = false;
 	
     public bool enableRazerHydra = true;
-	private SixenseInput sixense;
+	private SixenseInput sixense = null;
 	
 	private RUISCoordinateSystem coordinateSystem = null;
     private OpenNI.SceneAnalyzer sceneAnalyzer = null;
@@ -96,7 +96,30 @@ public class RUISInputManager : MonoBehaviour
 			Debug.Log("PS Move is disabled from RUISInputManager.");
             //psMoveWrapper.gameObject.SetActiveRecursively(false);
         }
-
+		
+		
+		sixense = FindObjectOfType(typeof(SixenseInput)) as SixenseInput;
+		if(enableRazerHydra)
+		{
+			if(sixense == null)
+				Debug.LogError(		"Could not connect with Razer Hydra! Your RUIS InputManager settings indicate "
+								+ 	"that you want to use Razer Hydra, but this scene does not have a gameobject "
+								+	"with SixenseInput script, which is required. Add SixenseInput prefab "
+								+	"into the scene.");
+			// IsBaseConnected() seems to crash Unity at least when called here
+//			else if(!SixenseInput.IsBaseConnected(0)) // TODO: *** Apparently there can be multiple bases
+//				Debug.LogError(		"Could not connect with Razer Hydra! Check the USB connection.");
+		}
+		else
+		{
+			if(sixense != null)
+			{
+				sixense.gameObject.SetActive(false);
+				Debug.Log(	"Razer Hydra is disabled from RUISInputManager. Disabling object " + sixense.name
+						  + " that has the SixenseInput script.");
+			}
+		}
+		
         DisableUnneededMoveWands();
 		
 		DisableUnneededRazerHydraWands();
@@ -132,24 +155,6 @@ public class RUISInputManager : MonoBehaviour
                 moveControllers[controller.controllerId] = controller;
             }
         }
-		
-		sixense = FindObjectOfType(typeof(SixenseInput)) as SixenseInput;
-		if(enableRazerHydra)
-		{
-			if(sixense == null)
-				Debug.LogError(		"Could not connect with Razer Hydra! Your RUIS InputManager settings indicate "
-								+ 	"that you want to use Razer Hydra, but this scene does not have a gameobject "
-								+	"with SixenseInput script, which is required. Add SixenseInput prefab "
-								+	"into the scene.");
-			// IsBaseConnected() seems to crash Unity at least when called here
-//			else if(!SixenseInput.IsBaseConnected(0)) // TODO: *** Apparently there can be multiple bases
-//				Debug.LogError(		"Could not connect with Razer Hydra! Check the USB connection.");
-		}
-		else
-		{
-//			if(sixense != null)
-//				sixense.enabled = false;
-		}
 
         OVRCameraController oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
         if (oculusCamController && OVRDevice.IsSensorPresent(oculusID))

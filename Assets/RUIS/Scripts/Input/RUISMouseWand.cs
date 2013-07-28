@@ -16,13 +16,51 @@ public class RUISMouseWand : RUISWand {
     bool mouseButtonPressed = false;
     bool mouseButtonReleased = false;
     bool mouseButtonDown = false;
+	
+	public bool disableIfOtherDevices = false;
 
     RUISDisplayManager displayManager;
 
-    public void Awake()
+    public void Start()
     {
         displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
-
+		
+		if(disableIfOtherDevices)
+		{
+			RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+			if(inputManager)
+			{
+				bool otherDevices = false;
+				string deviceNames = "";
+				if(inputManager.enableKinect)
+				{
+					deviceNames += "Kinect";
+					otherDevices = true;
+				}
+				if(inputManager.enableRazerHydra)
+				{
+					if(deviceNames.Length > 0)
+						deviceNames += ", ";
+					deviceNames += "Razer Hydra";
+					otherDevices = true;
+				}
+						
+				if(inputManager.enablePSMove)
+				{
+					if(deviceNames.Length > 0)
+						deviceNames += ", ";
+					deviceNames += "PS Move";
+					otherDevices = true;
+				}
+				if(otherDevices)
+				{
+					Debug.Log(	"Disabling MouseWand GameObject '" + gameObject.name + "' because the "
+							  + "following input devices were found: " + deviceNames					);
+					gameObject.SetActive(false);	
+				}
+			}
+		}
+		
         if (!displayManager)
         {
             Debug.LogError("RUISMouseWand requires a RUISDisplayManager in the scene!");
