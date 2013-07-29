@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   A Script to handle controlling a rigidbody character using Kinect and some traditional input method
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -25,6 +25,7 @@ public class RUISCharacterController : MonoBehaviour
     public int kinectPlayerId;
     public int moveControllerId;
     public Transform characterPivot;
+	public Vector3 psmoveOffset = Vector3.zero;
 
     public bool ignorePitchAndRoll = true;
 
@@ -182,7 +183,11 @@ public class RUISCharacterController : MonoBehaviour
                 characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].torso.rotation * Vector3.forward : Vector3.forward;
                 break;
             case CharacterPivotType.MoveController:
-                characterForward = inputManager.GetMoveWand(moveControllerId).qOrientation * Vector3.forward;
+			{
+				RUISPSMoveWand psmove = inputManager.GetMoveWand(moveControllerId);
+				if(psmove != null)
+	                characterForward = psmove.qOrientation * Vector3.forward;
+			}
                 break;
         }
 

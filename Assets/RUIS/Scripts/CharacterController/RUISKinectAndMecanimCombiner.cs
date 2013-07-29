@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   Functionality to combine skeleton input from Kinect with a Mecanim Animator controlled avatar
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -121,6 +121,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             mecanimGameObject.name = name + "Mecanim";
             mecanimGameObject.transform.parent = transform.parent;
             Destroy(mecanimGameObject.GetComponent<RUISKinectAndMecanimCombiner>());
+            Destroy(mecanimGameObject.GetComponent<RUISCharacterAnimationController>());
+
             Destroy(mecanimGameObject.GetComponent<RUISPlainSkeletonController>());
             foreach (Collider collider in mecanimGameObject.GetComponentsInChildren<Collider>())
             {
@@ -132,10 +134,9 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             }
 
 
-
-            Destroy(GetComponent<Animator>());
             Destroy(GetComponent<RUISPlainSkeletonController>());
-            Destroy(GetComponent<RUISCharacterAnimationController>());
+            Destroy(GetComponent<Animator>());
+            GetComponent<RUISCharacterAnimationController>().animator = mecanimGameObject.GetComponent<Animator>();
 
             skeletonController = kinectGameObject.GetComponent<RUISPlainSkeletonController>();
             mecanimAnimator = mecanimGameObject.GetComponent<Animator>();
@@ -323,11 +324,17 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
         //then apply the yaw to turn the limb to the same general direction as the torso
         Quaternion kinectToMecanimYaw = CalculateKinectToMecanimYaw();
-        kinectToMecanimYaw = Quaternion.Slerp(Quaternion.identity, kinectToMecanimYaw, limbRootBlendWeight);
-
-        float angles = Vector3.Angle(Vector3.up, kinectToMecanimYaw * Vector3.up);
-            
+        kinectToMecanimYaw = Quaternion.Slerp(Quaternion.identity, kinectToMecanimYaw, limbRootBlendWeight);   
+		
+		Vector3 rotatedForward = kinectToMecanimYaw * Vector3.forward;
+        float angles = -180*Mathf.Atan2(rotatedForward.y, rotatedForward.z)/Mathf.PI;
+		// Tuukka: was originally: float angles = Vector3.Angle(Vector3.up, kinectToMecanimYaw * Vector3.up);
+		// That doesn't work right, Vector3.Angle seems to return only values between [0, 180], and the leg animation came up wrong when facing left
+		
+		//print(angles); 
+		
         limbRootBone.blendedTransform.rotation = limbRootBone.blendedTransform.rotation * Quaternion.AngleAxis(angles, limbRootBone.blendedTransform.InverseTransformDirection(transform.up));//* newLocalRotation * Quaternion.Inverse(limbRootBone.blendedTransform.rotation) * limbRootBone.blendedTransform.rotation;
+        
     }
 
     private Quaternion CalculateKinectToMecanimYaw()
@@ -362,4 +369,9 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
         return bone.bodypartClassification == BodypartClassification.RightLeg ||
                bone.bodypartClassification == BodypartClassification.LeftLeg;
     }
+	
+	public bool isChildrenInstantiated()
+	{
+		return childrenInstantiated;
+	}
 }

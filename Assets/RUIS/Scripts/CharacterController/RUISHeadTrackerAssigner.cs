@@ -17,6 +17,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	public List<RUISHeadTracker> headTrackers = new List<RUISHeadTracker>(5);
 	public RUISDisplay display;
 	public bool applyKinectDriftCorrectionPreference = false;
+	public bool changePivotIfNoKinect = true;
 	
     void Awake()
     {
@@ -164,6 +165,21 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				Debug.Log(logString + ". This choice was made using a pre-selected list of head trackers.");
 				
 				ruisCamera = closestMatch.gameObject.GetComponentInChildren<RUISCamera>();
+				
+				if(		changePivotIfNoKinect && psmove && !kinect 
+					&&  closestMatch.headPositionInput == RUISHeadTracker.HeadPositionSource.PSMove )
+				{
+					RUISCharacterController characterController = gameObject.GetComponentInChildren<RUISCharacterController>();
+					if(		characterController != null 
+						&&  characterController.characterPivotType != RUISCharacterController.CharacterPivotType.MoveController )
+					{
+						characterController.characterPivotType = RUISCharacterController.CharacterPivotType.MoveController;
+						characterController.moveControllerId = closestMatch.positionPSMoveID;
+						Debug.Log(	  "PS Move enabled and Kinect disabled. Setting " + characterController.name 
+									+ "'s Character Pivot as PS Move controller #" + closestMatch.positionPSMoveID
+									+ ". PS Move position offset for this pivot is " + characterController.psmoveOffset);
+					}
+				}
 			}
 			
 			

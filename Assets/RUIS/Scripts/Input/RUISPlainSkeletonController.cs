@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   Functionality to control a skeleton using Kinect
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -29,8 +29,10 @@ public class RUISPlainSkeletonController : MonoBehaviour
     public Transform leftHip;
     public Transform leftKnee;
     public Transform leftFoot;
-
+	
+	private RUISInputManager inputManager;
     public RUISSkeletonManager skeletonManager;
+	private RUISCharacterController characterController;
 
     public int playerId = 0;
 
@@ -47,7 +49,11 @@ public class RUISPlainSkeletonController : MonoBehaviour
     public float minimumConfidenceToUpdate = 0.5f;
 
     public float rotationDamping = 15f;
-
+	
+	public bool followMoveController { get; private set; }
+	private int followMoveID = 0;
+	private RUISPSMoveWand psmove;
+	
     private Dictionary<Transform, Quaternion> jointInitialRotations;
     private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
 
@@ -66,7 +72,9 @@ public class RUISPlainSkeletonController : MonoBehaviour
         {
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
         }
-
+		
+		followMoveController = false;
+		
         jointInitialRotations = new Dictionary<Transform, Quaternion>();
         jointInitialDistances = new Dictionary<KeyValuePair<Transform, Transform>, float>();
     }
@@ -121,7 +129,7 @@ public class RUISPlainSkeletonController : MonoBehaviour
         SaveInitialDistance(rightShoulder, leftShoulder);
         SaveInitialDistance(rightHip, leftHip);
 		
-		RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(inputManager && !inputManager.enableKinect)
 		{
 //			Debug.Log("Kinect is not enabled. Disabling RUISPlainSkeletonController script from Kinect-controlled GameObject " + gameObject.name + ".");
@@ -131,6 +139,22 @@ public class RUISPlainSkeletonController : MonoBehaviour
 //				if(script.GetType().Equals(typeof(RUISPlainSkeletonController)))
 //					script.enabled = false;
 //			}
+			
+			if(gameObject.transform.parent != null)
+			{
+				characterController = gameObject.transform.parent.GetComponent<RUISCharacterController>();
+				if(characterController != null)
+					if(		characterController.characterPivotType == RUISCharacterController.CharacterPivotType.MoveController
+						&&	inputManager.enablePSMove																			)
+					{
+						followMoveController = true;
+						followMoveID = characterController.moveControllerId;
+						Debug.LogWarning(	"Using PS Move controller #" + characterController.moveControllerId + " as a source "
+										 +	"for avatar root position of " + gameObject.name + ", because Kinect is disabled "
+										 +	"and PS Move is enabled, while that PS Move controller has been assigned as a "
+										 +	"Character Pivot in " + gameObject.name + "'s parent GameObject");
+					}
+			}
 		}
     }
 
@@ -193,6 +217,37 @@ public class RUISPlainSkeletonController : MonoBehaviour
             }
 
         }
+		else // TUUKKA
+			if(followMoveController && characterController && inputManager)
+			{
+				psmove = inputManager.GetMoveWand(followMoveID);
+				if(psmove)
+				{
+				
+					Quaternion moveYaw = Quaternion.Euler(0, psmove.qOrientation.eulerAngles.y, 0);
+				
+					skeletonPosition = psmove.position - moveYaw*characterController.psmoveOffset;
+					skeletonPosition.y = 0;
+					
+					if (updateRootPosition)
+						transform.localPosition = skeletonPosition;
+					
+		            UpdateTransformWithPSMove(ref head, moveYaw);
+		            UpdateTransformWithPSMove(ref torso, moveYaw);
+		            UpdateTransformWithPSMove(ref leftShoulder, moveYaw);
+		            UpdateTransformWithPSMove(ref leftElbow, moveYaw);
+		            UpdateTransformWithPSMove(ref leftHand, moveYaw);
+		            UpdateTransformWithPSMove(ref rightShoulder, moveYaw);
+		            UpdateTransformWithPSMove(ref rightElbow, moveYaw);
+		            UpdateTransformWithPSMove(ref rightHand, moveYaw);
+		            UpdateTransformWithPSMove(ref leftHip, moveYaw);
+		            UpdateTransformWithPSMove(ref leftKnee, moveYaw);
+		            UpdateTransformWithPSMove(ref leftFoot, moveYaw);
+		            UpdateTransformWithPSMove(ref rightHip, moveYaw);
+		            UpdateTransformWithPSMove(ref rightKnee, moveYaw);
+		            UpdateTransformWithPSMove(ref rightFoot, moveYaw);
+				}
+			}
 
 
         TweakNeckHeight();
@@ -221,6 +276,31 @@ public class RUISPlainSkeletonController : MonoBehaviour
             }
         }
     }
+	
+	private void UpdateTransformWithPSMove(ref Transform transformToUpdate, Quaternion moveYaw)
+    {
+		if (transformToUpdate == null) return;
+		
+		//if (updateJointPositions) ;
+		
+		if (updateJointRotations)
+		{
+			if (useHierarchicalModel)
+            {
+//                Quaternion newRotation = transform.rotation * jointToGet.rotation *
+//                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
+//                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDamping);
+                Quaternion newRotation = transform.rotation * moveYaw *
+                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
+                transformToUpdate.rotation = newRotation;
+            }
+            else
+            {
+				transformToUpdate.localRotation = moveYaw;
+//                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDamping);
+            }
+		}
+	}
 
     private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet)
     {

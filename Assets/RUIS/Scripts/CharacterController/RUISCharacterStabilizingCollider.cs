@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   A script to modify a collider on the fly to stabilize the rigidbody controlled by kinect
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -27,7 +27,10 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 
     private float defaultColliderHeight;
     private Vector3 defaultColliderPosition;
-
+	
+	private bool kinectAndMecanimCombinerExists = false;
+	private bool combinerChildrenInstantiated = false;
+	
     private float _colliderHeight;
     public float colliderHeight
     {
@@ -46,6 +49,12 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	{
         skeletonManager = skeletonController.skeletonManager;
         playerId = skeletonController.playerId;
+		
+		if(gameObject.transform.parent != null)
+		{
+			if(gameObject.transform.parent.GetComponentInChildren<RUISKinectAndMecanimCombiner>())
+				kinectAndMecanimCombinerExists = true;
+		}
 
         capsuleCollider = GetComponent<CapsuleCollider>();
         defaultColliderHeight = capsuleCollider.height;
@@ -54,15 +63,51 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	
 	void FixedUpdate () 
 	{
+		Vector3 torsoPos;
         if (!skeletonManager || !skeletonManager.skeletons[playerId].isTracking)
         {
-            colliderHeight = defaultColliderHeight;
-            transform.localPosition = defaultColliderPosition;
-
-            return;
+			colliderHeight = defaultColliderHeight;
+			// Tuukka:
+			// Original skeletonController has been destroyed because the GameObject which had
+			// it has been split in three parts: Kinect, Mecanim, Blended. Lets fetch the new one.
+			if(!combinerChildrenInstantiated && kinectAndMecanimCombinerExists)
+			{
+				if(gameObject.transform.parent != null)
+				{
+					RUISKinectAndMecanimCombiner combiner = 
+								gameObject.transform.parent.GetComponentInChildren<RUISKinectAndMecanimCombiner>();
+					if(combiner && combiner.isChildrenInstantiated())
+					{
+						skeletonController = combiner.skeletonController;
+						combinerChildrenInstantiated = true;
+					}
+				}
+			}
+			
+			if(combinerChildrenInstantiated)
+			{
+				if(skeletonController.followMoveController)
+				{
+					//transform.localPosition = skeletonController.transform.localPosition;// + 0.5f*colliderHeight*Vector3.up;
+					torsoPos = skeletonController.transform.localPosition + defaultColliderHeight*Vector3.up;
+				}
+				else
+				{
+	            	colliderHeight = defaultColliderHeight;
+	            	transform.localPosition = defaultColliderPosition;
+	            	return;
+				}
+			}
+			else
+			{
+            	colliderHeight = defaultColliderHeight;
+            	transform.localPosition = defaultColliderPosition;
+            	return;
+			}
         }
-
-        Vector3 torsoPos = skeletonManager.skeletons[playerId].torso.position;
+		else
+			torsoPos = skeletonManager.skeletons[playerId].torso.position;
+		
         Vector3 newPos = torsoPos;
         newPos.y = torsoPos.y / 2;
 

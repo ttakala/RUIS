@@ -15,6 +15,8 @@ using System.Collections;
 [CanEditMultipleObjects]
 public class RUISCharacterControllerEditor : Editor
 {
+	int maxKinectSkeletons = 4;
+	int maxPSMoveControllers = 4;
     SerializedProperty characterPivotType;
     SerializedProperty kinectPlayerId;
     SerializedProperty moveControllerId;
@@ -23,6 +25,7 @@ public class RUISCharacterControllerEditor : Editor
     SerializedProperty groundedErrorTweaker;
 	SerializedProperty dynamicFriction;
 	SerializedProperty dynamicMaterial;
+	SerializedProperty psmoveOffset;
 
     public void OnEnable()
     {
@@ -34,6 +37,7 @@ public class RUISCharacterControllerEditor : Editor
         groundedErrorTweaker = serializedObject.FindProperty("groundedErrorTweaker");
         dynamicFriction = serializedObject.FindProperty("dynamicFriction");
         dynamicMaterial = serializedObject.FindProperty("dynamicMaterial");
+		psmoveOffset = serializedObject.FindProperty("psmoveOffset");
     }
 
     public override void OnInspectorGUI()
@@ -41,18 +45,29 @@ public class RUISCharacterControllerEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(characterPivotType, new GUIContent("Character Pivot Type", "What kind of pivot should be used for the character"));
-
+		
+		
+        EditorGUI.indentLevel += 2;
         switch (characterPivotType.enumValueIndex)
         {
             case (int)RUISCharacterController.CharacterPivotType.KinectHead:
             case (int)RUISCharacterController.CharacterPivotType.KinectHip:
             case (int)RUISCharacterController.CharacterPivotType.KinectCOM:
+				kinectPlayerId.intValue = Mathf.Clamp(kinectPlayerId.intValue, 0, maxKinectSkeletons - 1);
                 EditorGUILayout.PropertyField(kinectPlayerId, new GUIContent("Kinect Player ID", "Between 0 and 3"));
                 break;
             case (int)RUISCharacterController.CharacterPivotType.MoveController:
+			{
+				moveControllerId.intValue = Mathf.Clamp(moveControllerId.intValue, 0, maxPSMoveControllers - 1);
                 EditorGUILayout.PropertyField(moveControllerId, new GUIContent("PS Move ID", "Between 0 and 3"));
+                EditorGUILayout.PropertyField(psmoveOffset, new GUIContent("Position Offset (meters)", "PS Move controller's position in "
+                															+ "the tracked pivot's local coordinate system. Set these values "
+																			+ "according to the controller's offset from the tracked pivot's "
+																			+ "origin (torso center point etc.)."));
                 break;
+			}
         }
+        EditorGUI.indentLevel -= 2;
 
         EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent("Ignore Pitch and Roll", "Should the pitch and roll values of the pivot "
 																		+ "rotation be taken into account when transforming directions into character coordinates?"));

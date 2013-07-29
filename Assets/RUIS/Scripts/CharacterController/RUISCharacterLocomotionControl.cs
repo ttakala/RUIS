@@ -84,17 +84,17 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 		if(useRazerHydra && inputManager && !inputManager.enableRazerHydra)
 		{
 			useRazerHydra = false;
-			Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
-							+	"character locomotion controls, but you have disabled Razer "
-							+	"Hydra from RUIS InputManager.");
+			Debug.LogWarning(	"Your settings indicate that you want to use Razer Hydra for "
+							 +	"character locomotion controls, but you have disabled Razer "
+							 +	"Hydra from RUIS InputManager.");
 		}
 		
 		if(usePSNavigationController && inputManager && !inputManager.enablePSMove)
 		{
 			usePSNavigationController = false;
-			Debug.LogError(		"Your settings indicate that you want to use PS Navigation "
-							+	"controller for character locomotion controls, but you have "
-							+	"disabled PS Move from RUIS InputManager.");
+			Debug.LogWarning(	"Your settings indicate that you want to use PS Navigation "
+							 +	"controller for character locomotion controls, but you have "
+							 +	"disabled PS Move from RUIS InputManager.");
 		}
 		
 	}
@@ -209,12 +209,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                     {
                         if (Mathf.Abs(horiz) > 10)
                         {
-                            if (horiz > 0)
-                                direction = 1;
-                            else
-                                direction = -1;
-                            characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * ((float)horiz) / 128f
-                                                                                              * Time.fixedDeltaTime, 0));
+							turnMagnitude += ((float)horiz) / 128f;
                         }
                     }
 					
@@ -254,8 +249,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                 {
                     if (Mathf.Abs(razerController.JoystickX) > 0.075f)
                     {
-                        characterController.RotateAroundCharacterPivot(new Vector3(0, 100 * razerController.JoystickX
-                                                                                          * Time.fixedDeltaTime, 0));
+						turnMagnitude += razerController.JoystickX;
                     }
                 }
             }
