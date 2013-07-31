@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   Implements selection behavior for RUISWands
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -24,6 +24,7 @@ public class RUISWandSelector : MonoBehaviour {
     public float selectionRayStartDistance = 0.2f;
     private Vector3 selectionRayStart;
     private Vector3 selectionRayEnd;
+	private Vector3 headToWandDirection;
     public Ray selectionRay { get; private set; }
 
     public Transform headTransform;
@@ -32,6 +33,7 @@ public class RUISWandSelector : MonoBehaviour {
     public bool grabWhileButtonDown = true;
 
     private bool selectionButtonReleasedAfterSelection = false;
+
 
     public enum SelectionGrabType
     {
@@ -43,6 +45,10 @@ public class RUISWandSelector : MonoBehaviour {
 
     public SelectionGrabType positionSelectionGrabType = SelectionGrabType.SnapToWand;
     public SelectionGrabType rotationSelectionGrabType = SelectionGrabType.SnapToWand;
+
+
+    public string selectedGameObjectsLayer = "Default";
+    private int originalSelectedGameObjectLayer = -1;
     
     private RUISWand wand;
     private RUISSelectable selection;
@@ -126,6 +132,7 @@ public class RUISWandSelector : MonoBehaviour {
                             highlightedObject = null;
                         }
 
+
                         BeginSelection();
 
                         selectionButtonReleasedAfterSelection = false;
@@ -148,6 +155,7 @@ public class RUISWandSelector : MonoBehaviour {
                 !wand.IsSelectionButtonStandard())
             {
                 EndSelection();
+
             }
             else
             {
@@ -167,7 +175,8 @@ public class RUISWandSelector : MonoBehaviour {
         {
             case SelectionRayType.HeadToWand:
                 RaycastHit headToWandHit;
-                selectionRay = new Ray(headTransform.position, transform.position - headTransform.position);
+				headToWandDirection = transform.position - headTransform.position;
+                selectionRay = new Ray(headTransform.position + selectionRayStartDistance*headToWandDirection, headToWandDirection);
 
                 if (Physics.Raycast(selectionRay, out headToWandHit, selectionRayLength))
                 {
@@ -177,7 +186,7 @@ public class RUISWandSelector : MonoBehaviour {
                 break;
             case SelectionRayType.WandDirection:
                 RaycastHit wandDirectionHit;
-                selectionRay = new Ray(transform.position, transform.forward);
+                selectionRay = new Ray(transform.position + selectionRayStartDistance*transform.forward, transform.forward);
 
                 if (Physics.Raycast(selectionRay, out wandDirectionHit, selectionRayLength))
                 {
@@ -195,13 +204,46 @@ public class RUISWandSelector : MonoBehaviour {
 
     private void BeginSelection()
     {
+        originalSelectedGameObjectLayer = selection.gameObject.layer;
+        
+        SetLayersRecursively(selection.gameObject, LayerMask.NameToLayer(selectedGameObjectsLayer));
+
         selection.OnSelection(this);
     }
 
     private void EndSelection()
     {
         selection.OnSelectionEnd();
+
+        RevertLayersRecursively(selection.gameObject);
+        originalSelectedGameObjectLayer = -1;
+
         selection = null;
+    }
+
+    private void SetLayersRecursively(GameObject root, int layer)
+    {
+        if (root.layer == originalSelectedGameObjectLayer)
+        {
+            root.layer = layer;
+        }
+
+        foreach (Transform child in root.transform)
+        {
+            SetLayersRecursively(child.gameObject, layer);
+        }
+    }
+
+    private void RevertLayersRecursively(GameObject root)
+    {
+        if (root.layer == LayerMask.NameToLayer(selectedGameObjectsLayer))
+        {
+            root.layer = originalSelectedGameObjectLayer;
+        }
+
+        foreach(Transform child in root.transform){
+            RevertLayersRecursively(child.gameObject);
+        }
     }
 
     private void UpdateLineRenderer()
@@ -212,7 +254,7 @@ public class RUISWandSelector : MonoBehaviour {
 
         lineRenderer.SetColors(wand.color, wand.color);
 
-        lineRenderer.SetPosition(0, selectionRay.origin + selectionRayStartDistance * selectionRay.direction);
+        lineRenderer.SetPosition(0, selectionRay.origin);// + selectionRayStartDistance * selectionRay.direction);
         lineRenderer.SetPosition(1, selectionRayEnd);
     }
 }

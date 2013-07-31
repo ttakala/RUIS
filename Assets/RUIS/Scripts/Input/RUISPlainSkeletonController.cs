@@ -54,6 +54,11 @@ public class RUISPlainSkeletonController : MonoBehaviour
 	private int followMoveID = 0;
 	private RUISPSMoveWand psmove;
 	
+	private KalmanFilter positionKalman;
+	private double[] measuredPos = {0, 0, 0};
+	private double[] pos = {0, 0, 0};
+	private float positionNoiseCovariance = 500;
+	
     private Dictionary<Transform, Quaternion> jointInitialRotations;
     private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
 
@@ -77,6 +82,9 @@ public class RUISPlainSkeletonController : MonoBehaviour
 		
         jointInitialRotations = new Dictionary<Transform, Quaternion>();
         jointInitialDistances = new Dictionary<KeyValuePair<Transform, Transform>, float>();
+		
+		positionKalman = new KalmanFilter();
+		positionKalman.initialize(3,3);
     }
 
     void Start()
@@ -213,9 +221,23 @@ public class RUISPlainSkeletonController : MonoBehaviour
             if (updateRootPosition)
             {
                 Vector3 newRootPosition = skeletonManager.skeletons[playerId].root.position;
-                transform.localPosition = newRootPosition;
+				
+				measuredPos[0] = newRootPosition.x;
+				measuredPos[1] = newRootPosition.y;
+				measuredPos[2] = newRootPosition.z;
+				positionKalman.setR(Time.deltaTime * positionNoiseCovariance);
+			    positionKalman.predict();
+			    positionKalman.update(measuredPos);
+				pos = positionKalman.getState();
+				
+                transform.localPosition = new Vector3((float) pos[0], (float) pos[1], (float) pos[2]); //newRootPosition;
             }
 
+        }
+        else if (skeletonManager != null && skeletonManager.skeletons[playerId] != null)
+        {
+            leftShoulder.localRotation = jointInitialRotations[leftShoulder] * Quaternion.Euler(0, 0, -70) * Quaternion.Euler(90, 0, 0);
+            rightShoulder.localRotation = jointInitialRotations[rightShoulder] * Quaternion.Euler(0, 0, 110) * Quaternion.Euler(-90, 0, 0);
         }
 		else // TUUKKA
 			if(followMoveController && characterController && inputManager)
