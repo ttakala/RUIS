@@ -3721,10 +3721,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58cefced8c60edf4eb4e6012786be8e4, type: 3}
   m_Name: 
+  fontSize: 14
+  stereoOffset: -110
+  menuSkin: {fileID: 0}
   enablePSMove: 0
   psMoveIP: 
   psMovePort: 0
+  jumpGesture: {fileID: 0}
   oculusRiftMenu: 1
+  hideMouseOnPlay: 1
 --- !u!4 &180230448
 Transform:
   m_ObjectHideFlags: 0
@@ -14819,8 +14824,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b084b3639de80d34780b29bf6ce7d6ee, type: 3}
   m_Name: 
+  animator: {fileID: 0}
   locomotionControl: {fileID: 1456062745}
   characterController: {fileID: 1456062746}
+  animationCombiner: {fileID: 0}
 --- !u!114 &696799208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25164,7 +25171,7 @@ MonoBehaviour:
   skeletonController: {fileID: 696799209}
   maxHeightChange: 5
   maxPositionChange: 10
-  colliderRadiusTweaker: 1.5
+  colliderHeightTweaker: 0
 --- !u!136 &1181104692
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -25887,8 +25894,12 @@ MonoBehaviour:
   headTransform: {fileID: 0}
   toggleSelection: 0
   grabWhileButtonDown: 1
+  ignoredLayers:
+    serializedVersion: 2
+    m_Bits: 0
   positionSelectionGrabType: 0
   rotationSelectionGrabType: 0
+  selectedGameObjectsLayer: 
 --- !u!114 &1216430755
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26285,7 +26296,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 2300000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
@@ -27581,7 +27592,7 @@ Renderer:
     type: 2}
   m_PrefabInternal: {fileID: 1222544068}
   m_GameObject: {fileID: 1287815134}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_LightmapIndex: 255
@@ -31896,6 +31907,8 @@ MonoBehaviour:
   PSNaviControllerID: 0
   strafeInsteadTurning: 0
   jumpStrength: 10
+  jumpSpeedEffect: 0
+  aerialMobility: .100000001
   useRazerHydra: 1
   razerHydraID: 2
 --- !u!114 &1456062746
@@ -31913,11 +31926,14 @@ MonoBehaviour:
   kinectPlayerId: 0
   moveControllerId: 0
   characterPivot: {fileID: 0}
+  psmoveOffset: {x: 0, y: 0, z: 0}
   ignorePitchAndRoll: 1
   groundLayers:
     serializedVersion: 2
     m_Bits: 512
   groundedErrorTweaker: .0500000007
+  dynamicFriction: 1
+  dynamicMaterial: {fileID: 0}
 --- !u!54 &1456062747
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -42392,6 +42408,7 @@ MonoBehaviour:
   moveControllers: []
   riftMagnetometerMode: 0
   oculusID: 0
+  jumpGestureEnabled: 1
 --- !u!1 &1915309723
 GameObject:
   m_ObjectHideFlags: 0
