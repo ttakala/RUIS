@@ -229,47 +229,12 @@ public class RUISDisplay : MonoBehaviour {
 
     public bool LoadFromXML()
     {
-        XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(xmlFilename, displaySchema);
-        if (xmlDoc == null)
-        {
-            return false;
-        }
-
-        displayCenterPosition = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayCenterPosition").Item(0));
-        displayUpInternal = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayUp").Item(0));
-        displayNormalInternal = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayNormal").Item(0));
-
-        linkedCamera.LoadKeystoningFromXML(xmlDoc);
-
-        return true;
+        return XmlImportExport.ImportDisplay(this, xmlFilename, displaySchema);
     }
 
     public bool SaveToXML()
     {
-        XmlDocument xmlDoc = new XmlDocument();
-
-        xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-
-        XmlElement displayRootElement = xmlDoc.CreateElement("ns2", "ruisDisplay", "http://ruisystem.net/display");
-        xmlDoc.AppendChild(displayRootElement);
-
-        XmlElement displayCenterPositionElement = xmlDoc.CreateElement("displayCenterPosition");
-        XMLUtil.WriteVector3ToXmlElement(displayCenterPositionElement, displayCenterPosition);
-        displayRootElement.AppendChild(displayCenterPositionElement);
-
-        XmlElement displayUpElement = xmlDoc.CreateElement("displayUp");
-        XMLUtil.WriteVector3ToXmlElement(displayUpElement, displayUpInternal);
-        displayRootElement.AppendChild(displayUpElement);
-
-        XmlElement displayNormalElement = xmlDoc.CreateElement("displayNormal");
-        XMLUtil.WriteVector3ToXmlElement(displayNormalElement, displayNormalInternal);
-        displayRootElement.AppendChild(displayNormalElement);
-
-        linkedCamera.SaveKeystoningToXML(displayRootElement);
-
-        XMLUtil.SaveXmlToFile(xmlFilename, xmlDoc);
-
-        return true;
+        return XmlImportExport.ExportDisplay(this, xmlFilename);
     }
 
     void OnDrawGizmos()

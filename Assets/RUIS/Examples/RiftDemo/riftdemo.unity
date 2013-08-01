@@ -41555,7 +41555,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: linkedCamera
@@ -41571,6 +41571,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: riftMagnetometerMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: enableRazerHydra
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -12,11 +12,13 @@
     <enabled value="True" />
     <maxPlayers value="1" />
     <floorDetection value="True" />
+    <jumpGestureEnabled value="True" />
   </KinectSettings>
   <RazerSettings>
     <enabled value="True" />
   </RazerSettings>
   <OculusDriftSettings>
     <magnetometerDriftCorrection value="Off" />
+    <kinectDriftCorrectionIfAvailable value="False" />
   </OculusDriftSettings>
 </ns2:ruisInputManager>

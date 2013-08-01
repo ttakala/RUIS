@@ -14,9 +14,9 @@ using System.Xml;
 public class RUISKeystoningConfiguration : MonoBehaviour {
     RUISCamera ruisCamera;
 
-    public RUISKeystoning.KeystoningCorners centerCameraCorners { get; private set; }
-    public RUISKeystoning.KeystoningCorners leftCameraCorners { get; private set; }
-    public RUISKeystoning.KeystoningCorners rightCameraCorners { get; private set; }
+    public RUISKeystoning.KeystoningCorners centerCameraCorners { get; set; }
+    public RUISKeystoning.KeystoningCorners leftCameraCorners { get; set; }
+    public RUISKeystoning.KeystoningCorners rightCameraCorners { get; set; }
 
     RUISKeystoning.KeystoningCorners currentlyDragging = null;
     Camera cameraUnderModification = null;
@@ -104,14 +104,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 
     public bool LoadFromXML(XmlDocument xmlDoc)
     {
-        XmlNode centerCornerElement = xmlDoc.GetElementsByTagName("centerKeystone").Item(0);
-        centerCameraCorners = new RUISKeystoning.KeystoningCorners(centerCornerElement);
-
-        XmlNode leftCornerElement = xmlDoc.GetElementsByTagName("leftKeystone").Item(0);
-        leftCameraCorners = new RUISKeystoning.KeystoningCorners(leftCornerElement);
-
-        XmlNode rightCornerElement = xmlDoc.GetElementsByTagName("rightKeystone").Item(0);
-        rightCameraCorners = new RUISKeystoning.KeystoningCorners(rightCornerElement);
+        XmlImportExport.ImportKeystoningConfiguration(this, xmlDoc);
 		
 		
 		//crunch the optimization when loading
@@ -128,19 +121,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 
     public bool SaveToXML(XmlElement displayXmlElement)
     {
-        XmlElement centerCornerElement = displayXmlElement.OwnerDocument.CreateElement("centerKeystone");
-        centerCameraCorners.SaveToXML(centerCornerElement);
-        displayXmlElement.AppendChild(centerCornerElement);
-
-        XmlElement leftCornerElement = displayXmlElement.OwnerDocument.CreateElement("leftKeystone");
-        leftCameraCorners.SaveToXML(leftCornerElement);
-        displayXmlElement.AppendChild(leftCornerElement);
-
-        XmlElement rightCornerElement = displayXmlElement.OwnerDocument.CreateElement("rightKeystone");
-        rightCameraCorners.SaveToXML(rightCornerElement);
-        displayXmlElement.AppendChild(rightCornerElement);
-
-        return true;
+        return XmlImportExport.ExportKeystoningConfiguration(this, displayXmlElement);
     }
 
     private void ResetDrag()

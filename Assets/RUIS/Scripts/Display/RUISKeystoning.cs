@@ -123,7 +123,7 @@ public class RUISKeystoning {
 
     public class KeystoningCorners
     {
-        Vector2[] corners;
+        public Vector2[] corners;
 
         public KeystoningCorners()
         {
@@ -144,23 +144,9 @@ public class RUISKeystoning {
 
         
 
-        public void SaveToXML(XmlElement xmlElement)
+        public bool SaveToXML(XmlElement xmlElement)
         {
-            XmlElement topLeft = xmlElement.OwnerDocument.CreateElement("topLeft");
-            XMLUtil.WriteVector2ToXmlElement(topLeft, corners[0]);
-            xmlElement.AppendChild(topLeft);
-
-            XmlElement topRight = xmlElement.OwnerDocument.CreateElement("topRight");
-            XMLUtil.WriteVector2ToXmlElement(topRight, corners[1]); 
-            xmlElement.AppendChild(topRight);
-
-            XmlElement bottomRight = xmlElement.OwnerDocument.CreateElement("bottomRight");
-            XMLUtil.WriteVector2ToXmlElement(bottomRight, corners[2]); 
-            xmlElement.AppendChild(bottomRight);
-
-            XmlElement bottomLeft = xmlElement.OwnerDocument.CreateElement("bottomLeft");
-            XMLUtil.WriteVector2ToXmlElement(bottomLeft, corners[3]); 
-            xmlElement.AppendChild(bottomLeft);
+            return XmlImportExport.ExportKeystoning(this, xmlElement);
         }
 
         public Vector2 this[int i]

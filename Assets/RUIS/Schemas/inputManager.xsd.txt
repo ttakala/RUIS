@@ -29,6 +29,7 @@
 			<element name="enabled" type="boolean"/>
 			<element name="maxPlayers" type="int"/>
 			<element name="floorDetection" type="boolean"/>
+			<element name="jumpGestureEnabled" type="boolean"/>
 		</sequence>
 	</complexType>
 
@@ -41,6 +42,7 @@
 	<complexType name="OculusDriftSettingsType">
 		<sequence>
 			<element name="magnetometerDriftCorrection" type="string"/>
+			<element name="kinectDriftCorrectionIfAvailable" type="boolean"/>
 		</sequence>
 	</complexType>
 </schema>
