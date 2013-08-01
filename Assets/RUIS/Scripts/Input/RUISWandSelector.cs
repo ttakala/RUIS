@@ -34,6 +34,8 @@ public class RUISWandSelector : MonoBehaviour {
 
     private bool selectionButtonReleasedAfterSelection = false;
 
+    public LayerMask ignoredLayers;
+
 
     public enum SelectionGrabType
     {
@@ -178,7 +180,8 @@ public class RUISWandSelector : MonoBehaviour {
 				headToWandDirection = transform.position - headTransform.position;
                 selectionRay = new Ray(headTransform.position + selectionRayStartDistance*headToWandDirection, headToWandDirection);
 
-                if (Physics.Raycast(selectionRay, out headToWandHit, selectionRayLength))
+
+                while(Physics.Raycast(selectionRay, out headToWandHit, selectionRayLength, ~ignoredLayers))
                 {
                     selectionRayEnd = headToWandHit.point;
                     return headToWandHit.collider.gameObject;
@@ -188,7 +191,7 @@ public class RUISWandSelector : MonoBehaviour {
                 RaycastHit wandDirectionHit;
                 selectionRay = new Ray(transform.position + selectionRayStartDistance*transform.forward, transform.forward);
 
-                if (Physics.Raycast(selectionRay, out wandDirectionHit, selectionRayLength))
+                if (Physics.Raycast(selectionRay, out wandDirectionHit, selectionRayLength, ~ignoredLayers))
                 {
                     selectionRayEnd = wandDirectionHit.point;
                     return wandDirectionHit.collider.gameObject;

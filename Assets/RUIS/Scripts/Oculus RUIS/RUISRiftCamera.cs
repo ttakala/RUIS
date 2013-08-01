@@ -16,6 +16,8 @@ public class RUISRiftCamera : RUISCamera {
         leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
         rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
 
+        centerCamera = rightCamera;
+
         if (!leftCamera || !rightCamera)
         {
             Debug.LogError("Could not find cameras for Oculus Rift.");
@@ -38,5 +40,6 @@ public class RUISRiftCamera : RUISCamera {
     {
         leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth / 2, relativeHeight);
         rightCamera.rect = new Rect(relativeLeft + relativeWidth / 2, relativeBottom, relativeWidth / 2, relativeHeight);
+        centerCamera.rect = rightCamera.rect;
 	}
 }

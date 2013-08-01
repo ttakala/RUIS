@@ -307,7 +307,7 @@ public class RUISHeadTracker : MonoBehaviour
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 		if(		!skeletonManager
 			&&  (	headPositionInput == HeadPositionSource.Kinect
-			     || headRotationInput == HeadRotationSource.Kinect
+			     || (headRotationInput == HeadRotationSource.Kinect != useOculusRiftRotation)
 			     || (externalDriftCorrection && compass == CompassSource.Kinect)))
 			Debug.LogError("RUISSkeletonManager script is missing from this scene!");
 		

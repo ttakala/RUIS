@@ -12,19 +12,29 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISCharacterAnimationController : MonoBehaviour {
-    private Animator animator;
+    public Animator animator;
     public RUISCharacterLocomotionControl locomotionControl;
     public RUISCharacterController characterController;
-    
-    void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
+    public RUISKinectAndMecanimCombiner animationCombiner;
 
 	void Update () {
+        if (!animator) return;
         animator.SetBool("Grounded", characterController.grounded);
         animator.SetFloat("ForwardSpeed", locomotionControl.forwardSpeed);
         animator.SetFloat("StrafeSpeed", locomotionControl.strafeSpeed);
         animator.SetFloat("Direction", locomotionControl.direction);
+        animator.SetBool("Jump", locomotionControl.jump);
+
+        if (characterController.grounded)
+        {
+            float maxOfForwardOrStrafe = Mathf.Max(Mathf.Abs(locomotionControl.forwardSpeed), Mathf.Abs(locomotionControl.strafeSpeed));
+            animationCombiner.leftLegBlendWeight = Mathf.Clamp01(maxOfForwardOrStrafe);
+            animationCombiner.rightLegBlendWeight = Mathf.Clamp01(maxOfForwardOrStrafe);
+        }
+        else
+        {
+            animationCombiner.leftLegBlendWeight = 1;
+            animationCombiner.rightLegBlendWeight = 1;
+        }
 	}
 }

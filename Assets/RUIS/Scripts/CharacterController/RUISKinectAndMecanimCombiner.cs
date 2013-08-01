@@ -81,18 +81,17 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     private bool childrenInstantiated = false;
 
+    private RUISInputManager inputManager;
+
     void Awake()
     {
-        
+        inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
     }
 
     void Start()
     {
-        /*
-        */
-        //start at root bone, going through all bones until we hit the torso bone
-        //add all the bones encountered before the torso bone
-
+        
+        
     }
 
     void Update()
@@ -152,6 +151,18 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     void LateUpdate()
     {
+        if (!inputManager.enableKinect)
+        {
+            headBlendWeight = 1;
+            torsoBlendWeight = 1;
+            rightArmBlendWeight = 1;
+            leftArmBlendWeight = 1;
+            rightLegBlendWeight = 1;
+            leftLegBlendWeight = 1;
+            forceArmStartPosition = false;
+            forceLegStartPosition = false;
+        }
+
         UpdateScales(skeletonRoot);
 
         transform.position = kinectGameObject.transform.position;
@@ -327,8 +338,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
         kinectToMecanimYaw = Quaternion.Slerp(Quaternion.identity, kinectToMecanimYaw, limbRootBlendWeight);   
 		
 		Vector3 rotatedForward = kinectToMecanimYaw * Vector3.forward;
-        float angles = -180*Mathf.Atan2(rotatedForward.y, rotatedForward.z)/Mathf.PI;
-		// Tuukka: was originally: float angles = Vector3.Angle(Vector3.up, kinectToMecanimYaw * Vector3.up);
+        float angles = -Mathf.Atan2(rotatedForward.y, rotatedForward.z) * Mathf.Rad2Deg;
+		//float angles = Vector3.Angle(Vector3.up, kinectToMecanimYaw * Vector3.up);
 		// That doesn't work right, Vector3.Angle seems to return only values between [0, 180], and the leg animation came up wrong when facing left
 		
 		//print(angles); 
