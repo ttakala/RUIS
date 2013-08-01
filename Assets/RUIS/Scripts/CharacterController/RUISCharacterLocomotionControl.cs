@@ -233,7 +233,8 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
             if (razerController != null && razerController.Enabled)
             {
 				if(!airborne)
-	                extraSpeed = razerController.Trigger;
+					if(razerController.GetButton(SixenseButtons.JOYSTICK))
+		                extraSpeed = 1; //razerController.Trigger;
 				else
 					extraSpeed = 0;
 				
@@ -244,7 +245,7 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
                 {
                     if (Mathf.Abs(razerController.JoystickX) > 0.15f)
                         targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed), 0, 0);
-                }
+				}
                 else
                 {
                     if (Mathf.Abs(razerController.JoystickX) > 0.075f)
@@ -252,6 +253,11 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 						turnMagnitude += razerController.JoystickX;
                     }
                 }
+				
+				if(razerController.GetButton(SixenseButtons.THREE))
+					turnMagnitude -= 1;
+				if(razerController.GetButton(SixenseButtons.FOUR))
+					turnMagnitude += 1;
             }
         }
 		
