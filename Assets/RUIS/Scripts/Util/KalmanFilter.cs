@@ -48,7 +48,11 @@ public class KalmanFilter
     private Matrix K;
 	
 	private Double[] state;
+	
+	private double[] previousMeasurements;
+	private double[] tempZ;
 
+	public bool skipIdenticalMeasurements = false;
 
     /**
      * Specify the kinematics model of the Kalman filter with  
@@ -77,6 +81,10 @@ public class KalmanFilter
 	  state = new Double[dimenX];
 	  for(int i = 0; i<state.Length; ++i)
 	  		state[i] = 0;
+		
+	  previousMeasurements = new double[dimenZ];
+	  for(int i = 0; i<previousMeasurements.Length; ++i)
+	  		previousMeasurements[i] = 0;
     }
 
     /**
@@ -170,7 +178,25 @@ public class KalmanFilter
      * @param z Measurement.
      * @param R Measurement covariance.
      */
-    public void update(Matrix z, Matrix R) {
+    public void update(Matrix z, Matrix R) 
+	{
+		if(skipIdenticalMeasurements)
+		{
+			bool areIdentical = true;
+			
+			for(int i = 0; i<z.RowCount; ++i)
+			{
+				if(z[i+1, 1].Re != previousMeasurements[i])
+				{
+					areIdentical = false;
+					previousMeasurements[i] = z[i+1, 1].Re;
+				}
+			}
+			
+			if(areIdentical)
+				return;
+		}
+		
         // y = z - H x
         //mult(H,x,y);
         //sub(z,y,y);
@@ -220,6 +246,23 @@ public class KalmanFilter
      */
     public void update(double[] z) 
     {
+		
+		if(skipIdenticalMeasurements)
+		{
+			bool areIdentical = true;
+			
+			for(int i = 0; i<z.Length; ++i)
+			{
+				if(z[i] != previousMeasurements[i])
+				{
+					areIdentical = false;
+					previousMeasurements[i] = z[i];
+				}
+			}
+			
+			if(areIdentical)
+				return;
+		}
         // y = z - H x
         //mult(H,x,y);
         //for(int i=0; i<u.numRows; ++i)

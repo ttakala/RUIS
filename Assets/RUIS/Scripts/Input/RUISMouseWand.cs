@@ -69,6 +69,13 @@ public class RUISMouseWand : RUISWand {
 
     public void Update()
     {
+        mouseButtonPressed = Input.GetMouseButtonDown(0);
+        mouseButtonReleased = Input.GetMouseButtonUp(0);
+        mouseButtonDown = Input.GetMouseButton(0);
+    }
+	
+	void FixedUpdate()
+	{
         Ray wandRay = displayManager.ScreenPointToRay(Input.mousePosition);
         if (wandRay.direction != Vector3.zero)
         {
@@ -85,11 +92,7 @@ public class RUISMouseWand : RUISWand {
 	            transform.rotation = Quaternion.LookRotation(wandRay.direction);
 			}
         }
-
-        mouseButtonPressed = Input.GetMouseButtonDown(0);
-        mouseButtonReleased = Input.GetMouseButtonUp(0);
-        mouseButtonDown = Input.GetMouseButton(0);
-    }
+	}
 
     public override bool SelectionButtonWasPressed()
     {

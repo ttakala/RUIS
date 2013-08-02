@@ -227,7 +227,7 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	private double[] filteredDrift = {0, 0};
 	
-	//public bool filterInFixedUpdate = false;
+	public bool filterInFixedUpdate = true;
 	
 	public float driftNoiseCovariance = 1000;
 	
@@ -246,12 +246,14 @@ public class RUISHeadTracker : MonoBehaviour
 		
 		filterPos = new KalmanFilter();
 		filterPos.initialize(3,3);
+		filterPos.skipIdenticalMeasurements = true;
 //		filterRot = new KalmanFilter();
 //		filterRot.initialize(4,4);
 		
 		// Mobile Razer Hydra base filtering
 		hydraBaseFilterPos = new KalmanFilter();
 		hydraBaseFilterPos.initialize(3,3);
+		hydraBaseFilterPos.skipIdenticalMeasurements = true;
 //		hydraBaseFilterRot = new KalmanFilter();
 //		hydraBaseFilterRot.initialize(4,4);
 		
@@ -307,9 +309,11 @@ public class RUISHeadTracker : MonoBehaviour
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 		if(		!skeletonManager
 			&&  (	headPositionInput == HeadPositionSource.Kinect
-			     || (headRotationInput == HeadRotationSource.Kinect != useOculusRiftRotation)
+			     || (headRotationInput == HeadRotationSource.Kinect && !useOculusRiftRotation)
 			     || (externalDriftCorrection && compass == CompassSource.Kinect)))
+		{
 			Debug.LogError("RUISSkeletonManager script is missing from this scene!");
+		}
 		
 		if(inputManager && !inputManager.enableRazerHydra)
 		{
@@ -389,6 +393,26 @@ public class RUISHeadTracker : MonoBehaviour
 		
 	void Update () 
 	{
+		if(!filterInFixedUpdate)
+			updateTracker(Time.deltaTime);
+	}
+	
+	void FixedUpdate() 
+	{
+		if(filterInFixedUpdate)
+			updateTracker(Time.fixedDeltaTime);
+	}
+	
+	void LateUpdate () 
+	{
+		// Beginning of invocations that are needed by RUISCamera's oblique frustum creation
+        eyeCenterPosition = transform.localPosition;
+		// End of invocations that are needed by RUISCamera's oblique frustum creation
+	}
+	
+	private void updateTracker(float deltaT)
+	{
+
 		// Lets reduce the amount of required if clauses by setting the following:
 		if(!externalDriftCorrection)
 			compass = CompassSource.None;
@@ -478,22 +502,22 @@ public class RUISHeadTracker : MonoBehaviour
 				if(Mathf.Abs(poseRazer.JoystickX) > 0.1f)
 				{
 					if(mobileRazerBase == RazerHydraBase.Kinect)
-						hydraBasePositionOffsetKinect.x    += 0.5f*Time.deltaTime*poseRazer.JoystickX;
+						hydraBasePositionOffsetKinect.x    += 0.5f*deltaT*poseRazer.JoystickX;
 				}
 				if(Mathf.Abs(poseRazer.JoystickY) > 0.1f)
 				{
 					if(mobileRazerBase == RazerHydraBase.Kinect)
-						hydraBasePositionOffsetKinect.y    += 0.5f*Time.deltaTime*poseRazer.JoystickY;
+						hydraBasePositionOffsetKinect.y    += 0.5f*deltaT*poseRazer.JoystickY;
 				}
 				if(poseRazer.GetButton(SixenseButtons.THREE))
 				{
 					if(mobileRazerBase == RazerHydraBase.Kinect)
-						hydraBaseRotationOffsetKinect.x += 60*Time.deltaTime;
+						hydraBaseRotationOffsetKinect.x += 60*deltaT;
 				}
 				if(poseRazer.GetButton(SixenseButtons.ONE))
 				{
 					if(mobileRazerBase == RazerHydraBase.Kinect)
-						hydraBaseRotationOffsetKinect.x -= 60*Time.deltaTime;
+						hydraBaseRotationOffsetKinect.x -= 60*deltaT;
 				}
 			}
 			
@@ -590,7 +614,7 @@ public class RUISHeadTracker : MonoBehaviour
 				measuredPos[0] = hydraTempVector.x;
 				measuredPos[1] = hydraTempVector.y;
 				measuredPos[2] = hydraTempVector.z;
-				hydraBaseFilterPos.setR(Time.deltaTime * hydraBasePositionCovariance);
+				hydraBaseFilterPos.setR(deltaT * hydraBasePositionCovariance);
 			    hydraBaseFilterPos.predict();
 			    hydraBaseFilterPos.update(measuredPos);
 				filteredPos = hydraBaseFilterPos.getState();
@@ -600,7 +624,7 @@ public class RUISHeadTracker : MonoBehaviour
 			}
 			else
 				hydraBasePosition = hydraTempVector;
-//			float normalizedT = Mathf.Clamp01(Time.deltaTime * 5);
+//			float normalizedT = Mathf.Clamp01(deltaT * 5);
 //			if(normalizedT != 0)
 //				hydraBasePosition = Vector3.Lerp(hydraBasePosition, hydraTempVector, normalizedT );
 			
@@ -610,7 +634,7 @@ public class RUISHeadTracker : MonoBehaviour
 //				measuredRot[1] = hydraTempRotation.y;
 //				measuredRot[2] = hydraTempRotation.z;
 //				measuredRot[3] = hydraTempRotation.w;
-//				hydraBaseFilterRot.setR(Time.deltaTime * hydraBaseRotationCovariance);
+//				hydraBaseFilterRot.setR(deltaT * hydraBaseRotationCovariance);
 //			    hydraBaseFilterRot.predict();
 //			    hydraBaseFilterRot.update(measuredRot);
 //				filteredRot = hydraBaseFilterRot.getState();
@@ -618,11 +642,11 @@ public class RUISHeadTracker : MonoBehaviour
 //													(float) filteredRot[2], (float) filteredRot[3] );
 				
 				hydraBaseKalmanRot.rotationNoiseCovariance = hydraBaseRotationCovariance;
-				hydraBaseRotation = hydraBaseKalmanRot.Update(hydraTempRotation, Time.deltaTime);
+				hydraBaseRotation = hydraBaseKalmanRot.Update(hydraTempRotation, deltaT);
 			}
 			else
 				hydraBaseRotation = hydraTempRotation;		
-//			normalizedT = Mathf.Clamp01(Time.deltaTime * 5);
+//			normalizedT = Mathf.Clamp01(deltaT * 5);
 //			if(normalizedT != 0)
 //				hydraBaseRotation = Quaternion.Lerp(hydraBaseRotation, hydraTempRotation, normalizedT);
 		}
@@ -693,7 +717,7 @@ public class RUISHeadTracker : MonoBehaviour
 			measuredPos[0] = measuredHeadPosition.x;
 			measuredPos[1] = measuredHeadPosition.y;
 			measuredPos[2] = measuredHeadPosition.z;
-			filterPos.setR(Time.deltaTime * positionNoiseCovariance);
+			filterPos.setR(deltaT * positionNoiseCovariance);
 		    filterPos.predict();
 		    filterPos.update(measuredPos);
 			filteredPos = filterPos.getState();
@@ -781,7 +805,7 @@ public class RUISHeadTracker : MonoBehaviour
 //				measuredRot[1] = measuredHeadRotation.y;
 //				measuredRot[2] = measuredHeadRotation.z;
 //				measuredRot[3] = measuredHeadRotation.w;
-//				filterRot.setR(Time.deltaTime * rotationNoiseCovariance);
+//				filterRot.setR(deltaT * rotationNoiseCovariance);
 //			    filterRot.predict();
 //			    filterRot.update(measuredRot);
 //				filteredRot = filterRot.getState();
@@ -789,7 +813,7 @@ public class RUISHeadTracker : MonoBehaviour
 //													(float) filteredRot[2], (float) filteredRot[3] );
 				
 				filterRot.rotationNoiseCovariance = rotationNoiseCovariance;
-				tempLocalRotation = filterRot.Update(measuredHeadRotation, Time.deltaTime);
+				tempLocalRotation = filterRot.Update(measuredHeadRotation, deltaT);
 	        }
 			else 
 				tempLocalRotation = measuredHeadRotation;
@@ -806,33 +830,9 @@ public class RUISHeadTracker : MonoBehaviour
 		}
 		else
 		{
-			// Yaw Drift Corrector invocations in Update()
-			//if(!filterInFixedUpdate) 
-			//{
-			localRotation = driftCorrectedRotation(tempLocalRotation, Time.deltaTime);
+			localRotation = driftCorrectedRotation(tempLocalRotation, deltaT);
 			transform.localRotation = localRotation;
-			//}
 		}
-		
-	}
-	
-	void FixedUpdate() 
-	{
-		// Yaw Drift Corrector invocations in FixedUpdate()
-		// Kinect and PSMove do not need drift correction
-		//if(	   filterInFixedUpdate && externalDriftCorrection 
-		//	&& (useOculusRiftRotation || headRotationInput != HeadRotationSource.Kinect) 
-		//	&& (useOculusRiftRotation || headRotationInput != HeadRotationSource.PSMove))
-		//{
-		//transform.localRotation = driftCorrectedRotation(tempLocalRotation, Time.fixedDeltaTime);
-		//}
-	}
-	
-	void LateUpdate () 
-	{
-		// Beginning of invocations that are needed by RUISCamera's oblique frustum creation
-        eyeCenterPosition = transform.localPosition;
-		// End of invocations that are needed by RUISCamera's oblique frustum creation
 	}
 	
 	/// <summary>
@@ -840,7 +840,7 @@ public class RUISHeadTracker : MonoBehaviour
 	/// </summary>
 	public void ResetOrientation()
 	{
-		if(externalDriftCorrection) 
+		if(externalDriftCorrection && compass != CompassSource.PSMove) 
 			filterDrift.reset(); // Reset yaw filter correction to zero
 		
 		if(useOculusRiftRotation)

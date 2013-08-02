@@ -31,10 +31,10 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	private bool kinectAndMecanimCombinerExists = false;
 	private bool combinerChildrenInstantiated = false;
 	
-	private KalmanFilter heightKalman;
-	private double[] measuredHeight = {0};
-	private double[] colHeight = {0};
-	private float heightNoiseCovariance = 500;
+	private KalmanFilter positionKalman;
+	private double[] measuredPos = {0, 0, 0};
+	private double[] pos = {0, 0, 0};
+	private float positionNoiseCovariance = 1500;
 	
     private float _colliderHeight;
     public float colliderHeight
@@ -65,8 +65,9 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         defaultColliderHeight = capsuleCollider.height;
         defaultColliderPosition = transform.localPosition;
 		
-		heightKalman = new KalmanFilter();
-		heightKalman.initialize(1,1);
+		positionKalman = new KalmanFilter();
+		positionKalman.initialize(3,3);
+		positionKalman.skipIdenticalMeasurements = true;
 	}
 	
 	void FixedUpdate () 
@@ -98,6 +99,17 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
                 {
                     //transform.localPosition = skeletonController.transform.localPosition;// + 0.5f*colliderHeight*Vector3.up;
                     torsoPos = skeletonController.transform.localPosition + defaultColliderHeight * Vector3.up;
+					
+					measuredPos[0] = torsoPos.x;
+					measuredPos[1] = torsoPos.y;
+					measuredPos[2] = torsoPos.z;
+					positionKalman.setR(Time.fixedDeltaTime * positionNoiseCovariance);
+				    positionKalman.predict();
+				    positionKalman.update(measuredPos);
+					pos = positionKalman.getState();
+					torsoPos.x = (float) pos[0];
+					torsoPos.y = (float) pos[1];
+					torsoPos.z = (float) pos[2];
                 }
                 else
                 {
@@ -117,18 +129,22 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         {
             torsoPos = skeletonManager.skeletons[playerId].torso.position;
 			
-			measuredHeight[0] = torsoPos.y;
-			heightKalman.setR(Time.fixedDeltaTime * heightNoiseCovariance);
-		    heightKalman.predict();
-		    heightKalman.update(measuredHeight);
-			colHeight = heightKalman.getState();
-			torsoPos.y = (float) colHeight[0];
+			measuredPos[0] = torsoPos.x;
+			measuredPos[1] = torsoPos.y;
+			measuredPos[2] = torsoPos.z;
+			positionKalman.setR(Time.fixedDeltaTime * positionNoiseCovariance);
+		    positionKalman.predict();
+		    positionKalman.update(measuredPos);
+			pos = positionKalman.getState();
+			torsoPos.x = (float) pos[0];
+			torsoPos.y = (float) pos[1];
+			torsoPos.z = (float) pos[2];
         }
 		
         Vector3 newPos = torsoPos;
         newPos.y = torsoPos.y / 2;
 
-        colliderHeight = Mathf.Lerp(capsuleCollider.height, torsoPos.y + colliderHeightTweaker, maxHeightChange * Time.fixedDeltaTime); //TUUKKA ************************************
+        colliderHeight = Mathf.Lerp(capsuleCollider.height, torsoPos.y + colliderHeightTweaker, maxHeightChange * Time.fixedDeltaTime);
         
         transform.localPosition = Vector3.MoveTowards(transform.localPosition, newPos, maxPositionChange * Time.fixedDeltaTime);
 	}
