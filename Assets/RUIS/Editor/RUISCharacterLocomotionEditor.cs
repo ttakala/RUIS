@@ -64,7 +64,7 @@ public class RUISCharacterLocomotionEditor : Editor {
         EditorGUILayout.PropertyField(speed, new GUIContent("Moving Speed", "How fast is the character moving with Input.GetAxis()"));
         EditorGUILayout.PropertyField(maxVelocityChange, new GUIContent("Max Velocity Change", "How fast character can change existing velocity (e.g. sliding)"));
 		EditorGUILayout.PropertyField(jumpStrength, new GUIContent("Jump Strength", "Mass-invariant impulse force that is applied when jumping"));
-		EditorGUILayout.PropertyField(jumpSpeedEffect, new GUIContent("Speed Effect on Jump", "How much speed effects the jump strength. Value 0 means no effect, "
+		EditorGUILayout.PropertyField(jumpSpeedEffect, new GUIContent("Speed Effect on Jump", "How much speed affects the jump strength. Value 0 means no effect, "
 																	+ "value 1 means double strength when moving at max speed and so on."));
 		EditorGUILayout.PropertyField(aerialMobility, new GUIContent("Aerial Mobility", "At which rate the character can change his velocity while jumping "
 																	+ "or airborne."));

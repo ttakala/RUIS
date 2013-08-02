@@ -74,7 +74,25 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         jumpGesture = GetComponentInChildren<RUISJumpGestureRecognizer>();
 
         moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
-	
+
+        try
+        {
+            Input.GetAxis("Sprint");
+        }
+        catch (UnityException)
+        {
+            Debug.LogWarning("Sprint Axis not set");
+        }
+
+        try
+        {
+            Input.GetAxis("Right Analog Stick");
+        }
+        catch (UnityException)
+        {
+            Debug.LogWarning("Right Analog Stick Axis not set");
+        }
+
     }
 	
 	void Start()
@@ -174,9 +192,13 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
         Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
         {
-            extraSpeed = Input.GetAxis("Sprint");
-			if(!airborne)
-	            targetVelocity *= 1 + extraSpeed;
+            try
+            {
+                extraSpeed = Input.GetAxis("Sprint");
+                if (!airborne)
+                    targetVelocity *= 1 + extraSpeed;
+            }
+            catch (UnityException) { }
         }
 
         // Check if moving with PS Move Navigation controller
@@ -307,9 +329,13 @@ public class RUISCharacterLocomotionControl : MonoBehaviour
 		}
 
         //rigidbody.AddForce(new Vector3(0, -gravity * rigidbody.mass, 0));
-		
-		turnMagnitude += Input.GetAxis("Right Analog Stick");
-		
+
+        try
+        {
+            turnMagnitude += Input.GetAxis("Right Analog Stick");
+        }
+        catch (UnityException) { }
+
 		if(Input.GetKey(turnLeftKey))
             turnMagnitude -= 1;
         if(Input.GetKey(turnRightKey))
