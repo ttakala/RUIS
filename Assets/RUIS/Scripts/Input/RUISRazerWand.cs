@@ -2,7 +2,7 @@
 
 Content    :   A class to manage the information from a Razer Hydra controller
 Authors    :   Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -56,7 +56,7 @@ public class RUISRazerWand : RUISWand {
 					 && (	trackers[i].useOculusRiftRotation 
 						 || trackers[i].headRotationInput == RUISHeadTracker.HeadRotationSource.InputTransform )))
 				if(trackers[i].isRazerBaseMobile) // Found a Razer Hydra tracker that claims to have mobile base
-					headTracker = Object.FindObjectOfType(typeof(RUISHeadTracker)) as RUISHeadTracker;
+					headTracker = trackers[i];
 		}
 	}
 	
