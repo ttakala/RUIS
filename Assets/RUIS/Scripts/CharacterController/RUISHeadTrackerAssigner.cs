@@ -3,7 +3,7 @@
 Content    :	Leaves one head tracker enabled (that best matches RUISInputManager 
 				settings) from a input list of GameObjects with RUISTracker script
 Authors    :	Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :	Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :	RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -196,29 +196,40 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			
 			// *** TODO: Below is slightly hacky
 			// Read inputConfig.xml to see if Kinect yaw drift correction for Oculus Rift should be enabled
-			if(	   closestMatch != null && inputManager.kinectDriftCorrectionPreferred
+			if(	   closestMatch != null
 				&& closestMatch.useOculusRiftRotation && applyKinectDriftCorrectionPreference)
 			{
-				switch(closestMatch.headPositionInput)
+				if(inputManager.kinectDriftCorrectionPreferred)
 				{
-					case RUISHeadTracker.HeadPositionSource.Kinect:
-						if(!psmove && kinect)
-						{
-							closestMatch.externalDriftCorrection = true;
-							closestMatch.compass = RUISHeadTracker.CompassSource.Kinect;
-						}
-						break;
-					
-					case RUISHeadTracker.HeadPositionSource.RazerHydra:
-						if(!psmove && kinect && razer)
-						{
-							if(closestMatch.isRazerBaseMobile)
+					// Preference is to use Kinect for drift correction (if PS Move is not used for head tracking)
+					switch(closestMatch.headPositionInput)
+					{
+						case RUISHeadTracker.HeadPositionSource.Kinect:
+							if(!psmove && kinect)
 							{
 								closestMatch.externalDriftCorrection = true;
 								closestMatch.compass = RUISHeadTracker.CompassSource.Kinect;
 							}
-						}
-						break;
+							break;
+						
+						case RUISHeadTracker.HeadPositionSource.RazerHydra:
+							if(!psmove && kinect && razer)
+							{
+								if(closestMatch.isRazerBaseMobile)
+								{
+									closestMatch.externalDriftCorrection = true;
+									closestMatch.compass = RUISHeadTracker.CompassSource.Kinect;
+								}
+							}
+							break;
+					}
+				}
+				else
+				{
+					// Preference is NOT to use Kinect for drift correction
+					if(		closestMatch.headPositionInput == RUISHeadTracker.HeadPositionSource.Kinect
+						&&  !psmove && kinect															)
+						closestMatch.externalDriftCorrection = false;
 				}
 			}
 		}
