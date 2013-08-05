@@ -98,7 +98,6 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
     {
         if (!childrenInstantiated)
         {
-            childrenInstantiated = true;
             kinectGameObject = Instantiate(gameObject, transform.position, transform.rotation) as GameObject;
             kinectGameObject.name = name + "Kinect";
             kinectGameObject.transform.parent = transform.parent;
@@ -146,6 +145,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             skeletonRoot = new BoneTriplet(kinectRootBone, mecanimRootBone, blendedRootBone, BodypartClassification.Root);
 
             AddChildren(ref skeletonRoot, BodypartClassification.Root);
+            childrenInstantiated = true;
         }
     }
 

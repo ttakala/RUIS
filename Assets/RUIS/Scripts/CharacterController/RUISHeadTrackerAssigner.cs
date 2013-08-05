@@ -18,6 +18,8 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	public RUISDisplay display;
 	public bool applyKinectDriftCorrectionPreference = false;
 	public bool changePivotIfNoKinect = true;
+	public Vector3 onlyRazerOffset = Vector3.zero;
+	public Transform razerWandParent;
 	
     void Awake()
     {
@@ -193,6 +195,31 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				Debug.LogError(  positionTracker + " did not have a child with RUISCamera component, "
 							   + "and therefore it is not used to draw on any of the displays in "
 							   + "DisplayManager.");
+			
+			// If we are using Razer with a static base for head tracking, then apply onlyRazerOffset
+			// on the parent objects of the Razer head tracker and the hand-held Razer
+			if(		closestMatch != null && razer 
+				&&	closestMatch.headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
+				&&	!closestMatch.isRazerBaseMobile													)
+			{
+				// The parent object of the Razer head tracker must not have RUISCharacterConroller,
+				// because that script will modify the object's position
+				if(		closestMatch.transform.parent != null 
+					&&	closestMatch.transform.parent.GetComponent<RUISCharacterController>() == null )
+				{
+					string razerWandOffsetInfo = "";
+					closestMatch.transform.parent.localPosition += onlyRazerOffset;
+					if(razerWandParent != null)
+					{
+						razerWandParent.localPosition += onlyRazerOffset;
+						razerWandOffsetInfo =  " and " + razerWandParent.gameObject.name + " (parent of hand-held Razer "
+											 + "Hydra)";
+					}
+					Debug.Log(  "Applying offset of " + onlyRazerOffset + " to " 
+							   + closestMatch.transform.parent.gameObject.name + " (parent of Razer Hydra head tracker)"
+							   + razerWandOffsetInfo + "." );
+				}
+			}
 			
 			// *** TODO: Below is slightly hacky
 			// Read inputConfig.xml to see if Kinect yaw drift correction for Oculus Rift should be enabled

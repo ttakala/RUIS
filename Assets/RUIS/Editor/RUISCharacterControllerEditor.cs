@@ -26,6 +26,7 @@ public class RUISCharacterControllerEditor : Editor
 	SerializedProperty dynamicFriction;
 	SerializedProperty dynamicMaterial;
 	SerializedProperty psmoveOffset;
+	SerializedProperty feetAlsoAffectGrounding;
 
     public void OnEnable()
     {
@@ -38,6 +39,7 @@ public class RUISCharacterControllerEditor : Editor
         dynamicFriction = serializedObject.FindProperty("dynamicFriction");
         dynamicMaterial = serializedObject.FindProperty("dynamicMaterial");
 		psmoveOffset = serializedObject.FindProperty("psmoveOffset");
+		feetAlsoAffectGrounding = serializedObject.FindProperty("feetAlsoAffectGrounding");
     }
 
     public override void OnInspectorGUI()
@@ -72,7 +74,8 @@ public class RUISCharacterControllerEditor : Editor
         EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent("Ignore Pitch and Roll", "Should the pitch and roll values of the pivot "
 																		+ "rotation be taken into account when transforming directions into character coordinates?"));
 
-        EditorGUILayout.PropertyField(groundLayers, new GUIContent("Ground Layers", "The layers to take into account when checking whether the character is grounded"));
+        EditorGUILayout.PropertyField(groundLayers, new GUIContent("Ground Layers", "The layers to take into account when checking whether the character is grounded "
+																	  + "(and able to jump)."));
 
         EditorGUILayout.PropertyField(groundedErrorTweaker, new GUIContent("Grounded error tweaker", "This value can be adjusted to allow for some leniency in the "
 																		+ "checks whether the character is grounded"));
@@ -89,6 +92,13 @@ public class RUISCharacterControllerEditor : Editor
 																		  + "climb walls with friction, and he will slide down steep hills." ));
 			EditorGUI.indentLevel -= 2;
 		}
+		
+        EditorGUILayout.PropertyField(feetAlsoAffectGrounding, new GUIContent(  "Feet Affect Grounding", "When this option is disabled, the "
+																		  + "avatar is grounded (and able to jump) only if its Stabilizing Collider is "
+																		  + "standing on a collider from Ground Layers. By enabling this option, "
+																		  + "the avatar will also be grounded when at least one of its feet is "
+																		  + "standing on a non-kinematic Rigidbody from Ground Layers. We recommend "
+																	  	  + "that you enable this."  ));
         serializedObject.ApplyModifiedProperties();
     }
 }

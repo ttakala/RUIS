@@ -17,7 +17,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
     public RUISPlainSkeletonController skeletonController;
 
     RUISSkeletonManager skeletonManager;
-    int playerId;
+    int playerId = 0;
 
     private CapsuleCollider capsuleCollider;
 	
@@ -53,7 +53,11 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	void Awake () 
 	{
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
-        playerId = skeletonController.playerId;
+		if(skeletonController != null)
+	        playerId = skeletonController.playerId;
+		else
+			Debug.LogError(   "The public variable 'Skeleton Controller' is not assigned! Using skeleton "
+							+ "#0 as the torso position source.");
 		
 		if(gameObject.transform.parent != null)
 		{

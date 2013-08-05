@@ -9,6 +9,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class RUISCharacterController : MonoBehaviour
 {
@@ -38,7 +39,14 @@ public class RUISCharacterController : MonoBehaviour
     public bool grounded { get; private set; }
     public bool colliding { get; private set; }
 	private bool wasColliding = false;
-
+	
+	Vector3 raycastPosition;
+	float distanceToRaycast;
+	
+	RaycastHit hitInfo;
+	private bool tempGrounded = false;
+	private bool rayIntersected = false;
+	
     private RUISCharacterStabilizingCollider stabilizingCollider;
 	
 	public bool dynamicFriction = true;
@@ -46,6 +54,9 @@ public class RUISCharacterController : MonoBehaviour
 	private PhysicMaterial originalMaterial;
 	private Collider colliderComponent;
     public float lastJumpTime { get; set; }
+	
+	public bool feetAlsoAffectGrounding = true;
+	List<Transform> bodyParts = new List<Transform>(2);
 
     void Awake()
     {
@@ -59,6 +70,11 @@ public class RUISCharacterController : MonoBehaviour
     {
 		colliding = false;
 		grounded = false;
+	
+		RUISPlainSkeletonController skeletonController 
+									= gameObject.GetComponentInChildren<RUISPlainSkeletonController>();
+		bodyParts.Add(skeletonController.leftFoot);
+		bodyParts.Add(skeletonController.rightFoot);
 		
 		if(stabilizingCollider)
 		{	
@@ -96,13 +112,39 @@ public class RUISCharacterController : MonoBehaviour
 	
     void Update()
     {
-        Vector3 raycastPosition = stabilizingCollider ? stabilizingCollider.transform.position : transform.position;
+		// Check whether character collider (aka stabilizingCollider) is grounded
+        raycastPosition = stabilizingCollider ? stabilizingCollider.transform.position : transform.position;
 
-        float distanceToRaycast = stabilizingCollider ? stabilizingCollider.colliderHeight / 2 : 1.5f;
+        distanceToRaycast = stabilizingCollider ? stabilizingCollider.colliderHeight / 2 : 1.5f;
         distanceToRaycast += groundedErrorTweaker;
-
-        grounded = Physics.Raycast(raycastPosition, -transform.up, distanceToRaycast, groundLayers.value);
-	
+		
+        tempGrounded = Physics.Raycast(raycastPosition, -transform.up, distanceToRaycast, groundLayers.value);
+		
+		// Check if feet are grounded
+		if(!tempGrounded && feetAlsoAffectGrounding)
+		{
+			foreach(Transform bodyPart in bodyParts)
+			{
+	            if(bodyPart && bodyPart.collider)
+	            {
+					raycastPosition = bodyPart.collider.bounds.center;
+					distanceToRaycast = bodyPart.collider.bounds.extents.y + groundedErrorTweaker;
+					rayIntersected = Physics.Raycast(raycastPosition, -transform.up, out hitInfo, 
+													 distanceToRaycast, groundLayers.value		  );
+					
+					if(rayIntersected && hitInfo.rigidbody)
+					{
+						if(!hitInfo.rigidbody.isKinematic)
+						{
+							tempGrounded = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+        grounded = tempGrounded;
     }
 	
 	void FixedUpdate()

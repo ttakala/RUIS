@@ -2,7 +2,7 @@
 
 Content    :   Comprehensive 6DOF tracker class with yaw drift correction
 Authors    :   Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -143,7 +143,7 @@ public class RUISHeadTracker : MonoBehaviour
 	// user needs to know each controllers' local coordinate system
 	public Vector3 positionOffsetKinect = new Vector3(0, 0, 0);
 	public Vector3 positionOffsetPSMove = new Vector3(0, 0.12f, 0);
-	public Vector3 positionOffsetHydra  = new Vector3(-0.1f, 0, 0);
+	public Vector3 positionOffsetHydra  = new Vector3(-0.1f, -0.05f, 0);
 	
 	// Rift has its own methods for rotation offsetting
 	public Vector3 rotationOffsetKinect = new Vector3(0, 0, 0);
