@@ -157,10 +157,12 @@ public class RUISPlainSkeletonController : MonoBehaviour
 					{
 						followMoveController = true;
 						followMoveID = characterController.moveControllerId;
-						Debug.LogWarning(	"Using PS Move controller #" + characterController.moveControllerId + " as a source "
-										 +	"for avatar root position of " + gameObject.name + ", because Kinect is disabled "
-										 +	"and PS Move is enabled, while that PS Move controller has been assigned as a "
-										 +	"Character Pivot in " + gameObject.name + "'s parent GameObject");
+						if(		 gameObject.GetComponent<RUISKinectAndMecanimCombiner>() == null 
+							||	!gameObject.GetComponent<RUISKinectAndMecanimCombiner>().enabled )
+							Debug.LogWarning(	"Using PS Move controller #" + characterController.moveControllerId + " as a source "
+											 +	"for avatar root position of " + gameObject.name + ", because Kinect is disabled "
+											 +	"and PS Move is enabled, while that PS Move controller has been assigned as a "
+											 +	"Character Pivot in " + gameObject.name + "'s parent GameObject");
 					}
 			}
 		}
