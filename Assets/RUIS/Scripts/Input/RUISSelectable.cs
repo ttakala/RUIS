@@ -38,6 +38,11 @@ public class RUISSelectable : MonoBehaviour {
     public Material selectionMaterial;
 
     public bool maintainMomentumAfterRelease = true;
+	
+	public bool continuousCollisionDetectionWhenSelected = true;
+	private CollisionDetectionMode oldCollisionMode;
+	private bool switchToOldCollisionMode = false;
+	private bool switchToContinuousCollisionMode = false;
 
     private Vector3 latestVelocity = Vector3.zero;
     private Vector3 lastPosition = Vector3.zero;
@@ -49,6 +54,8 @@ public class RUISSelectable : MonoBehaviour {
     public void Awake()
     {
         velocityBuffer = new List<Vector3>();
+		if(rigidbody)
+			oldCollisionMode = rigidbody.collisionDetectionMode;
     }
 
     public void Update()
@@ -68,6 +75,17 @@ public class RUISSelectable : MonoBehaviour {
 
     public void FixedUpdate()
     {
+		if(switchToContinuousCollisionMode)
+		{
+			oldCollisionMode = rigidbody.collisionDetectionMode;
+			rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+			switchToContinuousCollisionMode = false;
+		}
+		if(switchToOldCollisionMode)
+		{
+			rigidbody.collisionDetectionMode = oldCollisionMode;
+			switchToOldCollisionMode = false;
+		}
         UpdateTransform(true);
         transformHasBeenUpdated = true;
     }
@@ -86,6 +104,10 @@ public class RUISSelectable : MonoBehaviour {
 
         if (rigidbody)
         {
+			if(continuousCollisionDetectionWhenSelected)
+			{
+				switchToContinuousCollisionMode = true;
+			}
             rigidbodyWasKinematic = rigidbody.isKinematic;
             rigidbody.isKinematic = true;
         }
@@ -102,12 +124,17 @@ public class RUISSelectable : MonoBehaviour {
         if (rigidbody)
         {
             rigidbody.isKinematic = rigidbodyWasKinematic;
+			if(continuousCollisionDetectionWhenSelected)
+			{
+				switchToOldCollisionMode = true;
+			}
         }
 
         if (maintainMomentumAfterRelease && rigidbody && !rigidbody.isKinematic)
         {
             rigidbody.AddForce(AverageBufferContent(velocityBuffer), ForceMode.VelocityChange);
-            rigidbody.AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
+			if(selector) // Put this if-clause here just in case because once received NullReferenceException
+	            rigidbody.AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
         }
 
         if(selectionMaterial != null)
@@ -209,7 +236,9 @@ public class RUISSelectable : MonoBehaviour {
 
     private void AddMaterial(Material m, Renderer r)
     {
-        if (m == null || r == null) return;
+        if (	m == null || r == null || r.GetType() == typeof(ParticleRenderer) 
+			||  r.GetType() == typeof(ParticleSystemRenderer))
+			return;
 
         Material[] newMaterials = new Material[r.materials.Length + 1];
         for (int i = 0; i < r.materials.Length; i++)
@@ -223,7 +252,9 @@ public class RUISSelectable : MonoBehaviour {
 
     private void RemoveMaterial(Renderer r)
     {
-        if (r == null) return;
+        if (	r == null || r.GetType() == typeof(ParticleRenderer) 
+			||  r.GetType() == typeof(ParticleSystemRenderer) || r.materials.Length == 0)
+			return;
 
         Material[] newMaterials = new Material[r.materials.Length - 1];
         for (int i = 0; i < newMaterials.Length; i++)
