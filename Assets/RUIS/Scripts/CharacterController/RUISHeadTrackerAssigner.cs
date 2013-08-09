@@ -19,6 +19,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	public bool applyKinectDriftCorrectionPreference = false;
 	public bool changePivotIfNoKinect = true;
 	public Vector3 onlyRazerOffset = Vector3.zero;
+//	public Vector3 onlyMouseOffset = Vector3.zero;
 	public Transform razerWandParent;
 	
     void Awake()
@@ -205,7 +206,8 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				// The parent object of the Razer head tracker must not have RUISCharacterConroller,
 				// because that script will modify the object's position
 				if(		closestMatch.transform.parent != null 
-					&&	closestMatch.transform.parent.GetComponent<RUISCharacterController>() == null )
+					&&	closestMatch.transform.parent.GetComponent<RUISCharacterController>() == null
+					&& (onlyRazerOffset.x != 0 || onlyRazerOffset.y != 0 || onlyRazerOffset.z != 0)  )
 				{
 					string razerWandOffsetInfo = "";
 					closestMatch.transform.parent.localPosition += onlyRazerOffset;
@@ -221,6 +223,22 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				}
 			}
 			
+			// If no Razer, Kinect, or PS Move is available, then apply onlyMouseOffset
+			// on the parent object of the head tracker that is left enabled
+//			if(		closestMatch != null && !razer && !kinect && !psmove)
+//			{
+//				// The parent object of the Razer head tracker must not have RUISCharacterConroller,
+//				// because that script will modify the object's position
+//				if(		closestMatch.transform.parent != null 
+//					&&	closestMatch.transform.parent.GetComponent<RUISCharacterController>() == null 
+//					&& (onlyMouseOffset.x != 0 || onlyMouseOffset.y != 0 || onlyMouseOffset.z != 0)  )
+//				{
+//					closestMatch.transform.parent.localPosition += onlyMouseOffset;
+//					Debug.Log(  "Applying offset of " + onlyMouseOffset + " to " 
+//							   + closestMatch.transform.parent.gameObject.name + " (parent of assigned head tracker).");
+//				}
+//			}
+				
 			// *** TODO: Below is slightly hacky
 			// Read inputConfig.xml to see if Kinect yaw drift correction for Oculus Rift should be enabled
 			if(	   closestMatch != null

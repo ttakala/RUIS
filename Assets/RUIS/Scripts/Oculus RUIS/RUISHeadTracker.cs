@@ -281,6 +281,8 @@ public class RUISHeadTracker : MonoBehaviour
 		//oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
 		//if(headRotationInput == HeadRotationSource.OculusRift && !oculusCamController)
 		//	Debug.LogError("OVRCameraController script is missing from this scene!");
+		
+		filterPosition = false;
     }
 		
 	void Start()
@@ -389,6 +391,7 @@ public class RUISHeadTracker : MonoBehaviour
 						  + "OVRCameraController.");
 			}
 		}
+		
 	}
 		
 	void Update () 
