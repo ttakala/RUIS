@@ -15,6 +15,30 @@ public class KalmanFilteredRotation {
 	/// </summary>
 	public float rotationNoiseCovariance = 100;
 	
+	public bool skipIdenticalMeasurements
+	{
+		get
+		{
+		    return filterRot.skipIdenticalMeasurements;
+		}
+		set
+		{
+		    filterRot.skipIdenticalMeasurements = value;
+		}
+	}
+	
+	public int identicalMeasurementsCap
+	{
+		get
+		{
+		    return filterRot.identicalMeasurementsCap;
+		}
+		set
+		{
+		    filterRot.identicalMeasurementsCap = value;
+		}
+	}
+	
 	private Quaternion lastMeasurement = Quaternion.identity;
 	private double[] measurement = {0, 0, 0, 1};
 	private double[] rot = {0, 0, 0, 1};

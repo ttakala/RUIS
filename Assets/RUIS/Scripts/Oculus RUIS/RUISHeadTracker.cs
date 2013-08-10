@@ -257,6 +257,8 @@ public class RUISHeadTracker : MonoBehaviour
 //		hydraBaseFilterRot = new KalmanFilter();
 //		hydraBaseFilterRot.initialize(4,4);
 		
+		filterRot.skipIdenticalMeasurements = true;
+		
 		// Yaw Drift Corrector invocations in Awake()
 		filterDrift = new KalmanFilter();
 		filterDrift.initialize(2,2);
@@ -378,19 +380,19 @@ public class RUISHeadTracker : MonoBehaviour
 					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
 					+ "trackers when you remove the OVRCameraController component from the child object(s).");
 		
-		if(useOculusRiftRotation && inputManager)
-		{
-			if(		(inputManager.enableKinect 		&& headPositionInput == HeadPositionSource.Kinect)
-				||	(inputManager.enableRazerHydra 	&& headPositionInput == HeadPositionSource.RazerHydra)
-				||	(inputManager.enablePSMove 		&& headPositionInput == HeadPositionSource.PSMove)
-				||	headPositionInput == HeadPositionSource.InputTransform								  )
-			{
-				oculusCamController.NeckPosition 		= Vector3.zero;
-				oculusCamController.EyeCenterPosition 	= Vector3.zero;
-				Debug.Log(	"Head position tracker found, setting NeckPosition and EyeCenterPosition to zero from "
-						  + "OVRCameraController.");
-			}
-		}
+//		if(useOculusRiftRotation && inputManager)
+//		{
+//			if(		(inputManager.enableKinect 		&& headPositionInput == HeadPositionSource.Kinect)
+//				||	(inputManager.enableRazerHydra 	&& headPositionInput == HeadPositionSource.RazerHydra)
+//				||	(inputManager.enablePSMove 		&& headPositionInput == HeadPositionSource.PSMove)
+//				||	headPositionInput == HeadPositionSource.InputTransform								  )
+//			{
+//				oculusCamController.SetNeckPosition(Vector3.zero);
+//				oculusCamController.SetEyeCenterPosition(Vector3.zero);
+//				Debug.Log(	"Head position tracker found, setting NeckPosition and EyeCenterPosition to zero from "
+//						  + "OVRCameraController.");
+//			}
+//		}
 		
 	}
 		
@@ -663,13 +665,12 @@ public class RUISHeadTracker : MonoBehaviour
 		{
 			case HeadPositionSource.Kinect:
 		        if (   skeletonManager 
-					&& skeletonManager.skeletons[positionPlayerID].torso.positionConfidence >= 1)
+					&& skeletonManager.skeletons[positionPlayerID].torso.positionConfidence >= 1) // Most stable joint is torso
 		        {
 					filterPosition = filterPositionKinect;
 					positionNoiseCovariance = positionNoiseCovarianceKinect;
 					jointData = skeletonManager.GetJointData(positionJoint, positionPlayerID);
-					// Most stable joint:
-					if(jointData != null && skeletonManager.skeletons[positionPlayerID].torso.positionConfidence >= 1)
+					if(jointData != null && jointData.positionConfidence >= 1)
 						measuredHeadPosition = jointData.position // Fix for Kinect2: below takes rotation from torso
 							- skeletonManager.skeletons[positionPlayerID].torso.rotation 
 											* Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect)) * positionOffsetKinect;
@@ -678,13 +679,15 @@ public class RUISHeadTracker : MonoBehaviour
 			case HeadPositionSource.PSMove:
 		        if (inputManager)
 		        {
-					filterPosition = filterPositionPSMove;
-					positionNoiseCovariance = positionNoiseCovariancePSMove;
 					posePSMove = inputManager.GetMoveWand(positionPSMoveID);
 					if(posePSMove)
+					{
+						filterPosition = filterPositionPSMove;
+						positionNoiseCovariance = positionNoiseCovariancePSMove;
 						measuredHeadPosition = posePSMove.position 
 										- posePSMove.qOrientation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove)) 
 																										* positionOffsetPSMove;
+					}
 				}
 				break;
 			case HeadPositionSource.RazerHydra:
@@ -771,11 +774,13 @@ public class RUISHeadTracker : MonoBehaviour
 				case HeadRotationSource.PSMove:
 			        if (inputManager)
 			        {
-						filterRotation = filterRotationPSMove;
-						rotationNoiseCovariance = rotationNoiseCovariancePSMove;
 						posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
 						if(posePSMove)
+						{
+							filterRotation = filterRotationPSMove;
+							rotationNoiseCovariance = rotationNoiseCovariancePSMove;
 							measuredHeadRotation = posePSMove.qOrientation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove));
+						}
 					}
 					break;
 				case HeadRotationSource.RazerHydra:

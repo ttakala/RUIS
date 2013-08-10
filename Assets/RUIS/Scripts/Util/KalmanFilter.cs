@@ -2,7 +2,7 @@
 
 Content    :   Class for simple Kalman filtering
 Authors    :   Tuukka Takala, derived from Peter Abeles' EJML Kalman class
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -53,6 +53,8 @@ public class KalmanFilter
 	private double[] tempZ;
 
 	public bool skipIdenticalMeasurements = false;
+	public int identicalMeasurementsCap = 10;
+	private int identicalMeasurementsCount = 0;
 
     /**
      * Specify the kinematics model of the Kalman filter with  
@@ -193,8 +195,13 @@ public class KalmanFilter
 				}
 			}
 			
-			if(areIdentical)
+			if(areIdentical && identicalMeasurementsCount < identicalMeasurementsCap)
+			{
+				++identicalMeasurementsCount;
 				return;
+			}
+			else
+				identicalMeasurementsCount = 0;
 		}
 		
         // y = z - H x
@@ -260,8 +267,13 @@ public class KalmanFilter
 				}
 			}
 			
-			if(areIdentical)
+			if(areIdentical && identicalMeasurementsCount < identicalMeasurementsCap)
+			{
+				++identicalMeasurementsCount;
 				return;
+			}
+			else
+				identicalMeasurementsCount = 0;
 		}
         // y = z - H x
         //mult(H,x,y);
