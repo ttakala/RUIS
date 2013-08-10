@@ -670,7 +670,7 @@ public class RUISHeadTracker : MonoBehaviour
 					filterPosition = filterPositionKinect;
 					positionNoiseCovariance = positionNoiseCovarianceKinect;
 					jointData = skeletonManager.GetJointData(positionJoint, positionPlayerID);
-					if(jointData != null && jointData.positionConfidence >= 1)
+					if(jointData != null)
 						measuredHeadPosition = jointData.position // Fix for Kinect2: below takes rotation from torso
 							- skeletonManager.skeletons[positionPlayerID].torso.rotation 
 											* Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect)) * positionOffsetKinect;
