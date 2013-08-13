@@ -391,7 +391,7 @@ public class RUISPlainSkeletonController : MonoBehaviour
         float playerBoneLength = Vector3.Distance(boneToScaleTracker.position, comparisonBoneTracker.position);
         float newScale = playerBoneLength / modelBoneLength / cumulativeScale;
 
-        boneToScale.localScale = Vector3.Lerp(boneToScale.localScale, new Vector3(newScale, newScale, newScale), maxScaleFactor * Time.deltaTime);
+        boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, newScale, newScale), maxScaleFactor * Time.deltaTime);
 
         return boneToScale.localScale.x;
     }

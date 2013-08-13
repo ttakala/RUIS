@@ -177,6 +177,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &4179409
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,6 +652,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &13364759
 Renderer:
   m_ObjectHideFlags: 0
@@ -738,6 +740,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &20961259
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -841,6 +844,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &27199575
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1132,6 +1136,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &33191071
 Renderer:
   m_ObjectHideFlags: 0
@@ -1219,6 +1224,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &35979230
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1464,6 +1470,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &39128610
 GameObject:
   m_ObjectHideFlags: 0
@@ -1640,6 +1647,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &49270737
 Renderer:
   m_ObjectHideFlags: 0
@@ -1727,6 +1735,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &54143411
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1916,6 +1925,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &58015778
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2373,6 +2383,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &77427189
 GameObject:
   m_ObjectHideFlags: 0
@@ -2601,6 +2612,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &80806630
 Prefab:
   m_ObjectHideFlags: 0
@@ -2878,6 +2890,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &95804913
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2981,6 +2994,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &96192715
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3100,6 +3114,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &96517905
 Renderer:
   m_ObjectHideFlags: 0
@@ -3270,6 +3285,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &113503186
 GameObject:
   m_ObjectHideFlags: 0
@@ -3723,6 +3739,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &142255562
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4004,6 +4021,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &156807231
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4107,6 +4125,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &157828726
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4313,6 +4332,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &166569459
 Prefab:
   m_ObjectHideFlags: 0
@@ -4550,6 +4570,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &180230446
 GameObject:
   m_ObjectHideFlags: 0
@@ -4714,7 +4735,7 @@ MonoBehaviour:
   resolutionX: 1280
   resolutionY: 800
   useDoubleTheSpace: 1
-  isStereo: 0
+  isStereo: 1
   eyeSeparation: .0599999987
   isHMD: 1
   linkedCamera: {fileID: 0}
@@ -4881,6 +4902,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &184962388
 Renderer:
   m_ObjectHideFlags: 0
@@ -5066,6 +5088,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &189510861
 GameObject:
   m_ObjectHideFlags: 0
@@ -5228,6 +5251,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &199824544
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5519,6 +5543,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &203750986
 Renderer:
   m_ObjectHideFlags: 0
@@ -5821,6 +5846,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &218240981
 Renderer:
   m_ObjectHideFlags: 0
@@ -6807,6 +6833,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &257280589
 GameObject:
   m_ObjectHideFlags: 0
@@ -7026,6 +7053,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &260297073
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7185,6 +7213,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &273338040
 GameObject:
   m_ObjectHideFlags: 0
@@ -7288,6 +7317,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &273819582
 Prefab:
   m_ObjectHideFlags: 0
@@ -7490,6 +7520,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &277265073
 Renderer:
   m_ObjectHideFlags: 0
@@ -7663,6 +7694,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &279866612
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7822,6 +7854,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &282217128
 GameObject:
   m_ObjectHideFlags: 0
@@ -7907,6 +7940,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &289456004
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8095,6 +8129,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &296269256
 GameObject:
   m_ObjectHideFlags: 0
@@ -8311,6 +8346,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &308514677
 GameObject:
   m_ObjectHideFlags: 0
@@ -8444,6 +8480,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &309458452
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8940,6 +8977,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &343121198
 GameObject:
   m_ObjectHideFlags: 0
@@ -8987,6 +9025,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &343121201
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9345,6 +9384,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &350100092
 GameObject:
   m_ObjectHideFlags: 0
@@ -9448,6 +9488,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &352893817
 GameObject:
   m_ObjectHideFlags: 0
@@ -9495,6 +9536,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &352893820
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9834,6 +9876,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &363256027
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10063,6 +10106,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &379183354
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10222,6 +10266,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &383447903
 GameObject:
   m_ObjectHideFlags: 0
@@ -10269,6 +10314,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &383447906
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10857,6 +10903,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &403606807
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11248,6 +11295,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &415274019
 Renderer:
   m_ObjectHideFlags: 0
@@ -11391,6 +11439,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &422473919
 GameObject:
   m_ObjectHideFlags: 0
@@ -11696,6 +11745,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &439467993
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12027,6 +12077,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &456016480
 GameObject:
   m_ObjectHideFlags: 0
@@ -12216,6 +12267,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &462645277
 GameObject:
   m_ObjectHideFlags: 0
@@ -12319,6 +12371,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &465710790
 GameObject:
   m_ObjectHideFlags: 0
@@ -12594,6 +12647,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &468271243
 GameObject:
   m_ObjectHideFlags: 0
@@ -12831,6 +12885,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &475960463
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13076,6 +13131,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &484834005
 GameObject:
   m_ObjectHideFlags: 0
@@ -13206,6 +13262,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &489519723
 GameObject:
   m_ObjectHideFlags: 0
@@ -13395,6 +13452,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &499722246
 GameObject:
   m_ObjectHideFlags: 0
@@ -13700,6 +13758,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &511294416
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14173,6 +14232,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &522456317
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14276,6 +14336,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &523697567
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14379,6 +14440,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &524557709
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14710,6 +14772,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &527390879
 GameObject:
   m_ObjectHideFlags: 0
@@ -14813,6 +14876,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &538573536
 GameObject:
   m_ObjectHideFlags: 0
@@ -14946,6 +15010,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &540278775
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15777,6 +15842,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &555314214
 Renderer:
   m_ObjectHideFlags: 0
@@ -15907,6 +15973,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &567080258
 Renderer:
   m_ObjectHideFlags: 0
@@ -16169,6 +16236,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &579307753
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16288,6 +16356,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &580269815
 Renderer:
   m_ObjectHideFlags: 0
@@ -16375,6 +16444,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &582825625
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16706,6 +16776,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &594798147
 GameObject:
   m_ObjectHideFlags: 0
@@ -16753,6 +16824,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &594798150
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -16912,6 +16984,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &594982852
 GameObject:
   m_ObjectHideFlags: 0
@@ -17101,6 +17174,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &611583619
 GameObject:
   m_ObjectHideFlags: 0
@@ -17234,6 +17308,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &615379767
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17419,6 +17494,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &629972587
 GameObject:
   m_ObjectHideFlags: 0
@@ -17654,6 +17730,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &646336706
 Renderer:
   m_ObjectHideFlags: 0
@@ -17883,6 +17960,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &674731436
 GameObject:
   m_ObjectHideFlags: 0
@@ -18072,6 +18150,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &676060994
 GameObject:
   m_ObjectHideFlags: 0
@@ -18347,6 +18426,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &687356276
 GameObject:
   m_ObjectHideFlags: 0
@@ -18690,6 +18770,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &698823817
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -18961,6 +19042,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &707355573
 GameObject:
   m_ObjectHideFlags: 0
@@ -19008,6 +19090,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &707355576
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19127,6 +19210,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &710994696
 Renderer:
   m_ObjectHideFlags: 0
@@ -19356,6 +19440,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &723565522
 GameObject:
   m_ObjectHideFlags: 0
@@ -19403,6 +19488,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &723565525
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19689,6 +19775,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &727112399
 GameObject:
   m_ObjectHideFlags: 0
@@ -19792,6 +19879,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &728198151
 GameObject:
   m_ObjectHideFlags: 0
@@ -20411,6 +20499,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &747436577
 GameObject:
   m_ObjectHideFlags: 0
@@ -20600,6 +20689,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &749920835
 GameObject:
   m_ObjectHideFlags: 0
@@ -20789,6 +20879,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &761084314
 GameObject:
   m_ObjectHideFlags: 0
@@ -20852,6 +20943,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &761084318
 Renderer:
   m_ObjectHideFlags: 0
@@ -20995,6 +21087,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &767214712
 GameObject:
   m_ObjectHideFlags: 0
@@ -21270,6 +21363,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &780619356
 GameObject:
   m_ObjectHideFlags: 0
@@ -21459,6 +21553,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &783944750
 GameObject:
   m_ObjectHideFlags: 0
@@ -21735,6 +21830,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &806790495
 GameObject:
   m_ObjectHideFlags: 0
@@ -21778,10 +21874,10 @@ MonoBehaviour:
   - {fileID: 182071551}
   stereoCamera: {fileID: 0}
   monoCamera: {fileID: 0}
-  totalResolutionX: 1920
-  totalResolutionY: 1080
-  totalRawResolutionX: 1920
-  totalRawResolutionY: 1080
+  totalResolutionX: 1280
+  totalResolutionY: 800
+  totalRawResolutionX: 2560
+  totalRawResolutionY: 800
   fullScreen: 1
 --- !u!1 &808024113
 GameObject:
@@ -21846,6 +21942,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &808024117
 Renderer:
   m_ObjectHideFlags: 0
@@ -22389,6 +22486,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &833241664
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22574,6 +22672,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &843284003
 Renderer:
   m_ObjectHideFlags: 0
@@ -22919,6 +23018,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &855729868
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23078,6 +23178,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &865176538
 Prefab:
   m_ObjectHideFlags: 0
@@ -23355,6 +23456,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &878956359
 GameObject:
   m_ObjectHideFlags: 0
@@ -23797,6 +23899,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &908390248
 GameObject:
   m_ObjectHideFlags: 0
@@ -23844,6 +23947,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &908390251
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23963,6 +24067,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &909422417
 Renderer:
   m_ObjectHideFlags: 0
@@ -24093,6 +24198,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &915985353
 Renderer:
   m_ObjectHideFlags: 0
@@ -24263,6 +24369,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &929843008
 GameObject:
   m_ObjectHideFlags: 0
@@ -24366,6 +24473,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &931469041
 GameObject:
   m_ObjectHideFlags: 0
@@ -24413,6 +24521,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &931469044
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -24572,6 +24681,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &934137328
 GameObject:
   m_ObjectHideFlags: 0
@@ -24847,6 +24957,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &942424047
 GameObject:
   m_ObjectHideFlags: 0
@@ -24894,6 +25005,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &942424050
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25053,6 +25165,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &951637440
 GameObject:
   m_ObjectHideFlags: 0
@@ -25328,6 +25441,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &953359940
 GameObject:
   m_ObjectHideFlags: 0
@@ -25431,6 +25545,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &954100800
 GameObject:
   m_ObjectHideFlags: 0
@@ -25534,6 +25649,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &955268062
 GameObject:
   m_ObjectHideFlags: 0
@@ -25597,6 +25713,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &955268066
 Renderer:
   m_ObjectHideFlags: 0
@@ -25826,6 +25943,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &960446038
 GameObject:
   m_ObjectHideFlags: 0
@@ -26657,6 +26775,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1011263217
 GameObject:
   m_ObjectHideFlags: 0
@@ -26720,6 +26839,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1011263221
 Renderer:
   m_ObjectHideFlags: 0
@@ -26949,6 +27069,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1031940993
 GameObject:
   m_ObjectHideFlags: 0
@@ -27403,6 +27524,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1071850914
 Renderer:
   m_ObjectHideFlags: 0
@@ -27546,6 +27668,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1078431221
 GameObject:
   m_ObjectHideFlags: 0
@@ -27593,6 +27716,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1078431224
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28149,6 +28273,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1112024253
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -28308,6 +28433,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1117732768
 GameObject:
   m_ObjectHideFlags: 0
@@ -28716,6 +28842,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1126874274
 GameObject:
   m_ObjectHideFlags: 0
@@ -28905,6 +29032,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1143204093
 GameObject:
   m_ObjectHideFlags: 0
@@ -29179,6 +29307,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1149738920
 Renderer:
   m_ObjectHideFlags: 0
@@ -29321,6 +29450,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1159866888
 Renderer:
   m_ObjectHideFlags: 0
@@ -29722,6 +29852,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1173999462
 GameObject:
   m_ObjectHideFlags: 0
@@ -30101,6 +30232,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1179803645
 GameObject:
   m_ObjectHideFlags: 0
@@ -30290,6 +30422,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1181104689
 GameObject:
   m_ObjectHideFlags: 0
@@ -30584,6 +30717,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1187938814
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30687,6 +30821,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1194878413
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -30790,6 +30925,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1197602924
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31283,6 +31419,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1218775680
 GameObject:
   m_ObjectHideFlags: 0
@@ -31386,6 +31523,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1221768345
 GameObject:
   m_ObjectHideFlags: 0
@@ -31575,6 +31713,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &1222544068
 Prefab:
   m_ObjectHideFlags: 0
@@ -31746,6 +31885,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1228075084
 GameObject:
   m_ObjectHideFlags: 0
@@ -31849,6 +31989,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1229009399
 GameObject:
   m_ObjectHideFlags: 0
@@ -31994,6 +32135,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1230982585
 GameObject:
   m_ObjectHideFlags: 0
@@ -32303,6 +32445,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1243717642
 Renderer:
   m_ObjectHideFlags: 0
@@ -32446,6 +32589,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1245419018
 GameObject:
   m_ObjectHideFlags: 0
@@ -32721,6 +32865,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1256655070
 GameObject:
   m_ObjectHideFlags: 0
@@ -32910,6 +33055,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1269183158
 GameObject:
   m_ObjectHideFlags: 0
@@ -32973,6 +33119,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1269183162
 Renderer:
   m_ObjectHideFlags: 0
@@ -33116,6 +33263,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1280959006
 GameObject:
   m_ObjectHideFlags: 0
@@ -33894,6 +34042,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1306188693
 GameObject:
   m_ObjectHideFlags: 0
@@ -33997,6 +34146,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &1312365164
 Prefab:
   m_ObjectHideFlags: 0
@@ -34275,6 +34425,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1316705117
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34567,6 +34718,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1328174786
 GameObject:
   m_ObjectHideFlags: 0
@@ -34614,6 +34766,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1328174789
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -34733,6 +34886,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1328464917
 Renderer:
   m_ObjectHideFlags: 0
@@ -34947,6 +35101,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1332182536
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35106,6 +35261,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1340847737
 GameObject:
   m_ObjectHideFlags: 0
@@ -35239,6 +35395,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1343023602
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -35570,6 +35727,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1355166716
 GameObject:
   m_ObjectHideFlags: 0
@@ -35759,6 +35917,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1360071225
 GameObject:
   m_ObjectHideFlags: 0
@@ -35862,6 +36021,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1363161838
 GameObject:
   m_ObjectHideFlags: 0
@@ -36128,6 +36288,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1370935733
 Renderer:
   m_ObjectHideFlags: 0
@@ -36271,6 +36432,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &1371526724
 Prefab:
   m_ObjectHideFlags: 0
@@ -36418,6 +36580,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1372932541
 GameObject:
   m_ObjectHideFlags: 0
@@ -36775,6 +36938,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1384147233
 Renderer:
   m_ObjectHideFlags: 0
@@ -36918,6 +37082,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1401651789
 GameObject:
   m_ObjectHideFlags: 0
@@ -38195,6 +38360,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1430696870
 GameObject:
   m_ObjectHideFlags: 0
@@ -38298,6 +38464,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1433067025
 GameObject:
   m_ObjectHideFlags: 0
@@ -38603,6 +38770,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1439993964
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38836,6 +39004,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1442640963
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -38939,6 +39108,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1443321608
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -39404,6 +39574,7 @@ MonoBehaviour:
   groundedErrorTweaker: .0500000007
   dynamicFriction: 1
   dynamicMaterial: {fileID: 0}
+  feetAlsoAffectGrounding: 1
 --- !u!54 &1456062747
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -39439,6 +39610,8 @@ MonoBehaviour:
   display: {fileID: 182071551}
   applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
+  onlyRazerOffset: {x: 0, y: 0, z: 0}
+  razerWandParent: {fileID: 0}
 --- !u!1 &1459595601
 GameObject:
   m_ObjectHideFlags: 0
@@ -39502,6 +39675,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1459595605
 Renderer:
   m_ObjectHideFlags: 0
@@ -39645,6 +39819,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1463882900
 GameObject:
   m_ObjectHideFlags: 0
@@ -40307,6 +40482,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1489030730
 Renderer:
   m_ObjectHideFlags: 0
@@ -40661,6 +40837,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1502907157
 GameObject:
   m_ObjectHideFlags: 0
@@ -41066,6 +41243,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1514860537
 Renderer:
   m_ObjectHideFlags: 0
@@ -41220,6 +41398,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1519502382
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -41339,6 +41518,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1521649378
 Renderer:
   m_ObjectHideFlags: 0
@@ -41653,6 +41833,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1533720046
 Renderer:
   m_ObjectHideFlags: 0
@@ -41922,6 +42103,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1545653129
 GameObject:
   m_ObjectHideFlags: 0
@@ -42025,6 +42207,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1551771240
 GameObject:
   m_ObjectHideFlags: 0
@@ -42174,6 +42357,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1561095149
 Renderer:
   m_ObjectHideFlags: 0
@@ -42261,6 +42445,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1561914586
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42464,6 +42649,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1572187886
 GameObject:
   m_ObjectHideFlags: 0
@@ -42567,6 +42753,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1575631013
 GameObject:
   m_ObjectHideFlags: 0
@@ -42872,6 +43059,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1583590842
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -42991,6 +43179,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1584663591
 Renderer:
   m_ObjectHideFlags: 0
@@ -43220,6 +43409,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1593895620
 GameObject:
   m_ObjectHideFlags: 0
@@ -43283,6 +43473,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1593895624
 Renderer:
   m_ObjectHideFlags: 0
@@ -43386,6 +43577,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1597053404
 Renderer:
   m_ObjectHideFlags: 0
@@ -43529,6 +43721,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1603211915
 GameObject:
   m_ObjectHideFlags: 0
@@ -43632,6 +43825,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1605312407
 GameObject:
   m_ObjectHideFlags: 0
@@ -43867,6 +44061,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1608681159
 Renderer:
   m_ObjectHideFlags: 0
@@ -44077,6 +44272,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1619625702
 GameObject:
   m_ObjectHideFlags: 0
@@ -44305,6 +44501,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1620506629
 GameObject:
   m_ObjectHideFlags: 0
@@ -44628,6 +44825,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1629261709
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -44787,6 +44985,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1638656455
 GameObject:
   m_ObjectHideFlags: 0
@@ -45276,6 +45475,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1649639996
 GameObject:
   m_ObjectHideFlags: 0
@@ -45469,6 +45669,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1654528454
 GameObject:
   m_ObjectHideFlags: 0
@@ -45516,6 +45717,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1654528457
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -45675,6 +45877,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1659611844
 GameObject:
   m_ObjectHideFlags: 0
@@ -46255,6 +46458,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1692760558
 GameObject:
   m_ObjectHideFlags: 0
@@ -46302,6 +46506,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1692760561
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -46565,6 +46770,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1707617568
 GameObject:
   m_ObjectHideFlags: 0
@@ -46628,6 +46834,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1707617572
 Renderer:
   m_ObjectHideFlags: 0
@@ -46943,6 +47150,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1720275512
 GameObject:
   m_ObjectHideFlags: 0
@@ -47046,6 +47254,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1720575017
 GameObject:
   m_ObjectHideFlags: 0
@@ -47149,6 +47358,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1727072720
 GameObject:
   m_ObjectHideFlags: 0
@@ -47282,6 +47492,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1732091955
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -47699,6 +47910,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1752629038
 GameObject:
   m_ObjectHideFlags: 0
@@ -47802,6 +48014,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1758786997
 GameObject:
   m_ObjectHideFlags: 0
@@ -47991,6 +48204,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1762583658
 GameObject:
   m_ObjectHideFlags: 0
@@ -48038,6 +48252,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1762583661
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48185,6 +48400,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1768512700
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48374,6 +48590,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1773241161
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48477,6 +48694,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1777414089
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48666,6 +48884,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1778414142
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48769,6 +48988,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1779395245
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -48958,6 +49178,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1784170536
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49389,6 +49610,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1797572332
 GameObject:
   m_ObjectHideFlags: 0
@@ -49581,6 +49803,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1810485495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49711,6 +49934,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1812855310
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -49900,6 +50124,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1815418970
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50019,6 +50244,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1816532944
 Renderer:
   m_ObjectHideFlags: 0
@@ -50162,6 +50388,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1835377092
 GameObject:
   m_ObjectHideFlags: 0
@@ -50265,6 +50492,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1836092134
 GameObject:
   m_ObjectHideFlags: 0
@@ -50368,6 +50596,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1842081742
 GameObject:
   m_ObjectHideFlags: 0
@@ -51010,6 +51239,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1857210238
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -51129,6 +51359,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1857695384
 Renderer:
   m_ObjectHideFlags: 0
@@ -51216,6 +51447,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1857822701
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -51319,6 +51551,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1860980669
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -51524,6 +51757,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1865011575
 Renderer:
   m_ObjectHideFlags: 0
@@ -51783,6 +52017,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1869369742
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -51942,6 +52177,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1870844564
 GameObject:
   m_ObjectHideFlags: 0
@@ -52045,6 +52281,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1871303603
 GameObject:
   m_ObjectHideFlags: 0
@@ -52148,6 +52385,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1872093283
 GameObject:
   m_ObjectHideFlags: 0
@@ -52251,6 +52489,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1874352018
 GameObject:
   m_ObjectHideFlags: 0
@@ -52354,6 +52593,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1877828959
 GameObject:
   m_ObjectHideFlags: 0
@@ -52457,6 +52697,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &1885577040
 Prefab:
   m_ObjectHideFlags: 0
@@ -52514,6 +52755,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableRazerHydra
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: isStereo
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -52701,6 +52946,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1896810711
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -52860,6 +53106,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1902131258
 GameObject:
   m_ObjectHideFlags: 0
@@ -52907,6 +53154,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1902131261
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -53114,6 +53362,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1903984913
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -53273,6 +53522,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1908296566
 GameObject:
   m_ObjectHideFlags: 0
@@ -53501,6 +53751,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1909672941
 Renderer:
   m_ObjectHideFlags: 0
@@ -53674,6 +53925,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1911814315
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -53931,6 +54183,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1917101709
 GameObject:
   m_ObjectHideFlags: 0
@@ -54080,6 +54333,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1917677356
 Renderer:
   m_ObjectHideFlags: 0
@@ -54223,6 +54477,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &1919916841
 Prefab:
   m_ObjectHideFlags: 0
@@ -54584,6 +54839,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1931792396
 GameObject:
   m_ObjectHideFlags: 0
@@ -54687,6 +54943,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1932807109
 GameObject:
   m_ObjectHideFlags: 0
@@ -54790,6 +55047,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &1938771960
 GameObject:
   m_ObjectHideFlags: 0
@@ -54992,6 +55250,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1941817533
 Renderer:
   m_ObjectHideFlags: 0
@@ -55267,6 +55526,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &1952818608
 Renderer:
   m_ObjectHideFlags: 0
@@ -55520,6 +55780,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1974881416
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -55735,6 +55996,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &1987501130
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -55943,6 +56205,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &2005607026
 Renderer:
   m_ObjectHideFlags: 0
@@ -56524,6 +56787,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &2014557595
 Renderer:
   m_ObjectHideFlags: 0
@@ -56885,6 +57149,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &2027042754
 Renderer:
   m_ObjectHideFlags: 0
@@ -57184,6 +57449,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &2043851732
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -57303,6 +57569,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &2044476285
 Renderer:
   m_ObjectHideFlags: 0
@@ -57833,6 +58100,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &2069859277
 GameObject:
   m_ObjectHideFlags: 0
@@ -58008,6 +58276,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &2085327911
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -58369,6 +58638,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &2091207740
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -58488,6 +58758,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!23 &2091792836
 Renderer:
   m_ObjectHideFlags: 0
@@ -58631,6 +58902,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &2095825959
 GameObject:
   m_ObjectHideFlags: 0
@@ -58760,6 +59032,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &2101699366
 GameObject:
   m_ObjectHideFlags: 0
@@ -58949,6 +59222,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &2120225714
 GameObject:
   m_ObjectHideFlags: 0
@@ -59052,6 +59326,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &2122579653
 GameObject:
   m_ObjectHideFlags: 0
@@ -59253,6 +59528,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &2125445954
 GameObject:
   m_ObjectHideFlags: 0
@@ -59356,6 +59632,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!1 &2129146815
 GameObject:
   m_ObjectHideFlags: 0
@@ -59489,6 +59766,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &2132986392
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -59592,6 +59870,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
   selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
+  continuousCollisionDetectionWhenSelected: 1
 --- !u!65 &2134174072
 BoxCollider:
   m_ObjectHideFlags: 0

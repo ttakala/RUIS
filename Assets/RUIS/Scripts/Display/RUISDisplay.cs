@@ -146,19 +146,6 @@ public class RUISDisplay : MonoBehaviour {
             linkedCamera.associatedDisplay = this;
         }
 
-        /*if (isStereo && linkedCamera == null)
-        {
-            Debug.LogError("Display " + name + " marked as stereo but linked RUISCamera " + linkedCamera.name + " is mono. Switching to mono mode.");
-            isStereo = false;
-        }
-
-        if (!isStereo && linkedCamera.GetComponent<RUISMonoCamera>() == null)
-        {
-            Debug.LogError("Display " + name + " marked as mono but linked RUISCamera " + linkedCamera.name + " is stereo. Switching to side by side stereo");
-            isStereo = true;
-            stereoType = StereoType.SideBySide;
-        }*/
-
         aspectRatio = resolutionX / resolutionY;
     }
 
