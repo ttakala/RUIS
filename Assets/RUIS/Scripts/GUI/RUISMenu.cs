@@ -421,13 +421,16 @@ public class RUISMenu : MonoBehaviour {
     {
         inputManager.enablePSMove = originalEnablePSMove;
         inputManager.enableKinect = originalEnableKinect;
-        if (originalEnableJumpGesture)
+        if (jumpGesture)
         {
-            jumpGesture.EnableGesture();
-        }
-        else
-        {
-            jumpGesture.DisableGesture();
+            if (originalEnableJumpGesture)
+            {
+                jumpGesture.EnableGesture();
+            }
+            else
+            {
+                jumpGesture.DisableGesture();
+            }
         }
 		inputManager.jumpGestureEnabled = originalEnableJumpGesture;
         inputManager.enableRazerHydra = originalEnableHydra;

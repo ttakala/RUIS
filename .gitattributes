@@ -38,6 +38,7 @@ Assets/OpenNI/Scripts/Trackers/Base[!!-~]tracker[!!-~]and[!!-~]manager[!!-~]clas
 Assets/Plugins/OculusPlugin.bundle/Contents/MacOS/OculusPlugin -text
 Assets/Plugins/OculusPlugin.bundle/Contents/Resources/en.lproj/InfoPlist.strings -text
 Assets/Plugins/OculusPlugin.dll -text
+Assets/Plugins/libOculusPlugin.so -text
 Assets/Plugins/sixense.dll -text
 Assets/Plugins/x86_64/OculusPlugin.dll -text
 Assets/Plugins/x86_64/libOculusPlugin.so -text
@@ -178,6 +179,7 @@ Library/metadata/00/00000000000000004000000000000000 -text
 Library/metadata/00/00000000000000004100000000000000 -text
 Library/metadata/00/00000000000000005000000000000000 -text
 Library/metadata/00/00000000000000006000000000000000 -text
+Library/metadata/00/00000000000000006100000000000000 -text
 Library/metadata/00/00000000000000007000000000000000 -text
 Library/metadata/00/00000000000000008000000000000000 -text
 Library/metadata/00/00000000000000009000000000000000 -text
@@ -207,8 +209,10 @@ Library/metadata/07/073f7d501e459a24d9acceb62b9d1d2f -text
 Library/metadata/07/07f9b092f7324f140b81490744a50473 -text
 Library/metadata/08/0851d20900b94ca408d217c8f3c91c6c -text
 Library/metadata/08/08555196d319682459fc85f281a0463a -text
+Library/metadata/08/08cdeb833f3d90f4bb31fad88ed33e4a -text
 Library/metadata/09/0950df82e7936c84983497630bde5b54 -text
 Library/metadata/09/098e6912988dd484583a229f785821ac -text
+Library/metadata/0a/0aa4597f41ac6794992e319940a3c740 -text
 Library/metadata/0a/0ab79d7f243824f5d9826bd83522c8df -text
 Library/metadata/0b/0b167d00b3108411a8a963cba5ddde1b -text
 Library/metadata/0b/0b1accba4b4f13146aa23bc7f4ba4ab6 -text
@@ -329,6 +333,7 @@ Library/metadata/35/359fbdc094471ab4dbde5121335a2896 -text
 Library/metadata/36/364f944ed733aed4e85da36d8c07dab2 -text
 Library/metadata/36/3689016460d401e428f3febeeb77d62a -text
 Library/metadata/37/3708edefcf101cc4bb996c983224db49 -text
+Library/metadata/37/372be855885f11e4a99058cf6762c982 -text
 Library/metadata/37/37457342b38bdc14698e16c8b973b9dc -text
 Library/metadata/37/374df03ba91ad6c48bf561fc58452699 -text
 Library/metadata/38/380baf2f678212b4fa8c999b4a30219c -text
