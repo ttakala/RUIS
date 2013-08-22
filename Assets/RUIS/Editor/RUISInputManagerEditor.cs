@@ -2,7 +2,7 @@
 
 Content    :   Custom editor script for RUISInputManager
 Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Mikael Matveinen, Tuukka Takala. All Rights reserved.
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -27,14 +27,7 @@ public class RUISInputManagerEditor : Editor {
     SerializedProperty psMovePort;
     SerializedProperty inGameMoveCalibration;
     SerializedProperty amountOfPSMoveControllers;
-	
-	SerializedProperty delayedWandActivation;
-	SerializedProperty delayTime;
-	SerializedProperty moveWand0;
-	SerializedProperty moveWand1;
-	SerializedProperty moveWand2;
-	SerializedProperty moveWand3;
-	
+
     SerializedProperty kinectEnabled;
     SerializedProperty maxNumberOfKinectPlayers;
 	SerializedProperty floorDetectionOnSceneStart;
@@ -58,13 +51,6 @@ public class RUISInputManagerEditor : Editor {
         inGameMoveCalibration = serializedObject.FindProperty("enableMoveCalibrationDuringPlay");
         amountOfPSMoveControllers = serializedObject.FindProperty("amountOfPSMoveControllers");
 
-		delayedWandActivation = serializedObject.FindProperty("delayedWandActivation");
-		delayTime = serializedObject.FindProperty("delayTime");
-		moveWand0 = serializedObject.FindProperty("moveWand0");
-		moveWand1 = serializedObject.FindProperty("moveWand1");
-		moveWand2 = serializedObject.FindProperty("moveWand2");
-		moveWand3 = serializedObject.FindProperty("moveWand3");
-		
         kinectEnabled = serializedObject.FindProperty("enableKinect");
         maxNumberOfKinectPlayers = serializedObject.FindProperty("maxNumberOfKinectPlayers");
 		floorDetectionOnSceneStart = serializedObject.FindProperty("kinectFloorDetection");
@@ -127,27 +113,7 @@ public class RUISInputManagerEditor : Editor {
 
             EditorGUILayout.PropertyField(amountOfPSMoveControllers, new GUIContent("Max amount of controllers connected", "Maximum amount of controllers connected. All RUISPSMoveControllers with a controller id outside of the range will get disabled to prevent accidents."));
             amountOfPSMoveControllers.intValue = Mathf.Clamp(amountOfPSMoveControllers.intValue, 0, 4);
-			
-			EditorGUILayout.PropertyField(delayedWandActivation, new GUIContent(  "Delayed Wand Activation", "Delayed PS Move Wand activation is useful when "
-																				+ "you do not know beforehand how many PS Move controllers the user has calibrated. "
-																				+ "If you mark a controller as delayed, then all GameObjects with a RUISPSMoveWand "
-																				+ "script that has the same controller ID will be disabled at the beginning, and "
-																				+ "re-activated after delay if the said controller is connected. Effectively this "
-																				+ "disables those objects whose associated PS Move controller is not connected, "
-																				+ "removing 'dead' input device representations."));
-			if (delayedWandActivation.boolValue)
-			{
-				EditorGUI.indentLevel += 1;
-				if(delayTime.floatValue < 5)
-					delayTime.floatValue = 5;
-				EditorGUILayout.PropertyField(delayTime, new GUIContent("Delay Duration", "Number of seconds from the start of the scene (minimum of 5)"));
-				EditorGUILayout.PropertyField(moveWand0, new GUIContent("PS Move #0", "Delayed wand activation for PS Move controller 0"));
-				EditorGUILayout.PropertyField(moveWand1, new GUIContent("PS Move #1", "Delayed wand activation for PS Move controller 1"));
-				EditorGUILayout.PropertyField(moveWand2, new GUIContent("PS Move #2", "Delayed wand activation for PS Move controller 2"));
-				EditorGUILayout.PropertyField(moveWand3, new GUIContent("PS Move #3", "Delayed wand activation for PS Move controller 3"));
-            	EditorGUI.indentLevel -= 1;
-			}
-			
+
             EditorGUI.indentLevel -= 2;
         }
 

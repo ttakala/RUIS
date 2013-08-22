@@ -35,16 +35,7 @@ public class RUISInputManager : MonoBehaviour
     public PSMoveWrapper psMoveWrapper;
     public int amountOfPSMoveControllers = 4;
     public bool enableMoveCalibrationDuringPlay = false;
-	
-	public bool delayedWandActivation = false;
-	public float delayTime = 5;
-	bool[] wandDelayed; // Following creates IndexOutOfRangeException: = new bool[4] {false, false, true, false};
-	List<GameObject> disabledWands;
-	public bool moveWand0 = false;
-	public bool moveWand1 = false;
-	public bool moveWand2 = false;
-	public bool moveWand3 = false;
-	
+
     public bool enableKinect = true;
     public int maxNumberOfKinectPlayers = 2;
     public bool kinectFloorDetection = true;
@@ -67,9 +58,6 @@ public class RUISInputManager : MonoBehaviour
 
     public void Awake()
     {
-		wandDelayed = new bool[4] {moveWand0, moveWand1, moveWand2, moveWand3};
-		disabledWands = new List<GameObject>();
-		
         if (!Application.isEditor || loadFromTextFileInEditor)
         {
             if (!Import(filename))
@@ -100,37 +88,7 @@ public class RUISInputManager : MonoBehaviour
                 psMoveWrapper.Connect(PSMoveIP, PSMovePort);
 
                 psMoveWrapper.enableDefaultInGameCalibrate = enableMoveCalibrationDuringPlay;
-				
-				if(delayedWandActivation)
-				{	
-					string names = "";
-					foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
-			        {
-			            if(		moveController != null && moveController.controllerId < 4 
-							&&	moveController.controllerId >= 0 && wandDelayed[moveController.controllerId] )
-						{
-							// Make sure that the found RUISPSMoveWand is not under InputManager->MoveControllers GameObject
-							if(		moveController.gameObject.transform.parent == null
-								||	moveController.gameObject.transform.parent.parent == null
-								||	(	moveController.gameObject.transform.parent.GetComponent<RUISInputManager>() == null
-									 &&	moveController.gameObject.transform.parent.parent.GetComponent<RUISInputManager>() == null))
-							{
-								moveController.gameObject.SetActive(false);
-								disabledWands.Add(moveController.gameObject);
-								if(names.Length > 0)
-									names += ", ";
-								names += moveController.gameObject.name;
-							}
-						}
-			        }
-					if(disabledWands.Count > 0)
-					{
-						Debug.Log(	  "DELAYED CONTROLLER ACTIVATION INITIALIZATION: Following objects are disabled: " 
-									+ names + ". If their input devices are found, they will be re-activated in "
-									+ delayTime + " seconds, as configured in RUISInputManager.");
-						StartCoroutine("DelayedWandActivation");
-					}
-				}
+
             }
         }
         else
@@ -229,15 +187,6 @@ public class RUISInputManager : MonoBehaviour
             psMoveWrapper.Disconnect(false);
     }
 	
-	// Doesn't seem to matter whether floor normal and point is constantly improved or just once in the beginning
-//	void Update()
-//	{
-//		if(enableKinect && kinectFloorDetection && !enablePSMove)
-//		{
-//			updateKinectFloorData();
-//		}
-//	}
-	
 	public void StartFloorDetection()
 	{
 		if (enableKinect)
@@ -266,136 +215,12 @@ public class RUISInputManager : MonoBehaviour
 
     public bool Import(string filename)
     {
-        XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(filename, xmlSchema);
-        if (xmlDoc == null)
-        {
-            return false;
-        }
-
-        XmlNode inputManagerNode = xmlDoc.GetElementsByTagName("ruisInputManager", "ns2").Item(0);
-        XmlNode psMoveNode = xmlDoc.GetElementsByTagName("PSMoveSettings").Item(0);
-        enablePSMove = bool.Parse(psMoveNode.SelectSingleNode("enabled").Attributes["value"].Value);
-        PSMoveIP = psMoveNode.SelectSingleNode("ip").Attributes["value"].Value;
-        PSMovePort = int.Parse(psMoveNode.SelectSingleNode("port").Attributes["value"].Value);
-        connectToPSMoveOnStartup = bool.Parse(psMoveNode.SelectSingleNode("autoConnect").Attributes["value"].Value);
-        enableMoveCalibrationDuringPlay = bool.Parse(psMoveNode.SelectSingleNode("enableInGameCalibration").Attributes["value"].Value);
-        amountOfPSMoveControllers = int.Parse(psMoveNode.SelectSingleNode("maxControllers").Attributes["value"].Value);
-
-        XmlNode kinectNode = xmlDoc.GetElementsByTagName("KinectSettings").Item(0);
-        enableKinect = bool.Parse(kinectNode.SelectSingleNode("enabled").Attributes["value"].Value);
-        maxNumberOfKinectPlayers = int.Parse(kinectNode.SelectSingleNode("maxPlayers").Attributes["value"].Value);
-        kinectFloorDetection = bool.Parse(kinectNode.SelectSingleNode("floorDetection").Attributes["value"].Value);
-        jumpGestureEnabled = bool.Parse(kinectNode.SelectSingleNode("jumpGestureEnabled").Attributes["value"].Value);
-
-        XmlNode razerNode = xmlDoc.GetElementsByTagName("RazerSettings").Item(0);
-        enableRazerHydra = bool.Parse(razerNode.SelectSingleNode("enabled").Attributes["value"].Value);
-
-        XmlNode riftDriftNode = xmlDoc.GetElementsByTagName("OculusDriftSettings").Item(0);
-        string magnetometerMode = riftDriftNode.SelectSingleNode("magnetometerDriftCorrection").Attributes["value"].Value;
-        riftMagnetometerMode = (RiftMagnetometer)System.Enum.Parse(typeof(RiftMagnetometer), magnetometerMode);
-        kinectDriftCorrectionPreferred = bool.Parse(riftDriftNode.SelectSingleNode("kinectDriftCorrectionIfAvailable").Attributes["value"].Value);
-
-        return true;
+        return XmlImportExport.ImportInputManager(this, filename, xmlSchema);
     }
 
     public bool Export(string filename)
     {
-        /*
-  <GestureSettings>
-	<jumpEnabled value="False" />
-  </GestureSettings> */
-        XmlDocument xmlDoc = new XmlDocument();
-
-        xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-
-        XmlElement inputManagerRootElement = xmlDoc.CreateElement("ns2", "ruisInputManager", "http://ruisystem.net/ruisInputManager");
-        xmlDoc.AppendChild(inputManagerRootElement);
-
-        XmlElement psMoveSettingsElement = xmlDoc.CreateElement("PSMoveSettings");
-        inputManagerRootElement.AppendChild(psMoveSettingsElement);
-
-        XmlElement psMoveEnabledElement = xmlDoc.CreateElement("enabled");
-        psMoveEnabledElement.SetAttribute("value", enablePSMove.ToString());
-        psMoveSettingsElement.AppendChild(psMoveEnabledElement);
-
-        XmlElement psMoveIPElement = xmlDoc.CreateElement("ip");
-        psMoveIPElement.SetAttribute("value", PSMoveIP.ToString());
-        psMoveSettingsElement.AppendChild(psMoveIPElement);
-
-        XmlElement psMovePortElement = xmlDoc.CreateElement("port");
-        psMovePortElement.SetAttribute("value", PSMovePort.ToString());
-        psMoveSettingsElement.AppendChild(psMovePortElement);
-
-        XmlElement psMoveAutoConnectElement = xmlDoc.CreateElement("autoConnect");
-        psMoveAutoConnectElement.SetAttribute("value", connectToPSMoveOnStartup.ToString());
-        psMoveSettingsElement.AppendChild(psMoveAutoConnectElement);
-
-        XmlElement psMoveEnableInGameCalibration = xmlDoc.CreateElement("enableInGameCalibration");
-        psMoveEnableInGameCalibration.SetAttribute("value", enableMoveCalibrationDuringPlay.ToString());
-        psMoveSettingsElement.AppendChild(psMoveEnableInGameCalibration);
-
-        XmlElement psMoveMaxControllersElement = xmlDoc.CreateElement("maxControllers");
-        psMoveMaxControllersElement.SetAttribute("value", amountOfPSMoveControllers.ToString());
-        psMoveSettingsElement.AppendChild(psMoveMaxControllersElement);
-
-
-
-        XmlElement kinectSettingsElement = xmlDoc.CreateElement("KinectSettings");
-        inputManagerRootElement.AppendChild(kinectSettingsElement);
-
-        XmlElement kinectEnabledElement = xmlDoc.CreateElement("enabled");
-        kinectEnabledElement.SetAttribute("value", enableKinect.ToString());
-        kinectSettingsElement.AppendChild(kinectEnabledElement);
-
-        XmlElement maxKinectPlayersElement = xmlDoc.CreateElement("maxPlayers");
-        maxKinectPlayersElement.SetAttribute("value", maxNumberOfKinectPlayers.ToString());
-        kinectSettingsElement.AppendChild(maxKinectPlayersElement);
-
-        XmlElement kinectFloorDetectionElement = xmlDoc.CreateElement("floorDetection");
-        kinectFloorDetectionElement.SetAttribute("value", kinectFloorDetection.ToString());
-        kinectSettingsElement.AppendChild(kinectFloorDetectionElement);
-
-        XmlElement jumpGestureElement = xmlDoc.CreateElement("jumpGestureEnabled");
-        jumpGestureElement.SetAttribute("value", jumpGestureEnabled.ToString());
-        kinectSettingsElement.AppendChild(jumpGestureElement);
-
-
-
-        XmlElement razerSettingsElement = xmlDoc.CreateElement("RazerSettings");
-        inputManagerRootElement.AppendChild(razerSettingsElement);
-
-        XmlElement razerEnabledElement = xmlDoc.CreateElement("enabled");
-        razerEnabledElement.SetAttribute("value", enableRazerHydra.ToString());
-        razerSettingsElement.AppendChild(razerEnabledElement);
-
-
-
-        XmlElement riftDriftSettingsElement = xmlDoc.CreateElement("OculusDriftSettings");
-        inputManagerRootElement.AppendChild(riftDriftSettingsElement);
-
-        XmlElement magnetometerDriftCorrectionElement = xmlDoc.CreateElement("magnetometerDriftCorrection");
-        magnetometerDriftCorrectionElement.SetAttribute("value", System.Enum.GetName(typeof(RiftMagnetometer), riftMagnetometerMode));
-        riftDriftSettingsElement.AppendChild(magnetometerDriftCorrectionElement);
-
-        XmlElement kinectDriftCorrectionElement = xmlDoc.CreateElement("kinectDriftCorrectionIfAvailable");
-        kinectDriftCorrectionElement.SetAttribute("value", kinectDriftCorrectionPreferred.ToString());
-        riftDriftSettingsElement.AppendChild(kinectDriftCorrectionElement);
-
-
-        /*
-        XmlElement displayUpElement = xmlDoc.CreateElement("displayUp");
-        XMLUtil.WriteVector3ToXmlElement(displayUpElement, displayUpInternal);
-        inputManagerRootElement.AppendChild(displayUpElement);
-
-        XmlElement displayNormalElement = xmlDoc.CreateElement("displayNormal");
-        XMLUtil.WriteVector3ToXmlElement(displayNormalElement, displayNormalInternal);
-        inputManagerRootElement.AppendChild(displayNormalElement);
-
-        linkedCamera.SaveKeystoningToXML(inputManagerRootElement);
-        */
-        XMLUtil.SaveXmlToFile(filename, xmlDoc);
-        
-        return true;
+        return XmlImportExport.ExportInputManager(this, filename);
     }
 
     private IEnumerator CheckForMoveConnection()
@@ -405,40 +230,6 @@ public class RUISInputManager : MonoBehaviour
         {
             Debug.LogError("Could not connect to PS Move server at: " + PSMoveIP + ":" + PSMovePort);
         }
-    }
-	
-    private IEnumerator DelayedWandActivation()
-    {
-        yield return new WaitForSeconds(delayTime);
-        if (enablePSMove && psMoveWrapper.isConnected)
-        {
-			string activated = "";
-			string leftDisabled = "";
-	        foreach (GameObject moveWand in disabledWands)
-	        {
-				RUISPSMoveWand moveWandScript = moveWand.GetComponent<RUISPSMoveWand>();
-				if(psMoveWrapper.moveConnected[moveWandScript.controllerId])
-				{
-					moveWand.SetActive(true);
-					if(activated.Length > 0)
-						activated += ", ";
-					activated += moveWand.name;
-				}
-				else
-				{
-					if(leftDisabled.Length > 0)
-						leftDisabled += ", ";
-					leftDisabled += moveWand.name;
-				}
-	        }
-			string report = "DELAYED CONTROLLER ACTIVATION REPORT: ";
-			if(activated.Length > 0)
-				report += "Following GameObjects were re-activated: " + activated + ". ";
-			if(leftDisabled.Length > 0)
-				report += "Following GameObjects will stay inactive because the controllers associated to them "
-						  + "are not connected: " + leftDisabled + ".";
-			Debug.Log(report);
-		}
     }
 	
     private IEnumerator attemptStartingSceneAnalyzer()
@@ -460,9 +251,9 @@ public class RUISInputManager : MonoBehaviour
 	
     private IEnumerator attemptUpdatingFloorNormal()
     {
-        yield return new WaitForSeconds(5.0f);
         if(kinectFloorDetection)
         {
+        	yield return new WaitForSeconds(5.0f);
 			coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
             if (!coordinateSystem)
             {
@@ -470,46 +261,38 @@ public class RUISInputManager : MonoBehaviour
             }
 			else if(sceneAnalyzer == null)
 				Debug.LogError("Failed to access OpenNI sceneAnalyzer!");
-			else 
+			else
 			{
 				Debug.Log ("Updating Kinect floor normal");
-				updateKinectFloorData();
+				coordinateSystem.ResetKinectFloorNormal();
+				coordinateSystem.ResetKinectDistanceFromFloor();
+		
+		        OpenNI.Plane3D floor = sceneAnalyzer.Floor;
+		        Vector3 newFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized;
+		        Vector3 newFloorPosition = coordinateSystem.ConvertKinectPosition(floor.Point);
+		        
+		        //Project the position of the kinect camera onto the floor
+		        //http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
+		        //http://en.wikipedia.org/wiki/Plane_(geometry)
+		        float d = newFloorNormal.x * newFloorPosition.x + newFloorNormal.y * newFloorPosition.y + newFloorNormal.z * newFloorPosition.z;
+		        Vector3 closestFloorPointToKinect = new Vector3(newFloorNormal.x, newFloorNormal.y, newFloorNormal.z);
+		        closestFloorPointToKinect = (closestFloorPointToKinect * d) / closestFloorPointToKinect.sqrMagnitude;
+		
+		        //transform the point from Kinect's coordinate system rotation to Unity's rotation
+		        closestFloorPointToKinect = Quaternion.FromToRotation(newFloorNormal, Vector3.up)  * closestFloorPointToKinect;
+		
+		        //floorPlane.transform.position = closestFloorPointToKinect;
+		
+		
+		        coordinateSystem.SetKinectFloorNormal(newFloorNormal);
+		        //floorNormal = newFloorNormal.normalized;
+		        coordinateSystem.SetKinectDistanceFromFloor(closestFloorPointToKinect.magnitude);
+				
+				//if(!usingExistingSceneAnalyzer)
+				//	sceneAnalyzer.StopGenerating();
 			}
-		}
-    }
-	
-	private void updateKinectFloorData()
-	{
-        if(coordinateSystem)
-        {
-			coordinateSystem.ResetKinectFloorNormal();
-			coordinateSystem.ResetKinectDistanceFromFloor();
-	
-	        OpenNI.Plane3D floor = sceneAnalyzer.Floor;
-	        Vector3 newFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized;
-	        Vector3 newFloorPosition = coordinateSystem.ConvertKinectPosition(floor.Point);
-	        
-	        //Project the position of the kinect camera onto the floor
-	        //http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
-	        //http://en.wikipedia.org/wiki/Plane_(geometry)
-	        float d = newFloorNormal.x * newFloorPosition.x + newFloorNormal.y * newFloorPosition.y + newFloorNormal.z * newFloorPosition.z;
-	        Vector3 closestFloorPointToKinect = new Vector3(newFloorNormal.x, newFloorNormal.y, newFloorNormal.z);
-	        closestFloorPointToKinect = (closestFloorPointToKinect * d) / closestFloorPointToKinect.sqrMagnitude;
-	
-	        //transform the point from Kinect's coordinate system rotation to Unity's rotation
-	        closestFloorPointToKinect = Quaternion.FromToRotation(newFloorNormal, Vector3.up)  * closestFloorPointToKinect;
-	
-	        //floorPlane.transform.position = closestFloorPointToKinect;
-	
-	
-	        coordinateSystem.SetKinectFloorNormal(newFloorNormal);
-	        //floorNormal = newFloorNormal.normalized;
-	        coordinateSystem.SetKinectDistanceFromFloor(closestFloorPointToKinect.magnitude);
-			
-			//if(!usingExistingSceneAnalyzer)
-			//	sceneAnalyzer.StopGenerating();
         }
-	}
+    }
 	
     private void DisableUnneededMoveWands()
     {
