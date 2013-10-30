@@ -18,7 +18,7 @@ public class RUISSkeletonWand : RUISWand
 
     public RUISGestureRecognizer gestureRecognizer;
 
-    public RUISSkeletonManager skeletonManager;
+    private RUISSkeletonManager skeletonManager;
 
     RUISDisplayManager displayManager;
 

@@ -12,7 +12,7 @@ using System.Collections;
 
 [RequireComponent(typeof(RUISCharacterController))]
 [RequireComponent(typeof(Rigidbody))]
-public class RUISCharacterLocomotionControl : MonoBehaviour
+public class RUISCharacterLocomotion : MonoBehaviour
 {
     RUISCharacterController characterController;
 	RUISInputManager inputManager;

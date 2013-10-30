@@ -31,7 +31,7 @@ public class RUISSkeletonController : MonoBehaviour
     public Transform leftFoot;
 	
 	private RUISInputManager inputManager;
-    public RUISSkeletonManager skeletonManager;
+    private RUISSkeletonManager skeletonManager;
 	private RUISCharacterController characterController;
 
     public int playerId = 0;

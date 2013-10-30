@@ -2,7 +2,7 @@
 
 Content    :   Comprehensive 6DOF tracker class with yaw drift correction
 Authors    :   Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -10,7 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 
-public class RUISHeadTracker : MonoBehaviour 
+public class RUISTracker : MonoBehaviour 
 {
 	
 	// Beginning of members that are needed by RUISCamera's oblique frustum creation
@@ -32,7 +32,7 @@ public class RUISHeadTracker : MonoBehaviour
 	
 	
 	RUISInputManager inputManager;
-    public RUISSkeletonManager skeletonManager;
+    private RUISSkeletonManager skeletonManager;
 	
 	// Three enums are needed if we support more devices in the future...
 	// Some devices provide only location or rotation. Some devices have

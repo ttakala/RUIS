@@ -14,7 +14,7 @@ using System.Collections.Generic;
 public class RUISHeadTrackerAssigner : MonoBehaviour {
 	
 	RUISInputManager inputManager;
-	public List<RUISHeadTracker> headTrackers = new List<RUISHeadTracker>(5);
+	public List<RUISTracker> headTrackers = new List<RUISTracker>(5);
 	public RUISDisplay display;
 	public bool applyKinectDriftCorrectionPreference = false;
 	public bool changePivotIfNoKinect = true;
@@ -46,10 +46,10 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			psmove = inputManager.enablePSMove;
 			razer  = inputManager.enableRazerHydra;
 			
-			RUISHeadTracker closestMatch = null;
+			RUISTracker closestMatch = null;
 			int currentMatchScore = 0;
 			
-			foreach(RUISHeadTracker trackerScript in headTrackers)
+			foreach(RUISTracker trackerScript in headTrackers)
 			{
 				if(trackerScript && trackerScript.gameObject.activeInHierarchy)
 				{
@@ -57,27 +57,27 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					int foundTrackerScore = 0;
 					
 					// Give score to found head trackers
-					if(psmove && trackerScript.headPositionInput == RUISHeadTracker.HeadPositionSource.PSMove)
+					if(psmove && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.PSMove)
 					{
 						foundTrackerScore = 5;
 					}
 					else if(	razer && trackerScript.isRazerBaseMobile
-							&&	trackerScript.headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
-							&&	trackerScript.mobileRazerBase == RUISHeadTracker.RazerHydraBase.InputTransform	)
+							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
+							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.InputTransform	)
 					{
 						foundTrackerScore = 4;
 					}
 					else if(	kinect && razer && trackerScript.isRazerBaseMobile
-							&&	trackerScript.headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
-							&&	trackerScript.mobileRazerBase == RUISHeadTracker.RazerHydraBase.Kinect			)
+							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
+							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.Kinect			)
 					{
 						foundTrackerScore = 3;
 					}
-					else if(kinect && trackerScript.headPositionInput == RUISHeadTracker.HeadPositionSource.Kinect)
+					else if(kinect && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect)
 					{
 						foundTrackerScore = 2;
 					}
-					else if(	razer && trackerScript.headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
+					else if(	razer && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
 							&&	!trackerScript.isRazerBaseMobile															)
 					{
 						foundTrackerScore = 1;
@@ -170,7 +170,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				ruisCamera = closestMatch.gameObject.GetComponentInChildren<RUISCamera>();
 				
 				if(		changePivotIfNoKinect && psmove && !kinect 
-					&&  closestMatch.headPositionInput == RUISHeadTracker.HeadPositionSource.PSMove )
+					&&  closestMatch.headPositionInput == RUISTracker.HeadPositionSource.PSMove )
 				{
 					RUISCharacterController characterController = gameObject.GetComponentInChildren<RUISCharacterController>();
 					if(		characterController != null 
@@ -200,7 +200,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			// If we are using Razer with a static base for head tracking, then apply onlyRazerOffset
 			// on the parent objects of the Razer head tracker and the hand-held Razer
 			if(		closestMatch != null && razer 
-				&&	closestMatch.headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
+				&&	closestMatch.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
 				&&	!closestMatch.isRazerBaseMobile													)
 			{
 				// The parent object of the Razer head tracker must not have RUISCharacterConroller,
@@ -249,21 +249,21 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					// Preference is to use Kinect for drift correction (if PS Move is not used for head tracking)
 					switch(closestMatch.headPositionInput)
 					{
-						case RUISHeadTracker.HeadPositionSource.Kinect:
+						case RUISTracker.HeadPositionSource.Kinect:
 							if(!psmove && kinect)
 							{
 								closestMatch.externalDriftCorrection = true;
-								closestMatch.compass = RUISHeadTracker.CompassSource.Kinect;
+								closestMatch.compass = RUISTracker.CompassSource.Kinect;
 							}
 							break;
 						
-						case RUISHeadTracker.HeadPositionSource.RazerHydra:
+						case RUISTracker.HeadPositionSource.RazerHydra:
 							if(!psmove && kinect && razer)
 							{
 								if(closestMatch.isRazerBaseMobile)
 								{
 									closestMatch.externalDriftCorrection = true;
-									closestMatch.compass = RUISHeadTracker.CompassSource.Kinect;
+									closestMatch.compass = RUISTracker.CompassSource.Kinect;
 								}
 							}
 							break;
@@ -272,7 +272,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				else
 				{
 					// Preference is NOT to use Kinect for drift correction
-					if(		closestMatch.headPositionInput == RUISHeadTracker.HeadPositionSource.Kinect
+					if(		closestMatch.headPositionInput == RUISTracker.HeadPositionSource.Kinect
 						&&  !psmove && kinect															)
 						closestMatch.externalDriftCorrection = false;
 				}

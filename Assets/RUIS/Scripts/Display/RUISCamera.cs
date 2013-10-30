@@ -38,7 +38,7 @@ public class RUISCamera : MonoBehaviour {
     public float near = 0.3f;
     public float far = 1000;
 
-    public RUISHeadTracker headTracker;
+    public RUISTracker headTracker;
 	public Vector3 KeystoningHeadTrackerPosition {
         get
         {
@@ -84,7 +84,7 @@ public class RUISCamera : MonoBehaviour {
 		if(associatedDisplay)
 		{
 			if(associatedDisplay.isObliqueFrustum && !headTracker)
-				Debug.LogError("RUISHeadTracker is none, you need to set it from the inspector!");
+				Debug.LogError("RUISTracker is none, you need to set it from the inspector!");
 			if(associatedDisplay.isObliqueFrustum && headTracker)
 			{
 		        Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
@@ -93,7 +93,7 @@ public class RUISCamera : MonoBehaviour {
 				print(camToDisplay + " " + eyePositions[0] + " " + distanceFromPlane);
 	            if(distanceFromPlane == 0)
 					Debug.LogError(  "In " + headTracker.gameObject.name + " GameObject's "
-								   + "RUISHeadTracker script, you have set defaultPosition to " 
+								   + "RUISTracker script, you have set defaultPosition to " 
 								   + "lie on the display plane of " 
 								   + associatedDisplay.gameObject.name + ". The defaultPosition "
 								   + "needs to be apart from the display!");
@@ -257,7 +257,7 @@ public class RUISCamera : MonoBehaviour {
         return frustum;
     }
 
-    public void SetupHeadTracking(RUISHeadTracker headTracker)
+    public void SetupHeadTracking(RUISTracker headTracker)
     {
         this.headTracker = headTracker;
         isHeadTracking = true;

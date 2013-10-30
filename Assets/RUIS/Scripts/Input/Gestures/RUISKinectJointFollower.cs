@@ -11,7 +11,7 @@ using UnityEngine;
 using System.Collections;
 
 public class RUISKinectJointFollower : MonoBehaviour {
-    public RUISSkeletonManager skeletonManager;
+    private RUISSkeletonManager skeletonManager;
     public int playerId;
 
     public RUISSkeletonManager.Joint jointToFollow;

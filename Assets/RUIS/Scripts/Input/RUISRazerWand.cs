@@ -12,7 +12,7 @@ using System.Collections;
 
 public class RUISRazerWand : RUISWand {
 	
-	RUISHeadTracker headTracker;
+	RUISTracker headTracker;
 	
 	public SixenseButtons selectionButton = SixenseButtons.BUMPER;
 	public SixenseHands	controller = SixenseHands.LEFT;
@@ -44,17 +44,17 @@ public class RUISRazerWand : RUISWand {
 	public void Start ()
     {
 		// Try to find RUISTracker that uses Razer Hydra in some way
-		RUISHeadTracker[] trackers = Object.FindObjectsOfType(typeof(RUISHeadTracker)) as RUISHeadTracker[];
+		RUISTracker[] trackers = Object.FindObjectsOfType(typeof(RUISTracker)) as RUISTracker[];
 		for(int i = 0; i < trackers.Length; ++i)
 		{
 			// Below complicated clauses make sure that this is a properly configured Razer Hydra tracker
-			if(		trackers[i].headPositionInput == RUISHeadTracker.HeadPositionSource.RazerHydra
-				||	(	trackers[i].headRotationInput == RUISHeadTracker.HeadRotationSource.RazerHydra
+			if(		trackers[i].headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
+				||	(	trackers[i].headRotationInput == RUISTracker.HeadRotationSource.RazerHydra
 					 &&	!trackers[i].useOculusRiftRotation)
-				||	(	trackers[i].compass == RUISHeadTracker.CompassSource.RazerHydra
+				||	(	trackers[i].compass == RUISTracker.CompassSource.RazerHydra
 					 && trackers[i].externalDriftCorrection
 					 && (	trackers[i].useOculusRiftRotation 
-						 || trackers[i].headRotationInput == RUISHeadTracker.HeadRotationSource.InputTransform )))
+						 || trackers[i].headRotationInput == RUISTracker.HeadRotationSource.InputTransform )))
 				if(trackers[i].isRazerBaseMobile) // Found a Razer Hydra tracker that claims to have mobile base
 					headTracker = trackers[i];
 		}

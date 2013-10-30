@@ -13,7 +13,7 @@ using System.Collections;
 
 public class RUISCharacterAnimationController : MonoBehaviour {
     public Animator animator;
-    public RUISCharacterLocomotionControl locomotionControl;
+    public RUISCharacterLocomotion locomotionControl;
     public RUISCharacterController characterController;
     public RUISKinectAndMecanimCombiner animationCombiner;
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-Content    :   Inspector behaviour for RUISHeadTracker script
+Content    :   Inspector behaviour for RUISTracker script
 Authors    :   Tuukka Takala
 Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
@@ -11,11 +11,11 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-[CustomEditor(typeof(RUISHeadTracker))]
+[CustomEditor(typeof(RUISTracker))]
 [CanEditMultipleObjects]
-public class RUISHeadTrackerEditor : Editor
+public class RUISTrackerEditor : Editor
 {
-	RUISHeadTracker headTrackerScript;
+	RUISTracker trackerScript;
 	OVRCameraController oculusCamController;
 	bool riftFound = false;
 	string movingBaseAnnouncement = "";
@@ -215,7 +215,7 @@ public class RUISHeadTrackerEditor : Editor
         EditorGUI.indentLevel += 2;
         switch (headPositionInput.enumValueIndex)
         {
-            case (int)RUISHeadTracker.HeadPositionSource.Kinect:
+            case (int)RUISTracker.HeadPositionSource.Kinect:
 				positionPlayerID.intValue = Mathf.Clamp(positionPlayerID.intValue, 0, maxKinectSkeletons - 1);
 				if(positionNoiseCovarianceKinect.floatValue < minNoiseCovariance)
 					positionNoiseCovarianceKinect.floatValue = minNoiseCovariance;
@@ -233,7 +233,7 @@ public class RUISHeadTrackerEditor : Editor
 																			+ "a bigger value means smoother results but a slower "
 																			+ "response to changes."));
                 break;
-            case (int)RUISHeadTracker.HeadPositionSource.PSMove:
+            case (int)RUISTracker.HeadPositionSource.PSMove:
 				positionPSMoveID.intValue = Mathf.Clamp(positionPSMoveID.intValue, 0, maxPSMoveControllers - 1);
 				if(positionNoiseCovariancePSMove.floatValue < minNoiseCovariance)
 					positionNoiseCovariancePSMove.floatValue = minNoiseCovariance;
@@ -249,7 +249,7 @@ public class RUISHeadTrackerEditor : Editor
 																			+ "a bigger value means smoother results but a slower "
 																			+ "response to changes."));
                 break;
-            case (int)RUISHeadTracker.HeadPositionSource.RazerHydra:
+            case (int)RUISTracker.HeadPositionSource.RazerHydra:
 				if(positionNoiseCovarianceHydra.floatValue < minNoiseCovariance)
 					positionNoiseCovarianceHydra.floatValue = minNoiseCovariance;
 			
@@ -268,7 +268,7 @@ public class RUISHeadTrackerEditor : Editor
 																			+ "a bigger value means smoother results but a slower "
 																			+ "response to changes."));
 				break;
-            case (int)RUISHeadTracker.HeadPositionSource.InputTransform:
+            case (int)RUISTracker.HeadPositionSource.InputTransform:
 				if(positionNoiseCovarianceTransform.floatValue < minNoiseCovariance)
 					positionNoiseCovarianceTransform.floatValue = minNoiseCovariance;
                 EditorGUILayout.PropertyField(positionInput, new GUIContent("Input Transform", "All other position trackers are supported "
@@ -283,7 +283,7 @@ public class RUISHeadTrackerEditor : Editor
 				break;
         }
 		
-//		if(headPositionInput.enumValueIndex != (int)RUISHeadTracker.HeadPositionSource.None)
+//		if(headPositionInput.enumValueIndex != (int)RUISTracker.HeadPositionSource.None)
 //		{
 //	        EditorGUILayout.PropertyField(filterPosition, new GUIContent("Filter Position", "Enables simple Kalman filtering for position "
 //																					+ "tracking. Only recommended for Kinect."));
@@ -294,10 +294,10 @@ public class RUISHeadTrackerEditor : Editor
 				
         EditorGUI.indentLevel -= 2;
 		
-		if(serializedObject.targetObject is RUISHeadTracker)
+		if(serializedObject.targetObject is RUISTracker)
 		{
-			headTrackerScript = (RUISHeadTracker) serializedObject.targetObject;
-			oculusCamController = headTrackerScript.gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
+			trackerScript = (RUISTracker) serializedObject.targetObject;
+			oculusCamController = trackerScript.gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
 			
 			if(oculusCamController)
 			{
@@ -322,7 +322,7 @@ public class RUISHeadTrackerEditor : Editor
 			
 			
 			EditorStyles.textField.wordWrap = true;
-			EditorGUILayout.TextArea("OVRCameraController script detected in a child object of this " + headTrackerScript.gameObject.name
+			EditorGUILayout.TextArea("OVRCameraController script detected in a child object of this " + trackerScript.gameObject.name
 										+ ". Assuming that you want to use rotation from Oculus Rift. Disabling other Rotation Tracker "
 										+ "options. You can access other rotation trackers when you remove or disable the child object "
 										+ "that has the OVRCameraController component.", GUILayout.Height(120));
@@ -333,19 +333,19 @@ public class RUISHeadTrackerEditor : Editor
         	EditorGUI.indentLevel += 1;
 			EditorGUILayout.PropertyField(resetKey, new GUIContent("KeyCode", "The button that resets Oculus Rift's yaw rotation to zero."));
 			
-			if(externalDriftCorrection.boolValue && compass.enumValueIndex == (int)RUISHeadTracker.CompassSource.RazerHydra)
+			if(externalDriftCorrection.boolValue && compass.enumValueIndex == (int)RUISTracker.CompassSource.RazerHydra)
 				EditorGUILayout.LabelField(new GUIContent(("BUMPER+START Razer Hydra " + compassRazerID.enumNames[compassRazerID.enumValueIndex]),
 										   "BUMPER and START of the Razer Hydra controller that you use for Yaw Drift Correction."),
 										   EditorStyles.label);
-			else if(headPositionInput.enumValueIndex == (int)RUISHeadTracker.HeadPositionSource.RazerHydra)
+			else if(headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.RazerHydra)
 				EditorGUILayout.LabelField(new GUIContent(("BUMPER+START Razer Hydra " + positionRazerID.enumNames[positionRazerID.enumValueIndex]),
 										   "BUMPER and START of the Razer Hydra controller that you use for position tracking."),
 										   EditorStyles.label);
-			if(externalDriftCorrection.boolValue && compass.enumValueIndex == (int)RUISHeadTracker.CompassSource.PSMove)
+			if(externalDriftCorrection.boolValue && compass.enumValueIndex == (int)RUISTracker.CompassSource.PSMove)
 				EditorGUILayout.LabelField(new GUIContent(("MOVE button on PS Move #" + compassPSMoveID.intValue),
 										   "MOVE button of the PS Move controller that you use for Yaw Drift Correction."),
 										   EditorStyles.label);
-			else if(headPositionInput.enumValueIndex == (int)RUISHeadTracker.HeadPositionSource.PSMove)
+			else if(headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.PSMove)
 				EditorGUILayout.LabelField(new GUIContent(("MOVE button on PS Move #" + positionPSMoveID.intValue),
 										   "MOVE button of the PS Move controller that you use for position tracking."),
 										   EditorStyles.label);
@@ -357,34 +357,34 @@ public class RUISHeadTrackerEditor : Editor
 			{
 				switch (headPositionInput.enumValueIndex)
         		{	
-					case (int)RUISHeadTracker.HeadPositionSource.Kinect:
+					case (int)RUISTracker.HeadPositionSource.Kinect:
 					{
-						headRotationInput.enumValueIndex = (int)RUISHeadTracker.HeadRotationSource.Kinect;
+						headRotationInput.enumValueIndex = (int)RUISTracker.HeadRotationSource.Kinect;
 						rotationPlayerID.intValue = positionPlayerID.intValue;
 						rotationJoint.enumValueIndex = positionJoint.enumValueIndex;
 						break;
 					}
-					case (int)RUISHeadTracker.HeadPositionSource.PSMove:
+					case (int)RUISTracker.HeadPositionSource.PSMove:
 					{
-						headRotationInput.enumValueIndex = (int)RUISHeadTracker.HeadRotationSource.PSMove;
+						headRotationInput.enumValueIndex = (int)RUISTracker.HeadRotationSource.PSMove;
 						rotationPSMoveID.intValue = positionPSMoveID.intValue;
 						break;
 					}
-					case (int)RUISHeadTracker.HeadPositionSource.RazerHydra:
+					case (int)RUISTracker.HeadPositionSource.RazerHydra:
 					{
-						headRotationInput.enumValueIndex = (int)RUISHeadTracker.HeadRotationSource.RazerHydra;
+						headRotationInput.enumValueIndex = (int)RUISTracker.HeadRotationSource.RazerHydra;
 						rotationRazerID.intValue = positionRazerID.intValue;
 						break;
 					}
-					case (int)RUISHeadTracker.HeadPositionSource.InputTransform:
+					case (int)RUISTracker.HeadPositionSource.InputTransform:
 					{
-						headRotationInput.enumValueIndex = (int)RUISHeadTracker.HeadRotationSource.InputTransform;
+						headRotationInput.enumValueIndex = (int)RUISTracker.HeadRotationSource.InputTransform;
 						rotationInput.objectReferenceValue = positionInput.objectReferenceValue;
 						break;
 					}
-					case (int)RUISHeadTracker.HeadPositionSource.None:
+					case (int)RUISTracker.HeadPositionSource.None:
 					{
-						headRotationInput.enumValueIndex = (int)RUISHeadTracker.HeadRotationSource.None;
+						headRotationInput.enumValueIndex = (int)RUISTracker.HeadRotationSource.None;
 						break;
 					}
 				}
@@ -398,7 +398,7 @@ public class RUISHeadTrackerEditor : Editor
 			
 	        switch (headRotationInput.enumValueIndex)
 	        {
-	            case (int)RUISHeadTracker.HeadRotationSource.Kinect:
+	            case (int)RUISTracker.HeadRotationSource.Kinect:
 					rotationPlayerID.intValue = Mathf.Clamp(rotationPlayerID.intValue, 0, maxKinectSkeletons - 1);
 					if(rotationNoiseCovarianceKinect.floatValue < minNoiseCovariance)
 						rotationNoiseCovarianceKinect.floatValue = minNoiseCovariance;
@@ -420,7 +420,7 @@ public class RUISHeadTrackerEditor : Editor
 																				+ "a bigger value means smoother results but a slower "
 																				+ "response to changes."));
 	                break;
-	            case (int)RUISHeadTracker.HeadRotationSource.PSMove:
+	            case (int)RUISTracker.HeadRotationSource.PSMove:
 					rotationPSMoveID.intValue = Mathf.Clamp(rotationPSMoveID.intValue, 0, maxPSMoveControllers - 1);
 					if(rotationNoiseCovariancePSMove.floatValue < minNoiseCovariance)
 						rotationNoiseCovariancePSMove.floatValue = minNoiseCovariance;
@@ -438,7 +438,7 @@ public class RUISHeadTrackerEditor : Editor
 																				+ "a bigger value means smoother results but a slower "
 																				+ "response to changes."));
 	                break;
-	            case (int)RUISHeadTracker.HeadRotationSource.RazerHydra:
+	            case (int)RUISTracker.HeadRotationSource.RazerHydra:
 					if(rotationNoiseCovarianceHydra.floatValue < minNoiseCovariance)
 						rotationNoiseCovarianceHydra.floatValue = minNoiseCovariance;
 					
@@ -459,7 +459,7 @@ public class RUISHeadTrackerEditor : Editor
 																				+ "a bigger value means smoother results but a slower "
 																				+ "response to changes."));
 					break;
-	            case (int)RUISHeadTracker.HeadRotationSource.InputTransform:
+	            case (int)RUISTracker.HeadRotationSource.InputTransform:
 					if(rotationNoiseCovarianceTransform.floatValue < minNoiseCovariance)
 						rotationNoiseCovarianceTransform.floatValue = minNoiseCovariance;
 					EditorGUI.BeginDisabledGroup(!pickRotationSource.boolValue);
@@ -476,7 +476,7 @@ public class RUISHeadTrackerEditor : Editor
 					break;
 	        }
 			
-//			if(headRotationInput.enumValueIndex != (int)RUISHeadTracker.HeadRotationSource.None)
+//			if(headRotationInput.enumValueIndex != (int)RUISTracker.HeadRotationSource.None)
 //			{
 //		        EditorGUILayout.PropertyField(filterRotation, new GUIContent("Filter Rotation", "Enables simple Kalman filtering for rotation "
 //																			+ "tracking. Only recommended for Kinect."));
@@ -491,18 +491,18 @@ public class RUISHeadTrackerEditor : Editor
         EditorGUILayout.Space();
 
 		
-		if(!riftFound && headRotationInput.enumValueIndex != (int)RUISHeadTracker.HeadRotationSource.InputTransform)
+		if(!riftFound && headRotationInput.enumValueIndex != (int)RUISTracker.HeadRotationSource.InputTransform)
 		{
 			EditorGUI.BeginDisabledGroup(true);
 	        EditorGUILayout.PropertyField(externalDriftCorrection, new GUIContent("Yaw Drift Correction", "Enables external yaw drift correction "
 																		+ "using Kinect, PS Move, or some other device"));
-			if(headRotationInput.enumValueIndex == (int)RUISHeadTracker.HeadRotationSource.Kinect)
+			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.Kinect)
 				EditorGUILayout.LabelField("Kinect joints don't need drift correction");
-			if(headRotationInput.enumValueIndex == (int)RUISHeadTracker.HeadRotationSource.PSMove)
+			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.PSMove)
 				EditorGUILayout.LabelField("PS Move doesn't need drift correction");
-			if(headRotationInput.enumValueIndex == (int)RUISHeadTracker.HeadRotationSource.RazerHydra)
+			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.RazerHydra)
 				EditorGUILayout.LabelField("Razer Hydra doesn't need drift correction");
-			if(headRotationInput.enumValueIndex == (int)RUISHeadTracker.HeadRotationSource.None)
+			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.None)
 				EditorGUILayout.LabelField("No Rotation Tracker: Drift correction disabled");
 			EditorGUI.EndDisabledGroup();
 		}
@@ -523,34 +523,34 @@ public class RUISHeadTrackerEditor : Editor
 				{
 					switch(headPositionInput.enumValueIndex)
 					{
-						case (int)RUISHeadTracker.HeadPositionSource.Kinect:
+						case (int)RUISTracker.HeadPositionSource.Kinect:
 						{
-							compass.enumValueIndex = (int)RUISHeadTracker.CompassSource.Kinect;
+							compass.enumValueIndex = (int)RUISTracker.CompassSource.Kinect;
 							compassPlayerID.intValue = positionPlayerID.intValue;
 							compassJoint.enumValueIndex = positionJoint.enumValueIndex;
 						}
 						break;
-						case (int)RUISHeadTracker.HeadPositionSource.PSMove:
+						case (int)RUISTracker.HeadPositionSource.PSMove:
 						{
-							compass.enumValueIndex = (int)RUISHeadTracker.CompassSource.PSMove;
+							compass.enumValueIndex = (int)RUISTracker.CompassSource.PSMove;
 							compassPSMoveID.intValue = positionPSMoveID.intValue;
 						}
 						break;
-						case (int)RUISHeadTracker.HeadPositionSource.RazerHydra:
+						case (int)RUISTracker.HeadPositionSource.RazerHydra:
 						{
-							compass.enumValueIndex = (int)RUISHeadTracker.CompassSource.RazerHydra;
+							compass.enumValueIndex = (int)RUISTracker.CompassSource.RazerHydra;
 							compassRazerID.enumValueIndex = positionRazerID.enumValueIndex;
 						}
 						break;
-						case (int)RUISHeadTracker.HeadPositionSource.InputTransform:
+						case (int)RUISTracker.HeadPositionSource.InputTransform:
 						{
-							compass.enumValueIndex = (int)RUISHeadTracker.CompassSource.InputTransform;
+							compass.enumValueIndex = (int)RUISTracker.CompassSource.InputTransform;
 							compassTransform.objectReferenceValue = positionInput.objectReferenceValue;
 						}
 						break;
-						case (int)RUISHeadTracker.HeadPositionSource.None:
+						case (int)RUISTracker.HeadPositionSource.None:
 						{
-							compass.enumValueIndex = (int)RUISHeadTracker.CompassSource.None;
+							compass.enumValueIndex = (int)RUISTracker.CompassSource.None;
 						}
 						break;
 					}
@@ -562,12 +562,12 @@ public class RUISHeadTrackerEditor : Editor
 																	+ "Rotation Tracker"));
 				EditorGUI.EndDisabledGroup();
 				
-				if(compassIsPositionTracker.boolValue && headPositionInput.enumValueIndex == (int)RUISHeadTracker.HeadPositionSource.None)
+				if(compassIsPositionTracker.boolValue && headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.None)
 					EditorGUILayout.LabelField("Position Tracker is set to None!");
 				else
 			        switch (compass.enumValueIndex)
 			        {
-			            case (int)RUISHeadTracker.CompassSource.Kinect:
+			            case (int)RUISTracker.CompassSource.Kinect:
 							compassPlayerID.intValue = Mathf.Clamp(compassPlayerID.intValue, 0, maxKinectSkeletons - 1);
 							driftCorrectionRateKinect.floatValue = Mathf.Clamp(driftCorrectionRateKinect.floatValue, minDriftCorrectionRate, 
 																													 maxDriftCorrectionRate );
@@ -597,7 +597,7 @@ public class RUISHeadTrackerEditor : Editor
 																				+ "compass, and the default 0.08 might be good. You might want "
 																				+ "to adjust this to suit your liking."));
 			                break;
-			            case (int)RUISHeadTracker.CompassSource.PSMove:
+			            case (int)RUISTracker.CompassSource.PSMove:
 							compassPSMoveID.intValue = Mathf.Clamp(compassPSMoveID.intValue, 0, maxPSMoveControllers - 1);
 							driftCorrectionRatePSMove.floatValue = Mathf.Clamp(driftCorrectionRatePSMove.floatValue, minDriftCorrectionRate, 
 																													 maxDriftCorrectionRate );
@@ -614,7 +614,7 @@ public class RUISHeadTrackerEditor : Editor
 																				+ "the drifting rotation is shifted towards the compass' "
 																				+ "rotation. Default of 0.1 is good."));
 			                break;
-			            case (int)RUISHeadTracker.CompassSource.RazerHydra:
+			            case (int)RUISTracker.CompassSource.RazerHydra:
 							driftCorrectionRateHydra.floatValue = Mathf.Clamp(driftCorrectionRateHydra.floatValue,  minDriftCorrectionRate, 
 																													maxDriftCorrectionRate );
 
@@ -636,7 +636,7 @@ public class RUISHeadTrackerEditor : Editor
 																				+ "the drifting rotation is shifted towards the compass' "
 																				+ "rotation. Default of 0.1 is good."));
 			                break;
-			            case (int)RUISHeadTracker.CompassSource.InputTransform:
+			            case (int)RUISTracker.CompassSource.InputTransform:
 							driftCorrectionRateTransform.floatValue = Mathf.Clamp(driftCorrectionRateTransform.floatValue,  minDriftCorrectionRate, 
 																															maxDriftCorrectionRate );
 						
@@ -678,12 +678,12 @@ public class RUISHeadTrackerEditor : Editor
 		
 		if(isRazerBaseMobile.boolValue)
 		{
-			if(headPositionInput.enumValueIndex == (int)RUISHeadTracker.HeadPositionSource.RazerHydra)
+			if(headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.RazerHydra)
 				movingBaseAnnouncement = "Razer Hydra base station set as moving in Position Tracker";
-			else if(headRotationInput.enumValueIndex == (int)RUISHeadTracker.HeadRotationSource.RazerHydra && !riftFound)
+			else if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.RazerHydra && !riftFound)
 				movingBaseAnnouncement = "Razer Hydra base station set as moving in Rotation Tracker";
-			else if(	compass.enumValueIndex == (int)RUISHeadTracker.CompassSource.RazerHydra && externalDriftCorrection.boolValue
-					&&	(riftFound || headRotationInput.enumValueIndex == (int)RUISHeadTracker.HeadRotationSource.InputTransform)	)
+			else if(	compass.enumValueIndex == (int)RUISTracker.CompassSource.RazerHydra && externalDriftCorrection.boolValue
+					&&	(riftFound || headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.InputTransform)	)
 				movingBaseAnnouncement = "Razer Hydra base station set as moving in Yaw Drift Correction";
 			else
 			{
@@ -706,7 +706,7 @@ public class RUISHeadTrackerEditor : Editor
 			}
 			switch(mobileRazerBase.enumValueIndex)
 			{
-				case (int) RUISHeadTracker.RazerHydraBase.Kinect:
+				case (int) RUISTracker.RazerHydraBase.Kinect:
 					hydraBaseKinectPlayerID.intValue = Mathf.Clamp(hydraBaseKinectPlayerID.intValue, 0, maxKinectSkeletons - 1);
 					if(hydraBasePositionCovarianceKinect.floatValue < minNoiseCovariance)
 						hydraBasePositionCovarianceKinect.floatValue = minNoiseCovariance;
@@ -754,7 +754,7 @@ public class RUISHeadTrackerEditor : Editor
 					}
 				break;
 			
-				case (int) RUISHeadTracker.RazerHydraBase.InputTransform:
+				case (int) RUISTracker.RazerHydraBase.InputTransform:
 					if(hydraBasePositionCovarianceTransform.floatValue < minNoiseCovariance)
 						hydraBasePositionCovarianceTransform.floatValue = minNoiseCovariance;
 					if(hydraBaseRotationCovarianceTransform.floatValue < minNoiseCovariance)

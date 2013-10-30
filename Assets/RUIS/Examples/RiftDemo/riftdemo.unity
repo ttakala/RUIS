@@ -3884,7 +3884,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d231127ae337c7c40a492768550cf970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonManager: {fileID: 0}
   playerId: 0
   jointToFollow: 0
   minimumConfidenceToUpdate: .5
@@ -8666,9 +8665,6 @@ GameObject:
   - 114: {fileID: 326275334}
   - 114: {fileID: 326275333}
   - 114: {fileID: 326275332}
-  - 82: {fileID: 326275331}
-  - 164: {fileID: 326275330}
-  - 169: {fileID: 326275329}
   m_Layer: 8
   m_Name: OVRCameraController
   m_TagString: Untagged
@@ -8689,110 +8685,6 @@ Transform:
   - {fileID: 255883615}
   - {fileID: 1420390547}
   m_Father: {fileID: 1845087123}
---- !u!169 &326275329
-AudioLowPassFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16900000, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 326275327}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_CutoffFrequency: 22000
-  m_LowpassResonanceQ: 1
-  lowpassLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
---- !u!164 &326275330
-AudioReverbFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16400000, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 326275327}
-  m_Enabled: 1
-  m_DryLevel: 0
-  m_Room: -1000
-  m_RoomHF: -4000
-  m_RoomRolloff: 0
-  m_DecayTime: 1.49000001
-  m_DecayHFRatio: .100000001
-  m_ReflectionsLevel: -449
-  m_ReverbLevel: 1700
-  m_ReverbDelay: .0109999999
-  m_Diffusion: 100
-  m_Density: 100
-  m_HFReference: 5000
-  m_RoomLF: 0
-  m_LFReference: 250
-  m_ReflectionsDelay: 0
-  m_ReverbPreset: 27
---- !u!82 &326275331
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8200000, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 326275327}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: 4c27d084ed5bd0d419d6e092b1f8eba5, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: .5
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!114 &326275332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15228,9 +15120,6 @@ GameObject:
   - 114: {fileID: 544421300}
   - 114: {fileID: 544421299}
   - 114: {fileID: 544421298}
-  - 82: {fileID: 544421297}
-  - 164: {fileID: 544421296}
-  - 169: {fileID: 544421295}
   m_Layer: 8
   m_Name: OVRCameraController
   m_TagString: Untagged
@@ -15251,110 +15140,6 @@ Transform:
   - {fileID: 1408029964}
   - {fileID: 1411269346}
   m_Father: {fileID: 1230982586}
---- !u!169 &544421295
-AudioLowPassFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16900002, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 544421293}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_CutoffFrequency: 22000
-  m_LowpassResonanceQ: 1
-  lowpassLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
---- !u!164 &544421296
-AudioReverbFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16400002, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 544421293}
-  m_Enabled: 1
-  m_DryLevel: 0
-  m_Room: -1000
-  m_RoomHF: -4000
-  m_RoomRolloff: 0
-  m_DecayTime: 1.49000001
-  m_DecayHFRatio: .100000001
-  m_ReflectionsLevel: -449
-  m_ReverbLevel: 1700
-  m_ReverbDelay: .0109999999
-  m_Diffusion: 100
-  m_Density: 100
-  m_HFReference: 5000
-  m_RoomLF: 0
-  m_LFReference: 250
-  m_ReflectionsDelay: 0
-  m_ReverbPreset: 27
---- !u!82 &544421297
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8200002, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 544421293}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: 4c27d084ed5bd0d419d6e092b1f8eba5, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: .5
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!114 &544421298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18794,7 +18579,6 @@ MonoBehaviour:
   leftHip: {fileID: 1095177585}
   leftKnee: {fileID: 1645734063}
   leftFoot: {fileID: 1330248486}
-  skeletonManager: {fileID: 0}
   playerId: 0
   updateRootPosition: 1
   updateJointPositions: 0
@@ -31140,9 +30924,6 @@ GameObject:
   - 114: {fileID: 1199045656}
   - 114: {fileID: 1199045655}
   - 114: {fileID: 1199045654}
-  - 82: {fileID: 1199045653}
-  - 164: {fileID: 1199045652}
-  - 169: {fileID: 1199045651}
   m_Layer: 8
   m_Name: OVRCameraController
   m_TagString: Untagged
@@ -31163,110 +30944,6 @@ Transform:
   - {fileID: 1148367697}
   - {fileID: 1913007482}
   m_Father: {fileID: 1406936262}
---- !u!169 &1199045651
-AudioLowPassFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16900004, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 1199045649}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_CutoffFrequency: 22000
-  m_LowpassResonanceQ: 1
-  lowpassLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
---- !u!164 &1199045652
-AudioReverbFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16400004, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 1199045649}
-  m_Enabled: 1
-  m_DryLevel: 0
-  m_Room: -1000
-  m_RoomHF: -4000
-  m_RoomRolloff: 0
-  m_DecayTime: 1.49000001
-  m_DecayHFRatio: .100000001
-  m_ReflectionsLevel: -449
-  m_ReverbLevel: 1700
-  m_ReverbDelay: .0109999999
-  m_Diffusion: 100
-  m_Density: 100
-  m_HFReference: 5000
-  m_RoomLF: 0
-  m_LFReference: 250
-  m_ReflectionsDelay: 0
-  m_ReverbPreset: 27
---- !u!82 &1199045653
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8200004, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 1199045649}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: 4c27d084ed5bd0d419d6e092b1f8eba5, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: .5
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!114 &1199045654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32345,7 +32022,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 1.60000002, z: 0}
-  skeletonManager: {fileID: 0}
   headPositionInput: 0
   headRotationInput: 0
   mobileRazerBase: 0
@@ -33920,9 +33596,6 @@ GameObject:
   - 114: {fileID: 1298004785}
   - 114: {fileID: 1298004784}
   - 114: {fileID: 1298004783}
-  - 82: {fileID: 1298004782}
-  - 164: {fileID: 1298004781}
-  - 169: {fileID: 1298004780}
   m_Layer: 8
   m_Name: OVRCameraController
   m_TagString: Untagged
@@ -33943,110 +33616,6 @@ Transform:
   - {fileID: 1423461193}
   - {fileID: 1490965381}
   m_Father: {fileID: 2007991503}
---- !u!169 &1298004780
-AudioLowPassFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16900006, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 1298004778}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_CutoffFrequency: 22000
-  m_LowpassResonanceQ: 1
-  lowpassLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
---- !u!164 &1298004781
-AudioReverbFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 16400006, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 1298004778}
-  m_Enabled: 1
-  m_DryLevel: 0
-  m_Room: -1000
-  m_RoomHF: -4000
-  m_RoomRolloff: 0
-  m_DecayTime: 1.49000001
-  m_DecayHFRatio: .100000001
-  m_ReflectionsLevel: -449
-  m_ReverbLevel: 1700
-  m_ReverbDelay: .0109999999
-  m_Diffusion: 100
-  m_Density: 100
-  m_HFReference: 5000
-  m_RoomLF: 0
-  m_LFReference: 250
-  m_ReflectionsDelay: 0
-  m_ReverbPreset: 27
---- !u!82 &1298004782
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8200006, guid: f2178fac68091a644a7ab772216e821a,
-    type: 2}
-  m_PrefabInternal: {fileID: 1505091813}
-  m_GameObject: {fileID: 1298004778}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_audioClip: {fileID: 8300000, guid: 4c27d084ed5bd0d419d6e092b1f8eba5, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: .5
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!114 &1298004783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37405,7 +36974,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 1.60000002, z: 0}
-  skeletonManager: {fileID: 0}
   headPositionInput: 2
   headRotationInput: 0
   mobileRazerBase: 0
@@ -39765,7 +39333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575cb7dc5eb8ea94e8f0ab6fde7e92f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPivotType: 2
+  characterPivotType: 1
   kinectPlayerId: 0
   moveControllerId: 0
   characterPivot: {fileID: 0}
@@ -41213,7 +40781,23 @@ Prefab:
       propertyPath: display
       value: 
       objectReference: {fileID: 182071551}
-    m_RemovedComponents: []
+    - target: {fileID: 11400068, guid: f2178fac68091a644a7ab772216e821a, type: 2}
+      propertyPath: characterPivotType
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: f2178fac68091a644a7ab772216e821a, type: 2}
   m_RootGameObject: {fileID: 1456062743}
   m_IsPrefabParent: 0
@@ -51129,7 +50713,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 1.60000002, z: 0}
-  skeletonManager: {fileID: 0}
   headPositionInput: 2
   headRotationInput: 0
   mobileRazerBase: 0
@@ -53011,7 +52594,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: linkedCamera
@@ -53031,7 +52614,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableRazerHydra
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: isStereo
@@ -53968,11 +53551,11 @@ MonoBehaviour:
   moveWand1: 0
   moveWand2: 0
   moveWand3: 0
-  enableKinect: 0
+  enableKinect: 1
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
-  enableRazerHydra: 1
+  enableRazerHydra: 0
   moveControllers: []
   riftMagnetometerMode: 0
   oculusID: 0
@@ -56688,7 +56271,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 1.60000002, z: 0}
-  skeletonManager: {fileID: 0}
   headPositionInput: 1
   headRotationInput: 1
   mobileRazerBase: 0

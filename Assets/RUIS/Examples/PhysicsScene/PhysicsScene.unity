@@ -2184,11 +2184,11 @@ MonoBehaviour:
   useDoubleTheSpace: 1
   isStereo: 0
   eyeSeparation: .0599999987
-  isHMD: 1
+  isHMD: 0
   linkedCamera: {fileID: 115874250}
   stereoType: 1
   isObliqueFrustum: 0
-  isKeystoneCorrected: 1
+  isKeystoneCorrected: 0
   displayCenterPosition: {x: 0, y: 0, z: 0}
   displayNormalInternal: {x: 0, y: 0, z: -1}
   displayUpInternal: {x: 0, y: 1, z: 0}
@@ -6545,7 +6545,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: isKeystoneCorrected
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: isHMD
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: isObliqueFrustum
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
@@ -6820,7 +6828,7 @@ MonoBehaviour:
   updateJointPositions: 0
   updateJointRotations: 1
   useHierarchicalModel: 1
-  scaleHierarchicalModelBones: 1
+  scaleHierarchicalModelBones: 0
   maxScaleFactor: .00999999978
   minimumConfidenceToUpdate: .5
   rotationDamping: 15
@@ -12350,6 +12358,12 @@ MonoBehaviour:
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
   enableMoveCalibrationDuringPlay: 1
+  delayedWandActivation: 0
+  delayTime: 5
+  moveWand0: 0
+  moveWand1: 0
+  moveWand2: 0
+  moveWand3: 0
   enableKinect: 1
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
@@ -14370,6 +14384,10 @@ Prefab:
       propertyPath: m_Name
       value: Player 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: e632df80c1ad60541a5cf84b8ae87ff7, type: 2}
+      propertyPath: scaleHierarchicalModelBones
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e632df80c1ad60541a5cf84b8ae87ff7, type: 2}
   m_RootGameObject: {fileID: 812367793}
@@ -16129,10 +16147,10 @@ MonoBehaviour:
   - {fileID: 261858358}
   stereoCamera: {fileID: 0}
   monoCamera: {fileID: 0}
-  totalResolutionX: 1920
-  totalResolutionY: 1080
-  totalRawResolutionX: 1920
-  totalRawResolutionY: 1080
+  totalResolutionX: 1280
+  totalResolutionY: 720
+  totalRawResolutionX: 1280
+  totalRawResolutionY: 720
   fullScreen: 1
 --- !u!1 &2060023669
 GameObject:

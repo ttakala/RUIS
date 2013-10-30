@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-[CustomEditor(typeof(RUISCharacterLocomotionControl))]
+[CustomEditor(typeof(RUISCharacterLocomotion))]
 [CanEditMultipleObjects]
 public class RUISCharacterLocomotionEditor : Editor {
 	
