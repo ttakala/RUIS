@@ -684,8 +684,8 @@ public class RUISHeadTracker : MonoBehaviour
 					{
 						filterPosition = filterPositionPSMove;
 						positionNoiseCovariance = positionNoiseCovariancePSMove;
-						measuredHeadPosition = posePSMove.position 
-										- posePSMove.qOrientation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove)) 
+						measuredHeadPosition = posePSMove.localPosition 
+										- posePSMove.localRotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove)) 
 																										* positionOffsetPSMove;
 					}
 				}
@@ -779,7 +779,7 @@ public class RUISHeadTracker : MonoBehaviour
 						{
 							filterRotation = filterRotationPSMove;
 							rotationNoiseCovariance = rotationNoiseCovariancePSMove;
-							measuredHeadRotation = posePSMove.qOrientation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove));
+							measuredHeadRotation = posePSMove.localRotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove));
 						}
 					}
 					break;
@@ -887,7 +887,7 @@ public class RUISHeadTracker : MonoBehaviour
 					posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
 					if(posePSMove)
 					{
-						rotationOffsetPSMove = posePSMove.qOrientation.eulerAngles;
+						rotationOffsetPSMove = posePSMove.localRotation.eulerAngles;
 						return rotationOffsetPSMove;
 					}
 				}
@@ -1014,7 +1014,7 @@ public class RUISHeadTracker : MonoBehaviour
 					if(compassPSMove)
 					{
 						driftCorrectionRate = driftCorrectionRatePSMove;
-						updateDifferenceKalman( (compassPSMove.qOrientation 
+						updateDifferenceKalman( (compassPSMove.localRotation 
 													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetPSMove))).eulerAngles, 
 												driftingEuler, deltaT 				 );
 					}

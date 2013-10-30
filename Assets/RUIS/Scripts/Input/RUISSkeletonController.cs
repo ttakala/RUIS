@@ -248,9 +248,9 @@ public class RUISSkeletonController : MonoBehaviour
 				if(psmove)
 				{
 				
-					Quaternion moveYaw = Quaternion.Euler(0, psmove.qOrientation.eulerAngles.y, 0);
+					Quaternion moveYaw = Quaternion.Euler(0, psmove.localRotation.eulerAngles.y, 0);
 				
-					skeletonPosition = psmove.position - moveYaw*characterController.psmoveOffset;
+					skeletonPosition = psmove.localPosition - moveYaw*characterController.psmoveOffset;
 					skeletonPosition.y = 0;
 					
 					if (updateRootPosition)

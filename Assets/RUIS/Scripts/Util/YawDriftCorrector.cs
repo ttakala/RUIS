@@ -196,7 +196,7 @@ public class YawDriftCorrector : MonoBehaviour {
 					compassMove = inputManager.GetMoveWand(PSMoveID);
 					if(compassMove)
 					{
-						updateDifferenceKalman( compassMove.qOrientation.eulerAngles, 
+						updateDifferenceKalman( compassMove.localRotation.eulerAngles, 
 												driftingEuler, deltaT 				 );
 					}
 				}

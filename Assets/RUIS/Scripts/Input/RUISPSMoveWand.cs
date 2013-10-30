@@ -65,8 +65,8 @@ public class RUISPSMoveWand : RUISWand {
         
         if(!rigidbody)
 		{
-            transform.localPosition = position;
-            transform.localRotation = qOrientation;
+            transform.localPosition = localPosition;
+            transform.localRotation = localRotation;
         }
 
 
@@ -88,14 +88,14 @@ public class RUISPSMoveWand : RUISWand {
             {
                 // If the wand has a parent, we need to apply its transformation first
                 // *** FIXME: If parent is scaled, then compound objects (Watering Bottle) get weird
-                rigidbody.MovePosition(transform.parent.TransformPoint(position));
-                rigidbody.MoveRotation(transform.parent.rotation * qOrientation);
+                rigidbody.MovePosition(transform.parent.TransformPoint(localPosition));
+                rigidbody.MoveRotation(transform.parent.rotation * localRotation);
             }
             else
             {
                 // TUUKKA: This was the original code 
-                rigidbody.MovePosition(position);
-                rigidbody.MoveRotation(qOrientation);
+                rigidbody.MovePosition(localPosition);
+                rigidbody.MoveRotation(localRotation);
             }
         }
     }
@@ -207,7 +207,7 @@ public class RUISPSMoveWand : RUISWand {
         return true;
     }
 
-    public Vector3 position
+    public Vector3 localPosition
     {
         get
         {
@@ -247,14 +247,7 @@ public class RUISPSMoveWand : RUISWand {
         }
     }
 
-    public Vector3 orientation
-    {
-        get
-        {
-            return qOrientation.eulerAngles;
-        }
-    }
-    public Quaternion qOrientation
+    public Quaternion localRotation
     {
         get
         {

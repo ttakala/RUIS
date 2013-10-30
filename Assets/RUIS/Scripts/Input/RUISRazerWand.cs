@@ -81,8 +81,8 @@ public class RUISRazerWand : RUISWand {
 				movingBaseRotation = Quaternion.identity;
 			}
 			
-            transform.localPosition = movingBaseRotation * position + movingBasePosition;
-            transform.localRotation = movingBaseRotation * qOrientation;
+            transform.localPosition = movingBaseRotation * localPosition + movingBasePosition;
+            transform.localRotation = movingBaseRotation * localRotation;
         }
 
 
@@ -104,19 +104,19 @@ public class RUISRazerWand : RUISWand {
             {
                 // If the wand has a parent, we need to apply its transformation first
                 // *** FIXME: If parent is scaled, then compound objects (Watering Bottle) get weird
-                rigidbody.MovePosition(transform.parent.TransformPoint(movingBaseRotation * position + movingBasePosition));
-                rigidbody.MoveRotation(transform.parent.rotation * movingBaseRotation * qOrientation);
+                rigidbody.MovePosition(transform.parent.TransformPoint(movingBaseRotation * localPosition + movingBasePosition));
+                rigidbody.MoveRotation(transform.parent.rotation * movingBaseRotation * localRotation);
             }
             else
             {
                 // TUUKKA: This was the original code 
-                rigidbody.MovePosition(movingBaseRotation * position + movingBasePosition);
-                rigidbody.MoveRotation(movingBaseRotation * qOrientation);
+                rigidbody.MovePosition(movingBaseRotation * localPosition + movingBasePosition);
+                rigidbody.MoveRotation(movingBaseRotation * localRotation);
             }
         }
 		
-		angularVelocity = (Quaternion.Inverse(previousRotation)*qOrientation).eulerAngles*Time.fixedDeltaTime;
-		previousRotation = qOrientation;
+		angularVelocity = (Quaternion.Inverse(previousRotation)*localRotation).eulerAngles*Time.fixedDeltaTime;
+		previousRotation = localRotation;
     }
 
     public override bool SelectionButtonWasPressed()
@@ -205,7 +205,7 @@ public class RUISRazerWand : RUISWand {
         return true;
     }
 
-    public Vector3 position
+    public Vector3 localPosition
     {
         get
         {
@@ -249,16 +249,7 @@ public class RUISRazerWand : RUISWand {
 //        }
 //    }
 
-    public Vector3 orientation
-    {
-        get
-        {
-			if(razer == null || !razer.Enabled)
-				return Vector3.zero;
-            return razer.Rotation.eulerAngles;
-        }
-    }
-    public Quaternion qOrientation
+    public Quaternion localRotation
     {
         get
         {

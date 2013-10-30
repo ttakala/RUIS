@@ -228,7 +228,7 @@ public class RUISCharacterController : MonoBehaviour
 			{
 				RUISPSMoveWand psmove = inputManager.GetMoveWand(moveControllerId);
 				if(psmove != null)
-	                characterForward = psmove.qOrientation * Vector3.forward;
+	                characterForward = psmove.localRotation * Vector3.forward;
 			}
                 break;
         }

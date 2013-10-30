@@ -172,6 +172,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -237,7 +238,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -307,7 +308,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -449,7 +450,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -535,7 +536,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -647,6 +648,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -735,6 +737,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -839,6 +842,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -944,7 +948,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1046,7 +1050,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1131,6 +1135,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -1219,6 +1224,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -1340,7 +1346,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1465,6 +1471,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -1541,7 +1548,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1642,6 +1649,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -1730,6 +1738,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -1835,7 +1844,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1920,6 +1929,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -2041,7 +2051,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2127,7 +2137,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2378,6 +2388,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -2607,6 +2618,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -2716,7 +2728,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2885,6 +2897,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -2989,6 +3002,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -3109,6 +3123,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -3280,6 +3295,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -3329,7 +3345,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3477,7 +3493,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3563,7 +3579,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3649,7 +3665,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -3734,6 +3750,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -3836,6 +3853,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 725d292227850ab4f94799e193a59452, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   playerId: 0
   requiredUpwardVelocity: .800000012
   timeBetweenJumps: 1
@@ -3852,6 +3870,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c5dba8c14fa8e6448b9a1a16d33fe05, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   bufferLength: .0500000007
 --- !u!114 &145589109
 MonoBehaviour:
@@ -3864,6 +3883,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d231127ae337c7c40a492768550cf970, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   skeletonManager: {fileID: 0}
   playerId: 0
   jointToFollow: 0
@@ -4016,6 +4036,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -4120,6 +4141,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -4327,6 +4349,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -4424,7 +4447,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -4565,6 +4588,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -4580,7 +4604,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 180230448}
   - 114: {fileID: 180230447}
-  - 114: {fileID: 180230449}
   m_Layer: 0
   m_Name: RUISMenu
   m_TagString: Untagged
@@ -4599,15 +4622,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58cefced8c60edf4eb4e6012786be8e4, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   fontSize: 14
   stereoOffset: -110
-  menuSkin: {fileID: 0}
+  menuSkin: {fileID: 11400000, guid: a102d97eb96354e449b74caccb8cad8b, type: 2}
   enablePSMove: 0
   psMoveIP: 
   psMovePort: 0
   jumpGesture: {fileID: 0}
   oculusRiftMenu: 1
-  hideMouseOnPlay: 1
+  hideMouseOnPlay: 0
 --- !u!4 &180230448
 Transform:
   m_ObjectHideFlags: 0
@@ -4619,21 +4643,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!114 &180230449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400002, guid: f88ad6ed838405246839ef2f7181f999,
-    type: 2}
-  m_PrefabInternal: {fileID: 239310209}
-  m_GameObject: {fileID: 180230446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c339b1cb7928e394780a844ae49e70d6, type: 3}
-  m_Name: 
-  autoCalibrateKey: 286
-  manualCalibrateKey: 287
-  showCompassKey: 289
-  textFont: {fileID: 12800000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
 --- !u!1 &181162672
 GameObject:
   m_ObjectHideFlags: 0
@@ -4673,6 +4682,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   rootSpeedScaling: {x: 1, y: 1, z: 1}
 --- !u!114 &181162675
 MonoBehaviour:
@@ -4685,6 +4695,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ee4b0a5b25363343844f6492ba44786, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   m_contextManager: {fileID: 0}
   m_MaxNumberOfPlayers: 1
   m_numRetries: 0
@@ -4730,6 +4741,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4612a60126cf507449c3adb9239c9cf5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
   resolutionX: 1280
@@ -4897,6 +4909,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -5083,6 +5096,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -5177,7 +5191,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -5246,6 +5260,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -5351,7 +5366,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -5437,7 +5452,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -5538,6 +5553,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -5841,6 +5857,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -6013,7 +6030,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6241,6 +6258,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 229e37cd924caef4db8dceaf2fb41b76, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   m_categoriesToShow: 010101
   m_minLevelToShow: 0
   m_sourcesToShow: 0101010101010101
@@ -6347,7 +6365,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6417,7 +6435,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6503,7 +6521,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6605,7 +6623,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6673,6 +6691,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -6691,6 +6710,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!124 &255883618
@@ -6828,6 +6848,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -6893,7 +6914,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -6979,7 +7000,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -7048,6 +7069,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -7208,6 +7230,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -7312,6 +7335,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -7515,6 +7539,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -7620,7 +7645,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -7689,6 +7714,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -7849,6 +7875,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -7882,6 +7909,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9da3d4409553fa445b53856335d11976, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &282217130
 Transform:
   m_ObjectHideFlags: 0
@@ -7935,6 +7963,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -8124,6 +8153,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -8173,7 +8203,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -8341,6 +8371,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -8390,7 +8421,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -8475,6 +8506,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -8596,7 +8628,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -8724,6 +8756,8 @@ AudioSource:
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -8770,6 +8804,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adb91800ae866d942a22b4c2d2d13ad1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 0}
@@ -8791,8 +8826,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   InitialPredictionTime: .0299999993
   InitialAccelGain: .0500000007
+  ResetTracker: 1
 --- !u!114 &326275334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8804,6 +8841,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   CameraRootPosition: {x: 0, y: 1, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
@@ -8816,9 +8854,6 @@ MonoBehaviour:
   WireMode: 0
   LensCorrection: 1
   Chromatic: 0
-  BackgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
-  NearClipPlane: .0500000007
-  FarClipPlane: 1000
 --- !u!1 &327173985
 GameObject:
   m_ObjectHideFlags: 0
@@ -8972,6 +9007,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -9020,6 +9056,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -9152,7 +9189,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -9254,7 +9291,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -9379,6 +9416,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -9483,6 +9521,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -9531,6 +9570,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -9636,7 +9676,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -9722,7 +9762,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -9803,6 +9843,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f89f8a7d7dac6f14d8e33be7c1501ef4, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   m_queryDescriptions:
   - m_vendorName: 
     m_nodeName: 
@@ -9871,6 +9912,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -9992,7 +10034,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -10101,6 +10143,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -10261,6 +10304,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -10309,6 +10353,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -10470,7 +10515,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -10623,7 +10668,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -10813,7 +10858,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -10898,6 +10943,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -11119,7 +11165,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11205,7 +11251,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11290,6 +11336,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -11434,6 +11481,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -11483,7 +11531,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11569,7 +11617,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11671,7 +11719,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11740,6 +11788,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -11845,7 +11894,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11931,7 +11980,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -12072,6 +12121,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -12126,7 +12176,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -12262,6 +12312,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -12366,6 +12417,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -12431,7 +12483,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -12517,7 +12569,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -12642,6 +12694,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -12691,7 +12744,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -12880,6 +12933,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -12985,7 +13039,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -13126,6 +13180,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -13257,6 +13312,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -13322,7 +13378,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -13447,6 +13503,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -13496,7 +13553,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -13582,7 +13639,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -13684,7 +13741,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -13753,6 +13810,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -13874,7 +13932,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -13944,7 +14002,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -14072,7 +14130,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -14158,7 +14216,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -14227,6 +14285,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -14331,6 +14390,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -14435,6 +14495,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -14540,7 +14601,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -14626,7 +14687,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -14767,6 +14828,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -14871,6 +14933,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -14920,7 +14983,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15005,6 +15068,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -15126,7 +15190,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15254,6 +15318,8 @@ AudioSource:
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -15300,6 +15366,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adb91800ae866d942a22b4c2d2d13ad1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 0}
@@ -15321,8 +15388,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   InitialPredictionTime: .0299999993
   InitialAccelGain: .0500000007
+  ResetTracker: 1
 --- !u!114 &544421300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15334,6 +15403,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   CameraRootPosition: {x: 0, y: 1, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
@@ -15346,9 +15416,6 @@ MonoBehaviour:
   WireMode: 0
   LensCorrection: 1
   Chromatic: 0
-  BackgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
-  NearClipPlane: .0500000007
-  FarClipPlane: 1000
 --- !u!1 &546658391
 GameObject:
   m_ObjectHideFlags: 0
@@ -15392,7 +15459,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15478,7 +15545,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15564,7 +15631,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15650,7 +15717,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15736,7 +15803,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -15837,6 +15904,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -15968,6 +16036,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -16073,7 +16142,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -16231,6 +16300,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -16351,6 +16421,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -16439,6 +16510,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -16544,7 +16616,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -16630,7 +16702,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -16771,6 +16843,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -16819,6 +16892,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -16979,6 +17053,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -17044,7 +17119,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -17169,6 +17244,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -17218,7 +17294,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -17303,6 +17379,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -17489,6 +17566,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -17538,7 +17616,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -17640,7 +17718,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -17725,6 +17803,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -17830,7 +17909,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -17955,6 +18034,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -18020,7 +18100,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -18145,6 +18225,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -18194,7 +18275,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -18296,7 +18377,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -18421,6 +18502,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -18470,7 +18552,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -18572,7 +18654,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -18655,6 +18737,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b084b3639de80d34780b29bf6ce7d6ee, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   animator: {fileID: 0}
   locomotionControl: {fileID: 1456062745}
   characterController: {fileID: 1456062746}
@@ -18670,6 +18753,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 215b5852f5592444792473066d0fac2e, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   mecanimAnimator: {fileID: 0}
   skeletonController: {fileID: 0}
   rootBlendWeight: 0
@@ -18693,6 +18777,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   root: {fileID: 183113851}
   head: {fileID: 572109715}
   neck: {fileID: 189510862}
@@ -18765,6 +18850,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -18886,7 +18972,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -19037,6 +19123,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -19085,6 +19172,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -19205,6 +19293,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -19294,7 +19383,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -19435,6 +19524,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -19483,6 +19573,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -19588,7 +19679,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -19770,6 +19861,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -19874,6 +19966,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -20140,7 +20233,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -20242,7 +20335,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -20328,7 +20421,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -20393,6 +20486,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
@@ -20494,6 +20588,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -20559,7 +20654,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -20684,6 +20779,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -20733,7 +20829,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -20874,6 +20970,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -20938,6 +21035,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -21082,6 +21180,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21131,7 +21230,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -21217,7 +21316,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -21358,6 +21457,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21423,7 +21523,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -21548,6 +21648,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21653,7 +21754,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -21825,6 +21926,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21870,14 +21972,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 983153594a876dc40934c28fe9c6d7f5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   displays:
   - {fileID: 182071551}
   stereoCamera: {fileID: 0}
   monoCamera: {fileID: 0}
-  totalResolutionX: 1280
-  totalResolutionY: 800
-  totalRawResolutionX: 2560
-  totalRawResolutionY: 800
+  totalResolutionX: 1920
+  totalResolutionY: 1080
+  totalRawResolutionX: 1920
+  totalRawResolutionY: 1080
   fullScreen: 1
 --- !u!1 &808024113
 GameObject:
@@ -21937,6 +22040,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -22052,7 +22156,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -22154,7 +22258,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -22224,7 +22328,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -22310,7 +22414,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -22396,7 +22500,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -22481,6 +22585,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -22667,6 +22772,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -22772,7 +22878,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -22842,7 +22948,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -22944,7 +23050,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -23013,6 +23119,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -23173,6 +23280,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -23310,7 +23418,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -23451,6 +23559,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -23589,7 +23698,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -23654,6 +23763,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 3
   whereToCopyColor: {fileID: 0}
@@ -23727,7 +23837,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -23894,6 +24004,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -23942,6 +24053,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -24062,6 +24174,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -24193,6 +24306,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -24364,6 +24478,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -24468,6 +24583,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -24516,6 +24632,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -24676,6 +24793,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -24741,7 +24859,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -24811,7 +24929,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -24952,6 +25070,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25000,6 +25119,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -25160,6 +25280,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25225,7 +25346,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -25311,7 +25432,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -25436,6 +25557,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25540,6 +25662,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25644,6 +25767,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25708,6 +25832,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25813,7 +25938,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -25938,6 +26063,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -26003,7 +26129,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -26073,7 +26199,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -26159,7 +26285,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -26285,7 +26411,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -26371,7 +26497,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -26473,7 +26599,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -26543,7 +26669,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -26645,7 +26771,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -26770,6 +26896,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -26834,6 +26961,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -26939,7 +27067,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -27064,6 +27192,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -27129,7 +27258,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -27262,7 +27391,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -27348,7 +27477,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -27418,7 +27547,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -27519,6 +27648,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -27663,6 +27793,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -27711,6 +27842,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -27816,7 +27948,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -28027,7 +28159,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -28097,7 +28229,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -28183,7 +28315,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -28268,6 +28400,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -28428,6 +28561,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -28540,7 +28674,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -28610,7 +28744,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -28712,7 +28846,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -28837,6 +28971,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -28886,7 +29021,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -29027,6 +29162,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -29076,7 +29212,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -29160,6 +29296,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -29178,6 +29315,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!124 &1148367700
@@ -29302,6 +29440,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -29445,6 +29584,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -29550,7 +29690,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -29636,7 +29776,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -29706,7 +29846,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -29847,6 +29987,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -29896,7 +30037,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -30102,7 +30243,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -30227,6 +30368,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -30276,7 +30418,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -30417,6 +30559,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -30462,6 +30605,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 891d7f34be3a15347a2c23df6d69ec62, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   skeletonController: {fileID: 696799209}
   maxHeightChange: 5
   maxPositionChange: 10
@@ -30523,7 +30667,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -30712,6 +30856,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -30816,6 +30961,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -30920,6 +31066,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -31083,6 +31230,8 @@ AudioSource:
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -31129,6 +31278,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adb91800ae866d942a22b4c2d2d13ad1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 0}
@@ -31150,8 +31300,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   InitialPredictionTime: .0299999993
   InitialAccelGain: .0500000007
+  ResetTracker: 1
 --- !u!114 &1199045656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31163,6 +31315,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   CameraRootPosition: {x: 0, y: 1, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
@@ -31175,9 +31328,6 @@ MonoBehaviour:
   WireMode: 0
   LensCorrection: 1
   Chromatic: 0
-  BackgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
-  NearClipPlane: .0500000007
-  FarClipPlane: 1000
 --- !u!1 &1214564143
 GameObject:
   m_ObjectHideFlags: 0
@@ -31216,6 +31366,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 2
   whereToCopyColor: {fileID: 0}
@@ -31278,6 +31429,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b44e1a29ec3e30941be432fcdcea38f7, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionRayType: 1
   selectionRayLength: 200
   selectionRayStartDistance: .200000003
@@ -31301,6 +31453,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
@@ -31414,6 +31567,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -31518,6 +31672,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -31583,7 +31738,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -31708,6 +31863,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -31880,6 +32036,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -31984,6 +32141,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -32130,6 +32288,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -32184,6 +32343,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 1.60000002, z: 0}
   skeletonManager: {fileID: 0}
   headPositionInput: 0
@@ -32313,7 +32473,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -32440,6 +32600,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -32584,6 +32745,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -32649,7 +32811,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -32735,7 +32897,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -32860,6 +33022,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -32909,7 +33072,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -33050,6 +33213,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -33114,6 +33278,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -33258,6 +33423,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -33353,7 +33519,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -33470,7 +33636,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -33540,7 +33706,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -33670,7 +33836,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -33844,6 +34010,8 @@ AudioSource:
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -33890,6 +34058,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adb91800ae866d942a22b4c2d2d13ad1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 0}
@@ -33911,8 +34080,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   InitialPredictionTime: .0299999993
   InitialAccelGain: .0500000007
+  ResetTracker: 1
 --- !u!114 &1298004785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33924,6 +34095,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   CameraRootPosition: {x: 0, y: 1, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
@@ -33936,9 +34108,6 @@ MonoBehaviour:
   WireMode: 0
   LensCorrection: 1
   Chromatic: 0
-  BackgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
-  NearClipPlane: .0500000007
-  FarClipPlane: 1000
 --- !u!1 &1300179326
 GameObject:
   m_ObjectHideFlags: 0
@@ -34037,6 +34206,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -34141,6 +34311,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -34420,6 +34591,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -34541,7 +34713,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -34713,6 +34885,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -34761,6 +34934,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -34881,6 +35055,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -34986,7 +35161,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -35096,6 +35271,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -35256,6 +35432,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -35305,7 +35482,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -35390,6 +35567,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -35500,7 +35678,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -35597,7 +35775,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -35722,6 +35900,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -35771,7 +35950,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -35912,6 +36091,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -36016,6 +36196,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -36065,7 +36246,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -36198,7 +36379,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -36283,6 +36464,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -36427,6 +36609,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -36575,6 +36758,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -36624,7 +36808,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -36933,6 +37117,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -37077,6 +37262,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -37126,7 +37312,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -37217,6 +37403,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 1.60000002, z: 0}
   skeletonManager: {fileID: 0}
   headPositionInput: 2
@@ -37344,6 +37531,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -37362,6 +37550,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!124 &1408029967
@@ -37460,7 +37649,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -37530,7 +37719,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -37614,6 +37803,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -37632,6 +37822,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!124 &1411269349
@@ -37714,7 +37905,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -37800,7 +37991,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -37884,6 +38075,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -37902,6 +38094,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!124 &1420390550
@@ -38000,7 +38193,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -38068,6 +38261,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -38086,6 +38280,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!124 &1423461196
@@ -38163,6 +38358,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0442d80ea55de654ab4a95b3bc862bdd, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   m_Logger: {fileID: 237372857}
   m_query: {fileID: 359731431}
   m_XMLFileName: 
@@ -38230,7 +38426,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -38355,6 +38551,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -38459,6 +38656,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -38524,7 +38722,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -38594,7 +38792,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -38696,7 +38894,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -38765,6 +38963,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -38914,7 +39113,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -38999,6 +39198,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -39103,6 +39303,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -39224,7 +39425,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -39363,7 +39564,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -39465,7 +39666,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -39537,6 +39738,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 271509f11e7230745aef7a35e8321bf4, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   turnRightKey: 101
   turnLeftKey: 113
   rotationScaler: 60
@@ -39562,6 +39764,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 575cb7dc5eb8ea94e8f0ab6fde7e92f2, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   characterPivotType: 2
   kinectPlayerId: 0
   moveControllerId: 0
@@ -39602,6 +39805,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e6d48bae5094dc4589d36200a4054fe, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   headTrackers:
   - {fileID: 1406936264}
   - {fileID: 1230982588}
@@ -39670,6 +39874,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -39814,6 +40019,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -39863,7 +40069,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -39965,7 +40171,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -40075,7 +40281,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -40161,7 +40367,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -40247,7 +40453,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -40349,7 +40555,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -40477,6 +40683,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -40566,7 +40773,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -40650,6 +40857,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -40668,6 +40876,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!124 &1490965384
@@ -40832,6 +41041,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -40937,7 +41147,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -41067,7 +41277,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -41153,7 +41363,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -41238,6 +41448,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -41393,6 +41604,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -41513,6 +41725,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -41607,7 +41820,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -41727,7 +41940,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -41828,6 +42041,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -41957,7 +42171,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -42098,6 +42312,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -42202,6 +42417,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -42267,7 +42483,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -42352,6 +42568,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -42440,6 +42657,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -42644,6 +42862,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -42748,6 +42967,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -42813,7 +43033,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -42883,7 +43103,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -42985,7 +43205,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -43054,6 +43274,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -43174,6 +43395,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -43268,7 +43490,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -43404,6 +43626,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -43468,6 +43691,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -43572,6 +43796,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -43716,6 +43941,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -43820,6 +44046,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -43885,7 +44112,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -43955,7 +44182,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -44056,6 +44283,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -44267,6 +44495,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -44371,7 +44600,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -44496,6 +44725,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -44545,7 +44775,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -44647,7 +44877,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -44820,6 +45050,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -44980,6 +45211,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -45045,7 +45277,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -45131,7 +45363,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -45217,7 +45449,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -45329,7 +45561,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -45470,6 +45702,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -45514,6 +45747,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a80beaec07f0aa45adfa8d462563de0, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   position: []
   velocity: []
   acceleration: []
@@ -45664,6 +45898,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -45712,6 +45947,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -45872,6 +46108,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -46031,7 +46268,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -46101,7 +46338,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -46226,7 +46463,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -46312,7 +46549,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -46453,6 +46690,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -46501,6 +46739,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -46765,6 +47004,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -46829,6 +47069,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -46923,7 +47164,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -47004,7 +47245,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -47145,6 +47386,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -47249,6 +47491,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -47353,6 +47596,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -47402,7 +47646,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -47487,6 +47731,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -47608,7 +47853,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -47678,7 +47923,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -47780,7 +48025,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -47905,6 +48150,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -48009,6 +48255,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -48058,7 +48305,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -48199,6 +48446,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -48247,6 +48495,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -48395,6 +48644,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -48516,7 +48766,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -48585,6 +48835,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -48689,6 +48940,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -48810,7 +49062,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -48879,6 +49131,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -48983,6 +49236,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -49104,7 +49358,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -49173,6 +49427,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -49278,7 +49533,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -49480,7 +49735,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -49605,6 +49860,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -49729,7 +49985,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -49798,6 +50054,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -49929,6 +50186,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -50034,7 +50292,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -50119,6 +50377,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -50239,6 +50498,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -50383,6 +50643,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -50487,6 +50748,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -50591,6 +50853,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -50687,7 +50950,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -50789,7 +51052,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -50864,6 +51127,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 1.60000002, z: 0}
   skeletonManager: {fileID: 0}
   headPositionInput: 2
@@ -51063,7 +51327,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -51165,7 +51429,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -51234,6 +51498,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -51354,6 +51619,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -51442,6 +51708,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -51546,6 +51813,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -51651,7 +51919,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -51752,6 +52020,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -51857,7 +52126,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -51943,7 +52212,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -52012,6 +52281,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -52172,6 +52442,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -52276,6 +52547,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -52380,6 +52652,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -52484,6 +52757,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -52588,6 +52862,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -52692,6 +52967,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -52872,7 +53148,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -52941,6 +53217,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -53101,6 +53378,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -53149,6 +53427,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -53357,6 +53636,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -53517,6 +53797,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -53566,7 +53847,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -53651,6 +53932,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1af08926c7e0c34192ca37d5e117fa7, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   coordinateXmlFile: calibration.xml
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 3}
   loadFromXML: 1
@@ -53669,6 +53951,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3cc8f20f27ab81542b70f1880fbad4f0, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   xmlSchema: {fileID: 4900000, guid: a07a36ac9f438794596e1ee51310972d, type: 3}
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
@@ -53679,6 +53962,12 @@ MonoBehaviour:
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
   enableMoveCalibrationDuringPlay: 1
+  delayedWandActivation: 0
+  delayTime: 5
+  moveWand0: 0
+  moveWand1: 0
+  moveWand2: 0
+  moveWand3: 0
   enableKinect: 0
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
@@ -53746,6 +54035,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -53851,7 +54141,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -53920,6 +54210,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -54023,6 +54314,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -54041,6 +54333,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!124 &1913007485
@@ -54178,6 +54471,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -54227,7 +54521,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -54328,6 +54622,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -54472,6 +54767,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -54581,7 +54877,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -54709,7 +55005,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -54834,6 +55130,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -54938,6 +55235,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -55042,6 +55340,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -55160,7 +55459,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -55245,6 +55544,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -55334,7 +55634,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -55436,7 +55736,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -55521,6 +55821,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -55615,7 +55916,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -55691,6 +55992,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 1
   whereToCopyColor: {fileID: 0}
@@ -55775,6 +56077,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -55922,7 +56225,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -55991,6 +56294,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -56142,6 +56446,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 526a02a3548a87e439fb873def0646c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2005607022
 GameObject:
   m_ObjectHideFlags: 0
@@ -56200,6 +56505,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -56305,7 +56611,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -56380,6 +56686,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 1.60000002, z: 0}
   skeletonManager: {fileID: 0}
   headPositionInput: 1
@@ -56525,7 +56832,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -56595,7 +56902,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -56681,7 +56988,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -56782,6 +57089,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -56887,7 +57195,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -56973,7 +57281,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -57043,7 +57351,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -57144,6 +57452,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -57273,7 +57582,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -57375,7 +57684,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -57444,6 +57753,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -57564,6 +57874,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -57653,7 +57964,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -57755,7 +58066,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -57864,7 +58175,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -58095,6 +58406,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -58186,7 +58498,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -58271,6 +58583,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -58376,7 +58689,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -58478,7 +58791,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -58548,7 +58861,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -58633,6 +58946,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -58753,6 +59067,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -58897,6 +59212,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -59027,6 +59343,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -59092,7 +59409,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -59217,6 +59534,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -59321,6 +59639,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -59386,6 +59705,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b44e1a29ec3e30941be432fcdcea38f7, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionRayType: 1
   selectionRayLength: 200
   selectionRayStartDistance: .119999997
@@ -59409,6 +59729,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22b3406e0dbd13144abedc3cc4d3b669, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 128
   controller: 1
   wandColor: {r: 1, g: 1, b: 1, a: 1}
@@ -59523,6 +59844,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -59627,6 +59949,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -59676,7 +59999,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -59761,6 +60084,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -59865,6 +60189,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -59970,7 +60295,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -60125,7 +60450,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
