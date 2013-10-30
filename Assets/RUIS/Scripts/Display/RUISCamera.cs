@@ -30,6 +30,11 @@ public class RUISCamera : MonoBehaviour {
     private Rect normalizedScreenRect;
     private float aspectRatio;
 
+    public float horizontalFOV = 60;
+    public float verticalFOV = 40;
+
+    public LayerMask cullingMask = 0xFFFFFF;
+
     public bool isStereo { get { return associatedDisplay.isStereo; } }
 
     private bool oldStereoValue;
@@ -59,6 +64,10 @@ public class RUISCamera : MonoBehaviour {
         centerCamera = camera;
         leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
         rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
+
+        centerCamera.cullingMask = cullingMask;
+        leftCamera.cullingMask = cullingMask;
+        rightCamera.cullingMask = cullingMask;
 
         try
         {
@@ -279,9 +288,9 @@ public class RUISCamera : MonoBehaviour {
 
     public Matrix4x4 CreateDefaultFrustum()
     {
-        float right = -Mathf.Tan(associatedDisplay.horizontalFOV / 2 * Mathf.Deg2Rad) * near;
+        float right = -Mathf.Tan(horizontalFOV / 2 * Mathf.Deg2Rad) * near;
         float left = -right;
-        float top = -Mathf.Tan(associatedDisplay.verticalFOV / 2 * Mathf.Deg2Rad) * near;
+        float top = -Mathf.Tan(verticalFOV / 2 * Mathf.Deg2Rad) * near;
         float bottom = -top;
 
         return CreateFrustum(right, left, top, bottom, near, far);

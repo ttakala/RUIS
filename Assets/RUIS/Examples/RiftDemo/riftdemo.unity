@@ -2960,6 +2960,11 @@ MonoBehaviour:
   keystoningCamera: {fileID: 0}
   enableOculusRift: 1
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 16777215
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
@@ -4931,8 +4936,6 @@ MonoBehaviour:
   displayUpInternal: {x: 0, y: 1, z: 0}
   width: 2
   height: 1.5
-  horizontalFOV: 60
-  verticalFOV: 40
 --- !u!1 &183729077
 GameObject:
   m_ObjectHideFlags: 0
@@ -8237,6 +8240,11 @@ MonoBehaviour:
   keystoningCamera: {fileID: 0}
   enableOculusRift: 1
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 16777215
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
@@ -31600,6 +31608,11 @@ MonoBehaviour:
   keystoningCamera: {fileID: 0}
   enableOculusRift: 1
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 16777215
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
@@ -35558,8 +35571,13 @@ MonoBehaviour:
   leftCamera: {fileID: 1095945506}
   rightCamera: {fileID: 1631535557}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
+  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
@@ -56212,7 +56230,7 @@ Prefab:
       objectReference: {fileID: 182071551}
     - target: {fileID: 11400034, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: enableOculusRift
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400036, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: enableOculusRift
@@ -56241,6 +56259,22 @@ Prefab:
     - target: {fileID: 400102, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000004, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: horizontalFOV
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: verticalFOV
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: cullingMask.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}

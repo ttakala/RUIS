@@ -287,6 +287,11 @@ MonoBehaviour:
   keystoningCamera: {fileID: 0}
   enableOculusRift: 0
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 16777215
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
