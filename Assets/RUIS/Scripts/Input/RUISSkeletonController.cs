@@ -10,8 +10,8 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections.Generic;
 
-[AddComponentMenu("RUIS/Input/RUISPlainSkeletonController")]
-public class RUISPlainSkeletonController : MonoBehaviour
+[AddComponentMenu("RUIS/Input/RUISSkeletonController")]
+public class RUISSkeletonController : MonoBehaviour
 {
     public Transform root;
     public Transform head;
@@ -140,11 +140,11 @@ public class RUISPlainSkeletonController : MonoBehaviour
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(inputManager && !inputManager.enableKinect)
 		{
-//			Debug.Log("Kinect is not enabled. Disabling RUISPlainSkeletonController script from Kinect-controlled GameObject " + gameObject.name + ".");
+//			Debug.Log("Kinect is not enabled. Disabling RUISSkeletonController script from Kinect-controlled GameObject " + gameObject.name + ".");
 //			MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
 //			foreach(MonoBehaviour script in scripts)
 //			{
-//				if(script.GetType().Equals(typeof(RUISPlainSkeletonController)))
+//				if(script.GetType().Equals(typeof(RUISSkeletonController)))
 //					script.enabled = false;
 //			}
 			

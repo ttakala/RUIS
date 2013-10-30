@@ -71,8 +71,8 @@ public class RUISCharacterController : MonoBehaviour
 		colliding = false;
 		grounded = false;
 	
-		RUISPlainSkeletonController skeletonController 
-									= gameObject.GetComponentInChildren<RUISPlainSkeletonController>();
+		RUISSkeletonController skeletonController 
+									= gameObject.GetComponentInChildren<RUISSkeletonController>();
 		bodyParts.Add(skeletonController.leftFoot);
 		bodyParts.Add(skeletonController.rightFoot);
 		

@@ -51,7 +51,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
     }
     
     public Animator mecanimAnimator;
-    public RUISPlainSkeletonController skeletonController;
+    public RUISSkeletonController skeletonController;
 
     public float rootBlendWeight;
     public float torsoBlendWeight;
@@ -121,7 +121,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             Destroy(mecanimGameObject.GetComponent<RUISKinectAndMecanimCombiner>());
             Destroy(mecanimGameObject.GetComponent<RUISCharacterAnimationController>());
 
-            Destroy(mecanimGameObject.GetComponent<RUISPlainSkeletonController>());
+            Destroy(mecanimGameObject.GetComponent<RUISSkeletonController>());
             foreach (Collider collider in mecanimGameObject.GetComponentsInChildren<Collider>())
             {
                 Destroy(collider);
@@ -132,11 +132,11 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             }
 
 
-            Destroy(GetComponent<RUISPlainSkeletonController>());
+            Destroy(GetComponent<RUISSkeletonController>());
             Destroy(GetComponent<Animator>());
             GetComponent<RUISCharacterAnimationController>().animator = mecanimGameObject.GetComponent<Animator>();
 
-            skeletonController = kinectGameObject.GetComponent<RUISPlainSkeletonController>();
+            skeletonController = kinectGameObject.GetComponent<RUISSkeletonController>();
             mecanimAnimator = mecanimGameObject.GetComponent<Animator>();
 
             Transform kinectRootBone = skeletonController.root;

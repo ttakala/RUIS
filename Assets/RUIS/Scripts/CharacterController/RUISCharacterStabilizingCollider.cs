@@ -14,7 +14,7 @@ using System.Collections;
 [RequireComponent(typeof(CapsuleCollider))]
 public class RUISCharacterStabilizingCollider : MonoBehaviour 
 {
-    public RUISPlainSkeletonController skeletonController;
+    public RUISSkeletonController skeletonController;
 
     RUISSkeletonManager skeletonManager;
     int playerId = 0;
