@@ -35,7 +35,16 @@ public class RUISInputManager : MonoBehaviour
     public PSMoveWrapper psMoveWrapper;
     public int amountOfPSMoveControllers = 4;
     public bool enableMoveCalibrationDuringPlay = false;
-
+	
+	public bool delayedWandActivation = false;
+	public float delayTime = 5;
+	bool[] wandDelayed; // Following creates IndexOutOfRangeException: = new bool[4] {false, false, true, false};
+	List<GameObject> disabledWands;
+	public bool moveWand0 = false;
+	public bool moveWand1 = false;
+	public bool moveWand2 = false;
+	public bool moveWand3 = false;
+	
     public bool enableKinect = true;
     public int maxNumberOfKinectPlayers = 2;
     public bool kinectFloorDetection = true;
@@ -58,6 +67,9 @@ public class RUISInputManager : MonoBehaviour
 
     public void Awake()
     {
+		wandDelayed = new bool[4] {moveWand0, moveWand1, moveWand2, moveWand3};
+		disabledWands = new List<GameObject>();
+		
         if (!Application.isEditor || loadFromTextFileInEditor)
         {
             if (!Import(filename))
@@ -88,7 +100,37 @@ public class RUISInputManager : MonoBehaviour
                 psMoveWrapper.Connect(PSMoveIP, PSMovePort);
 
                 psMoveWrapper.enableDefaultInGameCalibrate = enableMoveCalibrationDuringPlay;
-
+				
+				if(delayedWandActivation)
+				{	
+					string names = "";
+					foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
+			        {
+			            if(		moveController != null && moveController.controllerId < 4 
+							&&	moveController.controllerId >= 0 && wandDelayed[moveController.controllerId] )
+						{
+							// Make sure that the found RUISPSMoveWand is not under InputManager->MoveControllers GameObject
+							if(		moveController.gameObject.transform.parent == null
+								||	moveController.gameObject.transform.parent.parent == null
+								||	(	moveController.gameObject.transform.parent.GetComponent<RUISInputManager>() == null
+									 &&	moveController.gameObject.transform.parent.parent.GetComponent<RUISInputManager>() == null))
+							{
+								moveController.gameObject.SetActive(false);
+								disabledWands.Add(moveController.gameObject);
+								if(names.Length > 0)
+									names += ", ";
+								names += moveController.gameObject.name;
+							}
+						}
+			        }
+					if(disabledWands.Count > 0)
+					{
+						Debug.Log(	  "DELAYED CONTROLLER ACTIVATION INITIALIZATION: Following objects are disabled: " 
+									+ names + ". If their input devices are found, they will be re-activated in "
+									+ delayTime + " seconds, as configured in RUISInputManager.");
+						StartCoroutine("DelayedWandActivation");
+					}
+				}
             }
         }
         else
@@ -187,6 +229,15 @@ public class RUISInputManager : MonoBehaviour
             psMoveWrapper.Disconnect(false);
     }
 	
+	// Doesn't seem to matter whether floor normal and point is constantly improved or just once in the beginning
+//	void Update()
+//	{
+//		if(enableKinect && kinectFloorDetection && !enablePSMove)
+//		{
+//			updateKinectFloorData();
+//		}
+//	}
+	
 	public void StartFloorDetection()
 	{
 		if (enableKinect)
@@ -232,6 +283,40 @@ public class RUISInputManager : MonoBehaviour
         }
     }
 	
+    private IEnumerator DelayedWandActivation()
+    {
+        yield return new WaitForSeconds(delayTime);
+        if (enablePSMove && psMoveWrapper.isConnected)
+        {
+			string activated = "";
+			string leftDisabled = "";
+	        foreach (GameObject moveWand in disabledWands)
+	        {
+				RUISPSMoveWand moveWandScript = moveWand.GetComponent<RUISPSMoveWand>();
+				if(psMoveWrapper.moveConnected[moveWandScript.controllerId])
+				{
+					moveWand.SetActive(true);
+					if(activated.Length > 0)
+						activated += ", ";
+					activated += moveWand.name;
+				}
+				else
+				{
+					if(leftDisabled.Length > 0)
+						leftDisabled += ", ";
+					leftDisabled += moveWand.name;
+				}
+	        }
+			string report = "DELAYED CONTROLLER ACTIVATION REPORT: ";
+			if(activated.Length > 0)
+				report += "Following GameObjects were re-activated: " + activated + ". ";
+			if(leftDisabled.Length > 0)
+				report += "Following GameObjects will stay inactive because the controllers associated to them "
+						  + "are not connected: " + leftDisabled + ".";
+			Debug.Log(report);
+		}
+    }
+	
     private IEnumerator attemptStartingSceneAnalyzer()
     {
         if(kinectFloorDetection)
@@ -251,9 +336,9 @@ public class RUISInputManager : MonoBehaviour
 	
     private IEnumerator attemptUpdatingFloorNormal()
     {
+        yield return new WaitForSeconds(5.0f);
         if(kinectFloorDetection)
         {
-        	yield return new WaitForSeconds(5.0f);
 			coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
             if (!coordinateSystem)
             {
@@ -261,38 +346,46 @@ public class RUISInputManager : MonoBehaviour
             }
 			else if(sceneAnalyzer == null)
 				Debug.LogError("Failed to access OpenNI sceneAnalyzer!");
-			else
+			else 
 			{
 				Debug.Log ("Updating Kinect floor normal");
-				coordinateSystem.ResetKinectFloorNormal();
-				coordinateSystem.ResetKinectDistanceFromFloor();
-		
-		        OpenNI.Plane3D floor = sceneAnalyzer.Floor;
-		        Vector3 newFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized;
-		        Vector3 newFloorPosition = coordinateSystem.ConvertKinectPosition(floor.Point);
-		        
-		        //Project the position of the kinect camera onto the floor
-		        //http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
-		        //http://en.wikipedia.org/wiki/Plane_(geometry)
-		        float d = newFloorNormal.x * newFloorPosition.x + newFloorNormal.y * newFloorPosition.y + newFloorNormal.z * newFloorPosition.z;
-		        Vector3 closestFloorPointToKinect = new Vector3(newFloorNormal.x, newFloorNormal.y, newFloorNormal.z);
-		        closestFloorPointToKinect = (closestFloorPointToKinect * d) / closestFloorPointToKinect.sqrMagnitude;
-		
-		        //transform the point from Kinect's coordinate system rotation to Unity's rotation
-		        closestFloorPointToKinect = Quaternion.FromToRotation(newFloorNormal, Vector3.up)  * closestFloorPointToKinect;
-		
-		        //floorPlane.transform.position = closestFloorPointToKinect;
-		
-		
-		        coordinateSystem.SetKinectFloorNormal(newFloorNormal);
-		        //floorNormal = newFloorNormal.normalized;
-		        coordinateSystem.SetKinectDistanceFromFloor(closestFloorPointToKinect.magnitude);
-				
-				//if(!usingExistingSceneAnalyzer)
-				//	sceneAnalyzer.StopGenerating();
+				updateKinectFloorData();
 			}
-        }
+		}
     }
+	
+	private void updateKinectFloorData()
+	{
+        if(coordinateSystem)
+        {
+			coordinateSystem.ResetKinectFloorNormal();
+			coordinateSystem.ResetKinectDistanceFromFloor();
+	
+	        OpenNI.Plane3D floor = sceneAnalyzer.Floor;
+	        Vector3 newFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized;
+	        Vector3 newFloorPosition = coordinateSystem.ConvertKinectPosition(floor.Point);
+	        
+	        //Project the position of the kinect camera onto the floor
+	        //http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
+	        //http://en.wikipedia.org/wiki/Plane_(geometry)
+	        float d = newFloorNormal.x * newFloorPosition.x + newFloorNormal.y * newFloorPosition.y + newFloorNormal.z * newFloorPosition.z;
+	        Vector3 closestFloorPointToKinect = new Vector3(newFloorNormal.x, newFloorNormal.y, newFloorNormal.z);
+	        closestFloorPointToKinect = (closestFloorPointToKinect * d) / closestFloorPointToKinect.sqrMagnitude;
+	
+	        //transform the point from Kinect's coordinate system rotation to Unity's rotation
+	        closestFloorPointToKinect = Quaternion.FromToRotation(newFloorNormal, Vector3.up)  * closestFloorPointToKinect;
+	
+	        //floorPlane.transform.position = closestFloorPointToKinect;
+	
+	
+	        coordinateSystem.SetKinectFloorNormal(newFloorNormal);
+	        //floorNormal = newFloorNormal.normalized;
+	        coordinateSystem.SetKinectDistanceFromFloor(closestFloorPointToKinect.magnitude);
+			
+			//if(!usingExistingSceneAnalyzer)
+			//	sceneAnalyzer.StopGenerating();
+        }
+	}
 	
     private void DisableUnneededMoveWands()
     {
