@@ -199,7 +199,7 @@ public class RUISDisplayManager : MonoBehaviour {
     {
         foreach (RUISDisplay display in displays)
         {
-            if (display.linkedCamera.GetComponent<RUISRiftCamera>() != null)
+            if (display.linkedCamera.enableOculusRift)
             {
                 return display;
             }

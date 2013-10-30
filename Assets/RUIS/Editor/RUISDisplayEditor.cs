@@ -60,7 +60,7 @@ public class RUISDisplayEditor : Editor {
         isHMD = serializedObject.FindProperty("isHMD");
         isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
         isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
-        camera = serializedObject.FindProperty("linkedCamera");
+        camera = serializedObject.FindProperty("_linkedCamera");
         eyeSeparation = serializedObject.FindProperty("eyeSeparation");
         stereoType = serializedObject.FindProperty("stereoType");
         useDoubleTheSpace = serializedObject.FindProperty("useDoubleTheSpace");

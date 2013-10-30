@@ -61,7 +61,17 @@ public class RUISDisplay : MonoBehaviour {
     public bool isStereo;
     public float eyeSeparation = 0.06f;
     public bool isHMD; //head-mounted display
-    public RUISCamera linkedCamera;
+    public RUISCamera linkedCamera
+    {
+        get { return _linkedCamera; }
+        set
+        {
+            _linkedCamera = value;
+            _linkedCamera.associatedDisplay = this;
+        }
+    }
+    public RUISCamera _linkedCamera;
+    
     public StereoType stereoType;
     public bool isObliqueFrustum = false;
     public bool isKeystoneCorrected = false;
@@ -136,17 +146,20 @@ public class RUISDisplay : MonoBehaviour {
 
     public void Awake()
     {
+        aspectRatio = resolutionX / resolutionY;
+    }
+
+    public void Start()
+    {
         if (!linkedCamera)
         {
-            Debug.LogError("No camera attached to display: " + name);
+            Debug.LogError("No camera attached to display: " + name, this);
         }
         else
         {
             linkedCamera.isKeystoneCorrected = isKeystoneCorrected;
             linkedCamera.associatedDisplay = this;
         }
-
-        aspectRatio = resolutionX / resolutionY;
     }
 
     public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)

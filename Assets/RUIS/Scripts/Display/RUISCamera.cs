@@ -22,6 +22,8 @@ public class RUISCamera : MonoBehaviour {
     public Camera rightCamera;
 	public Camera keystoningCamera;
 
+    public bool enableOculusRift = false;
+
     [HideInInspector]
     public RUISDisplay associatedDisplay;
 
@@ -54,14 +56,40 @@ public class RUISCamera : MonoBehaviour {
     {
         keystoningConfiguration = GetComponent<RUISKeystoningConfiguration>();
 
-
         centerCamera = camera;
+        leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
+        rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
+
+        try
+        {
+            if (!enableOculusRift)
+            {
+                GetComponent<OVRCameraController>().enabled = false;
+                GetComponent<OVRDevice>().enabled = false;
+                leftCamera.GetComponent<OVRCamera>().enabled = false;
+                leftCamera.GetComponent<OVRLensCorrection>().enabled = false;
+                rightCamera.GetComponent<OVRCamera>().enabled = false;
+                rightCamera.GetComponent<OVRLensCorrection>().enabled = false;
+            }
+            else
+            {
+                foreach (RUISKeystoningBorderDrawer drawer in GetComponentsInChildren<RUISKeystoningBorderDrawer>())
+                {
+                    drawer.enabled = false;
+                }
+            }
+        }
+        catch (System.NullReferenceException e)
+        {
+            Debug.LogWarning(e.ToString(), this);
+            Debug.LogWarning("Seems like the RUISCamera prefab you were using was outdated, please update... " + name, this);
+        }
     }
 
 	public void Start () {
         if (!associatedDisplay)
         {
-            Debug.LogError("Camera not associated to any display, disabling... " + name);
+            Debug.LogError("Camera not associated to any display, disabling... " + name, this);
             gameObject.SetActive(false);
             return;
         }
@@ -72,32 +100,53 @@ public class RUISCamera : MonoBehaviour {
 
         if (!leftCamera || !rightCamera)
         {
-            Debug.LogError("Cameras not set properly in RUISCamera: " + name);
+            Debug.LogError("Cameras not set properly in RUISCamera: " + name, this);
         }
 
         SetupCameraTransforms();
 		
-		keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;
+		//keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;
 		//keystoningCamera.transform.position = KeystoningHeadTrackerPosition;
-		keystoningCamera.gameObject.SetActive(false);
+		//keystoningCamera.gameObject.SetActive(false);
 		
 		if(associatedDisplay)
 		{
-			if(associatedDisplay.isObliqueFrustum && !headTracker)
-				Debug.LogError("RUISTracker is none, you need to set it from the inspector!");
-			if(associatedDisplay.isObliqueFrustum && headTracker)
-			{
-		        Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
-				Vector3 camToDisplay = associatedDisplay.displayCenterPosition - eyePositions[0];
-        		float distanceFromPlane = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
-				print(camToDisplay + " " + eyePositions[0] + " " + distanceFromPlane);
-	            if(distanceFromPlane == 0)
+            if (enableOculusRift)
+            {
+                if (associatedDisplay.isStereo)
+                {
+                    Debug.LogError("Forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
+                    associatedDisplay.isStereo = true;
+                }
+                associatedDisplay.isHMD = true;
+                associatedDisplay.isObliqueFrustum = false;
+                associatedDisplay.isKeystoneCorrected = false;
+            }
+            else
+            {
+                associatedDisplay.isHMD = false;
+            }
+            
+            if(associatedDisplay.isObliqueFrustum)
+            {
+                if (headTracker)
+                {
+                    Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
+				    Vector3 camToDisplay = associatedDisplay.displayCenterPosition - eyePositions[0];
+        		    float distanceFromPlane = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
+				    print(camToDisplay + " " + eyePositions[0] + " " + distanceFromPlane);
+	                if(distanceFromPlane == 0)
 					Debug.LogError(  "In " + headTracker.gameObject.name + " GameObject's "
-								   + "RUISTracker script, you have set defaultPosition to " 
-								   + "lie on the display plane of " 
-								   + associatedDisplay.gameObject.name + ". The defaultPosition "
-								   + "needs to be apart from the display!");
-			}
+								       + "RUISTracker script, you have set defaultPosition to " 
+								       + "lie on the display plane of " 
+								       + associatedDisplay.gameObject.name + ". The defaultPosition "
+								       + "needs to be apart from the display!", this);
+                }
+                else
+                {
+                    Debug.LogError("RUISTracker is none, you need to set it from the inspector!", this);
+                }
+            }
 		}
 	}
 	
