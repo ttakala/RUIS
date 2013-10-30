@@ -68,7 +68,7 @@ public class NISkeletonController : MonoBehaviour
     /// @param state on true sets to active, on false sets to inactive
     public void SetSkeletonActive(bool state)
     {
-        gameObject.SetActiveRecursively(state);
+        gameObject.SetActive(state);// SetActiveRecursively(state);
     }
 
     /// mono-behavior Initialization

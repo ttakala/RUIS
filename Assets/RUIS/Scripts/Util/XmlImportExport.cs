@@ -11,7 +11,6 @@ public class XmlImportExport {
             return false;
         }
 
-        XmlNode inputManagerNode = xmlDoc.GetElementsByTagName("ruisInputManager", "ns2").Item(0);
         XmlNode psMoveNode = xmlDoc.GetElementsByTagName("PSMoveSettings").Item(0);
         inputManager.enablePSMove = bool.Parse(psMoveNode.SelectSingleNode("enabled").Attributes["value"].Value);
         inputManager.PSMoveIP = psMoveNode.SelectSingleNode("ip").Attributes["value"].Value;

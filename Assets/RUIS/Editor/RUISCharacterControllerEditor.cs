@@ -53,8 +53,7 @@ public class RUISCharacterControllerEditor : Editor
         switch (characterPivotType.enumValueIndex)
         {
             case (int)RUISCharacterController.CharacterPivotType.KinectHead:
-            case (int)RUISCharacterController.CharacterPivotType.KinectHip:
-            case (int)RUISCharacterController.CharacterPivotType.KinectCOM:
+            case (int)RUISCharacterController.CharacterPivotType.KinectTorso:
 				kinectPlayerId.intValue = Mathf.Clamp(kinectPlayerId.intValue, 0, maxKinectSkeletons - 1);
                 EditorGUILayout.PropertyField(kinectPlayerId, new GUIContent("Kinect Player ID", "Between 0 and 3"));
                 break;

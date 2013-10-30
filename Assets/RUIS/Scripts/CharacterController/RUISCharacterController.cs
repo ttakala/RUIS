@@ -15,13 +15,12 @@ public class RUISCharacterController : MonoBehaviour
 {
     public enum CharacterPivotType
     {
-        KinectHip,
         KinectHead,
-        KinectCOM,
+        KinectTorso,
         MoveController
     }
 
-    public CharacterPivotType characterPivotType = CharacterPivotType.KinectCOM;
+    public CharacterPivotType characterPivotType = CharacterPivotType.KinectTorso;
 
     public int kinectPlayerId;
     public int moveControllerId;
@@ -215,13 +214,10 @@ public class RUISCharacterController : MonoBehaviour
         
         switch (characterPivotType)
         {
-            case CharacterPivotType.KinectHip:
-                characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].leftHip.rotation * Vector3.forward : Vector3.forward;
-                break;
             case CharacterPivotType.KinectHead:
                 characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].head.rotation * Vector3.forward : Vector3.forward;
                 break;
-            case CharacterPivotType.KinectCOM:
+            case CharacterPivotType.KinectTorso:
                 characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].torso.rotation * Vector3.forward : Vector3.forward;
                 break;
             case CharacterPivotType.MoveController:
@@ -249,19 +245,13 @@ public class RUISCharacterController : MonoBehaviour
     {
         switch (characterPivotType)
         {
-            case CharacterPivotType.KinectHip:
-			{
-				if(skeletonManager && skeletonManager.skeletons[kinectPlayerId] != null)
-                	return skeletonManager.skeletons[kinectPlayerId].leftHip.position;
-				break;
-			}
             case CharacterPivotType.KinectHead:
 			{
 				if(skeletonManager && skeletonManager.skeletons[kinectPlayerId] != null)
                 	return skeletonManager.skeletons[kinectPlayerId].head.position;
 				break;
 			}
-            case CharacterPivotType.KinectCOM:
+            case CharacterPivotType.KinectTorso:
 			{
 				if(skeletonManager && skeletonManager.skeletons[kinectPlayerId] != null)
 	                return skeletonManager.skeletons[kinectPlayerId].torso.position;

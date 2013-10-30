@@ -56,22 +56,22 @@ public class XMLUtil {
     public static XmlDocument LoadAndValidateXml(string xmlFilename, TextAsset schemaFile, ValidationEventHandler validationEventHandler)
     {
         XmlTextReader textReader = null;
-        XmlValidatingReader validatingReader = null;
+        XmlReader validatingReader = null;
 
         MemoryStream fs = null;
         try
         {
             textReader = new XmlTextReader(xmlFilename);
-            validatingReader = new XmlValidatingReader(textReader);
-
-            validatingReader.ValidationType = ValidationType.Schema;
-            validatingReader.ValidationEventHandler += validationEventHandler;
+            XmlReaderSettings readerSettings = new XmlReaderSettings();
+            readerSettings.ValidationType = ValidationType.Schema;
+            readerSettings.ValidationEventHandler += validationEventHandler;
 
             fs = new MemoryStream(Encoding.ASCII.GetBytes(schemaFile.text));
             XmlSchema schema = XmlSchema.Read(fs, validationEventHandler);
+            readerSettings.Schemas.Add(schema);
 
-            validatingReader.Schemas.Add(schema);
-
+            validatingReader = XmlReader.Create(textReader, readerSettings); //new XmlValidatingReader(textReader);
+ 
             XmlDocument result = new XmlDocument();
             result.Load(validatingReader);
 
