@@ -158,6 +158,8 @@ Library/AssetServerCacheV3 -text
 Library/AssetVersioning.db -text
 Library/BuildPlayer.prefs -text
 Library/BuildSettings.asset -text
+Library/CurrentLayout.dwlt -text
+Library/CurrentMaximizeLayout.dwlt -text
 Library/EditorUserBuildSettings.asset -text
 Library/EditorUserSettings.asset -text
 Library/FailedAssetImports.txt -text
@@ -178,6 +180,7 @@ Library/metadata/00/00000000000000003000000000000000 -text
 Library/metadata/00/00000000000000004000000000000000 -text
 Library/metadata/00/00000000000000004100000000000000 -text
 Library/metadata/00/00000000000000005000000000000000 -text
+Library/metadata/00/00000000000000005100000000000000 -text
 Library/metadata/00/00000000000000006000000000000000 -text
 Library/metadata/00/00000000000000006100000000000000 -text
 Library/metadata/00/00000000000000007000000000000000 -text

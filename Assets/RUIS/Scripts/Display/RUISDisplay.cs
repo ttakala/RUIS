@@ -169,8 +169,8 @@ public class RUISDisplay : MonoBehaviour {
 
         if (linkedCamera)
         {
-            linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight, aspectRatio);
             linkedCamera.associatedDisplay = this;
+            linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight, aspectRatio);
         }
         else
         {
@@ -180,6 +180,8 @@ public class RUISDisplay : MonoBehaviour {
 
     public Camera GetCameraForScreenPoint(Vector2 screenPoint)
     {
+        if (linkedCamera == null) return null;
+
         if (isStereo)
         {
             if (linkedCamera.leftCamera.pixelRect.Contains(screenPoint))

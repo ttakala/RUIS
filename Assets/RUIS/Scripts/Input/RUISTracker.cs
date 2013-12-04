@@ -907,7 +907,7 @@ public class RUISTracker : MonoBehaviour
 	// Beginning of methods that are needed by RUISCamera's oblique frustum creation
 	private Vector3 GetLeftEyePosition(float eyeSeparation)
     { 
-        return EyeCenterPosition - transform.localRotation * Vector3.right * eyeSeparation / 2;
+        return EyeCenterPosition + transform.localRotation * Vector3.right * eyeSeparation / 2;
     }
 
 	/// <summary>

@@ -198,9 +198,9 @@ public class RUISCamera : MonoBehaviour {
 
         if (associatedDisplay.isObliqueFrustum)
         {
-            centerCamera.worldToCameraMatrix = Matrix4x4.identity;
-            leftCamera.worldToCameraMatrix = Matrix4x4.identity;
-            rightCamera.worldToCameraMatrix = Matrix4x4.identity;
+            centerCamera.worldToCameraMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale).inverse;
+            leftCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;
+            rightCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;
         }
 
 	    if (associatedDisplay.isKeystoneCorrected)
@@ -214,7 +214,7 @@ public class RUISCamera : MonoBehaviour {
         if (associatedDisplay.isObliqueFrustum && headTracker)
         {
             Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
-			//print (eyePositions[0] + " " + eyePositions[1] + " " + eyePositions[2] );
+			Debug.Log(eyePositions[0] + " " + eyePositions[1] + " " + eyePositions[2], this);
             return new Matrix4x4[] { CreateProjectionMatrix(eyePositions[0]), 
                                      CreateProjectionMatrix(eyePositions[1]),
                                      CreateProjectionMatrix(eyePositions[2]) };
@@ -345,6 +345,11 @@ public class RUISCamera : MonoBehaviour {
 
         centerCamera.rect = normalizedScreenRect;
         centerCamera.aspect = aspectRatio;
+
+        if (associatedDisplay == null)
+        {
+            Debug.LogError("Associated Display was null", this);
+        }
 
         if (associatedDisplay.stereoType == RUISDisplay.StereoType.SideBySide)
         {
