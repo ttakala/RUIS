@@ -1819,6 +1819,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000002
 Camera:
   m_ObjectHideFlags: 1
@@ -1847,6 +1848,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -1865,6 +1867,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -1940,21 +1945,21 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 0, z: 0}
-  skeletonManager: {fileID: 0}
   headPositionInput: 1
-  headRotationInput: 0
-  riftMagnetometerMode: 0
+  headRotationInput: 1
   mobileRazerBase: 0
   pickRotationSource: 0
   oculusID: 0
+  useOculusRiftRotation: 0
   resetKey: 0
   positionPlayerID: 0
   rotationPlayerID: 0
   positionJoint: 1
   rotationJoint: 2
   positionPSMoveID: 1
-  rotationPSMoveID: 0
+  rotationPSMoveID: 1
   positionRazerID: 1
   rotationRazerID: 1
   isRazerBaseMobile: 0
@@ -2019,6 +2024,7 @@ MonoBehaviour:
   driftCorrectionRatePSMove: .100000001
   driftCorrectionRateHydra: .100000001
   driftCorrectionRateTransform: .100000001
+  filterInFixedUpdate: 1
   driftNoiseCovariance: 3000
   enableVisualizers: 0
   driftingDirectionVisualizer: {fileID: 0}
@@ -2035,10 +2041,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 891d7f34be3a15347a2c23df6d69ec62, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   skeletonController: {fileID: 11400006}
   maxHeightChange: 5
   maxPositionChange: 10
-  colliderRadiusTweaker: 1.5
+  colliderHeightTweaker: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2049,6 +2056,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 271509f11e7230745aef7a35e8321bf4, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   turnRightKey: 101
   turnLeftKey: 113
   rotationScaler: 60
@@ -2059,6 +2067,8 @@ MonoBehaviour:
   PSNaviControllerID: 0
   strafeInsteadTurning: 0
   jumpStrength: 10
+  jumpSpeedEffect: 0
+  aerialMobility: .100000001
   useRazerHydra: 1
   razerHydraID: 2
 --- !u!114 &11400006
@@ -2071,6 +2081,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   root: {fileID: 400022}
   head: {fileID: 400088}
   neck: {fileID: 400050}
@@ -2087,7 +2098,6 @@ MonoBehaviour:
   leftHip: {fileID: 400004}
   leftKnee: {fileID: 400094}
   leftFoot: {fileID: 400100}
-  skeletonManager: {fileID: 0}
   playerId: 0
   updateRootPosition: 1
   updateJointPositions: 0
@@ -2111,6 +2121,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: adb91800ae866d942a22b4c2d2d13ad1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 0}
@@ -2131,15 +2142,20 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 575cb7dc5eb8ea94e8f0ab6fde7e92f2, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   characterPivotType: 2
   kinectPlayerId: 0
   moveControllerId: 0
   characterPivot: {fileID: 0}
+  psmoveOffset: {x: 0, y: 0, z: 0}
   ignorePitchAndRoll: 1
   groundLayers:
     serializedVersion: 2
     m_Bits: 0
   groundedErrorTweaker: .0500000007
+  dynamicFriction: 1
+  dynamicMaterial: {fileID: 0}
+  feetAlsoAffectGrounding: 1
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2150,8 +2166,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   InitialPredictionTime: .0299999993
   InitialAccelGain: .0500000007
+  ResetTracker: 1
 --- !u!114 &11400014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2162,6 +2180,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   CameraRootPosition: {x: 0, y: 1, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: 0, z: 0}
@@ -2174,9 +2193,6 @@ MonoBehaviour:
   WireMode: 0
   LensCorrection: 1
   Chromatic: 1
-  BackgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
-  NearClipPlane: .0500000007
-  FarClipPlane: 1000
 --- !u!114 &11400016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2187,6 +2203,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -2204,6 +2221,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!114 &11400020
@@ -2216,6 +2234,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
   _Center: {x: .5, y: .5}
   _ScaleIn: {x: 1, y: 1}
@@ -2233,6 +2252,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 467c1e6bb64de664bbba9800bb135078, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: .600000024, z: 0}
   EyePosition: {x: 0, y: .150000006, z: .0900000036}
 --- !u!114 &11400024
@@ -2245,10 +2265,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 725d292227850ab4f94799e193a59452, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   playerId: 0
   requiredUpwardVelocity: .800000012
   timeBetweenJumps: 1
   feetHeightThreshold: .200000003
+  requiredConfidence: 1
 --- !u!114 &11400026
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2259,7 +2281,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d231127ae337c7c40a492768550cf970, type: 3}
   m_Name: 
-  skeletonManager: {fileID: 0}
+  m_EditorClassIdentifier: 
   playerId: 0
   jointToFollow: 0
   minimumConfidenceToUpdate: .5
@@ -2275,6 +2297,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c5dba8c14fa8e6448b9a1a16d33fe05, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   bufferLength: .0500000007
 --- !u!124 &12400000
 Behaviour:
@@ -2438,6 +2461,9 @@ SkinnedMeshRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -2497,6 +2523,7 @@ SkinnedMeshRenderer:
   - {fileID: 400040}
   - {fileID: 400100}
   - {fileID: 400016}
+  m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
     m_Center: {x: .235710144, y: -1.29385567, z: 2.28881836e-05}

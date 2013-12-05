@@ -24,12 +24,12 @@ public class RUISInputManager : MonoBehaviour
     };
 
     public TextAsset xmlSchema;
-    public string filename = "inputConfig.txt";
+    public string filename = "inputConfig.xml";
 
     public bool loadFromTextFileInEditor = false;
 
     public bool enablePSMove = true;
-    public string PSMoveIP = "130.233.46.217";
+    public string PSMoveIP = "127.0.0.1";
     public int PSMovePort = 7899;
     public bool connectToPSMoveOnStartup = true;
     public PSMoveWrapper psMoveWrapper;

@@ -281,7 +281,7 @@ InputManager:
     descriptiveName: Opens up the RUIS menu
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: f2
+    positiveButton: escape
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
