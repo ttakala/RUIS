@@ -85,8 +85,8 @@ public class RUISMenu : MonoBehaviour {
         displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
         riftDisplay = displayManager.GetOculusRiftDisplay();
 		
-		
-        if (oculusRiftMenu)
+		// TODO: This menu should work with any stereo view, not just Rift. riftDisplay.linkedCamera is null when Rift is disabled.
+		if (oculusRiftMenu && riftDisplay && riftDisplay.linkedCamera )
         {
             windowRect = new Rect(riftDisplay.linkedCamera.leftCamera.pixelRect.x 
 									+ riftDisplay.resolutionX / 4 - 100, riftDisplay.resolutionY / 2 - 220, 250, 250);
@@ -133,7 +133,7 @@ public class RUISMenu : MonoBehaviour {
 
         if (oculusRiftMenu)
         {
-            if (riftDisplay)
+			if (riftDisplay)
             {
                 float offset = riftDisplay.resolutionX / 2 + stereoOffset;
                 Rect temp = GUILayout.Window(currentWindow + 1, new Rect(windowRect.x + offset, windowRect.y, 
