@@ -199,14 +199,26 @@ public class RUISCamera : MonoBehaviour {
         if (associatedDisplay.isObliqueFrustum)
         {
             centerCamera.worldToCameraMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale).inverse;
-            leftCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;
-            rightCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;
+
+            /*if (headTracker)
+            {
+                Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
+                Vector3 leftCameraPos = transform.position + transform.rotation * (eyePositions[1] - eyePositions[0]);
+                Vector3 rightCameraPos = transform.position + transform.rotation * (eyePositions[2] - eyePositions[0]);
+                leftCamera.worldToCameraMatrix = Matrix4x4.TRS(leftCameraPos, leftCamera.transform.rotation, leftCamera.transform.lossyScale).inverse;
+                rightCamera.worldToCameraMatrix = Matrix4x4.TRS(rightCameraPos, rightCamera.transform.rotation, rightCamera.transform.lossyScale).inverse;
+            }
+            else
+            {*/
+                leftCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;//Matrix4x4.TRS(leftCamera.transform.position, leftCamera.transform.rotation, leftCamera.transform.lossyScale).inverse;
+                rightCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;//Matrix4x4.TRS(rightCamera.transform.position, rightCamera.transform.rotation, rightCamera.transform.lossyScale).inverse;
+            //}
         }
 
-	    if (associatedDisplay.isKeystoneCorrected)
-	    {
+	    //if (associatedDisplay.isKeystoneCorrected)
+	    //{
 	        ApplyKeystoneCorrection();
-	    }
+	    //}
     }
 
     public Matrix4x4[] GetProjectionMatricesWithoutKeystoning()
@@ -214,7 +226,6 @@ public class RUISCamera : MonoBehaviour {
         if (associatedDisplay.isObliqueFrustum && headTracker)
         {
             Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
-			Debug.Log(eyePositions[0] + " " + eyePositions[1] + " " + eyePositions[2], this);
             return new Matrix4x4[] { CreateProjectionMatrix(eyePositions[0]), 
                                      CreateProjectionMatrix(eyePositions[1]),
                                      CreateProjectionMatrix(eyePositions[2]) };
@@ -332,10 +343,14 @@ public class RUISCamera : MonoBehaviour {
 
     private void ApplyKeystoneCorrection()
     {
-        centerCamera.projectionMatrix *= keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix();
         //Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
-        leftCamera.projectionMatrix *= keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix();
-        rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
+        //Debug.Log(centerCamera.projectionMatrix * keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
+        centerCamera.projectionMatrix = keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix() * centerCamera.projectionMatrix;
+        leftCamera.projectionMatrix = keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix() * leftCamera.projectionMatrix;
+        rightCamera.projectionMatrix = keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix() * rightCamera.projectionMatrix;
+        //Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
+        //leftCamera.projectionMatrix *= keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix();
+        //rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
     }
 
     virtual public void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)

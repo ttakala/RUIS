@@ -14,11 +14,23 @@ using System.Xml.Schema;
 
 public class RUISKeystoning {
     private const float maxCornerSelectionDistance = 0.2f;
-    private const int amountOfParameters = 10;
+    private const int amountOfParameters = 8;
+
 
     public class KeystoningSpecification
     {
         public float a, b, c, d, e, f, g, h, i, j, m, n;
+
+        public bool isValid
+        {
+            get
+            {
+                return !(float.IsNaN(a) || float.IsNaN(b) || float.IsNaN(c) ||
+                    float.IsNaN(d) || float.IsNaN(e) || float.IsNaN(f) ||
+                    float.IsNaN(g) || float.IsNaN(h) || float.IsNaN(i) ||
+                    float.IsNaN(j) || float.IsNaN(m) || float.IsNaN(n));
+            }
+        }
 
         public KeystoningSpecification()
         {
@@ -42,8 +54,8 @@ public class RUISKeystoning {
             this.h = other.h;
             this.i = other.i;
             this.j = other.j;
-            //this.m = other.m;
-            //this.n = other.n;
+            this.m = other.m;
+            this.n = other.n;
         }
 
         public Matrix4x4 GetMatrix(){
@@ -54,17 +66,19 @@ public class RUISKeystoning {
             // m n 0 1
             keystone[0, 0] = a;
             keystone[0, 1] = b;
-            keystone[0, 2] = c;
+            //keystone[0, 2] = c;
             keystone[0, 3] = d;
             keystone[1, 0] = e;
             keystone[1, 1] = f;
-            keystone[1, 2] = g;
+            //keystone[1, 2] = g;
             keystone[1, 3] = h;
-            keystone[2, 0] = i;
-            keystone[2, 1] = j;
-            keystone[2, 2] = 1;
-            //keystone[3, 0] = m;
-            //keystone[3, 1] = n;
+            keystone[2, 0] = 0;
+            keystone[2, 1] = 0;
+            keystone[2, 2] = 1 - Mathf.Abs(m) - Mathf.Abs(n);
+            keystone[2, 3] = 0;
+            keystone[3, 0] = m;
+            keystone[3, 1] = n;
+            keystone[3, 2] = 0;
             keystone[3, 3] = 1;
 
             return keystone;
@@ -92,8 +106,17 @@ public class RUISKeystoning {
                 case 4:
                     newSpec.f += modification;
                     break;
-                
                 case 5:
+                    newSpec.h += modification;
+                    break;
+                case 6:
+                    newSpec.m += modification;
+                    break;
+                case 7:
+                    newSpec.n += modification;
+                    break;
+
+                /*case 5:
                     newSpec.h += modification;
                     break;
                 
@@ -109,12 +132,7 @@ public class RUISKeystoning {
                 case 9:
                     newSpec.g += modification;
                     break;
-                /*case 10:
-                    newSpec.m += modification;
-                    break;
-                case 11:
-                    newSpec.n += modification;
-                    break;*/
+                */
             }
 
             return newSpec;
@@ -124,6 +142,8 @@ public class RUISKeystoning {
     public class KeystoningCorners
     {
         public Vector2[] corners;
+
+        public static Vector2[] untransformedCorners = new Vector2[] { new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1) };
 
         public KeystoningCorners()
         {
@@ -153,6 +173,11 @@ public class RUISKeystoning {
         {
             get { return corners[i]; }
             set { corners[i] = value; }
+        }
+
+        public Vector2 GetCornerNormalizedViewpointCoordinates(int i)
+        {
+            return corners[i] * 2 - Vector2.one;
         }
 
         public Vector2 GetDiagonalCenter()
@@ -201,12 +226,13 @@ public class RUISKeystoning {
 
     public static float Optimize(Camera camera, Matrix4x4 originalProjectionMatrix, RUISDisplay display, KeystoningCorners corners, ref KeystoningSpecification spec)
     {
-        spec = spec != null ? spec : new KeystoningSpecification();
+        if (!spec.isValid) Debug.Log("INVALID SPEC");
+        spec = /*spec != null && spec.isValid ? spec : */new KeystoningSpecification();
 
         //Debug.Log(spec.GetMatrix());
 
         //save all the relevant world points that we use for optimizing the keystoning matrix
-        camera.projectionMatrix = originalProjectionMatrix;
+        //camera.projectionMatrix = originalProjectionMatrix;
         /*Vector3[] worldPoints = new Vector3[10];
         worldPoints[0] = camera.ViewportToWorldPoint(new Vector3(0, 1, camera.nearClipPlane));
         worldPoints[1] = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
@@ -228,7 +254,7 @@ public class RUISKeystoning {
         Debug.Log("--------------------------------------------------------------");*/
 
         float stepSize = 0.1f;
-        float[] grad = new float[amountOfParameters-2];
+        float[] grad = new float[amountOfParameters];
 
         float currentValue = 0;
         /*while (stepSize > 0.000001f)
@@ -265,10 +291,11 @@ public class RUISKeystoning {
             stepSize *= 0.99f;
         }
         */
-        stepSize = 0.001f;
+        stepSize = 0.1f;
         grad = new float[amountOfParameters];
         currentValue = 0;
-        for(int iterations = 0; iterations < 10; iterations++)
+        while (stepSize > 0.000001f) 
+        //for(int iterations = 0; iterations < 10; iterations++)
         {
             // compute gradient
 
@@ -285,11 +312,12 @@ public class RUISKeystoning {
                 gradSquaredLength += grad[i] * grad[i];
             }
             float gradLength = Mathf.Sqrt((float)gradSquaredLength);
+            if (gradLength == 0) Debug.Log("CAUTIOOOOOOOOOOOOON");
             for (int i = 0; i < amountOfParameters; i++)
             {
                 spec = spec.ModifyWithStep(i, -stepSize * grad[i] / gradLength);
             }
-            stepSize *= 0.8f;
+            stepSize *= 0.99f;
         }
         
         //Debug.Log("final: " + spec.GetMatrix());
@@ -300,8 +328,33 @@ public class RUISKeystoning {
     //compares projected world points to the expected corner points and calculates the total square distance
     private static float CalcValue(KeystoningSpecification spec, Camera camera, Matrix4x4 originalProjectionMatrix, KeystoningCorners corners, RUISDisplay display, bool firstPhase)//, Vector3[] worldPoints)
     {
+        Vector2[] untransformedCorners = KeystoningCorners.untransformedCorners;
+
+        float distanceFromCorners = 0; // sum of squared distances
+        for (int pnum = 0; pnum < 4; pnum++)
+        {
+            // transformed coordinates (should match ’corners’ as good
+            // as possible)
+            float w = spec.m * untransformedCorners[pnum].x + spec.n * untransformedCorners[pnum].y + 1;
+            float tx = (spec.a * untransformedCorners[pnum].x + spec.b * untransformedCorners[pnum].y + spec.d) / w;
+            float ty = (spec.e * untransformedCorners[pnum].x + spec.f * untransformedCorners[pnum].y + spec.h) / w;
+            
+            Vector2 transformedCorner = corners.GetCornerNormalizedViewpointCoordinates(pnum);
+            distanceFromCorners += Vector2.SqrMagnitude(new Vector2(tx, ty) - transformedCorner);
+            
+            if (float.IsNaN(distanceFromCorners))
+            {
+                Debug.Log("was nan " + w + " " + pnum + " " + tx + " " + ty);
+                break;
+            }
+        }
+
+        
+
+        return distanceFromCorners;
+        
         //Debug.Log(CreateKeystonedMatrix(a, b, d, e, f, h, m, n));
-        camera.projectionMatrix = originalProjectionMatrix * spec.GetMatrix();
+        //camera.projectionMatrix = originalProjectionMatrix * spec.GetMatrix();
 
 
         
@@ -311,7 +364,7 @@ public class RUISKeystoning {
             newPoints[i] = camera.WorldToViewportPoint(worldPoints[i]);
         }*/
 
-        Vector2[] newPoints = new Vector2[10];
+        /*Vector2[] newPoints = new Vector2[10];
         newPoints[0] = camera.WorldToViewportPoint(display.TopLeftPosition);
         newPoints[1] = camera.WorldToViewportPoint(display.TopRightPosition);
         newPoints[2] = camera.WorldToViewportPoint(display.BottomRightPosition);
@@ -322,6 +375,7 @@ public class RUISKeystoning {
         newPoints[7] = camera.WorldToViewportPoint(display.BottomRightPosition + (display.BottomRightPosition - camera.transform.position) * 10);
         newPoints[8] = camera.WorldToViewportPoint(display.BottomLeftPosition + (display.BottomLeftPosition - camera.transform.position) * 10);
         newPoints[9] = camera.WorldToViewportPoint(display.displayCenterPosition + (display.displayCenterPosition - camera.transform.position) * 10);
+        
 
         float distanceFromCorners = 0; // sum of squared distances
         for (int i = 0; i < (firstPhase ? 3 : 4); i++)
@@ -337,6 +391,8 @@ public class RUISKeystoning {
         }
         //distanceFromCorners += (diagonalCenter - newPoints[9]).sqrMagnitude;
 
-        return distanceFromCorners;
+        return distanceFromCorners;*/
+
+
     }
 }

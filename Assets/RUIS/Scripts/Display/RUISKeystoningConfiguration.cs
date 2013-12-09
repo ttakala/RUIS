@@ -50,7 +50,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 	}
 	
 	void Update () {
-        if (!isEditing) return;
+        //if (!isEditing) return;
 
 	    if(Input.GetMouseButtonDown(0)){
             //figure out if we should start dragging some corner
@@ -134,16 +134,18 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
     private float Optimize()
     {
 		
-		ruisCamera.keystoningCamera.gameObject.SetActive(true);
+		/*ruisCamera.keystoningCamera.gameObject.SetActive(true);
         
-		ruisCamera.keystoningCamera.transform.position = ruisCamera.KeystoningHeadTrackerPosition;
+		ruisCamera.keystoningCamera.transform.position = ruisCamera.KeystoningHeadTrackerPosition;*/
 		float totalError = 0;
 		totalError += RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, centerCameraCorners, ref centerSpec);
         totalError += RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, leftCameraCorners, ref leftSpec);
         totalError += RUISKeystoning.Optimize(ruisCamera.keystoningCamera, ruisCamera.CreateKeystoningObliqueFrustum(), ruisCamera.associatedDisplay, rightCameraCorners, ref rightSpec);
 		
-		ruisCamera.keystoningCamera.gameObject.SetActive(false);
-		
+		//ruisCamera.keystoningCamera.gameObject.SetActive(false);
+
+        //Debug.Log(totalError);
+
 		return totalError;
     }
 
@@ -169,5 +171,17 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         centerSpec = new RUISKeystoning.KeystoningSpecification();
         leftSpec = new RUISKeystoning.KeystoningSpecification();
         rightSpec = new RUISKeystoning.KeystoningSpecification();
+    }
+
+    public void OnGUI()
+    {
+        if (GUILayout.Button("Optimize"))
+        {
+            Optimize();
+            Debug.Log(centerCameraCorners.GetCornerNormalizedViewpointCoordinates(0), this);
+            Debug.Log(centerCameraCorners.GetCornerNormalizedViewpointCoordinates(1), this);
+            Debug.Log(centerCameraCorners.GetCornerNormalizedViewpointCoordinates(2), this);
+            Debug.Log(centerCameraCorners.GetCornerNormalizedViewpointCoordinates(3), this);
+        }
     }
 }

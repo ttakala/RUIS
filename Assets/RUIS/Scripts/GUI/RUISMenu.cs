@@ -102,6 +102,7 @@ public class RUISMenu : MonoBehaviour {
             if (isShowing)
             {
                 DiscardInputChanges();
+
             }
 
             isShowing = !isShowing;
