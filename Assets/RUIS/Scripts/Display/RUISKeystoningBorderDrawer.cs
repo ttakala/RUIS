@@ -67,10 +67,7 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
             {
                 for (int j = 0; j < tileAmount; j++)
                 {
-                    GL.Begin(GL.QUADS);
-
-
-                    GL.TexCoord2(0, 0);
+                    
 
                     Vector3 leftEdgeTop = corners[0] + ((float)j / tileAmount) * (corners[3] - corners[0]);
                     Vector3 leftEdgeBottom = corners[0] + ((float)(j + 1) / tileAmount) * (corners[3] - corners[0]);
@@ -87,23 +84,26 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
                     bottomLeftPos.z = topLeftPos.z;
                     bottomRightPos.z = topLeftPos.z;
 
-                    Vector3 topLeftVertex = camera.ViewportToWorldPoint(topLeftPos);
-                    GL.Vertex3(topLeftVertex.x, topLeftVertex.y, topLeftVertex.z);
-                    GL.TexCoord2(1, 0);
-                    Vector3 topRightVertex = camera.ViewportToWorldPoint(topRightPos);
-                    GL.Vertex3(topRightVertex.x, topRightVertex.y, topLeftVertex.z);
-                    GL.TexCoord2(1, 1);
-                    Vector3 bottomRightVertex = camera.ViewportToWorldPoint(bottomRightPos);
-                    GL.Vertex3(bottomRightVertex.x, bottomRightVertex.y, bottomRightVertex.z);
-                    GL.TexCoord2(0, 1);
-                    Vector3 bottomLeftVertex = camera.ViewportToWorldPoint(bottomLeftPos);
-                    GL.Vertex3(bottomLeftVertex.x, bottomLeftVertex.y, bottomLeftVertex.z);
+                    GL.Begin(GL.QUADS);
+                        GL.TexCoord2(0, 0);
+                        Vector3 topLeftVertex = camera.ViewportToWorldPoint(topLeftPos);
+                        GL.Vertex3(topLeftVertex.x, topLeftVertex.y, topLeftVertex.z);
+                        GL.TexCoord2(1, 0);
+                        Vector3 topRightVertex = camera.ViewportToWorldPoint(topRightPos);
+                        GL.Vertex3(topRightVertex.x, topRightVertex.y, topLeftVertex.z);
+                        GL.TexCoord2(1, 1);
+                        Vector3 bottomRightVertex = camera.ViewportToWorldPoint(bottomRightPos);
+                        GL.Vertex3(bottomRightVertex.x, bottomRightVertex.y, bottomRightVertex.z);
+                        GL.TexCoord2(0, 1);
+                        Vector3 bottomLeftVertex = camera.ViewportToWorldPoint(bottomLeftPos);
+                        GL.Vertex3(bottomLeftVertex.x, bottomLeftVertex.y, bottomLeftVertex.z);
                     GL.End();
                 }
             }
         }
         GL.PushMatrix();
             keystoneBorder.SetPass(0);
+            GL.TexCoord2(0, 1);
             GL.LoadOrtho();
 
             GL.Begin(GL.TRIANGLE_STRIP);
@@ -114,7 +114,7 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
                 GL.Vertex3(corners[2].x, -0.02f, 0);
                 GL.Vertex3(1.02f, -0.02f, 0);
             GL.End();
-
+        
             GL.Begin(GL.TRIANGLE_STRIP);
                 GL.Vertex3(-0.02f, 1.02f, 0);
                 DrawVertex(corners[0]);
@@ -143,6 +143,71 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
             GL.End();
 
         GL.PopMatrix();
+
+        if (keystoningConfigurator.isEditing)
+        {
+            Vector2 diagonalCenter = corners.GetDiagonalCenter();
+            Vector2[] squeezedCorners = new Vector2[4];
+            for (int i = 0; i < squeezedCorners.Length; i++)
+            {
+                squeezedCorners[i] = corners[i] + (diagonalCenter - corners[i]) * 0.2f;
+            }
+
+            GL.PushMatrix();
+                GL.LoadOrtho(); 
+                keystoneBorder.SetPass(0);
+                GL.TexCoord2(0, 0);
+                    
+                GL.Begin(GL.TRIANGLES);
+                    //bottom
+                    DrawVertex(corners[3]);
+                    DrawVertex(squeezedCorners[3]);
+                    DrawVertex(squeezedCorners[2]);
+
+                    DrawVertex(corners[3]);
+                    DrawVertex(squeezedCorners[2]);
+                    DrawVertex(corners[2]);
+
+                    //left
+                    DrawVertex(corners[3]);
+                    DrawVertex(corners[0]);
+                    DrawVertex(squeezedCorners[0]);
+
+                    DrawVertex(corners[3]);
+                    DrawVertex(squeezedCorners[0]);
+                    DrawVertex(squeezedCorners[3]);
+
+                    //top
+                    DrawVertex(corners[0]);
+                    DrawVertex(corners[1]);
+                    DrawVertex(squeezedCorners[1]);
+
+                    DrawVertex(corners[0]);
+                    DrawVertex(squeezedCorners[1]);
+                    DrawVertex(squeezedCorners[0]);
+
+                    //right
+                    DrawVertex(corners[1]);
+                    DrawVertex(corners[2]);
+                    DrawVertex(squeezedCorners[2]);
+
+                    DrawVertex(corners[1]);
+                    DrawVertex(squeezedCorners[2]);
+                    DrawVertex(squeezedCorners[1]);
+                GL.End();
+
+                GL.TexCoord2(0, 1);
+
+                GL.Begin(GL.LINES);
+                    for (int i = 0; i < squeezedCorners.Length; i++)
+                    {
+                        DrawVertex(corners[i]);
+                        DrawVertex(squeezedCorners[i]);
+                    }                
+                GL.End();
+                
+            GL.PopMatrix();
+        }
     }
 
     public void DrawVertex(Vector2 corner)

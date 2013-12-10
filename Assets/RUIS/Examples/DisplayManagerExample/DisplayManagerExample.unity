@@ -5426,6 +5426,10 @@ Prefab:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
   m_RootGameObject: {fileID: 632743621}
@@ -7119,7 +7123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
-  xmlFilename: display.xml
+  xmlFilename: rightDisplay.xml
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 1
@@ -7414,7 +7418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
-  xmlFilename: display.xml
+  xmlFilename: leftDisplay.xml
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
@@ -10448,6 +10452,30 @@ Prefab:
       propertyPath: totalRawResolutionY
       value: 1080
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: isObliqueFrustum
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400018, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: isObliqueFrustum
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: isObliqueFrustum
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: xmlFilename
+      value: frontDisplay.xml
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400018, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: xmlFilename
+      value: leftDisplay.xml
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: xmlFilename
+      value: rightDisplay.xml
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d94c6e27c0db1994889737c587593074, type: 2}
   m_RootGameObject: {fileID: 231584585}
@@ -13287,7 +13315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
-  xmlFilename: display.xml
+  xmlFilename: frontDisplay.xml
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0

@@ -220,6 +220,11 @@ public class RUISKeystoning {
 
             return closestCorner;
         }
+
+        public static Vector2 TransformToKeystoningCorner(Vector2 normalizedViewpointCoordinate)
+        {
+            return (normalizedViewpointCoordinate + Vector2.one) / 2.0f;
+        }
     }
 
 

@@ -316,6 +316,13 @@ public class RUISMenu : MonoBehaviour {
 			
                 GUILayout.Space(2*additionalSpacing);
 
+                if (GUILayout.Button("Display Management"))
+                {
+                    SwitchKeystoneEditingState();
+                    //ToggleKeystoneGridState();
+                    menuState = MenuState.EditingDisplays;
+                }
+
                 GUI.enabled = UnsavedChanges();
                 if (GUILayout.Button("     Save Configuration & Restart Scene"))
                 {

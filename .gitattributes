@@ -91,6 +91,7 @@ Assets/RUIS/Examples/PhysicsScene/Tree[!!-~]Creator/Trees/BigTree_textures/trans
 Assets/RUIS/Resources/RUIS/Editor/Textures/monodisplay.png -text
 Assets/RUIS/Resources/RUIS/Editor/Textures/stereodisplay.png -text
 Assets/RUIS/Resources/RUIS/Fonts/appleberry_with_cyrillic.ttf -text
+Assets/RUIS/Resources/RUIS/Graphics/Displays/Keystoning/border.png -text
 Assets/RUIS/Resources/RUIS/Graphics/Displays/Keystoning/keystoning.png -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/CalibrationCubeMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/CalibrationFloorMaterial.mat -text
@@ -565,6 +566,7 @@ Library/metadata/93/9370708b4cd86ce49b46babb8d7951c9 -text
 Library/metadata/93/93bd7be59c73d74428f056a7904200ea -text
 Library/metadata/93/93d71c6173f554742a5831a05d7b5211 -text
 Library/metadata/93/93de12a124a8d2e45b086ba21baaafbb -text
+Library/metadata/94/944a22184812a744488fb3cda6ced830 -text
 Library/metadata/94/94d1a4d86a04fc44bb90b1c0ebf2a49a -text
 Library/metadata/95/95ae3a9e4f3bff3479088f474425bebc -text
 Library/metadata/95/95fedd445e9f9fc49a2397fbe363a65a -text
@@ -646,6 +648,7 @@ Library/metadata/b4/b44e1a29ec3e30941be432fcdcea38f7 -text
 Library/metadata/b5/b5a3c89330f75bf42905ac1b68591856 -text
 Library/metadata/b5/b5a9c88d04f1b5648b95b274ab960fc3 -text
 Library/metadata/b5/b5f14b62788dba642b17b059ef2bbbb8 -text
+Library/metadata/b5/b5f6e523b22dece4f966fed99c2075ec -text
 Library/metadata/b5/b5f8a02477de55a45a00c0438749f587 -text
 Library/metadata/b6/b683adf308688174ca5294dc5ed60e5f -text
 Library/metadata/b7/b732dc597c48ce14a84a241cd7df42de -text
@@ -771,6 +774,7 @@ Library/metadata/ee/eeefe2dd1d7f9a643aabc84849cecbf1 -text
 Library/metadata/ef/ef007e49e2147a14fa056cfd381b1cb9 -text
 Library/metadata/f0/f0779b8cf70eb0b48926196d27e57450 -text
 Library/metadata/f0/f0cdbcafec503db40a9072ee66d0396a -text
+Library/metadata/f0/f0e912bd67d99724eae1ff2883e7b768 -text
 Library/metadata/f3/f32230aa27025bf419a92df18e4e4461 -text
 Library/metadata/f3/f32708abc28e563428828a172e7e754e -text
 Library/metadata/f3/f332d29ca5ed72a48b5dd045e300e7c7 -text
@@ -801,7 +805,6 @@ Library/metadata/fd/fde95a1d4f9fe9a4199c89dde4e8b07e -text
 Library/metadata/fe/fef522d0247215a43be6b1a8819bd940 -text
 Library/metadata/ff/ff91db6ab04741a4fb1434d6dd8479c3 -text
 Library/metadata/ff/ffa957381079de44eab9ba6c6e3c0137 -text
-/PSMove.unitypackage -text
 ProjectSettings/AudioManager.asset -text
 ProjectSettings/DynamicsManager.asset -text
 ProjectSettings/EditorBuildSettings.asset -text
@@ -818,12 +821,8 @@ ProjectSettings/TimeManager.asset -text
 /Unity-csharp.suo -text
 /Unity.sln -text
 /Unity.userprefs -text
-/controllablecharacter.unitypackage -text
-/headtracker.unitypackage -text
-/inputConfig.txt -text
 /inputConfig.xml -text
 /inputConfig.xsd -text
-/jumpgesture.unitypackage -text
 /m2k.xml -text
 obj/Debug/Assembly-CSharp-Editor-vs.csproj.FileListAbsolute.txt -text
 obj/Debug/Assembly-CSharp-Editor.dll -text
@@ -836,9 +835,6 @@ obj/Debug/Assembly-CSharp.dll -text
 obj/Debug/Assembly-CSharp.pdb -text
 obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache -text
 obj/Debug/ResolveAssemblyReference.cache -text
-/oculus[!!-~]ruis.unitypackage -text
 /ruis-unity-csharp.sln -text
 /ruis-unity-csharp.suo -text
 /ruis-unity.sln -text
-/ruis.unitypackage -text
-/test.xml -text

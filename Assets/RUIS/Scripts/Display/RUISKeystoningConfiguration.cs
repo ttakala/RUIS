@@ -50,7 +50,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 	}
 	
 	void Update () {
-        //if (!isEditing) return;
+        if (!isEditing) return;
 
 	    if(Input.GetMouseButtonDown(0)){
             //figure out if we should start dragging some corner
@@ -95,8 +95,6 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
             newPos.x = Mathf.Clamp01(newPos.x);
             newPos.y = Mathf.Clamp01(newPos.y);
             currentlyDragging[draggedCornerIndex] = newPos;
-
-            //Optimize();
         }
 		
 		Optimize ();
@@ -106,15 +104,7 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
     {
         XmlImportExport.ImportKeystoningConfiguration(this, xmlDoc);
 		
-		
-		//crunch the optimization when loading
-		float error = 1;
-		int iterations = 0;
-		while(error > 0.000001f && iterations < 10000){
-			float newError = Optimize ();
-			error = newError;
-			iterations++;
-		}
+        Optimize();
 
         return true;
     }
