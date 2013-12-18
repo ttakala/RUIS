@@ -162,16 +162,4 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
         leftSpec = new RUISKeystoning.KeystoningSpecification();
         rightSpec = new RUISKeystoning.KeystoningSpecification();
     }
-
-    public void OnGUI()
-    {
-        if (GUILayout.Button("Optimize"))
-        {
-            Optimize();
-            Debug.Log(centerCameraCorners.GetCornerNormalizedViewpointCoordinates(0), this);
-            Debug.Log(centerCameraCorners.GetCornerNormalizedViewpointCoordinates(1), this);
-            Debug.Log(centerCameraCorners.GetCornerNormalizedViewpointCoordinates(2), this);
-            Debug.Log(centerCameraCorners.GetCornerNormalizedViewpointCoordinates(3), this);
-        }
-    }
 }

@@ -80,7 +80,6 @@ public class RUISCoordinateSystem : MonoBehaviour
         moveToKinectTransform.m20 = float.Parse(rotationElement.Attributes["r20"].Value);
         moveToKinectTransform.m21 = float.Parse(rotationElement.Attributes["r21"].Value);
         moveToKinectTransform.m22 = float.Parse(rotationElement.Attributes["r22"].Value);
-        Debug.Log(moveToKinectTransform);
 
         moveToRUISTransform = moveToKinectTransform;
 
@@ -89,7 +88,6 @@ public class RUISCoordinateSystem : MonoBehaviour
         rotationMatrix.SetColumn(0, rotationVectors[0]);
         rotationMatrix.SetColumn(1, rotationVectors[1]);
         rotationMatrix.SetColumn(2, rotationVectors[2]);
-        Debug.Log(rotationMatrix);
 
         moveToKinectRotation = MathUtil.QuaternionFromMatrix(rotationMatrix);
 

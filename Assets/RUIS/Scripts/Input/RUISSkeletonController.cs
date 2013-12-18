@@ -68,8 +68,11 @@ public class RUISSkeletonController : MonoBehaviour
     public float torsoScale = 1.0f;
 
     public float neckHeightTweaker = 0.0f;
-    public float forearmLengthRatio = 1.0f;
     private Vector3 neckOriginalLocalPosition;
+
+    public float forearmLengthRatio = 1.0f;
+    private Vector3 originalRightForearmScale;
+    private Vector3 originalLeftForearmScale;
 
     void Awake()
     {
@@ -91,6 +94,7 @@ public class RUISSkeletonController : MonoBehaviour
     {
         if (useHierarchicalModel)
         {
+            //fix all shoulder and hip rotations to match the default kinect rotations
             rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, transform.right) * rightShoulder.rotation;
             leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, -transform.right) * leftShoulder.rotation;
             rightHip.rotation = FindFixingRotation(rightHip.position, rightFoot.position, -transform.up) * rightHip.rotation;
@@ -136,6 +140,16 @@ public class RUISSkeletonController : MonoBehaviour
 
         SaveInitialDistance(rightShoulder, leftShoulder);
         SaveInitialDistance(rightHip, leftHip);
+
+        if (rightElbow)
+        {
+            originalRightForearmScale = rightElbow.localScale;
+        }
+
+        if (leftElbow)
+        {
+            originalLeftForearmScale = leftElbow.localScale;
+        }
 		
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(inputManager && !inputManager.enableKinect)
@@ -292,11 +306,11 @@ public class RUISSkeletonController : MonoBehaviour
             {
                 Quaternion newRotation = transform.rotation * jointToGet.rotation *
                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDamping);
+                transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDamping);
             }
             else
             {
-                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDamping);
+                transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDamping);
             }
         }
     }
@@ -365,13 +379,17 @@ public class RUISSkeletonController : MonoBehaviour
         torsoScale = UpdateTorsoScale();
 
         {
+            rightElbow.transform.localScale = originalRightForearmScale;
             float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[playerId].rightShoulder, skeletonManager.skeletons[playerId].rightElbow, torsoScale);
-            UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[playerId].rightElbow, skeletonManager.skeletons[playerId].rightHand, rightArmCumulativeScale / forearmLengthRatio);
+            UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[playerId].rightElbow, skeletonManager.skeletons[playerId].rightHand, rightArmCumulativeScale);
+            rightElbow.transform.localScale = rightElbow.transform.localScale * forearmLengthRatio;
         }
 
         {
+            leftElbow.transform.localScale = originalLeftForearmScale;
             float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[playerId].leftShoulder, skeletonManager.skeletons[playerId].leftElbow, torsoScale);
-            UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[playerId].leftElbow, skeletonManager.skeletons[playerId].leftHand, leftArmCumulativeScale / forearmLengthRatio);
+            UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[playerId].leftElbow, skeletonManager.skeletons[playerId].leftHand, leftArmCumulativeScale);
+            leftElbow.transform.localScale = leftElbow.transform.localScale * forearmLengthRatio;
         }
 
         {
@@ -424,9 +442,9 @@ public class RUISSkeletonController : MonoBehaviour
 
     public bool ConfidenceGoodEnoughForScaling()
     {
-        return skeletonManager.skeletons[playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
+        return !(skeletonManager.skeletons[playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
                skeletonManager.skeletons[playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
                skeletonManager.skeletons[playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
-               skeletonManager.skeletons[playerId].leftHip.positionConfidence < minimumConfidenceToUpdate;
+               skeletonManager.skeletons[playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
     }
 }

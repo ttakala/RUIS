@@ -395,7 +395,7 @@ public class RUISInputManager : MonoBehaviour
         {
             if (!childWands.Contains(moveController) && (!enablePSMove || !psMoveWrapper.isConnected || moveController.controllerId >= amountOfPSMoveControllers))
             {
-                Debug.LogWarning("Disabling PS Move wand: " + moveController.name);
+                Debug.LogWarning("Disabling PS Move wand: " + moveController.name, moveController);
                 moveController.enabled = false;
                 RUISWandSelector wandSelector = moveController.GetComponent<RUISWandSelector>();
                 if (wandSelector)
