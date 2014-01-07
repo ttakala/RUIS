@@ -1598,7 +1598,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100040}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .198565006, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400026}
@@ -1798,7 +1798,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100074}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .198565006, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400080}
@@ -1970,7 +1970,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100102}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .198565006, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400104}
@@ -2216,7 +2216,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100142}
   m_LocalRotation: {x: 0, y: 4.37113883e-08, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .198565006, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400118}
@@ -2378,6 +2378,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000002
 Camera:
   m_ObjectHideFlags: 1
@@ -2406,6 +2407,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000004
 Camera:
   m_ObjectHideFlags: 1
@@ -2434,6 +2436,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000006
 Camera:
   m_ObjectHideFlags: 1
@@ -2462,6 +2465,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000008
 Camera:
   m_ObjectHideFlags: 1
@@ -2490,6 +2494,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000010
 Camera:
   m_ObjectHideFlags: 1
@@ -2518,6 +2523,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000012
 Camera:
   m_ObjectHideFlags: 1
@@ -2546,6 +2552,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000014
 Camera:
   m_ObjectHideFlags: 1
@@ -2574,6 +2581,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000016
 Camera:
   m_ObjectHideFlags: 1
@@ -2602,6 +2610,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000018
 Camera:
   m_ObjectHideFlags: 1
@@ -2630,6 +2639,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000020
 Camera:
   m_ObjectHideFlags: 1
@@ -2658,6 +2668,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000022
 Camera:
   m_ObjectHideFlags: 1
@@ -2686,6 +2697,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -2704,6 +2716,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!23 &2300002
 Renderer:
   m_ObjectHideFlags: 1
@@ -2722,6 +2737,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!23 &2300004
 Renderer:
   m_ObjectHideFlags: 1
@@ -2741,6 +2759,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -2843,6 +2864,7 @@ AudioListener:
   m_Enabled: 1
 --- !u!95 &9500000
 Animator:
+  serializedVersion: 2
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -2853,6 +2875,7 @@ Animator:
   m_CullingMode: 0
   m_ApplyRootMotion: 0
   m_AnimatePhysics: 0
+  m_HasTransformHierarchy: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3163,6 +3186,11 @@ MonoBehaviour:
   keystoningCamera: {fileID: 0}
   enableOculusRift: 0
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
@@ -3183,8 +3211,13 @@ MonoBehaviour:
   leftCamera: {fileID: 2000008}
   rightCamera: {fileID: 2000010}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
+  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 16777215
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
@@ -3588,8 +3621,13 @@ MonoBehaviour:
   leftCamera: {fileID: 2000014}
   rightCamera: {fileID: 2000016}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
+  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 16777215
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
@@ -3622,7 +3660,7 @@ MonoBehaviour:
   rotationScaler: 60
   speed: 2
   gravity: 10
-  maxVelocityChange: 10
+  maxVelocityChange: 20
   usePSNavigationController: 1
   PSNaviControllerID: 0
   strafeInsteadTurning: 1
@@ -3651,7 +3689,7 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 2561
-  groundedErrorTweaker: .0500000007
+  groundedErrorTweaker: .100000001
   dynamicFriction: 1
   dynamicMaterial: {fileID: 0}
   feetAlsoAffectGrounding: 1
@@ -4218,8 +4256,13 @@ MonoBehaviour:
   leftCamera: {fileID: 2000020}
   rightCamera: {fileID: 2000018}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
+  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 16777215
   near: .100000001
   far: 500
   headTracker: {fileID: 0}
@@ -4241,6 +4284,9 @@ LineRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
   m_Positions: []
   m_Parameters:
     startWidth: .0500000007
@@ -4270,6 +4316,9 @@ LineRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
   m_Positions: []
   m_Parameters:
     startWidth: .00999999978
@@ -4382,7 +4431,7 @@ CapsuleCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100078}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: d07051c59516df348871fc6a56132251, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: .219999999
@@ -4485,6 +4534,9 @@ SkinnedMeshRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -4544,6 +4596,7 @@ SkinnedMeshRenderer:
   - {fileID: 400076}
   - {fileID: 400096}
   - {fileID: 400158}
+  m_BlendShapeWeights: []
   m_RootBone: {fileID: 400010}
   m_AABB:
     m_Center: {x: .235710144, y: -1.29385567, z: 2.28881836e-05}

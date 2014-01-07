@@ -14,10 +14,10 @@ TagManager:
   Builtin Layer 5: 
   Builtin Layer 6: 
   Builtin Layer 7: 
-  User Layer 8: CharacterColliders
-  User Layer 9: Floor
+  User Layer 8: CharacterBody
+  User Layer 9: Environment
   User Layer 10: CharacterStabilizer
-  User Layer 11: ManipulatedObjects
+  User Layer 11: SelectedObjects
   User Layer 12: 
   User Layer 13: 
   User Layer 14: 
@@ -38,3 +38,8 @@ TagManager:
   User Layer 29: 
   User Layer 30: 
   User Layer 31: 
+  m_SortingLayers:
+  - name: Default
+    userID: 0
+    uniqueID: 0
+    locked: 0
