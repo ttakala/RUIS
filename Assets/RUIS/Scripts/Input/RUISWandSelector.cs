@@ -49,7 +49,7 @@ public class RUISWandSelector : MonoBehaviour {
     public SelectionGrabType rotationSelectionGrabType = SelectionGrabType.SnapToWand;
 
 
-    public string selectedGameObjectsLayer = "Default";
+    public int selectedGameObjectsLayer = 0;
     private int originalSelectedGameObjectLayer = -1;
     
     private RUISWand wand;
@@ -209,7 +209,7 @@ public class RUISWandSelector : MonoBehaviour {
     {
         originalSelectedGameObjectLayer = selection.gameObject.layer;
         
-        SetLayersRecursively(selection.gameObject, LayerMask.NameToLayer(selectedGameObjectsLayer));
+        SetLayersRecursively(selection.gameObject, selectedGameObjectsLayer);
 
         selection.OnSelection(this);
     }
@@ -239,7 +239,7 @@ public class RUISWandSelector : MonoBehaviour {
 
     private void RevertLayersRecursively(GameObject root)
     {
-        if (root.layer == LayerMask.NameToLayer(selectedGameObjectsLayer))
+        if (root.layer == selectedGameObjectsLayer)
         {
             root.layer = originalSelectedGameObjectLayer;
         }

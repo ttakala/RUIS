@@ -130,6 +130,8 @@ public class XmlImportExport {
         display.displayCenterPosition = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayCenterPosition").Item(0));
         display.displayUpInternal = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayUp").Item(0));
         display.displayNormalInternal = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayNormal").Item(0));
+        display.width = int.Parse(xmlDoc.GetElementsByTagName("displayResolution").Item(0).Attributes["width"].Value);
+        display.height = int.Parse(xmlDoc.GetElementsByTagName("displayResolution").Item(0).Attributes["height"].Value);
 
         display.linkedCamera.LoadKeystoningFromXML(xmlDoc);
 
@@ -156,6 +158,11 @@ public class XmlImportExport {
         XmlElement displayNormalElement = xmlDoc.CreateElement("displayNormal");
         XMLUtil.WriteVector3ToXmlElement(displayNormalElement, display.displayNormalInternal);
         displayRootElement.AppendChild(displayNormalElement);
+
+        XmlElement displayResolutionElement = xmlDoc.CreateElement("displayResolution");
+        displayResolutionElement.SetAttribute("width", display.resolutionX.ToString());
+        displayResolutionElement.SetAttribute("height", display.resolutionY.ToString());
+        displayRootElement.AppendChild(displayResolutionElement);
 
         display.linkedCamera.SaveKeystoningToXML(displayRootElement);
 

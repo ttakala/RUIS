@@ -2447,6 +2447,22 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
+      propertyPath: selectionRayType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
+      propertyPath: ignoredLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
+      propertyPath: selectedGameObjectsLayer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
+      propertyPath: headTransform
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
   m_RootGameObject: {fileID: 2105757015}
@@ -3440,7 +3456,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 2
-  selectedGameObjectsLayer: Default
+  selectedGameObjectsLayer: 0
 --- !u!114 &459045222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3707,7 +3723,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
-  selectedGameObjectsLayer: Default
+  selectedGameObjectsLayer: 0
 --- !u!120 &476465069
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -5272,7 +5288,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
-  selectedGameObjectsLayer: Default
+  selectedGameObjectsLayer: 0
 --- !u!114 &626225049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12923,7 +12939,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 0
-  selectedGameObjectsLayer: Default
+  selectedGameObjectsLayer: 0
 --- !u!114 &1586584273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16817,7 +16833,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 0
-  selectedGameObjectsLayer: Default
+  selectedGameObjectsLayer: 0
 --- !u!114 &2075998477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17049,7 +17065,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
-  selectedGameObjectsLayer: Default
+  selectedGameObjectsLayer: 11
 --- !u!1 &2125104878
 GameObject:
   m_ObjectHideFlags: 0
