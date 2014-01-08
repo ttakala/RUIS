@@ -119,7 +119,7 @@ public class XmlImportExport {
         return true;
     }
 
-    public static bool ImportDisplay(RUISDisplay display, string filename, TextAsset displaySchema)
+    public static bool ImportDisplay(RUISDisplay display, string filename, TextAsset displaySchema, bool loadFromFileInEditor)
     {
         XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(filename, displaySchema);
         if (xmlDoc == null)
@@ -127,11 +127,16 @@ public class XmlImportExport {
             return false;
         }
 
-        display.displayCenterPosition = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayCenterPosition").Item(0));
-        display.displayUpInternal = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayUp").Item(0));
-        display.displayNormalInternal = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayNormal").Item(0));
-        display.width = int.Parse(xmlDoc.GetElementsByTagName("displayResolution").Item(0).Attributes["width"].Value);
-        display.height = int.Parse(xmlDoc.GetElementsByTagName("displayResolution").Item(0).Attributes["height"].Value);
+        if (Application.isEditor && loadFromFileInEditor)
+        {
+            display.displayCenterPosition = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayCenterPosition").Item(0));
+            display.displayUpInternal = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayUp").Item(0));
+            display.displayNormalInternal = XMLUtil.GetVector3FromXmlNode(xmlDoc.GetElementsByTagName("displayNormal").Item(0));
+            display.width = float.Parse(xmlDoc.GetElementsByTagName("displaySize").Item(0).Attributes["width"].Value);
+            display.height = float.Parse(xmlDoc.GetElementsByTagName("displaySize").Item(0).Attributes["height"].Value);
+            display.resolutionX = int.Parse(xmlDoc.GetElementsByTagName("displayResolution").Item(0).Attributes["width"].Value);
+            display.resolutionY = int.Parse(xmlDoc.GetElementsByTagName("displayResolution").Item(0).Attributes["height"].Value);
+        }
 
         display.linkedCamera.LoadKeystoningFromXML(xmlDoc);
 
@@ -158,6 +163,11 @@ public class XmlImportExport {
         XmlElement displayNormalElement = xmlDoc.CreateElement("displayNormal");
         XMLUtil.WriteVector3ToXmlElement(displayNormalElement, display.displayNormalInternal);
         displayRootElement.AppendChild(displayNormalElement);
+
+        XmlElement displaySizeElement = xmlDoc.CreateElement("displaySize");
+        displaySizeElement.SetAttribute("width", display.width.ToString());
+        displaySizeElement.SetAttribute("height", display.height.ToString());
+        displayRootElement.AppendChild(displaySizeElement);
 
         XmlElement displayResolutionElement = xmlDoc.CreateElement("displayResolution");
         displayResolutionElement.SetAttribute("width", display.resolutionX.ToString());

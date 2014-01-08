@@ -16,6 +16,7 @@ using System.Xml.Schema;
 public class RUISDisplay : MonoBehaviour {
     public TextAsset displaySchema;
     public string xmlFilename = "defaultDisplay.xml";
+    public bool loadFromFileInEditor = false;
 
     public enum StereoType
     {
@@ -228,7 +229,7 @@ public class RUISDisplay : MonoBehaviour {
 
     public bool LoadFromXML()
     {
-        return XmlImportExport.ImportDisplay(this, xmlFilename, displaySchema);
+        return XmlImportExport.ImportDisplay(this, xmlFilename, displaySchema, loadFromFileInEditor);
     }
 
     public bool SaveToXML()

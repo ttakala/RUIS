@@ -6,13 +6,14 @@
 	
 	<complexType name="DisplayType">
 		<sequence>
-			<element name="displayCenterPosition" type="tns:Vector3" minOccurs="0" maxOccurs="1"/>
-			<element name="displayUp" type="tns:Vector3" minOccurs="0" maxOccurs="1"/>
-			<element name="displayNormal" type="tns:Vector3" minOccurs="0" maxOccurs="1"/>
-			<element name="displayResolution" type="tns:ResolutionType" minOccurs="0" maxOccurs="1"/>
-			<element name="centerKeystone" type="tns:KeystoningCorners" minOccurs="0" maxOccurs="1"/>
-			<element name="leftKeystone" type="tns:KeystoningCorners" minOccurs="0" maxOccurs="1"/>
-			<element name="rightKeystone" type="tns:KeystoningCorners" minOccurs="0" maxOccurs="1"/>
+			<element name="displayCenterPosition" type="tns:Vector3" minOccurs="1" maxOccurs="1"/>
+			<element name="displayUp" type="tns:Vector3" minOccurs="1" maxOccurs="1"/>
+			<element name="displayNormal" type="tns:Vector3" minOccurs="1" maxOccurs="1"/>
+			<element name="displaySize" type="tns:DisplaySizeType" minOccurs="1" maxOccurs="1" />
+			<element name="displayResolution" type="tns:ResolutionType" minOccurs="1" maxOccurs="1"/>
+			<element name="centerKeystone" type="tns:KeystoningCorners" minOccurs="1" maxOccurs="1"/>
+			<element name="leftKeystone" type="tns:KeystoningCorners" minOccurs="1" maxOccurs="1"/>
+			<element name="rightKeystone" type="tns:KeystoningCorners" minOccurs="1" maxOccurs="1"/>
 		</sequence>
 	</complexType>
 
@@ -38,6 +39,11 @@
 
 	<complexType name="KinectDistanceFromFloorType">
 		<attribute name="value" type="float" use="required" />
+  </complexType>
+
+  <complexType name="DisplaySizeType">
+	<attribute name="width" type="float" use="required" />
+	<attribute name="height" type="float" use="required" />
   </complexType>
 
   <complexType name="ResolutionType">

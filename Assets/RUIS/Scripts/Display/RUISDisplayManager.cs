@@ -19,7 +19,7 @@ public class RUISDisplayManager : MonoBehaviour {
     public int totalRawResolutionX = 0;
     public int totalRawResolutionY = 0;
 
-    public bool fullScreen;
+    public bool allowResolutionDialog;
 
     public class ScreenPoint
     {
@@ -64,7 +64,10 @@ public class RUISDisplayManager : MonoBehaviour {
             currentResolutionX += display.rawResolutionX;
         }
 
-        Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, fullScreen);
+        if (displays.Count > 1 || (displays.Count == 0 && !allowResolutionDialog))
+        {
+            Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, false);
+        }
     }
 
     public void CalculateTotalResolution()

@@ -250,11 +250,6 @@ public class RUISSkeletonController : MonoBehaviour
             }
 
         }
-        else if (skeletonManager != null && skeletonManager.skeletons[playerId] != null)
-        {
-            leftShoulder.localRotation = jointInitialRotations[leftShoulder] * Quaternion.Euler(0, 0, -70) * Quaternion.Euler(90, 0, 0);
-            rightShoulder.localRotation = jointInitialRotations[rightShoulder] * Quaternion.Euler(0, 0, 110) * Quaternion.Euler(-90, 0, 0);
-        }
 		else // TUUKKA
 			if(followMoveController && characterController && inputManager)
 			{

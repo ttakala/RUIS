@@ -16,7 +16,7 @@ public class RUISDisplayManagerEditor : Editor {
     SerializedProperty displays;
     private GameObject displayPrefab;
 
-    SerializedProperty fullScreen;
+    SerializedProperty allowResolutionDialog;
 
     GUIStyle displayBoxStyle;
 
@@ -26,7 +26,7 @@ public class RUISDisplayManagerEditor : Editor {
     void OnEnable()
     {
         displays = serializedObject.FindProperty("displays");
-        fullScreen = serializedObject.FindProperty("fullScreen");
+        allowResolutionDialog = serializedObject.FindProperty("allowResolutionDialog");
         displayPrefab = Resources.Load("RUIS/Prefabs/Main RUIS/RUISDisplay") as GameObject;
 
         displayBoxStyle = new GUIStyle();
@@ -51,13 +51,20 @@ public class RUISDisplayManagerEditor : Editor {
         //if there is only one display we want to give the user the opportunity to set fullscreen
         if (displays.arraySize == 1)
         {
-            PlayerSettings.defaultIsFullScreen = EditorGUILayout.Toggle(new GUIContent("Full Screen", "Is this display full screen? Only available when using one display."), PlayerSettings.defaultIsFullScreen);
-            fullScreen.boolValue = PlayerSettings.defaultIsFullScreen;
+            allowResolutionDialog.boolValue = EditorGUILayout.Toggle(new GUIContent("Allow resolution dialog", "Allow the usage of the resolution dialog"), allowResolutionDialog.boolValue);
+            if (allowResolutionDialog.boolValue)
+            {
+                PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+            }
+            else
+            {
+                PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
+            }
         }
         else
         {
-            PlayerSettings.defaultIsFullScreen = false;
-            fullScreen.boolValue = false;
+            PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
+            allowResolutionDialog.boolValue = false;
         }
 
         if (GUILayout.Button("Add display"))

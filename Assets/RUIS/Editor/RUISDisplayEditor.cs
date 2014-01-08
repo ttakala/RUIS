@@ -16,6 +16,7 @@ using UnityEditor;
 public class RUISDisplayEditor : Editor {
     SerializedProperty xmlFilename;
     SerializedProperty displaySchema;
+    SerializedProperty loadFromFileInEditor;
 
     SerializedProperty resolutionX;
     SerializedProperty resolutionY;
@@ -46,6 +47,7 @@ public class RUISDisplayEditor : Editor {
     {
         xmlFilename = serializedObject.FindProperty("xmlFilename");
         displaySchema = serializedObject.FindProperty("displaySchema");
+        loadFromFileInEditor = serializedObject.FindProperty("loadFromFileInEditor");
 
         resolutionX = serializedObject.FindProperty("resolutionX");
         resolutionY = serializedObject.FindProperty("resolutionY");
@@ -89,6 +91,7 @@ public class RUISDisplayEditor : Editor {
 
         EditorGUILayout.PropertyField(displaySchema, new GUIContent("XML Schema", "Do not modify this unless you know what you're doing"));
         EditorGUILayout.PropertyField(xmlFilename, new GUIContent("XML filename", "The XML file with the display specifications"));
+        EditorGUILayout.PropertyField(loadFromFileInEditor, new GUIContent("Load from File in Editor", "Load the information from the xml file while in editor mode."));
 
         EditorGUILayout.PropertyField(resolutionX, new GUIContent("Resolution X", "The pixel width of the display"));
         EditorGUILayout.PropertyField(resolutionY, new GUIContent("Resolution Y", "The pixel height of the display"));

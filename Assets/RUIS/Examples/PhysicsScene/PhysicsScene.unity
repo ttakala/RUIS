@@ -2215,6 +2215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
+  loadFromFileInEditor: 0
   resolutionX: 1280
   resolutionY: 720
   useDoubleTheSpace: 1
@@ -6583,6 +6584,10 @@ Prefab:
       propertyPath: _linkedCamera
       value: 
       objectReference: {fileID: 115874250}
+    - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: allowResolutionDialog
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
@@ -11326,7 +11331,7 @@ GameObject:
   - 65: {fileID: 1360301161}
   - 114: {fileID: 1360301162}
   m_Layer: 0
-  m_Name: cardboardBox
+  m_Name: CubeBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11338,9 +11343,9 @@ Transform:
   m_PrefabParentObject: {fileID: 400020, guid: 6b66c5b778812d9439fac9a900e91ad7, type: 2}
   m_PrefabInternal: {fileID: 1166384451}
   m_GameObject: {fileID: 1360301156}
-  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .803289175, y: .541730046, z: -.720340371}
-  m_LocalScale: {x: .768218994, y: .768218994, z: .768218994}
+  m_LocalScale: {x: .400000006, y: .400000006, z: .400000006}
   m_Children: []
   m_Father: {fileID: 627582400}
 --- !u!23 &1360301158
@@ -11356,7 +11361,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: 359fbdc094471ab4dbde5121335a2896, type: 2}
+  - {fileID: 2100000, guid: 0bc1d9028006d754ba321c89d10c4742, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -11372,7 +11377,7 @@ MeshFilter:
     type: 2}
   m_PrefabInternal: {fileID: 1166384451}
   m_GameObject: {fileID: 1360301156}
-  m_Mesh: {fileID: 4300000, guid: 486c4be82875c3c40819753980a9b063, type: 3}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &1360301160
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11400,8 +11405,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: .519999981, y: .520000339, z: .5200001}
-  m_Center: {x: 0, y: -1.19209318e-07, z: 0}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1360301162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16368,7 +16373,7 @@ MonoBehaviour:
   totalResolutionY: 720
   totalRawResolutionX: 1280
   totalRawResolutionY: 720
-  fullScreen: 0
+  allowResolutionDialog: 1
 --- !u!1 &2060023669
 GameObject:
   m_ObjectHideFlags: 0
