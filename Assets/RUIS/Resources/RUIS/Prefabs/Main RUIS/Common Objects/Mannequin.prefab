@@ -1401,7 +1401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  root: {fileID: 0}
+  root: {fileID: 400020}
   head: {fileID: 400008}
   neck: {fileID: 0}
   torso: {fileID: 400010}
@@ -1425,7 +1425,7 @@ MonoBehaviour:
   scaleHierarchicalModelBones: 0
   maxScaleFactor: .00999999978
   minimumConfidenceToUpdate: .5
-  rotationDamping: 15
+  rotationDamping: 360
   torsoOffset: 0
   torsoScale: 1
   neckHeightTweaker: 0

@@ -1,8 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\RUIS\Scripts\Input\RUISInputManager.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\RUIS\Scripts\CharacterController\RUISCharacterController.cs">
     <Files>
-      <File FileName="Assets\RUIS\Scripts\Input\RUISInputManager.cs" Line="423" Column="14" />
+      <File FileName="Assets\RUIS\Scripts\CharacterController\RUISCharacterController.cs" Line="116" Column="31" />
+      <File FileName="Assets\RUIS\Editor\RUISCharacterControllerEditor.cs" Line="59" Column="139" />
+      <File FileName="Assets\RUIS\Scripts\CharacterController\RUISCharacterLocomotion.cs" Line="113" Column="20" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

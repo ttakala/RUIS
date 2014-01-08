@@ -138,7 +138,8 @@ public class XmlImportExport {
             display.resolutionY = int.Parse(xmlDoc.GetElementsByTagName("displayResolution").Item(0).Attributes["height"].Value);
         }
 
-        display.linkedCamera.LoadKeystoningFromXML(xmlDoc);
+		if(display.linkedCamera)
+	        display.linkedCamera.LoadKeystoningFromXML(xmlDoc);
 
         return true;
     }

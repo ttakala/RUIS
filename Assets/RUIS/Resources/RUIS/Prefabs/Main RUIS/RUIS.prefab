@@ -429,6 +429,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a80beaec07f0aa45adfa8d462563de0, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   position: []
   velocity: []
   acceleration: []
@@ -491,20 +492,32 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3cc8f20f27ab81542b70f1880fbad4f0, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   xmlSchema: {fileID: 4900000, guid: a07a36ac9f438794596e1ee51310972d, type: 3}
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
-  enablePSMove: 1
-  PSMoveIP: 130.233.46.224
+  enablePSMove: 0
+  PSMoveIP: 127.0.0.1
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
   enableMoveCalibrationDuringPlay: 1
+  delayedWandActivation: 0
+  delayTime: 5
+  moveWand0: 0
+  moveWand1: 0
+  moveWand2: 0
+  moveWand3: 0
   enableKinect: 0
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
+  kinectDriftCorrectionPreferred: 0
+  enableRazerHydra: 0
   moveControllers: []
+  riftMagnetometerMode: 0
+  oculusID: 0
+  jumpGestureEnabled: 1
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -515,6 +528,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0442d80ea55de654ab4a95b3bc862bdd, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   m_Logger: {fileID: 11400018}
   m_query: {fileID: 11400006}
   m_XMLFileName: 
@@ -533,6 +547,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f89f8a7d7dac6f14d8e33be7c1501ef4, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   m_queryDescriptions:
   - m_vendorName: 
     m_nodeName: 
@@ -569,6 +584,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ee4b0a5b25363343844f6492ba44786, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   m_contextManager: {fileID: 0}
   m_MaxNumberOfPlayers: 1
   m_numRetries: 0
@@ -586,6 +602,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   rootSpeedScaling: {x: 1, y: 1, z: 1}
 --- !u!114 &11400012
 MonoBehaviour:
@@ -597,6 +614,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4612a60126cf507449c3adb9239c9cf5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
   resolutionX: 1280
@@ -604,8 +622,8 @@ MonoBehaviour:
   useDoubleTheSpace: 1
   isStereo: 0
   eyeSeparation: .0599999987
-  isHMD: 1
-  linkedCamera: {fileID: 0}
+  isHMD: 0
+  _linkedCamera: {fileID: 0}
   stereoType: 0
   isObliqueFrustum: 0
   isKeystoneCorrected: 0
@@ -614,8 +632,6 @@ MonoBehaviour:
   displayUpInternal: {x: 0, y: 1, z: 0}
   width: 2
   height: 1.5
-  horizontalFOV: 60
-  verticalFOV: 40
 --- !u!114 &11400014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -626,6 +642,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1af08926c7e0c34192ca37d5e117fa7, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   coordinateXmlFile: calibration.xml
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 3}
   loadFromXML: 1
@@ -643,6 +660,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 526a02a3548a87e439fb873def0646c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -653,6 +671,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 229e37cd924caef4db8dceaf2fb41b76, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   m_categoriesToShow: 010101
   m_minLevelToShow: 0
   m_sourcesToShow: 0101010101010101
@@ -666,11 +685,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 3
-  coordinateSystem: {fileID: 0}
   whereToCopyColor: {fileID: 0}
-  wandAtRelativeOrigin: {fileID: 0}
 --- !u!114 &11400022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -681,11 +699,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 2
-  coordinateSystem: {fileID: 0}
   whereToCopyColor: {fileID: 0}
-  wandAtRelativeOrigin: {fileID: 0}
 --- !u!114 &11400024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -696,11 +713,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 1
-  coordinateSystem: {fileID: 0}
   whereToCopyColor: {fileID: 0}
-  wandAtRelativeOrigin: {fileID: 0}
 --- !u!114 &11400026
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -711,15 +727,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 983153594a876dc40934c28fe9c6d7f5, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   displays:
   - {fileID: 11400012}
   stereoCamera: {fileID: 0}
   monoCamera: {fileID: 0}
-  totalResolutionX: 1920
-  totalResolutionY: 1080
-  totalRawResolutionX: 1920
-  totalRawResolutionY: 1080
-  fullScreen: 1
+  totalResolutionX: 1280
+  totalResolutionY: 800
+  totalRawResolutionX: 1280
+  totalRawResolutionY: 800
+  fullScreen: 0
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -730,11 +747,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2149fbf0fa8596e42bbb95bf7a9c36c9, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 0
-  coordinateSystem: {fileID: 0}
   whereToCopyColor: {fileID: 0}
-  wandAtRelativeOrigin: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

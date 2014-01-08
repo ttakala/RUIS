@@ -55,7 +55,8 @@ public class RUISCharacterControllerEditor : Editor
             case (int)RUISCharacterController.CharacterPivotType.KinectHead:
             case (int)RUISCharacterController.CharacterPivotType.KinectTorso:
 				kinectPlayerId.intValue = Mathf.Clamp(kinectPlayerId.intValue, 0, maxKinectSkeletons - 1);
-                EditorGUILayout.PropertyField(kinectPlayerId, new GUIContent("Kinect Player ID", "Between 0 and 3"));
+                EditorGUILayout.PropertyField(kinectPlayerId, new GUIContent(	"Kinect Player ID", "Between 0 and 3. This value should be same as in the "
+			                                                             	 +	"RUISSkeletonController script that is parented under this GameObject."));
                 break;
             case (int)RUISCharacterController.CharacterPivotType.MoveController:
 			{

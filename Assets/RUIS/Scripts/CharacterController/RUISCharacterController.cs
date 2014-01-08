@@ -107,6 +107,14 @@ public class RUISCharacterController : MonoBehaviour
 				}
 			}
 		}
+		if((   characterPivotType == CharacterPivotType.KinectHead
+		    || characterPivotType == CharacterPivotType.KinectTorso)
+		    && (skeletonController && skeletonController.playerId != kinectPlayerId))
+			Debug.LogError(  "RUISCharacterController script in gameObject '" + gameObject.name + "' has a kinectPlayerId "
+			               + "that is different from the playerId of the RUISSkeletonController script (located in child "
+			               + "object '" + skeletonController.gameObject.name + "). Make sure that these two values are "
+			               + "the same.");
+
 	}
 	
     void Update()
