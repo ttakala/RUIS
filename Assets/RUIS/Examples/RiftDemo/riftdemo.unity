@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575cb7dc5eb8ea94e8f0ab6fde7e92f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPivotType: 2
+  characterPivotType: 1
   kinectPlayerId: 0
   moveControllerId: 0
   characterPivot: {fileID: 0}
@@ -2169,6 +2169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
+  loadFromFileInEditor: 0
   resolutionX: 1280
   resolutionY: 800
   useDoubleTheSpace: 1
@@ -10932,7 +10933,7 @@ MonoBehaviour:
   totalResolutionY: 800
   totalRawResolutionX: 1280
   totalRawResolutionY: 800
-  fullScreen: 0
+  allowResolutionDialog: 0
 --- !u!1 &807122979
 GameObject:
   m_ObjectHideFlags: 0

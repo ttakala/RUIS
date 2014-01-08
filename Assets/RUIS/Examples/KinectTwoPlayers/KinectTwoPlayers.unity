@@ -3951,13 +3951,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
+  loadFromFileInEditor: 0
   resolutionX: 1280
   resolutionY: 800
   useDoubleTheSpace: 1
   isStereo: 0
   eyeSeparation: .0599999987
   isHMD: 0
-  _linkedCamera: {fileID: 0}
+  _linkedCamera: {fileID: 115874250}
   stereoType: 0
   isObliqueFrustum: 0
   isKeystoneCorrected: 0
@@ -10662,6 +10663,14 @@ Prefab:
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: maxNumberOfKinectPlayers
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: _linkedCamera
+      value: 
+      objectReference: {fileID: 115874250}
+    - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: allowResolutionDialog
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
@@ -31795,7 +31804,7 @@ MonoBehaviour:
   totalResolutionY: 800
   totalRawResolutionX: 1280
   totalRawResolutionY: 800
-  fullScreen: 0
+  allowResolutionDialog: 0
 --- !u!1 &2069231644
 GameObject:
   m_ObjectHideFlags: 0
