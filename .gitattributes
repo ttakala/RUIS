@@ -40,7 +40,6 @@ Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Ball.physicMaterial -te
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Pin.physicMaterial -text
 Assets/RUIS/Examples/BowlingAlley/Prefabs/Bowling[!!-~]Pin.prefab -text
 Assets/RUIS/Examples/BowlingAlley/Prefabs/Bowling[!!-~]Pins.prefab -text
-Assets/RUIS/Examples/BowlingAlley/bowlingalley.unity -text
 Assets/RUIS/Examples/Shared[!!-~]Files/Materials/CrateBump.bmp -text
 Assets/RUIS/Examples/Shared[!!-~]Files/Materials/CrateDiffuse.bmp -text
 Assets/RUIS/Resources/RUIS/Editor/Textures/monodisplay.png -text
