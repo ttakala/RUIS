@@ -143,9 +143,9 @@ public class RUISCamera : MonoBehaviour {
                     Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
 				    Vector3 camToDisplay = associatedDisplay.displayCenterPosition - eyePositions[0];
         		    float distanceFromPlane = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
-				    print(camToDisplay + " " + eyePositions[0] + " " + distanceFromPlane);
+				    //print(camToDisplay + " " + eyePositions[0] + " " + distanceFromPlane);
 	                if(distanceFromPlane == 0)
-					Debug.LogError(  "In " + headTracker.gameObject.name + " GameObject's "
+						Debug.LogError(  "In " + headTracker.gameObject.name + " GameObject's "
 								       + "RUISTracker script, you have set defaultPosition to " 
 								       + "lie on the display plane of " 
 								       + associatedDisplay.gameObject.name + ". The defaultPosition "

@@ -92,7 +92,7 @@ public class RUISSkeletonControllerEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(playerId, new GUIContent("Player Id", "The kinect player id number"));
+        EditorGUILayout.PropertyField(playerId, new GUIContent("Kinect Player Id", "The kinect player id number"));
         
         EditorGUILayout.Space();
 

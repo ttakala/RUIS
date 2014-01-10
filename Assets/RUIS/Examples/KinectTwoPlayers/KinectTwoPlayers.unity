@@ -3951,7 +3951,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
-  loadFromFileInEditor: 0
   resolutionX: 1280
   resolutionY: 800
   useDoubleTheSpace: 1
@@ -10668,8 +10667,12 @@ Prefab:
       propertyPath: _linkedCamera
       value: 
       objectReference: {fileID: 115874250}
-    - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
-      propertyPath: allowResolutionDialog
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: isHMD
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: isObliqueFrustum
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -23735,6 +23738,10 @@ Prefab:
       propertyPath: playerId
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 1325886366}
@@ -31804,7 +31811,7 @@ MonoBehaviour:
   totalResolutionY: 800
   totalRawResolutionX: 1280
   totalRawResolutionY: 800
-  allowResolutionDialog: 0
+  fullScreen: 0
 --- !u!1 &2069231644
 GameObject:
   m_ObjectHideFlags: 0

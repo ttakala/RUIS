@@ -5,7 +5,7 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 400000}
   - 33: {fileID: 3300000}
@@ -16,13 +16,13 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 400002}
   - 143: {fileID: 14300000}
@@ -35,13 +35,13 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &100004
 GameObject:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 400004}
   - 20: {fileID: 2000002}
@@ -54,13 +54,13 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &100006
 GameObject:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 400006}
   - 20: {fileID: 2000000}
@@ -73,13 +73,13 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &100008
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 3
+  serializedVersion: 4
   m_Component:
   - 4: {fileID: 400008}
   - 114: {fileID: 11400008}
@@ -91,7 +91,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -179,6 +179,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000002
 Camera:
   m_ObjectHideFlags: 1
@@ -207,6 +208,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!20 &2000004
 Camera:
   m_ObjectHideFlags: 1
@@ -235,6 +237,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_HDR: 0
+  m_OcclusionCulling: 1
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -247,12 +250,15 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -296,8 +302,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100008}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68ec2fe99d1108b9d0006a298d76c639, type: 1}
+  m_Script: {fileID: 11500000, guid: 68ec2fe99d1108b9d0006a298d76c639, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   axes: 0
   sensitivityX: 2
   sensitivityY: 2
@@ -313,8 +320,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60bca8f58a0b8478e946e6e86658cb29, type: 1}
+  m_Script: {fileID: 11500000, guid: 60bca8f58a0b8478e946e6e86658cb29, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -323,8 +331,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ab79d7f243824f5d9826bd83522c8df, type: 1}
+  m_Script: {fileID: 11500000, guid: 0ab79d7f243824f5d9826bd83522c8df, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   canControl: 1
   useFixedUpdate: 1
   movement:
@@ -377,8 +386,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68ec2fe99d1108b9d0006a298d76c639, type: 1}
+  m_Script: {fileID: 11500000, guid: 68ec2fe99d1108b9d0006a298d76c639, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   axes: 1
   sensitivityX: 15
   sensitivityY: 0
@@ -394,14 +404,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 100008}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 1}
+  m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
+  isHeadTracking: 0
+  isKeystoneCorrected: 0
   centerCamera: {fileID: 2000004}
   leftCamera: {fileID: 2000002}
   rightCamera: {fileID: 2000000}
-  eyeSeparation: .0599999987
-  zeroParallaxDistance: 0
+  keystoningCamera: {fileID: 0}
+  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
+  horizontalFOV: 60
+  verticalFOV: 40
+  cullingMask:
+    serializedVersion: 2
+    m_Bits: 16777215
+  near: .300000012
+  far: 1000
+  headTracker: {fileID: 0}
 --- !u!124 &12400000
 Behaviour:
   m_ObjectHideFlags: 1

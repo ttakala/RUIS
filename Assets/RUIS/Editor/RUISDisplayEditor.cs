@@ -116,7 +116,7 @@ public class RUISDisplayEditor : Editor {
         {
             //disabled for now EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
 
-            EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked View", "Should the projection matrix be skewed to use this display as a head tracked viewport"));
+            EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked CAVE Display", "Should the projection matrix be skewed to use this display as a head tracked CAVE viewport"));
 
             if (isObliqueFrustum.boolValue)
             {

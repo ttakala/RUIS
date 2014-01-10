@@ -41,7 +41,9 @@ public class RUISCameraEditor : Editor
 
         if (!ovrEnabled.boolValue)
         {
-            EditorGUILayout.PropertyField(headTracker, new GUIContent("Head Tracker", "The head tracker object to use for oblique frustums"));
+            EditorGUILayout.PropertyField(headTracker, new GUIContent(  "CAVE Head Tracker", "The head tracker object to use for perspective "
+			                                                          + "distortion with CAVE-like displays. This is used only if the associated "
+			                                                          + "RUISDisplay has 'Head Tracked CAVE Display' enabled."));
         }
 
         EditorGUILayout.PropertyField(cullingMask, new GUIContent("Culling Mask", "Camera culling mask"));
