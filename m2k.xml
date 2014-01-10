@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:m2k xmlns:ns2="http://ruisystem.net/m2k">
-    <translate x="-0.8707576" y="-3.7021127" z="-6.697489"/>
-    <rotate r00="0.9531121" r01="0.012417603" r02="0.031293284" r10="0.014433151" r11="0.8939307" r12="0.09789329" r20="-0.07287312" r21="0.015432882" r22="0.9200282"/>
-    <sensorAngles MovePitchAngle="0.0" KinectPitchAngle="0.0" KinectRollAngle="0.0"/>
-</ns2:m2k>

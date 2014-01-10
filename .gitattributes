@@ -1,11 +1,4 @@
 * text=auto !eol
-/Assembly-CSharp-Editor.pidb -text
-/Assembly-CSharp-firstpass.pidb -text
-/Assembly-CSharp.pidb -text
-/Assembly-UnityScript-firstpass.pidb -text
-/Assembly-UnityScript-vs.unityproj -text
-/Assembly-UnityScript.pidb -text
-/Assembly-UnityScript.unityproj -text
 Assets/OVR/Materials/GUIHUD.mat -text
 Assets/OVR/Materials/MagHUDRef.mat -text
 Assets/OVR/Materials/MagHUDTracked.mat -text
@@ -171,14 +164,4 @@ ProjectSettings/ProjectSettings.asset -text
 ProjectSettings/QualitySettings.asset -text
 ProjectSettings/TagManager.asset -text
 ProjectSettings/TimeManager.asset -text
-/RUIS-csharp.v11.suo -text
-/Unity-csharp.sln -text
-/Unity-csharp.suo -text
-/Unity.sln -text
-/Unity.userprefs -text
 /inputConfig.xml -text
-/inputConfig.xsd -text
-/m2k.xml -text
-/ruis-unity-csharp.sln -text
-/ruis-unity-csharp.suo -text
-/ruis-unity.sln -text
