@@ -55,7 +55,6 @@ Assets/RUIS/Resources/RUIS/Graphics/Materials/DefaultHighlightMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/DefaultSelectionMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/MoveCalibrationCubeMaterial.mat -text
 Assets/RUIS/Resources/RUIS/Graphics/Materials/SelectionRayMaterial.mat -text
-Assets/RUIS/Resources/RUIS/Graphics/Materials/skin_box.jpg -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer.pdn -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer1.png -text
 Assets/RUIS/Resources/RUIS/Graphics/Selection/visualizer2.png -text
@@ -72,19 +71,10 @@ Assets/RUIS/Resources/RUIS/Models/Other/BaseballBat/basebbat_diffuse.dds -text
 Assets/RUIS/Resources/RUIS/Models/Other/BaseballBat/basebbat_normal.dds -text
 Assets/RUIS/Resources/RUIS/Models/Other/BaseballBat/basebbat_normal.png -text
 Assets/RUIS/Resources/RUIS/Models/Other/BaseballBat/basebbat_specular.dds -text
-Assets/RUIS/Resources/RUIS/Models/Other/SoccerBall.FBX -text
+Assets/RUIS/Resources/RUIS/Models/Other/SoccerBall/SoccerBall.FBX -text
 Assets/RUIS/Resources/RUIS/Models/Other/TubeBuilding/baked_building.png -text
 Assets/RUIS/Resources/RUIS/Models/PS[!!-~]Eye/PSEYE.png -text
 Assets/RUIS/Resources/RUIS/Models/Skeleton/Materials/No[!!-~]Name.mat -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/arm.fbx -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/foot.fbx -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/forearm.fbx -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/head.fbx -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/lefthand.fbx -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/righthand.fbx -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/shin.fbx -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/thigh.fbx -text
-Assets/RUIS/Resources/RUIS/Models/Skeleton/torso.fbx -text
 Assets/RUIS/Resources/RUIS/Models/Wand/psmove_icon.png -text
 Assets/RUIS/Resources/RUIS/Prefabs/Calibration/Calibration[!!-~]Sphere.prefab -text
 Assets/RUIS/Resources/RUIS/Prefabs/Calibration/MoveCalibrationCube.prefab -text
@@ -100,7 +90,6 @@ Assets/SixenseInput/DemoScenes/Models/Materials/Hands_Specular.png -text
 Assets/SixenseInput/DemoScenes/SixenseHands.unity -text
 Assets/SixenseInput/DemoScenes/SixenseInputTest.unity -text
 Assets/SixenseInput/SixenseInput.prefab -text
-Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/3rd[!!-~]Person[!!-~]Controller.prefab -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/First[!!-~]Person[!!-~]Controller.prefab -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/PrototypeCharacter/Constructor.FBX -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/PrototypeCharacter/Materials/constructor_done.mat -text
@@ -109,9 +98,6 @@ Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/PrototypeCharacte
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/CharacterMotor.js -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/FPSInputController.js -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/MouseLook.cs -text
-Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/PlatformInputController.js -text
-Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/ThirdPersonCamera.js -text
-Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/ThirdPersonController.js -text
 ProjectSettings/AudioManager.asset -text
 ProjectSettings/DynamicsManager.asset -text
 ProjectSettings/EditorBuildSettings.asset -text

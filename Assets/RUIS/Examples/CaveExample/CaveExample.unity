@@ -10190,6 +10190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: rightDisplay.xml
+  loadFromFileInEditor: 0
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 1
@@ -10796,6 +10797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: leftDisplay.xml
+  loadFromFileInEditor: 0
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
@@ -11611,7 +11613,7 @@ MonoBehaviour:
   totalResolutionY: 1080
   totalRawResolutionX: 5760
   totalRawResolutionY: 1080
-  fullScreen: 0
+  allowResolutionDialog: 0
 --- !u!1 &1071815039
 GameObject:
   m_ObjectHideFlags: 0
@@ -23049,6 +23051,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: frontDisplay.xml
+  loadFromFileInEditor: 0
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0

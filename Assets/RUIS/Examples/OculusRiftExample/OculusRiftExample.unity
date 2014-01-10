@@ -10931,7 +10931,7 @@ MonoBehaviour:
   monoCamera: {fileID: 0}
   totalResolutionX: 1280
   totalResolutionY: 800
-  totalRawResolutionX: 2560
+  totalRawResolutionX: 1280
   totalRawResolutionY: 800
   allowResolutionDialog: 0
 --- !u!1 &807122979
