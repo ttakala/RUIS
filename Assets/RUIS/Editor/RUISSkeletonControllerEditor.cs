@@ -48,7 +48,8 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty minimumConfidenceToUpdate;
     SerializedProperty rotationDamping;
     SerializedProperty neckHeightTweaker;
-    SerializedProperty forearmLengthTweaker;
+	SerializedProperty forearmLengthTweaker;
+	SerializedProperty shinLengthTweaker;
 
     public void OnEnable()
     {
@@ -86,29 +87,37 @@ public class RUISSkeletonControllerEditor : Editor
         rotationDamping = serializedObject.FindProperty("rotationDamping");
         neckHeightTweaker = serializedObject.FindProperty("neckHeightTweaker");
         forearmLengthTweaker = serializedObject.FindProperty("forearmLengthRatio");
+		shinLengthTweaker = serializedObject.FindProperty("shinLengthRatio");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(playerId, new GUIContent("Kinect Player Id", "The kinect player id number"));
+        EditorGUILayout.PropertyField(playerId, new GUIContent("Kinect Player ID", "The kinect player ID number"));
         
         EditorGUILayout.Space();
 
-        EditorGUILayout.PropertyField(useHierarchicalModel, new GUIContent("Use Hierarchical Model", "Is the model armature hierarchical (a tree) instead of non-hierarchical (all bones are on same level)"));
+        EditorGUILayout.PropertyField(useHierarchicalModel, new GUIContent(  "Hierarchical Model", "Is the model rig hierarchical (a tree) "
+		                                                                   + "instead of non-hierarchical (all bones are on same level)?"));
 
-        EditorGUILayout.PropertyField(updateRootPosition, new GUIContent("Update Root Position", "Update the position of this GameObject according to the skeleton root position"));
+        EditorGUILayout.PropertyField(updateRootPosition, new GUIContent(  "Update Root Position", "Update the position of this GameObject according "
+		                                                                 + "to the skeleton root position"));
 
         GUI.enabled = !useHierarchicalModel.boolValue;
-        EditorGUILayout.PropertyField(updateJointPositions, new GUIContent("Update Joint Positions", "Update all joint positions, this shouldn't be done on hierarchical armatures, since the skeleton structure already handles positions with joint rotations."));
+		EditorGUILayout.PropertyField(updateJointPositions, new GUIContent(  "Update Joint Positions", "Unavailable for hierarchical "
+		                                                                   + "models, since there the skeleton structure already "
+		                                                                   + "handles positions with joint rotations."));
         if (useHierarchicalModel.boolValue) updateJointPositions.boolValue = false;
         GUI.enabled = true;
 
-        EditorGUILayout.PropertyField(updateJointRotations, new GUIContent("Update Joint Rotations", "Update all joint rotations, especially important for hierarchical models"));
+        EditorGUILayout.PropertyField(updateJointRotations, new GUIContent(  "Update Joint Rotations", "Enabling this is especially "
+		                                                                   + "important for hierarchical models."));
 
         GUI.enabled = useHierarchicalModel.boolValue;
-        EditorGUILayout.PropertyField(scaleHierarchicalModelBones, new GUIContent("Scale Bones", "Scale the bones of the model based on the real-life lengths of the player bones"));
+        EditorGUILayout.PropertyField(scaleHierarchicalModelBones, new GUIContent(  "Scale Bones", "Scale the bones of the model based on the "
+		                                                                          + "real-life lengths of the player bones. Only available for "
+		                                                                          + "hierarchical models."));
         if (!useHierarchicalModel.boolValue) scaleHierarchicalModelBones.boolValue = false;
         GUI.enabled = true;
 
@@ -153,14 +162,22 @@ public class RUISSkeletonControllerEditor : Editor
 
         EditorGUILayout.LabelField("Tweaking", EditorStyles.boldLabel);
         GUI.enabled = scaleHierarchicalModelBones.boolValue;
-        EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent("Maximum Scale Factor", "The maximum amount the scale of a bone can change per second when using hierarchical model bone scaling"));
+        EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Maximum Scale Factor", "The maximum amount the scale of a bone can "
+		                                                             + "change per second when using hierarchical model bone scaling"));
         GUI.enabled = true;
-        EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent("Minimum Confidence to Update", "The minimum confidence in joint positions and rotations needed to update relevant values"));
-        EditorGUILayout.PropertyField(rotationDamping, new GUIContent("Max Joint Angular Velocity", "Maximum joint angular velocity can be used for damping character bone movement (smaller values)"));
+        EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Minimum Confidence to Update", "The minimum confidence in joint "
+		                                                                        + "positions and rotations needed to update relevant values"));
+        EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
+		                                                              + "for damping character bone movement (smaller values)"));
         EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent("Neck Height Tweaker", "The height offset for the neck"));
 
 		GUI.enabled = useHierarchicalModel.boolValue;
-		EditorGUILayout.PropertyField(forearmLengthTweaker, new GUIContent("Forearm Length Tweaker", "The forearm length ratio compared to the real-world value, use this to lengthen or shorten the forearm. Only used for hierarchical models"));
+		EditorGUILayout.PropertyField(forearmLengthTweaker, new GUIContent(  "Forearm Length Tweaker", "The forearm length ratio "
+		                                                                   + "compared to the real-world value, use this to lengthen "
+		                                                                   + "or shorten the forearms. Only used for hierarchical models"));
+		EditorGUILayout.PropertyField(shinLengthTweaker, new GUIContent(  "Shin Length Tweaker", "The shin length ratio compared to the "
+		                                                                + "real-world value, use this to lengthen or shorten the "
+		                                                                + "shins. Only used for hierarchical models"));
 		GUI.enabled = true;
 
         serializedObject.ApplyModifiedProperties();

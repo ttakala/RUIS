@@ -59,8 +59,12 @@ public class RUISKinectAndMecanimCombinerEditor : Editor
         EditorGUILayout.Slider(leftLegBlendWeight, 0, 1, new GUIContent("Left Leg", "Blend weight for left leg"));
         EditorGUI.indentLevel--;
 
-        EditorGUILayout.PropertyField(forceArmStartPosition, new GUIContent("Force Arm Position", "applyTorsoCounteringRotations"));
-        EditorGUILayout.PropertyField(forceLegStartPosition, new GUIContent("Force Leg Position", "applyTorsoCounteringRotations"));
+		EditorGUILayout.PropertyField(forceArmStartPosition, new GUIContent(  "Force Arm Position", "If enabled, the blended pose's shoulder positions "
+		                                                                    + "follow exactly the Kinect tracked shoulder positions. This way the avatar's "
+		                                                                    + "shoulders are as wide as Kinect sees them, even when playing arm animation."));
+		EditorGUILayout.PropertyField(forceLegStartPosition, new GUIContent(  "Force Leg Position", "If enabled, the blended pose's hip positions "
+		                                                                    + "follow exactly the Kinect tracked hip positions. This way the avatar's "
+		                                                                    + "hips are as wide as Kinect sees them, even when playing leg animation."));
 
         serializedObject.ApplyModifiedProperties();
     }

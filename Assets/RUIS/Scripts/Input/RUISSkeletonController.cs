@@ -73,6 +73,10 @@ public class RUISSkeletonController : MonoBehaviour
     public float forearmLengthRatio = 1.0f;
     private Vector3 originalRightForearmScale;
     private Vector3 originalLeftForearmScale;
+	
+	public float shinLengthRatio = 1.0f;
+	private Vector3 originalRightShinScale;
+	private Vector3 originalLeftShinScale;
 
     void Awake()
     {
@@ -150,7 +154,17 @@ public class RUISSkeletonController : MonoBehaviour
         {
             originalLeftForearmScale = leftElbow.localScale;
         }
+
+		if(rightKnee)
+		{
+			originalRightShinScale = rightKnee.localScale;
+		}
 		
+		if(leftKnee)
+		{
+			originalLeftShinScale = leftKnee.localScale;
+		}
+
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(inputManager && !inputManager.enableKinect)
 		{
@@ -388,13 +402,17 @@ public class RUISSkeletonController : MonoBehaviour
         }
 
         {
+			rightKnee.transform.localScale = originalRightShinScale;
             float rightLegCumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[playerId].rightHip, skeletonManager.skeletons[playerId].rightKnee, torsoScale);
             UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[playerId].rightKnee, skeletonManager.skeletons[playerId].rightFoot, rightLegCumulativeScale);
+			rightKnee.transform.localScale = rightKnee.transform.localScale * shinLengthRatio;
         }
 
         {
+			leftKnee.transform.localScale = originalLeftShinScale;
             float leftLegCumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[playerId].leftHip, skeletonManager.skeletons[playerId].leftKnee, torsoScale);
-            UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[playerId].leftKnee, skeletonManager.skeletons[playerId].leftFoot, leftLegCumulativeScale);
+			UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[playerId].leftKnee, skeletonManager.skeletons[playerId].leftFoot, leftLegCumulativeScale);
+			leftKnee.transform.localScale = leftKnee.transform.localScale * shinLengthRatio;
         }
     }
 

@@ -2224,6 +2224,18 @@ Prefab:
       propertyPath: display
       value: 
       objectReference: {fileID: 182071551}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: useHierarchicalModel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: scaleHierarchicalModelBones
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: updateJointPositions
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 9294544}
@@ -22149,6 +22161,7 @@ MonoBehaviour:
   torsoScale: 1
   neckHeightTweaker: 0
   forearmLengthRatio: 1
+  shinLengthRatio: 1
 --- !u!1 &1676033103
 GameObject:
   m_ObjectHideFlags: 0
