@@ -3951,6 +3951,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
+  loadFromFileInEditor: 0
   resolutionX: 1280
   resolutionY: 800
   useDoubleTheSpace: 1
@@ -31811,7 +31812,7 @@ MonoBehaviour:
   totalResolutionY: 800
   totalRawResolutionX: 1280
   totalRawResolutionY: 800
-  fullScreen: 0
+  allowResolutionDialog: 0
 --- !u!1 &2069231644
 GameObject:
   m_ObjectHideFlags: 0
