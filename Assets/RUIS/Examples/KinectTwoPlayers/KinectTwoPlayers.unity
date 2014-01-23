@@ -727,11 +727,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 1063167415}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -816,7 +816,7 @@ MonoBehaviour:
   leftCamera: {fileID: 1158576547}
   rightCamera: {fileID: 1351951184}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
+  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -1946,8 +1946,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
   FollowOrientation: {fileID: 0}
@@ -2450,15 +2450,15 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1325886367}
     m_Modifications:
     - target: {fileID: 400000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -1.85000002
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2827,15 +2827,15 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 2043242363}
     m_Modifications:
     - target: {fileID: 400000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -1.85000002
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
       propertyPath: m_LocalPosition.z
@@ -3954,7 +3954,7 @@ MonoBehaviour:
   loadFromFileInEditor: 0
   resolutionX: 1280
   resolutionY: 800
-  useDoubleTheSpace: 1
+  useDoubleTheSpace: 0
   isStereo: 0
   eyeSeparation: .0599999987
   isHMD: 0
@@ -5958,11 +5958,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 1760344526}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -6680,11 +6680,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 1995452953}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -6769,7 +6769,7 @@ MonoBehaviour:
   leftCamera: {fileID: 46529464}
   rightCamera: {fileID: 945730644}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
+  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -7873,11 +7873,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 16025834}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -7962,7 +7962,7 @@ MonoBehaviour:
   leftCamera: {fileID: 1544720380}
   rightCamera: {fileID: 859857281}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
+  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -8740,7 +8740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 725d292227850ab4f94799e193a59452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerId: 0
+  playerId: 1
   requiredUpwardVelocity: .800000012
   timeBetweenJumps: 1
   feetHeightThreshold: .200000003
@@ -8770,7 +8770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d231127ae337c7c40a492768550cf970, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerId: 0
+  playerId: 1
   jointToFollow: 0
   minimumConfidenceToUpdate: .5
   positionSmoothing: 100
@@ -10433,11 +10433,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 1001893605}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -10522,7 +10522,7 @@ MonoBehaviour:
   leftCamera: {fileID: 1353052525}
   rightCamera: {fileID: 1461927074}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
+  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -11356,6 +11356,34 @@ Prefab:
     - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: playerId
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400052, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: positionRazerID
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: playerId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: playerId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400122, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400036, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400066, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
@@ -12589,6 +12617,14 @@ Prefab:
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalRotation.w
       value: .988127947
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400020, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
+      propertyPath: CameraRootPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400020, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
+      propertyPath: NeckPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
@@ -13897,8 +13933,8 @@ GameObject:
   - 114: {fileID: 966551118}
   - 114: {fileID: 966551120}
   - 114: {fileID: 966551119}
-  - 81: {fileID: 966551115}
   - 92: {fileID: 966551116}
+  - 81: {fileID: 966551115}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: MainCamera
@@ -19199,6 +19235,7 @@ Transform:
   - {fileID: 696664711}
   - {fileID: 1391465356}
   - {fileID: 116647072}
+  - {fileID: 1586584268}
   m_Father: {fileID: 0}
 --- !u!114 &1325886368
 MonoBehaviour:
@@ -19269,6 +19306,7 @@ MonoBehaviour:
   - {fileID: 1995452955}
   - {fileID: 1063167417}
   display: {fileID: 0}
+  allowMultipleAssigners: 0
   applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
   onlyRazerOffset: {x: 0, y: .5, z: .300000012}
@@ -21700,11 +21738,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 191672787}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -21789,7 +21827,7 @@ MonoBehaviour:
   leftCamera: {fileID: 1835127672}
   rightCamera: {fileID: 1760111226}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
+  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -23404,7 +23442,7 @@ MonoBehaviour:
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
-  enableMoveCalibrationDuringPlay: 1
+  enableMoveCalibrationDuringPlay: 0
   delayedWandActivation: 0
   delayTime: 5
   moveWand0: 0
@@ -23743,6 +23781,18 @@ Prefab:
       propertyPath: enableOculusRift
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400122, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400036, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400066, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 1325886366}
@@ -24031,11 +24081,11 @@ Transform:
   m_PrefabInternal: {fileID: 154104419}
   m_GameObject: {fileID: 1586584267}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: -1}
+  m_LocalPosition: {x: -1, y: -1.85000002, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1920445965}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1325886367}
 --- !u!120 &1586584269
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -26155,6 +26205,7 @@ MonoBehaviour:
   torsoScale: 1
   neckHeightTweaker: 0
   forearmLengthRatio: 1
+  shinLengthRatio: 1
 --- !u!95 &1689802949
 Animator:
   serializedVersion: 2
@@ -26469,8 +26520,8 @@ GameObject:
   - 114: {fileID: 1697092116}
   - 114: {fileID: 1697092118}
   - 114: {fileID: 1697092117}
-  - 81: {fileID: 1697092113}
   - 92: {fileID: 1697092114}
+  - 81: {fileID: 1697092113}
   m_Layer: 0
   m_Name: CameraLeft
   m_TagString: MainCamera
@@ -28578,11 +28629,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 599563820}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -30803,11 +30854,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 1100357006}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -30892,7 +30943,7 @@ MonoBehaviour:
   leftCamera: {fileID: 2117462613}
   rightCamera: {fileID: 521076608}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
+  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -31647,6 +31698,7 @@ Transform:
   - {fileID: 1498337478}
   - {fileID: 1298089162}
   - {fileID: 2025768004}
+  - {fileID: 2075998472}
   m_Father: {fileID: 0}
 --- !u!114 &2043242364
 MonoBehaviour:
@@ -31666,6 +31718,7 @@ MonoBehaviour:
   - {fileID: 191672789}
   - {fileID: 1001893607}
   display: {fileID: 0}
+  allowMultipleAssigners: 0
   applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
   onlyRazerOffset: {x: 0, y: .5, z: .300000012}
@@ -31880,11 +31933,11 @@ Transform:
   m_PrefabInternal: {fileID: 183541468}
   m_GameObject: {fileID: 2075998471}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: -1}
+  m_LocalPosition: {x: 1, y: -1.85000002, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2021022399}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2043242363}
 --- !u!120 &2075998473
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -33289,6 +33342,7 @@ MonoBehaviour:
   torsoScale: 1
   neckHeightTweaker: 0
   forearmLengthRatio: 1
+  shinLengthRatio: 1
 --- !u!95 &2135021964
 Animator:
   serializedVersion: 2

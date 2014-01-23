@@ -122,9 +122,9 @@ public class RUISCamera : MonoBehaviour {
 		{
             if (enableOculusRift)
             {
-                if (associatedDisplay.isStereo)
+                if (!associatedDisplay.isStereo)
                 {
-                    Debug.LogError("Forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
+                    Debug.LogError("Oculus Rift enabled in RUISCamera, forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
                     associatedDisplay.isStereo = true;
                 }
                 associatedDisplay.isHMD = true;

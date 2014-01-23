@@ -331,7 +331,7 @@ MonoBehaviour:
   loadFromFileInEditor: 0
   resolutionX: 1280
   resolutionY: 800
-  useDoubleTheSpace: 1
+  useDoubleTheSpace: 0
   isStereo: 0
   eyeSeparation: .0599999987
   isHMD: 0
@@ -489,8 +489,8 @@ GameObject:
   - 114: {fileID: 688407582}
   - 114: {fileID: 688407584}
   - 114: {fileID: 688407583}
-  - 81: {fileID: 688407579}
   - 92: {fileID: 688407580}
+  - 81: {fileID: 688407579}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: MainCamera
@@ -1188,8 +1188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
   FollowOrientation: {fileID: 0}
@@ -1367,6 +1367,14 @@ Prefab:
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalRotation.w
       value: .996362984
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400020, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
+      propertyPath: CameraRootPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400020, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
+      propertyPath: NeckPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
@@ -1569,6 +1577,14 @@ Prefab:
       propertyPath: isObliqueFrustum
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: isStereo
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: enableKinect
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1706231380}
@@ -1645,7 +1661,7 @@ MonoBehaviour:
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
-  enableMoveCalibrationDuringPlay: 1
+  enableMoveCalibrationDuringPlay: 0
   delayedWandActivation: 0
   delayTime: 5
   moveWand0: 0
@@ -1749,8 +1765,8 @@ GameObject:
   - 114: {fileID: 2140423839}
   - 114: {fileID: 2140423841}
   - 114: {fileID: 2140423840}
-  - 81: {fileID: 2140423836}
   - 92: {fileID: 2140423837}
+  - 81: {fileID: 2140423836}
   m_Layer: 0
   m_Name: CameraLeft
   m_TagString: MainCamera

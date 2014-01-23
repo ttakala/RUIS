@@ -502,7 +502,7 @@ MonoBehaviour:
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
   amountOfPSMoveControllers: 4
-  enableMoveCalibrationDuringPlay: 1
+  enableMoveCalibrationDuringPlay: 0
   delayedWandActivation: 0
   delayTime: 5
   moveWand0: 0
@@ -617,9 +617,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displaySchema: {fileID: 4900000, guid: 681992c4cf4e730438bbfa54a173d920, type: 3}
   xmlFilename: defaultDisplay.xml
+  loadFromFileInEditor: 0
   resolutionX: 1280
   resolutionY: 800
-  useDoubleTheSpace: 1
+  useDoubleTheSpace: 0
   isStereo: 0
   eyeSeparation: .0599999987
   isHMD: 0
@@ -736,7 +737,7 @@ MonoBehaviour:
   totalResolutionY: 800
   totalRawResolutionX: 1280
   totalRawResolutionY: 800
-  fullScreen: 0
+  allowResolutionDialog: 0
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1

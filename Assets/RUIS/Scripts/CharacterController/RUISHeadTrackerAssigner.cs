@@ -1,7 +1,7 @@
 /*****************************************************************************
 
 Content    :	Leaves one head tracker enabled (that best matches RUISInputManager 
-				settings) from a input list of GameObjects with RUISTracker script
+				settings) from a input list of GameObjects with RUISTracker script.
 Authors    :	Tuukka Takala
 Copyright  :	Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :	RUIS is distributed under the LGPL Version 3 license.
@@ -16,6 +16,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	RUISInputManager inputManager;
 	public List<RUISTracker> headTrackers = new List<RUISTracker>(5);
 	public RUISDisplay display;
+	public bool allowMultipleAssigners = false;
 	public bool applyKinectDriftCorrectionPreference = false;
 	public bool changePivotIfNoKinect = true;
 	public Vector3 onlyRazerOffset = Vector3.zero;
@@ -37,9 +38,6 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 		
 		int trackerCount = 0;
 		
-		if(display == null)
-			return;
-		
 		if(inputManager)
 		{
 			kinect = inputManager.enableKinect;
@@ -48,7 +46,22 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			
 			RUISTracker closestMatch = null;
 			int currentMatchScore = 0;
-			
+
+			RUISHeadTrackerAssigner[] assigners = FindObjectsOfType(typeof(RUISHeadTrackerAssigner)) as RUISHeadTrackerAssigner[];
+			if(!allowMultipleAssigners && assigners.Length > 1)
+			{
+				Debug.LogError(  "Multiple active RUISHeadTrackerAssigner scripts found while 'Allow Multiple Assigners' is false: "
+				               + "Disabling all headtrackers and their child objects that are listed in the RUISHeadTrackerAssigner "
+				               + "component of '" + gameObject.name + "' object.");
+
+				for(int i = 0; i < headTrackers.Capacity; ++i)
+				{
+					if(headTrackers[i] && headTrackers[i].gameObject.activeInHierarchy)
+						headTrackers[i].gameObject.SetActive(false);
+				}
+				return;
+			}
+
 			foreach(RUISTracker trackerScript in headTrackers)
 			{
 				if(trackerScript && trackerScript.gameObject.activeInHierarchy)
@@ -188,9 +201,36 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			
 			if(ruisCamera)
 			{
-				Debug.Log(	  "Assigned RUISCamera from a child of " + positionTracker
-							+ " to render on " + display.gameObject.name					);
-				display.linkedCamera = ruisCamera;
+				if(display == null)
+				{
+					Debug.LogError( "No RUISDisplay attached to the RUISHeadTrackerAssigner script!");
+					RUISDisplay[] displays = FindObjectsOfType(typeof(RUISDisplay)) as RUISDisplay[];
+					for(int i = 0; i < displays.Length; ++i)
+					{
+						if(displays[i].linkedCamera == null)
+						{
+							Debug.LogWarning(  "Assigned RUISCamera component from the child of " + positionTracker
+							                 + " to render on " + displays[i].gameObject.name + " because that "
+							                 + "RUISDisplay component's RUISCamera field was empty.");
+							displays[i].linkedCamera = ruisCamera;
+							break;
+						}
+					}
+				}
+				else
+				{
+					if(display.linkedCamera == null)
+					{
+						Debug.Log(	  "Assigned RUISCamera component from the child of " + positionTracker
+									+ " to render on " + display.gameObject.name							);
+						display.linkedCamera = ruisCamera;
+					}
+					else
+						Debug.LogError(  "RUISDisplay " + display.gameObject.name + " is already connected with a "
+						               + "RUISCamera object! Leave the RUISCamera field empty in your RUISDisplay "
+						               + "component if you want RUISHeadTrackerAssigner script to automatically "
+						               + "assign a RUISCamera to your RUISDisplay.");
+				}
 			}
 			else
 				Debug.LogError(  positionTracker + " did not have a child with RUISCamera component, "

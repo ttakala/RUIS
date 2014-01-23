@@ -171,7 +171,7 @@ public class RUISDisplayManager : MonoBehaviour {
         {
             if (ruisCamera.associatedDisplay == null)
             {
-                Debug.LogWarning("Disabling RUISCamera: " + ruisCamera.name + " because it isn't linked into a RUISDisplay.");
+                Debug.LogWarning("Disabling RUISCamera '" + ruisCamera.name + "' because it isn't linked into a RUISDisplay.");
                 ruisCamera.gameObject.SetActive(false);
             }
         }

@@ -2040,7 +2040,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100114}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: .850000024, z: 0}
+  m_LocalPosition: {x: 0, y: .921793461, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400048}
@@ -3007,11 +3007,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 400086}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -3125,6 +3125,7 @@ MonoBehaviour:
   torsoScale: 1
   neckHeightTweaker: 0
   forearmLengthRatio: 1
+  shinLengthRatio: 1
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3184,7 +3185,7 @@ MonoBehaviour:
   leftCamera: {fileID: 2000002}
   rightCamera: {fileID: 2000000}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
+  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -3516,11 +3517,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 400138}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -3710,6 +3711,7 @@ MonoBehaviour:
   - {fileID: 11400080}
   - {fileID: 11400086}
   display: {fileID: 0}
+  allowMultipleAssigners: 0
   applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
   onlyRazerOffset: {x: 0, y: .5, z: .300000012}
@@ -3863,11 +3865,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 400100}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1
@@ -4172,11 +4174,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
-  FollowOrientation: {fileID: 0}
+  FollowOrientation: {fileID: 400152}
   TrackerRotatesY: 0
   PortraitMode: 0
   PredictionOn: 1

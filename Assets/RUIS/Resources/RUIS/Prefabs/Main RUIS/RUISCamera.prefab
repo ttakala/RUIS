@@ -13,8 +13,8 @@ GameObject:
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400010}
   - 114: {fileID: 11400012}
-  - 81: {fileID: 8100000}
   - 92: {fileID: 9200000}
+  - 81: {fileID: 8100000}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: MainCamera
@@ -35,8 +35,8 @@ GameObject:
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400016}
   - 114: {fileID: 11400014}
-  - 81: {fileID: 8100002}
   - 92: {fileID: 9200002}
+  - 81: {fileID: 8100002}
   m_Layer: 0
   m_Name: CameraLeft
   m_TagString: MainCamera
@@ -93,8 +93,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
-  m_LocalRotation: {x: .190592602, y: 0, z: 0, w: .981669247}
-  m_LocalPosition: {x: 0, y: 3.12239933, z: -4.66304445}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400002}
@@ -384,8 +384,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraRootPosition: {x: 0, y: 1, z: 0}
-  NeckPosition: {x: 0, y: .699999988, z: 0}
+  CameraRootPosition: {x: 0, y: 0, z: 0}
+  NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
   FollowOrientation: {fileID: 0}

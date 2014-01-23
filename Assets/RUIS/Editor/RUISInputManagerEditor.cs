@@ -161,8 +161,12 @@ public class RUISInputManagerEditor : Editor {
             EditorGUI.indentLevel += 2;
 
             EditorGUILayout.PropertyField(maxNumberOfKinectPlayers, new GUIContent("Max Kinect Players", "Number of concurrently tracked skeletons"));
-			EditorGUILayout.PropertyField(floorDetectionOnSceneStart, new GUIContent("Floor Detection On Scene Start", "Kinect tries to detect floor and adjusts the coordinate system automatically when the scene is run."));
-			
+			EditorGUILayout.PropertyField(floorDetectionOnSceneStart, new GUIContent(  "Floor Detection On Scene Start", "Kinect tries to detect "
+			                                                                         + "floor and adjusts the coordinate system automatically when "
+			                                                                         + "the scene is run. You should DISABLE this if you intend to "
+			                                                                         + "use Kinect and PS Move in a calibrated coordinate system. "
+			                                                                         + "Enabling this setting ignores whatever normal is stored in "
+			                                                                         + "'calibration.xml'."));
             EditorGUI.indentLevel -= 2;
         }
 

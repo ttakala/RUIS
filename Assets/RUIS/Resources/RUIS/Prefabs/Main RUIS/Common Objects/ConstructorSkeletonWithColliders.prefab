@@ -1599,6 +1599,9 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -1652,6 +1655,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   root: {fileID: 400006}
   head: {fileID: 400092}
   neck: {fileID: 400080}
@@ -1668,7 +1672,6 @@ MonoBehaviour:
   leftHip: {fileID: 400082}
   leftKnee: {fileID: 400032}
   leftFoot: {fileID: 400084}
-  skeletonManager: {fileID: 0}
   playerId: 0
   updateRootPosition: 1
   updateJointPositions: 0
@@ -1677,11 +1680,12 @@ MonoBehaviour:
   scaleHierarchicalModelBones: 1
   maxScaleFactor: .00999999978
   minimumConfidenceToUpdate: .5
-  rotationDamping: 15
+  rotationDamping: 360
   torsoOffset: 0
   torsoScale: 1
   neckHeightTweaker: 0
   forearmLengthRatio: 1
+  shinLengthRatio: 1
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -1817,6 +1821,9 @@ SkinnedMeshRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortingLayerID: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
@@ -1876,6 +1883,7 @@ SkinnedMeshRenderer:
   - {fileID: 400090}
   - {fileID: 400084}
   - {fileID: 400108}
+  m_BlendShapeWeights: []
   m_RootBone: {fileID: 0}
   m_AABB:
     m_Center: {x: .235710144, y: -1.29385567, z: 2.28881836e-05}

@@ -181,7 +181,7 @@ public class RUISInputManager : MonoBehaviour
             }
 			else 
 			{	// If PSMove is enabled, it's better to load the floor normal from XML (if such exists)
-				if(kinectFloorDetection && !enablePSMove)
+				if(kinectFloorDetection)
 				{
 					StartFloorDetection();
 				}

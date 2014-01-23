@@ -11,7 +11,7 @@ GameObject:
   - 114: {fileID: 11400002}
   - 114: {fileID: 11400000}
   m_Layer: 0
-  m_Name: RUISOculusMenu
+  m_Name: RUISMenuWithOculus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,6 +38,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c339b1cb7928e394780a844ae49e70d6, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   autoCalibrateKey: 286
   manualCalibrateKey: 287
   showCompassKey: 289
@@ -52,6 +53,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58cefced8c60edf4eb4e6012786be8e4, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   fontSize: 14
   stereoOffset: -110
   menuSkin: {fileID: 11400000, guid: a102d97eb96354e449b74caccb8cad8b, type: 2}
