@@ -3,11 +3,13 @@
   <displayCenterPosition x="1.5" y="1.5" z="-1.5" />
   <displayUp x="0" y="1" z="0" />
   <displayNormal x="-1" y="0" z="0" />
+  <displaySize width="3" height="3" />
+  <displayResolution width="249" height="714" />
   <centerKeystone>
-    <topLeft x="0.1376306" y="0.9509804" />
-    <topRight x="0.8954704" y="0.8767507" />
-    <bottomRight x="0.7778745" y="0.1232493" />
-    <bottomLeft x="0.1010452" y="0.09103642" />
+    <topLeft x="0" y="1" />
+    <topRight x="1" y="1" />
+    <bottomRight x="1" y="0" />
+    <bottomLeft x="0" y="0" />
   </centerKeystone>
   <leftKeystone>
     <topLeft x="0" y="1" />
