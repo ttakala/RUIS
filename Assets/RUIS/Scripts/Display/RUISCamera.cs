@@ -183,39 +183,22 @@ public class RUISCamera : MonoBehaviour {
         rightCamera.ResetProjectionMatrix();
 
         SetupCameraTransforms();
-        
-		
-	    Matrix4x4[] projectionMatrices = GetProjectionMatricesWithoutKeystoning();
-	    centerCamera.projectionMatrix = projectionMatrices[0];
-	    leftCamera.projectionMatrix = projectionMatrices[1];
-	    rightCamera.projectionMatrix = projectionMatrices[2];
 
-        /*centerCamera.projectionMatrix = CreateKeystoningObliqueFrustum();
-        transform.position = KeystoningHeadTrackerPosition;*/
 
-        if (associatedDisplay.isObliqueFrustum)
+        Matrix4x4[] projectionMatrices = GetProjectionMatricesWithoutKeystoning();
+        centerCamera.projectionMatrix = projectionMatrices[0];
+        leftCamera.projectionMatrix = projectionMatrices[1];
+        rightCamera.projectionMatrix = projectionMatrices[2];
+
+        if (associatedDisplay.isObliqueFrustum && associatedDisplay.enableOculusRift)
         {
             centerCamera.worldToCameraMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale).inverse;
 
-            /*if (headTracker)
-            {
-                Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
-                Vector3 leftCameraPos = transform.position + transform.rotation * (eyePositions[1] - eyePositions[0]);
-                Vector3 rightCameraPos = transform.position + transform.rotation * (eyePositions[2] - eyePositions[0]);
-                leftCamera.worldToCameraMatrix = Matrix4x4.TRS(leftCameraPos, leftCamera.transform.rotation, leftCamera.transform.lossyScale).inverse;
-                rightCamera.worldToCameraMatrix = Matrix4x4.TRS(rightCameraPos, rightCamera.transform.rotation, rightCamera.transform.lossyScale).inverse;
-            }
-            else
-            {*/
-                leftCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;//Matrix4x4.TRS(leftCamera.transform.position, leftCamera.transform.rotation, leftCamera.transform.lossyScale).inverse;
-                rightCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;//Matrix4x4.TRS(rightCamera.transform.position, rightCamera.transform.rotation, rightCamera.transform.lossyScale).inverse;
-            //}
+            leftCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;
+            rightCamera.worldToCameraMatrix = centerCamera.worldToCameraMatrix;
         }
 
-	    //if (associatedDisplay.isKeystoneCorrected)
-	    //{
-	        ApplyKeystoneCorrection();
-	    //}
+        ApplyKeystoneCorrection();
     }
 
     public Matrix4x4[] GetProjectionMatricesWithoutKeystoning()
