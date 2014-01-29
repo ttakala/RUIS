@@ -55,7 +55,7 @@ public class RUISDisplayEditor : Editor {
         displayHeight = serializedObject.FindProperty("height");
 
         isStereo = serializedObject.FindProperty("isStereo");
-        isHMD = serializedObject.FindProperty("isHMD");
+        isHMD = serializedObject.FindProperty("enableOculusRift");
         isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
         isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
         camera = serializedObject.FindProperty("_linkedCamera");
@@ -110,7 +110,7 @@ public class RUISDisplayEditor : Editor {
 
         
 
-        EditorGUILayout.PropertyField(isHMD, new GUIContent("Head-Mounted Display", "Is this display a HMD?"));
+        EditorGUILayout.PropertyField(isHMD, new GUIContent("Enable Oculus Rift", "Is this display an Oculus Rift?"));
 
         if (!isHMD.boolValue)
         {

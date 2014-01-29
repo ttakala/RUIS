@@ -6,7 +6,6 @@ using UnityEditor;
 [CanEditMultipleObjects]
 public class RUISCameraEditor : Editor
 {
-    SerializedProperty ovrEnabled; 
     SerializedProperty near;
     SerializedProperty far;
     SerializedProperty horizontalFOV;
@@ -18,8 +17,6 @@ public class RUISCameraEditor : Editor
 
     void OnEnable()
     {
-        ovrEnabled = serializedObject.FindProperty("enableOculusRift");
-
         near = serializedObject.FindProperty("near");
         far = serializedObject.FindProperty("far");
 
@@ -37,14 +34,9 @@ public class RUISCameraEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(ovrEnabled, new GUIContent("Oculus Rift Enabled", "Is this camera used for Oculus Rift rendering?"));
-
-        if (!ovrEnabled.boolValue)
-        {
-            EditorGUILayout.PropertyField(headTracker, new GUIContent(  "CAVE Head Tracker", "The head tracker object to use for perspective "
+        EditorGUILayout.PropertyField(headTracker, new GUIContent(  "CAVE Head Tracker", "The head tracker object to use for perspective "
 			                                                          + "distortion with CAVE-like displays. This is used only if the associated "
 			                                                          + "RUISDisplay has 'Head Tracked CAVE Display' enabled."));
-        }
 
         EditorGUILayout.PropertyField(cullingMask, new GUIContent("Culling Mask", "Camera culling mask"));
 

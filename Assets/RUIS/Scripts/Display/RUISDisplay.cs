@@ -59,6 +59,8 @@ public class RUISDisplay : MonoBehaviour {
         }
     }
 
+    public bool enableOculusRift = false;
+
     public bool isStereo = false;
     public float eyeSeparation = 0.06f;
     public bool isHMD; //head-mounted display

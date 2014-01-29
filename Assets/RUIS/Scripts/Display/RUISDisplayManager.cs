@@ -202,7 +202,7 @@ public class RUISDisplayManager : MonoBehaviour {
     {
         foreach (RUISDisplay display in displays)
         {
-            if (display.linkedCamera && display.linkedCamera.enableOculusRift)
+            if (display.linkedCamera && display.enableOculusRift)
             {
                 return display;
             }

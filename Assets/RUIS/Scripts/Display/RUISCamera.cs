@@ -22,8 +22,6 @@ public class RUISCamera : MonoBehaviour {
     public Camera rightCamera;
 	public Camera keystoningCamera;
 
-    public bool enableOculusRift = false;
-
     [HideInInspector]
     public RUISDisplay associatedDisplay;
 
@@ -68,10 +66,19 @@ public class RUISCamera : MonoBehaviour {
         centerCamera.cullingMask = cullingMask;
         leftCamera.cullingMask = cullingMask;
         rightCamera.cullingMask = cullingMask;
+    }
+
+	public void Start () {
+        if (!associatedDisplay)
+        {
+            Debug.LogError("Camera not associated to any display, disabling... " + name, this);
+            gameObject.SetActive(false);
+            return;
+        }
 
         try
         {
-            if (!enableOculusRift)
+            if (!associatedDisplay.enableOculusRift)
             {
                 GetComponent<OVRCameraController>().enabled = false;
                 GetComponent<OVRDevice>().enabled = false;
@@ -93,15 +100,6 @@ public class RUISCamera : MonoBehaviour {
             Debug.LogWarning(e.ToString(), this);
             Debug.LogWarning("Seems like the RUISCamera prefab you were using was outdated, please update... " + name, this);
         }
-    }
-
-	public void Start () {
-        if (!associatedDisplay)
-        {
-            Debug.LogError("Camera not associated to any display, disabling... " + name, this);
-            gameObject.SetActive(false);
-            return;
-        }
 
 
         UpdateStereo();
@@ -120,7 +118,7 @@ public class RUISCamera : MonoBehaviour {
 		
 		if(associatedDisplay)
 		{
-            if (enableOculusRift)
+            if (associatedDisplay.enableOculusRift)
             {
                 if (!associatedDisplay.isStereo)
                 {
