@@ -83,6 +83,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     private RUISInputManager inputManager;
 
+    private bool torsoIsRoot = false;
+
     void Awake()
     {
         inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
@@ -135,12 +137,23 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             skeletonController = kinectGameObject.GetComponent<RUISSkeletonController>();
             mecanimAnimator = mecanimGameObject.GetComponent<Animator>();
 
+
+            torsoIsRoot = skeletonController.root == skeletonController.torso;
+
             Transform kinectRootBone = skeletonController.root;
-            Transform mecanimRootBone = mecanimAnimator.transform.FindChild(kinectRootBone.name);
-            Transform blendedRootBone = transform.FindChild(kinectRootBone.name);
+            Transform mecanimRootBone = FindBone(mecanimAnimator.transform, kinectRootBone.name);
+            Transform blendedRootBone = FindBone(transform, kinectRootBone.name);
             skeletonRoot = new BoneTriplet(kinectRootBone, mecanimRootBone, blendedRootBone, BodypartClassification.Root);
 
-            AddChildren(ref skeletonRoot, BodypartClassification.Root);
+            if (torsoIsRoot)
+            {
+                torsoRoot = skeletonRoot;
+                AddChildren(ref torsoRoot, BodypartClassification.Torso);
+            }
+            else
+            {
+                AddChildren(ref skeletonRoot, BodypartClassification.Root);
+            }
         }
     }
 
@@ -160,7 +173,14 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             forceLegStartPosition = false;
         }
 
-        UpdateScales(skeletonRoot);
+        if (torsoIsRoot)
+        {
+            UpdateScales(torsoRoot);
+        }
+        else
+        {
+            UpdateScales(skeletonRoot);
+        }
 
         transform.position = kinectGameObject.transform.position;
         mecanimGameObject.transform.position = kinectGameObject.transform.position;
@@ -173,7 +193,14 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             neckRoot.mecanimTransform.localPosition = neckRoot.mecanimTransform.localPosition - neckRoot.mecanimTransform.InverseTransformDirection(Vector3.up) * skeletonController.neckHeightTweaker;
         }
 
-        Blend(skeletonRoot); 
+        if (torsoIsRoot)
+        {
+            Blend(torsoRoot);
+        }
+        else
+        {
+            Blend(skeletonRoot);
+        }
 
         if (forceArmStartPosition)
         {
@@ -382,4 +409,23 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 	{
 		return childrenInstantiated;
 	}
+
+    public Transform FindBone(Transform root, string name)
+    {
+        for (int i = 0; i < root.childCount; i++)
+        {
+            if (root.name == name)
+            {
+                return root;
+            }
+
+            Transform result = FindBone(root.GetChild(i), name);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        return null;
+    }
 }
