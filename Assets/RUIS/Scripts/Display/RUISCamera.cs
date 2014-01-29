@@ -178,6 +178,10 @@ public class RUISCamera : MonoBehaviour {
 
     public void LateUpdate()
     {
+        if(associatedDisplay.enableOculusRift){
+            return;
+        }
+
         centerCamera.ResetProjectionMatrix();
         leftCamera.ResetProjectionMatrix();
         rightCamera.ResetProjectionMatrix();
@@ -190,7 +194,7 @@ public class RUISCamera : MonoBehaviour {
         leftCamera.projectionMatrix = projectionMatrices[1];
         rightCamera.projectionMatrix = projectionMatrices[2];
 
-        if (associatedDisplay.isObliqueFrustum && associatedDisplay.enableOculusRift)
+        if (associatedDisplay.isObliqueFrustum)
         {
             centerCamera.worldToCameraMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale).inverse;
 
