@@ -3647,7 +3647,6 @@ MonoBehaviour:
   leftCamera: {fileID: 1185534683}
   rightCamera: {fileID: 1638180499}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -3656,7 +3655,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 247815526}
 --- !u!20 &431496785
 Camera:
   m_ObjectHideFlags: 0
@@ -5720,7 +5718,6 @@ MonoBehaviour:
   leftCamera: {fileID: 2125330198}
   rightCamera: {fileID: 447610950}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -5729,7 +5726,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 247815526}
 --- !u!20 &632743624
 Camera:
   m_ObjectHideFlags: 0
@@ -7944,7 +7940,6 @@ MonoBehaviour:
   leftCamera: {fileID: 146558236}
   rightCamera: {fileID: 1761767859}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -7953,7 +7948,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 247815526}
 --- !u!20 &755089094
 Camera:
   m_ObjectHideFlags: 0
@@ -10202,6 +10196,7 @@ MonoBehaviour:
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 1
+  enableOculusRift: 0
   isStereo: 0
   eyeSeparation: .0599999987
   isHMD: 0
@@ -10214,6 +10209,7 @@ MonoBehaviour:
   displayUpInternal: {x: 0, y: 1, z: 0}
   width: 3
   height: 3
+  headTracker: {fileID: 247815526}
 --- !u!1 &976107690
 GameObject:
   m_ObjectHideFlags: 0
@@ -10809,6 +10805,7 @@ MonoBehaviour:
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
+  enableOculusRift: 0
   isStereo: 0
   eyeSeparation: .0599999987
   isHMD: 0
@@ -10821,6 +10818,7 @@ MonoBehaviour:
   displayUpInternal: {x: 0, y: 1, z: 0}
   width: 3
   height: 3
+  headTracker: {fileID: 247815526}
 --- !u!4 &1017448146
 Transform:
   m_ObjectHideFlags: 0
@@ -14717,6 +14715,18 @@ Prefab:
       propertyPath: xmlFilename
       value: rightDisplay.xml
       objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: headTracker
+      value: 
+      objectReference: {fileID: 247815526}
+    - target: {fileID: 11400018, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: headTracker
+      value: 
+      objectReference: {fileID: 247815526}
+    - target: {fileID: 11400000, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: headTracker
+      value: 
+      objectReference: {fileID: 247815526}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d94c6e27c0db1994889737c587593074, type: 2}
   m_RootGameObject: {fileID: 231584585}
@@ -23079,6 +23089,7 @@ MonoBehaviour:
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
+  enableOculusRift: 0
   isStereo: 0
   eyeSeparation: .0599999987
   isHMD: 0
@@ -23091,6 +23102,7 @@ MonoBehaviour:
   displayUpInternal: {x: 0, y: 1, z: 0}
   width: 3
   height: 3
+  headTracker: {fileID: 247815526}
 --- !u!1 &2010210993
 GameObject:
   m_ObjectHideFlags: 0

@@ -43,12 +43,11 @@ public class RUISCamera : MonoBehaviour {
     public float near = 0.3f;
     public float far = 1000;
 
-    public RUISTracker headTracker;
 	public Vector3 KeystoningHeadTrackerPosition {
         get
         {
-			if(headTracker){
-				return headTracker.defaultPosition;
+			if(associatedDisplay && associatedDisplay.headTracker){
+				return associatedDisplay.headTracker.defaultPosition;
 			}
 			
             return associatedDisplay.displayCenterPosition + associatedDisplay.DisplayNormal;
@@ -136,18 +135,18 @@ public class RUISCamera : MonoBehaviour {
             
             if(associatedDisplay.isObliqueFrustum)
             {
-                if (headTracker)
+                if (associatedDisplay.headTracker)
                 {
-                    Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
+                    Vector3[] eyePositions = associatedDisplay.headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
 				    Vector3 camToDisplay = associatedDisplay.displayCenterPosition - eyePositions[0];
         		    float distanceFromPlane = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
 				    //print(camToDisplay + " " + eyePositions[0] + " " + distanceFromPlane);
 	                if(distanceFromPlane == 0)
-						Debug.LogError(  "In " + headTracker.gameObject.name + " GameObject's "
+						Debug.LogError(  "In " + associatedDisplay.headTracker.gameObject.name + " GameObject's "
 								       + "RUISTracker script, you have set defaultPosition to " 
 								       + "lie on the display plane of " 
 								       + associatedDisplay.gameObject.name + ". The defaultPosition "
-								       + "needs to be apart from the display!", this);
+								       + "needs to be apart from the display!", associatedDisplay);
                 }
                 else
                 {
@@ -221,9 +220,9 @@ public class RUISCamera : MonoBehaviour {
 
     public Matrix4x4[] GetProjectionMatricesWithoutKeystoning()
     {
-        if (associatedDisplay.isObliqueFrustum && headTracker)
+        if (associatedDisplay.isObliqueFrustum && associatedDisplay.headTracker)
         {
-            Vector3[] eyePositions = headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
+            Vector3[] eyePositions = associatedDisplay.headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
             return new Matrix4x4[] { CreateProjectionMatrix(eyePositions[0]), 
                                      CreateProjectionMatrix(eyePositions[1]),
                                      CreateProjectionMatrix(eyePositions[2]) };
@@ -326,7 +325,7 @@ public class RUISCamera : MonoBehaviour {
 
     public void SetupHeadTracking(RUISTracker headTracker)
     {
-        this.headTracker = headTracker;
+        associatedDisplay.headTracker = headTracker;
         isHeadTracking = true;
     }
 

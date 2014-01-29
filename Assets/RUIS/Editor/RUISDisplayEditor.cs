@@ -33,6 +33,7 @@ public class RUISDisplayEditor : Editor {
     SerializedProperty useDoubleTheSpace;
     GUIStyle displayBoxStyle;
 
+    SerializedProperty headTracker;
     SerializedProperty displayCenterPosition;
     SerializedProperty displayNormal;
     SerializedProperty displayUp;
@@ -63,6 +64,7 @@ public class RUISDisplayEditor : Editor {
         stereoType = serializedObject.FindProperty("stereoType");
         useDoubleTheSpace = serializedObject.FindProperty("useDoubleTheSpace");
 
+        headTracker = serializedObject.FindProperty("headTracker");
         displayCenterPosition = serializedObject.FindProperty("displayCenterPosition");
         displayNormal = serializedObject.FindProperty("displayNormalInternal");
         displayUp = serializedObject.FindProperty("displayUpInternal");
@@ -118,9 +120,14 @@ public class RUISDisplayEditor : Editor {
 
             EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked CAVE Display", "Should the projection matrix be skewed to use this display as a head tracked CAVE viewport"));
 
+
+
             if (isObliqueFrustum.boolValue)
             {
                 EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(headTracker, new GUIContent("CAVE Head Tracker", "The head tracker object to use for perspective "
+                                                                      + "distortion with CAVE-like displays. This is used only if the associated "
+                                                                      + "RUISDisplay has 'Head Tracked CAVE Display' enabled."));
                 EditorGUILayout.PropertyField(displayWidth, new GUIContent("Display Width", "The real-world width of the display"));
                 EditorGUILayout.PropertyField(displayHeight, new GUIContent("Display Height", "The real-world height of the display"));
                 EditorGUILayout.PropertyField(displayCenterPosition, new GUIContent("Display Center Position", "The location of the screen center in Unity coordinates"));

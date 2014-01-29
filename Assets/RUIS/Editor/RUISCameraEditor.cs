@@ -10,7 +10,6 @@ public class RUISCameraEditor : Editor
     SerializedProperty far;
     SerializedProperty horizontalFOV;
     SerializedProperty verticalFOV;
-    SerializedProperty headTracker;
     SerializedProperty cullingMask;
 
     RUISCamera camera;
@@ -23,8 +22,6 @@ public class RUISCameraEditor : Editor
         horizontalFOV = serializedObject.FindProperty("horizontalFOV");
         verticalFOV = serializedObject.FindProperty("verticalFOV");
         
-        headTracker = serializedObject.FindProperty("headTracker");
-        
         cullingMask = serializedObject.FindProperty("cullingMask");
 
         camera = target as RUISCamera;
@@ -33,10 +30,6 @@ public class RUISCameraEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
-        EditorGUILayout.PropertyField(headTracker, new GUIContent(  "CAVE Head Tracker", "The head tracker object to use for perspective "
-			                                                          + "distortion with CAVE-like displays. This is used only if the associated "
-			                                                          + "RUISDisplay has 'Head Tracked CAVE Display' enabled."));
 
         EditorGUILayout.PropertyField(cullingMask, new GUIContent("Culling Mask", "Camera culling mask"));
 

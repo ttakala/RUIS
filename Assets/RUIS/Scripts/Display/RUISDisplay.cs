@@ -85,6 +85,8 @@ public class RUISDisplay : MonoBehaviour {
     public float width = 2;
     public float height = 1.5f;
 
+    public RUISTracker headTracker;
+
     public Vector3 DisplayNormal
     {
         get
