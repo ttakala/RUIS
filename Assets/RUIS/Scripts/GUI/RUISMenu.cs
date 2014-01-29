@@ -155,23 +155,8 @@ public class RUISMenu : MonoBehaviour {
 		
         switch(menuState){
             case MenuState.Main:
+                inputManager.enablePSMove = GUILayout.Toggle(inputManager.enablePSMove, "Use PS Move");
                 
-                string togglePSMoveText;
-				if(inputManager.enablePSMove)
-				{
-					togglePSMoveText = "Disable PS Move";
-					GUI.backgroundColor = Color.green;
-				}
-				else
-				{
-					togglePSMoveText = "Enable PS Move";
-					GUI.backgroundColor = originalBackground;
-				}
-			
-                if (GUILayout.Button(togglePSMoveText))
-                {
-                    inputManager.enablePSMove = !inputManager.enablePSMove;
-                }
 			
 				elementSize = GUI.skin.GetStyle("textField").CalcSize(new GUIContent("999099909990999"));
                 GUI.enabled = inputManager.enablePSMove;
@@ -189,96 +174,35 @@ public class RUISMenu : MonoBehaviour {
                 inputManager.PSMovePort = int.Parse(portText);
                 GUI.enabled = true;
 
-                string toggleKinectText;
-				if(inputManager.enableKinect)
-				{
-					toggleKinectText = "Disable Kinect";
-					GUI.backgroundColor = Color.green;
-				}
-				else
-				{
-					toggleKinectText = "Enable Kinect";
-					GUI.backgroundColor = originalBackground;
-				}
-			
-                if (GUILayout.Button(toggleKinectText))
+                inputManager.enableKinect = GUILayout.Toggle(inputManager.enableKinect, "Use Kinect");
+
+                GUI.enabled = inputManager.enablePSMove && inputManager.enableKinect;
+
+				GUI.backgroundColor = originalBackground;
+                if (GUILayout.Button("Calibrate PS Move & Kinect (and Save)"))
                 {
-                    inputManager.enableKinect = !inputManager.enableKinect;
+                    inputManager.Export(inputManager.filename);
+                    SaveInputChanges();
+
+                    DontDestroyOnLoad(this);
+
+                    Debug.Log("Loading calibration screen.");
+
+                    gameObject.transform.parent = null;
+
+                    previousSceneId = Application.loadedLevel;
+
+                    menuState = MenuState.Calibrating;
+
+                    isShowing = false;
+
+                    Application.LoadLevel("calibration");
                 }
 
-                if (inputManager.enablePSMove && inputManager.enableKinect)
-                {
-					GUI.backgroundColor = originalBackground;
-                    if (GUILayout.Button("Calibrate PS Move & Kinect (and Save)"))
-                    {
-                        inputManager.Export(inputManager.filename);
-                        SaveInputChanges();
-
-                        DontDestroyOnLoad(this);
-
-                        Debug.Log("Loading calibration screen.");
-
-                        gameObject.transform.parent = null;
-
-                        previousSceneId = Application.loadedLevel;
-
-                        menuState = MenuState.Calibrating;
-
-                        isShowing = false;
-
-                        Application.LoadLevel("calibration");
-                    }
-                }
-                else
-                {
-					// *** TODO: Button texts should be replaced with variables instead of repeating the same constant strings...
-					elementSize = GUI.skin.GetStyle("button").CalcSize(new GUIContent("Calibrate PS Move & Kinect (and Save)"));
-					elementHeight = GUI.skin.GetStyle("button").CalcHeight(new GUIContent("Calibrate PS Move & Kinect (and Save)"), elementSize.x);
-                    GUILayout.Space(elementHeight + 0.5f*GUI.skin.button.margin.vertical);
-                }
-
-                string toggleHydraText;
-				if(inputManager.enableRazerHydra)
-				{
-					toggleHydraText = "Disable Razer Hydra";
-					GUI.backgroundColor = Color.green;
-				}
-				else
-				{
-					toggleHydraText = "Enable Razer Hydra";
-					GUI.backgroundColor = originalBackground;
-				}
-			
-                if (GUILayout.Button(toggleHydraText))
-                {
-                    inputManager.enableRazerHydra = !inputManager.enableRazerHydra;
-                }
+                GUI.enabled = true;
 
                 
-                string toggleJumpGestureText;
-				if(inputManager.jumpGestureEnabled)
-				{
-					toggleJumpGestureText = "Disable Jump Gesture";
-					GUI.backgroundColor = Color.green;
-				}
-				else
-				{
-					toggleJumpGestureText = "Enable Jump Gesture";
-					GUI.backgroundColor = originalBackground;
-				}
-			
-                if (GUILayout.Button(toggleJumpGestureText))
-                {
-                    if (!inputManager.jumpGestureEnabled)
-                    {
-                        jumpGesture.EnableGesture();
-                    }
-                    else
-                    {
-                        jumpGesture.DisableGesture();
-                    }
-					inputManager.jumpGestureEnabled = !inputManager.jumpGestureEnabled;
-                }
+                inputManager.enableRazerHydra = GUILayout.Toggle(inputManager.enableRazerHydra, "Use Hydra");
 			
 				GUI.backgroundColor = originalBackground;
 			
