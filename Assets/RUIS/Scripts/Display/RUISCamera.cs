@@ -109,11 +109,9 @@ public class RUISCamera : MonoBehaviour {
             Debug.LogError("Cameras not set properly in RUISCamera: " + name, this);
         }
 
-        SetupCameraTransforms();
-		
-		//keystoningCamera.worldToCameraMatrix = Matrix4x4.identity;
-		//keystoningCamera.transform.position = KeystoningHeadTrackerPosition;
-		//keystoningCamera.gameObject.SetActive(false);
+        if (!associatedDisplay.enableOculusRift)
+        {
+        }
 		
 		if(associatedDisplay)
 		{
@@ -124,13 +122,13 @@ public class RUISCamera : MonoBehaviour {
                     Debug.LogError("Oculus Rift enabled in RUISCamera, forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
                     associatedDisplay.isStereo = true;
                 }
-                associatedDisplay.isHMD = true;
+
                 associatedDisplay.isObliqueFrustum = false;
                 associatedDisplay.isKeystoneCorrected = false;
             }
             else
             {
-                associatedDisplay.isHMD = false;
+                SetupCameraTransforms();
             }
             
             if(associatedDisplay.isObliqueFrustum)
@@ -140,7 +138,6 @@ public class RUISCamera : MonoBehaviour {
                     Vector3[] eyePositions = associatedDisplay.headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
 				    Vector3 camToDisplay = associatedDisplay.displayCenterPosition - eyePositions[0];
         		    float distanceFromPlane = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
-				    //print(camToDisplay + " " + eyePositions[0] + " " + distanceFromPlane);
 	                if(distanceFromPlane == 0)
 						Debug.LogError(  "In " + associatedDisplay.headTracker.gameObject.name + " GameObject's "
 								       + "RUISTracker script, you have set defaultPosition to " 
@@ -150,18 +147,13 @@ public class RUISCamera : MonoBehaviour {
                 }
                 else
                 {
-                    Debug.LogError("RUISTracker is none, you need to set it from the inspector!", this);
+                    Debug.LogError("RUISTracker is none, you need to set it from the inspector!", associatedDisplay);
                 }
             }
 		}
 	}
 	
 	public void Update () {
-		if(transform.parent){
-        	/*centerCamera.worldToCameraMatrix = transform.parent.worldToLocalMatrix;
-            leftCamera.worldToCameraMatrix = transform.parent.worldToLocalMatrix;
-            rightCamera.worldToCameraMatrix = transform.parent.worldToLocalMatrix;*/
-		}
 			
         if (oldStereoValue != associatedDisplay.isStereo)
         {
@@ -172,8 +164,6 @@ public class RUISCamera : MonoBehaviour {
         {
             UpdateStereoType();
         }
-
-        
 	}
 
     public void LateUpdate()
