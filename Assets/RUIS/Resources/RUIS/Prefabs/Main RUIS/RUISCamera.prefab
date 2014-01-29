@@ -226,13 +226,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000004}
   leftCamera: {fileID: 2000002}
   rightCamera: {fileID: 2000000}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -241,7 +239,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1

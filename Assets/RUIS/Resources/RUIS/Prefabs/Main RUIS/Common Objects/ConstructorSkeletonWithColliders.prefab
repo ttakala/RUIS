@@ -1678,7 +1678,7 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
-  maxScaleFactor: .00999999978
+  maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
   torsoOffset: 0

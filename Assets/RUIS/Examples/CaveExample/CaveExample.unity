@@ -3641,7 +3641,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 431496785}
   leftCamera: {fileID: 1185534683}
@@ -5712,7 +5711,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 632743624}
   leftCamera: {fileID: 2125330198}
@@ -7934,7 +7932,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 755089094}
   leftCamera: {fileID: 146558236}
@@ -10199,7 +10196,6 @@ MonoBehaviour:
   enableOculusRift: 0
   isStereo: 0
   eyeSeparation: .0599999987
-  isHMD: 0
   _linkedCamera: {fileID: 431496784}
   stereoType: 0
   isObliqueFrustum: 1
@@ -10808,7 +10804,6 @@ MonoBehaviour:
   enableOculusRift: 0
   isStereo: 0
   eyeSeparation: .0599999987
-  isHMD: 0
   _linkedCamera: {fileID: 755089093}
   stereoType: 0
   isObliqueFrustum: 1
@@ -23092,7 +23087,6 @@ MonoBehaviour:
   enableOculusRift: 0
   isStereo: 0
   eyeSeparation: .0599999987
-  isHMD: 0
   _linkedCamera: {fileID: 632743623}
   stereoType: 0
   isObliqueFrustum: 1

@@ -125,10 +125,10 @@ public class RUISSkeletonControllerEditor : Editor
 
         EditorGUILayout.LabelField("Torso and Head", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(rootBone, new GUIContent("Root Bone", "The skeleton hierarchy root bone"));
-        EditorGUILayout.Space();
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(torsoBone, new GUIContent("Torso", "The torso bone, has to be parent or grandparent of the hips"));
+		EditorGUILayout.PropertyField(neckBone, new GUIContent("Neck", "The neck bone"));
         EditorGUILayout.PropertyField(headBone, new GUIContent("Head", "The head bone"));
-        EditorGUILayout.PropertyField(neckBone, new GUIContent("Neck", "The neck bone"));
-        EditorGUILayout.PropertyField(torsoBone, new GUIContent("Torso", "The torso bone, has to be parent or grandparent of the hips"));
 
         EditorGUILayout.Space();
 
@@ -162,11 +162,12 @@ public class RUISSkeletonControllerEditor : Editor
 
         EditorGUILayout.LabelField("Tweaking", EditorStyles.boldLabel);
         GUI.enabled = scaleHierarchicalModelBones.boolValue;
-        EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Maximum Scale Factor", "The maximum amount the scale of a bone can "
+        EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Max Scale Rate", "The maximum amount the scale of a bone can "
 		                                                             + "change per second when using hierarchical model bone scaling"));
         GUI.enabled = true;
-        EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Minimum Confidence to Update", "The minimum confidence in joint "
-		                                                                        + "positions and rotations needed to update relevant values"));
+        EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Min Confidence to Update", "The minimum confidence in joint "
+		                                                                        + "positions and rotations needed to update these values. "
+		                                                                        + "The confidence is either 0; 0,5; or 1."));
         EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
 		                                                              + "for damping character bone movement (smaller values)"));
         EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent("Neck Height Tweaker", "The height offset for the neck"));

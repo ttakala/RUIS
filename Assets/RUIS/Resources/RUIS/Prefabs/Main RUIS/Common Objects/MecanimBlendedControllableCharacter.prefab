@@ -3118,7 +3118,7 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
-  maxScaleFactor: .00999999978
+  maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
   torsoOffset: 0
@@ -3179,13 +3179,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000004}
   leftCamera: {fileID: 2000002}
   rightCamera: {fileID: 2000000}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -3194,7 +3192,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &11400036
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3206,13 +3203,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000006}
   leftCamera: {fileID: 2000008}
   rightCamera: {fileID: 2000010}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -3221,7 +3216,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &11400038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3616,13 +3610,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000012}
   leftCamera: {fileID: 2000014}
   rightCamera: {fileID: 2000016}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -3631,7 +3623,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &11400068
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4252,13 +4243,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000022}
   leftCamera: {fileID: 2000020}
   rightCamera: {fileID: 2000018}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -4267,7 +4256,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!120 &12000000
 LineRenderer:
   m_ObjectHideFlags: 1

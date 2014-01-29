@@ -1423,13 +1423,14 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 0
   scaleHierarchicalModelBones: 0
-  maxScaleFactor: .00999999978
+  maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
   torsoOffset: 0
   torsoScale: 1
   neckHeightTweaker: 0
   forearmLengthRatio: 1
+  shinLengthRatio: 1
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

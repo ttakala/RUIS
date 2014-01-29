@@ -810,13 +810,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 34413095}
   leftCamera: {fileID: 1158576547}
   rightCamera: {fileID: 1351951184}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -825,7 +823,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!1 &38910654
 GameObject:
   m_ObjectHideFlags: 0
@@ -1874,13 +1871,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 115874249}
   leftCamera: {fileID: 1697092112}
   rightCamera: {fileID: 966551114}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -1889,7 +1884,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &115874251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3955,9 +3949,9 @@ MonoBehaviour:
   resolutionX: 1280
   resolutionY: 800
   useDoubleTheSpace: 0
+  enableOculusRift: 0
   isStereo: 0
   eyeSeparation: .0599999987
-  isHMD: 0
   _linkedCamera: {fileID: 115874250}
   stereoType: 0
   isObliqueFrustum: 0
@@ -3967,6 +3961,7 @@ MonoBehaviour:
   displayUpInternal: {x: 0, y: 1, z: 0}
   width: 2
   height: 1.5
+  headTracker: {fileID: 0}
 --- !u!1 &261885862
 GameObject:
   m_ObjectHideFlags: 0
@@ -6041,13 +6036,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 447537736}
   leftCamera: {fileID: 1172655103}
   rightCamera: {fileID: 1992086909}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -6056,7 +6049,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!1 &448878848
 GameObject:
   m_ObjectHideFlags: 0
@@ -6763,13 +6755,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 476711101}
   leftCamera: {fileID: 46529464}
   rightCamera: {fileID: 945730644}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -6778,7 +6768,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!1 &480469998
 GameObject:
   m_ObjectHideFlags: 0
@@ -7956,13 +7945,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 550543412}
   leftCamera: {fileID: 1544720380}
   rightCamera: {fileID: 859857281}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -7971,7 +7958,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!1 &562292624
 GameObject:
   m_ObjectHideFlags: 0
@@ -10516,13 +10502,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 753089388}
   leftCamera: {fileID: 1353052525}
   rightCamera: {fileID: 1461927074}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -10531,7 +10515,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!1 &760498926
 GameObject:
   m_ObjectHideFlags: 0
@@ -21821,13 +21804,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 1449376595}
   leftCamera: {fileID: 1835127672}
   rightCamera: {fileID: 1760111226}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -21836,7 +21817,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!1 &1458209991
 GameObject:
   m_ObjectHideFlags: 0
@@ -28712,13 +28692,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 1868254143}
   leftCamera: {fileID: 1634678312}
   rightCamera: {fileID: 276710733}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -28727,7 +28705,6 @@ MonoBehaviour:
     m_Bits: 4294967295
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!1 &1872820869
 GameObject:
   m_ObjectHideFlags: 0
@@ -30937,13 +30914,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2002391620}
   leftCamera: {fileID: 2117462613}
   rightCamera: {fileID: 521076608}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 0
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
@@ -30952,7 +30927,6 @@ MonoBehaviour:
     m_Bits: 16777215
   near: .100000001
   far: 500
-  headTracker: {fileID: 0}
 --- !u!1 &2011366655
 GameObject:
   m_ObjectHideFlags: 0
