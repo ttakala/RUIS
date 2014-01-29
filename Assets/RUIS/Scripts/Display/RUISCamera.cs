@@ -12,8 +12,7 @@ using System.Collections;
 using System.Xml;
 
 public class RUISCamera : MonoBehaviour {
-    [HideInInspector]
-    public bool isHeadTracking;
+
     [HideInInspector]
     public bool isKeystoneCorrected;
 
@@ -298,12 +297,6 @@ public class RUISCamera : MonoBehaviour {
         frustum[3, 2] = -1;
 
         return frustum;
-    }
-
-    public void SetupHeadTracking(RUISTracker headTracker)
-    {
-        associatedDisplay.headTracker = headTracker;
-        isHeadTracking = true;
     }
 
     public void SetupKeystoneCorrection()
