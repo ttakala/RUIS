@@ -15,10 +15,8 @@ using System.Collections;
 [CanEditMultipleObjects]
 public class RUISCharacterControllerEditor : Editor
 {
-	int maxKinectSkeletons = 4;
 	int maxPSMoveControllers = 4;
     SerializedProperty characterPivotType;
-    SerializedProperty kinectPlayerId;
     SerializedProperty moveControllerId;
     SerializedProperty ignorePitchAndRoll;
     SerializedProperty groundLayers;
@@ -31,7 +29,6 @@ public class RUISCharacterControllerEditor : Editor
     public void OnEnable()
     {
         characterPivotType = serializedObject.FindProperty("characterPivotType");
-        kinectPlayerId = serializedObject.FindProperty("kinectPlayerId");
         moveControllerId = serializedObject.FindProperty("moveControllerId");
         ignorePitchAndRoll = serializedObject.FindProperty("ignorePitchAndRoll");
         groundLayers = serializedObject.FindProperty("groundLayers");
@@ -46,23 +43,20 @@ public class RUISCharacterControllerEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(characterPivotType, new GUIContent("Character Pivot Type", "What kind of pivot should be used for the character"));
+        EditorGUILayout.PropertyField(characterPivotType, new GUIContent(  "Character Pivot Type", "Rotation pivot for the character, in other "
+		                                                                 + "words, what is the rotation center for the character when turning with "
+		                                                                 + "the " + typeof(RUISCharacterLocomotion).Name + " script. Torso is "
+		                                                                 + "recommended for Kinect."));
 		
 		
         EditorGUI.indentLevel += 2;
         switch (characterPivotType.enumValueIndex)
         {
-            case (int)RUISCharacterController.CharacterPivotType.KinectHead:
-            case (int)RUISCharacterController.CharacterPivotType.KinectTorso:
-				kinectPlayerId.intValue = Mathf.Clamp(kinectPlayerId.intValue, 0, maxKinectSkeletons - 1);
-                EditorGUILayout.PropertyField(kinectPlayerId, new GUIContent(	"Kinect Player ID", "Between 0 and 3. This value should be same as in the "
-			                                                             	 +	"RUISSkeletonController script that is parented under this GameObject."));
-                break;
             case (int)RUISCharacterController.CharacterPivotType.MoveController:
 			{
 				moveControllerId.intValue = Mathf.Clamp(moveControllerId.intValue, 0, maxPSMoveControllers - 1);
                 EditorGUILayout.PropertyField(moveControllerId, new GUIContent("PS Move ID", "Between 0 and 3"));
-                EditorGUILayout.PropertyField(psmoveOffset, new GUIContent("Position Offset (meters)", "PS Move controller's position in "
+                EditorGUILayout.PropertyField(psmoveOffset, new GUIContent(   "Position Offset (meters)", "PS Move controller's position in "
                 															+ "the tracked pivot's local coordinate system. Set these values "
 																			+ "according to the controller's offset from the tracked pivot's "
 																			+ "origin (torso center point etc.)."));
@@ -71,14 +65,15 @@ public class RUISCharacterControllerEditor : Editor
         }
         EditorGUI.indentLevel -= 2;
 
-        EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent("Ignore Pitch and Roll", "Should the pitch and roll values of the pivot "
-																		+ "rotation be taken into account when transforming directions into character coordinates?"));
+        EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent(  "Ignore Pitch and Roll", "Should the pitch and roll values of the pivot "
+																		 + "rotation be taken into account when transforming directions into character "
+		                                                                 + "coordinates? In most cases this should be enabled."));
 
-        EditorGUILayout.PropertyField(groundLayers, new GUIContent("Ground Layers", "The layers to take into account when checking whether the character is grounded "
-																	  + "(and able to jump)."));
+        EditorGUILayout.PropertyField(groundLayers, new GUIContent(  "Ground Layers", "The layers to take into account when checking whether the character is grounded "
+																   + "(and able to jump)."));
 
-        EditorGUILayout.PropertyField(groundedErrorTweaker, new GUIContent("Grounded error tweaker", "This value can be adjusted to allow for some leniency in the "
-																		+ "checks whether the character is grounded"));
+        EditorGUILayout.PropertyField(groundedErrorTweaker, new GUIContent("Ground Distance Tweaker", "This value (in meters) can be adjusted to allow for some "
+		                                                                   + "leniency in the checks whether the character is grounded. Should be above zero."));
 		
         EditorGUILayout.PropertyField(dynamicFriction, new GUIContent(  "Dynamic Friction", "Enable this if you want the character collider to switch "
 																	  + "to a different Physics Material whenever the character is not grounded. We "

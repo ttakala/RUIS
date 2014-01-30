@@ -56,6 +56,7 @@ public class RUISCharacterController : MonoBehaviour
 	
 	public bool feetAlsoAffectGrounding = true;
 	List<Transform> bodyParts = new List<Transform>(2);
+	RUISSkeletonController skeletonController;
 
     void Awake()
     {
@@ -70,11 +71,19 @@ public class RUISCharacterController : MonoBehaviour
 		colliding = false;
 		grounded = false;
 	
-		RUISSkeletonController skeletonController 
-									= gameObject.GetComponentInChildren<RUISSkeletonController>();
-		bodyParts.Add(skeletonController.leftFoot);
-		bodyParts.Add(skeletonController.rightFoot);
-		
+		skeletonController = gameObject.GetComponentInChildren<RUISSkeletonController>();
+		if(skeletonController)
+		{
+			bodyParts.Add(skeletonController.leftFoot);
+			bodyParts.Add(skeletonController.rightFoot);
+			kinectPlayerId = skeletonController.playerId;
+		}
+		else
+		{
+			Debug.LogError(  "RUISCharacterController script in game object '" + gameObject.name 
+			               + "' did not find RUISSkeletonController component from it's child objects!");
+		}
+
 		if(stabilizingCollider)
 		{	
 			colliderComponent = stabilizingCollider.gameObject.collider;

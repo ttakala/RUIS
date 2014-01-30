@@ -240,7 +240,7 @@ MonoBehaviour:
   turnLeftKey: 113
   rotationScaler: 60
   speed: 2
-  gravity: 10
+  runAdder: 1
   maxVelocityChange: 20
   usePSNavigationController: 1
   PSNaviControllerID: 0
@@ -248,6 +248,7 @@ MonoBehaviour:
   jumpStrength: 60
   jumpSpeedEffect: 0
   aerialMobility: .100000001
+  desiredVelocity: {x: 0, y: 0, z: 0}
   useRazerHydra: 1
   razerHydraID: 2
 --- !u!114 &9294548
@@ -18531,6 +18532,14 @@ Prefab:
       propertyPath: display
       value: 
       objectReference: {fileID: 182071551}
+    - target: {fileID: 11400070, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: strafeInsteadTurning
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400070, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: speed
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 9294544}
@@ -22070,6 +22079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b084b3639de80d34780b29bf6ce7d6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationBlendStrength: 10
   animator: {fileID: 1668841488}
   locomotionControl: {fileID: 9294547}
   characterController: {fileID: 9294546}

@@ -24,7 +24,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	private float turnMagnitude = 0;
 
     public float speed = 2.0f;
-    public float gravity = 10.0f; // Is this the best place to apply gravity to RUISCharacterController?
+	public float runAdder = 1.0f;
     public float maxVelocityChange = 10.0f;
     //public bool canJump = true;
     //public float jumpHeight = 2.0f;
@@ -45,15 +45,16 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	private bool colliding = true;
 	private Vector3 accumulatedAirboneVelocity = new Vector3(0, 0, 0);
 	private Vector3 jumpTimeVelocity = new Vector3(0, 0, 0);
-	
+	private Vector3 targetVelocity = new Vector3(0, 0, 0);
+	private Vector3 controlDirection = new Vector3(0, 0, 0);
+
+	public Vector3 desiredVelocity = new Vector3(0, 0, 0);
 	
 	float extraSpeed = 0;
 	private float timeSinceJump = 0;
 
     private RUISJumpGestureRecognizer jumpGesture;
 
-	public float forwardSpeed { get; private set; }
-    public float strafeSpeed { get; private set; }
     public float direction { get; private set; }
     public bool jump { get; private set; }
 	
@@ -189,17 +190,22 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			airborne = true;
 		}
 			
-        Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+		targetVelocity = Vector2.zero;
+		extraSpeed = 0;
 
+		try
+		{
+			targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+		}
+		catch (UnityException) { }
+
+        try
         {
-            try
-            {
-                extraSpeed = Input.GetAxis("Sprint");
-                if (!airborne)
-                    targetVelocity *= 1 + extraSpeed;
-            }
-            catch (UnityException) { }
+	        extraSpeed = Input.GetAxis("Sprint");
+	        if (!airborne)
+				targetVelocity *= 1 + extraSpeed*runAdder;
         }
+        catch (UnityException) { }
 
         // Check if moving with PS Move Navigation controller
         if (PSNaviControllerID < 0)
@@ -220,12 +226,12 @@ public class RUISCharacterLocomotion : MonoBehaviour
 					else
 						extraSpeed = 0;
                     if (Mathf.Abs(verti) > 20)
-                        targetVelocity += new Vector3(0, 0, -((float)verti) / 128f * (1 + extraSpeed));
+						targetVelocity += new Vector3(0, 0, -((float)verti) / 128f * (1 + extraSpeed*runAdder));
 
                     if (strafeInsteadTurning)
                     {
                         if (Mathf.Abs(horiz) > 20)
-                            targetVelocity += new Vector3(((float)horiz) / 128f * (1 + extraSpeed), 0, 0);
+							targetVelocity += new Vector3(((float)horiz) / 128f * (1 + extraSpeed*runAdder), 0, 0);
                     }
                     else
                     {
@@ -261,12 +267,12 @@ public class RUISCharacterLocomotion : MonoBehaviour
 					extraSpeed = 0;
 				
                 if (Mathf.Abs(razerController.JoystickY) > 0.15f)
-                    targetVelocity += new Vector3(0, 0, razerController.JoystickY * (1 + extraSpeed));
+					targetVelocity += new Vector3(0, 0, razerController.JoystickY * (1 + extraSpeed*runAdder));
 
                 if (strafeInsteadTurning)
                 {
                     if (Mathf.Abs(razerController.JoystickX) > 0.15f)
-                        targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed), 0, 0);
+						targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed*runAdder), 0, 0);
 				}
                 else
                 {
@@ -282,12 +288,16 @@ public class RUISCharacterLocomotion : MonoBehaviour
 					turnMagnitude += 1;
             }
         }
-		
-		// Limit of two comes from [0,1] + extraSpeed
-		targetVelocity = Vector3.ClampMagnitude(targetVelocity, 2);
 
-        forwardSpeed = Mathf.Lerp(forwardSpeed, targetVelocity.z, Time.deltaTime * animationBlendStrength);
-        strafeSpeed = Mathf.Lerp(strafeSpeed, targetVelocity.x, Time.deltaTime * animationBlendStrength);
+		// controlDirection is a unit vector that shows the direction where the joystick is pressed
+		controlDirection = Vector3.ClampMagnitude(targetVelocity, 1);
+		
+		// desiredVelocity is a vector with magnitude between 0 (not moving) and 2 (sprinting)
+		desiredVelocity = Vector3.ClampMagnitude(targetVelocity, 1 + extraSpeed);
+
+		// Limit comes from [0,1] + extraSpeed*runAdder
+		targetVelocity = Vector3.ClampMagnitude(targetVelocity, 1 + extraSpeed*runAdder);
+
 		
         targetVelocity = characterController.TransformDirection(targetVelocity);
         targetVelocity *= speed;
@@ -305,7 +315,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		else
 		{
 			// Below is very hacky ***
-			accumulatedAirboneVelocity += aerialMobility*targetVelocity;
+			accumulatedAirboneVelocity += aerialMobility*characterController.TransformDirection(desiredVelocity)*speed;
 			Vector3 temp = new Vector3(jumpTimeVelocity.x, 0, jumpTimeVelocity.z);
 			velocityChange = temp.normalized*Vector3.Dot(accumulatedAirboneVelocity, temp.normalized);
 			if(Vector3.Dot(velocityChange, temp) > 0)
@@ -343,10 +353,10 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			
 		if(turnMagnitude != 0)
 			characterController.RotateAroundCharacterPivot(new Vector3(0, turnMagnitude * rotationScaler * Time.fixedDeltaTime, 0));
-		
+
         if (shouldJump)
-        {
-            rigidbody.AddForce(new Vector3(0, Mathf.Sqrt((1 + 0.5f*Mathf.Abs(forwardSpeed)*jumpSpeedEffect) * jumpStrength) 
+		{
+			rigidbody.AddForce(new Vector3(0, Mathf.Sqrt((1 + 0.5f*(controlDirection.magnitude + extraSpeed)*jumpSpeedEffect) * jumpStrength) 
 																			* rigidbody.mass, 0), ForceMode.Impulse);
 			if(characterController)
 				characterController.lastJumpTime = Time.fixedTime;

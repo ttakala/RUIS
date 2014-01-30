@@ -21,6 +21,7 @@ public class RUISCharacterLocomotionEditor : Editor {
     SerializedProperty rotationScaler;
 
     SerializedProperty speed;
+	SerializedProperty runAdder;
     SerializedProperty maxVelocityChange;
 
     SerializedProperty usePSNavigationController;
@@ -40,6 +41,7 @@ public class RUISCharacterLocomotionEditor : Editor {
         turnLeftKey = serializedObject.FindProperty("turnLeftKey");
         rotationScaler = serializedObject.FindProperty("rotationScaler");
         speed = serializedObject.FindProperty("speed");
+		runAdder = serializedObject.FindProperty("runAdder");
         maxVelocityChange = serializedObject.FindProperty("maxVelocityChange");
         usePSNavigationController = serializedObject.FindProperty("usePSNavigationController");
         PSNaviControllerID = serializedObject.FindProperty("PSNaviControllerID");
@@ -57,17 +59,22 @@ public class RUISCharacterLocomotionEditor : Editor {
 		
 		if(jumpSpeedEffect.floatValue < 0)
 			jumpSpeedEffect.floatValue = 0;
-		
+
         EditorGUILayout.PropertyField(turnRightKey, new GUIContent("Turn Right Key", "Which key is used to rotate the character to rigth"));
         EditorGUILayout.PropertyField(turnLeftKey, new GUIContent("Turn Left Key", "Which key is used to rotate the character to left"));
-        EditorGUILayout.PropertyField(rotationScaler, new GUIContent("Rotation Speed", "How fast is the character rotating when pressing turn key"));
-        EditorGUILayout.PropertyField(speed, new GUIContent("Moving Speed", "How fast is the character moving with Input.GetAxis()"));
-        EditorGUILayout.PropertyField(maxVelocityChange, new GUIContent("Max Velocity Change", "How fast character can change existing velocity (e.g. sliding)"));
-		EditorGUILayout.PropertyField(jumpStrength, new GUIContent("Jump Strength", "Mass-invariant impulse force that is applied when jumping"));
-		EditorGUILayout.PropertyField(jumpSpeedEffect, new GUIContent("Speed Effect on Jump", "How much speed affects the jump strength. Value 0 means no effect, "
-																	+ "value 1 means double strength when moving at max speed and so on."));
+        EditorGUILayout.PropertyField(rotationScaler, new GUIContent("Rotation Speed", "How fast is the character rotating when pressing turn key (degrees/s)"));
+        EditorGUILayout.PropertyField(speed, new GUIContent("Moving Speed", "How fast is the character's walking speed (m/s) with Input.GetAxis()"));
+		EditorGUILayout.PropertyField(runAdder, new GUIContent(  "Sprint Effect", "How much the 'Sprint' button affects the Moving Speed. Value 0 means no effect, "
+		                                                       + "value 1 means double speed and so on. This value should be non-negative."));
+		EditorGUILayout.PropertyField(maxVelocityChange, new GUIContent(  "Max Acceleration", "The maximum rate of velocity change (m/s^2) when "
+		                                                                + "starting or stopping locomotion."));
+		EditorGUILayout.PropertyField(jumpStrength, new GUIContent(  "Jump Strength", "Mass-invariant impulse force that is applied when jumping. Note that this "
+		                                                           + "value has a non-linear relationship with the resulting jump height (which also depends on "
+		                                                           + "the gravity)."));
+		EditorGUILayout.PropertyField(jumpSpeedEffect, new GUIContent("Speed Effect on Jump", "How much speed affects the Jump Strength. Value 0 means no effect, "
+																	+ "value 1 means double strength when moving at sprint speed and so on."));
 		EditorGUILayout.PropertyField(aerialMobility, new GUIContent("Aerial Mobility", "At which rate the character can change his velocity while jumping "
-																	+ "or airborne."));
+																	+ "or airborne. This value is relative to Moving Speed."));
 		
         EditorGUILayout.PropertyField(useRazerHydra, new GUIContent("Use Razer Hydra", "Enable walking with a Razer Hydra controller"));
 		
