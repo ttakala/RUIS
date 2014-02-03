@@ -25,10 +25,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
     public float speed = 2.0f;
 	public float runAdder = 1.0f;
-    public float maxVelocityChange = 10.0f;
-    //public bool canJump = true;
-    //public float jumpHeight = 2.0f;
-    //private bool grounded = false;
+    public float maxVelocityChange = 20.0f;
 
     public bool usePSNavigationController = true;
     public int PSNaviControllerID = 0;
@@ -36,22 +33,27 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
     public float jumpStrength = 10f;
 	public float jumpSpeedEffect = 0;
-	public float aerialMobility = 0.1f;
+	public float aerialAcceleration = 20;
+	public float aerialMobility = 1.5f;
+	public float aerialDrag = 4;
 	
-    private Vector3 velocity;
-    private Vector3 velocityChange;
+	private Vector3 velocity = new Vector3(0, 0, 0);
+	private Vector3 velocityChange = new Vector3(0, 0, 0);
+	private Vector3 proposedVelocity = new Vector3(0, 0, 0);
 	private bool airborne = false;
 	private bool grounded = true;
 	private bool colliding = true;
-	private Vector3 accumulatedAirboneVelocity = new Vector3(0, 0, 0);
+	private Vector3 proposedAcceleration = new Vector3(0, 0, 0);
 	private Vector3 jumpTimeVelocity = new Vector3(0, 0, 0);
 	private Vector3 targetVelocity = new Vector3(0, 0, 0);
 	private Vector3 controlDirection = new Vector3(0, 0, 0);
+	
+	private Vector3 airborneAccumulatedVelocity = new Vector3(0, 0, 0);
+	private Vector3 tempAcceleration = new Vector3(0, 0, 0);
 
 	public Vector3 desiredVelocity = new Vector3(0, 0, 0);
 	
 	float extraSpeed = 0;
-	private float timeSinceJump = 0;
 
     private RUISJumpGestureRecognizer jumpGesture;
 
@@ -177,15 +179,15 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		if(grounded || colliding)
 		{
 			airborne = false;
-			accumulatedAirboneVelocity = Vector3.zero;
 		}
 		else
 		{
-			timeSinceJump += Time.fixedDeltaTime;
 			if(!airborne)
 			{
 				jumpTimeVelocity = rigidbody.velocity;
-				timeSinceJump = 0;
+				jumpTimeVelocity.y = 0;
+				jumpTimeVelocity = Vector3.ClampMagnitude(jumpTimeVelocity, aerialMobility*speed);
+				airborneAccumulatedVelocity = jumpTimeVelocity;
 			}
 			airborne = true;
 		}
@@ -306,7 +308,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
         velocityChange = (targetVelocity - velocity);
 
         velocityChange.y = 0;
-        velocityChange = Vector3.ClampMagnitude(velocityChange, Time.deltaTime * maxVelocityChange);
+		velocityChange = Vector3.ClampMagnitude(velocityChange, Time.fixedDeltaTime * maxVelocityChange);
 		
 		if(!airborne)
 		{
@@ -314,31 +316,35 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		}
 		else
 		{
-			// Below is very hacky ***
-			accumulatedAirboneVelocity += aerialMobility*characterController.TransformDirection(desiredVelocity)*speed;
-			Vector3 temp = new Vector3(jumpTimeVelocity.x, 0, jumpTimeVelocity.z);
-			velocityChange = temp.normalized*Vector3.Dot(accumulatedAirboneVelocity, temp.normalized);
-			if(Vector3.Dot(velocityChange, temp) > 0)
-			{
-				accumulatedAirboneVelocity -= velocityChange;
-				accumulatedAirboneVelocity = Vector3.ClampMagnitude(accumulatedAirboneVelocity, speed);
-			}
-			else
-			{
-				accumulatedAirboneVelocity = Vector3.ClampMagnitude(accumulatedAirboneVelocity, speed);
-				
-				jumpTimeVelocity *= Mathf.Clamp01(1-0.1f*timeSinceJump);
-				
-			}
-			
-			velocityChange = jumpTimeVelocity + accumulatedAirboneVelocity - velocity;
-        	velocityChange.y = 0;
-        	velocityChange = Vector3.ClampMagnitude(velocityChange, Time.deltaTime * maxVelocityChange);
-			
-			rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
-		}
 
-        //rigidbody.AddForce(new Vector3(0, -gravity * rigidbody.mass, 0));
+			// Calculate air drag which direction is opposite to the current horizontal velocity vector
+			tempAcceleration = aerialDrag * ( - 1) * airborneAccumulatedVelocity.normalized ;
+			tempAcceleration.y = 0;
+
+			// Calculate proposed acceleration as a sum of player controls and air drag
+			proposedAcceleration = aerialAcceleration*characterController.TransformDirection(desiredVelocity) + tempAcceleration;
+
+			// Integrate proposed total velocity = old velocity + proposed acceleration * deltaT
+			proposedVelocity = airborneAccumulatedVelocity + (proposedAcceleration)*Time.fixedDeltaTime;
+
+			// If the proposed total velocity is not inside "aerial velocity disc", then shorten the proposed velocity
+			// with length of [proposed acceleration * deltaT]. This allows aerial maneuvers along the edge of the disc (circle).
+			// In other words: If you have reach maximum aerial velocity to certain direction, you can still control the 
+			// velocity in the axis that is perpendicular to that direction
+			if(proposedVelocity.magnitude >= aerialMobility*speed)
+			{
+				proposedVelocity     -=  1.01f*airborneAccumulatedVelocity.normalized*proposedAcceleration.magnitude*Time.fixedDeltaTime;
+				proposedAcceleration -=  1.01f*airborneAccumulatedVelocity.normalized*proposedAcceleration.magnitude;
+			}
+
+			// If the proposed total velocity is within allowed "aerial velocity disc", then add the proposed 
+			// acceleration to the character and update the accumulatedAerialSpeed accordingly
+			if(proposedVelocity.magnitude < aerialMobility*speed)
+			{
+				rigidbody.AddForce(proposedAcceleration, ForceMode.Acceleration);
+				airborneAccumulatedVelocity = proposedVelocity;
+			}
+		}
 
         try
         {
