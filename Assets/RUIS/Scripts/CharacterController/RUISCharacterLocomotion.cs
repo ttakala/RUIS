@@ -50,6 +50,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	
 	private Vector3 airborneAccumulatedVelocity = new Vector3(0, 0, 0);
 	private Vector3 tempAcceleration = new Vector3(0, 0, 0);
+	private Vector3 tempVelocity = new Vector3(0, 0, 0);
 
 	public Vector3 desiredVelocity = new Vector3(0, 0, 0);
 	
@@ -316,10 +317,18 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		}
 		else
 		{
-
-			// Calculate air drag which direction is opposite to the current horizontal velocity vector
-			tempAcceleration = aerialDrag * ( - 1) * airborneAccumulatedVelocity.normalized ;
+			// Calculate constant air drag whose direction is opposite to the current horizontal velocity vector
+			tempVelocity = velocity;
+			tempVelocity.y = 0;
+			tempAcceleration = -aerialDrag * tempVelocity.normalized ;
 			tempAcceleration.y = 0;
+
+			// The drag should only stop the character, not push him like a wind in the opposite direction
+			// This condition is true when the tempVelocity is close to zero and its normalization fails
+			if(Vector3.Dot(tempVelocity, tempAcceleration) >= 0)
+			{
+				tempAcceleration = Vector3.zero;
+			}
 
 			// Calculate proposed acceleration as a sum of player controls and air drag
 			proposedAcceleration = aerialAcceleration*characterController.TransformDirection(desiredVelocity) + tempAcceleration;
