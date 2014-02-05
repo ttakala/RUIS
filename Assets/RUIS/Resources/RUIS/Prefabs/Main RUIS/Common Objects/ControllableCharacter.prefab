@@ -3890,14 +3890,17 @@ MonoBehaviour:
   turnLeftKey: 113
   rotationScaler: 60
   speed: 2
-  gravity: 10
-  maxVelocityChange: 10
+  runAdder: 1
+  maxVelocityChange: 20
   usePSNavigationController: 1
   PSNaviControllerID: 0
   strafeInsteadTurning: 0
-  jumpStrength: 10
+  jumpStrength: 60
   jumpSpeedEffect: 0
-  aerialMobility: .100000001
+  aerialAcceleration: 20
+  aerialMobility: 1.5
+  aerialDrag: 4
+  desiredVelocity: {x: 0, y: 0, z: 0}
   useRazerHydra: 1
   razerHydraID: 2
 --- !u!114 &11400110

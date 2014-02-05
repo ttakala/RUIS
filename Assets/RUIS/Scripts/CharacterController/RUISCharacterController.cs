@@ -232,10 +232,16 @@ public class RUISCharacterController : MonoBehaviour
         switch (characterPivotType)
         {
             case CharacterPivotType.KinectHead:
-                characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].head.rotation * Vector3.forward : Vector3.forward;
+				if(skeletonManager != null && skeletonManager.skeletons[kinectPlayerId] != null)
+					characterForward = skeletonManager.skeletons[kinectPlayerId].head.rotation * Vector3.forward;
+				else 
+					characterForward = Vector3.forward;
                 break;
-            case CharacterPivotType.KinectTorso:
-                characterForward = skeletonManager ? skeletonManager.skeletons[kinectPlayerId].torso.rotation * Vector3.forward : Vector3.forward;
+			case CharacterPivotType.KinectTorso:
+				if(skeletonManager != null && skeletonManager.skeletons[kinectPlayerId] != null)
+					characterForward = skeletonManager.skeletons[kinectPlayerId].torso.rotation * Vector3.forward;
+				else 
+					characterForward = Vector3.forward;
                 break;
             case CharacterPivotType.MoveController:
 			{

@@ -402,9 +402,10 @@ public class RUISCamera : MonoBehaviour {
         keystoningConfiguration.SaveToXML(displayXmlElement);
     }
 
+	/*
     public void OnDrawGizmos()
     {
-        /*if (!associatedDisplay) return;
+        if (!associatedDisplay) return;
 
         Color color = Gizmos.color;
         Gizmos.color = new Color(50, 50, 50);
@@ -425,6 +426,7 @@ public class RUISCamera : MonoBehaviour {
         Gizmos.DrawCube((associatedDisplay.BottomRightPosition + associatedDisplay.BottomLeftPosition) / 2, new Vector3(associatedDisplay.BottomRightPosition.x - associatedDisplay.BottomLeftPosition.x, 0.1f, 0.1f));
         
         Gizmos.color = color;
-        Gizmos.matrix = originalMatrix;*/
+        Gizmos.matrix = originalMatrix;
     }
+	 */
 }

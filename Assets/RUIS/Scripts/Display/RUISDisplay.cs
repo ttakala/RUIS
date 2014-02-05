@@ -242,39 +242,45 @@ public class RUISDisplay : MonoBehaviour {
 
     void OnDrawGizmos()
     {
-        Color color = Gizmos.color;
-        Gizmos.color = new Color(128, 128, 128);
-        Gizmos.DrawLine(TopLeftPosition, TopRightPosition);
-        Gizmos.DrawLine(TopRightPosition, BottomRightPosition);
-        Gizmos.DrawLine(BottomRightPosition, BottomLeftPosition);
-        Gizmos.DrawLine(BottomLeftPosition, TopLeftPosition);
-        Gizmos.color = color;
+		if(isObliqueFrustum)
+		{
+	        Color color = Gizmos.color;
+	        Gizmos.color = new Color(128, 128, 128);
+	        Gizmos.DrawLine(TopLeftPosition, TopRightPosition);
+	        Gizmos.DrawLine(TopRightPosition, BottomRightPosition);
+	        Gizmos.DrawLine(BottomRightPosition, BottomLeftPosition);
+	        Gizmos.DrawLine(BottomLeftPosition, TopLeftPosition);
+	        Gizmos.color = color;
+		}
     }
 
     void OnDrawGizmosSelected()
-    {
-        Color color = Gizmos.color;
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(TopLeftPosition, TopRightPosition);
-        Gizmos.DrawLine(TopRightPosition, BottomRightPosition);
-        Gizmos.DrawLine(BottomRightPosition, BottomLeftPosition);
-        Gizmos.DrawLine(BottomLeftPosition, TopLeftPosition);
+	{
+		if(isObliqueFrustum)
+		{
+	        Color color = Gizmos.color;
+	        Gizmos.color = Color.green;
+	        Gizmos.DrawLine(TopLeftPosition, TopRightPosition);
+	        Gizmos.DrawLine(TopRightPosition, BottomRightPosition);
+	        Gizmos.DrawLine(BottomRightPosition, BottomLeftPosition);
+	        Gizmos.DrawLine(BottomLeftPosition, TopLeftPosition);
 
-        Vector3 horizontalScale = 0.1f * (TopRightPosition - TopLeftPosition);
-        Vector3 verticalScale = 0.1f * (BottomRightPosition - TopRightPosition);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(TopLeftPosition + horizontalScale + verticalScale, TopRightPosition - horizontalScale + verticalScale);
-        Gizmos.DrawLine(TopRightPosition - horizontalScale + verticalScale, BottomRightPosition - horizontalScale - verticalScale);
-        Gizmos.DrawLine(BottomRightPosition - horizontalScale - verticalScale, BottomLeftPosition + horizontalScale - verticalScale);
-        Gizmos.DrawLine(BottomLeftPosition + horizontalScale - verticalScale, TopLeftPosition + horizontalScale + verticalScale);
+	        Vector3 horizontalScale = 0.1f * (TopRightPosition - TopLeftPosition);
+	        Vector3 verticalScale = 0.1f * (BottomRightPosition - TopRightPosition);
+	        Gizmos.color = Color.yellow;
+	        Gizmos.DrawLine(TopLeftPosition + horizontalScale + verticalScale, TopRightPosition - horizontalScale + verticalScale);
+	        Gizmos.DrawLine(TopRightPosition - horizontalScale + verticalScale, BottomRightPosition - horizontalScale - verticalScale);
+	        Gizmos.DrawLine(BottomRightPosition - horizontalScale - verticalScale, BottomLeftPosition + horizontalScale - verticalScale);
+	        Gizmos.DrawLine(BottomLeftPosition + horizontalScale - verticalScale, TopLeftPosition + horizontalScale + verticalScale);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(displayCenterPosition, displayCenterPosition + DisplayNormal/2);
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(displayCenterPosition, displayCenterPosition + DisplayUp/2);
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(displayCenterPosition, displayCenterPosition + DisplayRight/2);
+	        Gizmos.color = Color.blue;
+	        Gizmos.DrawLine(displayCenterPosition, displayCenterPosition + DisplayNormal/2);
+	        Gizmos.color = Color.green;
+	        Gizmos.DrawLine(displayCenterPosition, displayCenterPosition + DisplayUp/2);
+	        Gizmos.color = Color.red;
+	        Gizmos.DrawLine(displayCenterPosition, displayCenterPosition + DisplayRight/2);
 
-        Gizmos.color = color;
+			Gizmos.color = color;
+		}
     }
 }

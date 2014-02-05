@@ -85,18 +85,26 @@ public class RUISCharacterLocomotion : MonoBehaviour
         }
         catch (UnityException)
         {
-            Debug.LogWarning("Sprint Axis not set");
+			Debug.LogWarning("'Sprint' not defined in Unity Input settings");
         }
 
         try
         {
-            Input.GetAxis("Right Analog Stick");
+            Input.GetAxis("Turn");
         }
         catch (UnityException)
         {
-            Debug.LogWarning("Right Analog Stick Axis not set");
+			Debug.LogWarning("'Turn' not defined in Unity Input settings");
         }
-
+		
+		try
+		{
+			Input.GetAxis("Jump");
+		}
+		catch (UnityException)
+		{
+			Debug.LogWarning("'Jump' not defined in Unity Input settings");
+		}
     }
 	
 	void Start()
@@ -357,7 +365,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
         try
         {
-            turnMagnitude += Input.GetAxis("Right Analog Stick");
+			turnMagnitude += Input.GetAxis("Turn");
         }
         catch (UnityException) { }
 

@@ -675,7 +675,7 @@ GameObject:
   - 114: {fileID: 11400040}
   - 120: {fileID: 12000000}
   m_Layer: 0
-  m_Name: MoveController
+  m_Name: PSMoveWand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1319,7 +1319,7 @@ GameObject:
   - 114: {fileID: 11400088}
   - 120: {fileID: 12000002}
   m_Layer: 0
-  m_Name: RazerHydra
+  m_Name: RazerHydraWand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3058,6 +3058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b084b3639de80d34780b29bf6ce7d6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationBlendStrength: 10
   animator: {fileID: 9500000}
   locomotionControl: {fileID: 11400070}
   characterController: {fileID: 11400072}
@@ -3651,14 +3652,17 @@ MonoBehaviour:
   turnLeftKey: 113
   rotationScaler: 60
   speed: 2
-  gravity: 10
+  runAdder: 1
   maxVelocityChange: 20
   usePSNavigationController: 1
   PSNaviControllerID: 0
   strafeInsteadTurning: 1
   jumpStrength: 60
   jumpSpeedEffect: 0
-  aerialMobility: .100000001
+  aerialAcceleration: 20
+  aerialMobility: 1.5
+  aerialDrag: 4
+  desiredVelocity: {x: 0, y: 0, z: 0}
   useRazerHydra: 1
   razerHydraID: 2
 --- !u!114 &11400072
