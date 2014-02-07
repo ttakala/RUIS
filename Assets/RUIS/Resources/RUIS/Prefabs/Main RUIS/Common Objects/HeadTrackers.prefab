@@ -547,7 +547,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -576,7 +576,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .0500000007
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -605,7 +605,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -634,7 +634,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .0500000007
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -663,7 +663,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -692,7 +692,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -721,7 +721,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -750,7 +750,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -779,7 +779,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .150000006
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -808,7 +808,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -837,7 +837,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -866,7 +866,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .0500000007
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -1206,22 +1206,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000006}
   leftCamera: {fileID: 2000010}
   rightCamera: {fileID: 2000004}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &11400040
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1423,22 +1420,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000016}
   leftCamera: {fileID: 2000014}
   rightCamera: {fileID: 2000012}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .150000006
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &11400068
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1477,22 +1471,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000002}
   leftCamera: {fileID: 2000008}
   rightCamera: {fileID: 2000000}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
   cullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  near: .100000001
+  near: .0500000007
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &11400074
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1573,22 +1564,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isHeadTracking: 0
   isKeystoneCorrected: 0
   centerCamera: {fileID: 2000022}
   leftCamera: {fileID: 2000020}
   rightCamera: {fileID: 2000018}
   keystoningCamera: {fileID: 0}
-  enableOculusRift: 1
   associatedDisplay: {fileID: 0}
   horizontalFOV: 60
   verticalFOV: 40
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
-  headTracker: {fileID: 0}
 --- !u!114 &11400082
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -2366,7 +2366,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2395,7 +2395,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2482,7 +2482,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2511,7 +2511,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2540,7 +2540,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .0500000007
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -2569,7 +2569,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2598,7 +2598,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2627,7 +2627,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2656,7 +2656,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2685,7 +2685,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .150000006
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -3191,7 +3191,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!114 &11400036
 MonoBehaviour:
@@ -3215,7 +3215,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!114 &11400038
 MonoBehaviour:
@@ -3622,7 +3622,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!114 &11400068
 MonoBehaviour:
@@ -3709,7 +3709,7 @@ MonoBehaviour:
   allowMultipleAssigners: 0
   applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: .5, z: .300000012}
+  onlyRazerOffset: {x: 0, y: .200000003, z: .300000012}
   razerWandParent: {fileID: 400136}
 --- !u!114 &11400076
 MonoBehaviour:
@@ -4258,7 +4258,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .150000006
   far: 500
 --- !u!120 &12000000
 LineRenderer:

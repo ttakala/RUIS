@@ -11610,10 +11610,10 @@ MonoBehaviour:
   - {fileID: 965776105}
   stereoCamera: {fileID: 0}
   monoCamera: {fileID: 0}
-  totalResolutionX: 3072
-  totalResolutionY: 768
-  totalRawResolutionX: 3072
-  totalRawResolutionY: 768
+  totalResolutionX: 5760
+  totalResolutionY: 1080
+  totalRawResolutionX: 5760
+  totalRawResolutionY: 1080
   allowResolutionDialog: 0
 --- !u!1 &1071815039
 GameObject:
@@ -14600,7 +14600,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400022, guid: d94c6e27c0db1994889737c587593074, type: 2}
       propertyPath: applyMoveToKinect
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: d94c6e27c0db1994889737c587593074, type: 2}
       propertyPath: width
@@ -14620,7 +14620,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400022, guid: d94c6e27c0db1994889737c587593074, type: 2}
       propertyPath: loadFromXML
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400020, guid: d94c6e27c0db1994889737c587593074, type: 2}
       propertyPath: enablePSMove
@@ -22849,8 +22849,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coordinateXmlFile: calibration.xml
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 3}
-  loadFromXML: 0
-  applyMoveToKinect: 0
+  loadFromXML: 1
+  applyMoveToKinect: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
   yawOffset: 0

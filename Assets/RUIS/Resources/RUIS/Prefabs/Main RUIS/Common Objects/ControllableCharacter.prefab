@@ -2218,7 +2218,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2247,7 +2247,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .0500000007
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -2276,7 +2276,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2334,7 +2334,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2363,7 +2363,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2392,7 +2392,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2421,7 +2421,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2450,7 +2450,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .150000006
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -2479,7 +2479,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2508,7 +2508,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2537,7 +2537,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .0500000007
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -2967,7 +2967,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!114 &11400040
 MonoBehaviour:
@@ -3181,7 +3181,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .150000006
   far: 500
 --- !u!114 &11400068
 MonoBehaviour:
@@ -3232,7 +3232,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!114 &11400074
 MonoBehaviour:
@@ -3325,7 +3325,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!114 &11400082
 MonoBehaviour:

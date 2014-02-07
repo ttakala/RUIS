@@ -77,8 +77,9 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	void FixedUpdate () 
 	{
 		Vector3 torsoPos;
+		Vector3 newLocalPosition;
         if (!skeletonManager || !skeletonManager.skeletons[playerId].isTracking)
-        {
+		{
             colliderHeight = defaultColliderHeight;
             // Tuukka:
             // Original skeletonController has been destroyed because the GameObject which had
@@ -101,8 +102,12 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
             {
                 if (skeletonController.followMoveController)
                 {
-                    //transform.localPosition = skeletonController.transform.localPosition;// + 0.5f*colliderHeight*Vector3.up;
-                    torsoPos = skeletonController.transform.localPosition + defaultColliderHeight * Vector3.up;
+					// TODO *** Check that this works with other models. Before with grandma model torsoPos value was:
+                    //torsoPos = skeletonController.transform.localPosition + defaultColliderHeight * Vector3.up;
+					torsoPos = skeletonController.transform.localPosition;
+					torsoPos.y = defaultColliderHeight; // torsoPos.y is lerped and 0 doesn't seem to work
+					newLocalPosition = torsoPos;
+					newLocalPosition.y = defaultColliderPosition.y;
 					
 					measuredPos[0] = torsoPos.x;
 					measuredPos[1] = torsoPos.y;
@@ -143,14 +148,16 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 			torsoPos.x = (float) pos[0];
 			torsoPos.y = (float) pos[1];
 			torsoPos.z = (float) pos[2];
-        }
-		
-        Vector3 newPos = torsoPos;
-        newPos.y = torsoPos.y / 2;
 
-        colliderHeight = Mathf.Lerp(capsuleCollider.height, torsoPos.y + colliderHeightTweaker, maxHeightChange * Time.fixedDeltaTime);
-        
-        transform.localPosition = Vector3.MoveTowards(transform.localPosition, newPos, maxPositionChange * Time.fixedDeltaTime);
+			// Capsule collider is from floor up till torsoPos, therefore the capsule's center point is half of that
+			newLocalPosition = torsoPos;
+			newLocalPosition.y = torsoPos.y / 2; 
+        }
+
+		// Updated collider height (from floor to torsoPos)
+		colliderHeight = Mathf.Lerp(capsuleCollider.height, torsoPos.y + colliderHeightTweaker, maxHeightChange * Time.fixedDeltaTime);
+		// Updated collider position
+        transform.localPosition = Vector3.MoveTowards(transform.localPosition, newLocalPosition, maxPositionChange * Time.fixedDeltaTime);
 	}
 	
 }

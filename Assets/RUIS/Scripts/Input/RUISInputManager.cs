@@ -426,7 +426,7 @@ public class RUISInputManager : MonoBehaviour
 
     public RUISPSMoveWand GetMoveWand(int i)
     {
-		if(psMoveWrapper.isConnected)
+		if(psMoveWrapper && psMoveWrapper.isConnected)
 		{
 	        if (i < 0 || i >= amountOfPSMoveControllers || i >= moveControllers.Length)
 	        {

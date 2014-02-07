@@ -785,7 +785,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .150000006
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -821,7 +821,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .150000006
   far: 500
 --- !u!1 &38910654
 GameObject:
@@ -1105,7 +1105,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -4076,7 +4076,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -6011,7 +6011,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: .100000001
+  near clip plane: .0500000007
   far clip plane: 500
   field of view: 60
   orthographic: 0
@@ -6047,7 +6047,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!1 &448878848
 GameObject:
@@ -6766,7 +6766,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!1 &480469998
 GameObject:
@@ -7387,7 +7387,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -7956,7 +7956,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!1 &562292624
 GameObject:
@@ -9802,7 +9802,7 @@ GameObject:
   - 114: {fileID: 696664713}
   - 120: {fileID: 696664712}
   m_Layer: 0
-  m_Name: MoveController
+  m_Name: PSMoveWand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10513,7 +10513,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .150000006
   far: 500
 --- !u!1 &760498926
 GameObject:
@@ -11368,6 +11368,62 @@ Prefab:
       propertyPath: enableOculusRift
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400074, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: onlyRazerOffset.y
+      value: .200000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000004, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400036, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400066, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400122, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near
+      value: .150000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000020, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .150000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000018, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .150000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000016, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000002, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000010, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000008, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000014, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 2043242362}
@@ -12008,7 +12064,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -13192,7 +13248,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -14524,7 +14580,7 @@ GameObject:
   - 114: {fileID: 1004861306}
   - 120: {fileID: 1004861305}
   m_Layer: 0
-  m_Name: RazerHydra
+  m_Name: RazerHydraWand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16855,7 +16911,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -17118,7 +17174,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -19261,14 +19317,17 @@ MonoBehaviour:
   turnLeftKey: 113
   rotationScaler: 60
   speed: 2
-  gravity: 10
+  runAdder: 1
   maxVelocityChange: 20
   usePSNavigationController: 1
   PSNaviControllerID: 0
   strafeInsteadTurning: 1
   jumpStrength: 60
   jumpSpeedEffect: 0
-  aerialMobility: .100000001
+  aerialAcceleration: 20
+  aerialMobility: 1.5
+  aerialDrag: 4
+  desiredVelocity: {x: 0, y: 0, z: 0}
   useRazerHydra: 1
   razerHydraID: 2
 --- !u!114 &1325886370
@@ -19292,7 +19351,7 @@ MonoBehaviour:
   allowMultipleAssigners: 0
   applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: .5, z: .300000012}
+  onlyRazerOffset: {x: 0, y: .200000003, z: .300000012}
   razerWandParent: {fileID: 1391465356}
 --- !u!54 &1325886371
 Rigidbody:
@@ -19805,7 +19864,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -19922,7 +19981,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -21815,7 +21874,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!1 &1458209991
 GameObject:
@@ -22043,7 +22102,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .150000006
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -22759,7 +22818,7 @@ GameObject:
   - 114: {fileID: 1498337480}
   - 120: {fileID: 1498337479}
   m_Layer: 0
-  m_Name: MoveController
+  m_Name: PSMoveWand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23648,7 +23707,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -23772,6 +23831,62 @@ Prefab:
     - target: {fileID: 11400066, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: enableOculusRift
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400074, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: onlyRazerOffset.y
+      value: .200000003
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400036, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400066, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000022, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .150000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400122, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near
+      value: .150000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000020, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .150000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000018, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .150000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000008, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000016, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000010, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000014, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000002, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: near clip plane
+      value: .0500000007
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
@@ -25193,7 +25308,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -26178,7 +26293,7 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
-  maxScaleFactor: .00999999978
+  maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
   torsoOffset: 0
@@ -26213,6 +26328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b084b3639de80d34780b29bf6ce7d6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationBlendStrength: 10
   animator: {fileID: 1689802949}
   locomotionControl: {fileID: 1325886369}
   characterController: {fileID: 1325886368}
@@ -27504,7 +27620,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -28481,7 +28597,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -28703,7 +28819,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!1 &1872820869
 GameObject:
@@ -29663,7 +29779,7 @@ GameObject:
   - 114: {fileID: 1946423854}
   - 120: {fileID: 1946423853}
   m_Layer: 0
-  m_Name: RazerHydra
+  m_Name: RazerHydraWand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30489,7 +30605,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -30925,7 +31041,7 @@ MonoBehaviour:
   cullingMask:
     serializedVersion: 2
     m_Bits: 16777215
-  near: .100000001
+  near: .0500000007
   far: 500
 --- !u!1 &2011366655
 GameObject:
@@ -31695,7 +31811,7 @@ MonoBehaviour:
   allowMultipleAssigners: 0
   applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: .5, z: .300000012}
+  onlyRazerOffset: {x: 0, y: .200000003, z: .300000012}
   razerWandParent: {fileID: 1298089162}
 --- !u!114 &2043242365
 MonoBehaviour:
@@ -31713,14 +31829,17 @@ MonoBehaviour:
   turnLeftKey: 113
   rotationScaler: 60
   speed: 2
-  gravity: 10
+  runAdder: 1
   maxVelocityChange: 20
   usePSNavigationController: 1
   PSNaviControllerID: 0
   strafeInsteadTurning: 1
   jumpStrength: 60
   jumpSpeedEffect: 0
-  aerialMobility: .100000001
+  aerialAcceleration: 20
+  aerialMobility: 1.5
+  aerialDrag: 4
+  desiredVelocity: {x: 0, y: 0, z: 0}
   useRazerHydra: 1
   razerHydraID: 2
 --- !u!114 &2043242366
@@ -32816,7 +32935,7 @@ Camera:
     y: 0
     width: .5
     height: 1
-  near clip plane: .300000012
+  near clip plane: .0500000007
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -33309,7 +33428,7 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
-  maxScaleFactor: .00999999978
+  maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
   torsoOffset: 0
@@ -33344,6 +33463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b084b3639de80d34780b29bf6ce7d6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationBlendStrength: 10
   animator: {fileID: 2135021964}
   locomotionControl: {fileID: 2043242365}
   characterController: {fileID: 2043242366}
