@@ -1324,8 +1324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialPredictionTime: .0500000007
-  InitialAccelGain: .0500000007
-  ResetTracker: 1
+  ResetTrackerOnLoad: 1
 --- !u!114 &88217827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1338,6 +1337,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ipd: .064000003
+  verticalFOV: 90
   CameraRootPosition: {x: 0, y: 0, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
@@ -1345,11 +1346,15 @@ MonoBehaviour:
   FollowOrientation: {fileID: 596268421}
   TrackerRotatesY: 0
   PortraitMode: 0
+  EnableOrientation: 1
   PredictionOn: 1
   CallInPreRender: 0
   WireMode: 0
   LensCorrection: 1
   Chromatic: 1
+  backgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
+  nearClipPlane: .150000006
+  farClipPlane: 1000
 --- !u!114 &88217828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2021,54 +2026,6 @@ Transform:
   m_LocalScale: {x: 1.00000012, y: 1.00000012, z: 1.00000012}
   m_Children: []
   m_Father: {fileID: 1359923796}
---- !u!1 &180230446
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-  m_PrefabInternal: {fileID: 239310209}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 180230448}
-  - 114: {fileID: 180230447}
-  m_Layer: 0
-  m_Name: RUISMenu
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &180230447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: f88ad6ed838405246839ef2f7181f999,
-    type: 2}
-  m_PrefabInternal: {fileID: 239310209}
-  m_GameObject: {fileID: 180230446}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58cefced8c60edf4eb4e6012786be8e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fontSize: 14
-  stereoOffset: -110
-  menuSkin: {fileID: 11400000, guid: a102d97eb96354e449b74caccb8cad8b, type: 2}
-  enablePSMove: 0
-  psMoveIP: 
-  psMovePort: 0
-  jumpGesture: {fileID: 0}
-  oculusRiftMenu: 1
-  hideMouseOnPlay: 0
---- !u!4 &180230448
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-  m_PrefabInternal: {fileID: 239310209}
-  m_GameObject: {fileID: 180230446}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
 --- !u!1 &181162672
 GameObject:
   m_ObjectHideFlags: 0
@@ -2918,50 +2875,6 @@ MonoBehaviour:
   m_categoriesToShow: 010101
   m_minLevelToShow: 0
   m_sourcesToShow: 0101010101010101
---- !u!1001 &239310209
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-      propertyPath: oculusRiftMenu
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: f88ad6ed838405246839ef2f7181f999, type: 2}
-  m_RootGameObject: {fileID: 180230446}
-  m_IsPrefabParent: 0
-  m_IsExploded: 1
 --- !u!1 &249214127
 GameObject:
   m_ObjectHideFlags: 0
@@ -3791,6 +3704,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ipd: .064000003
+  verticalFOV: 90
   CameraRootPosition: {x: 0, y: 0, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
@@ -3798,11 +3713,15 @@ MonoBehaviour:
   FollowOrientation: {fileID: 714044352}
   TrackerRotatesY: 0
   PortraitMode: 0
+  EnableOrientation: 1
   PredictionOn: 1
   CallInPreRender: 0
   WireMode: 0
   LensCorrection: 1
   Chromatic: 1
+  backgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
+  nearClipPlane: .150000006
+  farClipPlane: 1000
 --- !u!114 &302487832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3816,8 +3735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialPredictionTime: .0500000007
-  InitialAccelGain: .0500000007
-  ResetTracker: 1
+  ResetTrackerOnLoad: 1
 --- !u!1 &304188168
 GameObject:
   m_ObjectHideFlags: 0
@@ -8873,6 +8791,66 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1176955585}
   m_GameObject: {fileID: 660077315}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &661810179
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: hideMouseOnPlay
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: showCompassKey
+      value: 287
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: autoCalibrateKey
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+      propertyPath: showCalibrationStatus
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+  m_RootGameObject: {fileID: 1937194344}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &663885710
 GameObject:
   m_ObjectHideFlags: 0
@@ -15397,8 +15375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialPredictionTime: .0500000007
-  InitialAccelGain: .0500000007
-  ResetTracker: 1
+  ResetTrackerOnLoad: 1
 --- !u!114 &1184721211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15411,6 +15388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ipd: .064000003
+  verticalFOV: 90
   CameraRootPosition: {x: 0, y: 0, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
@@ -15418,11 +15397,15 @@ MonoBehaviour:
   FollowOrientation: {fileID: 29678204}
   TrackerRotatesY: 0
   PortraitMode: 0
+  EnableOrientation: 1
   PredictionOn: 1
   CallInPreRender: 0
   WireMode: 0
   LensCorrection: 1
   Chromatic: 1
+  backgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
+  nearClipPlane: .150000006
+  farClipPlane: 1000
 --- !u!114 &1184721212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17556,8 +17539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialPredictionTime: .0500000007
-  InitialAccelGain: .0500000007
-  ResetTracker: 1
+  ResetTrackerOnLoad: 1
 --- !u!114 &1327365926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17570,6 +17552,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ipd: .064000003
+  verticalFOV: 90
   CameraRootPosition: {x: 0, y: 0, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
   EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
@@ -17577,11 +17561,15 @@ MonoBehaviour:
   FollowOrientation: {fileID: 1047920945}
   TrackerRotatesY: 0
   PortraitMode: 0
+  EnableOrientation: 1
   PredictionOn: 1
   CallInPreRender: 0
   WireMode: 0
   LensCorrection: 1
   Chromatic: 1
+  backgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
+  nearClipPlane: .150000006
+  farClipPlane: 1000
 --- !u!114 &1327365927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24133,7 +24121,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: linkedCamera
@@ -24441,14 +24429,13 @@ MonoBehaviour:
   moveWand1: 0
   moveWand2: 0
   moveWand3: 0
-  enableKinect: 1
+  enableKinect: 0
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
   enableRazerHydra: 0
   moveControllers: []
   riftMagnetometerMode: 0
-  oculusID: 0
   jumpGestureEnabled: 1
 --- !u!1 &1909672937
 GameObject:
@@ -25314,6 +25301,69 @@ MonoBehaviour:
   selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
   continuousCollisionDetectionWhenSelected: 1
+--- !u!1 &1937194344
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+  m_PrefabInternal: {fileID: 661810179}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1937194347}
+  - 114: {fileID: 1937194346}
+  - 114: {fileID: 1937194345}
+  m_Layer: 0
+  m_Name: RUISMenuWithOculus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1937194345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400000, guid: 0aa4597f41ac6794992e319940a3c740,
+    type: 2}
+  m_PrefabInternal: {fileID: 661810179}
+  m_GameObject: {fileID: 1937194344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c339b1cb7928e394780a844ae49e70d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showCalibrationStatus: 0
+  textFont: {fileID: 12800000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
+--- !u!114 &1937194346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400002, guid: 0aa4597f41ac6794992e319940a3c740,
+    type: 2}
+  m_PrefabInternal: {fileID: 661810179}
+  m_GameObject: {fileID: 1937194344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58cefced8c60edf4eb4e6012786be8e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fontSize: 14
+  stereoOffset: -110
+  menuSkin: {fileID: 11400000, guid: a102d97eb96354e449b74caccb8cad8b, type: 2}
+  enablePSMove: 1
+  psMoveIP: 130.233.46.224
+  psMovePort: 7899
+  jumpGesture: {fileID: 0}
+  oculusRiftMenu: 1
+  hideMouseOnPlay: 0
+--- !u!4 &1937194347
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: 0aa4597f41ac6794992e319940a3c740, type: 2}
+  m_PrefabInternal: {fileID: 661810179}
+  m_GameObject: {fileID: 1937194344}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
 --- !u!1 &1940915197
 GameObject:
   m_ObjectHideFlags: 0

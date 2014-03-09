@@ -28,6 +28,7 @@ Assets/OpenNI/Scripts/Main[!!-~]OpenNI/Basic[!!-~]objects/OpenNI[!!-~]engine/Wra
 Assets/OpenNI/Scripts/Main[!!-~]OpenNI/Basic[!!-~]objects/OpenNI[!!-~]engine/WrapperBaseObjects/NIWrapperObject.cs -text
 Assets/OpenNI/Scripts/Trackers/Base[!!-~]tracker[!!-~]and[!!-~]manager[!!-~]classes/NIPointTracker.cs -text
 Assets/OpenNI/Scripts/Trackers/Base[!!-~]tracker[!!-~]and[!!-~]manager[!!-~]classes/NIPointTrackerManager.cs -text
+Assets/Plugins/Android/libOculusPlugin.so -text
 Assets/Plugins/OculusPlugin.bundle/Contents/MacOS/OculusPlugin -text
 Assets/Plugins/OculusPlugin.bundle/Contents/Resources/en.lproj/InfoPlist.strings -text
 Assets/Plugins/OculusPlugin.dll -text

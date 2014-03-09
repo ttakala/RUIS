@@ -19,8 +19,7 @@ public class RUISInputManager : MonoBehaviour
     public enum RiftMagnetometer
     {
         Off = 0,
-        ManualCalibration = 1,
-        AutomaticCalibration = 2
+        AutomaticCalibration = 1
     };
 
     public TextAsset xmlSchema;
@@ -61,7 +60,6 @@ public class RUISInputManager : MonoBehaviour
     public RUISPSMoveWand[] moveControllers;
 
     public RiftMagnetometer riftMagnetometerMode = RiftMagnetometer.Off;
-    public int oculusID = 0;
 
     public bool jumpGestureEnabled = true;
 
@@ -195,30 +193,6 @@ public class RUISInputManager : MonoBehaviour
             foreach (RUISPSMoveWand controller in controllers)
             {
                 moveControllers[controller.controllerId] = controller;
-            }
-        }
-
-        OVRCameraController oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
-        if (oculusCamController && OVRDevice.IsSensorPresent(oculusID))
-        {
-            RUISOculusHUD ruisOculusHUD = FindObjectOfType(typeof(RUISOculusHUD)) as RUISOculusHUD;
-            if (riftMagnetometerMode == RiftMagnetometer.AutomaticCalibration)
-            {
-                if (ruisOculusHUD)
-                    ruisOculusHUD.StartAutoCalibration();
-                else
-                    Debug.LogError("Your settings indicate that you want to start automatic yaw drift correction "
-                                   + "process for Oculus Rift in the beginning of the scene, but no RUISOculusHUD "
-                                   + "script is found!");
-            }
-            if (riftMagnetometerMode == RiftMagnetometer.ManualCalibration)
-            {
-                if (ruisOculusHUD)
-                    ruisOculusHUD.StartManualCalibration();
-                else
-                    Debug.LogError("Your settings indicate that you want to start manual yaw drift correction "
-                                   + "process for Oculus Rift in the beginning of the scene, but no RUISOculusHUD "
-                                   + "script is found!");
             }
         }
     }
