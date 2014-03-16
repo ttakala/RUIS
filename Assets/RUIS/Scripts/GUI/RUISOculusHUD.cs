@@ -77,7 +77,7 @@ public class RUISOculusHUD : MonoBehaviour
 				int w = Screen.width;
 				int h = Screen.height;
 
-				if(CameraController.PortraitMode == true)
+				if(CameraController != null && CameraController.PortraitMode == true)
 				{
 					int t = h;
 					h = w;
@@ -120,8 +120,11 @@ public class RUISOculusHUD : MonoBehaviour
 		}
 		
 		// Mag Yaw-Drift correction
-		magCal.SetOVRCameraController(ref CameraController);
-		magCal.SetInitialCalibarationState();
+		if(CameraController != null)
+		{
+			magCal.SetOVRCameraController(ref CameraController);
+			magCal.SetInitialCalibarationState();
+		}
 
 		// Show Oculus magnetometer status at the beginning
 		if(showCalibrationStatus && OVRDevice.IsSensorPresent(0))
@@ -166,7 +169,7 @@ public class RUISOculusHUD : MonoBehaviour
 		
 		// Set the GUI matrix to deal with portrait mode
 		Vector3 scale = Vector3.one;
-		if(CameraController.PortraitMode == true)
+		if(CameraController != null && CameraController.PortraitMode == true)
 		{
 			float h = OVRDevice.HResolution;
 			float v = OVRDevice.VResolution;
