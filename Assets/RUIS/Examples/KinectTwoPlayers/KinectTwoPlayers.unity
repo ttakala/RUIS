@@ -2508,6 +2508,10 @@ Prefab:
       propertyPath: toggleSelection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
+      propertyPath: selectedGameObjectsLayer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
   m_RootGameObject: {fileID: 1586584267}
@@ -2884,6 +2888,10 @@ Prefab:
     - target: {fileID: 11400002, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
       propertyPath: bufferSize
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
+      propertyPath: selectedGameObjectsLayer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
@@ -9901,7 +9909,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
-  selectedGameObjectsLayer: 0
+  selectedGameObjectsLayer: 11
 --- !u!114 &696664714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11457,6 +11465,14 @@ Prefab:
     - target: {fileID: 2000014, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: near clip plane
       value: .0500000007
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400040, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: selectedGameObjectsLayer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400088, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: selectedGameObjectsLayer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
@@ -14679,7 +14695,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
-  selectedGameObjectsLayer: 0
+  selectedGameObjectsLayer: 11
 --- !u!114 &1004861307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22922,7 +22938,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
-  selectedGameObjectsLayer: 0
+  selectedGameObjectsLayer: 11
 --- !u!114 &1498337481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23917,6 +23933,14 @@ Prefab:
       propertyPath: near clip plane
       value: .0500000007
       objectReference: {fileID: 0}
+    - target: {fileID: 11400040, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: selectedGameObjectsLayer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400088, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: selectedGameObjectsLayer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 1325886366}
@@ -24293,7 +24317,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 0
-  selectedGameObjectsLayer: 0
+  selectedGameObjectsLayer: 11
 --- !u!114 &1586584273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29878,7 +29902,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
-  selectedGameObjectsLayer: 0
+  selectedGameObjectsLayer: 11
 --- !u!114 &1946423855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32144,7 +32168,7 @@ MonoBehaviour:
     m_Bits: 0
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 0
-  selectedGameObjectsLayer: 0
+  selectedGameObjectsLayer: 11
 --- !u!114 &2075998477
 MonoBehaviour:
   m_ObjectHideFlags: 0
