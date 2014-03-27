@@ -10423,6 +10423,22 @@ Prefab:
       propertyPath: display
       value: 
       objectReference: {fileID: 182071551}
+    - target: {fileID: 11400072, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: characterPivotType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400070, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: PSNaviControllerID
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400070, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: usePSNavigationController
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: scaleHierarchicalModelBones
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 9294544}
@@ -24121,7 +24137,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: linkedCamera
@@ -24141,7 +24157,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableRazerHydra
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: isStereo
@@ -24149,7 +24165,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: PSMoveIP
-      value: 130.233.46.212
+      value: 127.0.0.1
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableMoveCalibrationDuringPlay
@@ -24169,6 +24185,26 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableOculusRift
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: positionOffset.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: loadFromXML
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: yawOffset
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: applyMoveToKinect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: setKinectOriginToFloor
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -24417,7 +24453,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 130.233.46.212
+  PSMoveIP: 127.0.0.1
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
@@ -24429,11 +24465,11 @@ MonoBehaviour:
   moveWand1: 0
   moveWand2: 0
   moveWand3: 0
-  enableKinect: 0
+  enableKinect: 1
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
-  enableRazerHydra: 1
+  enableRazerHydra: 0
   moveControllers: []
   riftMagnetometerMode: 0
   jumpGestureEnabled: 1

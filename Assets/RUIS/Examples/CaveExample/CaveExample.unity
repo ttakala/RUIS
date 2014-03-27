@@ -14714,6 +14714,10 @@ Prefab:
       propertyPath: isStereo
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400020, guid: d94c6e27c0db1994889737c587593074, type: 2}
+      propertyPath: PSMoveIP
+      value: 127.0.0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d94c6e27c0db1994889737c587593074, type: 2}
   m_RootGameObject: {fileID: 231584585}
@@ -22784,7 +22788,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 130.233.46.224
+  PSMoveIP: 127.0.0.1
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
