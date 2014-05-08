@@ -30,6 +30,9 @@ public class RUISCamera : MonoBehaviour {
     public float horizontalFOV = 60;
     public float verticalFOV = 40;
 
+	public float fovFactor = 57.2957795f;
+	public float aspFactor = 1;
+
     public LayerMask cullingMask = 0xFFFFFF;
 
     public bool isStereo { get { return associatedDisplay.isStereo; } }
@@ -41,6 +44,12 @@ public class RUISCamera : MonoBehaviour {
 
     public float near = 0.3f;
     public float far = 1000;
+
+	private float frustumWidth = 1;
+	private float frustumHeight = 1;
+	private float frustumTop = 1;
+	private float frustumBottom = 0;
+	private float topPlusBottom = 1;
 
 	public Vector3 KeystoningHeadTrackerPosition {
         get
@@ -177,11 +186,15 @@ public class RUISCamera : MonoBehaviour {
 
         SetupCameraTransforms();
 
-
         Matrix4x4[] projectionMatrices = GetProjectionMatricesWithoutKeystoning();
+
+		setCameraAspectAndFOV(centerCamera, projectionMatrices[0]);
+		setCameraAspectAndFOV(leftCamera,   projectionMatrices[1]);
+		setCameraAspectAndFOV(rightCamera,  projectionMatrices[2]);
+
         centerCamera.projectionMatrix = projectionMatrices[0];
-        leftCamera.projectionMatrix = projectionMatrices[1];
-        rightCamera.projectionMatrix = projectionMatrices[2];
+		leftCamera.projectionMatrix   = projectionMatrices[1];
+        rightCamera.projectionMatrix  = projectionMatrices[2];
 
         if (associatedDisplay.isObliqueFrustum)
         {
@@ -193,6 +206,28 @@ public class RUISCamera : MonoBehaviour {
 
         ApplyKeystoneCorrection();
     }
+
+	// TUUKKA
+	private void setCameraAspectAndFOV(Camera camera, Matrix4x4 projectionMatrix)
+	{
+		if(projectionMatrix[0, 0] == 0)
+			frustumWidth = float.MaxValue;
+		else
+			frustumWidth = 2*camera.nearClipPlane/projectionMatrix[0, 0];
+		
+		if(projectionMatrix[1, 1] == 0)
+			frustumHeight = float.MaxValue;
+		else
+			frustumHeight = 2*camera.nearClipPlane/projectionMatrix[1, 1];
+		
+		topPlusBottom = projectionMatrix[1, 2]*frustumHeight;
+		frustumTop = 0.5f*(topPlusBottom + frustumHeight);
+		frustumBottom = 0.5f*(topPlusBottom - frustumHeight);
+		
+		camera.aspect = aspFactor*frustumWidth/frustumHeight;
+		camera.fieldOfView = fovFactor*(Mathf.Atan(frustumTop/camera.nearClipPlane) - Mathf.Atan(frustumBottom/camera.nearClipPlane));
+
+	}
 
     public Matrix4x4[] GetProjectionMatricesWithoutKeystoning()
     {
@@ -223,6 +258,9 @@ public class RUISCamera : MonoBehaviour {
             Vector3 vn = associatedDisplay.DisplayNormal;
 
             float eyedistance = -(Vector3.Dot(va, vn));
+	
+			if(eyedistance == 0)
+				eyedistance = float.MinValue;
 
             float left = (Vector3.Dot(vr, va) * near) / eyedistance;
             float right = (Vector3.Dot(vr, vb) * near) / eyedistance;
@@ -286,7 +324,7 @@ public class RUISCamera : MonoBehaviour {
 
     private static Matrix4x4 CreateFrustum(float left, float right, float bottom, float top, float near, float far)
     {
-        Matrix4x4 frustum = new Matrix4x4();
+        Matrix4x4 frustum = Matrix4x4.identity;
 
         frustum[0, 0] = 2 * near / (right - left);
         frustum[0, 2] = (right + left) / (right - left);
