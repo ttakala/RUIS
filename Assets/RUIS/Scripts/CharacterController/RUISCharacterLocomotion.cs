@@ -111,21 +111,21 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	{
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		
-		if(useRazerHydra && inputManager && !inputManager.enableRazerHydra)
-		{
-			useRazerHydra = false;
-			Debug.LogWarning(	"Your settings indicate that you want to use Razer Hydra for "
-							 +	"character locomotion controls, but you have disabled Razer "
-							 +	"Hydra from RUIS InputManager.");
-		}
-		
-		if(usePSNavigationController && inputManager && !inputManager.enablePSMove)
-		{
-			usePSNavigationController = false;
-			Debug.LogWarning(	"Your settings indicate that you want to use PS Navigation "
-							 +	"controller for character locomotion controls, but you have "
-							 +	"disabled PS Move from RUIS InputManager.");
-		}
+//		if(useRazerHydra && inputManager && !inputManager.enableRazerHydra)
+//		{
+//			useRazerHydra = false;
+//			Debug.LogWarning(	"Your settings indicate that you want to use Razer Hydra for "
+//							 +	"character locomotion controls, but you have disabled Razer "
+//							 +	"Hydra from RUIS InputManager.");
+//		}
+//		
+//		if(usePSNavigationController && inputManager && !inputManager.enablePSMove)
+//		{
+//			usePSNavigationController = false;
+//			Debug.LogWarning(	"Your settings indicate that you want to use PS Navigation "
+//							 +	"controller for character locomotion controls, but you have "
+//							 +	"disabled PS Move from RUIS InputManager.");
+//		}
 		
 	}
 

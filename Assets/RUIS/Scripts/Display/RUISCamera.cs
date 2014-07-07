@@ -67,24 +67,66 @@ public class RUISCamera : MonoBehaviour {
 		leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
 		rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
 
-		centerCamera.cullingMask = cullingMask;
+		if(centerCamera == null)
+		{
+			Debug.LogError(  "GameObject " + name + " has " + this.GetType().Name + " script, "
+			               + "but is missing camera component!");
+			
+			gameObject.SetActive(false);
+			return;
+		}
+
+		bool isDifferentCenterMask = false;
+		bool isDifferentLeftMask = false;
+		bool isDifferentRightMask = false;
+
+		if(cullingMask != centerCamera.cullingMask)
+			isDifferentCenterMask = true;
 
 		try
 		{
-			leftCamera.cullingMask = cullingMask;
-			rightCamera.cullingMask = cullingMask;
+			
+			if(cullingMask != leftCamera.cullingMask)
+				isDifferentLeftMask = true;
+			if(cullingMask != rightCamera.cullingMask)
+				isDifferentRightMask = true;
 		}
 		catch (System.NullReferenceException e)
 		{
 			Debug.LogError(e.ToString(), this);
-			Debug.LogError("Missing either CameraLeft or CameraRight child object or their Camera components.");
+			Debug.LogError(  "GameObject " + name + " has " + this.GetType().Name + " script, "
+			               + "but it is missing either CameraLeft or CameraRight child object or their Camera components.");
+			gameObject.SetActive(false);
+			return;
 		}
+
+		if(isDifferentCenterMask || isDifferentLeftMask || isDifferentRightMask)
+		{
+			string differingMasksList = isDifferentCenterMask?"Camera":"";
+			if(differingMasksList.Length == 0)
+				differingMasksList += isDifferentLeftMask?"CameraLeft":"";
+			else
+				differingMasksList += isDifferentLeftMask?", CameraLeft":"";
+			if(differingMasksList.Length == 0)
+				differingMasksList += isDifferentRightMask?"CameraRight":"";
+			else
+				differingMasksList += isDifferentRightMask?", CameraRight":"";
+
+			Debug.LogWarning(  "GameObject " + name + " has " + this.GetType().Name + " script, whose "
+			                 + "Culling Mask property has overwritten Culling Masks of its [" + differingMasksList + "]." );
+
+		}
+		
+		centerCamera.cullingMask = cullingMask;
+		leftCamera.cullingMask = cullingMask;
+		rightCamera.cullingMask = cullingMask;
 	}
 	
 	public void Start () {
 		if (!associatedDisplay)
 		{
-			Debug.LogError("Camera not associated to any display, disabling... " + name, this);
+			Debug.LogError(  "GameObject " + name + " has " + this.GetType().Name + " script, "
+			               + "but it is not associated to any display in DisplayManager, disabling " + name, this);
 			gameObject.SetActive(false);
 			return;
 		}
@@ -92,11 +134,11 @@ public class RUISCamera : MonoBehaviour {
 		{
 			if(associatedDisplay.isObliqueFrustum)
 			{
-				centerCamera.fieldOfView = 90;
+				centerCamera.fieldOfView = 170;
 				if(leftCamera)
-					leftCamera.fieldOfView = 90;
+					leftCamera.fieldOfView = 170;
 				if(rightCamera)
-					rightCamera.fieldOfView = 90;
+					rightCamera.fieldOfView = 170;
 			}
 		}
 		
@@ -143,7 +185,7 @@ public class RUISCamera : MonoBehaviour {
 			{
 				if (!associatedDisplay.isStereo)
 				{
-					Debug.LogError("Oculus Rift enabled in RUISCamera, forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
+					Debug.LogWarning("Oculus Rift enabled in RUISCamera, forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
 					associatedDisplay.isStereo = true;
 				}
 				
@@ -493,4 +535,15 @@ public class RUISCamera : MonoBehaviour {
         Gizmos.matrix = originalMatrix;
     }
 	 */
+
+	/*
+	 * Sets a new Culling Mask for center camera, Camera Left, and Camera Right.
+	 */
+	public void setCullingMask(LayerMask newCullingMask)
+	{
+		cullingMask = newCullingMask;
+		centerCamera.cullingMask = newCullingMask;
+		leftCamera.cullingMask = newCullingMask;
+		rightCamera.cullingMask = newCullingMask;
+	}
 }
