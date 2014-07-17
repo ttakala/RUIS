@@ -29,12 +29,33 @@ public class RUISSkeletonController : MonoBehaviour
     public Transform leftHip;
     public Transform leftKnee;
     public Transform leftFoot;
-	
+
+	public Transform leftThumb;
+	public Transform leftIndexFinger;
+	public Transform leftMiddleFinger;
+	public Transform leftRingFinger;
+	public Transform leftLittleFinger;
+
+	public Transform rightThumb;
+	public Transform rightIndexFinger;
+	public Transform rightMiddleFinger;
+	public Transform rightRingFinger;
+	public Transform rightLittleFinger;
+
 	private RUISInputManager inputManager;
     private RUISSkeletonManager skeletonManager;
 	private RUISCharacterController characterController;
 
+	public enum kinectVersionType
+	{
+		Kinect_1,
+		Kinect_2
+	}
+	public kinectVersionType kinectDevice = kinectVersionType.Kinect_1;
+
 	public int kinectVersion = 0;
+
+
     public int playerId = 0;
 
     private Vector3 skeletonPosition = Vector3.zero;
@@ -81,6 +102,9 @@ public class RUISSkeletonController : MonoBehaviour
 
     void Awake()
     {
+		if(kinectDevice == kinectVersionType.Kinect_1) kinectVersion = 0;
+		if(kinectDevice == kinectVersionType.Kinect_2)  kinectVersion = 1;
+
         if (skeletonManager == null)
         {
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
@@ -131,6 +155,18 @@ public class RUISSkeletonController : MonoBehaviour
         SaveInitialRotation(leftKnee);
         SaveInitialRotation(leftFoot);
 
+		SaveInitialRotation(leftThumb);
+		SaveInitialRotation(leftIndexFinger);
+		SaveInitialRotation(leftMiddleFinger);
+		SaveInitialRotation(leftRingFinger);
+		SaveInitialRotation(leftLittleFinger);
+
+		SaveInitialRotation(rightThumb);
+		SaveInitialRotation(rightIndexFinger);
+		SaveInitialRotation(rightMiddleFinger);
+		SaveInitialRotation(rightRingFinger);
+		SaveInitialRotation(rightLittleFinger);
+
         SaveInitialDistance(rightShoulder, rightElbow);
         SaveInitialDistance(rightElbow, rightHand);
         SaveInitialDistance(leftShoulder, leftElbow);
@@ -167,7 +203,7 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
-		if(inputManager && !inputManager.enableKinect)
+		if(inputManager && !inputManager.enableKinect && !inputManager.enableKinect2)
 		{
 //			Debug.Log("Kinect is not enabled. Disabling RUISSkeletonController script from Kinect-controlled GameObject " + gameObject.name + ".");
 //			MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
@@ -202,25 +238,37 @@ public class RUISSkeletonController : MonoBehaviour
 
     void LateUpdate()
     {
-		int index = kinectVersion;
 
-		if (skeletonManager != null && skeletonManager.skeletons [index, playerId] != null && skeletonManager.skeletons [index, playerId].isTracking) {
+
+		if (skeletonManager != null && skeletonManager.skeletons [kinectVersion, playerId] != null && skeletonManager.skeletons [kinectVersion, playerId].isTracking) {
+						
 						UpdateSkeletonPosition ();
 
-						UpdateTransform (ref head, skeletonManager.skeletons[index, playerId].head);
-						UpdateTransform (ref torso, skeletonManager.skeletons [index, playerId].torso);
-						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [index, playerId].leftShoulder);
-						UpdateTransform (ref leftElbow, skeletonManager.skeletons [index, playerId].leftElbow);
-						UpdateTransform (ref leftHand, skeletonManager.skeletons [index, playerId].leftHand);
-						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [index, playerId].rightShoulder);
-						UpdateTransform (ref rightElbow, skeletonManager.skeletons [index, playerId].rightElbow);
-						UpdateTransform (ref rightHand, skeletonManager.skeletons [index, playerId].rightHand);
-						UpdateTransform (ref leftHip, skeletonManager.skeletons [index, playerId].leftHip);
-						UpdateTransform (ref leftKnee, skeletonManager.skeletons [index, playerId].leftKnee);
-						UpdateTransform (ref leftFoot, skeletonManager.skeletons [index, playerId].leftFoot);
-						UpdateTransform (ref rightHip, skeletonManager.skeletons [index, playerId].rightHip);
-						UpdateTransform (ref rightKnee, skeletonManager.skeletons [index, playerId].rightKnee);
-						UpdateTransform (ref rightFoot, skeletonManager.skeletons [index, playerId].rightFoot);
+						UpdateTransform (ref head, skeletonManager.skeletons[kinectVersion, playerId].head);
+						UpdateTransform (ref torso, skeletonManager.skeletons [kinectVersion, playerId].torso);
+						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [kinectVersion, playerId].leftShoulder);
+						UpdateTransform (ref leftElbow, skeletonManager.skeletons [kinectVersion, playerId].leftElbow);
+						UpdateTransform (ref leftHand, skeletonManager.skeletons [kinectVersion, playerId].leftHand);
+						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [kinectVersion, playerId].rightShoulder);
+						UpdateTransform (ref rightElbow, skeletonManager.skeletons [kinectVersion, playerId].rightElbow);
+						UpdateTransform (ref rightHand, skeletonManager.skeletons [kinectVersion, playerId].rightHand);
+						UpdateTransform (ref leftHip, skeletonManager.skeletons [kinectVersion, playerId].leftHip);
+						UpdateTransform (ref leftKnee, skeletonManager.skeletons [kinectVersion, playerId].leftKnee);
+						UpdateTransform (ref leftFoot, skeletonManager.skeletons [kinectVersion, playerId].leftFoot);
+						UpdateTransform (ref rightHip, skeletonManager.skeletons [kinectVersion, playerId].rightHip);
+						UpdateTransform (ref rightKnee, skeletonManager.skeletons [kinectVersion, playerId].rightKnee);
+						UpdateTransform (ref rightFoot, skeletonManager.skeletons [kinectVersion, playerId].rightFoot);
+
+
+						if(rightThumb != null && rightIndexFinger != null && rightMiddleFinger != null && rightRingFinger != null && rightLittleFinger != null) {
+									if(skeletonManager.skeletons [kinectVersion, playerId].rightHand.HandClosed) closeHand(true);
+									else openHand(true);
+						}
+
+						if(leftThumb != null && leftIndexFinger != null && leftMiddleFinger != null && leftRingFinger != null && leftLittleFinger != null) {
+								if(skeletonManager.skeletons [kinectVersion, playerId].leftHand.HandClosed) closeHand(false);
+								else openHand(false);
+						}
 
 						if (!useHierarchicalModel) {
 								if (leftHand != null) {
@@ -234,18 +282,19 @@ public class RUISSkeletonController : MonoBehaviour
 								if (scaleHierarchicalModelBones) {
 										UpdateBoneScalings ();
 
-										Vector3 torsoDirection = skeletonManager.skeletons [0, playerId].torso.rotation * Vector3.down;
-										torso.position = transform.TransformPoint (skeletonManager.skeletons [0, playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
+										Vector3 torsoDirection = skeletonManager.skeletons [kinectVersion, playerId].torso.rotation * Vector3.down;
+										torso.position = transform.TransformPoint (skeletonManager.skeletons [kinectVersion, playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
 
-										ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [0, playerId].rightShoulder);
-										ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [0, playerId].leftShoulder);
-										ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [0, playerId].rightHip);
-										ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [0, playerId].leftHip);
+										ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [kinectVersion, playerId].rightShoulder);
+										ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [kinectVersion, playerId].leftShoulder);
+										ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [kinectVersion, playerId].rightHip);
+										ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [kinectVersion, playerId].leftHip);
 								}
 						}
 
 						if (updateRootPosition) {
-								Vector3 newRootPosition = skeletonManager.skeletons [0, playerId].root.position;
+								
+								Vector3 newRootPosition = skeletonManager.skeletons [kinectVersion, playerId].root.position;
 				
 								measuredPos [0] = newRootPosition.x;
 								measuredPos [1] = newRootPosition.y;
@@ -352,9 +401,9 @@ public class RUISSkeletonController : MonoBehaviour
     //gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
     private void UpdateSkeletonPosition()
     {
-        if (skeletonManager.skeletons[0, playerId].root.positionConfidence >= minimumConfidenceToUpdate)
+		if (skeletonManager.skeletons[kinectVersion, playerId].root.positionConfidence >= minimumConfidenceToUpdate)
         {
-            skeletonPosition = skeletonManager.skeletons[0, playerId].root.position;
+			skeletonPosition = skeletonManager.skeletons[kinectVersion, playerId].root.position;
         }
     }
 
@@ -382,29 +431,29 @@ public class RUISSkeletonController : MonoBehaviour
 
         {
             rightElbow.transform.localScale = originalRightForearmScale;
-            float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[0, playerId].rightShoulder, skeletonManager.skeletons[0, playerId].rightElbow, torsoScale);
-            UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[0, playerId].rightElbow, skeletonManager.skeletons[0, playerId].rightHand, rightArmCumulativeScale);
+			float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[kinectVersion, playerId].rightShoulder, skeletonManager.skeletons[kinectVersion, playerId].rightElbow, torsoScale);
+			UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[kinectVersion, playerId].rightElbow, skeletonManager.skeletons[kinectVersion, playerId].rightHand, rightArmCumulativeScale);
             rightElbow.transform.localScale = rightElbow.transform.localScale * forearmLengthRatio;
         }
 
         {
             leftElbow.transform.localScale = originalLeftForearmScale;
-            float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[0, playerId].leftShoulder, skeletonManager.skeletons[0, playerId].leftElbow, torsoScale);
-            UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[0, playerId].leftElbow, skeletonManager.skeletons[0, playerId].leftHand, leftArmCumulativeScale);
+			float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[kinectVersion, playerId].leftShoulder, skeletonManager.skeletons[kinectVersion, playerId].leftElbow, torsoScale);
+			UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[kinectVersion, playerId].leftElbow, skeletonManager.skeletons[kinectVersion, playerId].leftHand, leftArmCumulativeScale);
             leftElbow.transform.localScale = leftElbow.transform.localScale * forearmLengthRatio;
         }
 
         {
 			rightKnee.transform.localScale = originalRightShinScale;
-            float rightLegCumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[0, playerId].rightHip, skeletonManager.skeletons[0, playerId].rightKnee, torsoScale);
-            UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[0, playerId].rightKnee, skeletonManager.skeletons[0, playerId].rightFoot, rightLegCumulativeScale);
+			float rightLegCumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[kinectVersion, playerId].rightHip, skeletonManager.skeletons[kinectVersion, playerId].rightKnee, torsoScale);
+			UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[kinectVersion, playerId].rightKnee, skeletonManager.skeletons[kinectVersion, playerId].rightFoot, rightLegCumulativeScale);
 			rightKnee.transform.localScale = rightKnee.transform.localScale * shinLengthRatio;
         }
 
         {
 			leftKnee.transform.localScale = originalLeftShinScale;
-            float leftLegCumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[0, playerId].leftHip, skeletonManager.skeletons[0, playerId].leftKnee, torsoScale);
-			UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[0, playerId].leftKnee, skeletonManager.skeletons[0, playerId].leftFoot, leftLegCumulativeScale);
+			float leftLegCumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[kinectVersion, playerId].leftHip, skeletonManager.skeletons[kinectVersion, playerId].leftKnee, torsoScale);
+			UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[kinectVersion, playerId].leftKnee, skeletonManager.skeletons[kinectVersion, playerId].leftFoot, leftLegCumulativeScale);
 			leftKnee.transform.localScale = leftKnee.transform.localScale * shinLengthRatio;
         }
     }
@@ -426,8 +475,8 @@ public class RUISSkeletonController : MonoBehaviour
         //we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
         float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
                             jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
-        float playerLength = (Vector3.Distance(skeletonManager.skeletons[0, playerId].rightShoulder.position, skeletonManager.skeletons[0, playerId].leftShoulder.position) +
-                                Vector3.Distance(skeletonManager.skeletons[0, playerId].rightHip.position, skeletonManager.skeletons[0, playerId].leftHip.position)) / 2;
+		float playerLength = (Vector3.Distance(skeletonManager.skeletons[kinectVersion, playerId].rightShoulder.position, skeletonManager.skeletons[kinectVersion, playerId].leftShoulder.position) +
+		                      Vector3.Distance(skeletonManager.skeletons[kinectVersion, playerId].rightHip.position, skeletonManager.skeletons[kinectVersion, playerId].leftHip.position)) / 2;
 
         float newScale = playerLength / modelLength;
         torso.localScale = new Vector3(newScale, newScale, newScale);
@@ -448,9 +497,45 @@ public class RUISSkeletonController : MonoBehaviour
 
     public bool ConfidenceGoodEnoughForScaling()
     {
-        return !(skeletonManager.skeletons[0, playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
-               skeletonManager.skeletons[0, playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
-               skeletonManager.skeletons[0, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
-               skeletonManager.skeletons[0, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
+		return !(skeletonManager.skeletons[kinectVersion, playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
+		         skeletonManager.skeletons[kinectVersion, playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
+		         skeletonManager.skeletons[kinectVersion, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
+		         skeletonManager.skeletons[kinectVersion, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
     }
+
+	public void closeHand(bool rightHandDetected) {
+		Vector3 angleFingers = new Vector3(0,0,-110);
+		Vector3 angleThumb = new Vector3(0,0,-40);
+		if (rightHandDetected) {
+			rightThumb.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleThumb);
+			rightIndexFinger.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleFingers);
+			rightMiddleFinger.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleFingers);
+			rightRingFinger.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleFingers);
+			rightLittleFinger.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleFingers);
+		} 
+		else {
+			leftThumb.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleThumb);
+			leftIndexFinger.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleFingers);
+			leftMiddleFinger.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleFingers);
+			leftRingFinger.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleFingers);
+			leftLittleFinger.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleFingers);
+		}
+
+	}
+	public void openHand(bool rightHandDetected) {
+		if (rightHandDetected) {
+			rightThumb.transform.rotation = rightHand.transform.rotation;
+			rightIndexFinger.transform.rotation = rightHand.transform.rotation;
+			rightMiddleFinger.transform.rotation = rightHand.transform.rotation;
+			rightRingFinger.transform.rotation = rightHand.transform.rotation;
+			rightLittleFinger.transform.rotation = rightHand.transform.rotation;
+		} 
+		else {
+			leftThumb.transform.rotation = leftHand.transform.rotation;
+			leftIndexFinger.transform.rotation = leftHand.transform.rotation;
+			leftMiddleFinger.transform.rotation = leftHand.transform.rotation;
+			leftRingFinger.transform.rotation = leftHand.transform.rotation;
+			leftLittleFinger.transform.rotation = leftHand.transform.rotation;	
+		}
+	}
 }
