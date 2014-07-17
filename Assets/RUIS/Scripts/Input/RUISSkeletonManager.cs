@@ -105,10 +105,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 		playerManager = GetComponent<NIPlayerManager>();
 		RUISKinect2Data = GetComponent<RUISKinect2Data>();
 
-
 		if (!inputManager.enableKinect) playerManager.enabled = false;
 		if (!inputManager.enableKinect2) RUISKinect2Data.enabled = false;
-		
 
         if (coordinateSystem == null)
         {
@@ -121,11 +119,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 					}
 			}
     }
-
-    void Start()
-    {
-        
-	}
 	
 	void Update () {
 
@@ -170,6 +163,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 				for(int y = 0; y < skeletons.GetLength(1); y++) {
 					skeletons [kinect2SensorID, y].isTracking = false; 
 				}
+				
 				foreach(var body in data) {
 					if(body.IsTracked) {
 						for(int y = 0; y < skeletons.GetLength(1); y++) {
@@ -179,7 +173,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 						}
 					}
 				}
-				
 				
 				foreach(var body in data) {	
 					
@@ -219,7 +212,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 						trackingIDtoIndex[body.TrackingId] = playerID;
 						skeletons [kinect2SensorID, playerID].trackingId = body.TrackingId;
 						
-
 						UpdateKinect2RootData(getKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID);
 
 						UpdateKinect2JointData(getKinect2JointData(body.Joints[Kinect.JointType.Head], body.JointOrientations[Kinect.JointType.Head]), playerID, ref skeletons [kinect2SensorID, playerID].head);
@@ -276,14 +268,14 @@ public class RUISSkeletonManager : MonoBehaviour {
 						//skeletons [kinect2SensorID, playerID].leftShoulder.rotation = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].leftElbow.rotation * Vector3.right) * Quaternion.Euler(-45, 90, 0);
 						skeletons [kinect2SensorID, playerID].leftShoulder.rotation = skeletons [kinect2SensorID, playerID].leftElbow.rotation * Quaternion.Euler(0, 45, -90);
 
-						relativePos = skeletons [kinect2SensorID, playerID].rightElbow.position - skeletons [kinect2SensorID, playerID].rightShoulder.position;
-						skeletons [kinect2SensorID, playerID].rightShoulder.rotation = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].rightElbow.rotation * Vector3.right) * Quaternion.Euler(135, 270, 0);
-						//skeletons [kinect2SensorID, playerID].rightShoulder.rotation = skeletons [kinect2SensorID, playerID].rightElbow.rotation * Quaternion.Euler(0, -45, 90);
+						//relativePos = skeletons [kinect2SensorID, playerID].rightElbow.position - skeletons [kinect2SensorID, playerID].rightShoulder.position;
+						//skeletons [kinect2SensorID, playerID].rightShoulder.rotation = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].rightElbow.rotation * Vector3.right) * Quaternion.Euler(135, 270, 0);
+						skeletons [kinect2SensorID, playerID].rightShoulder.rotation = skeletons [kinect2SensorID, playerID].rightElbow.rotation * Quaternion.Euler(0, -45, 90);
 						
 						// Lower arm
-						//relativePos = skeletons [kinect2SensorID, playerID].leftElbow.position - skeletons [kinect2SensorID, playerID].leftWrist.position;
-						//skeletons [kinect2SensorID, playerID].leftElbow.rotation = Quaternion.LookRotation(relativePos)  * Quaternion.Euler(0, -90, 0); 
-						skeletons [kinect2SensorID, playerID].leftElbow.rotation = skeletons [kinect2SensorID, playerID].leftWrist.rotation  * Quaternion.Euler(0, 180, -90); 
+						relativePos = skeletons [kinect2SensorID, playerID].leftElbow.position - skeletons [kinect2SensorID, playerID].leftWrist.position;
+						skeletons [kinect2SensorID, playerID].leftElbow.rotation = Quaternion.LookRotation(relativePos)  * Quaternion.Euler(0, -90, 0); 
+						//skeletons [kinect2SensorID, playerID].leftElbow.rotation = skeletons [kinect2SensorID, playerID].leftWrist.rotation  * Quaternion.Euler(0, 180, -90); 
 						
 						relativePos = skeletons [kinect2SensorID, playerID].rightElbow.position - skeletons [kinect2SensorID, playerID].rightWrist.position;
 						skeletons [kinect2SensorID, playerID].rightElbow.rotation = Quaternion.LookRotation(relativePos)  * Quaternion.Euler(0, 90, 0); 
@@ -365,6 +357,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 	private void UpdateKinect2RootData(JointData torso, int player)
 	{
 		Vector3 newRootPosition = coordinateSystem.ConvertKinectPosition2(torso.position);
+		
 		skeletons [kinect2SensorID, player].root.position = newRootPosition;
 		skeletons [kinect2SensorID, player].root.positionConfidence = torso.positionConfidence;
 		skeletons [kinect2SensorID, player].root.rotation = coordinateSystem.ConvertKinectRotation2(torso.rotation);
@@ -422,10 +415,17 @@ public class RUISSkeletonManager : MonoBehaviour {
     }
 
 	public JointData getKinect2JointData(Kinect.Joint jointPosition, Kinect.JointOrientation jointRotation) {
+	
+		
 		JointData jointData = new JointData();
 		jointData.rotation = new Quaternion(jointRotation.Orientation.X,jointRotation.Orientation.Y,jointRotation.Orientation.Z,jointRotation.Orientation.W);
 		jointData.position = new Vector3(jointPosition.Position.X, jointPosition.Position.Y, jointPosition.Position.Z);
 
+		// The spine is positioned slightly higher on Kinect 2
+		if(jointPosition.JointType == Kinect.JointType.SpineMid) {
+			jointData.position = new Vector3(jointPosition.Position.X, jointPosition.Position.Y - (float)0.1f, jointPosition.Position.Z);
+		}
+	
 		if(jointPosition.TrackingState == Kinect.TrackingState.Tracked)  {
 			jointData.positionConfidence = 1.0f;
 			jointData.rotationConfidence = 1.0f;

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class drawDebugLines : MonoBehaviour {
 	
+	private float lineLength = 0.2f;
+	
 	// Use this for initialization
 	void Start () {
 		
@@ -19,7 +21,7 @@ public class drawDebugLines : MonoBehaviour {
 		Color color;
 		color = Color.green;
 		// local up
-		DrawHelperAtCenter(this.transform.up, color, 0.5f);
+		DrawHelperAtCenter(this.transform.up, color, lineLength);
 		
 		color.g -= 0.5f;
 		// global up
@@ -27,7 +29,7 @@ public class drawDebugLines : MonoBehaviour {
 		
 		color = Color.blue;
 		// local forward
-		DrawHelperAtCenter(this.transform.forward, color, 0.5f);
+		DrawHelperAtCenter(this.transform.forward, color, lineLength);
 		
 		color.b -= 0.5f;
 		// global forward
@@ -35,7 +37,7 @@ public class drawDebugLines : MonoBehaviour {
 		
 		color = Color.red;
 		// local right
-		DrawHelperAtCenter(this.transform.right, color, 0.5f);
+		DrawHelperAtCenter(this.transform.right, color, lineLength);
 		
 		color.r -= 0.5f;
 		// global right

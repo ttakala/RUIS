@@ -60,25 +60,26 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty fistCurlFingers;
 	SerializedProperty trackThumbs;
 	SerializedProperty trackAnkle;
+	SerializedProperty rotateWristFromElbow;
 	
-	SerializedProperty  customRoot;
-	SerializedProperty  customHead;
-	SerializedProperty  customNeck;
-	SerializedProperty  customTorso;
-	SerializedProperty  customRightShoulder;
-	SerializedProperty  customRightElbow;
-	SerializedProperty  customRightHand;
-	SerializedProperty  customRightHip;
-	SerializedProperty  customRightKnee;
-	SerializedProperty  customRightFoot;
-	SerializedProperty  customLeftShoulder;
-	SerializedProperty  customLeftElbow;
-	SerializedProperty  customLeftHand;
-	SerializedProperty  customLeftHip;
-	SerializedProperty  customLeftKnee;
-	SerializedProperty  customLeftFoot;
-	SerializedProperty  customLeftThumb;
-	SerializedProperty  customRightThumb;
+	SerializedProperty customRoot;
+	SerializedProperty customHead;
+	SerializedProperty customNeck;
+	SerializedProperty customTorso;
+	SerializedProperty customRightShoulder;
+	SerializedProperty customRightElbow;
+	SerializedProperty customRightHand;
+	SerializedProperty customRightHip;
+	SerializedProperty customRightKnee;
+	SerializedProperty customRightFoot;
+	SerializedProperty customLeftShoulder;
+	SerializedProperty customLeftElbow;
+	SerializedProperty customLeftHand;
+	SerializedProperty customLeftHip;
+	SerializedProperty customLeftKnee;
+	SerializedProperty customLeftFoot;
+	SerializedProperty customLeftThumb;
+	SerializedProperty customRightThumb;
 	
 
     public void OnEnable()
@@ -117,7 +118,7 @@ public class RUISSkeletonControllerEditor : Editor
 		leftThumb = serializedObject.FindProperty ("leftThumb");
 		rightThumb = serializedObject.FindProperty ("rightThumb");
 		trackAnkle = serializedObject.FindProperty ("trackAnkle");
-		
+		rotateWristFromElbow = serializedObject.FindProperty ("rotateWristFromElbow");
 		
         maxScaleFactor = serializedObject.FindProperty("maxScaleFactor");
         minimumConfidenceToUpdate = serializedObject.FindProperty("minimumConfidenceToUpdate");
@@ -275,6 +276,10 @@ public class RUISSkeletonControllerEditor : Editor
             EditorGUILayout.PropertyField(rightHandBone, new GUIContent("Right Hand", "The right wrist bone (hand)"));
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
+		
+		if (bodyTrackingDevice.enumValueIndex == 1) {
+			EditorGUILayout.PropertyField(rotateWristFromElbow, new GUIContent("Wrist Rotates Lower Arm", "Should wrist rotate whole lower arm or just the hand?"));
+		}		
 
 		EditorGUILayout.Space();
 	
