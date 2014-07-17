@@ -188,7 +188,9 @@ public class RUISSkeletonManager : MonoBehaviour {
 				{
 					if(i > skeletons.Length - 1) continue;
 					if (body == null) continue;
-					float angleCorrection;
+					float xCorrection, yCorrection, zCorrection;
+
+
 
 					if(body.IsTracked)
 					{
@@ -218,6 +220,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.AnkleLeft], body.JointOrientations[Kinect.JointType.AnkleLeft]), i, ref skeletons[1, i].leftAnkle);
 						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.AnkleRight], body.JointOrientations[Kinect.JointType.AnkleRight]), i, ref skeletons[1, i].rightAnkle);
 
+						//body.Expressions
+						//print(body.Expressions[Kinect.Expression.Happy]);
 						Vector3 relativePos;
 						/*
 						 * 	Rotation corrections
@@ -254,15 +258,11 @@ public class RUISSkeletonManager : MonoBehaviour {
 						skeletons[1, i].rightKnee.rotation = skeletons[1, i].rightAnkle.rotation  * Quaternion.Euler(180, 90, 0);;
 
 						// Hands
-						angleCorrection = skeletons[1, i].leftWrist.rotation.eulerAngles.y;
-						if(angleCorrection > 70)angleCorrection = 70;
-						if(angleCorrection < -70) angleCorrection = -70;
-						skeletons[1, i].leftHand.rotation = skeletons[1, i].leftElbow.rotation * Quaternion.Euler(angleCorrection - 90, 0, 0);
+						xCorrection = -skeletons[1, i].leftWrist.rotation.eulerAngles.y - 90;
+						skeletons[1, i].leftHand.rotation = skeletons[1, i].leftElbow.rotation * Quaternion.Euler(xCorrection, 0, 0);
 
-						angleCorrection = skeletons[1, i].rightWrist.rotation.eulerAngles.y;
-						if(angleCorrection > 70)angleCorrection = 70;
-						if(angleCorrection < -70) angleCorrection = -70;
-						skeletons[1, i].rightHand.rotation = skeletons[1, i].rightElbow.rotation * Quaternion.Euler(angleCorrection - 90, 0, 0);
+						xCorrection = skeletons[1, i].rightWrist.rotation.eulerAngles.y - 90;
+						skeletons[1, i].rightHand.rotation = skeletons[1, i].rightElbow.rotation * Quaternion.Euler(xCorrection, 0, 0);
 
 
 						if(body.HandLeftState == Kinect.HandState.Closed) skeletons[1, i].leftHand.HandClosed = true;

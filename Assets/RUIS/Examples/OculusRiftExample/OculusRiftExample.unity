@@ -3550,7 +3550,7 @@ MonoBehaviour:
   rightRingFinger: {fileID: 291718916}
   rightLittleFinger: {fileID: 78355128}
   kinectDevice: 1
-  kinectVersion: 0
+  kinectVersion: 1
   playerId: 0
   updateRootPosition: 1
   updateJointPositions: 0
@@ -29886,7 +29886,7 @@ MonoBehaviour:
   moveWand1: 0
   moveWand2: 0
   moveWand3: 0
-  enableKinect: 1
+  enableKinect: 0
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 0
   kinectDriftCorrectionPreferred: 0
@@ -32394,7 +32394,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
