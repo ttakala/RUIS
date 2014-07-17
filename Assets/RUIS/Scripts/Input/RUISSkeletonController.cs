@@ -30,17 +30,9 @@ public class RUISSkeletonController : MonoBehaviour
     public Transform leftKnee;
     public Transform leftFoot;
 
-	public Transform leftThumb;
-	public Transform leftIndexFinger;
-	public Transform leftMiddleFinger;
-	public Transform leftRingFinger;
-	public Transform leftLittleFinger;
+	public GameObject leftThumb;
+	public GameObject rightThumb;
 
-	public Transform rightThumb;
-	public Transform rightIndexFinger;
-	public Transform rightMiddleFinger;
-	public Transform rightRingFinger;
-	public Transform rightLittleFinger;
 
 	private RUISInputManager inputManager;
     private RUISSkeletonManager skeletonManager;
@@ -155,17 +147,8 @@ public class RUISSkeletonController : MonoBehaviour
         SaveInitialRotation(leftKnee);
         SaveInitialRotation(leftFoot);
 
-		SaveInitialRotation(leftThumb);
-		SaveInitialRotation(leftIndexFinger);
-		SaveInitialRotation(leftMiddleFinger);
-		SaveInitialRotation(leftRingFinger);
-		SaveInitialRotation(leftLittleFinger);
-
-		SaveInitialRotation(rightThumb);
-		SaveInitialRotation(rightIndexFinger);
-		SaveInitialRotation(rightMiddleFinger);
-		SaveInitialRotation(rightRingFinger);
-		SaveInitialRotation(rightLittleFinger);
+		//SaveInitialRotation(leftThumb);
+		//SaveInitialRotation(rightThumb);
 
         SaveInitialDistance(rightShoulder, rightElbow);
         SaveInitialDistance(rightElbow, rightHand);
@@ -259,17 +242,22 @@ public class RUISSkeletonController : MonoBehaviour
 						UpdateTransform (ref rightKnee, skeletonManager.skeletons [kinectVersion, playerId].rightKnee);
 						UpdateTransform (ref rightFoot, skeletonManager.skeletons [kinectVersion, playerId].rightFoot);
 
-						UpdateTransform (ref rightThumb, skeletonManager.skeletons [kinectVersion, playerId].rightThumb);
-						UpdateTransform (ref rightIndexFinger, skeletonManager.skeletons [kinectVersion, playerId].rightIndexFinger);
-						UpdateTransform (ref rightMiddleFinger, skeletonManager.skeletons [kinectVersion, playerId].rightMiddleFinger);
-						UpdateTransform (ref rightRingFinger, skeletonManager.skeletons [kinectVersion, playerId].rightRingFinger);
-						UpdateTransform (ref rightLittleFinger, skeletonManager.skeletons [kinectVersion, playerId].rightLittleFinger);
+						Quaternion fingerRotation = Quaternion.Euler(0, 0, 80);
+						Quaternion noFingerRotation = Quaternion.Euler(0, 0, 0);
+						Quaternion rightArmRotation = skeletonManager.skeletons [kinectVersion, playerId].rightElbow.rotation * Quaternion.Euler(0, 180, 0);
+						Quaternion leftArmRotation = skeletonManager.skeletons [kinectVersion, playerId].leftElbow.rotation;
 						
-						UpdateTransform (ref leftThumb, skeletonManager.skeletons [kinectVersion, playerId].leftThumb);
-						UpdateTransform (ref leftIndexFinger, skeletonManager.skeletons [kinectVersion, playerId].leftIndexFinger);
-						UpdateTransform (ref leftMiddleFinger, skeletonManager.skeletons [kinectVersion, playerId].leftMiddleFinger);
-						UpdateTransform (ref leftRingFinger, skeletonManager.skeletons [kinectVersion, playerId].leftRingFinger);
-						UpdateTransform (ref leftLittleFinger, skeletonManager.skeletons [kinectVersion, playerId].leftLittleFinger);
+
+						if(skeletonManager.skeletons [kinectVersion, playerId].rightHandClosed) curlFingers(true, fingerRotation, rightArmRotation);
+						else curlFingers(true,  noFingerRotation, rightArmRotation);
+
+						if(skeletonManager.skeletons [kinectVersion, playerId].leftHandClosed) curlFingers(false, fingerRotation, leftArmRotation);
+						else curlFingers(false, noFingerRotation, leftArmRotation);
+			
+						//UpdateTransform (ref rightThumb, skeletonManager.skeletons [kinectVersion, playerId].rightThumb);
+						//UpdateTransform (ref leftThumb, skeletonManager.skeletons [kinectVersion, playerId].leftThumb);
+						
+						
 
 						if (!useHierarchicalModel) {
 								if (leftHand != null) {
@@ -503,5 +491,33 @@ public class RUISSkeletonController : MonoBehaviour
 		         skeletonManager.skeletons[kinectVersion, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
 		         skeletonManager.skeletons[kinectVersion, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
     }
-	
+
+	private void curlFingers(bool curlRightHand, Quaternion fingerAngle, Quaternion armAngle) {
+		// TODO: slerp
+		GameObject handObject;
+
+		if (curlRightHand && rightThumb != null) handObject = rightThumb.transform.parent.gameObject;
+		else if (leftThumb != null) handObject = leftThumb.transform.parent.gameObject;
+		else return;
+
+		Transform[] fingers = handObject.GetComponentsInChildren<Transform>();
+
+		foreach (Transform finger in fingers) {
+			if(finger.parent.transform.gameObject == handObject) {
+				finger.transform.rotation = armAngle  * fingerAngle;
+				Transform[] nextFingerParts  = finger.gameObject.GetComponentsInChildren<Transform>();
+				foreach (Transform part1 in nextFingerParts) {
+					if(part1.parent.transform.gameObject == finger.gameObject) {
+						part1.transform.rotation = armAngle * fingerAngle * fingerAngle;
+						Transform[] nextFingerParts2  = finger.gameObject.GetComponentsInChildren<Transform>();
+						foreach (Transform part2 in nextFingerParts2) {
+							if(part2.parent.transform.gameObject == part1.gameObject) {
+								part2.transform.rotation = armAngle * fingerAngle * fingerAngle * fingerAngle;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

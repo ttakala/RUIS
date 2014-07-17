@@ -78,18 +78,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 		public JointData rightThumb = new JointData();
 		public JointData neck = new JointData();
 
-
-		public JointData leftIndexFinger = new JointData();
-		public JointData leftMiddleFinger = new JointData();
-		public JointData leftRingFinger = new JointData();
-		public JointData leftLittleFinger = new JointData();
-
-
-		public JointData rightIndexFinger = new JointData();
-		public JointData rightMiddleFinger = new JointData();
-		public JointData rightRingFinger = new JointData();
-		public JointData rightLittleFinger = new JointData();
-
+		public bool rightHandClosed = false;
+		public bool leftHandClosed = false;
     }
 
 
@@ -233,16 +223,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.AnkleRight], body.JointOrientations[Kinect.JointType.AnkleRight]), i, ref skeletons[1, i].rightAnkle);
 
 						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandLeft], body.JointOrientations[Kinect.JointType.HandLeft]), i, ref skeletons[1, i].leftThumb);
-						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandLeft], body.JointOrientations[Kinect.JointType.HandLeft]), i, ref skeletons[1, i].leftIndexFinger);
-						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandLeft], body.JointOrientations[Kinect.JointType.HandLeft]), i, ref skeletons[1, i].leftMiddleFinger);
-						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandLeft], body.JointOrientations[Kinect.JointType.HandLeft]), i, ref skeletons[1, i].leftRingFinger);
-						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandLeft], body.JointOrientations[Kinect.JointType.HandLeft]), i, ref skeletons[1, i].leftLittleFinger);
-
 						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandRight], body.JointOrientations[Kinect.JointType.HandRight]), i, ref skeletons[1, i].rightThumb);
-						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandRight], body.JointOrientations[Kinect.JointType.HandRight]), i, ref skeletons[1, i].rightIndexFinger);
-						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandRight], body.JointOrientations[Kinect.JointType.HandRight]), i, ref skeletons[1, i].rightMiddleFinger);
-						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandRight], body.JointOrientations[Kinect.JointType.HandRight]), i, ref skeletons[1, i].rightRingFinger);
-						UpdateJointData2(getKinect2JointData(body.Joints[Kinect.JointType.HandRight], body.JointOrientations[Kinect.JointType.HandRight]), i, ref skeletons[1, i].rightLittleFinger);
 
 
 						//body.Expressions
@@ -290,40 +271,23 @@ public class RUISSkeletonManager : MonoBehaviour {
 						Vector3 angleFingers = new Vector3(0,0,-120);
 						Vector3 angleThumb = new Vector3(0,0,40);
 
-						if(body.HandLeftState == Kinect.HandState.Closed) {
-							skeletons[1, i].leftThumb.rotation = skeletons[1, i].leftHand.rotation * Quaternion.Euler(-angleThumb);
-							skeletons[1, i].leftIndexFinger.rotation = skeletons[1, i].leftHand.rotation * Quaternion.Euler(-angleFingers);
-							skeletons[1, i].leftMiddleFinger.rotation = skeletons[1, i].leftHand.rotation * Quaternion.Euler(-angleFingers);
-							skeletons[1, i].leftRingFinger.rotation = skeletons[1, i].leftHand.rotation * Quaternion.Euler(-angleFingers);
-							skeletons[1, i].leftLittleFinger.rotation = skeletons[1, i].leftHand.rotation * Quaternion.Euler(-angleFingers);
+						if(body.HandLeftState == Kinect.HandState.Closed) { 
+							skeletons[1, i].leftHandClosed = true;
+							skeletons[1, i].leftHand.rotation = skeletons[1, i].leftElbow.rotation;
 						}
-						else {
-							skeletons[1, i].leftThumb.rotation = skeletons[1, i].leftHand.rotation;
-							skeletons[1, i].leftIndexFinger.rotation = skeletons[1, i].leftHand.rotation;
-							skeletons[1, i].leftMiddleFinger.rotation = skeletons[1, i].leftHand.rotation;
-							skeletons[1, i].leftRingFinger.rotation = skeletons[1, i].leftHand.rotation;
-							skeletons[1, i].leftLittleFinger.rotation = skeletons[1, i].leftHand.rotation;
-						}
+						else skeletons[1, i].leftHandClosed = false;
 
 						if(body.HandRightState == Kinect.HandState.Closed) {
-							skeletons[1, i].rightThumb.rotation = skeletons[1, i].rightHand.rotation * Quaternion.Euler(angleThumb);
-							skeletons[1, i].rightIndexFinger.rotation = skeletons[1, i].rightHand.rotation * Quaternion.Euler(angleFingers);
-							skeletons[1, i].rightMiddleFinger.rotation = skeletons[1, i].rightHand.rotation * Quaternion.Euler(angleFingers);
-							skeletons[1, i].rightRingFinger.rotation = skeletons[1, i].rightHand.rotation * Quaternion.Euler(angleFingers);
-							skeletons[1, i].rightLittleFinger.rotation = skeletons[1, i].rightHand.rotation * Quaternion.Euler(angleFingers);
+							skeletons[1, i].rightHandClosed = true;
+							skeletons[1, i].rightHand.rotation = skeletons[1, i].rightElbow.rotation;
 						}
-						else {
-							skeletons[1, i].rightThumb.rotation = skeletons[1, i].rightHand.rotation;
-							skeletons[1, i].rightIndexFinger.rotation = skeletons[1, i].rightHand.rotation;
-							skeletons[1, i].rightMiddleFinger.rotation = skeletons[1, i].rightHand.rotation;
-							skeletons[1, i].rightRingFinger.rotation = skeletons[1, i].rightHand.rotation;
-							skeletons[1, i].rightLittleFinger.rotation = skeletons[1, i].rightHand.rotation;
-						}
+						else skeletons[1, i].rightHandClosed = false;
+
 
 						i++;
 
 						// Debug kinect detecion area
-
+						/*
 						Vector3 origPosition = GameObject.Find ("z1Wall").transform.position;
 						origPosition.y = 0;
 						GameObject mechanim = GameObject.Find("Mecanim - Kinect 2");
@@ -365,7 +329,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 							}
 						}
 						// end debug
-
+						*/
 
 					}
 					else {

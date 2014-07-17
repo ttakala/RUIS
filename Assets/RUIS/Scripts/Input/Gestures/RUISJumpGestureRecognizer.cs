@@ -46,7 +46,7 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 
     public void Awake()
     {
-		skeletonController = GetComponent<RUISSkeletonController>();
+		skeletonController = FindObjectOfType(typeof(RUISSkeletonController)) as RUISSkeletonController;
         pointTracker = GetComponent<RUISPointTracker>();
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 		ResetProgress();

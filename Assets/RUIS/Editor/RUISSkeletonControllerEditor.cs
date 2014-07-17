@@ -47,16 +47,7 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty rightFootBone;
 
 	SerializedProperty leftThumb;
-	SerializedProperty leftIndexFinger;
-	SerializedProperty leftMiddleFinger;
-	SerializedProperty leftRingFinger;
-	SerializedProperty leftLittleFinger;
-
 	SerializedProperty rightThumb;
-	SerializedProperty rightIndexFinger;
-	SerializedProperty rightMiddleFinger;
-	SerializedProperty rightRingFinger;
-	SerializedProperty rightLittleFinger;
 
     SerializedProperty maxScaleFactor;
     SerializedProperty minimumConfidenceToUpdate;
@@ -100,16 +91,7 @@ public class RUISSkeletonControllerEditor : Editor
         rightFootBone = serializedObject.FindProperty("rightFoot");
 
 		leftThumb = serializedObject.FindProperty ("leftThumb");
-		leftIndexFinger = serializedObject.FindProperty ("leftIndexFinger");
-		leftMiddleFinger = serializedObject.FindProperty ("leftMiddleFinger");
-		leftRingFinger = serializedObject.FindProperty ("leftRingFinger");
-		leftLittleFinger = serializedObject.FindProperty ("leftLittleFinger");
-
 		rightThumb = serializedObject.FindProperty ("rightThumb");
-		rightIndexFinger = serializedObject.FindProperty ("rightIndexFinger");
-		rightMiddleFinger = serializedObject.FindProperty ("rightMiddleFinger");
-		rightRingFinger = serializedObject.FindProperty ("rightRingFinger");
-		rightLittleFinger = serializedObject.FindProperty ("rightLittleFinger");
 
         maxScaleFactor = serializedObject.FindProperty("maxScaleFactor");
         minimumConfidenceToUpdate = serializedObject.FindProperty("minimumConfidenceToUpdate");
@@ -193,30 +175,18 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
 
-		leftThumb = serializedObject.FindProperty ("leftThumb");
-		leftIndexFinger = serializedObject.FindProperty ("leftIndexFinger");
-		leftMiddleFinger = serializedObject.FindProperty ("leftMiddleFinger");
-		leftRingFinger = serializedObject.FindProperty ("leftRingFinger");
-		leftLittleFinger = serializedObject.FindProperty ("leftLittleFinger");
+		if (kinectDevice.enumValueIndex == 1) {
+				EditorGUILayout.LabelField ("Fingers", EditorStyles.boldLabel);
+				EditorGUILayout.BeginHorizontal ();
+				EditorGUILayout.BeginVertical (GUILayout.Width (Screen.width / 2 - 20));
+				EditorGUILayout.PropertyField (leftThumb, new GUIContent ("Left Thumb", "The thumb of the left hand"));
+				EditorGUILayout.EndVertical ();
+				EditorGUILayout.BeginVertical (GUILayout.Width (Screen.width / 2 - 20));
+				EditorGUILayout.PropertyField (rightThumb, new GUIContent ("Right Thumb", "The thumb of the right hand"));
 
-		EditorGUILayout.LabelField("Fingers", EditorStyles.boldLabel);
-		EditorGUILayout.BeginHorizontal();
-		EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 20));
-		EditorGUILayout.PropertyField(leftThumb, new GUIContent("Left Thumb", "The thumb of the left hand"));
-		EditorGUILayout.PropertyField(leftIndexFinger, new GUIContent("Left Index Finger", "The index finger of the left hand"));
-		EditorGUILayout.PropertyField(leftMiddleFinger, new GUIContent("Left Middle Finger", "The middle finger of the left hand"));
-		EditorGUILayout.PropertyField(leftRingFinger, new GUIContent("Left Ring Finger", "The ring finger of the left hand"));
-		EditorGUILayout.PropertyField(leftLittleFinger, new GUIContent("Left Little Finger", "The little finger of the left hand"));
-		EditorGUILayout.EndVertical();
-		EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 20));
-		EditorGUILayout.PropertyField(rightThumb, new GUIContent("Right Thumb", "The thumb of the right hand"));
-		EditorGUILayout.PropertyField(rightIndexFinger, new GUIContent("Right Index Finger", "The index finger of the right hand"));
-		EditorGUILayout.PropertyField(rightMiddleFinger, new GUIContent("Right Middle Finger", "The middle finger of the right hand"));
-		EditorGUILayout.PropertyField(rightRingFinger, new GUIContent("Right Ring Finger", "The ring finger of the right hand"));
-		EditorGUILayout.PropertyField(rightLittleFinger, new GUIContent("Right Little Finger", "The little finger of the right hand"));
-		EditorGUILayout.EndVertical();
-		EditorGUILayout.EndHorizontal();
-
+				EditorGUILayout.EndVertical ();
+				EditorGUILayout.EndHorizontal ();
+		}
 
         EditorGUILayout.LabelField("Tweaking", EditorStyles.boldLabel);
         GUI.enabled = scaleHierarchicalModelBones.boolValue;
