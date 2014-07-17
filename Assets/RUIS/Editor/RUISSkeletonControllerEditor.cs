@@ -15,7 +15,7 @@ using System.Collections;
 [CanEditMultipleObjects]
 public class RUISSkeletonControllerEditor : Editor
 {
-	SerializedProperty kinectDevice;
+	SerializedProperty bodyTrackingDevice;
 
 	SerializedProperty playerId;
 
@@ -58,11 +58,13 @@ public class RUISSkeletonControllerEditor : Editor
 	
 	SerializedProperty fistCurlFingers;
 	SerializedProperty trackThumbs;
+	SerializedProperty trackAnkle;
+	
 
     public void OnEnable()
     {
 
-		kinectDevice = serializedObject.FindProperty("kinectDevice");
+		bodyTrackingDevice = serializedObject.FindProperty("bodyTrackingDevice");
 		playerId = serializedObject.FindProperty("playerId");
 
         useHierarchicalModel = serializedObject.FindProperty("useHierarchicalModel");
@@ -94,7 +96,9 @@ public class RUISSkeletonControllerEditor : Editor
 
 		leftThumb = serializedObject.FindProperty ("leftThumb");
 		rightThumb = serializedObject.FindProperty ("rightThumb");
-
+		trackAnkle = serializedObject.FindProperty ("trackAnkle");
+		
+		
         maxScaleFactor = serializedObject.FindProperty("maxScaleFactor");
         minimumConfidenceToUpdate = serializedObject.FindProperty("minimumConfidenceToUpdate");
         rotationDamping = serializedObject.FindProperty("rotationDamping");
@@ -110,11 +114,11 @@ public class RUISSkeletonControllerEditor : Editor
     {
         serializedObject.Update();
 		 
-		EditorGUILayout.PropertyField(kinectDevice, new GUIContent("Kinect version", "")); 
+		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", "")); 
 		
 		EditorGUILayout.Space();
 
-        EditorGUILayout.PropertyField(playerId, new GUIContent("Kinect Player ID", "The kinect player ID number"));
+        EditorGUILayout.PropertyField(playerId, new GUIContent("Kinect Player ID", "The Kinect player ID number"));
         
         EditorGUILayout.Space();
 
@@ -141,8 +145,9 @@ public class RUISSkeletonControllerEditor : Editor
         if (!useHierarchicalModel.boolValue) scaleHierarchicalModelBones.boolValue = false;
         GUI.enabled = true;
 
-        EditorGUILayout.Space();
-
+		EditorGUILayout.Space();
+		EditorGUILayout.Separator();
+		
         EditorGUILayout.LabelField("Torso and Head", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(rootBone, new GUIContent("Root Bone", "The skeleton hierarchy root bone"));
 		EditorGUILayout.Space();
@@ -151,7 +156,8 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.PropertyField(headBone, new GUIContent("Head", "The head bone"));
 
         EditorGUILayout.Space();
-
+		EditorGUILayout.Separator();
+		
         EditorGUILayout.LabelField("Arms", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 20));
@@ -166,6 +172,9 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
 
+		EditorGUILayout.Space();
+		EditorGUILayout.Separator();
+	
         EditorGUILayout.LabelField("Legs", EditorStyles.boldLabel);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 20));
@@ -180,7 +189,14 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
 
-		if (kinectDevice.enumValueIndex == 1) {
+		if (bodyTrackingDevice.enumValueIndex == 1) {
+			EditorGUILayout.PropertyField(trackAnkle, new GUIContent("Track Ankle", "Track the rotation of the ankle bone"));
+		}
+		
+		EditorGUILayout.Space();
+		EditorGUILayout.Separator();
+
+		if (bodyTrackingDevice.enumValueIndex == 1) {
 				EditorGUILayout.LabelField ("Fingers", EditorStyles.boldLabel);
 				EditorGUILayout.BeginHorizontal ();
 				EditorGUILayout.BeginVertical (GUILayout.Width (Screen.width / 2 - 20));
@@ -192,11 +208,14 @@ public class RUISSkeletonControllerEditor : Editor
 				EditorGUILayout.EndHorizontal ();
 			
 			
-			EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent("Track fist curling", "Should finger in fist be curled when closing hand?"));
-			EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track thumbs", "Track thumb movement."));
+			EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent("Track Fist Curling", "Should finger in fist be curled when closing hand?"));
+			EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track Thumbs", "Track thumb movement."));
 			
 		}
-
+		
+		EditorGUILayout.Space();
+		EditorGUILayout.Separator();
+		
         EditorGUILayout.LabelField("Tweaking", EditorStyles.boldLabel);
         GUI.enabled = scaleHierarchicalModelBones.boolValue;
         EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Max Scale Rate", "The maximum amount the scale of a bone can "

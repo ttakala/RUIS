@@ -14,7 +14,7 @@ using System.Collections;
 public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 {
     public int playerId = 0;
-	public int kinectVersion = 0;
+	public int bodyTrackingDeviceID = 0;
 
     public float requiredUpwardVelocity = 1.0f;
     public float timeBetweenJumps = 1.0f;
@@ -52,13 +52,14 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 		ResetProgress();
     }
 	public void Start() {
-		kinectVersion = skeletonController.kinectVersion;
+		
+		bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
 	}
     public void Update()
     {
         if (!skeletonManager) return;
 
-		bool currentIsTracking = skeletonManager.skeletons[kinectVersion, playerId].isTracking;
+		bool currentIsTracking = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking;
 
         if (!currentIsTracking)
         {
@@ -136,14 +137,14 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 
     private void DoWaitingForJump()
     {
-		if (skeletonManager.skeletons[kinectVersion, playerId].leftFoot.positionConfidence < requiredConfidence ||
-		    skeletonManager.skeletons[kinectVersion, playerId].rightFoot.positionConfidence < requiredConfidence)
+		if (skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.positionConfidence < requiredConfidence ||
+		    skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.positionConfidence < requiredConfidence)
         {
             return;
         }
 
-		leftFootHeight = skeletonManager.skeletons[kinectVersion, playerId].leftFoot.position;
-		rightFootHeight = skeletonManager.skeletons[kinectVersion, playerId].rightFoot.position;
+		leftFootHeight = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.position;
+		rightFootHeight = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.position;
 
         if (leftFootHeight.y >= feetHeightThreshold && rightFootHeight.y >= feetHeightThreshold && pointTracker.averageVelocity.y >= requiredUpwardVelocity)
         {

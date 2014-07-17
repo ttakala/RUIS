@@ -21,7 +21,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 
     RUISSkeletonManager skeletonManager;
     int playerId = 0;
-
+	int bodyTrackingDeviceID = 0;
     private CapsuleCollider capsuleCollider;
 	
     public float maxHeightChange = 5f;
@@ -57,8 +57,11 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	void Awake () 
 	{
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
-		if(skeletonController != null)
+		
+		if(skeletonController != null) {
 	        playerId = skeletonController.playerId;
+			bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+	        }
 		else
 			Debug.LogError(   "The public variable 'Skeleton Controller' is not assigned! Using skeleton "
 							+ "ID 0 as the pivot source.");
@@ -94,7 +97,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 
 		Vector3 torsoPos;
 		Vector3 newLocalPosition;
-		if (!skeletonManager || !skeletonManager.skeletons[0, playerId].isTracking)
+		if (!skeletonManager || !skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking) 
 		{
             colliderHeight = defaultColliderHeight;
             // Tuukka:
@@ -152,7 +155,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         }
         else
         {
-            torsoPos = skeletonManager.skeletons[0, playerId].torso.position;
+        	torsoPos = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position;
 			
 			measuredPos[0] = torsoPos.x;
 			measuredPos[1] = torsoPos.y;

@@ -36,19 +36,21 @@ public class RUISSkeletonController : MonoBehaviour
 	
 	public bool fistCurlFingers;
 	public bool trackThumbs;
-
+	public bool trackAnkle;
+	
 	private RUISInputManager inputManager;
     private RUISSkeletonManager skeletonManager;
 	private RUISCharacterController characterController;
 
-	public enum kinectVersionType
+	public enum bodyTrackingDeviceType
 	{
-		Kinect_1,
-		Kinect_2
+		Kinect1,
+		Kinect2,
+		GenericMotionTracker
 	}
-	public kinectVersionType kinectDevice = kinectVersionType.Kinect_1;
+	public bodyTrackingDeviceType bodyTrackingDevice = bodyTrackingDeviceType.Kinect1;
 
-	public int kinectVersion = 0;
+	public int bodyTrackingDeviceID = 0;
     public int playerId = 0;
 
     private Vector3 skeletonPosition = Vector3.zero;
@@ -93,6 +95,7 @@ public class RUISSkeletonController : MonoBehaviour
 	private Vector3 originalRightShinScale;
 	private Vector3 originalLeftShinScale;
 	
+	
 	Quaternion[,,] initialFingerRotations = new Quaternion[2,5,3]; // 2 hands, 5 fingers, 3 finger bones
 	Transform[,,] fingerTransforms = new Transform[2,5,3]; // For quick access to finger gameobjects
 	
@@ -108,8 +111,8 @@ public class RUISSkeletonController : MonoBehaviour
 	
     void Awake()
     {
-		if(kinectDevice == kinectVersionType.Kinect_1) kinectVersion = 0;
-		if(kinectDevice == kinectVersionType.Kinect_2)  kinectVersion = 1;
+		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1) bodyTrackingDeviceID = 0;
+		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2)  bodyTrackingDeviceID = 1;
 
         if (skeletonManager == null)
         {
@@ -238,34 +241,35 @@ public class RUISSkeletonController : MonoBehaviour
     {
 
 
-		if (skeletonManager != null && skeletonManager.skeletons [kinectVersion, playerId] != null && skeletonManager.skeletons [kinectVersion, playerId].isTracking) {
+		if (skeletonManager != null && skeletonManager.skeletons [bodyTrackingDeviceID, playerId] != null && skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking) {
 						
 						UpdateSkeletonPosition ();
  
-						UpdateTransform (ref head, skeletonManager.skeletons[kinectVersion, playerId].head);
-						UpdateTransform (ref torso, skeletonManager.skeletons [kinectVersion, playerId].torso);
-						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [kinectVersion, playerId].leftShoulder);
-						UpdateTransform (ref leftElbow, skeletonManager.skeletons [kinectVersion, playerId].leftElbow);
-						UpdateTransform (ref leftHand, skeletonManager.skeletons [kinectVersion, playerId].leftHand);
+						UpdateTransform (ref head, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head);
+						UpdateTransform (ref torso, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso);
+						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
+						UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow);
+						UpdateTransform (ref leftHand, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand);
+						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
+						UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow);
+						UpdateTransform (ref rightHand, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand);
 						
-						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [kinectVersion, playerId].rightShoulder);
-						UpdateTransform (ref rightElbow, skeletonManager.skeletons [kinectVersion, playerId].rightElbow);
-						UpdateTransform (ref rightHand, skeletonManager.skeletons [kinectVersion, playerId].rightHand);
-						
-						UpdateTransform (ref leftHip, skeletonManager.skeletons [kinectVersion, playerId].leftHip);
-						UpdateTransform (ref leftKnee, skeletonManager.skeletons [kinectVersion, playerId].leftKnee);
-						UpdateTransform (ref leftFoot, skeletonManager.skeletons [kinectVersion, playerId].leftFoot);
-						UpdateTransform (ref rightHip, skeletonManager.skeletons [kinectVersion, playerId].rightHip);
-						UpdateTransform (ref rightKnee, skeletonManager.skeletons [kinectVersion, playerId].rightKnee);
-						UpdateTransform (ref rightFoot, skeletonManager.skeletons [kinectVersion, playerId].rightFoot);
+						UpdateTransform (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
+						UpdateTransform (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
+						UpdateTransform (ref leftKnee, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee);
+						UpdateTransform (ref rightKnee, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee);
 
-						
-			
+						if(trackAnkle) {
+							UpdateTransform (ref leftFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot);
+							UpdateTransform (ref rightFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot);
+							
+						}
+				
 						if(fistCurlFingers) handleFingersCurling(trackThumbs);
 			
 						if(trackThumbs && rightThumb && leftThumb) {
-							UpdateTransform (ref rightThumb, skeletonManager.skeletons [kinectVersion, playerId].rightThumb);
-							UpdateTransform (ref leftThumb, skeletonManager.skeletons [kinectVersion, playerId].leftThumb);
+							UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb);
+							UpdateTransform (ref leftThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb);
 						}
 						
 
@@ -281,19 +285,19 @@ public class RUISSkeletonController : MonoBehaviour
 								if (scaleHierarchicalModelBones) {
 										UpdateBoneScalings ();
 
-										Vector3 torsoDirection = skeletonManager.skeletons [kinectVersion, playerId].torso.rotation * Vector3.down;
-										torso.position = transform.TransformPoint (skeletonManager.skeletons [kinectVersion, playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
+										Vector3 torsoDirection = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation * Vector3.down;
+										torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
 
-										ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [kinectVersion, playerId].rightShoulder);
-										ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [kinectVersion, playerId].leftShoulder);
-										ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [kinectVersion, playerId].rightHip);
-										ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [kinectVersion, playerId].leftHip);
+										ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
+										ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
+										ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
+										ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
 								}
 						}
 
 						if (updateRootPosition) {
 								
-								Vector3 newRootPosition = skeletonManager.skeletons [kinectVersion, playerId].root.position;
+								Vector3 newRootPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position;
 				
 								measuredPos [0] = newRootPosition.x;
 								measuredPos [1] = newRootPosition.y;
@@ -400,9 +404,9 @@ public class RUISSkeletonController : MonoBehaviour
     //gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
     private void UpdateSkeletonPosition()
     {
-		if (skeletonManager.skeletons[kinectVersion, playerId].root.positionConfidence >= minimumConfidenceToUpdate)
+		if (skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.positionConfidence >= minimumConfidenceToUpdate)
         {
-			skeletonPosition = skeletonManager.skeletons[kinectVersion, playerId].root.position;
+			skeletonPosition = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.position;
         }
     }
 
@@ -430,29 +434,29 @@ public class RUISSkeletonController : MonoBehaviour
 
         {
             rightElbow.transform.localScale = originalRightForearmScale;
-			float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[kinectVersion, playerId].rightShoulder, skeletonManager.skeletons[kinectVersion, playerId].rightElbow, torsoScale);
-			UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[kinectVersion, playerId].rightElbow, skeletonManager.skeletons[kinectVersion, playerId].rightHand, rightArmCumulativeScale);
+			float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow, torsoScale);
+			UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand, rightArmCumulativeScale);
             rightElbow.transform.localScale = rightElbow.transform.localScale * forearmLengthRatio;
         }
 
         {
             leftElbow.transform.localScale = originalLeftForearmScale;
-			float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[kinectVersion, playerId].leftShoulder, skeletonManager.skeletons[kinectVersion, playerId].leftElbow, torsoScale);
-			UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[kinectVersion, playerId].leftElbow, skeletonManager.skeletons[kinectVersion, playerId].leftHand, leftArmCumulativeScale);
+			float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow, torsoScale);
+			UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand, leftArmCumulativeScale);
             leftElbow.transform.localScale = leftElbow.transform.localScale * forearmLengthRatio;
         }
 
         {
 			rightKnee.transform.localScale = originalRightShinScale;
-			float rightLegCumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[kinectVersion, playerId].rightHip, skeletonManager.skeletons[kinectVersion, playerId].rightKnee, torsoScale);
-			UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[kinectVersion, playerId].rightKnee, skeletonManager.skeletons[kinectVersion, playerId].rightFoot, rightLegCumulativeScale);
+			float rightLegCumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee, torsoScale);
+			UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot, rightLegCumulativeScale);
 			rightKnee.transform.localScale = rightKnee.transform.localScale * shinLengthRatio;
         }
 
         {
 			leftKnee.transform.localScale = originalLeftShinScale;
-			float leftLegCumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[kinectVersion, playerId].leftHip, skeletonManager.skeletons[kinectVersion, playerId].leftKnee, torsoScale);
-			UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[kinectVersion, playerId].leftKnee, skeletonManager.skeletons[kinectVersion, playerId].leftFoot, leftLegCumulativeScale);
+			float leftLegCumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee, torsoScale);
+			UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot, leftLegCumulativeScale);
 			leftKnee.transform.localScale = leftKnee.transform.localScale * shinLengthRatio;
         }
     }
@@ -474,8 +478,8 @@ public class RUISSkeletonController : MonoBehaviour
         //we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
         float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
                             jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
-		float playerLength = (Vector3.Distance(skeletonManager.skeletons[kinectVersion, playerId].rightShoulder.position, skeletonManager.skeletons[kinectVersion, playerId].leftShoulder.position) +
-		                      Vector3.Distance(skeletonManager.skeletons[kinectVersion, playerId].rightHip.position, skeletonManager.skeletons[kinectVersion, playerId].leftHip.position)) / 2;
+		float playerLength = (Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position) +
+		                      Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
 
         float newScale = playerLength / modelLength;
         torso.localScale = new Vector3(newScale, newScale, newScale);
@@ -496,10 +500,10 @@ public class RUISSkeletonController : MonoBehaviour
 
     public bool ConfidenceGoodEnoughForScaling()
     {
-		return !(skeletonManager.skeletons[kinectVersion, playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
-		         skeletonManager.skeletons[kinectVersion, playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
-		         skeletonManager.skeletons[kinectVersion, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
-		         skeletonManager.skeletons[kinectVersion, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
+		return !(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
+		         skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
+		         skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
+		         skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
     }
 
 	private void handleFingersCurling(bool trackThumbs) {
@@ -512,32 +516,33 @@ public class RUISSkeletonController : MonoBehaviour
 		for (int i = 0; i < 2; i++)  { // Hands
 			
 			if (i == 0) {
-				closeHand = skeletonManager.skeletons [kinectVersion, playerId].rightHandClosed;
+				closeHand = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandClosed;
 				invert = -1;
 			}
 			else {
-				closeHand = skeletonManager.skeletons [kinectVersion, playerId].leftHandClosed;	
+				closeHand = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandClosed;	
 				invert = 1;
 			}
 			// Thumb rotation correction
 			clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x * invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
-			
 			for(int a = 0; a < 5; a++) { // Fingers
-				for(int b = 0; b < 3; b++) { // Finger bones
-					if(!closeHand && !(a == 4 && trackThumbs)) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, initialFingerRotations[i, a, b], Time.deltaTime * rotationSpeed);
-					else {
-						if(a != 4) {
-							if(b == 0) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationMCP, Time.deltaTime * rotationSpeed);
-							if(b == 1) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationPIP, Time.deltaTime * rotationSpeed);
-							if(b == 2) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationDIP, Time.deltaTime * rotationSpeed);
-						}
-						else if(!trackThumbs) { // Thumbs (if separate thumb  tracking is not enabled)
-							if(b == 0) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationThumbTM_corrected, Time.deltaTime * rotationSpeed);
-							if(b == 1) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
-							if(b == 2) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationThumbIP, Time.deltaTime * rotationSpeed);
-						}	
+				if(!closeHand && !(a == 4 && trackThumbs)) {
+					fingerTransforms[i, a, 0].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], Time.deltaTime * rotationSpeed);
+					fingerTransforms[i, a, 1].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], Time.deltaTime * rotationSpeed);
+					fingerTransforms[i, a, 2].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], Time.deltaTime * rotationSpeed);
 					}
-				}
+				else {
+					if(a != 4) {
+						fingerTransforms[i, a, 0].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 1].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationPIP, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 2].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, Time.deltaTime * rotationSpeed);
+					}
+					else if(!trackThumbs) { // Thumbs (if separate thumb  tracking is not enabled)
+						fingerTransforms[i, a, 0].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 1].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 2].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP, Time.deltaTime * rotationSpeed);
+					}	
+				}	
 			}
 		}
 	}
