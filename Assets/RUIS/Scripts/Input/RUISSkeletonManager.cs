@@ -283,19 +283,24 @@ public class RUISSkeletonManager : MonoBehaviour {
 						skeletons [kinect2SensorID, playerID].torso.rotation  = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90); // TODO: Bug when turning right
 
 						// Upper arm
-						relativePos =  skeletons [kinect2SensorID, playerID].leftElbow.position - skeletons [kinect2SensorID, playerID].leftShoulder.position;
-						skeletons [kinect2SensorID, playerID].leftShoulder.rotation = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].leftElbow.rotation * Vector3.right) * Quaternion.Euler(-45, 90, 0);
+						//relativePos =  skeletons [kinect2SensorID, playerID].leftElbow.position - skeletons [kinect2SensorID, playerID].leftShoulder.position;
+						//skeletons [kinect2SensorID, playerID].leftShoulder.rotation = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].leftElbow.rotation * Vector3.right) * Quaternion.Euler(-45, 90, 0);
+						skeletons [kinect2SensorID, playerID].leftShoulder.rotation = skeletons [kinect2SensorID, playerID].leftElbow.rotation * Quaternion.Euler(0, 45, -90);
 
 						relativePos = skeletons [kinect2SensorID, playerID].rightElbow.position - skeletons [kinect2SensorID, playerID].rightShoulder.position;
 						skeletons [kinect2SensorID, playerID].rightShoulder.rotation = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].rightElbow.rotation * Vector3.right) * Quaternion.Euler(135, 270, 0);
-
+						//skeletons [kinect2SensorID, playerID].rightShoulder.rotation = skeletons [kinect2SensorID, playerID].rightElbow.rotation * Quaternion.Euler(0, -45, 90);
+						
 						// Lower arm
-						relativePos = skeletons [kinect2SensorID, playerID].leftElbow.position - skeletons [kinect2SensorID, playerID].leftWrist.position;
-						skeletons [kinect2SensorID, playerID].leftElbow.rotation = Quaternion.LookRotation(relativePos)  * Quaternion.Euler(0, -90, 0); 
-					
+						//relativePos = skeletons [kinect2SensorID, playerID].leftElbow.position - skeletons [kinect2SensorID, playerID].leftWrist.position;
+						//skeletons [kinect2SensorID, playerID].leftElbow.rotation = Quaternion.LookRotation(relativePos)  * Quaternion.Euler(0, -90, 0); 
+						skeletons [kinect2SensorID, playerID].leftElbow.rotation = skeletons [kinect2SensorID, playerID].leftWrist.rotation  * Quaternion.Euler(0, 180, -90); 
+						
 						relativePos = skeletons [kinect2SensorID, playerID].rightElbow.position - skeletons [kinect2SensorID, playerID].rightWrist.position;
 						skeletons [kinect2SensorID, playerID].rightElbow.rotation = Quaternion.LookRotation(relativePos)  * Quaternion.Euler(0, 90, 0); 
-					
+						//skeletons [kinect2SensorID, playerID].rightElbow.rotation = skeletons [kinect2SensorID, playerID].rightWrist.rotation  * Quaternion.Euler(0, -180, 90); 
+						
+						
 						// Upper leg
 						skeletons [kinect2SensorID, playerID].leftHip.rotation = skeletons [kinect2SensorID, playerID].leftKnee.rotation * Quaternion.Euler(180, -90, 0);
 						skeletons [kinect2SensorID, playerID].rightHip.rotation = skeletons [kinect2SensorID, playerID].rightKnee.rotation * Quaternion.Euler(180, 90, 0);;
