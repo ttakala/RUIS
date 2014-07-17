@@ -159,7 +159,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     void LateUpdate()
     {
-        if (!inputManager.enableKinect)
+        if (!inputManager.enableKinect && !inputManager.enableKinect2)
         {
 			// Without the below if-clause the legs will twist with PS Move head tracker (when Move is enabled but Kinect is not)
 			if(!inputManager.enablePSMove)
