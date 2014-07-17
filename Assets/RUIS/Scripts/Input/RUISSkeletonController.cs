@@ -13,6 +13,7 @@ using System.Collections.Generic;
 [AddComponentMenu("RUIS/Input/RUISSkeletonController")]
 public class RUISSkeletonController : MonoBehaviour
 {
+
     public Transform root;
     public Transform head;
     public Transform neck;
@@ -30,9 +31,11 @@ public class RUISSkeletonController : MonoBehaviour
     public Transform leftKnee;
     public Transform leftFoot;
 
-	public GameObject leftThumb;
-	public GameObject rightThumb;
-
+	public Transform leftThumb;
+	public Transform rightThumb;
+	
+	public bool fistCurlFingers;
+	public bool trackThumbs;
 
 	private RUISInputManager inputManager;
     private RUISSkeletonManager skeletonManager;
@@ -46,8 +49,6 @@ public class RUISSkeletonController : MonoBehaviour
 	public kinectVersionType kinectDevice = kinectVersionType.Kinect_1;
 
 	public int kinectVersion = 0;
-
-
     public int playerId = 0;
 
     private Vector3 skeletonPosition = Vector3.zero;
@@ -62,7 +63,7 @@ public class RUISSkeletonController : MonoBehaviour
 
     public float minimumConfidenceToUpdate = 0.5f;
 
-    public float rotationDamping = 15f;
+    public float rotationDamping = 15.0f;
 	
 	public bool followMoveController { get; private set; }
 	private int followMoveID = 0;
@@ -91,7 +92,20 @@ public class RUISSkeletonController : MonoBehaviour
 	public float shinLengthRatio = 1.0f;
 	private Vector3 originalRightShinScale;
 	private Vector3 originalLeftShinScale;
-
+	
+	Quaternion[,,] initialFingerRotations = new Quaternion[2,5,3]; // 2 hands, 5 fingers, 3 finger bones
+	Transform[,,] fingerTransforms = new Transform[2,5,3]; // For quick access to finger gameobjects
+	
+	// Thumb phalanges
+	Quaternion clenchedRotationThumbTM = Quaternion.Euler (45, 0, 0); 
+	Quaternion clenchedRotationThumbMCP = Quaternion.Euler (0, 0, -25 );
+	Quaternion clenchedRotationThumbIP = Quaternion.Euler (0, 0, -80);
+	
+	// Phalanges of other fingers
+	Quaternion clenchedRotationMCP = Quaternion.Euler (0, 0, -45);
+	Quaternion clenchedRotationPIP = Quaternion.Euler (0, 0, -100);
+	Quaternion clenchedRotationDIP = Quaternion.Euler (0, 0, -70);
+	
     void Awake()
     {
 		if(kinectDevice == kinectVersionType.Kinect_1) kinectVersion = 0;
@@ -147,9 +161,10 @@ public class RUISSkeletonController : MonoBehaviour
         SaveInitialRotation(leftKnee);
         SaveInitialRotation(leftFoot);
 
-		//SaveInitialRotation(leftThumb);
-		//SaveInitialRotation(rightThumb);
-
+		SaveInitialRotation(leftThumb);
+		SaveInitialRotation(rightThumb);
+		saveInitialFingerRotations();
+		
         SaveInitialDistance(rightShoulder, rightElbow);
         SaveInitialDistance(rightElbow, rightHand);
         SaveInitialDistance(leftShoulder, leftElbow);
@@ -226,15 +241,17 @@ public class RUISSkeletonController : MonoBehaviour
 		if (skeletonManager != null && skeletonManager.skeletons [kinectVersion, playerId] != null && skeletonManager.skeletons [kinectVersion, playerId].isTracking) {
 						
 						UpdateSkeletonPosition ();
-
+ 
 						UpdateTransform (ref head, skeletonManager.skeletons[kinectVersion, playerId].head);
 						UpdateTransform (ref torso, skeletonManager.skeletons [kinectVersion, playerId].torso);
 						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [kinectVersion, playerId].leftShoulder);
 						UpdateTransform (ref leftElbow, skeletonManager.skeletons [kinectVersion, playerId].leftElbow);
 						UpdateTransform (ref leftHand, skeletonManager.skeletons [kinectVersion, playerId].leftHand);
+						
 						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [kinectVersion, playerId].rightShoulder);
 						UpdateTransform (ref rightElbow, skeletonManager.skeletons [kinectVersion, playerId].rightElbow);
 						UpdateTransform (ref rightHand, skeletonManager.skeletons [kinectVersion, playerId].rightHand);
+						
 						UpdateTransform (ref leftHip, skeletonManager.skeletons [kinectVersion, playerId].leftHip);
 						UpdateTransform (ref leftKnee, skeletonManager.skeletons [kinectVersion, playerId].leftKnee);
 						UpdateTransform (ref leftFoot, skeletonManager.skeletons [kinectVersion, playerId].leftFoot);
@@ -242,21 +259,14 @@ public class RUISSkeletonController : MonoBehaviour
 						UpdateTransform (ref rightKnee, skeletonManager.skeletons [kinectVersion, playerId].rightKnee);
 						UpdateTransform (ref rightFoot, skeletonManager.skeletons [kinectVersion, playerId].rightFoot);
 
-						Quaternion fingerRotation = Quaternion.Euler(0, 0, 80);
-						Quaternion noFingerRotation = Quaternion.Euler(0, 0, 0);
-						Quaternion rightArmRotation = skeletonManager.skeletons [kinectVersion, playerId].rightElbow.rotation * Quaternion.Euler(0, 180, 0);
-						Quaternion leftArmRotation = skeletonManager.skeletons [kinectVersion, playerId].leftElbow.rotation;
 						
-
-						if(skeletonManager.skeletons [kinectVersion, playerId].rightHandClosed) curlFingers(true, fingerRotation, rightArmRotation);
-						else curlFingers(true,  noFingerRotation, rightArmRotation);
-
-						if(skeletonManager.skeletons [kinectVersion, playerId].leftHandClosed) curlFingers(false, fingerRotation, leftArmRotation);
-						else curlFingers(false, noFingerRotation, leftArmRotation);
 			
-						//UpdateTransform (ref rightThumb, skeletonManager.skeletons [kinectVersion, playerId].rightThumb);
-						//UpdateTransform (ref leftThumb, skeletonManager.skeletons [kinectVersion, playerId].leftThumb);
-						
+						if(fistCurlFingers) handleFingersCurling(trackThumbs);
+			
+						if(trackThumbs && rightThumb && leftThumb) {
+							UpdateTransform (ref rightThumb, skeletonManager.skeletons [kinectVersion, playerId].rightThumb);
+							UpdateTransform (ref leftThumb, skeletonManager.skeletons [kinectVersion, playerId].leftThumb);
+						}
 						
 
 						if (!useHierarchicalModel) {
@@ -492,32 +502,94 @@ public class RUISSkeletonController : MonoBehaviour
 		         skeletonManager.skeletons[kinectVersion, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
     }
 
-	private void curlFingers(bool curlRightHand, Quaternion fingerAngle, Quaternion armAngle) {
-		// TODO: slerp
-		GameObject handObject;
+	private void handleFingersCurling(bool trackThumbs) {
 
-		if (curlRightHand && rightThumb != null) handObject = rightThumb.transform.parent.gameObject;
-		else if (leftThumb != null) handObject = leftThumb.transform.parent.gameObject;
-		else return;
+		bool closeHand;
+		int invert = 1;
+		float rotationSpeed = 10.0f; // Per second
+		Quaternion clenchedRotationThumbTM_corrected;
+		
+		for (int i = 0; i < 2; i++)  { // Hands
+			
+			if (i == 0) {
+				closeHand = skeletonManager.skeletons [kinectVersion, playerId].rightHandClosed;
+				invert = -1;
+			}
+			else {
+				closeHand = skeletonManager.skeletons [kinectVersion, playerId].leftHandClosed;	
+				invert = 1;
+			}
+			// Thumb rotation correction
+			clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x * invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
+			
+			for(int a = 0; a < 5; a++) { // Fingers
+				for(int b = 0; b < 3; b++) { // Finger bones
+					if(!closeHand && !(a == 4 && trackThumbs)) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, initialFingerRotations[i, a, b], Time.deltaTime * rotationSpeed);
+					else {
+						if(a != 4) {
+							if(b == 0) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationMCP, Time.deltaTime * rotationSpeed);
+							if(b == 1) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationPIP, Time.deltaTime * rotationSpeed);
+							if(b == 2) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationDIP, Time.deltaTime * rotationSpeed);
+						}
+						else if(!trackThumbs) { // Thumbs (if separate thumb  tracking is not enabled)
+							if(b == 0) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationThumbTM_corrected, Time.deltaTime * rotationSpeed);
+							if(b == 1) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
+							if(b == 2) fingerTransforms[i, a, b].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, b].localRotation, clenchedRotationThumbIP, Time.deltaTime * rotationSpeed);
+						}	
+					}
+				}
+			}
+		}
+	}
 
-		Transform[] fingers = handObject.GetComponentsInChildren<Transform>();
-
-		foreach (Transform finger in fingers) {
-			if(finger.parent.transform.gameObject == handObject) {
-				finger.transform.rotation = armAngle  * fingerAngle;
-				Transform[] nextFingerParts  = finger.gameObject.GetComponentsInChildren<Transform>();
-				foreach (Transform part1 in nextFingerParts) {
-					if(part1.parent.transform.gameObject == finger.gameObject) {
-						part1.transform.rotation = armAngle * fingerAngle * fingerAngle;
-						Transform[] nextFingerParts2  = finger.gameObject.GetComponentsInChildren<Transform>();
-						foreach (Transform part2 in nextFingerParts2) {
-							if(part2.parent.transform.gameObject == part1.gameObject) {
-								part2.transform.rotation = armAngle * fingerAngle * fingerAngle * fingerAngle;
+	private void saveInitialFingerRotations() {
+		
+		Transform handObject;
+		
+		for (int i = 0; i < 2; i++) { 
+			if (i == 0) handObject = rightHand;
+			else handObject = leftHand;
+			
+			Transform[] fingers = handObject.GetComponentsInChildren<Transform> ();
+			
+			int fingerIndex = 0;
+			int index = 0;
+			foreach (Transform finger in fingers) {
+			
+				if (finger.parent.transform.gameObject == handObject.transform.gameObject
+				    && (finger.gameObject.name.Contains("finger") || finger.gameObject.name.Contains("Finger"))) {
+				
+					if(fingerIndex > 4) break; // No mutants allowed!
+					
+					if(finger == rightThumb || finger == leftThumb) index = 4; // thumb
+					else {
+						index = fingerIndex;
+						fingerIndex++;
+					}
+				
+					// First bone
+					initialFingerRotations[i, index, 0] = finger.localRotation;
+					fingerTransforms[i, index, 0] = finger;
+					Transform[] nextFingerParts = finger.gameObject.GetComponentsInChildren<Transform> ();
+					foreach (Transform part1 in nextFingerParts) {
+						if (part1.parent.transform.gameObject == finger.gameObject
+						    && (part1.gameObject.name.Contains("finger") || part1.gameObject.name.Contains("Finger"))) {
+							// Second bone
+							initialFingerRotations[i, index, 1] = part1.localRotation;
+							fingerTransforms[i, index, 1] = part1;
+							Transform[] nextFingerParts2 = finger.gameObject.GetComponentsInChildren<Transform> ();
+							foreach (Transform part2 in nextFingerParts2) {
+								if (part2.parent.transform.gameObject == part1.gameObject
+								    && (part2.gameObject.name.Contains("finger") || part2.gameObject.name.Contains("Finger"))) {
+									// Third bone
+									initialFingerRotations[i, index, 2] = part2.localRotation;
+									fingerTransforms[i, index, 2] = part2; 
+								}
 							}
 						}
 					}
 				}
-			}
+			}	
 		}
 	}
 }

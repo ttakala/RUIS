@@ -55,13 +55,15 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty neckHeightTweaker;
 	SerializedProperty forearmLengthTweaker;
 	SerializedProperty shinLengthTweaker;
+	
+	SerializedProperty fistCurlFingers;
+	SerializedProperty trackThumbs;
 
     public void OnEnable()
     {
 
 		kinectDevice = serializedObject.FindProperty("kinectDevice");
-
-        playerId = serializedObject.FindProperty("playerId");
+		playerId = serializedObject.FindProperty("playerId");
 
         useHierarchicalModel = serializedObject.FindProperty("useHierarchicalModel");
 
@@ -99,6 +101,9 @@ public class RUISSkeletonControllerEditor : Editor
         neckHeightTweaker = serializedObject.FindProperty("neckHeightTweaker");
         forearmLengthTweaker = serializedObject.FindProperty("forearmLengthRatio");
 		shinLengthTweaker = serializedObject.FindProperty("shinLengthRatio");
+		
+		fistCurlFingers = serializedObject.FindProperty("fistCurlFingers");
+		trackThumbs = serializedObject.FindProperty("trackThumbs");
     }
 
     public override void OnInspectorGUI()
@@ -183,9 +188,13 @@ public class RUISSkeletonControllerEditor : Editor
 				EditorGUILayout.EndVertical ();
 				EditorGUILayout.BeginVertical (GUILayout.Width (Screen.width / 2 - 20));
 				EditorGUILayout.PropertyField (rightThumb, new GUIContent ("Right Thumb", "The thumb of the right hand"));
-
 				EditorGUILayout.EndVertical ();
 				EditorGUILayout.EndHorizontal ();
+			
+			
+			EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent("Track fist curling", "Should finger in fist be curled when closing hand?"));
+			EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track thumbs", "Track thumb movement."));
+			
 		}
 
         EditorGUILayout.LabelField("Tweaking", EditorStyles.boldLabel);

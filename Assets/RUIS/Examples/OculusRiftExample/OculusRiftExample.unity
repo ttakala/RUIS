@@ -3539,8 +3539,10 @@ MonoBehaviour:
   leftHip: {fileID: 1485059248}
   leftKnee: {fileID: 1407989005}
   leftFoot: {fileID: 2107143677}
-  leftThumb: {fileID: 153802629}
-  rightThumb: {fileID: 153138881}
+  leftThumb: {fileID: 153802630}
+  rightThumb: {fileID: 153138882}
+  fistCurlFingers: 1
+  trackThumbs: 0
   kinectDevice: 1
   kinectVersion: 1
   playerId: 0
@@ -27198,6 +27200,8 @@ MonoBehaviour:
   leftFoot: {fileID: 1242235559}
   leftThumb: {fileID: 0}
   rightThumb: {fileID: 0}
+  fistCurlFingers: 0
+  trackThumbs: 0
   kinectDevice: 0
   kinectVersion: 0
   playerId: 0
@@ -33277,7 +33281,7 @@ Prefab:
     - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: leftThumb
       value: 
-      objectReference: {fileID: 153802629}
+      objectReference: {fileID: 153802630}
     - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: leftIndexFinger
       value: 
@@ -33297,7 +33301,7 @@ Prefab:
     - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: rightThumb
       value: 
-      objectReference: {fileID: 153138881}
+      objectReference: {fileID: 153138882}
     - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: rightIndexFinger
       value: 
@@ -33361,6 +33365,18 @@ Prefab:
     - target: {fileID: 11400072, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: characterPivotType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: rotationDamping
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: fistCurlFingers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: trackThumbs
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
