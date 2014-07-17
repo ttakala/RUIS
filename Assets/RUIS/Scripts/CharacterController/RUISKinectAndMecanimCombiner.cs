@@ -159,6 +159,10 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     void LateUpdate()
     {
+		// For debug
+		rightLegBlendWeight = 1;
+		leftLegBlendWeight = 1;
+		// end for debug
         if (!inputManager.enableKinect && !inputManager.enableKinect2)
         {
 			// Without the below if-clause the legs will twist with PS Move head tracker (when Move is enabled but Kinect is not)

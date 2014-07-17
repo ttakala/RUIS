@@ -199,7 +199,7 @@ Transform:
   - {fileID: 1905681824}
   - {fileID: 1001762725}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
 --- !u!114 &9294546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2080,6 +2080,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  choice1: 1
+  choice2: 0
+  choice3: 0
+  choice4: 0
+  choice5: 0
+  choice6: 0
+  choice7: 0
+  choice8: 0
+  choice9: 0
+  choice10: 0
+  choice11: 0
+  choice12: 0
+  choice13: 0
+  choice14: 0
+  choice15: 0
+  choice16: 0
+  choice17: 0
+  choice18: 0
+  choice19: 0
+  choice20: 0
+  choice21: 0
+  choice22: 0
+  choice23: 0
+  choice24: 0
+  choice25: 0
+  choice26: 0
+  choice27: 0
+  choice28: 0
+  choice29: 0
+  choice30: 0
+  choice31: 0
+  choice32: 0
+  choice33: 0
+  choice34: 0
+  choice35: 0
+  choice36: 0
   rootSpeedScaling: {x: 1, y: 1, z: 1}
 --- !u!114 &181162675
 MonoBehaviour:
@@ -3577,7 +3613,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!1 &295248657
 GameObject:
   m_ObjectHideFlags: 0
@@ -10508,11 +10544,23 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: scaleHierarchicalModelBones
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400114, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: updateRootPosition
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
@@ -17320,7 +17368,12 @@ Prefab:
       propertyPath: enableKinect2
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: enableKinect
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 11400016, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1659611844}
   m_IsPrefabParent: 0
@@ -22375,7 +22428,7 @@ MonoBehaviour:
   updateJointPositions: 0
   updateJointRotations: 1
   useHierarchicalModel: 1
-  scaleHierarchicalModelBones: 1
+  scaleHierarchicalModelBones: 0
   maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
@@ -25584,7 +25637,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!1 &1940915197
 GameObject:
   m_ObjectHideFlags: 0
@@ -26755,9 +26808,8 @@ Transform:
 --- !u!114 &2003238543
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400016, guid: 7e2baee5779349340b6a78274c032bf7,
-    type: 2}
-  m_PrefabInternal: {fileID: 1290284188}
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2003238541}
   m_Enabled: 1
   m_EditorHideFlags: 0

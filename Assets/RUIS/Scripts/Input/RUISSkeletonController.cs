@@ -201,101 +201,92 @@ public class RUISSkeletonController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (skeletonManager != null && skeletonManager.skeletons[playerId] != null && skeletonManager.skeletons[playerId].isTracking)
-        {
-            UpdateSkeletonPosition();
+        if (skeletonManager != null && skeletonManager.skeletons [playerId] != null && skeletonManager.skeletons [playerId].isTracking) {
 
-            UpdateTransform(ref head, skeletonManager.skeletons[playerId].head);
-            UpdateTransform(ref torso, skeletonManager.skeletons[playerId].torso);
-            UpdateTransform(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
-            UpdateTransform(ref leftElbow, skeletonManager.skeletons[playerId].leftElbow);
-            UpdateTransform(ref leftHand, skeletonManager.skeletons[playerId].leftHand);
-            UpdateTransform(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
-            UpdateTransform(ref rightElbow, skeletonManager.skeletons[playerId].rightElbow);
-            UpdateTransform(ref rightHand, skeletonManager.skeletons[playerId].rightHand);
-            UpdateTransform(ref leftHip, skeletonManager.skeletons[playerId].leftHip);
-            UpdateTransform(ref leftKnee, skeletonManager.skeletons[playerId].leftKnee);
-            UpdateTransform(ref leftFoot, skeletonManager.skeletons[playerId].leftFoot);
-            UpdateTransform(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
-            UpdateTransform(ref rightKnee, skeletonManager.skeletons[playerId].rightKnee);
-            UpdateTransform(ref rightFoot, skeletonManager.skeletons[playerId].rightFoot);
+						UpdateSkeletonPosition ();
 
-            if (!useHierarchicalModel)
-            {
-                if (leftHand != null)
-                {
-                    leftHand.localRotation = leftElbow.localRotation;
-                }
+						UpdateTransform (ref head, skeletonManager.skeletons [playerId].head);
+						UpdateTransform (ref torso, skeletonManager.skeletons [playerId].torso);
+						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [playerId].leftShoulder);
+						UpdateTransform (ref leftElbow, skeletonManager.skeletons [playerId].leftElbow);
+						UpdateTransform (ref leftHand, skeletonManager.skeletons [playerId].leftHand);
+						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [playerId].rightShoulder);
+						UpdateTransform (ref rightElbow, skeletonManager.skeletons [playerId].rightElbow);
+						UpdateTransform (ref rightHand, skeletonManager.skeletons [playerId].rightHand);
+						UpdateTransform (ref leftHip, skeletonManager.skeletons [playerId].leftHip);
+						UpdateTransform (ref leftKnee, skeletonManager.skeletons [playerId].leftKnee);
+						UpdateTransform (ref leftFoot, skeletonManager.skeletons [playerId].leftFoot);
+						UpdateTransform (ref rightHip, skeletonManager.skeletons [playerId].rightHip);
+						UpdateTransform (ref rightKnee, skeletonManager.skeletons [playerId].rightKnee);
+						UpdateTransform (ref rightFoot, skeletonManager.skeletons [playerId].rightFoot);
 
-                if (rightHand != null)
-                {
-                    rightHand.localRotation = rightElbow.localRotation;
-                }
-            }
-            else
-            {
-                if (scaleHierarchicalModelBones)
-                {
-                    UpdateBoneScalings();
+						if (!useHierarchicalModel) {
+								if (leftHand != null) {
+										leftHand.localRotation = leftElbow.localRotation;
+								}
 
-                    Vector3 torsoDirection = skeletonManager.skeletons[playerId].torso.rotation * Vector3.down;
-                    torso.position = transform.TransformPoint(skeletonManager.skeletons[playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
+								if (rightHand != null) {
+										rightHand.localRotation = rightElbow.localRotation;
+								}
+						} else {
+								if (scaleHierarchicalModelBones) {
+										UpdateBoneScalings ();
 
-                    ForceUpdatePosition(ref rightShoulder, skeletonManager.skeletons[playerId].rightShoulder);
-                    ForceUpdatePosition(ref leftShoulder, skeletonManager.skeletons[playerId].leftShoulder);
-                    ForceUpdatePosition(ref rightHip, skeletonManager.skeletons[playerId].rightHip);
-                    ForceUpdatePosition(ref leftHip, skeletonManager.skeletons[playerId].leftHip);
-                }
-            }
+										Vector3 torsoDirection = skeletonManager.skeletons [playerId].torso.rotation * Vector3.down;
+										torso.position = transform.TransformPoint (skeletonManager.skeletons [playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
 
-            if (updateRootPosition)
-            {
-                Vector3 newRootPosition = skeletonManager.skeletons[playerId].root.position;
+										ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [playerId].rightShoulder);
+										ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [playerId].leftShoulder);
+										ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [playerId].rightHip);
+										ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [playerId].leftHip);
+								}
+						}
+
+						if (updateRootPosition) {
+								Vector3 newRootPosition = skeletonManager.skeletons [playerId].root.position;
 				
-				measuredPos[0] = newRootPosition.x;
-				measuredPos[1] = newRootPosition.y;
-				measuredPos[2] = newRootPosition.z;
-				positionKalman.setR(Time.deltaTime * positionNoiseCovariance);
-			    positionKalman.predict();
-			    positionKalman.update(measuredPos);
-				pos = positionKalman.getState();
+								measuredPos [0] = newRootPosition.x;
+								measuredPos [1] = newRootPosition.y;
+								measuredPos [2] = newRootPosition.z;
+								positionKalman.setR (Time.deltaTime * positionNoiseCovariance);
+								positionKalman.predict ();
+								positionKalman.update (measuredPos);
+								pos = positionKalman.getState ();
 				
-                transform.localPosition = new Vector3((float) pos[0], (float) pos[1], (float) pos[2]); //newRootPosition;
-            }
+								transform.localPosition = new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]); //newRootPosition;
+						}
 
-        }
-		else // TUUKKA
-			if(followMoveController && characterController && inputManager)
-			{
-				psmove = inputManager.GetMoveWand(followMoveID);
-				if(psmove)
-				{
+				} else { // TUUKKA
+
+						if (followMoveController && characterController && inputManager) {
+								psmove = inputManager.GetMoveWand (followMoveID);
+								if (psmove) {
 				
-					Quaternion moveYaw = Quaternion.Euler(0, psmove.localRotation.eulerAngles.y, 0);
+										Quaternion moveYaw = Quaternion.Euler (0, psmove.localRotation.eulerAngles.y, 0);
 				
-					skeletonPosition = psmove.localPosition - moveYaw*characterController.psmoveOffset;
-					skeletonPosition.y = 0;
+										skeletonPosition = psmove.localPosition - moveYaw * characterController.psmoveOffset;
+										skeletonPosition.y = 0;
 					
-					if (updateRootPosition)
-						transform.localPosition = skeletonPosition;
+										if (updateRootPosition)
+												transform.localPosition = skeletonPosition;
 					
-		            UpdateTransformWithPSMove(ref head, moveYaw);
-		            UpdateTransformWithPSMove(ref torso, moveYaw);
-		            UpdateTransformWithPSMove(ref leftShoulder, moveYaw);
-		            UpdateTransformWithPSMove(ref leftElbow, moveYaw);
-		            UpdateTransformWithPSMove(ref leftHand, moveYaw);
-		            UpdateTransformWithPSMove(ref rightShoulder, moveYaw);
-		            UpdateTransformWithPSMove(ref rightElbow, moveYaw);
-		            UpdateTransformWithPSMove(ref rightHand, moveYaw);
-		            UpdateTransformWithPSMove(ref leftHip, moveYaw);
-		            UpdateTransformWithPSMove(ref leftKnee, moveYaw);
-		            UpdateTransformWithPSMove(ref leftFoot, moveYaw);
-		            UpdateTransformWithPSMove(ref rightHip, moveYaw);
-		            UpdateTransformWithPSMove(ref rightKnee, moveYaw);
-		            UpdateTransformWithPSMove(ref rightFoot, moveYaw);
+										UpdateTransformWithPSMove (ref head, moveYaw);
+										UpdateTransformWithPSMove (ref torso, moveYaw);
+										UpdateTransformWithPSMove (ref leftShoulder, moveYaw);
+										UpdateTransformWithPSMove (ref leftElbow, moveYaw);
+										UpdateTransformWithPSMove (ref leftHand, moveYaw);
+										UpdateTransformWithPSMove (ref rightShoulder, moveYaw);
+										UpdateTransformWithPSMove (ref rightElbow, moveYaw);
+										UpdateTransformWithPSMove (ref rightHand, moveYaw);
+										UpdateTransformWithPSMove (ref leftHip, moveYaw);
+										UpdateTransformWithPSMove (ref leftKnee, moveYaw);
+										UpdateTransformWithPSMove (ref leftFoot, moveYaw);
+										UpdateTransformWithPSMove (ref rightHip, moveYaw);
+										UpdateTransformWithPSMove (ref rightKnee, moveYaw);
+										UpdateTransformWithPSMove (ref rightFoot, moveYaw);
+								}
+						}
 				}
-			}
-
 
         TweakNeckHeight();
     }

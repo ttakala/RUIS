@@ -176,7 +176,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 
     public void SetKinectFloorNormal(Vector3 normal)
     {
-        kinectFloorNormal = normal.normalized;
+		kinectFloorNormal = normal.normalized;
         kinectFloorRotator = Quaternion.identity;
         kinectFloorRotator.SetFromToRotation(Vector3.up, kinectFloorNormal);
     }
@@ -330,10 +330,17 @@ public class RUISCoordinateSystem : MonoBehaviour
 	 */
 	public Vector3 ConvertKinectPosition2(Vector3 position)
 	{
+
 		Vector3 newPosition = Vector3.zero;
 		newPosition.x = position.x;
 		newPosition.y = position.y;
 		newPosition.z = position.z;
+
+		if (setKinectOriginToFloor)
+		{
+			newPosition.y += kinectDistanceFromFloor;
+		}
+
 		return newPosition;
 	}
 	public Quaternion ConvertKinectRotation2(Quaternion rotation)
@@ -343,6 +350,9 @@ public class RUISCoordinateSystem : MonoBehaviour
 		newRotation.y = -rotation.y;
 		newRotation.z = rotation.z;
 		newRotation.w = rotation.w;
+
+		newRotation = kinectFloorRotator * newRotation;
+
 		return newRotation;
 	}
 }
