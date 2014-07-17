@@ -259,16 +259,17 @@ public class RUISSkeletonController : MonoBehaviour
 						UpdateTransform (ref rightKnee, skeletonManager.skeletons [kinectVersion, playerId].rightKnee);
 						UpdateTransform (ref rightFoot, skeletonManager.skeletons [kinectVersion, playerId].rightFoot);
 
-
-						if(rightThumb != null && rightIndexFinger != null && rightMiddleFinger != null && rightRingFinger != null && rightLittleFinger != null) {
-									if(skeletonManager.skeletons [kinectVersion, playerId].rightHand.HandClosed) closeHand(true);
-									else openHand(true);
-						}
-
-						if(leftThumb != null && leftIndexFinger != null && leftMiddleFinger != null && leftRingFinger != null && leftLittleFinger != null) {
-								if(skeletonManager.skeletons [kinectVersion, playerId].leftHand.HandClosed) closeHand(false);
-								else openHand(false);
-						}
+						UpdateTransform (ref rightThumb, skeletonManager.skeletons [kinectVersion, playerId].rightThumb);
+						UpdateTransform (ref rightIndexFinger, skeletonManager.skeletons [kinectVersion, playerId].rightIndexFinger);
+						UpdateTransform (ref rightMiddleFinger, skeletonManager.skeletons [kinectVersion, playerId].rightMiddleFinger);
+						UpdateTransform (ref rightRingFinger, skeletonManager.skeletons [kinectVersion, playerId].rightRingFinger);
+						UpdateTransform (ref rightLittleFinger, skeletonManager.skeletons [kinectVersion, playerId].rightLittleFinger);
+						
+						UpdateTransform (ref leftThumb, skeletonManager.skeletons [kinectVersion, playerId].leftThumb);
+						UpdateTransform (ref leftIndexFinger, skeletonManager.skeletons [kinectVersion, playerId].leftIndexFinger);
+						UpdateTransform (ref leftMiddleFinger, skeletonManager.skeletons [kinectVersion, playerId].leftMiddleFinger);
+						UpdateTransform (ref leftRingFinger, skeletonManager.skeletons [kinectVersion, playerId].leftRingFinger);
+						UpdateTransform (ref leftLittleFinger, skeletonManager.skeletons [kinectVersion, playerId].leftLittleFinger);
 
 						if (!useHierarchicalModel) {
 								if (leftHand != null) {
@@ -502,40 +503,5 @@ public class RUISSkeletonController : MonoBehaviour
 		         skeletonManager.skeletons[kinectVersion, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
 		         skeletonManager.skeletons[kinectVersion, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
     }
-
-	public void closeHand(bool rightHandDetected) {
-		Vector3 angleFingers = new Vector3(0,0,-110);
-		Vector3 angleThumb = new Vector3(0,0,-40);
-		if (rightHandDetected) {
-			rightThumb.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleThumb);
-			rightIndexFinger.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleFingers);
-			rightMiddleFinger.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleFingers);
-			rightRingFinger.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleFingers);
-			rightLittleFinger.transform.rotation = rightHand.transform.rotation * Quaternion.Euler(angleFingers);
-		} 
-		else {
-			leftThumb.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleThumb);
-			leftIndexFinger.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleFingers);
-			leftMiddleFinger.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleFingers);
-			leftRingFinger.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleFingers);
-			leftLittleFinger.transform.rotation = leftHand.transform.rotation * Quaternion.Euler(angleFingers);
-		}
-
-	}
-	public void openHand(bool rightHandDetected) {
-		if (rightHandDetected) {
-			rightThumb.transform.rotation = rightHand.transform.rotation;
-			rightIndexFinger.transform.rotation = rightHand.transform.rotation;
-			rightMiddleFinger.transform.rotation = rightHand.transform.rotation;
-			rightRingFinger.transform.rotation = rightHand.transform.rotation;
-			rightLittleFinger.transform.rotation = rightHand.transform.rotation;
-		} 
-		else {
-			leftThumb.transform.rotation = leftHand.transform.rotation;
-			leftIndexFinger.transform.rotation = leftHand.transform.rotation;
-			leftMiddleFinger.transform.rotation = leftHand.transform.rotation;
-			leftRingFinger.transform.rotation = leftHand.transform.rotation;
-			leftLittleFinger.transform.rotation = leftHand.transform.rotation;	
-		}
-	}
+	
 }

@@ -14,6 +14,8 @@ using System.Collections;
 public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 {
     public int playerId = 0;
+	public int kinectVersion = 0;
+
     public float requiredUpwardVelocity = 1.0f;
     public float timeBetweenJumps = 1.0f;
     public float feetHeightThreshold = 0.1f;
@@ -37,22 +39,26 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 
     private RUISSkeletonManager skeletonManager;
     private RUISPointTracker pointTracker;
+	private RUISSkeletonController skeletonController;
 
     private bool previousIsTracking = false;
     private bool isTrackingBufferTimeFinished = false;
 
     public void Awake()
     {
+		skeletonController = GetComponent<RUISSkeletonController>();
         pointTracker = GetComponent<RUISPointTracker>();
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
-        ResetProgress();
+		ResetProgress();
     }
-
+	public void Start() {
+		kinectVersion = skeletonController.kinectVersion;
+	}
     public void Update()
     {
         if (!skeletonManager) return;
 
-        bool currentIsTracking = skeletonManager.skeletons[0, playerId].isTracking;
+		bool currentIsTracking = skeletonManager.skeletons[kinectVersion, playerId].isTracking;
 
         if (!currentIsTracking)
         {
@@ -130,14 +136,14 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 
     private void DoWaitingForJump()
     {
-		if (skeletonManager.skeletons[0, playerId].leftFoot.positionConfidence < requiredConfidence ||
-		    skeletonManager.skeletons[0, playerId].rightFoot.positionConfidence < requiredConfidence)
+		if (skeletonManager.skeletons[kinectVersion, playerId].leftFoot.positionConfidence < requiredConfidence ||
+		    skeletonManager.skeletons[kinectVersion, playerId].rightFoot.positionConfidence < requiredConfidence)
         {
             return;
         }
 
-		leftFootHeight = skeletonManager.skeletons[0, playerId].leftFoot.position;
-		rightFootHeight = skeletonManager.skeletons[0, playerId].rightFoot.position;
+		leftFootHeight = skeletonManager.skeletons[kinectVersion, playerId].leftFoot.position;
+		rightFootHeight = skeletonManager.skeletons[kinectVersion, playerId].rightFoot.position;
 
         if (leftFootHeight.y >= feetHeightThreshold && rightFootHeight.y >= feetHeightThreshold && pointTracker.averageVelocity.y >= requiredUpwardVelocity)
         {
