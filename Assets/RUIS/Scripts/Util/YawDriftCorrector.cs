@@ -173,7 +173,7 @@ public class YawDriftCorrector : MonoBehaviour {
 		switch(compass) 
 		{
 			case CompassSource.Kinect:
-		        if (!skeletonManager || !skeletonManager.skeletons[kinectPlayerID].isTracking)
+		        if (!skeletonManager || !skeletonManager.skeletons[0, kinectPlayerID].isTracking)
 		        {
 		            break;
 		        }

@@ -34,6 +34,7 @@ public class RUISSkeletonController : MonoBehaviour
     private RUISSkeletonManager skeletonManager;
 	private RUISCharacterController characterController;
 
+	public int kinectVersion = 0;
     public int playerId = 0;
 
     private Vector3 skeletonPosition = Vector3.zero;
@@ -201,24 +202,26 @@ public class RUISSkeletonController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (skeletonManager != null && skeletonManager.skeletons [playerId] != null && skeletonManager.skeletons [playerId].isTracking) {
+		int index = kinectVersion;
 
+		if (skeletonManager != null && skeletonManager.skeletons [index, playerId] != null && skeletonManager.skeletons [index, playerId].isTracking) {
+						print ("here");
 						UpdateSkeletonPosition ();
 
-						UpdateTransform (ref head, skeletonManager.skeletons [playerId].head);
-						UpdateTransform (ref torso, skeletonManager.skeletons [playerId].torso);
-						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [playerId].leftShoulder);
-						UpdateTransform (ref leftElbow, skeletonManager.skeletons [playerId].leftElbow);
-						UpdateTransform (ref leftHand, skeletonManager.skeletons [playerId].leftHand);
-						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [playerId].rightShoulder);
-						UpdateTransform (ref rightElbow, skeletonManager.skeletons [playerId].rightElbow);
-						UpdateTransform (ref rightHand, skeletonManager.skeletons [playerId].rightHand);
-						UpdateTransform (ref leftHip, skeletonManager.skeletons [playerId].leftHip);
-						UpdateTransform (ref leftKnee, skeletonManager.skeletons [playerId].leftKnee);
-						UpdateTransform (ref leftFoot, skeletonManager.skeletons [playerId].leftFoot);
-						UpdateTransform (ref rightHip, skeletonManager.skeletons [playerId].rightHip);
-						UpdateTransform (ref rightKnee, skeletonManager.skeletons [playerId].rightKnee);
-						UpdateTransform (ref rightFoot, skeletonManager.skeletons [playerId].rightFoot);
+						UpdateTransform (ref head, skeletonManager.skeletons[index, playerId].head);
+						UpdateTransform (ref torso, skeletonManager.skeletons [index, playerId].torso);
+						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [index, playerId].leftShoulder);
+						UpdateTransform (ref leftElbow, skeletonManager.skeletons [index, playerId].leftElbow);
+						UpdateTransform (ref leftHand, skeletonManager.skeletons [index, playerId].leftHand);
+						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [index, playerId].rightShoulder);
+						UpdateTransform (ref rightElbow, skeletonManager.skeletons [index, playerId].rightElbow);
+						UpdateTransform (ref rightHand, skeletonManager.skeletons [index, playerId].rightHand);
+						UpdateTransform (ref leftHip, skeletonManager.skeletons [index, playerId].leftHip);
+						UpdateTransform (ref leftKnee, skeletonManager.skeletons [index, playerId].leftKnee);
+						UpdateTransform (ref leftFoot, skeletonManager.skeletons [index, playerId].leftFoot);
+						UpdateTransform (ref rightHip, skeletonManager.skeletons [index, playerId].rightHip);
+						UpdateTransform (ref rightKnee, skeletonManager.skeletons [index, playerId].rightKnee);
+						UpdateTransform (ref rightFoot, skeletonManager.skeletons [index, playerId].rightFoot);
 
 						if (!useHierarchicalModel) {
 								if (leftHand != null) {
@@ -232,18 +235,18 @@ public class RUISSkeletonController : MonoBehaviour
 								if (scaleHierarchicalModelBones) {
 										UpdateBoneScalings ();
 
-										Vector3 torsoDirection = skeletonManager.skeletons [playerId].torso.rotation * Vector3.down;
-										torso.position = transform.TransformPoint (skeletonManager.skeletons [playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
+										Vector3 torsoDirection = skeletonManager.skeletons [0, playerId].torso.rotation * Vector3.down;
+										torso.position = transform.TransformPoint (skeletonManager.skeletons [0, playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
 
-										ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [playerId].rightShoulder);
-										ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [playerId].leftShoulder);
-										ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [playerId].rightHip);
-										ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [playerId].leftHip);
+										ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [0, playerId].rightShoulder);
+										ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [0, playerId].leftShoulder);
+										ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [0, playerId].rightHip);
+										ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [0, playerId].leftHip);
 								}
 						}
 
 						if (updateRootPosition) {
-								Vector3 newRootPosition = skeletonManager.skeletons [playerId].root.position;
+								Vector3 newRootPosition = skeletonManager.skeletons [0, playerId].root.position;
 				
 								measuredPos [0] = newRootPosition.x;
 								measuredPos [1] = newRootPosition.y;
@@ -257,7 +260,7 @@ public class RUISSkeletonController : MonoBehaviour
 						}
 
 				} else { // TUUKKA
-
+						
 						if (followMoveController && characterController && inputManager) {
 								psmove = inputManager.GetMoveWand (followMoveID);
 								if (psmove) {
@@ -350,9 +353,9 @@ public class RUISSkeletonController : MonoBehaviour
     //gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
     private void UpdateSkeletonPosition()
     {
-        if (skeletonManager.skeletons[playerId].root.positionConfidence >= minimumConfidenceToUpdate)
+        if (skeletonManager.skeletons[0, playerId].root.positionConfidence >= minimumConfidenceToUpdate)
         {
-            skeletonPosition = skeletonManager.skeletons[playerId].root.position;
+            skeletonPosition = skeletonManager.skeletons[0, playerId].root.position;
         }
     }
 
@@ -380,29 +383,29 @@ public class RUISSkeletonController : MonoBehaviour
 
         {
             rightElbow.transform.localScale = originalRightForearmScale;
-            float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[playerId].rightShoulder, skeletonManager.skeletons[playerId].rightElbow, torsoScale);
-            UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[playerId].rightElbow, skeletonManager.skeletons[playerId].rightHand, rightArmCumulativeScale);
+            float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[0, playerId].rightShoulder, skeletonManager.skeletons[0, playerId].rightElbow, torsoScale);
+            UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[0, playerId].rightElbow, skeletonManager.skeletons[0, playerId].rightHand, rightArmCumulativeScale);
             rightElbow.transform.localScale = rightElbow.transform.localScale * forearmLengthRatio;
         }
 
         {
             leftElbow.transform.localScale = originalLeftForearmScale;
-            float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[playerId].leftShoulder, skeletonManager.skeletons[playerId].leftElbow, torsoScale);
-            UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[playerId].leftElbow, skeletonManager.skeletons[playerId].leftHand, leftArmCumulativeScale);
+            float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[0, playerId].leftShoulder, skeletonManager.skeletons[0, playerId].leftElbow, torsoScale);
+            UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[0, playerId].leftElbow, skeletonManager.skeletons[0, playerId].leftHand, leftArmCumulativeScale);
             leftElbow.transform.localScale = leftElbow.transform.localScale * forearmLengthRatio;
         }
 
         {
 			rightKnee.transform.localScale = originalRightShinScale;
-            float rightLegCumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[playerId].rightHip, skeletonManager.skeletons[playerId].rightKnee, torsoScale);
-            UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[playerId].rightKnee, skeletonManager.skeletons[playerId].rightFoot, rightLegCumulativeScale);
+            float rightLegCumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[0, playerId].rightHip, skeletonManager.skeletons[0, playerId].rightKnee, torsoScale);
+            UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[0, playerId].rightKnee, skeletonManager.skeletons[0, playerId].rightFoot, rightLegCumulativeScale);
 			rightKnee.transform.localScale = rightKnee.transform.localScale * shinLengthRatio;
         }
 
         {
 			leftKnee.transform.localScale = originalLeftShinScale;
-            float leftLegCumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[playerId].leftHip, skeletonManager.skeletons[playerId].leftKnee, torsoScale);
-			UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[playerId].leftKnee, skeletonManager.skeletons[playerId].leftFoot, leftLegCumulativeScale);
+            float leftLegCumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[0, playerId].leftHip, skeletonManager.skeletons[0, playerId].leftKnee, torsoScale);
+			UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[0, playerId].leftKnee, skeletonManager.skeletons[0, playerId].leftFoot, leftLegCumulativeScale);
 			leftKnee.transform.localScale = leftKnee.transform.localScale * shinLengthRatio;
         }
     }
@@ -424,8 +427,8 @@ public class RUISSkeletonController : MonoBehaviour
         //we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
         float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
                             jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
-        float playerLength = (Vector3.Distance(skeletonManager.skeletons[playerId].rightShoulder.position, skeletonManager.skeletons[playerId].leftShoulder.position) +
-                                Vector3.Distance(skeletonManager.skeletons[playerId].rightHip.position, skeletonManager.skeletons[playerId].leftHip.position)) / 2;
+        float playerLength = (Vector3.Distance(skeletonManager.skeletons[0, playerId].rightShoulder.position, skeletonManager.skeletons[0, playerId].leftShoulder.position) +
+                                Vector3.Distance(skeletonManager.skeletons[0, playerId].rightHip.position, skeletonManager.skeletons[0, playerId].leftHip.position)) / 2;
 
         float newScale = playerLength / modelLength;
         torso.localScale = new Vector3(newScale, newScale, newScale);
@@ -446,9 +449,9 @@ public class RUISSkeletonController : MonoBehaviour
 
     public bool ConfidenceGoodEnoughForScaling()
     {
-        return !(skeletonManager.skeletons[playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
-               skeletonManager.skeletons[playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
-               skeletonManager.skeletons[playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
-               skeletonManager.skeletons[playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
+        return !(skeletonManager.skeletons[0, playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
+               skeletonManager.skeletons[0, playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
+               skeletonManager.skeletons[0, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
+               skeletonManager.skeletons[0, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
     }
 }

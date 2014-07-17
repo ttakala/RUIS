@@ -29,7 +29,7 @@ public class RUISKinectJointFollower : MonoBehaviour {
 	}
 	
 	void Update () {
-        if (!skeletonManager || !skeletonManager.skeletons[playerId].isTracking) return;
+		if (!skeletonManager || !skeletonManager.skeletons[0, playerId].isTracking) return;
 
         RUISSkeletonManager.JointData jointData = skeletonManager.GetJointData(jointToFollow, playerId);
         if(jointData.positionConfidence > minimumConfidenceToUpdate)

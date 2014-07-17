@@ -160,8 +160,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
     void LateUpdate()
     {
 		// For debug
-		rightLegBlendWeight = 1;
-		leftLegBlendWeight = 1;
+		//rightLegBlendWeight = 1;
+		//leftLegBlendWeight = 1;
 		// end for debug
         if (!inputManager.enableKinect && !inputManager.enableKinect2)
         {

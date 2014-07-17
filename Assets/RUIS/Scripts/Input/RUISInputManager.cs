@@ -423,4 +423,9 @@ public class RUISInputManager : MonoBehaviour
 		else
 			return null;
     }
+	public int getKinectArrayIndex() {
+		if (enableKinect) return 0;
+		else if (enableKinect2) return 1;
+		else return 0;
+	}
 }

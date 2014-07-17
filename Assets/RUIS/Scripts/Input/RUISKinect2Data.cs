@@ -47,4 +47,8 @@ public class RUISKinect2Data : MonoBehaviour {
 		Kinect.Body[] data = _BodyManager.GetData();
 		return data;
 	}
+
+	public void Update() {
+
+	}
 }

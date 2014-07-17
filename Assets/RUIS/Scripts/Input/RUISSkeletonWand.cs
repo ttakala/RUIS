@@ -72,15 +72,15 @@ public class RUISSkeletonWand : RUISWand
 
     public void Update()
     {
-        if (!isTracking && skeletonManager.skeletons[playerId].isTracking)
+        if (!isTracking && skeletonManager.skeletons[0, playerId].isTracking)
         {
             PlayerFound();
         }
-        else if (isTracking && !skeletonManager.skeletons[playerId].isTracking)
+        else if (isTracking && !skeletonManager.skeletons[0, playerId].isTracking)
         {
             PlayerLost();
         }
-        else if (!skeletonManager.skeletons[playerId].isTracking)
+        else if (!skeletonManager.skeletons[0, playerId].isTracking)
         {
             return;
         }
@@ -157,7 +157,7 @@ public class RUISSkeletonWand : RUISWand
 
     public void OnGUI()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return;
+        if (!skeletonManager.skeletons[0, playerId].isTracking || !gestureRecognizer) return;
 
         float gestureProgress = gestureRecognizer.GetGestureProgress();
 
@@ -181,7 +181,7 @@ public class RUISSkeletonWand : RUISWand
 
     public override bool SelectionButtonWasPressed()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
+        if (!skeletonManager.skeletons[0, playerId].isTracking || !gestureRecognizer) return false;
         if (gestureRecognizer.GestureTriggered() && wandSelector.HighlightedObject)
         {
             gestureRecognizer.ResetProgress();
@@ -193,7 +193,7 @@ public class RUISSkeletonWand : RUISWand
 
     public override bool SelectionButtonWasReleased()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
+        if (!skeletonManager.skeletons[0, playerId].isTracking || !gestureRecognizer) return false;
         if (gestureRecognizer.GestureTriggered())
         {
             gestureRecognizer.ResetProgress();
@@ -205,7 +205,7 @@ public class RUISSkeletonWand : RUISWand
 
     public override bool SelectionButtonIsDown()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
+        if (!skeletonManager.skeletons[0, playerId].isTracking || !gestureRecognizer) return false;
         return gestureRecognizer.GestureTriggered();
     }
 

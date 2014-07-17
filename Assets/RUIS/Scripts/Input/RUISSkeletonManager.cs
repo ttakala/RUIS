@@ -16,50 +16,6 @@ using Kinect = Windows.Kinect;
 public class RUISSkeletonManager : MonoBehaviour {
     RUISCoordinateSystem coordinateSystem;
 
-	public bool choice1 = true;
-	public bool choice2 = false;
-	public bool choice3 = false;
-	public bool choice4 = false;
-	
-	public bool choice5 = false;
-	public bool choice6 = false;
-	public bool choice7 = false;
-	public bool choice8 = false;
-	public bool choice9 = false;
-	public bool choice10 = false;
-	public bool choice11 = false;
-	public bool choice12 = false;
-	
-	public bool choice13 = false;
-	public bool choice14 = false;
-	public bool choice15 = false;
-	public bool choice16 = false;
-	
-	public bool choice17 = false;
-	public bool choice18 = false;
-	public bool choice19 = false;
-	public bool choice20 = false;
-	
-	public bool choice21 = false;
-	public bool choice22 = false;
-	public bool choice23 = false;
-	public bool choice24 = false;
-	
-	public bool choice25 = false;
-	public bool choice26 = false;
-	public bool choice27 = false;
-	public bool choice28 = false;
-	
-	public bool choice29 = false;
-	public bool choice30 = false;
-	public bool choice31 = false;
-	public bool choice32 = false;
-	
-	public bool choice33 = false;
-	public bool choice34 = false;
-	public bool choice35 = false;
-	public bool choice36 = false;
-
     public enum Joint
     {
         Root,
@@ -86,6 +42,7 @@ public class RUISSkeletonManager : MonoBehaviour {
         public Quaternion rotation = Quaternion.identity;
         public float positionConfidence = 0.0f;
         public float rotationConfidence = 0.0f;
+		public Kinect.TrackingState TrackingState = Kinect.TrackingState.NotTracked;
     }
 
     public class Skeleton
@@ -127,7 +84,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 	RUISKinect2Data RUISKinect2Data;
 
 	public readonly int skeletonsHardwareLimit = 4;
-	public Skeleton[] skeletons = new Skeleton[4];
+	public Skeleton[,] skeletons = new Skeleton[2,4];
 	private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     
 
@@ -137,18 +94,23 @@ public class RUISSkeletonManager : MonoBehaviour {
     {
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 
-		if (inputManager.enableKinect) playerManager = GetComponent<NIPlayerManager>();
-		if(inputManager.enableKinect2) RUISKinect2Data = GetComponent<RUISKinect2Data>();
+		playerManager = GetComponent<NIPlayerManager>();
+		RUISKinect2Data = GetComponent<RUISKinect2Data>();
+
+
+		if (!inputManager.enableKinect) playerManager.enabled = false;
+		if (!inputManager.enableKinect2) RUISKinect2Data.enabled = false;
 
         if (coordinateSystem == null)
         {
             coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
         }
 
-        for (int i = 0; i < skeletons.Length; i++)
-        {
-            skeletons[i] = new Skeleton();
-        }
+		for (int x = 0; x < 2; x++) {
+					for (int i = 0; i < 4; i++) {
+							skeletons [x, i] = new Skeleton ();
+					}
+			}
     }
 
     void Start()
@@ -161,30 +123,31 @@ public class RUISSkeletonManager : MonoBehaviour {
 		if (inputManager.enableKinect) {
 			for (int i = 0; i < playerManager.m_MaxNumberOfPlayers; i++) 
 					{
-						skeletons [i].isTracking = playerManager.GetPlayer (i).Tracking;
+						skeletons [0, i].isTracking = playerManager.GetPlayer (i).Tracking;
 
-						if (!skeletons [i].isTracking)
+						if (!skeletons [0, i].isTracking)
 								continue;
 
 						UpdateRootData (i);
-						UpdateJointData (OpenNI.SkeletonJoint.Head, i, ref skeletons [i].head);
-						UpdateJointData (OpenNI.SkeletonJoint.Torso, i, ref skeletons [i].torso);
-						UpdateJointData (OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons [i].leftShoulder);
-						UpdateJointData (OpenNI.SkeletonJoint.LeftElbow, i, ref skeletons [i].leftElbow);
-						UpdateJointData (OpenNI.SkeletonJoint.LeftHand, i, ref skeletons [i].leftHand);
-						UpdateJointData (OpenNI.SkeletonJoint.RightShoulder, i, ref skeletons [i].rightShoulder);
-						UpdateJointData (OpenNI.SkeletonJoint.RightElbow, i, ref skeletons [i].rightElbow);
-						UpdateJointData (OpenNI.SkeletonJoint.RightHand, i, ref skeletons [i].rightHand);
-						UpdateJointData (OpenNI.SkeletonJoint.LeftHip, i, ref skeletons [i].leftHip);
-						UpdateJointData (OpenNI.SkeletonJoint.LeftKnee, i, ref skeletons [i].leftKnee);
-						UpdateJointData (OpenNI.SkeletonJoint.LeftFoot, i, ref skeletons [i].leftFoot);
-						UpdateJointData (OpenNI.SkeletonJoint.RightHip, i, ref skeletons [i].rightHip);
-						UpdateJointData (OpenNI.SkeletonJoint.RightKnee, i, ref skeletons [i].rightKnee);
-						UpdateJointData (OpenNI.SkeletonJoint.RightFoot, i, ref skeletons [i].rightFoot);
+						UpdateJointData (OpenNI.SkeletonJoint.Head, i, ref skeletons [0, i].head);
+						UpdateJointData (OpenNI.SkeletonJoint.Torso, i, ref skeletons [0, i].torso);
+						UpdateJointData (OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons [0, i].leftShoulder);
+						UpdateJointData (OpenNI.SkeletonJoint.LeftElbow, i, ref skeletons [0, i].leftElbow);
+						UpdateJointData (OpenNI.SkeletonJoint.LeftHand, i, ref skeletons [0, i].leftHand);
+						UpdateJointData (OpenNI.SkeletonJoint.RightShoulder, i, ref skeletons [0, i].rightShoulder);
+						UpdateJointData (OpenNI.SkeletonJoint.RightElbow, i, ref skeletons [0, i].rightElbow);
+						UpdateJointData (OpenNI.SkeletonJoint.RightHand, i, ref skeletons [0, i].rightHand);
+						UpdateJointData (OpenNI.SkeletonJoint.LeftHip, i, ref skeletons [0, i].leftHip);
+						UpdateJointData (OpenNI.SkeletonJoint.LeftKnee, i, ref skeletons [0, i].leftKnee);
+						UpdateJointData (OpenNI.SkeletonJoint.LeftFoot, i, ref skeletons [0, i].leftFoot);
+						UpdateJointData (OpenNI.SkeletonJoint.RightHip, i, ref skeletons [0, i].rightHip);
+						UpdateJointData (OpenNI.SkeletonJoint.RightKnee, i, ref skeletons [0, i].rightKnee);
+						UpdateJointData (OpenNI.SkeletonJoint.RightFoot, i, ref skeletons [0, i].rightFoot);
 
 					}
 			}
-		else if (inputManager.enableKinect2) {
+
+		if (inputManager.enableKinect2) {
 
 			Kinect.Body[] data = RUISKinect2Data.getData ();
 
@@ -226,7 +189,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 					if(body.IsTracked)
 					{
-						skeletons [i].isTracking = true;
+						skeletons [1, i].isTracking = true;
 
 						for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
 						{	
@@ -239,74 +202,91 @@ public class RUISSkeletonManager : MonoBehaviour {
 							tempJoint.position = new Vector3(p.Position.X, p.Position.Y, p.Position.Z);
 							tempJoint.positionConfidence = tempJoint.positionConfidence;
 							tempJoint.rotationConfidence = tempJoint.rotationConfidence;
+
+							tempJoint.TrackingState = p.TrackingState;
+
+
+							if(p.TrackingState == Kinect.TrackingState.Tracked)  {
+								tempJoint.positionConfidence = 1.0f;
+								tempJoint.rotationConfidence = 1.0f;
+							}
+							if(p.TrackingState == Kinect.TrackingState.Inferred)  {
+								tempJoint.positionConfidence = 0.5f;
+								tempJoint.rotationConfidence = 0.5f;
+							}
+							if(p.TrackingState == Kinect.TrackingState.NotTracked)  {
+								tempJoint.positionConfidence = 0.0f;
+								tempJoint.rotationConfidence = 0.0f;
+							}
+
 							//print (jt.ToString() + " : " + tempJoint.rotation);
 						
 							switch(jt.ToString()) {
 								
-								case "Head":UpdateJointData2(tempJoint, i, ref skeletons[i].head);break;
+								case "Head":UpdateJointData2(tempJoint, i, ref skeletons[1, i].head);break;
 								case "SpineMid":
 									newrotation = tempJoint.rotation;
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.back, Vector3.up);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].torso);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].torso);
 									tempJoint.position.z = -tempJoint.position.z;
 									UpdateRootData2(tempJoint, i);
 									break;
 								case "ShoulderLeft":
-									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[i].leftElbow.position;
+									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[1, i].leftElbow.position;
 									newrotation = Quaternion.LookRotation(relativePos);
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.left, Vector3.right);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].leftShoulder);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftShoulder);
 									break;
 								case "ShoulderRight":
-									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[i].rightElbow.position;
+									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[1, i].rightElbow.position;
 									newrotation = Quaternion.LookRotation(relativePos);
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.right, Vector3.left);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].rightShoulder);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightShoulder);
 									break;
 								case "WristLeft":
-									UpdateJointData2(tempJoint, i, ref skeletons[i].leftWrist);
-									relativePos = skeletons[i].leftHandTip.position -  coordinateSystem.ConvertKinectPosition2(tempJoint.position);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftWrist);
+									relativePos = skeletons[1, i].leftHandTip.position -  coordinateSystem.ConvertKinectPosition2(tempJoint.position);
 									newrotation = Quaternion.LookRotation(relativePos, Vector3.right);
-									//UpdateJointData2(tempJoint, i, ref skeletons[i].leftHand);
+									//UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftHand);
 									break;
 								case "WristRight":
-									UpdateJointData2(tempJoint, i, ref skeletons[i].rightWrist);
-									relativePos = skeletons[i].leftHandTip.position -  coordinateSystem.ConvertKinectPosition2(tempJoint.position);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightWrist);
+									relativePos = skeletons[1, i].leftHandTip.position -  coordinateSystem.ConvertKinectPosition2(tempJoint.position);
 									newrotation = Quaternion.LookRotation(relativePos);
-									//UpdateJointData2(tempJoint, i, ref skeletons[i].rightHand);
+									//UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightHand);
 									break;
 								case "ElbowLeft":
-									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[i].leftWrist.position;
+									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[1, i].leftWrist.position;
 									newrotation = Quaternion.LookRotation(relativePos);
 									tempJoint.rotation = newrotation;
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.left, Vector3.up);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].leftElbow);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftElbow);
 									break;
 								case "ElbowRight":
-									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[i].rightWrist.position;
+									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[1, i].rightWrist.position;
 									newrotation = Quaternion.LookRotation(relativePos);
 									tempJoint.rotation = newrotation;
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.right, Vector3.up);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].rightElbow);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightElbow);
 									break;
 								case "HandLeft":
-									tempJoint.rotation = skeletons[i].leftHand.rotation; // Only take position, rotation is handled at Wrist rotation
-									//UpdateJointData2(tempJoint, i, ref skeletons[i].leftHand);
+									tempJoint.rotation = skeletons[1, i].leftHand.rotation; // Only take position, rotation is handled at Wrist rotation
+									//UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftHand);
 									break;
 								case "HandRight":
-									tempJoint.rotation = skeletons[i].rightHand.rotation; // Only take position, rotation is handled at Wrist rotation
-									//UpdateJointData2(tempJoint, i, ref skeletons[i].rightHand);
+									tempJoint.rotation = skeletons[1, i].rightHand.rotation; // Only take position, rotation is handled at Wrist rotation
+									//UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightHand);
 									break;
 								case "HandTipLeft":
-									UpdateJointData2(tempJoint, i, ref skeletons[i].leftHandTip);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftHandTip);
 									break;
 								case "HandTipRight":
-									UpdateJointData2(tempJoint, i, ref skeletons[i].rightHandTip);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightHandTip);
 									break;
 								case "HipLeft":
 									//UpdateJointData2(tempJoint, i, ref skeletons[i].leftHip);
@@ -318,34 +298,34 @@ public class RUISSkeletonManager : MonoBehaviour {
 									newrotation = tempJoint.rotation;
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.back, Vector3.back);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].leftHip);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftHip);
 									break;
 								case "KneeRight":
 									newrotation = tempJoint.rotation;
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.forward, Vector3.down);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].rightHip);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightHip);
 									break;
-								case "FootLeft":UpdateJointData2(tempJoint, i, ref skeletons[i].leftFoot);break;
-								case "FootRight":UpdateJointData2(tempJoint, i, ref skeletons[i].rightFoot);break;
+								case "FootLeft":UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftFoot);break;
+								case "FootRight":UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightFoot);break;
 								case "AnkleRight":
 									newrotation = tempJoint.rotation;
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.right, Vector3.down);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].rightKnee);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightKnee);
 									break;
 								case "AnkleLeft":
 									newrotation = tempJoint.rotation;
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.left, Vector3.down);
 									tempJoint.rotation = newrotation;
-									UpdateJointData2(tempJoint, i, ref skeletons[i].leftKnee);
+									UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftKnee);
 									break; 
 							}
 						}
 						i++;
 					}
 					else {
-						skeletons [i].isTracking = false;
+						skeletons [1, i].isTracking = false;
 					}
 
 				}
@@ -366,10 +346,10 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 		Vector3 newRootPosition = coordinateSystem.ConvertKinectPosition(data.Position.Position);
         newRootPosition = Vector3.Scale(newRootPosition, rootSpeedScaling);
-        skeletons[player].root.position = newRootPosition;
-        skeletons[player].root.positionConfidence = data.Position.Confidence;
-        skeletons[player].root.rotation = coordinateSystem.ConvertKinectRotation(data.Orientation);
-        skeletons[player].root.rotationConfidence = data.Orientation.Confidence;
+        skeletons[0, player].root.position = newRootPosition;
+		skeletons[0, player].root.positionConfidence = data.Position.Confidence;
+		skeletons[0, player].root.rotation = coordinateSystem.ConvertKinectRotation(data.Orientation);
+		skeletons[0, player].root.rotationConfidence = data.Orientation.Confidence;
     }
 
     private void UpdateJointData(OpenNI.SkeletonJoint joint, int player, ref JointData jointData)
@@ -392,17 +372,18 @@ public class RUISSkeletonManager : MonoBehaviour {
 	private void UpdateRootData2(JointData torso, int player)
 	{
 		Vector3 newRootPosition = coordinateSystem.ConvertKinectPosition2(torso.position);
-		skeletons[player].root.position = newRootPosition;
-		skeletons [player].root.positionConfidence = 1; //torso.positionConfidence;
-		skeletons[player].root.rotation = coordinateSystem.ConvertKinectRotation2(torso.rotation);
-		skeletons [player].root.rotationConfidence = 1; //torso.rotationConfidence;
+		skeletons[1, player].root.position = newRootPosition;
+
+		skeletons[1, player].root.positionConfidence = torso.positionConfidence;
+		skeletons[1, player].root.rotation = coordinateSystem.ConvertKinectRotation2(torso.rotation);
+		skeletons[1, player].root.rotationConfidence = torso.rotationConfidence;
 	}
 	private void UpdateJointData2(JointData joint, int player, ref JointData jointData)
 	{
 		jointData.position = coordinateSystem.ConvertKinectPosition2(joint.position);
-		jointData.positionConfidence = 1; //joint.positionConfidence; 
+		jointData.positionConfidence = joint.positionConfidence; 
 		jointData.rotation = coordinateSystem.ConvertKinectRotation2(joint.rotation);
-		jointData.rotationConfidence = 1; //joint.rotationConfidence;
+		jointData.rotationConfidence = joint.rotationConfidence;
 	}
 
 
@@ -412,38 +393,42 @@ public class RUISSkeletonManager : MonoBehaviour {
 		if(player >= skeletons.Length)
 			return null;
 
+		int index = 0;
+		if (inputManager.enableKinect) index = 0;
+		if (inputManager.enableKinect2) index = 1;
+
         switch (joint)
         {
             case Joint.Root:
-                return skeletons[player].root;
+                return skeletons[index, player].root;
             case Joint.Head:
-                return skeletons[player].head;
+				return skeletons[index, player].head;
             case Joint.Torso:
-                return skeletons[player].torso;
+				return skeletons[index, player].torso;
             case Joint.LeftShoulder:
-                return skeletons[player].leftShoulder;
+				return skeletons[index, player].leftShoulder;
             case Joint.LeftElbow:
-                return skeletons[player].leftElbow;
+				return skeletons[index, player].leftElbow;
             case Joint.LeftHand:
-                return skeletons[player].leftHand;
+				return skeletons[index, player].leftHand;
             case Joint.RightShoulder:
-                return skeletons[player].rightShoulder;
+				return skeletons[index, player].rightShoulder;
             case Joint.RightElbow:
-                return skeletons[player].rightElbow;
+				return skeletons[index, player].rightElbow;
             case Joint.RightHand:
-                return skeletons[player].rightHand;
+				return skeletons[index, player].rightHand;
             case Joint.LeftHip:
-                return skeletons[player].leftHip;
+				return skeletons[index, player].leftHip;
             case Joint.LeftKnee:
-                return skeletons[player].leftKnee;
+				return skeletons[index, player].leftKnee;
             case Joint.LeftFoot:
-                return skeletons[player].leftFoot;
+				return skeletons[index, player].leftFoot;
             case Joint.RightHip:
-                return skeletons[player].rightHip;
+				return skeletons[index, player].rightHip;
             case Joint.RightKnee:
-                return skeletons[player].rightKnee;
+				return skeletons[index, player].rightKnee;
             case Joint.RightFoot:
-                return skeletons[player].rightFoot;
+				return skeletons[index, player].rightFoot;
             default:
                 return null;
         }

@@ -94,7 +94,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 
 		Vector3 torsoPos;
 		Vector3 newLocalPosition;
-        if (!skeletonManager || !skeletonManager.skeletons[playerId].isTracking)
+		if (!skeletonManager || !skeletonManager.skeletons[0, playerId].isTracking)
 		{
             colliderHeight = defaultColliderHeight;
             // Tuukka:
@@ -152,7 +152,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         }
         else
         {
-            torsoPos = skeletonManager.skeletons[playerId].torso.position;
+            torsoPos = skeletonManager.skeletons[0, playerId].torso.position;
 			
 			measuredPos[0] = torsoPos.x;
 			measuredPos[1] = torsoPos.y;

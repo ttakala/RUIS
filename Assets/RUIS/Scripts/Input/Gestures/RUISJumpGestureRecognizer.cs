@@ -52,7 +52,7 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
     {
         if (!skeletonManager) return;
 
-        bool currentIsTracking = skeletonManager.skeletons[playerId].isTracking;
+        bool currentIsTracking = skeletonManager.skeletons[0, playerId].isTracking;
 
         if (!currentIsTracking)
         {
@@ -130,14 +130,14 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 
     private void DoWaitingForJump()
     {
-        if (skeletonManager.skeletons[playerId].leftFoot.positionConfidence < requiredConfidence ||
-            skeletonManager.skeletons[playerId].rightFoot.positionConfidence < requiredConfidence)
+		if (skeletonManager.skeletons[0, playerId].leftFoot.positionConfidence < requiredConfidence ||
+		    skeletonManager.skeletons[0, playerId].rightFoot.positionConfidence < requiredConfidence)
         {
             return;
         }
 
-        leftFootHeight = skeletonManager.skeletons[playerId].leftFoot.position;
-        rightFootHeight = skeletonManager.skeletons[playerId].rightFoot.position;
+		leftFootHeight = skeletonManager.skeletons[0, playerId].leftFoot.position;
+		rightFootHeight = skeletonManager.skeletons[0, playerId].rightFoot.position;
 
         if (leftFootHeight.y >= feetHeightThreshold && rightFootHeight.y >= feetHeightThreshold && pointTracker.averageVelocity.y >= requiredUpwardVelocity)
         {

@@ -15,7 +15,9 @@ using System.Collections;
 [CanEditMultipleObjects]
 public class RUISSkeletonControllerEditor : Editor
 {
-    SerializedProperty playerId;
+	SerializedProperty kinectVersion;
+
+	SerializedProperty playerId;
 
     SerializedProperty useHierarchicalModel;
 
@@ -53,6 +55,9 @@ public class RUISSkeletonControllerEditor : Editor
 
     public void OnEnable()
     {
+
+		kinectVersion = serializedObject.FindProperty("kinectVersion");
+
         playerId = serializedObject.FindProperty("playerId");
 
         useHierarchicalModel = serializedObject.FindProperty("useHierarchicalModel");
@@ -93,6 +98,10 @@ public class RUISSkeletonControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+
+		EditorGUILayout.PropertyField(kinectVersion, new GUIContent("Kinect version", ""));
+		
+		EditorGUILayout.Space();
 
         EditorGUILayout.PropertyField(playerId, new GUIContent("Kinect Player ID", "The kinect player ID number"));
         

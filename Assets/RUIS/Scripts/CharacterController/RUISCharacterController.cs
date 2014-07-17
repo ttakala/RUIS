@@ -22,6 +22,7 @@ public class RUISCharacterController : MonoBehaviour
 
     public CharacterPivotType characterPivotType = CharacterPivotType.KinectTorso;
 
+
     public int kinectPlayerId;
     public int moveControllerId;
     public Transform characterPivot;
@@ -238,18 +239,18 @@ public class RUISCharacterController : MonoBehaviour
     {
         Vector3 characterForward = Vector3.forward;
 
-        
+
         switch (characterPivotType)
         {
             case CharacterPivotType.KinectHead:
-				if(skeletonManager != null && skeletonManager.skeletons[kinectPlayerId] != null)
-					characterForward = skeletonManager.skeletons[kinectPlayerId].head.rotation * Vector3.forward;
+			if(skeletonManager != null && skeletonManager.skeletons[0, kinectPlayerId] != null)
+					characterForward = skeletonManager.skeletons[0, kinectPlayerId].head.rotation * Vector3.forward;
 				else 
 					characterForward = Vector3.forward;
                 break;
 			case CharacterPivotType.KinectTorso:
-				if(skeletonManager != null && skeletonManager.skeletons[kinectPlayerId] != null)
-					characterForward = skeletonManager.skeletons[kinectPlayerId].torso.rotation * Vector3.forward;
+			if(skeletonManager != null && skeletonManager.skeletons[0, kinectPlayerId] != null)
+				characterForward = skeletonManager.skeletons[0, kinectPlayerId].torso.rotation * Vector3.forward;
 				else 
 					characterForward = Vector3.forward;
                 break;
@@ -280,14 +281,14 @@ public class RUISCharacterController : MonoBehaviour
         {
             case CharacterPivotType.KinectHead:
 			{
-				if(skeletonManager && skeletonManager.skeletons[kinectPlayerId] != null)
-                	return skeletonManager.skeletons[kinectPlayerId].head.position;
+				if(skeletonManager && skeletonManager.skeletons[0, kinectPlayerId] != null)
+				return skeletonManager.skeletons[0, kinectPlayerId].head.position;
 				break;
 			}
             case CharacterPivotType.KinectTorso:
 			{
-				if(skeletonManager && skeletonManager.skeletons[kinectPlayerId] != null)
-	                return skeletonManager.skeletons[kinectPlayerId].torso.position;
+				if(skeletonManager && skeletonManager.skeletons[0, kinectPlayerId] != null)
+				return skeletonManager.skeletons[0, kinectPlayerId].torso.position;
 				break;
 			}
             case CharacterPivotType.MoveController:
