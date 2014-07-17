@@ -334,7 +334,9 @@ public class RUISCoordinateSystem : MonoBehaviour
 		Vector3 newPosition = Vector3.zero;
 		newPosition.x = position.x;
 		newPosition.y = position.y;
-		newPosition.z = position.z;
+		newPosition.z = -position.z;
+		
+		newPosition = (Quaternion.Euler(0, yawOffset, 0) * kinectFloorRotator * newPosition);
 
 		if (setKinectOriginToFloor)
 		{

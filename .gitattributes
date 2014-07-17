@@ -1,5 +1,4 @@
 * text=auto !eol
-Assets/KinectUnity1404/Materials/BoneMaterial.mat -text
 Assets/OVR/Materials/GUIHUD.mat -text
 Assets/OVR/Materials/MagHUDRef.mat -text
 Assets/OVR/Materials/MagHUDTracked.mat -text

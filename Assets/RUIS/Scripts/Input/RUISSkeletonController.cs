@@ -205,7 +205,6 @@ public class RUISSkeletonController : MonoBehaviour
 		int index = kinectVersion;
 
 		if (skeletonManager != null && skeletonManager.skeletons [index, playerId] != null && skeletonManager.skeletons [index, playerId].isTracking) {
-						print ("here");
 						UpdateSkeletonPosition ();
 
 						UpdateTransform (ref head, skeletonManager.skeletons[index, playerId].head);

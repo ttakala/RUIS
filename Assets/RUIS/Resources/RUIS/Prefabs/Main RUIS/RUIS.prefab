@@ -39,7 +39,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400004}
-  - 114: {fileID: 11400016}
+  - 114: {fileID: 11400032}
   m_Layer: 0
   m_Name: Kinect
   m_TagString: Untagged
@@ -89,6 +89,7 @@ GameObject:
   - 4: {fileID: 400010}
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400010}
+  - 114: {fileID: 11400016}
   m_Layer: 0
   m_Name: SkeletonManager
   m_TagString: Untagged
@@ -581,11 +582,11 @@ MonoBehaviour:
   moveWand1: 0
   moveWand2: 0
   moveWand3: 0
-  enableKinect: 0
+  enableKinect: 1
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
-  enableKinect2: 0
+  enableKinect2: 1
   enableRazerHydra: 0
   moveControllers: []
   riftMagnetometerMode: 0
@@ -693,8 +694,8 @@ MonoBehaviour:
   resolutionX: 1280
   resolutionY: 800
   useDoubleTheSpace: 0
-  enableOculusRift: 1
-  isStereo: 1
+  enableOculusRift: 0
+  isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 0}
   stereoType: 0
@@ -729,12 +730,13 @@ MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100004}
+  m_GameObject: {fileID: 100010}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 526a02a3548a87e439fb873def0646c9, type: 3}
+  m_Script: {fileID: 11500000, guid: e6617f7f04e68df43a3321a12fccdbbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BodySourceManager: {fileID: 100022}
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -834,6 +836,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e74aed0503c9d24290a1ae5438fddc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400032
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 526a02a3548a87e439fb873def0646c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &100100000
