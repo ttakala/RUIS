@@ -232,6 +232,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 									tempJoint.position.z = -tempJoint.position.z;
 									UpdateRootData2(tempJoint, i);
 									break;
+
 								case "ShoulderLeft":
 									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[1, i].leftElbow.position;
 									newrotation = Quaternion.LookRotation(relativePos);
@@ -239,12 +240,31 @@ public class RUISSkeletonManager : MonoBehaviour {
 									tempJoint.rotation = newrotation;
 									UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftShoulder);
 									break;
+									
+							
+							
 								case "ShoulderRight":
 									relativePos = coordinateSystem.ConvertKinectPosition2(tempJoint.position) - skeletons[1, i].rightElbow.position;
 									newrotation = Quaternion.LookRotation(relativePos);
 									newrotation = newrotation * Quaternion.LookRotation(Vector3.right, Vector3.left);
+									
+									/*
+									Vector3 a = relativePos;
+									Vector3 b = skeletons[1, i].rightHandTip.position -  skeletons[1, i].rightWrist.position;
+									
+									Vector3 rot = a - b;
+									//print (Vector3.Angle (a, b));
+									Quaternion rotation = Quaternion.LookRotation(rot, relativePos);
+									
+									GameObject testCube = GameObject.Find("rotationCube");
+									testCube.transform.rotation = rotation;
+									*/
+									
 									tempJoint.rotation = newrotation;
 									UpdateJointData2(tempJoint, i, ref skeletons[1, i].rightShoulder);
+									
+									
+									
 									break;
 								case "WristLeft":
 									UpdateJointData2(tempJoint, i, ref skeletons[1, i].leftWrist);
@@ -387,16 +407,14 @@ public class RUISSkeletonManager : MonoBehaviour {
 	}
 
 
-    public JointData GetJointData(Joint joint, int player)
+	public JointData GetJointData(Joint joint, int player, int kinectVersion)
     {
         //if (player >= playerManager.m_MaxNumberOfPlayers)
 		if(player >= skeletons.Length)
 			return null;
 
-		int index = 0;
-		if (inputManager.enableKinect) index = 0;
-		if (inputManager.enableKinect2) index = 1;
-
+		int index = kinectVersion;
+	
         switch (joint)
         {
             case Joint.Root:

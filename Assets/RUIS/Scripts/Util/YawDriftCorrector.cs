@@ -37,6 +37,7 @@ public class YawDriftCorrector : MonoBehaviour {
 	public CompassSource compass = CompassSource.PSMove;
 	
 	public int kinectPlayerID = 0; //
+	public int kinectVersion = 0;
 	private RUISSkeletonManager skeletonManager; //
 	public RUISSkeletonManager.Joint compassJoint = RUISSkeletonManager.Joint.Torso;
 	public bool correctOnlyWhenFacingForward = true;
@@ -179,7 +180,7 @@ public class YawDriftCorrector : MonoBehaviour {
 		        }
 				else 
 				{
-					compassData = skeletonManager.GetJointData(compassJoint, kinectPlayerID);
+					compassData = skeletonManager.GetJointData(compassJoint, kinectPlayerID, kinectVersion);
 				
 					// First check for high confidence value
 		            if (compassData != null && compassData.rotationConfidence >= 1.0f) 

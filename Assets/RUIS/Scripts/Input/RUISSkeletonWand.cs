@@ -25,6 +25,7 @@ public class RUISSkeletonWand : RUISWand
     public Color wandColor = Color.white;
 
     public int playerId = 0;
+	public int kinectVersion = 0;
 
     private const int amountOfSelectionVisualizerImages = 8;
     Texture2D[] selectionVisualizers;
@@ -102,8 +103,8 @@ public class RUISSkeletonWand : RUISWand
 
         visualizerThreshold = Mathf.Clamp01(visualizerThreshold);
 
-        RUISSkeletonManager.JointData startData = skeletonManager.GetJointData(wandStart, playerId);
-        RUISSkeletonManager.JointData endData = skeletonManager.GetJointData(wandEnd, playerId);
+		RUISSkeletonManager.JointData startData = skeletonManager.GetJointData(wandStart, playerId, kinectVersion);
+		RUISSkeletonManager.JointData endData = skeletonManager.GetJointData(wandEnd, playerId, kinectVersion);
 
         if (endData.positionConfidence >= 0.5f)
         {

@@ -13,6 +13,7 @@ using System.Collections;
 public class RUISKinectJointFollower : MonoBehaviour {
     private RUISSkeletonManager skeletonManager;
     public int playerId;
+	public int kinectVersion;
 
     public RUISSkeletonManager.Joint jointToFollow;
 
@@ -29,9 +30,9 @@ public class RUISKinectJointFollower : MonoBehaviour {
 	}
 	
 	void Update () {
-		if (!skeletonManager || !skeletonManager.skeletons[0, playerId].isTracking) return;
+		if (!skeletonManager || !skeletonManager.skeletons[kinectVersion, playerId].isTracking) return;
 
-        RUISSkeletonManager.JointData jointData = skeletonManager.GetJointData(jointToFollow, playerId);
+		RUISSkeletonManager.JointData jointData = skeletonManager.GetJointData(jointToFollow, playerId, kinectVersion);
         if(jointData.positionConfidence > minimumConfidenceToUpdate)
         {
             transform.localPosition = Vector3.Lerp(transform.localPosition, jointData.position, positionSmoothing * Time.deltaTime);
