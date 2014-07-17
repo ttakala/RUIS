@@ -84,8 +84,10 @@ public class RUISSkeletonController : MonoBehaviour
     public float maxScaleFactor = 0.01f;
 
     public float minimumConfidenceToUpdate = 0.5f;
-
-    public float rotationDamping = 15.0f;
+	public float rotationDamping = 15.0f;
+	
+	public float handRollAngleMinimum = -180; // Constrained between [0, -180] in Unity Editor script
+	public float handRollAngleMaximum =  180; // Constrained between [0,  180] in Unity Editor script
 	
 	public bool followMoveController { get; private set; }
 	private int followMoveID = 0;
@@ -249,87 +251,6 @@ public class RUISSkeletonController : MonoBehaviour
 		}
     }
 
-	// Whole update() for constraints testing, can delete
-	void Update() {
-		//Transform testcube = GameObject.Find ("testcube").transform;
-		//Vector3 armVector = leftElbow.position - leftHand.position;
-		
-		
-		//testcube.transform.rotation = Quaternion.AngleAxis(leftHand.localRotation.eulerAngles.y, armVector);
-		//testcube.transform.RotateAround(testcube.transform.position, armVector,  leftHand.localRotation.eulerAngles.x);
-		/*
-		string debugText = Mathf.RoundToInt(leftHand.localRotation.eulerAngles.x) + " : " 
-			+ Mathf.RoundToInt(leftHand.localRotation.eulerAngles.y) + " : " 
-				+ Mathf.RoundToInt(leftHand.localRotation.eulerAngles.z);
-		string debugText = Mathf.RoundToInt(leftHand.rotation.eulerAngles.x) + " : " 
-			+ Mathf.RoundToInt(leftHand.rotation.eulerAngles.y) + " : " 
-				+ Mathf.RoundToInt(leftHand.rotation.eulerAngles.z);
-		*/
-		/*
-		string debugText = Mathf.RoundToInt(testcube.rotation.eulerAngles.x) + " : " 
-			+ Mathf.RoundToInt(testcube.rotation.eulerAngles.y) + " : " 
-				+ Mathf.RoundToInt(testcube.rotation.eulerAngles.z);
-		*/	
-		/*	
-		if(playerId == 0) {
-		GameObject.Find ("Kinect 2 text A").GetComponent<TextMesh>().text  = "-----------------" + Mathf.RoundToInt(leftHand.localRotation.eulerAngles.x) + " : " 
-			+ Mathf.RoundToInt(leftHand.localRotation.eulerAngles.y) + " : " 
-				+ Mathf.RoundToInt(leftHand.localRotation.eulerAngles.z);
-		
-		print ( 
-				Mathf.RoundToInt(leftHand.localRotation.eulerAngles.x) + " : " 
-		       + Mathf.RoundToInt(leftHand.localRotation.eulerAngles.y) + " : " 
-		       + Mathf.RoundToInt(leftHand.localRotation.eulerAngles.z)
-		                   );
-		                   
-		 }
-		 */
-		/*
-		if(playerId == 0) {
-			GameObject.Find ("Kinect 2 text A").GetComponent<TextMesh>().text  = "-----------------" + Mathf.RoundToInt(rightHand.localRotation.eulerAngles.x) + " : " 
-				+ Mathf.RoundToInt(rightHand.localRotation.eulerAngles.y) + " : " 
-					+ Mathf.RoundToInt(rightHand.localRotation.eulerAngles.z);
-			
-			print ( 
-			       Mathf.RoundToInt(rightHand.localRotation.eulerAngles.x) + " : " 
-			       + Mathf.RoundToInt(rightHand.localRotation.eulerAngles.y) + " : " 
-			       + Mathf.RoundToInt(rightHand.localRotation.eulerAngles.z)
-			       );
-			
-		}
-		*/
-		/*
-		if(playerId == 0) {
-			print (rightHand.localRotation.eulerAngles.x);
-			if(rightHand.localRotation.eulerAngles.x < 270 && rightHand.localRotation.eulerAngles.x > 180) print ("over right");
-			if(rightHand.localRotation.eulerAngles.x > 90 && rightHand.localRotation.eulerAngles.x < 180) print ("over left");
-		}
-		*/
-		/*
-		if(playerId == 0) {
-		float angle;
-		Vector3 axis;
-			leftElbow.localRotation.ToAngleAxis(out angle, out axis);
-			print ( 
-			       Mathf.RoundToInt(angle) + " : " + axis
-			       );
-			     */  
-//		print ( 
-//		       Mathf.RoundToInt(leftElbow.localRotation.eulerAngles.x) + " : " 
-//		       + Mathf.RoundToInt(leftElbow.localRotation.eulerAngles.y) + " : " 
-//		       + Mathf.RoundToInt(leftElbow.localRotation.eulerAngles.z)
-//		       );
-		/*
-		int x1 = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotation.eulerAngles.x;
-			int y1 = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotation.eulerAngles.x;
-			int x1 = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotation.eulerAngles.x;
-		*/
-		//print(leftElbow.localRotation.eulerAngles.x);
-		//}
-		
-		
-	}
-
     void LateUpdate()
     {
 		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker) {
@@ -448,119 +369,121 @@ public class RUISSkeletonController : MonoBehaviour
 
 		if (skeletonManager != null && skeletonManager.skeletons [bodyTrackingDeviceID, playerId] != null && skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking) {
 						
-						UpdateSkeletonPosition ();
-						
-						UpdateTransform (ref head, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head);
-						UpdateTransform (ref torso, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso);
-						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
-						
-						
-						UpdateTransform (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
-						
-						UpdateTransform (ref leftHand, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand);
-						UpdateTransform (ref rightHand, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand);
-			
-						
-						UpdateTransform (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
-						UpdateTransform (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
-						UpdateTransform (ref leftKnee, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee);
-						UpdateTransform (ref rightKnee, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee);
-
-						if(rotateWristFromElbow) {
-							UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand);
-							UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand);
-						}
-						else {
-							UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow);
-							UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow);
-						}
-
-						if(trackAnkle) {
-							UpdateTransform (ref leftFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot);
-							UpdateTransform (ref rightFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot);
-							
-						}
+				UpdateSkeletonPosition ();
 				
-						if(fistCurlFingers) handleFingersCurling(trackThumbs);
-			
-						if(trackThumbs && rightThumb && leftThumb) {
-							UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb);
-							UpdateTransform (ref leftThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb);
-						}
-						
+				UpdateTransform (ref head, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head);
+				UpdateTransform (ref torso, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso);
+				UpdateTransform (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
+				UpdateTransform (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
+				UpdateTransform (ref leftHand, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand);
+				UpdateTransform (ref rightHand, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand);
 
-						if (!useHierarchicalModel) {
-								if (leftHand != null) {
-										leftHand.localRotation = leftElbow.localRotation;
-								}
+				UpdateTransform (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
+				UpdateTransform (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
+				UpdateTransform (ref leftKnee, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee);
+				UpdateTransform (ref rightKnee, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee);
 
-								if (rightHand != null) {
-										rightHand.localRotation = rightElbow.localRotation;
-								}
-						} else {
-								if (scaleHierarchicalModelBones) {
-										UpdateBoneScalings ();
-
-										Vector3 torsoDirection = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation * Vector3.down;
-										torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
-
-										ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
-										ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
-										ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
-										ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
-								}
-						}
-
-						if (updateRootPosition) {
-								
-								Vector3 newRootPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position;
+				if(rotateWristFromElbow) {
+					UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand);
+					UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand);
+				}
+				else {
+					UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow);
+					UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow);
+				}
 				
-								measuredPos [0] = newRootPosition.x;
-								measuredPos [1] = newRootPosition.y;
-								measuredPos [2] = newRootPosition.z;
-								positionKalman.setR (Time.deltaTime * positionNoiseCovariance);
-								positionKalman.predict ();
-								positionKalman.update (measuredPos);
-								pos = positionKalman.getState ();
-				
-								transform.localPosition = new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]); //newRootPosition;
-						}
+				// Hand rotation constraint 
+				//if(bodyTrackingDeviceID == 1) {
+				//	GameObject.Find("SCube").transform.localRotation = rightElbow.rotation) *
+				//		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightWrist.rotation;
+//				rightHand.localRotation = limitZRotation(Quaternion.Inverse(rightElbow.rotation) *
+//				                                         skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightWrist.rotation,  
+//																				 handRollAngleMinimum,  handRollAngleMaximum);
+				//}
 
-				} else { // TUUKKA
-						
-						if (followMoveController && characterController && inputManager) {
-								psmove = inputManager.GetMoveWand (followMoveID);
-								if (psmove) {
-				
-										Quaternion moveYaw = Quaternion.Euler (0, psmove.localRotation.eulerAngles.y, 0);
-				
-										skeletonPosition = psmove.localPosition - moveYaw * characterController.psmoveOffset;
-										skeletonPosition.y = 0;
+				if(trackAnkle) {
+					UpdateTransform (ref leftFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot);
+					UpdateTransform (ref rightFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot);
 					
-										if (updateRootPosition)
-												transform.localPosition = skeletonPosition;
-					
-										UpdateTransformWithPSMove (ref head, moveYaw);
-										UpdateTransformWithPSMove (ref torso, moveYaw);
-										UpdateTransformWithPSMove (ref leftShoulder, moveYaw);
-										UpdateTransformWithPSMove (ref leftElbow, moveYaw);
-										UpdateTransformWithPSMove (ref leftHand, moveYaw);
-										UpdateTransformWithPSMove (ref rightShoulder, moveYaw);
-										UpdateTransformWithPSMove (ref rightElbow, moveYaw);
-										UpdateTransformWithPSMove (ref rightHand, moveYaw);
-										UpdateTransformWithPSMove (ref leftHip, moveYaw);
-										UpdateTransformWithPSMove (ref leftKnee, moveYaw);
-										UpdateTransformWithPSMove (ref leftFoot, moveYaw);
-										UpdateTransformWithPSMove (ref rightHip, moveYaw);
-										UpdateTransformWithPSMove (ref rightKnee, moveYaw);
-										UpdateTransformWithPSMove (ref rightFoot, moveYaw);
-								}
+				}
+		
+				if(fistCurlFingers) handleFingersCurling(trackThumbs);
+	
+				if(trackThumbs && rightThumb && leftThumb) {
+					UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb);
+					UpdateTransform (ref leftThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb);
+				}
+				
+
+				if (!useHierarchicalModel) {
+						if (leftHand != null) {
+								leftHand.localRotation = leftElbow.localRotation;
+						}
+
+						if (rightHand != null) {
+								rightHand.localRotation = rightElbow.localRotation;
+						}
+				} else {
+						if (scaleHierarchicalModelBones) {
+								UpdateBoneScalings ();
+
+								Vector3 torsoDirection = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation * Vector3.down;
+								torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition - torsoDirection * torsoOffset * torsoScale);
+
+								ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
+								ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
+								ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
+								ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
 						}
 				}
 
+				if (updateRootPosition) {
+						
+						Vector3 newRootPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position;
 		
-
-        TweakNeckHeight();
+						measuredPos [0] = newRootPosition.x;
+						measuredPos [1] = newRootPosition.y;
+						measuredPos [2] = newRootPosition.z;
+						positionKalman.setR (Time.deltaTime * positionNoiseCovariance);
+						positionKalman.predict ();
+						positionKalman.update (measuredPos);
+						pos = positionKalman.getState ();
+		
+						transform.localPosition = new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]); //newRootPosition;
+				}
+				
+			
+			} else { // TUUKKA
+					if (followMoveController && characterController && inputManager) {
+							psmove = inputManager.GetMoveWand (followMoveID);
+							if (psmove) {
+			
+									Quaternion moveYaw = Quaternion.Euler (0, psmove.localRotation.eulerAngles.y, 0);
+			
+									skeletonPosition = psmove.localPosition - moveYaw * characterController.psmoveOffset;
+									skeletonPosition.y = 0;
+				
+									if (updateRootPosition)
+											transform.localPosition = skeletonPosition;
+				
+									UpdateTransformWithPSMove (ref head, moveYaw);
+									UpdateTransformWithPSMove (ref torso, moveYaw);
+									UpdateTransformWithPSMove (ref leftShoulder, moveYaw);
+									UpdateTransformWithPSMove (ref leftElbow, moveYaw);
+									UpdateTransformWithPSMove (ref leftHand, moveYaw);
+									UpdateTransformWithPSMove (ref rightShoulder, moveYaw);
+									UpdateTransformWithPSMove (ref rightElbow, moveYaw);
+									UpdateTransformWithPSMove (ref rightHand, moveYaw);
+									UpdateTransformWithPSMove (ref leftHip, moveYaw);
+									UpdateTransformWithPSMove (ref leftKnee, moveYaw);
+									UpdateTransformWithPSMove (ref leftFoot, moveYaw);
+									UpdateTransformWithPSMove (ref rightHip, moveYaw);
+									UpdateTransformWithPSMove (ref rightKnee, moveYaw);
+									UpdateTransformWithPSMove (ref rightFoot, moveYaw);
+							}
+					}
+			}
+		TweakNeckHeight();
     }
 
     private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet)
@@ -698,9 +621,9 @@ public class RUISSkeletonController : MonoBehaviour
                             jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
 		float playerLength = (Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position) +
 		                      Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
-
+		
         float newScale = playerLength / modelLength;
-        torso.localScale = new Vector3(newScale, newScale, newScale);
+		torso.localScale = new Vector3(newScale, newScale, newScale);
         return newScale;
     }
 
@@ -815,4 +738,50 @@ public class RUISSkeletonController : MonoBehaviour
 			}	
 		}
 	}
+	
+	
+	private Quaternion limitZRotation(Quaternion inputRotation, float rollMinimum, float rollMaximum)
+	{
+		/**
+		 * Argument inputRotation's roll angle (rotation around Z axis) is clamped between [rollMinimum, rollMaximum].
+		 * Works only if effective rotation around Y axis is zero. Rotation around X axis is allowed though.
+		 **/
+	 
+		float rollAngle = 0;
+		Vector3 limitedRoll = Vector3.zero;
+		Quaternion outputRotation = inputRotation;
+		
+		// Calculate the rotation of inputRotation where roll (rotation around Z axis) is omitted
+		Quaternion rotationWithoutRoll = Quaternion.LookRotation(inputRotation * Vector3.forward, 
+		                                                         Vector3.Cross( inputRotation * Vector3.forward, Vector3.right)); 
+		rollAngle = Quaternion.Angle(inputRotation, rotationWithoutRoll);
+		
+		// Is the roll to the left or to the right? Quaternion.Angle returns only positive values and omits rotation "direction"
+		if((inputRotation*Vector3.up).x > 0)
+			rollAngle *= -1;
+		
+		if(rollAngle > rollMaximum) // Rolling towards or over maximum angle
+		{
+			// Clamp to nearest limit
+			if(rollAngle - rollMaximum < 0.5f*(360 - rollMaximum + rollMinimum))
+				limitedRoll.z = rollMaximum;
+			else
+				limitedRoll.z = rollMinimum;
+			outputRotation = rotationWithoutRoll * Quaternion.Euler(limitedRoll);
+		}
+		if(rollAngle < rollMinimum) // Rolling towards or below minimum angle
+		{
+			// Clamp to nearest limit
+			if(rollMinimum - rollAngle < 0.5f*(360 - rollMaximum + rollMinimum))
+				limitedRoll.z = rollMinimum;
+			else
+				limitedRoll.z = rollMaximum;
+			outputRotation = rotationWithoutRoll * Quaternion.Euler(limitedRoll);
+		}
+		
+		print (rollAngle + " " + rotationWithoutRoll.eulerAngles);
+		
+		return outputRotation;
+	}
+	
 }

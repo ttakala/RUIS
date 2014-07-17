@@ -92,10 +92,7 @@ public class RUISInputManager : MonoBehaviour
 		if (!enableKinect2) {
 			Debug.Log("Kinect 2 is disabled from RUISInputManager.");
 		} 
-		else {
-			// Do nothing?
-		}
-
+		
         psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
         if (enablePSMove)
         {

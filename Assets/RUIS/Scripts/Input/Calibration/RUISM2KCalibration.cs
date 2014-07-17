@@ -105,7 +105,9 @@ public class RUISM2KCalibration : MonoBehaviour {
 
         firstDeviceSamples = new List<Vector3>();
         secondDeviceSamples = new List<Vector3>();
-
+		
+		floorNormal = new Vector3(0,1,0);
+		
         Screen.SetResolution(resolutionX, resolutionY, Screen.fullScreen);
 
 		RUISKinect2Data = GetComponent<RUISKinect2Data>();

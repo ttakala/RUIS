@@ -3,7 +3,7 @@ using System.Collections;
 
 public class drawDebugLines : MonoBehaviour {
 	
-	private float lineLength = 0.2f;
+	private float lineLength = 1.2f;
 	
 	// Use this for initialization
 	void Start () {

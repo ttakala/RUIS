@@ -131,6 +131,9 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
     void Update()
     {
+		RUISCoordinateSystem coord = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
+		Debug.LogError(coord.kinectFloorNormal);
+		
         jump = false;
 
         if(characterController == null || !characterController.grounded)

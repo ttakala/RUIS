@@ -3317,7 +3317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de494c11653e6bb409485c4cc41c787a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  First_device: 1
+  First_device: 0
   Second_device: 2
   minNumberOfSamplesToTake: 100
   samplesPerSecond: 3
@@ -3767,6 +3767,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  customRoot: {fileID: 0}
+  customHead: {fileID: 0}
+  customNeck: {fileID: 0}
+  customTorso: {fileID: 0}
+  customRightShoulder: {fileID: 0}
+  customRightElbow: {fileID: 0}
+  customRightHand: {fileID: 0}
+  customRightHip: {fileID: 0}
+  customRightKnee: {fileID: 0}
+  customRightFoot: {fileID: 0}
+  customLeftShoulder: {fileID: 0}
+  customLeftElbow: {fileID: 0}
+  customLeftHand: {fileID: 0}
+  customLeftHip: {fileID: 0}
+  customLeftKnee: {fileID: 0}
+  customLeftFoot: {fileID: 0}
+  customLeftThumb: {fileID: 0}
+  customRightThumb: {fileID: 0}
   root: {fileID: 2093014173}
   head: {fileID: 817678350}
   neck: {fileID: 0}
@@ -3784,17 +3802,13 @@ MonoBehaviour:
   leftKnee: {fileID: 678814900}
   leftFoot: {fileID: 551658452}
   leftThumb: {fileID: 0}
-  leftIndexFinger: {fileID: 0}
-  leftMiddleFinger: {fileID: 0}
-  leftRingFinger: {fileID: 0}
-  leftLittleFinger: {fileID: 0}
   rightThumb: {fileID: 0}
-  rightIndexFinger: {fileID: 0}
-  rightMiddleFinger: {fileID: 0}
-  rightRingFinger: {fileID: 0}
-  rightLittleFinger: {fileID: 0}
-  kinectDevice: 0
-  kinectVersion: 0
+  fistCurlFingers: 0
+  trackThumbs: 0
+  trackAnkle: 0
+  rotateWristFromElbow: 0
+  bodyTrackingDevice: 0
+  bodyTrackingDeviceID: 0
   playerId: 0
   updateRootPosition: 1
   updateJointPositions: 1
@@ -3804,6 +3818,8 @@ MonoBehaviour:
   maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
+  handRollAngleMinimum: -180
+  handRollAngleMaximum: 180
   torsoOffset: 0
   torsoScale: 1
   neckHeightTweaker: 0
