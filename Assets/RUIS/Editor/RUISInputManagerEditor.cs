@@ -38,7 +38,9 @@ public class RUISInputManagerEditor : Editor {
     SerializedProperty kinectEnabled;
     SerializedProperty maxNumberOfKinectPlayers;
 	SerializedProperty floorDetectionOnSceneStart;
-	
+
+	SerializedProperty kinect2Enabled;
+
 	SerializedProperty enableRazerHydra;
 
     SerializedProperty riftMagnetometerMode;
@@ -68,7 +70,9 @@ public class RUISInputManagerEditor : Editor {
         kinectEnabled = serializedObject.FindProperty("enableKinect");
         maxNumberOfKinectPlayers = serializedObject.FindProperty("maxNumberOfKinectPlayers");
 		floorDetectionOnSceneStart = serializedObject.FindProperty("kinectFloorDetection");
-		
+
+		kinect2Enabled = serializedObject.FindProperty("enableKinect2");
+
 		enableRazerHydra = serializedObject.FindProperty("enableRazerHydra");
 
         riftMagnetometerMode = serializedObject.FindProperty("riftMagnetometerMode");
@@ -169,6 +173,8 @@ public class RUISInputManagerEditor : Editor {
 			                                                                         + "'calibration.xml'."));
             EditorGUI.indentLevel -= 2;
         }
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(kinect2Enabled, new GUIContent("Kinect 2 Enabled"));
 
         EditorGUILayout.Space();
 

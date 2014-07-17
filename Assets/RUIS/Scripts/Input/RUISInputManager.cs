@@ -48,7 +48,9 @@ public class RUISInputManager : MonoBehaviour
     public int maxNumberOfKinectPlayers = 2;
     public bool kinectFloorDetection = true;
 	public bool kinectDriftCorrectionPreferred = false;
-	
+
+	public bool enableKinect2 = false;
+
 	public bool enableRazerHydra = false;
 	private SixenseInput sixense = null;
 	
@@ -86,6 +88,13 @@ public class RUISInputManager : MonoBehaviour
         {
             GetComponentInChildren<NIPlayerManagerCOMSelection>().m_MaxNumberOfPlayers = maxNumberOfKinectPlayers;
         }
+
+		if (!enableKinect2) {
+			Debug.Log("Kinect 2 is disabled from RUISInputManager.");
+		} 
+		else {
+			// Do nothing?
+		}
 
         psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
         if (enablePSMove)
