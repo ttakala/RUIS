@@ -83,14 +83,14 @@ public class RUISSkeletonManager : MonoBehaviour {
 		
 		public ulong trackingId = 0;
     }
-
+ 
 
 	NIPlayerManager playerManager;
 	RUISInputManager inputManager;
 	RUISKinect2Data RUISKinect2Data;
 
 	public readonly int skeletonsHardwareLimit = 4;
-	public Skeleton[,] skeletons = new Skeleton[2,6];
+	public Skeleton[,] skeletons = new Skeleton[3,6];
 	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
 
     public Vector3 rootSpeedScaling = Vector3.one;
@@ -108,13 +108,14 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 		if (!inputManager.enableKinect) playerManager.enabled = false;
 		if (!inputManager.enableKinect2) RUISKinect2Data.enabled = false;
+		
 
         if (coordinateSystem == null)
         {
             coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
         }
 
-		for (int x = 0; x < 2; x++) {
+		for (int x = 0; x < 3; x++) {
 					for (int i = 0; i < 6; i++) {
 							skeletons [x, i] = new Skeleton ();
 					}
@@ -158,30 +159,17 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 			Kinect.Body[] data = RUISKinect2Data.getData ();
 			
-			
-			
-			foreach (KeyValuePair<ulong, int> item in trackingIDtoIndex)
-			{
-				print (item.Key + " : " + item.Value);
-			}
-			
 			if (data != null) {
 				
 				Vector3 relativePos;
-				float angleCorrection;
-				int playerID;
-				int x = 0;
+				int playerID = 0;
 				bool newBody = true;
 				int i = 0;
-				
 				
 				// Refresh skeleton tracking status
 				for(int y = 0; y < skeletons.GetLength(1); y++) {
 					skeletons [kinect2SensorID, y].isTracking = false; 
 				}
-				//for(int j=0; j<data.Length; ++j)
-				//	data.
-				
 				foreach(var body in data) {
 					if(body.IsTracked) {
 						for(int y = 0; y < skeletons.GetLength(1); y++) {
@@ -218,12 +206,14 @@ public class RUISSkeletonManager : MonoBehaviour {
 						}
 						
 						// Fore debug
+						/*
 						if(playerID == 0) {
 							GameObject.Find ("Kinect 2 text A").GetComponent<TextMesh>().text  = "-----------------" + body.TrackingId + " Index: " + playerID + " i: " + i;
 						}
 						if(playerID == 1) {
 							GameObject.Find ("Kinect 2 text B").GetComponent<TextMesh>().text  = "-----------------" + body.TrackingId + " Index: " + playerID + " i: " + i;
 						}
+						*/
 						// end debug
 						
 						trackingIDtoIndex[body.TrackingId] = playerID;
@@ -256,7 +246,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 						UpdateKinect2JointData(getKinect2JointData(body.Joints[Kinect.JointType.AnkleLeft], body.JointOrientations[Kinect.JointType.AnkleLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftAnkle);
 						UpdateKinect2JointData(getKinect2JointData(body.Joints[Kinect.JointType.AnkleRight], body.JointOrientations[Kinect.JointType.AnkleRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightAnkle);
 	
-				
 						UpdateKinect2JointData(getKinect2JointData(body.Joints[Kinect.JointType.HandLeft], body.JointOrientations[Kinect.JointType.HandLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftHand);
 						UpdateKinect2JointData(getKinect2JointData(body.Joints[Kinect.JointType.HandRight], body.JointOrientations[Kinect.JointType.HandRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightHand);
 
@@ -300,7 +289,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 						skeletons [kinect2SensorID, playerID].rightElbow.rotation = Quaternion.LookRotation(relativePos)  * Quaternion.Euler(0, 90, 0); 
 						//skeletons [kinect2SensorID, playerID].rightElbow.rotation = skeletons [kinect2SensorID, playerID].rightWrist.rotation  * Quaternion.Euler(0, -180, 90); 
 						
-						
 						// Upper leg
 						skeletons [kinect2SensorID, playerID].leftHip.rotation = skeletons [kinect2SensorID, playerID].leftKnee.rotation * Quaternion.Euler(180, -90, 0);
 						skeletons [kinect2SensorID, playerID].rightHip.rotation = skeletons [kinect2SensorID, playerID].rightKnee.rotation * Quaternion.Euler(180, 90, 0);;
@@ -312,11 +300,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 						// Hands
 						skeletons [kinect2SensorID, playerID].leftHand.rotation *= Quaternion.Euler(0, 180, -90);
 						skeletons [kinect2SensorID, playerID].rightHand.rotation *= Quaternion.Euler(0, 180, 90);
-
-						// Fingers
-						Vector3 angleFingers = new Vector3(0,0,-120);
-						Vector3 angleThumb = new Vector3(0,0,40);
-
+						
+						// Fist curling
 						skeletons [kinect2SensorID, playerID].leftHandClosed = (body.HandLeftState == Kinect.HandState.Closed) ? true : false;
 						skeletons [kinect2SensorID, playerID].rightHandClosed = (body.HandRightState == Kinect.HandState.Closed) ? true : false;
 						
@@ -334,52 +319,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 						relativePos = skeletons [kinect2SensorID, playerID].rightAnkle.position - skeletons [kinect2SensorID, playerID].rightFoot.position;
 						skeletons [kinect2SensorID, playerID].rightFoot.rotation = Quaternion.LookRotation(relativePos) * Quaternion.Euler(0, 180, 0); 
 						
-						
-
-						// Debug kinect detecion area
-						/*
-						Vector3 origPosition = GameObject.Find ("z1Wall").transform.position;
-						origPosition.y = 0;
-						GameObject mechanim = GameObject.Find("Mecanim - Kinect 2");
-						for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++)
-						{
-							if(body.Joints[jt].TrackingState == Kinect.TrackingState.Tracked) {
-
-								GameObject x1Wall = GameObject.Find ("x1Wall");
-								GameObject x2Wall = GameObject.Find ("x2Wall");
-								GameObject z2Wall = GameObject.Find ("z2Wall");
-
-								float currentX1 = x1Wall.transform.position.x - mechanim.transform.position.x;
-								//float currentY1 = GameObject.Find ("y1Wall").transform.position.y - mechanim.transform.position.y;
-								//float currentZ1 = GameObject.Find ("z1Wall").transform.position.z - mechanim.transform.position.z;
-
-								float currentX2 = x2Wall.transform.position.x - mechanim.transform.position.x;
-								//float currentY2 = GameObject.Find ("y2Wall").transform.position.y - mechanim.transform.position.y;
-								float currentZ2 = z2Wall.transform.position.z - mechanim.transform.position.z;
-
-								if(body.Joints[jt].Position.X > currentX1) x1Wall.transform.position = new Vector3(body.Joints[jt].Position.X + mechanim.transform.position.x,mechanim.transform.position.y,-body.Joints[jt].Position.Z  + mechanim.transform.position.z);
-							//	if(body.Joints[jt].Position.Y > currentY1) GameObject.Find ("y1Wall").transform.position = new Vector3(mechanim.transform.position.x,body.Joints[jt].Position.Y + mechanim.transform.position.y,mechanim.transform.position.z);
-							//	if(-body.Joints[jt].Position.Z > currentZ1) GameObject.Find ("z1Wall").transform.position = new Vector3(mechanim.transform.position.x,mechanim.transform.position.y,-body.Joints[jt].Position.Z + mechanim.transform.position.z);
-
-								if(body.Joints[jt].Position.X < currentX2) x2Wall.transform.position = new Vector3(body.Joints[jt].Position.X + mechanim.transform.position.x,mechanim.transform.position.y,-body.Joints[jt].Position.Z + mechanim.transform.position.z);
-							//	if(body.Joints[jt].Position.Y < currentY2) GameObject.Find ("y2Wall").transform.position = new Vector3(mechanim.transform.position.x,body.Joints[jt].Position.Y + mechanim.transform.position.y,mechanim.transform.position.z);
-								if(-body.Joints[jt].Position.Z < currentZ2) z2Wall.transform.position = new Vector3(mechanim.transform.position.x,mechanim.transform.position.y,-body.Joints[jt].Position.Z + mechanim.transform.position.z);
-
-								Vector3 leftPoint = new Vector3(x1Wall.transform.position.x, 0, x1Wall.transform.position.z);
-								Vector3 rightPoint = new Vector3(x2Wall.transform.position.x, 0, x2Wall.transform.position.z);
-								Vector3 leftVector = leftPoint - origPosition;
-								Vector3 rightVector = rightPoint - origPosition;
-
-
-								Quaternion angleLeft = Quaternion.LookRotation(leftVector, Vector3.up);
-								Quaternion angleRight = Quaternion.LookRotation(rightVector, Vector3.up);
-
-								x1Wall.transform.rotation = angleLeft;
-								x2Wall.transform.rotation = angleRight;
-							}
-						}
-						// end debug
-						*/
 						i++;
 					}
 				}

@@ -50,7 +50,7 @@ public class RUISInputManager : MonoBehaviour
 	public bool kinectDriftCorrectionPreferred = false;
 
 	public bool enableKinect2 = false;
-
+	
 	public bool enableRazerHydra = false;
 	private SixenseInput sixense = null;
 	

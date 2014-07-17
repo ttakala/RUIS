@@ -14,6 +14,26 @@ using System.Collections.Generic;
 public class RUISSkeletonController : MonoBehaviour
 {
 
+	// Transforms for custom motion tracking
+	public Transform customRoot;
+	public Transform customHead;
+	public Transform customNeck;
+	public Transform customTorso;
+	public Transform customRightShoulder;
+	public Transform customRightElbow;
+	public Transform customRightHand;
+	public Transform customRightHip;
+	public Transform customRightKnee;
+	public Transform customRightFoot;
+	public Transform customLeftShoulder;
+	public Transform customLeftElbow;
+	public Transform customLeftHand;
+	public Transform customLeftHip;
+	public Transform customLeftKnee;
+	public Transform customLeftFoot;
+	public Transform customLeftThumb;
+	public Transform customRightThumb;
+
     public Transform root;
     public Transform head;
     public Transform neck;
@@ -30,7 +50,6 @@ public class RUISSkeletonController : MonoBehaviour
     public Transform leftHip;
     public Transform leftKnee;
     public Transform leftFoot;
-
 	public Transform leftThumb;
 	public Transform rightThumb;
 	
@@ -113,7 +132,8 @@ public class RUISSkeletonController : MonoBehaviour
     {
 		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1) bodyTrackingDeviceID = 0;
 		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2)  bodyTrackingDeviceID = 1;
-
+		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)  bodyTrackingDeviceID = 2;
+		
         if (skeletonManager == null)
         {
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
@@ -204,16 +224,9 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
-		if(inputManager && !inputManager.enableKinect && !inputManager.enableKinect2)
+		if(inputManager)
 		{
-//			Debug.Log("Kinect is not enabled. Disabling RUISSkeletonController script from Kinect-controlled GameObject " + gameObject.name + ".");
-//			MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
-//			foreach(MonoBehaviour script in scripts)
-//			{
-//				if(script.GetType().Equals(typeof(RUISSkeletonController)))
-//					script.enabled = false;
-//			}
-			
+
 			if(gameObject.transform.parent != null)
 			{
 				characterController = gameObject.transform.parent.GetComponent<RUISCharacterController>();
@@ -234,17 +247,207 @@ public class RUISSkeletonController : MonoBehaviour
 		}
     }
 
-
-
+	// Whole update() for constraints testing, can delete
+	void Update() {
+		//Transform testcube = GameObject.Find ("testcube").transform;
+		//Vector3 armVector = leftElbow.position - leftHand.position;
+		
+		
+		//testcube.transform.rotation = Quaternion.AngleAxis(leftHand.localRotation.eulerAngles.y, armVector);
+		//testcube.transform.RotateAround(testcube.transform.position, armVector,  leftHand.localRotation.eulerAngles.x);
+		/*
+		string debugText = Mathf.RoundToInt(leftHand.localRotation.eulerAngles.x) + " : " 
+			+ Mathf.RoundToInt(leftHand.localRotation.eulerAngles.y) + " : " 
+				+ Mathf.RoundToInt(leftHand.localRotation.eulerAngles.z);
+		string debugText = Mathf.RoundToInt(leftHand.rotation.eulerAngles.x) + " : " 
+			+ Mathf.RoundToInt(leftHand.rotation.eulerAngles.y) + " : " 
+				+ Mathf.RoundToInt(leftHand.rotation.eulerAngles.z);
+		*/
+		/*
+		string debugText = Mathf.RoundToInt(testcube.rotation.eulerAngles.x) + " : " 
+			+ Mathf.RoundToInt(testcube.rotation.eulerAngles.y) + " : " 
+				+ Mathf.RoundToInt(testcube.rotation.eulerAngles.z);
+		*/	
+		/*	
+		if(playerId == 0) {
+		GameObject.Find ("Kinect 2 text A").GetComponent<TextMesh>().text  = "-----------------" + Mathf.RoundToInt(leftHand.localRotation.eulerAngles.x) + " : " 
+			+ Mathf.RoundToInt(leftHand.localRotation.eulerAngles.y) + " : " 
+				+ Mathf.RoundToInt(leftHand.localRotation.eulerAngles.z);
+		
+		print ( 
+				Mathf.RoundToInt(leftHand.localRotation.eulerAngles.x) + " : " 
+		       + Mathf.RoundToInt(leftHand.localRotation.eulerAngles.y) + " : " 
+		       + Mathf.RoundToInt(leftHand.localRotation.eulerAngles.z)
+		                   );
+		                   
+		 }
+		 */
+		/*
+		if(playerId == 0) {
+			GameObject.Find ("Kinect 2 text A").GetComponent<TextMesh>().text  = "-----------------" + Mathf.RoundToInt(rightHand.localRotation.eulerAngles.x) + " : " 
+				+ Mathf.RoundToInt(rightHand.localRotation.eulerAngles.y) + " : " 
+					+ Mathf.RoundToInt(rightHand.localRotation.eulerAngles.z);
+			
+			print ( 
+			       Mathf.RoundToInt(rightHand.localRotation.eulerAngles.x) + " : " 
+			       + Mathf.RoundToInt(rightHand.localRotation.eulerAngles.y) + " : " 
+			       + Mathf.RoundToInt(rightHand.localRotation.eulerAngles.z)
+			       );
+			
+		}
+		*/
+		/*
+		if(playerId == 0) {
+			print (rightHand.localRotation.eulerAngles.x);
+			if(rightHand.localRotation.eulerAngles.x < 270 && rightHand.localRotation.eulerAngles.x > 180) print ("over right");
+			if(rightHand.localRotation.eulerAngles.x > 90 && rightHand.localRotation.eulerAngles.x < 180) print ("over left");
+		}
+		*/
+		/*
+		if(playerId == 0) {
+		float angle;
+		Vector3 axis;
+			leftElbow.localRotation.ToAngleAxis(out angle, out axis);
+			print ( 
+			       Mathf.RoundToInt(angle) + " : " + axis
+			       );
+			     */  
+//		print ( 
+//		       Mathf.RoundToInt(leftElbow.localRotation.eulerAngles.x) + " : " 
+//		       + Mathf.RoundToInt(leftElbow.localRotation.eulerAngles.y) + " : " 
+//		       + Mathf.RoundToInt(leftElbow.localRotation.eulerAngles.z)
+//		       );
+		/*
+		int x1 = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotation.eulerAngles.x;
+			int y1 = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotation.eulerAngles.x;
+			int x1 = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotation.eulerAngles.x;
+		*/
+		//print(leftElbow.localRotation.eulerAngles.x);
+		//}
+		
+		
+	}
 
     void LateUpdate()
     {
-
+		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker) {
+			
+			skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking = true;
+			
+			if(customRoot) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.rotation = customRoot.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position = customRoot.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.rotationConfidence = 1;
+			}
+			if(customHead) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotation = customHead.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.position = customHead.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotationConfidence = 1;
+			}
+			if(customNeck) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].neck.rotation = customNeck.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].neck.position = customNeck.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].neck.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].neck.rotationConfidence = 1;
+			}
+			if(customTorso) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation = customTorso.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position = customTorso.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotationConfidence = 1;
+			}
+			if(customRightShoulder) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder.rotation = customRightShoulder.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder.position = customRightShoulder.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder.rotationConfidence = 1;
+			}
+			if(customLeftShoulder) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder.rotation = customLeftShoulder.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder.position = customLeftShoulder.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder.rotationConfidence = 1;
+			}
+			if(customRightElbow) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow.rotation = customRightElbow.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow.position = customRightElbow.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow.rotationConfidence = 1;
+			}
+			if(customLeftElbow) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotation = customLeftElbow.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.position = customLeftElbow.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotationConfidence = 1;
+			}
+			if(customRightHand) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand.rotation = customRightHand.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand.position = customRightHand.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand.rotationConfidence = 1;
+			}
+			if(customLeftHand) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand.rotation = customLeftHand.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand.position = customLeftHand.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand.rotationConfidence = 1;
+			}
+			if(customRightHip) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.rotation = customRightHip.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.position = customRightHip.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.rotationConfidence = 1;
+			}
+			if(customLeftHip) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.rotation = customLeftHip.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.position = customLeftHip.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.rotationConfidence = 1;
+			}
+			if(customRightKnee) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee.rotation = customRightKnee.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee.position = customRightKnee.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee.rotationConfidence = 1;
+			}
+			if(customLeftKnee) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee.rotation = customLeftKnee.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee.position = customLeftKnee.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee.rotationConfidence = 1;
+			}
+			if(customRightFoot) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot.rotation = customRightFoot.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot.position = customRightFoot.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot.rotationConfidence = 1;
+			}
+			if(customLeftFoot) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot.rotation = customLeftFoot.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot.position = customLeftFoot.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot.rotationConfidence = 1;
+			}
+			if(customRightThumb) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb.rotation = customRightThumb.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb.position = customRightThumb.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb.rotationConfidence = 1;
+			}
+			if(customLeftThumb) {
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb.rotation = customLeftThumb.rotation;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb.position = customLeftThumb.position;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb.positionConfidence = 1;
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb.rotationConfidence = 1;
+			}
+		}
 
 		if (skeletonManager != null && skeletonManager.skeletons [bodyTrackingDeviceID, playerId] != null && skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking) {
 						
 						UpdateSkeletonPosition ();
- 
+						
 						UpdateTransform (ref head, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head);
 						UpdateTransform (ref torso, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso);
 						UpdateTransform (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
@@ -341,6 +544,8 @@ public class RUISSkeletonController : MonoBehaviour
 								}
 						}
 				}
+
+		
 
         TweakNeckHeight();
     }

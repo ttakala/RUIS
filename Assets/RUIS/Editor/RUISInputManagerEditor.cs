@@ -44,7 +44,7 @@ public class RUISInputManagerEditor : Editor {
 	SerializedProperty enableRazerHydra;
 
     SerializedProperty riftMagnetometerMode;
-
+    
     void OnEnable()
     {
         inputConfig = target as RUISInputManager;
@@ -76,14 +76,15 @@ public class RUISInputManagerEditor : Editor {
 		enableRazerHydra = serializedObject.FindProperty("enableRazerHydra");
 
         riftMagnetometerMode = serializedObject.FindProperty("riftMagnetometerMode");
-    }
+        
+	}
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
         EditorGUILayout.Space();
-
+		
         EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Import from XML"))
             {
@@ -115,7 +116,8 @@ public class RUISInputManagerEditor : Editor {
         EditorGUILayout.PropertyField(loadFromTextFileInEditor, new GUIContent("Load from File in Editor", "Load PSMove IP and Port from " + filename.stringValue + " while in editor. Otherwise use the values specified here. Outside the editor the applicable values are loaded from the external file."));
 
 
-        EditorGUILayout.Space();
+        RUISEditorUtility.HorizontalRuler();
+        
         EditorGUILayout.PropertyField(psMoveEnabled, new GUIContent("PS Move Enabled"));
 
         if (psMoveEnabled.boolValue)
@@ -177,7 +179,7 @@ public class RUISInputManagerEditor : Editor {
 		EditorGUILayout.PropertyField(kinect2Enabled, new GUIContent("Kinect 2 Enabled"));
 
         EditorGUILayout.Space();
-
+		
         EditorGUILayout.PropertyField(riftMagnetometerMode, new GUIContent("Rift Drift Correction", "Choose whether Oculus Rift's "
                                                                     + "magnetometer is calibrated at the beginning of the scene (for yaw "
                                                                     + "drift correction). It can always be (re)calibrated in-game with the "
