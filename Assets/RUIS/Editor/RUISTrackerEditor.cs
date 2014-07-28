@@ -26,7 +26,7 @@ public class RUISTrackerEditor : Editor
 	float minNoiseCovariance = 0.001f;
 	float minDriftCorrectionRate = 0.001f;
 	float maxDriftCorrectionRate = 1000;
-	
+
     SerializedProperty defaultPosition;
     SerializedProperty skeletonManager;
     SerializedProperty headPositionInput;
@@ -220,6 +220,7 @@ public class RUISTrackerEditor : Editor
 				if(positionNoiseCovarianceKinect.floatValue < minNoiseCovariance)
 					positionNoiseCovarianceKinect.floatValue = minNoiseCovariance;
                 EditorGUILayout.PropertyField(positionPlayerID, new GUIContent("Kinect Player Id", "Between 0 and 3"));
+
                 EditorGUILayout.PropertyField(positionJoint, new GUIContent("Joint", "Head is the best joint for tracking head position"));
                 EditorGUILayout.PropertyField(positionOffsetKinect, new GUIContent("Position Offset (meters)", "Kinect joint's position in "
                 															+ "the tracked object's local coordinate system. Set these values "

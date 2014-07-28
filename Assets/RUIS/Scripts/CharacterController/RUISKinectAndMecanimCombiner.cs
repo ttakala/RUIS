@@ -137,6 +137,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             skeletonController = kinectGameObject.GetComponent<RUISSkeletonController>();
             mecanimAnimator = mecanimGameObject.GetComponent<Animator>();
 
+			if(!skeletonController)
+				Debug.LogError("Script " + skeletonController.GetType().Name + " is not found by " + this.GetType().Name + "!");
 
             torsoIsRoot = skeletonController.root == skeletonController.torso;
 
@@ -159,7 +161,12 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     void LateUpdate()
     {
-        if (!inputManager.enableKinect)
+		// For debug
+		//rightLegBlendWeight = 1;
+		//leftLegBlendWeight = 1;
+		// end for debug
+		if (	!inputManager.enableKinect && !inputManager.enableKinect2 
+			&&  (skeletonController.bodyTrackingDevice != RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker))
         {
 			// Without the below if-clause the legs will twist with PS Move head tracker (when Move is enabled but Kinect is not)
 			if(!inputManager.enablePSMove)

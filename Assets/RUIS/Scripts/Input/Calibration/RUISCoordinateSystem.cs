@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Schema;
 using System.IO;
+using Kinect = Windows.Kinect;
 
 public class RUISCoordinateSystem : MonoBehaviour
 {
@@ -175,7 +176,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 
     public void SetKinectFloorNormal(Vector3 normal)
     {
-        kinectFloorNormal = normal.normalized;
+		kinectFloorNormal = normal.normalized;
         kinectFloorRotator = Quaternion.identity;
         kinectFloorRotator.SetFromToRotation(Vector3.up, kinectFloorNormal);
     }
@@ -324,5 +325,37 @@ public class RUISCoordinateSystem : MonoBehaviour
 
         return newRotation;
     }
+	/*
+	 * 	Kinect 2 functions
+	 */
+	public Vector3 ConvertKinectPosition2(Vector3 position)
+	{
+
+		Vector3 newPosition = Vector3.zero;
+		newPosition.x = position.x;
+		newPosition.y = position.y;
+		newPosition.z = -position.z;
+		
+		newPosition = (Quaternion.Euler(0, yawOffset, 0) * kinectFloorRotator * newPosition);
+
+		if (setKinectOriginToFloor)
+		{
+			newPosition.y += kinectDistanceFromFloor;
+		}
+
+		return newPosition;
+	}
+	public Quaternion ConvertKinectRotation2(Quaternion rotation)
+	{
+		Quaternion newRotation  = rotation;
+		newRotation.x = -rotation.x;
+		newRotation.y = -rotation.y;
+		newRotation.z = rotation.z;
+		newRotation.w = rotation.w;
+
+		newRotation = kinectFloorRotator * newRotation;
+
+		return newRotation;
+	}
 }
 

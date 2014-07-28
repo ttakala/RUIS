@@ -95,6 +95,9 @@ public class RUISTracker : MonoBehaviour
 	OVRCameraController oculusCamController;
 	public bool useOculusRiftRotation = false;
 	public KeyCode resetKey;
+
+	public int kinectVersion = 0; // *** Add support for Kinect2 for Kinec+RazerHydra combination head tracker..?
+	private static int kinectSensorID = 0;
 	
     public int positionPlayerID = 0;
     public int rotationPlayerID = 0;
@@ -531,8 +534,8 @@ public class RUISTracker : MonoBehaviour
 				case RazerHydraBase.Kinect:
 					if (skeletonManager)
 				        {
-							jointData = skeletonManager.GetJointData(hydraBaseJoint, hydraBaseKinectPlayerID);
-							if(		skeletonManager.skeletons[hydraBaseKinectPlayerID].isTracking
+					jointData = skeletonManager.GetJointData(hydraBaseJoint, hydraBaseKinectPlayerID, kinectVersion);
+					if(		skeletonManager.skeletons[kinectVersion, hydraBaseKinectPlayerID].isTracking
 								&&  jointData != null)
 							{
 								filterHydraBasePose = filterHydraBasePoseKinect;
@@ -665,14 +668,14 @@ public class RUISTracker : MonoBehaviour
 		{
 			case HeadPositionSource.Kinect:
 		        if (   skeletonManager 
-					&& skeletonManager.skeletons[positionPlayerID].torso.positionConfidence >= 1) // Most stable joint is torso
+			    && skeletonManager.skeletons[kinectSensorID, positionPlayerID].torso.positionConfidence >= 1) // Most stable joint is torso
 		        {
 					filterPosition = filterPositionKinect;
 					positionNoiseCovariance = positionNoiseCovarianceKinect;
-					jointData = skeletonManager.GetJointData(positionJoint, positionPlayerID);
+				jointData = skeletonManager.GetJointData(positionJoint, positionPlayerID, kinectSensorID);
 					if(jointData != null)
 						measuredHeadPosition = jointData.position // Fix for Kinect2: below takes rotation from torso
-							- skeletonManager.skeletons[positionPlayerID].torso.rotation 
+						- skeletonManager.skeletons[kinectSensorID, positionPlayerID].torso.rotation 
 											* Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect)) * positionOffsetKinect;
 		        }
 				break;
@@ -761,11 +764,11 @@ public class RUISTracker : MonoBehaviour
 				//	break;
 				case HeadRotationSource.Kinect:
 			        if (   skeletonManager 
-						&& skeletonManager.skeletons[rotationPlayerID].torso.rotationConfidence >= 1)
+				    && skeletonManager.skeletons[kinectSensorID, rotationPlayerID].torso.rotationConfidence >= 1)
 			        {
 						filterRotation = filterRotationKinect;
 						rotationNoiseCovariance = rotationNoiseCovarianceKinect;
-						jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID);
+					jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID, kinectSensorID);
 						// Most stable joint:
 						if(jointData != null && jointData.rotationConfidence >= 1)
 							measuredHeadRotation = jointData.rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect));
@@ -873,7 +876,7 @@ public class RUISTracker : MonoBehaviour
 			case HeadRotationSource.Kinect:
 		        if (skeletonManager)
 		        {
-					jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID);
+				jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID, kinectSensorID);
 					if(jointData != null)
 					{
 						rotationOffsetKinect = jointData.rotation.eulerAngles;
@@ -988,13 +991,13 @@ public class RUISTracker : MonoBehaviour
 		switch(compass) 
 		{
 			case CompassSource.Kinect:
-		        if (!skeletonManager || !skeletonManager.skeletons[compassPlayerID].isTracking)
+			if (!skeletonManager || !skeletonManager.skeletons[kinectSensorID, compassPlayerID].isTracking)
 		        {
 		            break;
 		        }
 				else 
 				{
-					compassData = skeletonManager.GetJointData(compassJoint, compassPlayerID);
+				compassData = skeletonManager.GetJointData(compassJoint, compassPlayerID, kinectSensorID);
 				
 					// First check for high confidence value
 		            if (compassData != null && compassData.rotationConfidence >= 1.0f) 

@@ -11,6 +11,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using CSML;
+using Kinect = Windows.Kinect;
 
 public class RUISM2KCalibration : MonoBehaviour {
     public enum State
@@ -23,6 +24,18 @@ public class RUISM2KCalibration : MonoBehaviour {
         CalibratingWithoutMove
     }
 
+	public enum Device
+	{
+		Kinect_1,
+		Kinect_2,
+		PS_Move
+	}
+
+
+	public Device First_device;
+	public Device Second_device;
+
+
     private State currentState;
     private PSMoveWrapper psMoveWrapper;
     private NIPlayerManagerCOMSelection kinectSelection;
@@ -33,10 +46,9 @@ public class RUISM2KCalibration : MonoBehaviour {
     private float timeSinceLastSample;
     public float samplesPerSecond = 1;
     private float timeBetweenSamples;
-
-    private List<Vector3> rawPSMoveSamples;
-    private List<Vector3> psMoveSamples;
-    private List<Vector3> kinectSamples;
+	
+    private List<Vector3> firstDeviceSamples;
+    private List<Vector3> secondDeviceSamples;
 
     private int calibratingPSMoveControllerId;
 
@@ -81,23 +93,29 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     private bool kinectAvailable = true;
 
+	RUISKinect2Data RUISKinect2Data;
+
+	
+
     void Awake () {
         currentState = State.Start;
         psMoveWrapper = GetComponent<PSMoveWrapper>();
         kinectSelection = FindObjectOfType(typeof(NIPlayerManagerCOMSelection)) as NIPlayerManagerCOMSelection;
         statusText = GetComponentInChildren<GUIText>();
 
-        rawPSMoveSamples = new List<Vector3>();
-        psMoveSamples = new List<Vector3>();
-        kinectSamples = new List<Vector3>();
-
+        firstDeviceSamples = new List<Vector3>();
+        secondDeviceSamples = new List<Vector3>();
+		
+		floorNormal = new Vector3(0,1,0);
+		
         Screen.SetResolution(resolutionX, resolutionY, Screen.fullScreen);
+
+		RUISKinect2Data = GetComponent<RUISKinect2Data>();
 	}
 
     void Start()
     {
-
-        OpenNISettingsManager settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
+		OpenNISettingsManager settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
         if (settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid)
         {
             Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
@@ -267,9 +285,8 @@ public class RUISM2KCalibration : MonoBehaviour {
 
                 calibrationSpheres = new List<GameObject>();
 
-                rawPSMoveSamples = new List<Vector3>();
-                psMoveSamples = new List<Vector3>();
-                kinectSamples = new List<Vector3>();
+                firstDeviceSamples = new List<Vector3>();
+                secondDeviceSamples = new List<Vector3>();
 
                 coordinateSystem.ResetTransforms();
 
@@ -305,7 +322,7 @@ public class RUISM2KCalibration : MonoBehaviour {
             {
                 //Destroy(sphere);
                 GameObject sphere = calibrationSpheres[i];
-                Vector3 cubePosition = coordinateSystem.ConvertMovePosition(rawPSMoveSamples[i]);
+                Vector3 cubePosition = firstDeviceSamples[i];
                 GameObject cube = Instantiate(calibrationCube, cubePosition, Quaternion.identity) as GameObject;
                 cube.GetComponent<RUISMoveCalibrationVisualizer>().kinectCalibrationSphere = sphere;
 
@@ -368,29 +385,25 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     private void TakeSample()
     {
-        OpenNI.SkeletonJointPosition jointPosition;
-        bool success = kinectSelection.GetPlayer(0).GetSkeletonJointPosition(OpenNI.SkeletonJoint.RightHand, out jointPosition);
-
-        timeSinceLastSample += Time.deltaTime;
+		Vector3 firstDeviceSample = getSample (First_device);
+		Vector3 secondDeviceSample = getSample (Second_device);
+		timeSinceLastSample += Time.deltaTime;
 
         //check if we should take sample
-        if (!success || 
-            !psMoveWrapper.sphereVisible[calibratingPSMoveControllerId] || 
-            psMoveWrapper.handleVelocity[calibratingPSMoveControllerId].magnitude >= 10.0f||
-            jointPosition.Confidence <= 0.5 ||
-            timeSinceLastSample < timeBetweenSamples)
-        {
+        if (firstDeviceSample == Vector3.zero ||
+		    secondDeviceSample == Vector3.zero ||
+            timeSinceLastSample < timeBetweenSamples) 
+		{
             return;
         }
 
-        rawPSMoveSamples.Add(psMoveWrapper.handlePosition[calibratingPSMoveControllerId]);
-        psMoveSamples.Add(coordinateSystem.ConvertMovePosition(psMoveWrapper.handlePosition[calibratingPSMoveControllerId]));
-        kinectSamples.Add(coordinateSystem.ConvertKinectPosition(jointPosition.Position));
+		firstDeviceSamples.Add(firstDeviceSample);
+		secondDeviceSamples.Add(secondDeviceSample);
 
         numberOfSamplesTaken++;
         timeSinceLastSample = 0;
 
-        calibrationSpheres.Add(Instantiate(calibrationSphere, coordinateSystem.ConvertKinectPosition(jointPosition.Position), Quaternion.identity) as GameObject);
+		calibrationSpheres.Add(Instantiate(calibrationSphere, firstDeviceSample, Quaternion.identity) as GameObject);
     }
 
     private void UpdateFloorNormal()
@@ -437,28 +450,64 @@ public class RUISM2KCalibration : MonoBehaviour {
 
     private void CalculateTransformation()
     {
-        if (psMoveSamples.Count != numberOfSamplesTaken || kinectSamples.Count != numberOfSamplesTaken)
+        if (firstDeviceSamples.Count != numberOfSamplesTaken || secondDeviceSamples.Count != numberOfSamplesTaken)
         {
             Debug.LogError("Mismatch in sample list lengths!");
         }
 
-        Matrix moveMatrix = Matrix.Zeros(psMoveSamples.Count, 4);
-        for (int i = 1; i <= psMoveSamples.Count; i++)
-        {
-            moveMatrix[i, 1] = new Complex(psMoveSamples[i - 1].x);
-            moveMatrix[i, 2] = new Complex(psMoveSamples[i - 1].y);
-            moveMatrix[i, 3] = new Complex(psMoveSamples[i - 1].z);
-            moveMatrix[i, 4] = new Complex(1.0f);
-        }
+		Matrix moveMatrix;
+		Matrix kinectMatrix;
 
-        Matrix kinectMatrix = Matrix.Zeros(kinectSamples.Count, 3);
-        for (int i = 1; i <= kinectSamples.Count; i++)
-        {
-            kinectMatrix[i, 1] = new Complex(kinectSamples[i - 1].x);
-            kinectMatrix[i, 2] = new Complex(kinectSamples[i - 1].y);
-            kinectMatrix[i, 3] = new Complex(kinectSamples[i - 1].z);
-        }
+		// Matrix.Zeros(firstDeviceSamples.Count, 4);
 
+
+		moveMatrix = Matrix.Zeros(firstDeviceSamples.Count, 4);
+
+		if (First_device == Device.PS_Move || Second_device == Device.PS_Move) {
+				if (First_device == Device.PS_Move) {
+						moveMatrix = Matrix.Zeros (firstDeviceSamples.Count, 4);
+						kinectMatrix = Matrix.Zeros (secondDeviceSamples.Count, 3);
+						for (int i = 1; i <= firstDeviceSamples.Count; i++) {
+							moveMatrix [i, 1] = new Complex (firstDeviceSamples [i - 1].x);
+							moveMatrix [i, 2] = new Complex (firstDeviceSamples [i - 1].y);
+							moveMatrix [i, 3] = new Complex (firstDeviceSamples [i - 1].z);
+							moveMatrix [i, 4] = new Complex (1.0f);
+						}
+						for (int i = 1; i <= secondDeviceSamples.Count; i++) {
+							kinectMatrix [i, 1] = new Complex (secondDeviceSamples [i - 1].x);
+							kinectMatrix [i, 2] = new Complex (secondDeviceSamples [i - 1].y);
+							kinectMatrix [i, 3] = new Complex (secondDeviceSamples [i - 1].z);
+						}
+				} else {
+						moveMatrix = Matrix.Zeros (secondDeviceSamples.Count, 4);
+						kinectMatrix = Matrix.Zeros (firstDeviceSamples.Count, 3);
+						for (int i = 1; i <= secondDeviceSamples.Count; i++) {
+							moveMatrix [i, 1] = new Complex (secondDeviceSamples [i - 1].x);
+							moveMatrix [i, 2] = new Complex (secondDeviceSamples [i - 1].y);
+							moveMatrix [i, 3] = new Complex (secondDeviceSamples [i - 1].z);
+							moveMatrix [i, 4] = new Complex (1.0f);
+						}
+						for (int i = 1; i <= firstDeviceSamples.Count; i++) {
+							kinectMatrix [i, 1] = new Complex (firstDeviceSamples [i - 1].x);
+							kinectMatrix [i, 2] = new Complex (firstDeviceSamples [i - 1].y);
+							kinectMatrix [i, 3] = new Complex (firstDeviceSamples [i - 1].z);
+						}
+				}
+				
+		} else {
+			moveMatrix = Matrix.Zeros (firstDeviceSamples.Count, 3);
+			kinectMatrix = Matrix.Zeros (secondDeviceSamples.Count, 3);
+			for (int i = 1; i <= firstDeviceSamples.Count; i++) {
+				moveMatrix [i, 1] = new Complex (firstDeviceSamples [i - 1].x);
+				moveMatrix [i, 2] = new Complex (firstDeviceSamples [i - 1].y);
+				moveMatrix [i, 3] = new Complex (firstDeviceSamples [i - 1].z);
+			}
+			for (int i = 1; i <= secondDeviceSamples.Count; i++) {
+				kinectMatrix [i, 1] = new Complex (secondDeviceSamples [i - 1].x);
+				kinectMatrix [i, 2] = new Complex (secondDeviceSamples [i - 1].y);
+				kinectMatrix [i, 3] = new Complex (secondDeviceSamples [i - 1].z);
+			}
+		}
         //perform a matrix solve Ax = B. We have to get transposes and inverses because moveMatrix isn't square
         //the solution is the same with (A^T)Ax = (A^T)B -> x = ((A^T)A)'(A^T)B
         Matrix transformMatrixSolution = (moveMatrix.Transpose() * moveMatrix).Inverse() * moveMatrix.Transpose() * kinectMatrix;
@@ -536,4 +585,38 @@ public class RUISM2KCalibration : MonoBehaviour {
             Debug.LogError("Could not connect to PS Move server at: " + psMoveIP + ":" + psMovePort);
         }
     }
+
+	private Vector3 getSample(Device device) {
+		Vector3 sample = new Vector3(0,0,0);
+
+		switch (device) {
+
+			case Device.Kinect_1:
+				OpenNI.SkeletonJointPosition jointPosition;
+				bool success = kinectSelection.GetPlayer(0).GetSkeletonJointPosition(OpenNI.SkeletonJoint.RightHand, out jointPosition);
+				if(success && jointPosition.Confidence >= 0.5) sample = coordinateSystem.ConvertKinectPosition(jointPosition.Position);
+			break;
+
+			case Device.Kinect_2:
+				Kinect.Body[] data = RUISKinect2Data.getData ();
+				foreach(var body in data) {
+				if(body.IsTracked && body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) {
+						sample = new Vector3(body.Joints[Kinect.JointType.HandRight].Position.X,
+						                     body.Joints[Kinect.JointType.HandRight].Position.Y,
+						                     -body.Joints[Kinect.JointType.HandRight].Position.Z);
+					}
+				}
+			break;
+
+			case Device.PS_Move:
+				if(psMoveWrapper.sphereVisible[calibratingPSMoveControllerId] && 
+				   psMoveWrapper.handleVelocity[calibratingPSMoveControllerId].magnitude <= 10.0f) {
+					sample = coordinateSystem.ConvertMovePosition(psMoveWrapper.handlePosition[calibratingPSMoveControllerId]);
+					}
+			break;
+
+		}
+		return sample;
+	}
+
 }

@@ -25,6 +25,7 @@ public class RUISSkeletonWand : RUISWand
     public Color wandColor = Color.white;
 
     public int playerId = 0;
+	public int bodyTrackingDeviceID = 0;
 
     private const int amountOfSelectionVisualizerImages = 8;
     Texture2D[] selectionVisualizers;
@@ -72,15 +73,15 @@ public class RUISSkeletonWand : RUISWand
 
     public void Update()
     {
-        if (!isTracking && skeletonManager.skeletons[playerId].isTracking)
+        if (!isTracking && skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking)
         {
             PlayerFound();
         }
-        else if (isTracking && !skeletonManager.skeletons[playerId].isTracking)
+        else if (isTracking && !skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking)
         {
             PlayerLost();
         }
-        else if (!skeletonManager.skeletons[playerId].isTracking)
+        else if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking)
         {
             return;
         }
@@ -102,8 +103,8 @@ public class RUISSkeletonWand : RUISWand
 
         visualizerThreshold = Mathf.Clamp01(visualizerThreshold);
 
-        RUISSkeletonManager.JointData startData = skeletonManager.GetJointData(wandStart, playerId);
-        RUISSkeletonManager.JointData endData = skeletonManager.GetJointData(wandEnd, playerId);
+		RUISSkeletonManager.JointData startData = skeletonManager.GetJointData(wandStart, playerId, bodyTrackingDeviceID);
+		RUISSkeletonManager.JointData endData = skeletonManager.GetJointData(wandEnd, playerId, bodyTrackingDeviceID);
 
         if (endData.positionConfidence >= 0.5f)
         {
@@ -157,7 +158,7 @@ public class RUISSkeletonWand : RUISWand
 
     public void OnGUI()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return;
+        if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) return;
 
         float gestureProgress = gestureRecognizer.GetGestureProgress();
 
@@ -181,7 +182,7 @@ public class RUISSkeletonWand : RUISWand
 
     public override bool SelectionButtonWasPressed()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
+        if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) return false;
         if (gestureRecognizer.GestureTriggered() && wandSelector.HighlightedObject)
         {
             gestureRecognizer.ResetProgress();
@@ -193,7 +194,7 @@ public class RUISSkeletonWand : RUISWand
 
     public override bool SelectionButtonWasReleased()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
+        if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) return false;
         if (gestureRecognizer.GestureTriggered())
         {
             gestureRecognizer.ResetProgress();
@@ -205,7 +206,7 @@ public class RUISSkeletonWand : RUISWand
 
     public override bool SelectionButtonIsDown()
     {
-        if (!skeletonManager.skeletons[playerId].isTracking || !gestureRecognizer) return false;
+        if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) return false;
         return gestureRecognizer.GestureTriggered();
     }
 
