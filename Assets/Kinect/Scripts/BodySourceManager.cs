@@ -8,7 +8,7 @@ public class BodySourceManager : MonoBehaviour
     private BodyFrameReader _Reader;
     private Body[] _Data = null;
     
-    public Body[] GetData()
+    public Body[] GetBodyData()
     {
         return _Data;
     }

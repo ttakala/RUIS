@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Kinect = Windows.Kinect;
@@ -56,7 +56,7 @@ public class BodySourceView : MonoBehaviour
             return;
         }
         
-        Kinect.Body[] data = _BodyManager.GetData();
+        Kinect.Body[] data = _BodyManager.GetBodyData();
         if (data == null)
         {
             return;

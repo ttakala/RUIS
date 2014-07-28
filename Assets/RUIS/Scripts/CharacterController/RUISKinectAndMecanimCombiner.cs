@@ -81,7 +81,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     private bool childrenInstantiated = false;
 
-    private RUISInputManager inputManager;
+	private RUISInputManager inputManager;
+	private RUISSkeletonManager skeletonManager;
 
     private bool torsoIsRoot = false;
 
@@ -91,7 +92,9 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
     }
 
     void Start()
-    {
+	{
+		skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
+
         if (!childrenInstantiated)
         {
             childrenInstantiated = true;
@@ -138,7 +141,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             mecanimAnimator = mecanimGameObject.GetComponent<Animator>();
 
 			if(!skeletonController)
-				Debug.LogError("Script " + skeletonController.GetType().Name + " is not found by " + this.GetType().Name + "!");
+				Debug.LogError("Script " + typeof(RUISSkeletonController) + " is not found by " + this.GetType().Name + "!");
 
             torsoIsRoot = skeletonController.root == skeletonController.torso;
 
@@ -375,29 +378,47 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		
 		//print(angles); 
 		
-        limbRootBone.blendedTransform.rotation = limbRootBone.blendedTransform.rotation * Quaternion.AngleAxis(angles, limbRootBone.blendedTransform.InverseTransformDirection(transform.up));//* newLocalRotation * Quaternion.Inverse(limbRootBone.blendedTransform.rotation) * limbRootBone.blendedTransform.rotation;
+        limbRootBone.blendedTransform.rotation = limbRootBone.blendedTransform.rotation 
+			* Quaternion.AngleAxis(angles, limbRootBone.blendedTransform.InverseTransformDirection(transform.up));
+			//* newLocalRotation * Quaternion.Inverse(limbRootBone.blendedTransform.rotation) * limbRootBone.blendedTransform.rotation;
         
     }
 
     private Quaternion CalculateKinectToMecanimYaw()
     {
-        Vector3 kinectTorsoForward = torsoRoot.kinectTransform.forward;
+		Vector3 kinectTorsoForward = torsoRoot.kinectTransform.forward; // The old and occasionally buggy way (kinectTorsoForward is set again below)
+		Vector3 kinectTorsoUp = Vector3.up; //torsoRoot.kinectTransform.up;
+
+		if(skeletonManager != null && skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
+			kinectTorsoForward = skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId].torso.rotation*Vector3.forward;
+
+		
+		//kinectTorsoUp.y = 0;
+		//kinectTorsoUp.Normalize();
+
         kinectTorsoForward.y = 0;
-        kinectTorsoForward.Normalize();
-        Vector3 kinectTorsoUp = torsoRoot.kinectTransform.up;
-        kinectTorsoUp.y = 0;
-        kinectTorsoUp.Normalize();
+		kinectTorsoForward.Normalize();
         Quaternion kinectTorsoRotation = Quaternion.LookRotation(kinectTorsoForward, kinectTorsoUp);
 
-        Vector3 mecanimTorsoForward = -transform.right;
+
+		Vector3 mecanimTorsoForward = transform.forward; //-transform.right;
         mecanimTorsoForward.y = 0;
         mecanimTorsoForward.Normalize();
-        Vector3 mecanimTorsoUp = transform.forward;
-        mecanimTorsoUp.y = 0;
+		Vector3 mecanimTorsoUp = Vector3.up; //transform.forward;
+        //mecanimTorsoUp.y = 0;
         mecanimTorsoUp.Normalize();
-        Quaternion mecanimTorsoRotation = Quaternion.LookRotation(mecanimTorsoForward, mecanimTorsoUp);
+//        Quaternion mecanimTorsoRotation = Quaternion.LookRotation(mecanimTorsoForward, mecanimTorsoUp);
 
-        Quaternion torsoYawRotation = Quaternion.Inverse(kinectTorsoRotation) * mecanimTorsoRotation;
+		// Is the custom Euler rotation rig hierarchy dependent..?
+		Quaternion torsoYawRotation = Quaternion.Euler(new Vector3(0,0,-90)) * kinectTorsoRotation; // Quaternion.Inverse(kinectTorsoRotation) * mecanimTorsoRotation;
+
+		// TODO: DELETE
+		if(transform.parent.gameObject.name == "Mecanim - Kinect 1 A")
+		{
+			GameObject.Find("KinectC").transform.rotation = skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId].torso.rotation; //torsoRoot.kinectTransform.rotation;
+			GameObject.Find("MecanimC").transform.rotation = torsoYawRotation; //transform.rotation;
+		}
+
         return torsoYawRotation;
     }
 

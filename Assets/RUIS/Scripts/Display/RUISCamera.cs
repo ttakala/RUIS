@@ -353,34 +353,7 @@ public class RUISCamera : MonoBehaviour {
 		translation[3, 3] = 1;
 		
 		return projectionMatrix * rotation * translation;
-
-            //return projectionMatrix;
-
-        /*Vector3 camToDisplay = associatedDisplay.displayCenterPosition - trackerCoordinates;
-        float dd = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
-        float frx = -Vector3.Dot(camToDisplay, associatedDisplay.DisplayRight) / dd;
-        float fry = -Vector3.Dot(camToDisplay, associatedDisplay.DisplayUp) / dd;
-        float scx = dd / (0.5f * associatedDisplay.width); // Metreissä
-        float scy = dd / (0.5f * associatedDisplay.height); // Metreissä
-        if (dd > 0)
-            scy *= -1;
-
-        Matrix4x4 B = Matrix4x4.identity;
-        B[0, 0] = scx;
-        B[1, 1] = scy;
-        B[0, 2] = scx * frx;
-        B[1, 2] = scy * fry;
-
-        
-        //Vector3 eyeProjWall = associatedDisplay.DisplayNormal * Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
-        float eyeProjWallX = trackerCoordinates.x - associatedDisplay.DisplayNormal.x * (Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal)); // Tässä on jostain syystä miinusmerkki
-        float eyeProjWallY = trackerCoordinates.y + associatedDisplay.DisplayNormal.y * (Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal));
-        float eyeProjWallZ = trackerCoordinates.z + associatedDisplay.DisplayNormal.z * (Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal));
-
-
-        Matrix4x4 C = Camera(trackerCoordinates.x, trackerCoordinates.y, trackerCoordinates.z, eyeProjWallX, eyeProjWallY, eyeProjWallZ, associatedDisplay.DisplayUp.x, associatedDisplay.DisplayUp.y, associatedDisplay.DisplayUp.z);
-
-        return CreateDefaultFrustum() * B * C;*/
+	
 	}
 	
 	public Matrix4x4 CreateDefaultFrustum()

@@ -14,7 +14,7 @@ using System.Collections;
 [RequireComponent(typeof(CapsuleCollider))]
 public class RUISCharacterStabilizingCollider : MonoBehaviour 
 {
-    public RUISSkeletonController skeletonController;
+    RUISSkeletonController skeletonController;
 
 	private RUISCoordinateSystem coordinateSystem;
 	private float coordinateYOffset = 0;
@@ -57,13 +57,15 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	void Awake () 
 	{
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
-		
-		if(skeletonController != null) {
-	        playerId = skeletonController.playerId;
-			}
-		else
-			Debug.LogError(   "The public variable 'Skeleton Controller' is not assigned! Using skeleton "
-							+ "ID 0 as the pivot source.");
+
+		if(skeletonController != null) 
+		{
+			playerId = skeletonController.playerId;
+			bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+		}
+//		else
+//			Debug.LogError(   "The public variable 'Skeleton Controller' is not assigned! Using skeleton "
+//							+ "ID 0 as the pivot source.");
 		
 		if(gameObject.transform.parent != null)
 		{
@@ -85,7 +87,6 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	void Start()
 	{
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-		bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
 	}
 	
 	void FixedUpdate () 
@@ -114,6 +115,15 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
                     if (combiner && combiner.isChildrenInstantiated())
                     {
                         skeletonController = combiner.skeletonController;
+
+						if(skeletonController == null)
+							Debug.LogError(  "Could not find Component " + typeof(RUISSkeletonController) + " from "
+							               + "children of " + gameObject.transform.parent.name
+							               + ", something is very wrong with this character setup!");
+
+						skeletonController.GetType();
+						bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+						playerId = skeletonController.playerId;
                         combinerChildrenInstantiated = true;
                     }
                 }

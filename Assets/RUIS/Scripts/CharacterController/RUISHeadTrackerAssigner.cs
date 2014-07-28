@@ -226,10 +226,10 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 						display.linkedCamera = ruisCamera;
 					}
 					else
-						Debug.LogError(  "RUISDisplay " + display.gameObject.name + " is already connected with a "
-						               + "RUISCamera object! Leave the RUISCamera field empty in your RUISDisplay "
-						               + "component if you want RUISHeadTrackerAssigner script to automatically "
-						               + "assign a RUISCamera to your RUISDisplay.");
+						Debug.LogWarning(  	  "RUISDisplay " + display.gameObject.name + " is already connected with a "
+											+ "RUISCamera object! Leave the RUISCamera field empty in your RUISDisplay "
+											+ "component if you want RUISHeadTrackerAssigner script to automatically "
+											+ "assign a RUISCamera to your RUISDisplay.");
 				}
 			}
 			else

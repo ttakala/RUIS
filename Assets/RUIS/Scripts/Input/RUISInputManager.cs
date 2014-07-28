@@ -88,10 +88,6 @@ public class RUISInputManager : MonoBehaviour
         {
             GetComponentInChildren<NIPlayerManagerCOMSelection>().m_MaxNumberOfPlayers = maxNumberOfKinectPlayers;
         }
-
-		if (!enableKinect2) {
-			Debug.Log("Kinect 2 is disabled from RUISInputManager.");
-		} 
 		
         psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
         if (enablePSMove)
@@ -191,6 +187,14 @@ public class RUISInputManager : MonoBehaviour
 				}
 			}
         }
+
+		if (!enableKinect2)
+		{
+			Debug.Log("Kinect 2 is disabled from RUISInputManager.");
+			BodySourceManager kinect2Manager = GetComponentInChildren<BodySourceManager>();
+			if(kinect2Manager)
+				kinect2Manager.gameObject.SetActive(false);
+		} 
 
         if (enablePSMove)
         {

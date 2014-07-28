@@ -15,7 +15,7 @@ using System.Collections;
 public class RUISCharacterLocomotion : MonoBehaviour
 {
     RUISCharacterController characterController;
-	RUISInputManager inputManager;
+	//RUISInputManager inputManager;
 	
     public KeyCode turnRightKey = KeyCode.E;
     public KeyCode turnLeftKey = KeyCode.Q;
@@ -70,8 +70,6 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
     bool shouldJump = false;
 
-    private float animationBlendStrength = 10.0f;
-
     void Awake()
     {
         characterController = GetComponent<RUISCharacterController>();
@@ -109,7 +107,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	
 	void Start()
 	{
-		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+		//inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		
 //		if(useRazerHydra && inputManager && !inputManager.enableRazerHydra)
 //		{
@@ -131,9 +129,6 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
     void Update()
     {
-		RUISCoordinateSystem coord = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-		Debug.LogError(coord.kinectFloorNormal);
-		
         jump = false;
 
         if(characterController == null || !characterController.grounded)

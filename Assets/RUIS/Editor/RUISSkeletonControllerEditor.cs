@@ -26,7 +26,8 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty updateJointPositions;
     SerializedProperty updateJointRotations;
 
-    SerializedProperty scaleHierarchicalModelBones;
+	SerializedProperty scaleHierarchicalModelBones;
+	SerializedProperty scaleBoneLengthOnly;
 
     SerializedProperty rootBone;
     SerializedProperty headBone;
@@ -94,7 +95,8 @@ public class RUISSkeletonControllerEditor : Editor
         updateJointPositions = serializedObject.FindProperty("updateJointPositions");
         updateJointRotations = serializedObject.FindProperty("updateJointRotations");
 
-        scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
+		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
+		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
 
         rootBone = serializedObject.FindProperty("root");
         headBone = serializedObject.FindProperty("head");
@@ -184,9 +186,22 @@ public class RUISSkeletonControllerEditor : Editor
 
         GUI.enabled = useHierarchicalModel.boolValue;
         EditorGUILayout.PropertyField(scaleHierarchicalModelBones, new GUIContent(  "Scale Bones", "Scale the bones of the model based on the "
-		                                                                          + "real-life lengths of the player bones. Only available for "
-		                                                                          + "hierarchical models."));
-        if (!useHierarchicalModel.boolValue) scaleHierarchicalModelBones.boolValue = false;
+		                                                                          + "real-life lengths of the player bones. This option is only "
+		                                                                          + "available for hierarchical models."));
+
+		GUI.enabled = scaleHierarchicalModelBones.boolValue;
+		EditorGUI.indentLevel++;
+		EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Scale Length Only", "Scale the bone length (localScale.x) but not their "
+		                                                                  + "thickness. This option is only available for hierarchical models."));
+		EditorGUI.indentLevel--;
+
+        if (!useHierarchicalModel.boolValue)
+		{
+			scaleHierarchicalModelBones.boolValue = false;
+		}
+		if (!scaleHierarchicalModelBones.boolValue)
+			scaleBoneLengthOnly.boolValue = false;
+
         GUI.enabled = true;
 
 		EditorGUILayout.Space();
