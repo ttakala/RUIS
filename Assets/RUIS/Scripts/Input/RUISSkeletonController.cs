@@ -10,6 +10,11 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections.Generic;
 
+public enum RUISAxis
+{
+	X, Y, Z
+}
+
 [AddComponentMenu("RUIS/Input/RUISSkeletonController")]
 public class RUISSkeletonController : MonoBehaviour
 {
@@ -82,7 +87,8 @@ public class RUISSkeletonController : MonoBehaviour
 
     public bool useHierarchicalModel = false;
 	public bool scaleHierarchicalModelBones = true;
-	public bool scaleBoneLengthOnly = true;
+	public bool scaleBoneLengthOnly = false;
+	public RUISAxis boneLengthAxis = RUISAxis.X;
 	public float maxScaleFactor = 0.01f;
 
     public float minimumConfidenceToUpdate = 0.5f;
@@ -587,8 +593,21 @@ public class RUISSkeletonController : MonoBehaviour
 			UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand, rightArmCumulativeScale);
 			if(scaleBoneLengthOnly)
 			{
-				rightElbow.transform.localScale = new Vector3(forearmLengthRatio * 
-				                                              	rightElbow.transform.localScale.x, rightElbow.transform.localScale.y, rightElbow.transform.localScale.z);
+				switch(boneLengthAxis)
+				{
+					case RUISAxis.X:
+						rightElbow.transform.localScale = new Vector3(forearmLengthRatio * rightElbow.transform.localScale.x, rightElbow.transform.localScale.y, 
+					                                           		  rightElbow.transform.localScale.z);
+						break;
+					case RUISAxis.Y:
+						rightElbow.transform.localScale = new Vector3(rightElbow.transform.localScale.x, forearmLengthRatio * rightElbow.transform.localScale.y, 
+					                                              rightElbow.transform.localScale.z);
+						break;
+					case RUISAxis.Z:
+						rightElbow.transform.localScale = new Vector3(rightElbow.transform.localScale.x, rightElbow.transform.localScale.y, forearmLengthRatio *
+					                                              rightElbow.transform.localScale.z);
+						break;
+				}
 			}
 			else
 			   rightElbow.transform.localScale = rightElbow.transform.localScale * forearmLengthRatio;
@@ -600,8 +619,21 @@ public class RUISSkeletonController : MonoBehaviour
 			UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand, leftArmCumulativeScale);
 			if(scaleBoneLengthOnly)
 			{
-				leftElbow.transform.localScale = new Vector3(forearmLengthRatio * 
-				                                             leftElbow.transform.localScale.x, leftElbow.transform.localScale.y, leftElbow.transform.localScale.z);
+				switch(boneLengthAxis)
+				{
+					case RUISAxis.X:
+						leftElbow.transform.localScale = new Vector3(forearmLengthRatio * leftElbow.transform.localScale.x, leftElbow.transform.localScale.y, 
+						                                             leftElbow.transform.localScale.z);
+						break;
+					case RUISAxis.Y:
+						leftElbow.transform.localScale = new Vector3(leftElbow.transform.localScale.x, forearmLengthRatio * leftElbow.transform.localScale.y, 
+						                                             leftElbow.transform.localScale.z);
+						break;
+					case RUISAxis.Z:
+						leftElbow.transform.localScale = new Vector3(leftElbow.transform.localScale.x, leftElbow.transform.localScale.y, forearmLengthRatio * 
+						                                             leftElbow.transform.localScale.z);
+						break;
+				}
 			}
 			else
 				leftElbow.transform.localScale = leftElbow.transform.localScale * forearmLengthRatio;
@@ -613,8 +645,21 @@ public class RUISSkeletonController : MonoBehaviour
 			UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot, rightLegCumulativeScale);
 			if(scaleBoneLengthOnly)
 			{
-				rightKnee.transform.localScale = new Vector3(shinLengthRatio * 
-				                                             rightKnee.transform.localScale.x, rightKnee.transform.localScale.y, rightKnee.transform.localScale.z);
+				switch(boneLengthAxis)
+				{
+					case RUISAxis.X:
+						rightKnee.transform.localScale = new Vector3(shinLengthRatio * rightKnee.transform.localScale.x, rightKnee.transform.localScale.y, 
+						                                             rightKnee.transform.localScale.z);
+						break;
+					case RUISAxis.Y:
+						rightKnee.transform.localScale = new Vector3(rightKnee.transform.localScale.x, shinLengthRatio * rightKnee.transform.localScale.y, 
+						                                             rightKnee.transform.localScale.z);
+						break;
+					case RUISAxis.Z:
+						rightKnee.transform.localScale = new Vector3(rightKnee.transform.localScale.x, rightKnee.transform.localScale.y, shinLengthRatio * 
+						                                             rightKnee.transform.localScale.z);
+						break;
+				}
 			}
 			else
 				rightKnee.transform.localScale = rightKnee.transform.localScale * shinLengthRatio;
@@ -626,8 +671,21 @@ public class RUISSkeletonController : MonoBehaviour
 			UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot, leftLegCumulativeScale);
 			if(scaleBoneLengthOnly)
 			{
-				leftKnee.transform.localScale = new Vector3(shinLengthRatio * 
-				                                            leftKnee.transform.localScale.x, leftKnee.transform.localScale.y, leftKnee.transform.localScale.z);
+				switch(boneLengthAxis)
+				{
+					case RUISAxis.X:
+						leftKnee.transform.localScale = new Vector3(shinLengthRatio * leftKnee.transform.localScale.x, leftKnee.transform.localScale.y, 
+						                                            leftKnee.transform.localScale.z);
+						break;
+					case RUISAxis.Y:
+						leftKnee.transform.localScale = new Vector3(leftKnee.transform.localScale.x, shinLengthRatio * leftKnee.transform.localScale.y, 
+						                                            leftKnee.transform.localScale.z);
+						break;
+					case RUISAxis.Z:
+						leftKnee.transform.localScale = new Vector3(leftKnee.transform.localScale.x, leftKnee.transform.localScale.y, 
+						                                            shinLengthRatio * leftKnee.transform.localScale.z);
+						break;
+				}
 			}
 			else
 				leftKnee.transform.localScale = leftKnee.transform.localScale * shinLengthRatio;
@@ -642,7 +700,21 @@ public class RUISSkeletonController : MonoBehaviour
 
 		if(scaleBoneLengthOnly)
 		{
-			boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, boneToScale.localScale.y, boneToScale.localScale.z), maxScaleFactor * Time.deltaTime);
+			switch(boneLengthAxis)
+			{
+			case RUISAxis.X:
+				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, boneToScale.localScale.y, boneToScale.localScale.z), 
+				                                             maxScaleFactor * Time.deltaTime);
+				break;
+			case RUISAxis.Y:
+				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(boneToScale.localScale.x, newScale, boneToScale.localScale.z), 
+				                                             maxScaleFactor * Time.deltaTime);
+				break;
+			case RUISAxis.Z:
+				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(boneToScale.localScale.x, boneToScale.localScale.y, newScale), 
+				                                             maxScaleFactor * Time.deltaTime);
+				break;
+			}
 		}
 		else
 			boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, newScale, newScale), maxScaleFactor * Time.deltaTime);

@@ -28,6 +28,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 	SerializedProperty scaleHierarchicalModelBones;
 	SerializedProperty scaleBoneLengthOnly;
+	SerializedProperty boneLengthAxis;
 
     SerializedProperty rootBone;
     SerializedProperty headBone;
@@ -97,6 +98,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
+		boneLengthAxis = serializedObject.FindProperty("boneLengthAxis");
 
         rootBone = serializedObject.FindProperty("root");
         headBone = serializedObject.FindProperty("head");
@@ -191,8 +193,15 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 		EditorGUI.indentLevel++;
-		EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Scale Length Only", "Scale the bone length (localScale.x) but not their "
-		                                                                  + "thickness. This option is only available for hierarchical models."));
+		EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Scale Length Only", "Scale the bone length (localScale.x/y/z) but not the "
+		                                                                  + "bone thickness (localScale.yz/xz/xy). WARNING: Enabling this option could "
+		                                                                  + "lead to peculiar results, depending on the animation rig."));
+		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent(  "Length Axis for Scaling", "Determines the localScale axis along which each bone is "
+		                                                             + "scaled, if only length is scaled. You can discover the correct axis by examining "
+		                                                             + "the animation rig hierarchy, by looking at the directional axis between parent "
+		                                                             + "joints and their child joints in local coordinate system. IMPORTANT: Disable the "
+		                                                             + "above 'Scale Length Only' option if the same localScale axis is not consistently "
+		                                                             + "used in all the joints of the animation rig."));
 		EditorGUI.indentLevel--;
 
         if (!useHierarchicalModel.boolValue)

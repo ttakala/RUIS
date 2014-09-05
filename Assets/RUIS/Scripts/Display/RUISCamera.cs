@@ -409,12 +409,7 @@ public class RUISCamera : MonoBehaviour {
 //		                                                 - Mathf.Atan(frustumBottom/camera.nearClipPlane))*fovFactor);
 		
 	}
-	
-	public void SetupKeystoneCorrection()
-	{
-		isKeystoneCorrected = true;
-	}
-	
+
 	private void ApplyKeystoneCorrection()
 	{
 		//Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
