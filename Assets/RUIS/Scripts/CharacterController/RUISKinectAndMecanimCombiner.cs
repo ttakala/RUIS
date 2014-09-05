@@ -392,7 +392,6 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		if(skeletonManager != null && skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
 			kinectTorsoForward = skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId].torso.rotation*Vector3.forward;
 
-		
 		//kinectTorsoUp.y = 0;
 		//kinectTorsoUp.Normalize();
 
@@ -400,24 +399,16 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		kinectTorsoForward.Normalize();
         Quaternion kinectTorsoRotation = Quaternion.LookRotation(kinectTorsoForward, kinectTorsoUp);
 
-
 		Vector3 mecanimTorsoForward = transform.forward; //-transform.right;
         mecanimTorsoForward.y = 0;
         mecanimTorsoForward.Normalize();
 		Vector3 mecanimTorsoUp = Vector3.up; //transform.forward;
         //mecanimTorsoUp.y = 0;
-        mecanimTorsoUp.Normalize();
+        //mecanimTorsoUp.Normalize();
 //        Quaternion mecanimTorsoRotation = Quaternion.LookRotation(mecanimTorsoForward, mecanimTorsoUp);
 
 		// Is the custom Euler rotation rig hierarchy dependent..?
 		Quaternion torsoYawRotation = Quaternion.Euler(new Vector3(0,0,-90)) * kinectTorsoRotation; // Quaternion.Inverse(kinectTorsoRotation) * mecanimTorsoRotation;
-
-		// TODO: DELETE
-		if(transform.parent.gameObject.name == "Mecanim - Kinect 1 A")
-		{
-			GameObject.Find("KinectC").transform.rotation = skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId].torso.rotation; //torsoRoot.kinectTransform.rotation;
-			GameObject.Find("MecanimC").transform.rotation = torsoYawRotation; //transform.rotation;
-		}
 
         return torsoYawRotation;
     }

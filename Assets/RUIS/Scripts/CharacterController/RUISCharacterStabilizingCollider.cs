@@ -121,7 +121,6 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 							               + "children of " + gameObject.transform.parent.name
 							               + ", something is very wrong with this character setup!");
 
-						skeletonController.GetType();
 						bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
 						playerId = skeletonController.playerId;
                         combinerChildrenInstantiated = true;
