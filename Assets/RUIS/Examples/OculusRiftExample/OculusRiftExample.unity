@@ -3601,7 +3601,7 @@ MonoBehaviour:
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
-  enableOculusRift: 0
+  enableOculusRift: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 1164690019}
@@ -36463,7 +36463,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableOculusRift
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: guiY
@@ -38394,7 +38394,7 @@ MonoBehaviour:
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 3}
   loadFromXML: 1
   yawOffset: 0
-  floorNormal: {x: 0, y: 1, z: 0}
+  floorNormal: {x: 0, y: 0, z: 0}
   floorPitchRotation: {x: 0, y: 0, z: 0, w: 1}
   applyToRootCoordinates: 1
   setKinectOriginToFloor: 1
