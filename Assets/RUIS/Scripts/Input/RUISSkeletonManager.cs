@@ -316,11 +316,14 @@ public class RUISSkeletonManager : MonoBehaviour {
             return;
         }
 
-		Vector3 newRootPosition = coordinateSystem.ConvertKinectPosition(data.Position.Position);
-        newRootPosition = Vector3.Scale(newRootPosition, rootSpeedScaling);
+		Vector3 newRootPosition = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinectLocation(data.Position.Position), RUISDevice.Kinect_1);
+		
+		newRootPosition = Vector3.Scale(newRootPosition, rootSpeedScaling);
 		skeletons[kinectSensorID, player].root.position = newRootPosition;
 		skeletons[kinectSensorID, player].root.positionConfidence = data.Position.Confidence;
-		skeletons[kinectSensorID, player].root.rotation = coordinateSystem.ConvertKinectRotation(data.Orientation);
+		skeletons[kinectSensorID, player].root.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);
+		
+		
 		skeletons[kinectSensorID, player].root.rotationConfidence = data.Orientation.Confidence;
     }
 
@@ -332,10 +335,10 @@ public class RUISSkeletonManager : MonoBehaviour {
         {
             return;
         }
-
-		jointData.position = coordinateSystem.ConvertKinectPosition(data.Position.Position);
+		
+		jointData.position = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinectLocation(data.Position.Position), RUISDevice.Kinect_1);
         jointData.positionConfidence = data.Position.Confidence;
-        jointData.rotation = coordinateSystem.ConvertKinectRotation(data.Orientation);
+		jointData.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);
         jointData.rotationConfidence = data.Orientation.Confidence;
     }
 	/*
@@ -343,18 +346,17 @@ public class RUISSkeletonManager : MonoBehaviour {
 	 */
 	private void UpdateKinect2RootData(JointData torso, int player)
 	{
-		Vector3 newRootPosition = coordinateSystem.ConvertKinectPosition2(torso.position);
-		
+		Vector3 newRootPosition = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinect2Location(torso.position), RUISDevice.Kinect_2);
 		skeletons [kinect2SensorID, player].root.position = newRootPosition;
 		skeletons [kinect2SensorID, player].root.positionConfidence = torso.positionConfidence;
-		skeletons [kinect2SensorID, player].root.rotation = coordinateSystem.ConvertKinectRotation2(torso.rotation);
+		skeletons [kinect2SensorID, player].root.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinect2Rotation(torso.rotation), RUISDevice.Kinect_2);
 		skeletons [kinect2SensorID, player].root.rotationConfidence = torso.rotationConfidence;
 	}
 	private void UpdateKinect2JointData(JointData joint, int player, ref JointData jointData)
 	{
-		jointData.position = coordinateSystem.ConvertKinectPosition2(joint.position);
+		jointData.position = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinect2Location(joint.position), RUISDevice.Kinect_2);
 		jointData.positionConfidence = joint.positionConfidence; 
-		jointData.rotation = coordinateSystem.ConvertKinectRotation2(joint.rotation);
+		jointData.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinect2Rotation(joint.rotation), RUISDevice.Kinect_2);
 		jointData.rotationConfidence = joint.rotationConfidence;
 	}
 

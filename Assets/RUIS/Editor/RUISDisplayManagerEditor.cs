@@ -17,15 +17,47 @@ public class RUISDisplayManagerEditor : Editor {
     private GameObject displayPrefab;
 
     SerializedProperty allowResolutionDialog;
-
+	SerializedProperty ruisMenuPrefab;
+	SerializedProperty guiX; 
+	SerializedProperty guiY; 
+	SerializedProperty guiZ;
+	SerializedProperty guiScaleX;
+	SerializedProperty guiScaleY;
+	SerializedProperty hideMouseOnPlay;
+	
     GUIStyle displayBoxStyle;
 
     private Texture2D monoDisplayTexture;
     private Texture2D stereoDisplayTexture;
-
+	
+	List<string> guiDisplayChoices;
+	
+	SerializedObject displayManagerLink; 
+	SerializedProperty guiDisplayChoiceLink;
+	
+	
+	RUISDisplayManager displayManager; 
+	
+	SerializedProperty menuCursorPrefab;
+	
     void OnEnable()
     {
+    
+		displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
+		
         displays = serializedObject.FindProperty("displays");
+		ruisMenuPrefab = serializedObject.FindProperty("ruisMenuPrefab");
+		
+		guiX = serializedObject.FindProperty("guiX");
+		guiY = serializedObject.FindProperty("guiY");
+		guiZ = serializedObject.FindProperty("guiZ");
+		guiScaleX = serializedObject.FindProperty("guiScaleX");
+		guiScaleY = serializedObject.FindProperty("guiScaleY");
+		hideMouseOnPlay = serializedObject.FindProperty("hideMouseOnPlay");
+		
+		displayManagerLink = new SerializedObject(displayManager);// target is the object that you are trying to make editor changes for. In this case Uni.
+		guiDisplayChoiceLink = displayManagerLink.FindProperty("guiDisplayChoice");
+		
         allowResolutionDialog = serializedObject.FindProperty("allowResolutionDialog");
         displayPrefab = Resources.Load("RUIS/Prefabs/Main RUIS/RUISDisplay") as GameObject;
 
@@ -38,12 +70,15 @@ public class RUISDisplayManagerEditor : Editor {
 
         monoDisplayTexture = Resources.Load("RUIS/Editor/Textures/monodisplay") as Texture2D;
         stereoDisplayTexture = Resources.Load("RUIS/Editor/Textures/stereodisplay") as Texture2D;
+		
+		menuCursorPrefab = serializedObject.FindProperty("menuCursorPrefab");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
+		displayManagerLink.Update();
+		
         EditorGUILayout.PropertyField(displays, true);
 
         EditorGUILayout.Space();
@@ -154,8 +189,40 @@ public class RUISDisplayManagerEditor : Editor {
 
         EditorGUILayout.EndHorizontal();
 
-        serializedObject.ApplyModifiedProperties();
+		EditorGUILayout.BeginHorizontal();
+		EditorGUILayout.LabelField("Display with RUIS Menu:");
+		guiDisplayChoices = new List<string>();
+		for(int i = 0; i < displayManager.displays.Count; ++i)
+		{
+			guiDisplayChoices.Add(i + " " + displayManager.displays[i].name);
+		}
+		//MonoBehaviour.print(guiDisplayChoiceLink + ":" + guiDisplayChoices.Count);
+		if(guiDisplayChoiceLink.intValue >= guiDisplayChoices.Count) 
+			guiDisplayChoiceLink.intValue = 0; 
+		guiDisplayChoiceLink.intValue = EditorGUILayout.Popup(guiDisplayChoiceLink.intValue, guiDisplayChoices.ToArray());
+		EditorGUILayout.EndHorizontal();
+		
+		EditorGUILayout.PropertyField(ruisMenuPrefab);
 
+		
+		
+		EditorGUILayout.LabelField("RUIS Menu local coordinates:");
+		EditorGUILayout.PropertyField(guiX,  new GUIContent("X", ""));
+		EditorGUILayout.PropertyField(guiY,  new GUIContent("Y", ""));
+		EditorGUILayout.PropertyField(guiZ,  new GUIContent("Z", ""));
+		EditorGUILayout.LabelField("RUIS Menu scale:");
+		EditorGUILayout.PropertyField(guiScaleX,  new GUIContent("X-scale", ""));
+		EditorGUILayout.PropertyField(guiScaleY,  new GUIContent("Y-scale", ""));
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(hideMouseOnPlay,  new GUIContent("Hide mouse on play", ""));
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(menuCursorPrefab,  new GUIContent("Menu cursor prefab", ""));
+		
+
+        serializedObject.ApplyModifiedProperties();
+		displayManagerLink.ApplyModifiedProperties();
+		
+	
         //remove all child displays that aren't in the list anymore
         RUISDisplay displayToDestroy = null;
         foreach (RUISDisplay display in displayManager.GetComponentsInChildren<RUISDisplay>())
@@ -169,6 +236,9 @@ public class RUISDisplayManagerEditor : Editor {
         {
             DestroyImmediate(displayToDestroy.gameObject);
         }
+        
+		
+		
     }
 
     private void MoveUp(int displayIndex)

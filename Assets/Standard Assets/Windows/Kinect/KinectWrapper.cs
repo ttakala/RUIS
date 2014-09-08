@@ -9,6 +9,7 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.KinectCapabilities
     //
+    [RootSystem.Flags]
     public enum KinectCapabilities : uint
     {
         None                                     =0,
@@ -22,6 +23,7 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.FrameSourceTypes
     //
+    [RootSystem.Flags]
     public enum FrameSourceTypes : uint
     {
         None                                     =0,
@@ -153,6 +155,7 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.FrameEdges
     //
+    [RootSystem.Flags]
     public enum FrameEdges : uint
     {
         None                                     =0,
@@ -201,10 +204,40 @@ namespace Windows.Kinect
     [RootSystem.Runtime.InteropServices.StructLayout(RootSystem.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct Vector4
     {
-        public float X;
-        public float Y;
-        public float Z;
-        public float W;
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
+        public float W { get; set; }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode() ^ W.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Vector4))
+            {
+                return false;
+            }
+
+            return this.Equals((Vector4)obj);
+        }
+
+        public bool Equals(Vector4 obj)
+        {
+            return X.Equals(obj) && Y.Equals(obj) && Z.Equals(obj) && W.Equals(obj);
+        }
+
+        public static bool operator ==(Vector4 a, Vector4 b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Vector4 a, Vector4 b)
+        {
+            return !(a.Equals(b));
+        }
     }
 
     //
@@ -213,8 +246,38 @@ namespace Windows.Kinect
     [RootSystem.Runtime.InteropServices.StructLayout(RootSystem.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct ColorSpacePoint
     {
-        public float X;
-        public float Y;
+        public float X { get; set; }
+        public float Y { get; set; }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ColorSpacePoint))
+            {
+                return false;
+            }
+
+            return this.Equals((ColorSpacePoint)obj);
+        }
+
+        public bool Equals(ColorSpacePoint obj)
+        {
+            return X.Equals(obj) && Y.Equals(obj);
+        }
+
+        public static bool operator ==(ColorSpacePoint a, ColorSpacePoint b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(ColorSpacePoint a, ColorSpacePoint b)
+        {
+            return !(a.Equals(b));
+        }
     }
 
     //
@@ -223,8 +286,38 @@ namespace Windows.Kinect
     [RootSystem.Runtime.InteropServices.StructLayout(RootSystem.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct DepthSpacePoint
     {
-        public float X;
-        public float Y;
+        public float X { get; set; }
+        public float Y { get; set; }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is DepthSpacePoint))
+            {
+                return false;
+            }
+
+            return this.Equals((DepthSpacePoint)obj);
+        }
+
+        public bool Equals(DepthSpacePoint obj)
+        {
+            return X.Equals(obj) && Y.Equals(obj);
+        }
+
+        public static bool operator ==(DepthSpacePoint a, DepthSpacePoint b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(DepthSpacePoint a, DepthSpacePoint b)
+        {
+            return !(a.Equals(b));
+        }
     }
 
     //
@@ -233,9 +326,39 @@ namespace Windows.Kinect
     [RootSystem.Runtime.InteropServices.StructLayout(RootSystem.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct CameraSpacePoint
     {
-        public float X;
-        public float Y;
-        public float Z;
+        public float X { get; set; }
+        public float Y { get; set; }
+        public float Z { get; set; }
+
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode() ^ Z.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is CameraSpacePoint))
+            {
+                return false;
+            }
+
+            return this.Equals((CameraSpacePoint)obj);
+        }
+
+        public bool Equals(CameraSpacePoint obj)
+        {
+            return X.Equals(obj) && Y.Equals(obj) && Z.Equals(obj);
+        }
+
+        public static bool operator ==(CameraSpacePoint a, CameraSpacePoint b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(CameraSpacePoint a, CameraSpacePoint b)
+        {
+            return !(a.Equals(b));
+        }
     }
 
     //
@@ -244,9 +367,39 @@ namespace Windows.Kinect
     [RootSystem.Runtime.InteropServices.StructLayout(RootSystem.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct Joint
     {
-        public Windows.Kinect.JointType JointType;
-        public Windows.Kinect.CameraSpacePoint Position;
-        public Windows.Kinect.TrackingState TrackingState;
+        public Windows.Kinect.JointType JointType { get; set; }
+        public Windows.Kinect.CameraSpacePoint Position { get; set; }
+        public Windows.Kinect.TrackingState TrackingState { get; set; }
+
+        public override int GetHashCode()
+        {
+            return JointType.GetHashCode() ^ Position.GetHashCode() ^ TrackingState.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Joint))
+            {
+                return false;
+            }
+
+            return this.Equals((Joint)obj);
+        }
+
+        public bool Equals(Joint obj)
+        {
+            return JointType.Equals(obj) && Position.Equals(obj) && TrackingState.Equals(obj);
+        }
+
+        public static bool operator ==(Joint a, Joint b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Joint a, Joint b)
+        {
+            return !(a.Equals(b));
+        }
     }
 
     //
@@ -255,8 +408,38 @@ namespace Windows.Kinect
     [RootSystem.Runtime.InteropServices.StructLayout(RootSystem.Runtime.InteropServices.LayoutKind.Sequential)]
     public struct JointOrientation
     {
-        public Windows.Kinect.JointType JointType;
-        public Windows.Kinect.Vector4 Orientation;
+        public Windows.Kinect.JointType JointType { get; set; }
+        public Windows.Kinect.Vector4 Orientation { get; set; }
+
+        public override int GetHashCode()
+        {
+            return JointType.GetHashCode() ^ Orientation.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is JointOrientation))
+            {
+                return false;
+            }
+
+            return this.Equals((JointOrientation)obj);
+        }
+
+        public bool Equals(JointOrientation obj)
+        {
+            return JointType.Equals(obj) && Orientation.Equals(obj);
+        }
+
+        public static bool operator ==(JointOrientation a, JointOrientation b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(JointOrientation a, JointOrientation b)
+        {
+            return !(a.Equals(b));
+        }
     }
 
     #endregion // Structs
@@ -266,9 +449,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.KinectSensor
     //
-    public partial class KinectSensor
+    public sealed partial class KinectSensor
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal KinectSensor(RootSystem.IntPtr pNative)
@@ -286,7 +469,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_KinectSensor_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_KinectSensor_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -297,31 +480,6 @@ namespace Windows.Kinect
                 Windows_Kinect_KinectSensor_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(KinectSensor other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator KinectSensor(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<KinectSensor>(other);
-            if(obj == null)
-            {
-                obj = new KinectSensor(other);
-                Helper.NativeObjectCache.AddObject<KinectSensor>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -628,39 +786,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_IsAvailableChangedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_IsAvailableChangedEventArgs_Delegate(object sender, Windows.Kinect.IsAvailableChangedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_IsAvailableChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_IsAvailableChangedEventArgs_Delegate>> Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_IsAvailableChangedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.IsAvailableChangedEventArgs>>> Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.IsAvailableChangedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_IsAvailableChangedEventArgs_Delegate))]
         private static void Windows_Kinect_IsAvailableChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_IsAvailableChangedEventArgs_Delegate>();
+                Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.IsAvailableChangedEventArgs>>();
             }
             var callbackList = Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<KinectSensor>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<KinectSensor>(pNative);
+                    var args = new Windows.Kinect.IsAvailableChangedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.IsAvailableChangedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_KinectSensor_add_IsAvailableChanged(RootSystem.IntPtr pNative, _Windows_Kinect_IsAvailableChangedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_IsAvailableChangedEventArgs_Delegate IsAvailableChanged
+        public event RootSystem.EventHandler<Windows.Kinect.IsAvailableChangedEventArgs> IsAvailableChanged
         {
             add
             {
             if(!Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_IsAvailableChangedEventArgs_Delegate>());
+                Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.IsAvailableChangedEventArgs>>());
             }
             var callbackList = Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -678,7 +839,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_IsAvailableChangedEventArgs_Delegate>();
+                Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.IsAvailableChangedEventArgs>>();
             }
             var callbackList = Windows_Kinect_IsAvailableChangedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -688,6 +849,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_KinectSensor_add_IsAvailableChanged(_pNative, Windows_Kinect_IsAvailableChangedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_IsAvailableChangedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<KinectSensor>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_KinectSensor_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_KinectSensor_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_KinectSensor_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -773,9 +1004,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.IsAvailableChangedEventArgs
     //
-    public partial class IsAvailableChangedEventArgs
+    public sealed partial class IsAvailableChangedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal IsAvailableChangedEventArgs(RootSystem.IntPtr pNative)
@@ -793,7 +1025,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_IsAvailableChangedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_IsAvailableChangedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -804,31 +1036,6 @@ namespace Windows.Kinect
                 Windows_Kinect_IsAvailableChangedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(IsAvailableChangedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator IsAvailableChangedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<IsAvailableChangedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new IsAvailableChangedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<IsAvailableChangedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -853,9 +1060,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.ColorFrameSource
     //
-    public partial class ColorFrameSource
+    public sealed partial class ColorFrameSource
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal ColorFrameSource(RootSystem.IntPtr pNative)
@@ -873,7 +1080,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_ColorFrameSource_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_ColorFrameSource_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -884,31 +1091,6 @@ namespace Windows.Kinect
                 Windows_Kinect_ColorFrameSource_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(ColorFrameSource other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator ColorFrameSource(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<ColorFrameSource>(other);
-            if(obj == null)
-            {
-                obj = new ColorFrameSource(other);
-                Helper.NativeObjectCache.AddObject<ColorFrameSource>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -990,39 +1172,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_FrameCapturedEventArgs_Delegate(object sender, Windows.Kinect.FrameCapturedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_FrameCapturedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_FrameCapturedEventArgs_Delegate))]
         private static void Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<ColorFrameSource>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<ColorFrameSource>(pNative);
+                    var args = new Windows.Kinect.FrameCapturedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.FrameCapturedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_ColorFrameSource_add_FrameCaptured(RootSystem.IntPtr pNative, _Windows_Kinect_FrameCapturedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_FrameCapturedEventArgs_Delegate FrameCaptured
+        public event RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs> FrameCaptured
         {
             add
             {
             if(!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>());
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>());
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -1040,7 +1225,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -1050,6 +1235,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_ColorFrameSource_add_FrameCaptured(_pNative, Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<ColorFrameSource>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_ColorFrameSource_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_ColorFrameSource_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_ColorFrameSource_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -1114,9 +1369,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.DepthFrameSource
     //
-    public partial class DepthFrameSource
+    public sealed partial class DepthFrameSource
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal DepthFrameSource(RootSystem.IntPtr pNative)
@@ -1134,7 +1389,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_DepthFrameSource_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_DepthFrameSource_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -1145,31 +1400,6 @@ namespace Windows.Kinect
                 Windows_Kinect_DepthFrameSource_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(DepthFrameSource other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator DepthFrameSource(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<DepthFrameSource>(other);
-            if(obj == null)
-            {
-                obj = new DepthFrameSource(other);
-                Helper.NativeObjectCache.AddObject<DepthFrameSource>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -1281,39 +1511,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_FrameCapturedEventArgs_Delegate(object sender, Windows.Kinect.FrameCapturedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_FrameCapturedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_FrameCapturedEventArgs_Delegate))]
         private static void Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<DepthFrameSource>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<DepthFrameSource>(pNative);
+                    var args = new Windows.Kinect.FrameCapturedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.FrameCapturedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_DepthFrameSource_add_FrameCaptured(RootSystem.IntPtr pNative, _Windows_Kinect_FrameCapturedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_FrameCapturedEventArgs_Delegate FrameCaptured
+        public event RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs> FrameCaptured
         {
             add
             {
             if(!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>());
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>());
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -1331,7 +1564,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -1341,6 +1574,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_DepthFrameSource_add_FrameCaptured(_pNative, Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<DepthFrameSource>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_DepthFrameSource_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_DepthFrameSource_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_DepthFrameSource_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -1379,9 +1682,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyFrameSource
     //
-    public partial class BodyFrameSource
+    public sealed partial class BodyFrameSource
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyFrameSource(RootSystem.IntPtr pNative)
@@ -1399,7 +1702,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyFrameSource_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyFrameSource_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -1410,31 +1713,6 @@ namespace Windows.Kinect
                 Windows_Kinect_BodyFrameSource_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(BodyFrameSource other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyFrameSource(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyFrameSource>(other);
-            if(obj == null)
-            {
-                obj = new BodyFrameSource(other);
-                Helper.NativeObjectCache.AddObject<BodyFrameSource>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -1502,39 +1780,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_FrameCapturedEventArgs_Delegate(object sender, Windows.Kinect.FrameCapturedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_FrameCapturedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_FrameCapturedEventArgs_Delegate))]
         private static void Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<BodyFrameSource>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<BodyFrameSource>(pNative);
+                    var args = new Windows.Kinect.FrameCapturedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.FrameCapturedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyFrameSource_add_FrameCaptured(RootSystem.IntPtr pNative, _Windows_Kinect_FrameCapturedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_FrameCapturedEventArgs_Delegate FrameCaptured
+        public event RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs> FrameCaptured
         {
             add
             {
             if(!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>());
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>());
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -1552,7 +1833,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -1562,6 +1843,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_BodyFrameSource_add_FrameCaptured(_pNative, Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<BodyFrameSource>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_BodyFrameSource_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_BodyFrameSource_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_BodyFrameSource_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -1624,9 +1975,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyIndexFrameSource
     //
-    public partial class BodyIndexFrameSource
+    public sealed partial class BodyIndexFrameSource
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyIndexFrameSource(RootSystem.IntPtr pNative)
@@ -1644,7 +1995,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyIndexFrameSource_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyIndexFrameSource_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -1655,31 +2006,6 @@ namespace Windows.Kinect
                 Windows_Kinect_BodyIndexFrameSource_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(BodyIndexFrameSource other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyIndexFrameSource(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyIndexFrameSource>(other);
-            if(obj == null)
-            {
-                obj = new BodyIndexFrameSource(other);
-                Helper.NativeObjectCache.AddObject<BodyIndexFrameSource>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -1761,39 +2087,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_FrameCapturedEventArgs_Delegate(object sender, Windows.Kinect.FrameCapturedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_FrameCapturedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_FrameCapturedEventArgs_Delegate))]
         private static void Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<BodyIndexFrameSource>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<BodyIndexFrameSource>(pNative);
+                    var args = new Windows.Kinect.FrameCapturedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.FrameCapturedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyIndexFrameSource_add_FrameCaptured(RootSystem.IntPtr pNative, _Windows_Kinect_FrameCapturedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_FrameCapturedEventArgs_Delegate FrameCaptured
+        public event RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs> FrameCaptured
         {
             add
             {
             if(!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>());
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>());
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -1811,7 +2140,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -1821,6 +2150,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_BodyIndexFrameSource_add_FrameCaptured(_pNative, Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<BodyIndexFrameSource>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_BodyIndexFrameSource_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_BodyIndexFrameSource_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_BodyIndexFrameSource_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -1859,9 +2258,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.InfraredFrameSource
     //
-    public partial class InfraredFrameSource
+    public sealed partial class InfraredFrameSource
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal InfraredFrameSource(RootSystem.IntPtr pNative)
@@ -1879,7 +2278,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_InfraredFrameSource_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_InfraredFrameSource_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -1890,31 +2289,6 @@ namespace Windows.Kinect
                 Windows_Kinect_InfraredFrameSource_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(InfraredFrameSource other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator InfraredFrameSource(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<InfraredFrameSource>(other);
-            if(obj == null)
-            {
-                obj = new InfraredFrameSource(other);
-                Helper.NativeObjectCache.AddObject<InfraredFrameSource>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -1996,39 +2370,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_FrameCapturedEventArgs_Delegate(object sender, Windows.Kinect.FrameCapturedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_FrameCapturedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_FrameCapturedEventArgs_Delegate))]
         private static void Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<InfraredFrameSource>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<InfraredFrameSource>(pNative);
+                    var args = new Windows.Kinect.FrameCapturedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.FrameCapturedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_InfraredFrameSource_add_FrameCaptured(RootSystem.IntPtr pNative, _Windows_Kinect_FrameCapturedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_FrameCapturedEventArgs_Delegate FrameCaptured
+        public event RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs> FrameCaptured
         {
             add
             {
             if(!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>());
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>());
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2046,7 +2423,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2056,6 +2433,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_InfraredFrameSource_add_FrameCaptured(_pNative, Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<InfraredFrameSource>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_InfraredFrameSource_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_InfraredFrameSource_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_InfraredFrameSource_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -2094,9 +2541,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.LongExposureInfraredFrameSource
     //
-    public partial class LongExposureInfraredFrameSource
+    public sealed partial class LongExposureInfraredFrameSource
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal LongExposureInfraredFrameSource(RootSystem.IntPtr pNative)
@@ -2114,7 +2561,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_LongExposureInfraredFrameSource_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_LongExposureInfraredFrameSource_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -2125,31 +2572,6 @@ namespace Windows.Kinect
                 Windows_Kinect_LongExposureInfraredFrameSource_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(LongExposureInfraredFrameSource other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator LongExposureInfraredFrameSource(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameSource>(other);
-            if(obj == null)
-            {
-                obj = new LongExposureInfraredFrameSource(other);
-                Helper.NativeObjectCache.AddObject<LongExposureInfraredFrameSource>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -2231,39 +2653,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_FrameCapturedEventArgs_Delegate(object sender, Windows.Kinect.FrameCapturedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_FrameCapturedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_FrameCapturedEventArgs_Delegate))]
         private static void Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameSource>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameSource>(pNative);
+                    var args = new Windows.Kinect.FrameCapturedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.FrameCapturedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_LongExposureInfraredFrameSource_add_FrameCaptured(RootSystem.IntPtr pNative, _Windows_Kinect_FrameCapturedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_FrameCapturedEventArgs_Delegate FrameCaptured
+        public event RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs> FrameCaptured
         {
             add
             {
             if(!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>());
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>());
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2281,7 +2706,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2291,6 +2716,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_LongExposureInfraredFrameSource_add_FrameCaptured(_pNative, Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameSource>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_LongExposureInfraredFrameSource_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_LongExposureInfraredFrameSource_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_LongExposureInfraredFrameSource_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -2329,9 +2824,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.AudioSource
     //
-    public partial class AudioSource
+    public sealed partial class AudioSource
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioSource(RootSystem.IntPtr pNative)
@@ -2349,7 +2844,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioSource_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioSource_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -2362,38 +2857,13 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(AudioSource other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioSource(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioSource>(other);
-            if(obj == null)
-            {
-                obj = new AudioSource(other);
-                Helper.NativeObjectCache.AddObject<AudioSource>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern int Windows_Kinect_AudioSource_get_AudioBeams(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] RootSystem.IntPtr[] outCollection, int collectionSize);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern int Windows_Kinect_AudioSource_get_AudioBeams_Length(RootSystem.IntPtr pNative);
-        public  Windows.Kinect.AudioBeam[] AudioBeams
+        public  RootSystem.Collections.Generic.IList<Windows.Kinect.AudioBeam> AudioBeams
         {
             get
             {
@@ -2488,8 +2958,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_AudioSource_get_SubFrameDuration(RootSystem.IntPtr pNative);
-        public  long SubFrameDuration
+        private static extern RootSystem.TimeSpan Windows_Kinect_AudioSource_get_SubFrameDuration(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan SubFrameDuration
         {
             get
             {
@@ -2536,39 +3006,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_FrameCapturedEventArgs_Delegate(object sender, Windows.Kinect.FrameCapturedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_FrameCapturedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_FrameCapturedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>> Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_FrameCapturedEventArgs_Delegate))]
         private static void Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<AudioSource>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<AudioSource>(pNative);
+                    var args = new Windows.Kinect.FrameCapturedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.FrameCapturedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioSource_add_FrameCaptured(RootSystem.IntPtr pNative, _Windows_Kinect_FrameCapturedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_FrameCapturedEventArgs_Delegate FrameCaptured
+        public event RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs> FrameCaptured
         {
             add
             {
             if(!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>());
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>());
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2586,7 +3059,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_FrameCapturedEventArgs_Delegate>();
+                Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.FrameCapturedEventArgs>>();
             }
             var callbackList = Windows_Kinect_FrameCapturedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2596,6 +3069,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_AudioSource_add_FrameCaptured(_pNative, Windows_Kinect_FrameCapturedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_FrameCapturedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<AudioSource>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_AudioSource_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_AudioSource_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_AudioSource_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -2634,10 +3177,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.MultiSourceFrameReader
     //
-    public partial class MultiSourceFrameReader : RootSystem.IDisposable
+    public sealed partial class MultiSourceFrameReader : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal MultiSourceFrameReader(RootSystem.IntPtr pNative)
@@ -2655,7 +3198,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_MultiSourceFrameReader_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_MultiSourceFrameReader_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -2671,31 +3214,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(MultiSourceFrameReader other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator MultiSourceFrameReader(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<MultiSourceFrameReader>(other);
-            if(obj == null)
-            {
-                obj = new MultiSourceFrameReader(other);
-                Helper.NativeObjectCache.AddObject<MultiSourceFrameReader>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -2774,39 +3292,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate(object sender, Windows.Kinect.MultiSourceFrameArrivedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate>> Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.MultiSourceFrameArrivedEventArgs>>> Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.MultiSourceFrameArrivedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate))]
         private static void Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.MultiSourceFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<MultiSourceFrameReader>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<MultiSourceFrameReader>(pNative);
+                    var args = new Windows.Kinect.MultiSourceFrameArrivedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.MultiSourceFrameArrivedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_MultiSourceFrameReader_add_MultiSourceFrameArrived(RootSystem.IntPtr pNative, _Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate MultiSourceFrameArrived
+        public event RootSystem.EventHandler<Windows.Kinect.MultiSourceFrameArrivedEventArgs> MultiSourceFrameArrived
         {
             add
             {
             if(!Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate>());
+                Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.MultiSourceFrameArrivedEventArgs>>());
             }
             var callbackList = Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2824,7 +3345,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.MultiSourceFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2834,6 +3355,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_MultiSourceFrameReader_add_MultiSourceFrameArrived(_pNative, Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_MultiSourceFrameArrivedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<MultiSourceFrameReader>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_MultiSourceFrameReader_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_MultiSourceFrameReader_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_MultiSourceFrameReader_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -2885,9 +3476,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.CoordinateMapper
     //
-    public partial class CoordinateMapper
+    public sealed partial class CoordinateMapper
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal CoordinateMapper(RootSystem.IntPtr pNative)
@@ -2905,7 +3496,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_CoordinateMapper_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_CoordinateMapper_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -2918,68 +3509,46 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(CoordinateMapper other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator CoordinateMapper(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<CoordinateMapper>(other);
-            if(obj == null)
-            {
-                obj = new CoordinateMapper(other);
-                Helper.NativeObjectCache.AddObject<CoordinateMapper>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate(object sender, Windows.Kinect.CoordinateMappingChangedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate>> Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.CoordinateMappingChangedEventArgs>>> Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.CoordinateMappingChangedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate))]
         private static void Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate>();
+                Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.CoordinateMappingChangedEventArgs>>();
             }
             var callbackList = Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<CoordinateMapper>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<CoordinateMapper>(pNative);
+                    var args = new Windows.Kinect.CoordinateMappingChangedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.CoordinateMappingChangedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_CoordinateMapper_add_CoordinateMappingChanged(RootSystem.IntPtr pNative, _Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate CoordinateMappingChanged
+        public event RootSystem.EventHandler<Windows.Kinect.CoordinateMappingChangedEventArgs> CoordinateMappingChanged
         {
             add
             {
             if(!Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate>());
+                Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.CoordinateMappingChangedEventArgs>>());
             }
             var callbackList = Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -2997,7 +3566,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate>();
+                Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.CoordinateMappingChangedEventArgs>>();
             }
             var callbackList = Windows_Kinect_CoordinateMappingChangedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -3163,9 +3732,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.MultiSourceFrameArrivedEventArgs
     //
-    public partial class MultiSourceFrameArrivedEventArgs
+    public sealed partial class MultiSourceFrameArrivedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal MultiSourceFrameArrivedEventArgs(RootSystem.IntPtr pNative)
@@ -3183,7 +3753,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_MultiSourceFrameArrivedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_MultiSourceFrameArrivedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -3194,31 +3764,6 @@ namespace Windows.Kinect
                 Windows_Kinect_MultiSourceFrameArrivedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(MultiSourceFrameArrivedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator MultiSourceFrameArrivedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<MultiSourceFrameArrivedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new MultiSourceFrameArrivedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<MultiSourceFrameArrivedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -3257,10 +3802,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.MultiSourceFrame
     //
-    public partial class MultiSourceFrame : RootSystem.IDisposable
-
+    public sealed partial class MultiSourceFrame
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal MultiSourceFrame(RootSystem.IntPtr pNative)
@@ -3278,7 +3822,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_MultiSourceFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_MultiSourceFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -3288,37 +3832,7 @@ namespace Windows.Kinect
             Helper.NativeObjectCache.RemoveObject<MultiSourceFrame>(_pNative);
                 Windows_Kinect_MultiSourceFrame_ReleaseObject(ref _pNative);
 
-            if (disposing)
-            {
-                Windows_Kinect_MultiSourceFrame_Dispose(_pNative);
-            }
-
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(MultiSourceFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator MultiSourceFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<MultiSourceFrame>(other);
-            if(obj == null)
-            {
-                obj = new MultiSourceFrame(other);
-                Helper.NativeObjectCache.AddObject<MultiSourceFrame>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -3499,27 +4013,14 @@ namespace Windows.Kinect
 
 
         // Public Methods
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern void Windows_Kinect_MultiSourceFrame_Dispose(RootSystem.IntPtr pNative);
-        public void Dispose()
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                return;
-            }
-
-            Dispose(true);
-            RootSystem.GC.SuppressFinalize(this);
-        }
-
     }
 
     //
     // Windows.Kinect.MultiSourceFrameReference
     //
-    public partial class MultiSourceFrameReference
+    public sealed partial class MultiSourceFrameReference
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal MultiSourceFrameReference(RootSystem.IntPtr pNative)
@@ -3537,7 +4038,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_MultiSourceFrameReference_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_MultiSourceFrameReference_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -3548,31 +4049,6 @@ namespace Windows.Kinect
                 Windows_Kinect_MultiSourceFrameReference_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(MultiSourceFrameReference other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator MultiSourceFrameReference(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<MultiSourceFrameReference>(other);
-            if(obj == null)
-            {
-                obj = new MultiSourceFrameReference(other);
-                Helper.NativeObjectCache.AddObject<MultiSourceFrameReference>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -3608,9 +4084,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.ColorFrameReference
     //
-    public partial class ColorFrameReference
+    public sealed partial class ColorFrameReference
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal ColorFrameReference(RootSystem.IntPtr pNative)
@@ -3628,7 +4104,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_ColorFrameReference_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_ColorFrameReference_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -3641,36 +4117,11 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(ColorFrameReference other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator ColorFrameReference(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<ColorFrameReference>(other);
-            if(obj == null)
-            {
-                obj = new ColorFrameReference(other);
-                Helper.NativeObjectCache.AddObject<ColorFrameReference>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_ColorFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_ColorFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -3716,9 +4167,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.DepthFrameReference
     //
-    public partial class DepthFrameReference
+    public sealed partial class DepthFrameReference
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal DepthFrameReference(RootSystem.IntPtr pNative)
@@ -3736,7 +4187,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_DepthFrameReference_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_DepthFrameReference_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -3749,36 +4200,11 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(DepthFrameReference other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator DepthFrameReference(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<DepthFrameReference>(other);
-            if(obj == null)
-            {
-                obj = new DepthFrameReference(other);
-                Helper.NativeObjectCache.AddObject<DepthFrameReference>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_DepthFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_DepthFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -3824,9 +4250,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyFrameReference
     //
-    public partial class BodyFrameReference
+    public sealed partial class BodyFrameReference
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyFrameReference(RootSystem.IntPtr pNative)
@@ -3844,7 +4270,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyFrameReference_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyFrameReference_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -3857,36 +4283,11 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(BodyFrameReference other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyFrameReference(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyFrameReference>(other);
-            if(obj == null)
-            {
-                obj = new BodyFrameReference(other);
-                Helper.NativeObjectCache.AddObject<BodyFrameReference>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_BodyFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_BodyFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -3932,9 +4333,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyIndexFrameReference
     //
-    public partial class BodyIndexFrameReference
+    public sealed partial class BodyIndexFrameReference
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyIndexFrameReference(RootSystem.IntPtr pNative)
@@ -3952,7 +4353,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyIndexFrameReference_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyIndexFrameReference_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -3965,36 +4366,11 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(BodyIndexFrameReference other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyIndexFrameReference(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyIndexFrameReference>(other);
-            if(obj == null)
-            {
-                obj = new BodyIndexFrameReference(other);
-                Helper.NativeObjectCache.AddObject<BodyIndexFrameReference>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_BodyIndexFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_BodyIndexFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -4040,9 +4416,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.InfraredFrameReference
     //
-    public partial class InfraredFrameReference
+    public sealed partial class InfraredFrameReference
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal InfraredFrameReference(RootSystem.IntPtr pNative)
@@ -4060,7 +4436,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_InfraredFrameReference_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_InfraredFrameReference_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -4073,36 +4449,11 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(InfraredFrameReference other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator InfraredFrameReference(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<InfraredFrameReference>(other);
-            if(obj == null)
-            {
-                obj = new InfraredFrameReference(other);
-                Helper.NativeObjectCache.AddObject<InfraredFrameReference>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_InfraredFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_InfraredFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -4148,9 +4499,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.LongExposureInfraredFrameReference
     //
-    public partial class LongExposureInfraredFrameReference
+    public sealed partial class LongExposureInfraredFrameReference
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal LongExposureInfraredFrameReference(RootSystem.IntPtr pNative)
@@ -4168,7 +4519,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_LongExposureInfraredFrameReference_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_LongExposureInfraredFrameReference_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -4181,36 +4532,11 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(LongExposureInfraredFrameReference other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator LongExposureInfraredFrameReference(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameReference>(other);
-            if(obj == null)
-            {
-                obj = new LongExposureInfraredFrameReference(other);
-                Helper.NativeObjectCache.AddObject<LongExposureInfraredFrameReference>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_LongExposureInfraredFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_LongExposureInfraredFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -4256,10 +4582,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.ColorFrame
     //
-    public partial class ColorFrame : RootSystem.IDisposable
+    public sealed partial class ColorFrame : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal ColorFrame(RootSystem.IntPtr pNative)
@@ -4277,7 +4603,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_ColorFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_ColorFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -4293,31 +4619,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(ColorFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator ColorFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<ColorFrame>(other);
-            if(obj == null)
-            {
-                obj = new ColorFrame(other);
-                Helper.NativeObjectCache.AddObject<ColorFrame>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -4425,8 +4726,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_ColorFrame_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_ColorFrame_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -4451,32 +4752,6 @@ namespace Windows.Kinect
             }
 
             Windows_Kinect_ColorFrame_CopyRawFrameDataToArray(_pNative, frameData, frameData.Length);
-        }
-
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern RootSystem.IntPtr Windows_Kinect_ColorFrame_LockRawImageBuffer(RootSystem.IntPtr pNative);
-        public Windows.Storage.Streams.IBuffer LockRawImageBuffer()
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                throw new RootSystem.ObjectDisposedException("ColorFrame");
-            }
-
-            RootSystem.IntPtr objectPointer = Windows_Kinect_ColorFrame_LockRawImageBuffer(_pNative);
-            if (objectPointer == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-
-            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
-            var obj = Helper.NativeObjectCache.GetObject<Windows.Storage.Streams.IBuffer>(objectPointer);
-            if (obj == null)
-            {
-                obj = new Windows.Storage.Streams.IBuffer(objectPointer);
-                Helper.NativeObjectCache.AddObject<Windows.Storage.Streams.IBuffer>(objectPointer, obj);
-            }
-
-            return obj;
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
@@ -4535,9 +4810,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.FrameCapturedEventArgs
     //
-    public partial class FrameCapturedEventArgs
+    public sealed partial class FrameCapturedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal FrameCapturedEventArgs(RootSystem.IntPtr pNative)
@@ -4555,7 +4831,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_FrameCapturedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_FrameCapturedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -4566,31 +4842,6 @@ namespace Windows.Kinect
                 Windows_Kinect_FrameCapturedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(FrameCapturedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator FrameCapturedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<FrameCapturedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new FrameCapturedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<FrameCapturedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -4626,8 +4877,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_FrameCapturedEventArgs_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_FrameCapturedEventArgs_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -4645,10 +4896,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.ColorFrameReader
     //
-    public partial class ColorFrameReader : RootSystem.IDisposable
+    public sealed partial class ColorFrameReader : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal ColorFrameReader(RootSystem.IntPtr pNative)
@@ -4666,7 +4917,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_ColorFrameReader_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_ColorFrameReader_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -4682,31 +4933,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(ColorFrameReader other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator ColorFrameReader(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<ColorFrameReader>(other);
-            if(obj == null)
-            {
-                obj = new ColorFrameReader(other);
-                Helper.NativeObjectCache.AddObject<ColorFrameReader>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -4770,39 +4996,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_ColorFrameArrivedEventArgs_Delegate(object sender, Windows.Kinect.ColorFrameArrivedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_ColorFrameArrivedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_ColorFrameArrivedEventArgs_Delegate>> Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_ColorFrameArrivedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.ColorFrameArrivedEventArgs>>> Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.ColorFrameArrivedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_ColorFrameArrivedEventArgs_Delegate))]
         private static void Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_ColorFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.ColorFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<ColorFrameReader>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<ColorFrameReader>(pNative);
+                    var args = new Windows.Kinect.ColorFrameArrivedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.ColorFrameArrivedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_ColorFrameReader_add_FrameArrived(RootSystem.IntPtr pNative, _Windows_Kinect_ColorFrameArrivedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_ColorFrameArrivedEventArgs_Delegate FrameArrived
+        public event RootSystem.EventHandler<Windows.Kinect.ColorFrameArrivedEventArgs> FrameArrived
         {
             add
             {
             if(!Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_ColorFrameArrivedEventArgs_Delegate>());
+                Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.ColorFrameArrivedEventArgs>>());
             }
             var callbackList = Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -4820,7 +5049,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_ColorFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.ColorFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -4830,6 +5059,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_ColorFrameReader_add_FrameArrived(_pNative, Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_ColorFrameArrivedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<ColorFrameReader>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_ColorFrameReader_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_ColorFrameReader_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_ColorFrameReader_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -4881,9 +5180,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.FrameDescription
     //
-    public partial class FrameDescription
+    public sealed partial class FrameDescription
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal FrameDescription(RootSystem.IntPtr pNative)
@@ -4901,7 +5200,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_FrameDescription_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_FrameDescription_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -4912,31 +5211,6 @@ namespace Windows.Kinect
                 Windows_Kinect_FrameDescription_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(FrameDescription other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator FrameDescription(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<FrameDescription>(other);
-            if(obj == null)
-            {
-                obj = new FrameDescription(other);
-                Helper.NativeObjectCache.AddObject<FrameDescription>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -5051,9 +5325,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.ColorFrameArrivedEventArgs
     //
-    public partial class ColorFrameArrivedEventArgs
+    public sealed partial class ColorFrameArrivedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal ColorFrameArrivedEventArgs(RootSystem.IntPtr pNative)
@@ -5071,7 +5346,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_ColorFrameArrivedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_ColorFrameArrivedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -5082,31 +5357,6 @@ namespace Windows.Kinect
                 Windows_Kinect_ColorFrameArrivedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(ColorFrameArrivedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator ColorFrameArrivedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<ColorFrameArrivedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new ColorFrameArrivedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<ColorFrameArrivedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -5145,9 +5395,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.ColorCameraSettings
     //
-    public partial class ColorCameraSettings
+    public sealed partial class ColorCameraSettings
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal ColorCameraSettings(RootSystem.IntPtr pNative)
@@ -5165,7 +5415,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_ColorCameraSettings_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_ColorCameraSettings_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -5178,36 +5428,11 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(ColorCameraSettings other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator ColorCameraSettings(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<ColorCameraSettings>(other);
-            if(obj == null)
-            {
-                obj = new ColorCameraSettings(other);
-                Helper.NativeObjectCache.AddObject<ColorCameraSettings>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_ColorCameraSettings_get_ExposureTime(RootSystem.IntPtr pNative);
-        public  long ExposureTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_ColorCameraSettings_get_ExposureTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan ExposureTime
         {
             get
             {
@@ -5221,8 +5446,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_ColorCameraSettings_get_FrameInterval(RootSystem.IntPtr pNative);
-        public  long FrameInterval
+        private static extern RootSystem.TimeSpan Windows_Kinect_ColorCameraSettings_get_FrameInterval(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan FrameInterval
         {
             get
             {
@@ -5270,10 +5495,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.DepthFrame
     //
-    public partial class DepthFrame : RootSystem.IDisposable
+    public sealed partial class DepthFrame : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal DepthFrame(RootSystem.IntPtr pNative)
@@ -5291,7 +5516,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_DepthFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_DepthFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -5307,31 +5532,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(DepthFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator DepthFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<DepthFrame>(other);
-            if(obj == null)
-            {
-                obj = new DepthFrame(other);
-                Helper.NativeObjectCache.AddObject<DepthFrame>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -5425,8 +5625,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_DepthFrame_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_DepthFrame_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -5454,32 +5654,6 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern RootSystem.IntPtr Windows_Kinect_DepthFrame_LockImageBuffer(RootSystem.IntPtr pNative);
-        public Windows.Storage.Streams.IBuffer LockImageBuffer()
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                throw new RootSystem.ObjectDisposedException("DepthFrame");
-            }
-
-            RootSystem.IntPtr objectPointer = Windows_Kinect_DepthFrame_LockImageBuffer(_pNative);
-            if (objectPointer == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-
-            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
-            var obj = Helper.NativeObjectCache.GetObject<Windows.Storage.Streams.IBuffer>(objectPointer);
-            if (obj == null)
-            {
-                obj = new Windows.Storage.Streams.IBuffer(objectPointer);
-                Helper.NativeObjectCache.AddObject<Windows.Storage.Streams.IBuffer>(objectPointer, obj);
-            }
-
-            return obj;
-        }
-
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_DepthFrame_Dispose(RootSystem.IntPtr pNative);
         public void Dispose()
         {
@@ -5497,10 +5671,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.DepthFrameReader
     //
-    public partial class DepthFrameReader : RootSystem.IDisposable
+    public sealed partial class DepthFrameReader : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal DepthFrameReader(RootSystem.IntPtr pNative)
@@ -5518,7 +5692,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_DepthFrameReader_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_DepthFrameReader_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -5534,31 +5708,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(DepthFrameReader other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator DepthFrameReader(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<DepthFrameReader>(other);
-            if(obj == null)
-            {
-                obj = new DepthFrameReader(other);
-                Helper.NativeObjectCache.AddObject<DepthFrameReader>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -5622,39 +5771,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_DepthFrameArrivedEventArgs_Delegate(object sender, Windows.Kinect.DepthFrameArrivedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_DepthFrameArrivedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_DepthFrameArrivedEventArgs_Delegate>> Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_DepthFrameArrivedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.DepthFrameArrivedEventArgs>>> Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.DepthFrameArrivedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_DepthFrameArrivedEventArgs_Delegate))]
         private static void Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_DepthFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.DepthFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<DepthFrameReader>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<DepthFrameReader>(pNative);
+                    var args = new Windows.Kinect.DepthFrameArrivedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.DepthFrameArrivedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_DepthFrameReader_add_FrameArrived(RootSystem.IntPtr pNative, _Windows_Kinect_DepthFrameArrivedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_DepthFrameArrivedEventArgs_Delegate FrameArrived
+        public event RootSystem.EventHandler<Windows.Kinect.DepthFrameArrivedEventArgs> FrameArrived
         {
             add
             {
             if(!Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_DepthFrameArrivedEventArgs_Delegate>());
+                Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.DepthFrameArrivedEventArgs>>());
             }
             var callbackList = Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -5672,7 +5824,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_DepthFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.DepthFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -5682,6 +5834,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_DepthFrameReader_add_FrameArrived(_pNative, Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_DepthFrameArrivedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<DepthFrameReader>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_DepthFrameReader_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_DepthFrameReader_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_DepthFrameReader_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -5733,9 +5955,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.DepthFrameArrivedEventArgs
     //
-    public partial class DepthFrameArrivedEventArgs
+    public sealed partial class DepthFrameArrivedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal DepthFrameArrivedEventArgs(RootSystem.IntPtr pNative)
@@ -5753,7 +5976,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_DepthFrameArrivedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_DepthFrameArrivedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -5764,31 +5987,6 @@ namespace Windows.Kinect
                 Windows_Kinect_DepthFrameArrivedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(DepthFrameArrivedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator DepthFrameArrivedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<DepthFrameArrivedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new DepthFrameArrivedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<DepthFrameArrivedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -5827,10 +6025,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyFrame
     //
-    public partial class BodyFrame : RootSystem.IDisposable
+    public sealed partial class BodyFrame : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyFrame(RootSystem.IntPtr pNative)
@@ -5848,7 +6046,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -5864,31 +6062,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(BodyFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyFrame>(other);
-            if(obj == null)
-            {
-                obj = new BodyFrame(other);
-                Helper.NativeObjectCache.AddObject<BodyFrame>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -5938,23 +6111,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern Windows.Kinect.Vector4 Windows_Kinect_BodyFrame_get_FloorClipPlane(RootSystem.IntPtr pNative);
-        public  Windows.Kinect.Vector4 FloorClipPlane
-        {
-            get
-            {
-                if (_pNative == RootSystem.IntPtr.Zero)
-                {
-                    throw new RootSystem.ObjectDisposedException("BodyFrame");
-                }
-
-                return Windows_Kinect_BodyFrame_get_FloorClipPlane(_pNative);
-            }
-        }
-
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_BodyFrame_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_BodyFrame_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -5969,29 +6127,6 @@ namespace Windows.Kinect
 
 
         // Public Methods
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern void Windows_Kinect_BodyFrame_GetAndRefreshBodyData(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] RootSystem.IntPtr[] bodies, int bodiesSize);
-        public void GetAndRefreshBodyData(Windows.Kinect.Body[] bodies)
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                throw new RootSystem.ObjectDisposedException("BodyFrame");
-            }
-
-            int _bodies_idx=0;
-            var _bodies = new RootSystem.IntPtr[bodies.Count()];
-            foreach(var value in bodies)
-            {
-                _bodies[_bodies_idx] = (RootSystem.IntPtr)value;
-                _bodies_idx++;
-            }
-            Windows_Kinect_BodyFrame_GetAndRefreshBodyData(_pNative, _bodies, bodies.Length);
-            for(int i=0;i<bodies.Count();i++)
-            {
-                bodies[i] = (Windows.Kinect.Body)_bodies[i];
-            }
-        }
-
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyFrame_Dispose(RootSystem.IntPtr pNative);
         public void Dispose()
@@ -6010,10 +6145,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyFrameReader
     //
-    public partial class BodyFrameReader : RootSystem.IDisposable
+    public sealed partial class BodyFrameReader : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyFrameReader(RootSystem.IntPtr pNative)
@@ -6031,7 +6166,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyFrameReader_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyFrameReader_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -6047,31 +6182,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(BodyFrameReader other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyFrameReader(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyFrameReader>(other);
-            if(obj == null)
-            {
-                obj = new BodyFrameReader(other);
-                Helper.NativeObjectCache.AddObject<BodyFrameReader>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -6135,39 +6245,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_BodyFrameArrivedEventArgs_Delegate(object sender, Windows.Kinect.BodyFrameArrivedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_BodyFrameArrivedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_BodyFrameArrivedEventArgs_Delegate>> Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_BodyFrameArrivedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.BodyFrameArrivedEventArgs>>> Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.BodyFrameArrivedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_BodyFrameArrivedEventArgs_Delegate))]
         private static void Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_BodyFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.BodyFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<BodyFrameReader>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<BodyFrameReader>(pNative);
+                    var args = new Windows.Kinect.BodyFrameArrivedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.BodyFrameArrivedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyFrameReader_add_FrameArrived(RootSystem.IntPtr pNative, _Windows_Kinect_BodyFrameArrivedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_BodyFrameArrivedEventArgs_Delegate FrameArrived
+        public event RootSystem.EventHandler<Windows.Kinect.BodyFrameArrivedEventArgs> FrameArrived
         {
             add
             {
             if(!Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_BodyFrameArrivedEventArgs_Delegate>());
+                Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.BodyFrameArrivedEventArgs>>());
             }
             var callbackList = Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -6185,7 +6298,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_BodyFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.BodyFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -6195,6 +6308,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_BodyFrameReader_add_FrameArrived(_pNative, Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_BodyFrameArrivedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<BodyFrameReader>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_BodyFrameReader_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_BodyFrameReader_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_BodyFrameReader_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -6246,9 +6429,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyFrameArrivedEventArgs
     //
-    public partial class BodyFrameArrivedEventArgs
+    public sealed partial class BodyFrameArrivedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyFrameArrivedEventArgs(RootSystem.IntPtr pNative)
@@ -6266,7 +6450,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyFrameArrivedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyFrameArrivedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -6277,31 +6461,6 @@ namespace Windows.Kinect
                 Windows_Kinect_BodyFrameArrivedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(BodyFrameArrivedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyFrameArrivedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyFrameArrivedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new BodyFrameArrivedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<BodyFrameArrivedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -6340,10 +6499,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.Body
     //
-    public partial class Body : RootSystem.IDisposable
-
+    public sealed partial class Body
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal Body(RootSystem.IntPtr pNative)
@@ -6361,7 +6519,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_Body_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_Body_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -6371,37 +6529,7 @@ namespace Windows.Kinect
             Helper.NativeObjectCache.RemoveObject<Body>(_pNative);
                 Windows_Kinect_Body_ReleaseObject(ref _pNative);
 
-            if (disposing)
-            {
-                Windows_Kinect_Body_Dispose(_pNative);
-            }
-
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(Body other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator Body(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<Body>(other);
-            if(obj == null)
-            {
-                obj = new Body(other);
-                Helper.NativeObjectCache.AddObject<Body>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -6607,36 +6735,32 @@ namespace Windows.Kinect
             }
         }
 
-		[RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-		private static extern int Windows_Kinect_Body_get_JointOrientations(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.JointOrientation[] outValues, int collectionSize);
-		[RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-		private static extern int Windows_Kinect_Body_get_JointOrientations_Length(RootSystem.IntPtr pNative);
-		public  RootSystem.Collections.Generic.Dictionary<Windows.Kinect.JointType, Windows.Kinect.JointOrientation> JointOrientations
-		{
-			get
-			{
-				if (_pNative == RootSystem.IntPtr.Zero)
-				{
-					throw new RootSystem.ObjectDisposedException("Body");
-				}
-				
-				int collectionSize = 25;
-				
-				//int collectionSize = Windows_Kinect_Body_get_JointOrientations_Length(_pNative);
-				var outValues = new Windows.Kinect.JointOrientation[collectionSize];
-				var managedDictionary = new RootSystem.Collections.Generic.Dictionary<Windows.Kinect.JointType, Windows.Kinect.JointOrientation>();
-				
-				int result = Windows_Kinect_Body_get_JointOrientations(_pNative, outValues, collectionSize);
-				if( result == 0)
-				{
-					for(int i=0;i<collectionSize;i++)
-					{
-						managedDictionary.Add((JointType)i, outValues[i]);
-					}
-				}
-				return managedDictionary;
-			}
-		}
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern int Windows_Kinect_Body_get_JointOrientations(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.JointType[] outKeys, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.JointOrientation[] outValues, int collectionSize);
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern int Windows_Kinect_Body_get_JointOrientations_Length(RootSystem.IntPtr pNative);
+        public  RootSystem.Collections.Generic.Dictionary<Windows.Kinect.JointType, Windows.Kinect.JointOrientation> JointOrientations
+        {
+            get
+            {
+                if (_pNative == RootSystem.IntPtr.Zero)
+                {
+                    throw new RootSystem.ObjectDisposedException("Body");
+                }
+
+                int collectionSize = Windows_Kinect_Body_get_JointOrientations_Length(_pNative);
+                var outKeys = new Windows.Kinect.JointType[collectionSize];
+                var outValues = new Windows.Kinect.JointOrientation[collectionSize];
+                var managedDictionary = new RootSystem.Collections.Generic.Dictionary<Windows.Kinect.JointType, Windows.Kinect.JointOrientation>();
+
+                collectionSize = Windows_Kinect_Body_get_JointOrientations(_pNative, outKeys, outValues, collectionSize);
+                for(int i=0;i<collectionSize;i++)
+                {
+                    managedDictionary.Add(outKeys[i], outValues[i]);
+                }
+                return managedDictionary;
+            }
+        }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern int Windows_Kinect_Body_get_Joints(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.JointType[] outKeys, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.Joint[] outValues, int collectionSize);
@@ -6707,28 +6831,15 @@ namespace Windows.Kinect
 
 
         // Public Methods
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern void Windows_Kinect_Body_Dispose(RootSystem.IntPtr pNative);
-        public void Dispose()
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                return;
-            }
-
-            Dispose(true);
-            RootSystem.GC.SuppressFinalize(this);
-        }
-
     }
 
     //
     // Windows.Kinect.BodyIndexFrame
     //
-    public partial class BodyIndexFrame : RootSystem.IDisposable
+    public sealed partial class BodyIndexFrame : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyIndexFrame(RootSystem.IntPtr pNative)
@@ -6746,7 +6857,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyIndexFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyIndexFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -6762,31 +6873,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(BodyIndexFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyIndexFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyIndexFrame>(other);
-            if(obj == null)
-            {
-                obj = new BodyIndexFrame(other);
-                Helper.NativeObjectCache.AddObject<BodyIndexFrame>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -6850,8 +6936,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_BodyIndexFrame_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_BodyIndexFrame_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -6879,32 +6965,6 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern RootSystem.IntPtr Windows_Kinect_BodyIndexFrame_LockImageBuffer(RootSystem.IntPtr pNative);
-        public Windows.Storage.Streams.IBuffer LockImageBuffer()
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                throw new RootSystem.ObjectDisposedException("BodyIndexFrame");
-            }
-
-            RootSystem.IntPtr objectPointer = Windows_Kinect_BodyIndexFrame_LockImageBuffer(_pNative);
-            if (objectPointer == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-
-            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
-            var obj = Helper.NativeObjectCache.GetObject<Windows.Storage.Streams.IBuffer>(objectPointer);
-            if (obj == null)
-            {
-                obj = new Windows.Storage.Streams.IBuffer(objectPointer);
-                Helper.NativeObjectCache.AddObject<Windows.Storage.Streams.IBuffer>(objectPointer, obj);
-            }
-
-            return obj;
-        }
-
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyIndexFrame_Dispose(RootSystem.IntPtr pNative);
         public void Dispose()
         {
@@ -6922,10 +6982,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyIndexFrameReader
     //
-    public partial class BodyIndexFrameReader : RootSystem.IDisposable
+    public sealed partial class BodyIndexFrameReader : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyIndexFrameReader(RootSystem.IntPtr pNative)
@@ -6943,7 +7003,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyIndexFrameReader_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyIndexFrameReader_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -6959,31 +7019,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(BodyIndexFrameReader other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyIndexFrameReader(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyIndexFrameReader>(other);
-            if(obj == null)
-            {
-                obj = new BodyIndexFrameReader(other);
-                Helper.NativeObjectCache.AddObject<BodyIndexFrameReader>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -7047,39 +7082,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate(object sender, Windows.Kinect.BodyIndexFrameArrivedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate>> Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.BodyIndexFrameArrivedEventArgs>>> Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.BodyIndexFrameArrivedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate))]
         private static void Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.BodyIndexFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<BodyIndexFrameReader>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<BodyIndexFrameReader>(pNative);
+                    var args = new Windows.Kinect.BodyIndexFrameArrivedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.BodyIndexFrameArrivedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyIndexFrameReader_add_FrameArrived(RootSystem.IntPtr pNative, _Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate FrameArrived
+        public event RootSystem.EventHandler<Windows.Kinect.BodyIndexFrameArrivedEventArgs> FrameArrived
         {
             add
             {
             if(!Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate>());
+                Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.BodyIndexFrameArrivedEventArgs>>());
             }
             var callbackList = Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -7097,7 +7135,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.BodyIndexFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -7107,6 +7145,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_BodyIndexFrameReader_add_FrameArrived(_pNative, Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_BodyIndexFrameArrivedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<BodyIndexFrameReader>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_BodyIndexFrameReader_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_BodyIndexFrameReader_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_BodyIndexFrameReader_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -7158,9 +7266,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.BodyIndexFrameArrivedEventArgs
     //
-    public partial class BodyIndexFrameArrivedEventArgs
+    public sealed partial class BodyIndexFrameArrivedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal BodyIndexFrameArrivedEventArgs(RootSystem.IntPtr pNative)
@@ -7178,7 +7287,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_BodyIndexFrameArrivedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_BodyIndexFrameArrivedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -7189,31 +7298,6 @@ namespace Windows.Kinect
                 Windows_Kinect_BodyIndexFrameArrivedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(BodyIndexFrameArrivedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator BodyIndexFrameArrivedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<BodyIndexFrameArrivedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new BodyIndexFrameArrivedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<BodyIndexFrameArrivedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -7252,10 +7336,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.InfraredFrame
     //
-    public partial class InfraredFrame : RootSystem.IDisposable
+    public sealed partial class InfraredFrame : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal InfraredFrame(RootSystem.IntPtr pNative)
@@ -7273,7 +7357,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_InfraredFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_InfraredFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -7289,31 +7373,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(InfraredFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator InfraredFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<InfraredFrame>(other);
-            if(obj == null)
-            {
-                obj = new InfraredFrame(other);
-                Helper.NativeObjectCache.AddObject<InfraredFrame>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -7377,8 +7436,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_InfraredFrame_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_InfraredFrame_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -7406,32 +7465,6 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern RootSystem.IntPtr Windows_Kinect_InfraredFrame_LockImageBuffer(RootSystem.IntPtr pNative);
-        public Windows.Storage.Streams.IBuffer LockImageBuffer()
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                throw new RootSystem.ObjectDisposedException("InfraredFrame");
-            }
-
-            RootSystem.IntPtr objectPointer = Windows_Kinect_InfraredFrame_LockImageBuffer(_pNative);
-            if (objectPointer == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-
-            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
-            var obj = Helper.NativeObjectCache.GetObject<Windows.Storage.Streams.IBuffer>(objectPointer);
-            if (obj == null)
-            {
-                obj = new Windows.Storage.Streams.IBuffer(objectPointer);
-                Helper.NativeObjectCache.AddObject<Windows.Storage.Streams.IBuffer>(objectPointer, obj);
-            }
-
-            return obj;
-        }
-
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_InfraredFrame_Dispose(RootSystem.IntPtr pNative);
         public void Dispose()
         {
@@ -7449,10 +7482,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.InfraredFrameReader
     //
-    public partial class InfraredFrameReader : RootSystem.IDisposable
+    public sealed partial class InfraredFrameReader : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal InfraredFrameReader(RootSystem.IntPtr pNative)
@@ -7470,7 +7503,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_InfraredFrameReader_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_InfraredFrameReader_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -7486,31 +7519,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(InfraredFrameReader other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator InfraredFrameReader(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<InfraredFrameReader>(other);
-            if(obj == null)
-            {
-                obj = new InfraredFrameReader(other);
-                Helper.NativeObjectCache.AddObject<InfraredFrameReader>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -7574,39 +7582,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate(object sender, Windows.Kinect.InfraredFrameArrivedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate>> Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.InfraredFrameArrivedEventArgs>>> Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.InfraredFrameArrivedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate))]
         private static void Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.InfraredFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<InfraredFrameReader>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<InfraredFrameReader>(pNative);
+                    var args = new Windows.Kinect.InfraredFrameArrivedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.InfraredFrameArrivedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_InfraredFrameReader_add_FrameArrived(RootSystem.IntPtr pNative, _Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate FrameArrived
+        public event RootSystem.EventHandler<Windows.Kinect.InfraredFrameArrivedEventArgs> FrameArrived
         {
             add
             {
             if(!Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate>());
+                Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.InfraredFrameArrivedEventArgs>>());
             }
             var callbackList = Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -7624,7 +7635,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.InfraredFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -7634,6 +7645,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_InfraredFrameReader_add_FrameArrived(_pNative, Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_InfraredFrameArrivedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<InfraredFrameReader>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_InfraredFrameReader_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_InfraredFrameReader_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_InfraredFrameReader_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -7685,9 +7766,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.InfraredFrameArrivedEventArgs
     //
-    public partial class InfraredFrameArrivedEventArgs
+    public sealed partial class InfraredFrameArrivedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal InfraredFrameArrivedEventArgs(RootSystem.IntPtr pNative)
@@ -7705,7 +7787,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_InfraredFrameArrivedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_InfraredFrameArrivedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -7716,31 +7798,6 @@ namespace Windows.Kinect
                 Windows_Kinect_InfraredFrameArrivedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(InfraredFrameArrivedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator InfraredFrameArrivedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<InfraredFrameArrivedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new InfraredFrameArrivedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<InfraredFrameArrivedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -7779,10 +7836,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.LongExposureInfraredFrame
     //
-    public partial class LongExposureInfraredFrame : RootSystem.IDisposable
+    public sealed partial class LongExposureInfraredFrame : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal LongExposureInfraredFrame(RootSystem.IntPtr pNative)
@@ -7800,7 +7857,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_LongExposureInfraredFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_LongExposureInfraredFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -7816,31 +7873,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(LongExposureInfraredFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator LongExposureInfraredFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrame>(other);
-            if(obj == null)
-            {
-                obj = new LongExposureInfraredFrame(other);
-                Helper.NativeObjectCache.AddObject<LongExposureInfraredFrame>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -7904,8 +7936,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_LongExposureInfraredFrame_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_LongExposureInfraredFrame_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -7933,32 +7965,6 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern RootSystem.IntPtr Windows_Kinect_LongExposureInfraredFrame_LockImageBuffer(RootSystem.IntPtr pNative);
-        public Windows.Storage.Streams.IBuffer LockImageBuffer()
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                throw new RootSystem.ObjectDisposedException("LongExposureInfraredFrame");
-            }
-
-            RootSystem.IntPtr objectPointer = Windows_Kinect_LongExposureInfraredFrame_LockImageBuffer(_pNative);
-            if (objectPointer == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-
-            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
-            var obj = Helper.NativeObjectCache.GetObject<Windows.Storage.Streams.IBuffer>(objectPointer);
-            if (obj == null)
-            {
-                obj = new Windows.Storage.Streams.IBuffer(objectPointer);
-                Helper.NativeObjectCache.AddObject<Windows.Storage.Streams.IBuffer>(objectPointer, obj);
-            }
-
-            return obj;
-        }
-
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_LongExposureInfraredFrame_Dispose(RootSystem.IntPtr pNative);
         public void Dispose()
         {
@@ -7976,10 +7982,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.LongExposureInfraredFrameReader
     //
-    public partial class LongExposureInfraredFrameReader : RootSystem.IDisposable
+    public sealed partial class LongExposureInfraredFrameReader : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal LongExposureInfraredFrameReader(RootSystem.IntPtr pNative)
@@ -7997,7 +8003,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_LongExposureInfraredFrameReader_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_LongExposureInfraredFrameReader_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -8013,31 +8019,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(LongExposureInfraredFrameReader other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator LongExposureInfraredFrameReader(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameReader>(other);
-            if(obj == null)
-            {
-                obj = new LongExposureInfraredFrameReader(other);
-                Helper.NativeObjectCache.AddObject<LongExposureInfraredFrameReader>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -8101,39 +8082,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate(object sender, Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate>> Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs>>> Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate))]
         private static void Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameReader>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameReader>(pNative);
+                    var args = new Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_LongExposureInfraredFrameReader_add_FrameArrived(RootSystem.IntPtr pNative, _Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate FrameArrived
+        public event RootSystem.EventHandler<Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs> FrameArrived
         {
             add
             {
             if(!Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate>());
+                Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs>>());
             }
             var callbackList = Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -8151,7 +8135,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -8161,6 +8145,76 @@ namespace Windows.Kinect
                     {
                         Windows_Kinect_LongExposureInfraredFrameReader_add_FrameArrived(_pNative, Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_Handler, true);
                         _Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameReader>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_LongExposureInfraredFrameReader_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_LongExposureInfraredFrameReader_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_LongExposureInfraredFrameReader_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
                     }
                 }
             }
@@ -8212,9 +8266,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.LongExposureInfraredFrameArrivedEventArgs
     //
-    public partial class LongExposureInfraredFrameArrivedEventArgs
+    public sealed partial class LongExposureInfraredFrameArrivedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal LongExposureInfraredFrameArrivedEventArgs(RootSystem.IntPtr pNative)
@@ -8232,7 +8287,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -8243,31 +8298,6 @@ namespace Windows.Kinect
                 Windows_Kinect_LongExposureInfraredFrameArrivedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(LongExposureInfraredFrameArrivedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator LongExposureInfraredFrameArrivedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<LongExposureInfraredFrameArrivedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new LongExposureInfraredFrameArrivedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<LongExposureInfraredFrameArrivedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -8306,9 +8336,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.AudioBeam
     //
-    public partial class AudioBeam
+    public sealed partial class AudioBeam
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioBeam(RootSystem.IntPtr pNative)
@@ -8326,7 +8356,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioBeam_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeam_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -8337,31 +8367,6 @@ namespace Windows.Kinect
                 Windows_Kinect_AudioBeam_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(AudioBeam other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioBeam(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioBeam>(other);
-            if(obj == null)
-            {
-                obj = new AudioBeam(other);
-                Helper.NativeObjectCache.AddObject<AudioBeam>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -8463,8 +8468,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_AudioBeam_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_AudioBeam_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -8478,16 +8483,88 @@ namespace Windows.Kinect
         }
 
 
+        // Events
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<AudioBeam>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_AudioBeam_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_AudioBeam_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_AudioBeam_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
+
         // Public Methods
     }
 
     //
     // Windows.Kinect.AudioBeamSubFrame
     //
-    public partial class AudioBeamSubFrame : RootSystem.IDisposable
+    public sealed partial class AudioBeamSubFrame : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioBeamSubFrame(RootSystem.IntPtr pNative)
@@ -8505,7 +8582,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioBeamSubFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeamSubFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -8521,31 +8598,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(AudioBeamSubFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioBeamSubFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioBeamSubFrame>(other);
-            if(obj == null)
-            {
-                obj = new AudioBeamSubFrame(other);
-                Helper.NativeObjectCache.AddObject<AudioBeamSubFrame>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -8569,7 +8621,7 @@ namespace Windows.Kinect
         private static extern int Windows_Kinect_AudioBeamSubFrame_get_AudioBodyCorrelations(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] RootSystem.IntPtr[] outCollection, int collectionSize);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern int Windows_Kinect_AudioBeamSubFrame_get_AudioBodyCorrelations_Length(RootSystem.IntPtr pNative);
-        public  Windows.Kinect.AudioBodyCorrelation[] AudioBodyCorrelations
+        public  RootSystem.Collections.Generic.IList<Windows.Kinect.AudioBodyCorrelation> AudioBodyCorrelations
         {
             get
             {
@@ -8635,8 +8687,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_AudioBeamSubFrame_get_Duration(RootSystem.IntPtr pNative);
-        public  long Duration
+        private static extern RootSystem.TimeSpan Windows_Kinect_AudioBeamSubFrame_get_Duration(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan Duration
         {
             get
             {
@@ -8665,8 +8717,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_AudioBeamSubFrame_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_AudioBeamSubFrame_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -8694,32 +8746,6 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern RootSystem.IntPtr Windows_Kinect_AudioBeamSubFrame_LockAudioBuffer(RootSystem.IntPtr pNative);
-        public Windows.Storage.Streams.IBuffer LockAudioBuffer()
-        {
-            if (_pNative == RootSystem.IntPtr.Zero)
-            {
-                throw new RootSystem.ObjectDisposedException("AudioBeamSubFrame");
-            }
-
-            RootSystem.IntPtr objectPointer = Windows_Kinect_AudioBeamSubFrame_LockAudioBuffer(_pNative);
-            if (objectPointer == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-
-            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
-            var obj = Helper.NativeObjectCache.GetObject<Windows.Storage.Streams.IBuffer>(objectPointer);
-            if (obj == null)
-            {
-                obj = new Windows.Storage.Streams.IBuffer(objectPointer);
-                Helper.NativeObjectCache.AddObject<Windows.Storage.Streams.IBuffer>(objectPointer, obj);
-            }
-
-            return obj;
-        }
-
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeamSubFrame_Dispose(RootSystem.IntPtr pNative);
         public void Dispose()
         {
@@ -8737,9 +8763,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.AudioBodyCorrelation
     //
-    public partial class AudioBodyCorrelation
+    public sealed partial class AudioBodyCorrelation
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioBodyCorrelation(RootSystem.IntPtr pNative)
@@ -8757,7 +8783,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioBodyCorrelation_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBodyCorrelation_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -8768,31 +8794,6 @@ namespace Windows.Kinect
                 Windows_Kinect_AudioBodyCorrelation_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(AudioBodyCorrelation other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioBodyCorrelation(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioBodyCorrelation>(other);
-            if(obj == null)
-            {
-                obj = new AudioBodyCorrelation(other);
-                Helper.NativeObjectCache.AddObject<AudioBodyCorrelation>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -8817,10 +8818,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.AudioBeamFrame
     //
-    public partial class AudioBeamFrame : RootSystem.IDisposable
+    public sealed partial class AudioBeamFrame : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioBeamFrame(RootSystem.IntPtr pNative)
@@ -8838,31 +8839,6 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioBeamFrame_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeamFrame_AddRefObject(ref RootSystem.IntPtr pNative);
-        public static implicit operator RootSystem.IntPtr(AudioBeamFrame other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioBeamFrame(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioBeamFrame>(other);
-            if(obj == null)
-            {
-                obj = new AudioBeamFrame(other);
-                Helper.NativeObjectCache.AddObject<AudioBeamFrame>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
@@ -8924,8 +8900,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_AudioBeamFrame_get_Duration(RootSystem.IntPtr pNative);
-        public  long Duration
+        private static extern RootSystem.TimeSpan Windows_Kinect_AudioBeamFrame_get_Duration(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan Duration
         {
             get
             {
@@ -8939,8 +8915,8 @@ namespace Windows.Kinect
         }
 
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_AudioBeamFrame_get_RelativeTimeStart(RootSystem.IntPtr pNative);
-        public  long RelativeTimeStart
+        private static extern RootSystem.TimeSpan Windows_Kinect_AudioBeamFrame_get_RelativeTimeStart(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTimeStart
         {
             get
             {
@@ -8960,9 +8936,9 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.AudioBeamFrameReference
     //
-    public partial class AudioBeamFrameReference
+    public sealed partial class AudioBeamFrameReference
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioBeamFrameReference(RootSystem.IntPtr pNative)
@@ -8980,7 +8956,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioBeamFrameReference_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeamFrameReference_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -8993,36 +8969,11 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(AudioBeamFrameReference other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioBeamFrameReference(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioBeamFrameReference>(other);
-            if(obj == null)
-            {
-                obj = new AudioBeamFrameReference(other);
-                Helper.NativeObjectCache.AddObject<AudioBeamFrameReference>(other, obj);
-            }
-            return obj;
-        }
-
 
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern long Windows_Kinect_AudioBeamFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
-        public  long RelativeTime
+        private static extern RootSystem.TimeSpan Windows_Kinect_AudioBeamFrameReference_get_RelativeTime(RootSystem.IntPtr pNative);
+        public  RootSystem.TimeSpan RelativeTime
         {
             get
             {
@@ -9041,7 +8992,7 @@ namespace Windows.Kinect
         private static extern int Windows_Kinect_AudioBeamFrameReference_AcquireBeamFrames_Length(RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern int Windows_Kinect_AudioBeamFrameReference_AcquireBeamFrames(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] RootSystem.IntPtr[] outCollection, int collectionSize);
-        public Windows.Kinect.AudioBeamFrame[] AcquireBeamFrames()
+        public RootSystem.Collections.Generic.IList<Windows.Kinect.AudioBeamFrame> AcquireBeamFrames()
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -9078,10 +9029,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.AudioBeamFrameReader
     //
-    public partial class AudioBeamFrameReader : RootSystem.IDisposable
+    public sealed partial class AudioBeamFrameReader : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioBeamFrameReader(RootSystem.IntPtr pNative)
@@ -9099,7 +9050,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioBeamFrameReader_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeamFrameReader_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -9115,31 +9066,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(AudioBeamFrameReader other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioBeamFrameReader(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioBeamFrameReader>(other);
-            if(obj == null)
-            {
-                obj = new AudioBeamFrameReader(other);
-                Helper.NativeObjectCache.AddObject<AudioBeamFrameReader>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -9203,39 +9129,42 @@ namespace Windows.Kinect
         // Events
         private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_Handle;
         [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        public delegate void Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate(object sender, Windows.Kinect.AudioBeamFrameArrivedEventArgs args);
-        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private delegate void _Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
-        private static Dictionary<RootSystem.IntPtr, List<Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate>> Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate>>();
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.AudioBeamFrameArrivedEventArgs>>> Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Kinect.AudioBeamFrameArrivedEventArgs>>>();
         [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate))]
         private static void Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
         {
             if (!Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(pNative))
             {
-                Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Kinect.AudioBeamFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks[pNative];
             lock(callbackList)
             {
-                object objThis = Helper.NativeObjectCache.GetObject<AudioBeamFrameReader>(pNative);
-                foreach(var func in callbackList)
+                try
                 {
-                    if(func != null)
+                    var objThis = Helper.NativeObjectCache.GetObject<AudioBeamFrameReader>(pNative);
+                    var args = new Windows.Kinect.AudioBeamFrameArrivedEventArgs(result);
+                    foreach(var func in callbackList)
                     {
-                        func(objThis, (Windows.Kinect.AudioBeamFrameArrivedEventArgs)result);
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
                     }
                 }
+                catch { }
             }
         }
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeamFrameReader_add_FrameArrived(RootSystem.IntPtr pNative, _Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate eventCallback, bool unsubscribe);
-        public  event Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate FrameArrived
+        public event RootSystem.EventHandler<Windows.Kinect.AudioBeamFrameArrivedEventArgs> FrameArrived
         {
             add
             {
             if(!Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate>());
+                Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Kinect.AudioBeamFrameArrivedEventArgs>>());
             }
             var callbackList = Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -9253,7 +9182,7 @@ namespace Windows.Kinect
             {
             if (!Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
             {
-                Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate>();
+                Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Kinect.AudioBeamFrameArrivedEventArgs>>();
             }
             var callbackList = Windows_Kinect_AudioBeamFrameArrivedEventArgs_Delegate_callbacks[_pNative];
                 lock (callbackList)
@@ -9268,13 +9197,83 @@ namespace Windows.Kinect
             }
         }
 
+        private static RootSystem.Runtime.InteropServices.GCHandle _Windows_Data_PropertyChangedEventArgs_Delegate_Handle;
+        [RootSystem.Runtime.InteropServices.UnmanagedFunctionPointer(RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private delegate void _Windows_Data_PropertyChangedEventArgs_Delegate(RootSystem.IntPtr args, RootSystem.IntPtr pNative);
+        private static Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>> Windows_Data_PropertyChangedEventArgs_Delegate_callbacks = new Dictionary<RootSystem.IntPtr, List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>>();
+        [AOT.MonoPInvokeCallbackAttribute(typeof(_Windows_Data_PropertyChangedEventArgs_Delegate))]
+        private static void Windows_Data_PropertyChangedEventArgs_Delegate_Handler(RootSystem.IntPtr result, RootSystem.IntPtr pNative)
+        {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[pNative];
+            lock(callbackList)
+            {
+                try
+                {
+                    var objThis = Helper.NativeObjectCache.GetObject<AudioBeamFrameReader>(pNative);
+                    var args = new Windows.Data.PropertyChangedEventArgs(result);
+                    foreach(var func in callbackList)
+                    {
+                        if(func != null)
+                        {
+                            func(objThis, args);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_AudioBeamFrameReader_add_PropertyChanged(RootSystem.IntPtr pNative, _Windows_Data_PropertyChangedEventArgs_Delegate eventCallback, bool unsubscribe);
+        public event RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs> PropertyChanged
+        {
+            add
+            {
+            if(!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.Add(_pNative, new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>());
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Add(value);
+                    if(callbackList.Count == 1)
+                    {
+                        var del = new _Windows_Data_PropertyChangedEventArgs_Delegate(Windows_Data_PropertyChangedEventArgs_Delegate_Handler);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle = RootSystem.Runtime.InteropServices.GCHandle.Alloc(del);
+                        Windows_Kinect_AudioBeamFrameReader_add_PropertyChanged(_pNative, del, false);
+                    }
+                }
+            }
+            remove
+            {
+            if (!Windows_Data_PropertyChangedEventArgs_Delegate_callbacks.ContainsKey(_pNative))
+            {
+                Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative] = new List<RootSystem.EventHandler<Windows.Data.PropertyChangedEventArgs>>();
+            }
+            var callbackList = Windows_Data_PropertyChangedEventArgs_Delegate_callbacks[_pNative];
+                lock (callbackList)
+                {
+                    callbackList.Remove(value);
+                    if(callbackList.Count == 0)
+                    {
+                        Windows_Kinect_AudioBeamFrameReader_add_PropertyChanged(_pNative, Windows_Data_PropertyChangedEventArgs_Delegate_Handler, true);
+                        _Windows_Data_PropertyChangedEventArgs_Delegate_Handle.Free();
+                    }
+                }
+            }
+        }
+
 
         // Public Methods
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern int Windows_Kinect_AudioBeamFrameReader_AcquireLatestBeamFrames_Length(RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern int Windows_Kinect_AudioBeamFrameReader_AcquireLatestBeamFrames(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] RootSystem.IntPtr[] outCollection, int collectionSize);
-        public Windows.Kinect.AudioBeamFrame[] AcquireLatestBeamFrames()
+        public RootSystem.Collections.Generic.IList<Windows.Kinect.AudioBeamFrame> AcquireLatestBeamFrames()
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -9324,9 +9323,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.AudioBeamFrameArrivedEventArgs
     //
-    public partial class AudioBeamFrameArrivedEventArgs
+    public sealed partial class AudioBeamFrameArrivedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioBeamFrameArrivedEventArgs(RootSystem.IntPtr pNative)
@@ -9344,7 +9344,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioBeamFrameArrivedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeamFrameArrivedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -9355,31 +9355,6 @@ namespace Windows.Kinect
                 Windows_Kinect_AudioBeamFrameArrivedEventArgs_ReleaseObject(ref _pNative);
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(AudioBeamFrameArrivedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioBeamFrameArrivedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioBeamFrameArrivedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new AudioBeamFrameArrivedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<AudioBeamFrameArrivedEventArgs>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -9418,9 +9393,10 @@ namespace Windows.Kinect
     //
     // Windows.Kinect.CoordinateMappingChangedEventArgs
     //
-    public partial class CoordinateMappingChangedEventArgs
+    public sealed partial class CoordinateMappingChangedEventArgs : RootSystem.EventArgs
+
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal CoordinateMappingChangedEventArgs(RootSystem.IntPtr pNative)
@@ -9438,7 +9414,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_CoordinateMappingChangedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_CoordinateMappingChangedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -9451,40 +9427,15 @@ namespace Windows.Kinect
             _pNative = RootSystem.IntPtr.Zero;
         }
 
-        public static implicit operator RootSystem.IntPtr(CoordinateMappingChangedEventArgs other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator CoordinateMappingChangedEventArgs(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<CoordinateMappingChangedEventArgs>(other);
-            if(obj == null)
-            {
-                obj = new CoordinateMappingChangedEventArgs(other);
-                Helper.NativeObjectCache.AddObject<CoordinateMappingChangedEventArgs>(other, obj);
-            }
-            return obj;
-        }
-
     }
 
     //
     // Windows.Kinect.AudioBeamFrameList
     //
-    public partial class AudioBeamFrameList : RootSystem.IDisposable
+    public sealed partial class AudioBeamFrameList : RootSystem.IDisposable
 
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
 
         // Constructors and Finalizers
         internal AudioBeamFrameList(RootSystem.IntPtr pNative)
@@ -9502,7 +9453,7 @@ namespace Windows.Kinect
         private static extern void Windows_Kinect_AudioBeamFrameList_ReleaseObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_AudioBeamFrameList_AddRefObject(ref RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -9518,31 +9469,6 @@ namespace Windows.Kinect
             }
 
             _pNative = RootSystem.IntPtr.Zero;
-        }
-
-        public static implicit operator RootSystem.IntPtr(AudioBeamFrameList other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-
-        public static explicit operator AudioBeamFrameList(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioBeamFrameList>(other);
-            if(obj == null)
-            {
-                obj = new AudioBeamFrameList(other);
-                Helper.NativeObjectCache.AddObject<AudioBeamFrameList>(other, obj);
-            }
-            return obj;
         }
 
 
@@ -9577,10 +9503,72 @@ namespace Windows.Kinect
     #endregion // Classes
 }
 
-namespace Windows.Storage.Streams
+namespace Windows.Data
 {
 
     #region Classes
+
+    //
+    // Windows.Data.PropertyChangedEventArgs
+    //
+    public sealed partial class PropertyChangedEventArgs : RootSystem.EventArgs
+
+    {
+        internal RootSystem.IntPtr _pNative;
+
+        // Constructors and Finalizers
+        internal PropertyChangedEventArgs(RootSystem.IntPtr pNative)
+        {
+            _pNative = pNative;
+            Windows_Data_PropertyChangedEventArgs_AddRefObject(ref _pNative);
+        }
+
+        ~PropertyChangedEventArgs()
+        {
+            Dispose(false);
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Data_PropertyChangedEventArgs_ReleaseObject(ref RootSystem.IntPtr pNative);
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Data_PropertyChangedEventArgs_AddRefObject(ref RootSystem.IntPtr pNative);
+        private void Dispose(bool disposing)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                return;
+            }
+
+            Helper.NativeObjectCache.RemoveObject<PropertyChangedEventArgs>(_pNative);
+                Windows_Data_PropertyChangedEventArgs_ReleaseObject(ref _pNative);
+
+            _pNative = RootSystem.IntPtr.Zero;
+        }
+
+
+        // Public Properties
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern RootSystem.IntPtr Windows_Data_PropertyChangedEventArgs_get_PropertyName(RootSystem.IntPtr pNative);
+        public  string PropertyName
+        {
+            get
+            {
+                if (_pNative == RootSystem.IntPtr.Zero)
+                {
+                    throw new RootSystem.ObjectDisposedException("PropertyChangedEventArgs");
+                }
+
+                RootSystem.IntPtr objectPointer = Windows_Data_PropertyChangedEventArgs_get_PropertyName(_pNative);
+                if (objectPointer == RootSystem.IntPtr.Zero)
+                {
+                    return null;
+                }
+
+                return RootSystem.Runtime.InteropServices.Marshal.PtrToStringUni(objectPointer);
+            }
+        }
+
+    }
 
     #endregion // Classes
 }

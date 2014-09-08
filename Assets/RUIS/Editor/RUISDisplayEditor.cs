@@ -37,7 +37,6 @@ public class RUISDisplayEditor : Editor {
     SerializedProperty displayCenterPosition;
     SerializedProperty displayNormal;
     SerializedProperty displayUp;
-    
 
     private Texture2D monoDisplayTexture;
     private Texture2D stereoDisplayTexture;
@@ -79,6 +78,7 @@ public class RUISDisplayEditor : Editor {
         stereoDisplayTexture = Resources.Load("RUIS/Editor/Textures/stereodisplay") as Texture2D;
 
         displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
+
     }
 
     public void OnGUI()

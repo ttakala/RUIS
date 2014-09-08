@@ -142,7 +142,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100018
 GameObject:
   m_ObjectHideFlags: 1
@@ -170,7 +170,6 @@ GameObject:
   - 124: {fileID: 12400002}
   - 114: {fileID: 11400020}
   - 114: {fileID: 11400012}
-  - 114: {fileID: 11400010}
   m_Layer: 0
   m_Name: CameraLeft
   m_TagString: Untagged
@@ -220,7 +219,6 @@ GameObject:
   - 124: {fileID: 12400000}
   - 114: {fileID: 11400018}
   - 114: {fileID: 11400006}
-  - 114: {fileID: 11400008}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: Untagged
@@ -860,7 +858,6 @@ GameObject:
   - 124: {fileID: 12400010}
   - 114: {fileID: 11400082}
   - 114: {fileID: 11400100}
-  - 114: {fileID: 11400098}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: Untagged
@@ -880,7 +877,6 @@ GameObject:
   - 124: {fileID: 12400008}
   - 114: {fileID: 11400078}
   - 114: {fileID: 11400094}
-  - 114: {fileID: 11400096}
   m_Layer: 0
   m_Name: CameraLeft
   m_TagString: Untagged
@@ -1357,7 +1353,7 @@ GameObject:
   m_IsActive: 1
 --- !u!1 &100166
 GameObject:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -1366,7 +1362,7 @@ GameObject:
   - 23: {fileID: 2300006}
   - 102: {fileID: 10200000}
   m_Layer: 0
-  m_Name: Kinect 2 text
+  m_Name: Kinect 2 text A
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1692,7 +1688,6 @@ Transform:
   m_Children:
   - {fileID: 400010}
   - {fileID: 400128}
-  - {fileID: 400166}
   m_Father: {fileID: 400114}
   m_RootOrder: 0
 --- !u!4 &400050
@@ -2088,8 +2083,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100110}
-  m_LocalRotation: {x: -.397784591, y: .457301617, z: -.174690798, w: .775967658}
-  m_LocalPosition: {x: -.0353150368, y: .0104373693, z: .0361629315}
+  m_LocalRotation: {x: -.413403004, y: .376536846, z: -.13359417, w: .818211794}
+  m_LocalPosition: {x: -.0353150032, y: .0104375556, z: .0361634195}
   m_LocalScale: {x: .999999881, y: .999999881, z: .99999994}
   m_Children:
   - {fileID: 400068}
@@ -2115,7 +2110,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100114}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.01352453, y: .921793461, z: -13.3596611}
+  m_LocalPosition: {x: -1.62034321, y: .941147089, z: -13.3260822}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400048}
@@ -2124,6 +2119,7 @@ Transform:
   - {fileID: 400082}
   - {fileID: 400136}
   - {fileID: 400078}
+  - {fileID: 400166}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &400116
@@ -2461,8 +2457,8 @@ Transform:
   m_LocalPosition: {x: .404837132, y: 1.20610952, z: 0}
   m_LocalScale: {x: .183060005, y: .183060005, z: .183060005}
   m_Children: []
-  m_Father: {fileID: 400048}
-  m_RootOrder: 2
+  m_Father: {fileID: 400114}
+  m_RootOrder: 6
 --- !u!20 &2000000
 Camera:
   m_ObjectHideFlags: 1
@@ -3049,7 +3045,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100166}
-  m_Text: Kinect 2
+  m_Text: Kinect 2 A
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -3075,6 +3071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerId: 0
+  bodyTrackingDeviceID: 0
   requiredUpwardVelocity: .800000012
   timeBetweenJumps: 1
   feetHeightThreshold: .200000003
@@ -3103,7 +3100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerId: 0
-  kinectVersion: 0
+  bodyTrackingDeviceID: 0
   jointToFollow: 0
   minimumConfidenceToUpdate: .5
   positionSmoothing: 100
@@ -3121,42 +3118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
---- !u!114 &11400008
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100026}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
-  _Center: {x: .5, y: .5}
-  _ScaleIn: {x: 1, y: 1}
-  _Scale: {x: 1, y: 1}
-  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
-  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
-  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
---- !u!114 &11400010
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
-  _Center: {x: .5, y: .5}
-  _ScaleIn: {x: 1, y: 1}
-  _Scale: {x: 1, y: 1}
-  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
-  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
-  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
+  RightEye: 0
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3170,6 +3132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
+  RightEye: 0
 --- !u!114 &11400014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3181,8 +3144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialPredictionTime: .0500000007
-  ResetTrackerOnLoad: 1
 --- !u!114 &11400016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3196,19 +3157,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ipd: .064000003
   verticalFOV: 90
+  CameraTextureScale: 1
+  scaleRenderTarget: 1
   CameraRootPosition: {x: 0, y: 0, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
-  EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
   FollowOrientation: {fileID: 400114}
   TrackerRotatesY: 0
-  PortraitMode: 0
   EnableOrientation: 1
+  EnablePosition: 1
   PredictionOn: 1
-  CallInPreRender: 0
-  WireMode: 0
-  LensCorrection: 1
-  Chromatic: 1
+  timeWarp: 0
+  mirror: 0
+  FreezeTimeWarp: 0
   backgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
   nearClipPlane: .150000006
   farClipPlane: 1000
@@ -3290,10 +3251,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  customRoot: {fileID: 0}
+  customHead: {fileID: 0}
+  customNeck: {fileID: 0}
+  customTorso: {fileID: 0}
+  customRightShoulder: {fileID: 0}
+  customRightElbow: {fileID: 0}
+  customRightHand: {fileID: 0}
+  customRightHip: {fileID: 0}
+  customRightKnee: {fileID: 0}
+  customRightFoot: {fileID: 0}
+  customLeftShoulder: {fileID: 0}
+  customLeftElbow: {fileID: 0}
+  customLeftHand: {fileID: 0}
+  customLeftHip: {fileID: 0}
+  customLeftKnee: {fileID: 0}
+  customLeftFoot: {fileID: 0}
+  customLeftThumb: {fileID: 0}
+  customRightThumb: {fileID: 0}
   root: {fileID: 400010}
   head: {fileID: 400044}
   neck: {fileID: 400014}
-  torso: {fileID: 400004}
+  torso: {fileID: 400010}
   rightShoulder: {fileID: 400112}
   rightElbow: {fileID: 400012}
   rightHand: {fileID: 400132}
@@ -3306,16 +3285,25 @@ MonoBehaviour:
   leftHip: {fileID: 400070}
   leftKnee: {fileID: 400126}
   leftFoot: {fileID: 400096}
-  kinectVersion: 1
+  leftThumb: {fileID: 400062}
+  rightThumb: {fileID: 400110}
+  fistCurlFingers: 1
+  trackThumbs: 0
+  trackAnkle: 0
+  rotateWristFromElbow: 0
+  bodyTrackingDevice: 1
+  bodyTrackingDeviceID: 0
   playerId: 0
   updateRootPosition: 1
   updateJointPositions: 0
   updateJointRotations: 1
   useHierarchicalModel: 1
-  scaleHierarchicalModelBones: 0
+  scaleHierarchicalModelBones: 1
   maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
+  handRollAngleMinimum: -180
+  handRollAngleMaximum: 180
   torsoOffset: 0
   torsoScale: 1
   neckHeightTweaker: 0
@@ -3459,7 +3447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionButton: 0
-  controllerId: 1
+  controllerId: 0
   whereToCopyColor: {fileID: 0}
 --- !u!114 &11400044
 MonoBehaviour:
@@ -3710,19 +3698,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ipd: .064000003
   verticalFOV: 90
+  CameraTextureScale: 1
+  scaleRenderTarget: 1
   CameraRootPosition: {x: 0, y: 0, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
-  EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
   FollowOrientation: {fileID: 400114}
   TrackerRotatesY: 0
-  PortraitMode: 0
   EnableOrientation: 1
+  EnablePosition: 1
   PredictionOn: 1
-  CallInPreRender: 0
-  WireMode: 0
-  LensCorrection: 1
-  Chromatic: 1
+  timeWarp: 0
+  mirror: 0
+  FreezeTimeWarp: 0
   backgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
   nearClipPlane: .150000006
   farClipPlane: 1000
@@ -3737,8 +3725,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialPredictionTime: .0500000007
-  ResetTrackerOnLoad: 1
 --- !u!114 &11400058
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3752,6 +3738,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
+  RightEye: 0
 --- !u!114 &11400060
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3801,6 +3788,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
+  RightEye: 0
 --- !u!114 &11400066
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3879,6 +3867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPivotType: 1
   kinectPlayerId: 0
+  bodyTrackingDeviceID: 0
   moveControllerId: 0
   characterPivot: {fileID: 0}
   psmoveOffset: {x: 0, y: 0, z: 0}
@@ -4064,19 +4053,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ipd: .064000003
   verticalFOV: 90
+  CameraTextureScale: 1
+  scaleRenderTarget: 1
   CameraRootPosition: {x: 0, y: 0, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
-  EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
   FollowOrientation: {fileID: 400114}
   TrackerRotatesY: 0
-  PortraitMode: 0
   EnableOrientation: 1
+  EnablePosition: 1
   PredictionOn: 1
-  CallInPreRender: 0
-  WireMode: 0
-  LensCorrection: 1
-  Chromatic: 1
+  timeWarp: 0
+  mirror: 0
+  FreezeTimeWarp: 0
   backgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
   nearClipPlane: .150000006
   farClipPlane: 1000
@@ -4226,8 +4215,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialPredictionTime: .0500000007
-  ResetTrackerOnLoad: 1
 --- !u!114 &11400094
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4241,42 +4228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
---- !u!114 &11400096
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
-  _Center: {x: .5, y: .5}
-  _ScaleIn: {x: 1, y: 1}
-  _Scale: {x: 1, y: 1}
-  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
-  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
-  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
---- !u!114 &11400098
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
-  _Center: {x: .5, y: .5}
-  _ScaleIn: {x: 1, y: 1}
-  _Scale: {x: 1, y: 1}
-  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
-  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
-  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
+  RightEye: 0
 --- !u!114 &11400100
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4290,6 +4242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
+  RightEye: 0
 --- !u!114 &11400102
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4303,6 +4256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
+  RightEye: 0
 --- !u!114 &11400104
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4352,6 +4306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
+  RightEye: 0
 --- !u!114 &11400110
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4363,8 +4318,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialPredictionTime: .0500000007
-  ResetTrackerOnLoad: 1
 --- !u!114 &11400112
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4378,19 +4331,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ipd: .064000003
   verticalFOV: 90
+  CameraTextureScale: 1
+  scaleRenderTarget: 1
   CameraRootPosition: {x: 0, y: 0, z: 0}
   NeckPosition: {x: 0, y: 0, z: 0}
-  EyeCenterPosition: {x: 0, y: .150000006, z: .0900000036}
   UsePlayerEyeHeight: 0
   FollowOrientation: {fileID: 400114}
   TrackerRotatesY: 0
-  PortraitMode: 0
   EnableOrientation: 1
+  EnablePosition: 1
   PredictionOn: 1
-  CallInPreRender: 0
-  WireMode: 0
-  LensCorrection: 1
-  Chromatic: 1
+  timeWarp: 0
+  mirror: 0
+  FreezeTimeWarp: 0
   backgroundColor: {r: .192000002, g: .301999986, b: .474999994, a: 1}
   nearClipPlane: .150000006
   farClipPlane: 1000

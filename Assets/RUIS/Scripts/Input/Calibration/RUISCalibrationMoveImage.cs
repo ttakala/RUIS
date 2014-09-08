@@ -17,10 +17,6 @@ public class RUISCalibrationMoveImage : MonoBehaviour {
 
     void Awake()
     {
-        RUISM2KCalibration calibration = FindObjectOfType(typeof(RUISM2KCalibration)) as RUISM2KCalibration;
-        if (!calibration.usePSMove)
-            gameObject.SetActive(false);
-
         psMoveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
         texture = new Texture2D(640, 480, TextureFormat.ARGB32, false);
     }

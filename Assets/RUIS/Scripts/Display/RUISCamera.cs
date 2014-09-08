@@ -38,7 +38,8 @@ public class RUISCamera : MonoBehaviour {
     private RUISDisplay.StereoType oldStereoTypeValue;
 
     RUISKeystoningConfiguration keystoningConfiguration;
-
+	OVRCameraController ovrController;
+	
     public float near = 0.3f;
     public float far = 1000;
 	
@@ -59,14 +60,14 @@ public class RUISCamera : MonoBehaviour {
 		}
 	}
 
-	
 	public void Awake()
 	{
-		keystoningConfiguration = GetComponent<RUISKeystoningConfiguration>();
+        keystoningConfiguration = GetComponent<RUISKeystoningConfiguration>();
+		ovrController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
 		
-		centerCamera = camera;
-		leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
-		rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
+        centerCamera = camera;
+        leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
+        rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
 
 		if(centerCamera == null)
 		{
@@ -80,6 +81,33 @@ public class RUISCamera : MonoBehaviour {
 		bool isDifferentCenterMask = false;
 		bool isDifferentLeftMask = false;
 		bool isDifferentRightMask = false;
+		
+		try
+		{
+			if (!associatedDisplay.enableOculusRift)
+			{
+				GetComponent<OVRCameraController>().enabled = false;
+				GetComponent<OVRDevice>().enabled = false;
+				leftCamera.GetComponent<OVRCamera>().enabled = false;
+				// leftCamera.GetComponent<OVRLensCorrection>().enabled = false;
+				rightCamera.GetComponent<OVRCamera>().enabled = false;
+				// rightCamera.GetComponent<OVRLensCorrection>().enabled = false;
+			}
+			else
+			{
+				foreach (RUISKeystoningBorderDrawer drawer in GetComponentsInChildren<RUISKeystoningBorderDrawer>())
+				{
+					drawer.enabled = false;
+				}
+			}
+		}
+		catch (System.NullReferenceException e)
+		{
+			Debug.LogWarning(e.ToString(), this);
+			Debug.LogWarning("Seems like the RUISCamera prefab you were using was outdated, please update... " + name, this);
+		}
+		
+
 
 		if(cullingMask != centerCamera.cullingMask)
 			isDifferentCenterMask = true;
@@ -143,29 +171,7 @@ public class RUISCamera : MonoBehaviour {
 			}
 		}
 		
-		try
-		{
-			if (!associatedDisplay.enableOculusRift)
-			{
-				GetComponent<OVRCameraController>().enabled = false;
-				GetComponent<OVRDevice>().enabled = false;
-				leftCamera.GetComponent<OVRCamera>().enabled = false;
-				leftCamera.GetComponent<OVRLensCorrection>().enabled = false;
-				rightCamera.GetComponent<OVRCamera>().enabled = false;
-				rightCamera.GetComponent<OVRLensCorrection>().enabled = false;
-			}
-			else
-			{
-				foreach (RUISKeystoningBorderDrawer drawer in GetComponentsInChildren<RUISKeystoningBorderDrawer>())
-				{
-					drawer.enabled = false;
-				}
-			}
-		}
-		catch (System.NullReferenceException e)
-		{
-			Debug.LogWarning(e.ToString(), this);
-		}
+       
 		
 		
 		UpdateStereo();
@@ -182,30 +188,38 @@ public class RUISCamera : MonoBehaviour {
 		
 		if(associatedDisplay)
 		{
-			if (associatedDisplay.enableOculusRift)
-			{
-				if (!associatedDisplay.isStereo)
+            if (associatedDisplay.enableOculusRift)
+            {
+                if (!associatedDisplay.isStereo)
+                {
+                    Debug.LogWarning("Oculus Rift enabled in RUISCamera, forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
+                    associatedDisplay.isStereo = true;
+					associatedDisplay.stereoType = RUISDisplay.StereoType.SideBySide;
+                }
+                
+				if (associatedDisplay.stereoType != RUISDisplay.StereoType.SideBySide)
 				{
-					Debug.LogWarning("Oculus Rift enabled in RUISCamera, forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
-					associatedDisplay.isStereo = true;
+					Debug.LogWarning(  "Oculus Rift enabled in RUISCamera, switching to side-by-side stereo mode to display: " 
+									 + associatedDisplay.name, associatedDisplay);
+					associatedDisplay.stereoType = RUISDisplay.StereoType.SideBySide;
 				}
-				
-				associatedDisplay.isObliqueFrustum = false;
-				associatedDisplay.isKeystoneCorrected = false;
-			}
-			else
-			{
-				SetupCameraTransforms();
-			}
-			
-			if(associatedDisplay.isObliqueFrustum)
-			{
-				if (associatedDisplay.headTracker)
-				{
-					Vector3[] eyePositions = associatedDisplay.headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
-					Vector3 camToDisplay = associatedDisplay.displayCenterPosition - eyePositions[0];
-					float distanceFromPlane = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
-					if(distanceFromPlane == 0)
+
+                associatedDisplay.isObliqueFrustum = false;
+                associatedDisplay.isKeystoneCorrected = false;
+            }
+            else
+            {
+                SetupCameraTransforms();
+            }
+            
+            if(associatedDisplay.isObliqueFrustum)
+            {
+                if (associatedDisplay.headTracker)
+                {
+                    Vector3[] eyePositions = associatedDisplay.headTracker.GetEyePositions(associatedDisplay.eyeSeparation);
+				    Vector3 camToDisplay = associatedDisplay.displayCenterPosition - eyePositions[0];
+        		    float distanceFromPlane = Vector3.Dot(camToDisplay, associatedDisplay.DisplayNormal);
+	                if(distanceFromPlane == 0)
 						Debug.LogError(  "In " + associatedDisplay.headTracker.gameObject.name + " GameObject's "
 						               + "RUISTracker script, you have set defaultPosition to " 
 						               + "lie on the display plane of " 
@@ -400,7 +414,7 @@ public class RUISCamera : MonoBehaviour {
 //		
 //		topPlusBottom = projectionMatrix[1, 2]*frustumHeight;
 
-		
+
 		camera.aspect = frustumWidth/frustumHeight;
 		
 //		frustumTop = 0.5f*(topPlusBottom + frustumHeight);
@@ -410,50 +424,63 @@ public class RUISCamera : MonoBehaviour {
 		
 	}
 
-	private void ApplyKeystoneCorrection()
-	{
-		//Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
-		//Debug.Log(centerCamera.projectionMatrix * keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
-		centerCamera.projectionMatrix = keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix() * centerCamera.projectionMatrix;
-		leftCamera.projectionMatrix = keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix() * leftCamera.projectionMatrix;
-		rightCamera.projectionMatrix = keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix() * rightCamera.projectionMatrix;
-		//Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
-		//leftCamera.projectionMatrix *= keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix();
-		//rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
-	}
-	
-	virtual public void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)
-	{
-		normalizedScreenRect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
-		this.aspectRatio = aspectRatio;
-		
-		centerCamera.rect = normalizedScreenRect;
-		centerCamera.aspect = aspectRatio;
+    private void ApplyKeystoneCorrection()
+    {
+        //Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
+        //Debug.Log(centerCamera.projectionMatrix * keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
+        centerCamera.projectionMatrix = keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix() * centerCamera.projectionMatrix;
+        leftCamera.projectionMatrix = keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix() * leftCamera.projectionMatrix;
+        rightCamera.projectionMatrix = keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix() * rightCamera.projectionMatrix;
+        //Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
+        //leftCamera.projectionMatrix *= keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix();
+        //rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
+    }
+
+    virtual public void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)
+    {
 		
 		if (associatedDisplay == null)
 		{
 			Debug.LogError("Associated Display was null", this);
 		}
-		
-		if (associatedDisplay.stereoType == RUISDisplay.StereoType.SideBySide)
-		{
-			leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth / 2, relativeHeight);
-			rightCamera.rect = new Rect(relativeLeft + relativeWidth / 2, relativeBottom, relativeWidth / 2, relativeHeight);
-		}
-		else if (associatedDisplay.stereoType == RUISDisplay.StereoType.TopAndBottom)
-		{
-			leftCamera.rect = new Rect(relativeLeft, relativeBottom + relativeHeight / 2, relativeWidth, relativeHeight / 2);
-			rightCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight / 2);
-		}
 		else
 		{
-			leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
-			rightCamera.rect = new Rect(leftCamera.rect);
-		}
+			if(associatedDisplay.enableOculusRift)
+			{
+			}
+			else
+			{
+		        normalizedScreenRect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+		        this.aspectRatio = aspectRatio;
 		
-		leftCamera.aspect = aspectRatio;
-		rightCamera.aspect = aspectRatio;
-	}
+				if(centerCamera)
+				{
+			        centerCamera.rect = normalizedScreenRect;
+			        centerCamera.aspect = aspectRatio;
+		        }
+		
+			
+		        if (associatedDisplay.stereoType == RUISDisplay.StereoType.SideBySide)
+		        {
+		            leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth / 2, relativeHeight);
+		            rightCamera.rect = new Rect(relativeLeft + relativeWidth / 2, relativeBottom, relativeWidth / 2, relativeHeight);
+		        }
+		        else if (associatedDisplay.stereoType == RUISDisplay.StereoType.TopAndBottom)
+		        {
+		            leftCamera.rect = new Rect(relativeLeft, relativeBottom + relativeHeight / 2, relativeWidth, relativeHeight / 2);
+		            rightCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight / 2);
+		        }
+		        else
+		        {
+		            leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+		            rightCamera.rect = new Rect(leftCamera.rect);
+		        }
+			}
+		}
+			
+        leftCamera.aspect = aspectRatio;
+        rightCamera.aspect = aspectRatio;
+    }
 	
 	private void SetupCameraTransforms()
 	{
@@ -468,42 +495,42 @@ public class RUISCamera : MonoBehaviour {
             rightCamera.transform.localRotation = Quaternion.Euler(-rotation);
             leftCamera.transform.localRotation = Quaternion.Euler(rotation);
         }*/
-	}
-	
-	private void UpdateStereo()
-	{
-		if (associatedDisplay.isStereo)
-		{
-			centerCamera.enabled = false;
-			leftCamera.enabled = true;
-			rightCamera.enabled = true;
-		}
-		else
-		{
+    }
+
+    private void UpdateStereo()
+    {
+        if (associatedDisplay.isStereo)
+        {
+			if(!associatedDisplay.enableOculusRift) centerCamera.enabled = false;
+            leftCamera.enabled = true;
+            rightCamera.enabled = true;
+        }
+        else
+        {
 			centerCamera.enabled = true;
-			leftCamera.enabled = false;
-			rightCamera.enabled = false;
-		}
-		
-		oldStereoValue = associatedDisplay.isStereo;
-	}
-	
-	private void UpdateStereoType()
-	{
-		SetupCameraViewports(normalizedScreenRect.xMin, normalizedScreenRect.yMin, normalizedScreenRect.width, normalizedScreenRect.height, aspectRatio);
-		oldStereoTypeValue = associatedDisplay.stereoType;
-	}
-	
-	public void LoadKeystoningFromXML(XmlDocument xmlDoc)
-	{
-		keystoningConfiguration.LoadFromXML(xmlDoc);
-	}
-	
-	public void SaveKeystoningToXML(XmlElement displayXmlElement)
-	{
-		keystoningConfiguration.SaveToXML(displayXmlElement);
-	}
-	
+            leftCamera.enabled = false;
+            rightCamera.enabled = false;
+        }
+
+        oldStereoValue = associatedDisplay.isStereo;
+    }
+
+    private void UpdateStereoType()
+    {
+        SetupCameraViewports(normalizedScreenRect.xMin, normalizedScreenRect.yMin, normalizedScreenRect.width, normalizedScreenRect.height, aspectRatio);
+        oldStereoTypeValue = associatedDisplay.stereoType;
+    }
+
+    public void LoadKeystoningFromXML(XmlDocument xmlDoc)
+    {
+        keystoningConfiguration.LoadFromXML(xmlDoc);
+    }
+
+    public void SaveKeystoningToXML(XmlElement displayXmlElement)
+    {
+        keystoningConfiguration.SaveToXML(displayXmlElement);
+    }
+
 	/*
     public void OnDrawGizmos()
     {

@@ -148,22 +148,24 @@ public class RUISDisplay : MonoBehaviour {
     public void Awake()
     {
         aspectRatio = resolutionX / resolutionY;
-    }
-
-    public void Start()
-    {
-        if (!linkedCamera)
-        {
-            Debug.LogError("No camera attached to display: " + name, this);
-        }
-        else
-        {
-            linkedCamera.isKeystoneCorrected = isKeystoneCorrected;
-            linkedCamera.associatedDisplay = this;
-        }
-    }
-
-    public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)
+        
+		if (!linkedCamera)
+		{
+			Debug.LogError("No camera attached to display: " + name, this);
+		}
+		else
+		{
+			linkedCamera.isKeystoneCorrected = isKeystoneCorrected;
+			linkedCamera.associatedDisplay = this;
+		}
+ 	}
+	
+	public void Start()
+	{
+		
+	}
+	
+	public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)
     {
         float relativeWidth = rawResolutionX / totalRawResolution.x;
         float relativeHeight = rawResolutionY / totalRawResolution.y;
@@ -174,7 +176,9 @@ public class RUISDisplay : MonoBehaviour {
         if (linkedCamera)
         {
             linkedCamera.associatedDisplay = this;
-            linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight, aspectRatio);
+//            if(enableOculusRift)
+//				return;
+			linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight, aspectRatio);
         }
         else
         {

@@ -32,6 +32,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
+		bool kinect2 = false;
 		bool kinect = false;
 		bool psmove = false;
 		bool razer = false;
@@ -40,6 +41,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 		
 		if(inputManager)
 		{
+			kinect2 = inputManager.enableKinect2;
 			kinect = inputManager.enableKinect;
 			psmove = inputManager.enablePSMove;
 			razer  = inputManager.enableRazerHydra;
@@ -86,7 +88,9 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					{
 						foundTrackerScore = 3;
 					}
-					else if(kinect && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect)
+					else if((kinect || kinect2) 
+						&& (trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect
+					    || trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect2))
 					{
 						foundTrackerScore = 2;
 					}
@@ -102,7 +106,6 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 						closestMatch = trackerScript;
 						currentMatchScore = foundTrackerScore;
 					}
-						
 				}
 			}
 			

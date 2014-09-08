@@ -38,9 +38,12 @@ public class RUISPSMoveWand : RUISWand {
     protected RUISCoordinateSystem coordinateSystem;
 
     public Renderer whereToCopyColor;
-
+	private RUISInputManager inputManager;
+	
 	public void Awake ()
     {
+		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+    
         if (psMoveWrapper == null)
         {
             psMoveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
@@ -250,11 +253,11 @@ public class RUISPSMoveWand : RUISWand {
     {
         get
         {
-            return coordinateSystem.ConvertMoveRotation(psMoveWrapper.qOrientation[controllerId]);
+			return coordinateSystem.ConvertRotation(coordinateSystem.ConvertRawPSMoveRotation(psMoveWrapper.qOrientation[controllerId]),RUISDevice.PS_Move);
         }
     }
 
-	// Returns angularVelocity in wand's local coordinate system, unaffected my parent's scale
+	// Returns angularVelocity in wand's local coordinate system, unaffected by parent's scale
     public Vector3 angularVelocity
     {
         get
@@ -264,7 +267,7 @@ public class RUISPSMoveWand : RUISWand {
 				return transform.parent.TransformDirection(
 					coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]));
 			else */
-            	return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]);
+			return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]);
         }
 	}
 
@@ -278,7 +281,7 @@ public class RUISPSMoveWand : RUISWand {
 				return transform.parent.TransformDirection(
 					coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularAcceleration[controllerId]));
 			else */
-            	return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularAcceleration[controllerId]);
+			return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularAcceleration[controllerId]);
         }
     }
 	
@@ -342,12 +345,12 @@ public class RUISPSMoveWand : RUISWand {
 	// TUUKKA:
     private Vector3 TransformVelocity(Vector3 value)
     {
-        return coordinateSystem.ConvertMoveVelocity(value);
+		return coordinateSystem.ConvertMoveVelocity(value);
     }
 	
     private Vector3 TransformPosition(Vector3 value)
     {
-        return coordinateSystem.ConvertMovePosition(value);
+		return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawPSMoveLocation(value),RUISDevice.PS_Move);
     }
 	
 	// Returns angularVelocity in wand's local coordinate system

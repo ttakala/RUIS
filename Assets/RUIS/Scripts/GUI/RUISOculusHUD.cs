@@ -17,6 +17,7 @@ using System.Collections;
 
 public class RUISOculusHUD : MonoBehaviour 
 {
+	/*
 	public bool showCalibrationStatus = false;
 	//public KeyCode toggleCalibrationKey = KeyCode.X; // This key is hardcoded in OVRMagCalibration.cs
 	
@@ -161,7 +162,8 @@ public class RUISOculusHUD : MonoBehaviour
 		if(GUIRenderObject != null)
 		{
 			if(		showMagStatus
-				/* || ((magCal.Disabled () == false) && (magCal.Ready () == false)) */ )
+				// || ((magCal.Disabled () == false) && (magCal.Ready () == false)) 
+				 )
 				GUIRenderObject.SetActive(true);
 			else
 				GUIRenderObject.SetActive(false);
@@ -194,7 +196,8 @@ public class RUISOculusHUD : MonoBehaviour
 		// is removed from GUI)
 		GuiHelper.SetFontReplace(textFont);
 		
-		if(showMagStatus /*|| (magCal.Disabled () == false) && (magCal.Ready () == false) */ )
+		if(showMagStatus //|| (magCal.Disabled () == false) && (magCal.Ready () == false) 
+		 )
 		{
 			// Print out auto mag correction state
 			magCal.GUIMagYawDriftCorrection(VRVarsSX, VRVarsSY, VRVarsWidthX, VRVarsWidthY,
@@ -230,4 +233,5 @@ public class RUISOculusHUD : MonoBehaviour
 //			showMagStatus = true;
 //		}
 	}
+	*/
 }

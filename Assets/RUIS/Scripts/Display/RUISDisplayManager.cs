@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   A manager for display configurations
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Heikki Heiskanen
+Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -21,6 +21,19 @@ public class RUISDisplayManager : MonoBehaviour {
 
     public bool allowResolutionDialog;
 
+	public GameObject ruisMenuPrefab;
+	public int guiDisplayChoice = 0;
+	
+	public float guiX;  
+	public float guiY; 
+	public float guiZ;
+	
+	public float guiScaleX = 1;
+	public float guiScaleY = 1;
+	public bool hideMouseOnPlay = false;
+	
+	public GameObject menuCursorPrefab;
+	
     public class ScreenPoint
     {
         public Vector2 coordinates;
@@ -42,6 +55,8 @@ public class RUISDisplayManager : MonoBehaviour {
 
 
         LoadDisplaysFromXML();
+		
+		InitRUISMenu(ruisMenuPrefab, guiDisplayChoice);
 	}
 
     void Update()
@@ -210,4 +225,34 @@ public class RUISDisplayManager : MonoBehaviour {
 
         return null;
     }
+    
+	private void InitRUISMenu(GameObject ruisMenuPrefab, int guiDisplayChoice)
+	{
+		if(ruisMenuPrefab == null)
+			return;
+		GameObject ruisMenu = Instantiate(ruisMenuPrefab) as GameObject;
+		if(		ruisMenu == null || displays[guiDisplayChoice].GetComponent<RUISDisplay>() == null
+		   	||	displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera == null			)
+		{
+			return;
+		}
+		
+		
+		if(!displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo
+		   && !displays[guiDisplayChoice].GetComponent<RUISDisplay>().enableOculusRift)
+		{
+			displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.gameObject.AddComponent<UICamera>();
+		}
+		else 
+		{
+			displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform.gameObject.AddComponent<UICamera>();
+			displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraLeft").transform.gameObject.AddComponent<UICamera>();
+		}
+		
+		ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform;
+		
+		
+		ruisMenu.transform.localPosition = new Vector3(guiX,guiY,guiZ);
+		ruisMenu.transform.localRotation = Quaternion.identity;
+	}
 }

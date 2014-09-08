@@ -216,6 +216,7 @@ public class RUISTrackerEditor : Editor
         switch (headPositionInput.enumValueIndex)
         {
             case (int)RUISTracker.HeadPositionSource.Kinect:
+			case (int)RUISTracker.HeadPositionSource.Kinect2:
 				positionPlayerID.intValue = Mathf.Clamp(positionPlayerID.intValue, 0, maxKinectSkeletons - 1);
 				if(positionNoiseCovarianceKinect.floatValue < minNoiseCovariance)
 					positionNoiseCovarianceKinect.floatValue = minNoiseCovariance;

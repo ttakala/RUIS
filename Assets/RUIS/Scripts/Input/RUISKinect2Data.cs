@@ -1,4 +1,4 @@
-﻿/*****************************************************************************
+/*****************************************************************************
 
 Content    :   Wrapper for getting Kinect 2 data
 Authors    :   Heikki Heiskanen
@@ -14,13 +14,14 @@ using Kinect = Windows.Kinect;
 
 public class RUISKinect2Data : MonoBehaviour {
 	
-	public GameObject bodySourceManagerObject;
 
-	private BodySourceManager _BodyManager;
+	public GameObject SourceManager;
+
+	private Kinect2SourceManager _SourceManager;
 	
 	public void Awake()
 	{
-		_BodyManager = bodySourceManagerObject.GetComponent<BodySourceManager>();
+		_SourceManager = SourceManager.GetComponent<Kinect2SourceManager>();
 	}
 //	private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
 //	{
@@ -56,10 +57,11 @@ public class RUISKinect2Data : MonoBehaviour {
 	
 	public Kinect.Body[] getData() 
 	{
-		if(_BodyManager)
-			return _BodyManager.GetBodyData();
+		if(_SourceManager)
+			return _SourceManager.GetBodyData();
 		else
 			return null;
+
 	}
 
 }

@@ -10,6 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 [AddComponentMenu("RUIS/GUI/RUISMenu")]
 public class RUISMenu : MonoBehaviour {
@@ -18,7 +19,8 @@ public class RUISMenu : MonoBehaviour {
         Main,
         Calibrating,
         EditingDisplays,
-        EditingInputConfiguration
+        EditingInputConfiguration,
+        CalibrationOptions
     }
 	
 	public int fontSize = 14;
@@ -33,7 +35,6 @@ public class RUISMenu : MonoBehaviour {
 	private Color originalBackground;
 	private GUIStyle gridStyle;
 	private Color darkGreen = new Color(0, 0.8f, 0);
-	private Color lightGrey = new Color(0.8f, 0.8f, 0.8f);
 
     bool isShowing = false;
 
@@ -46,7 +47,10 @@ public class RUISMenu : MonoBehaviour {
     [HideInInspector] public int psMovePort;
 
     bool isEditingKeystones = false;
-
+	
+	private Dictionary<RUISDevice, bool> firstDevice = new Dictionary<RUISDevice, bool>();
+	private Dictionary<RUISDevice, bool> secondDevice = new Dictionary<RUISDevice, bool>();
+	
     RUISInputManager inputManager;
 
     public RUISJumpGestureRecognizer jumpGesture;
@@ -56,7 +60,7 @@ public class RUISMenu : MonoBehaviour {
     private bool originalEnableJumpGesture;
     private bool originalEnableHydra;
 	private bool originalKinectDriftCorrection;
-    private RUISInputManager.RiftMagnetometer originalMagnetometerMode;
+    //private RUISInputManager.RiftMagnetometer originalMagnetometerMode;
 
     public bool oculusRiftMenu = false;
     public bool hideMouseOnPlay = true;
@@ -66,6 +70,13 @@ public class RUISMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+		string[] names = System.Enum.GetNames( typeof( RUISDevice ) );
+		foreach(string device in names) {
+			RUISDevice deviceEnum = (RUISDevice) System.Enum.Parse( typeof(RUISDevice), device, true );
+			firstDevice[deviceEnum] = false;
+			secondDevice[deviceEnum] = false;
+		}
+		
         try
         {
             Input.GetButtonDown("RUISMenu");
@@ -93,6 +104,29 @@ public class RUISMenu : MonoBehaviour {
         }
 		
         SaveInputChanges();
+        
+        
+        /*
+         ComboBox test
+         */
+         /*
+		comboBoxList = new GUIContent[5];
+		comboBoxList[0] = new GUIContent("Thing 1");
+		comboBoxList[1] = new GUIContent("Thing 2");
+		comboBoxList[2] = new GUIContent("Thing 3");
+		comboBoxList[3] = new GUIContent("Thing 4");
+		comboBoxList[4] = new GUIContent("Thing 5");
+		
+		listStyle.normal.textColor = Color.white; 
+		listStyle.onHover.background =
+			listStyle.hover.background = new Texture2D(2, 2);
+		listStyle.padding.left =
+			listStyle.padding.right =
+				listStyle.padding.top =
+				listStyle.padding.bottom = 4;
+		
+		comboBoxControl = new ComboBox(new Rect(0, 100, 100, 20), comboBoxList[0], comboBoxList, "button", "box", listStyle);
+     	*/   
 	}
 
     void Update()
@@ -111,6 +145,8 @@ public class RUISMenu : MonoBehaviour {
 
     void OnGUI()
     {
+		
+    
         if (!isShowing) 
 		{
 			if(hideMouseOnPlay && !Application.isEditor)
@@ -179,25 +215,7 @@ public class RUISMenu : MonoBehaviour {
                 GUI.enabled = inputManager.enablePSMove && inputManager.enableKinect;
 
 				GUI.backgroundColor = originalBackground;
-                if (GUILayout.Button("Calibrate PS Move & Kinect (and Save)"))
-                {
-                    inputManager.Export(inputManager.filename);
-                    SaveInputChanges();
-
-                    DontDestroyOnLoad(this);
-
-                    Debug.Log("Loading calibration screen.");
-
-                    gameObject.transform.parent = null;
-
-                    previousSceneId = Application.loadedLevel;
-
-                    menuState = MenuState.Calibrating;
-
-                    isShowing = false;
-
-                    Application.LoadLevel("calibration");
-                }
+                
 
                 GUI.enabled = true;
 
@@ -210,13 +228,15 @@ public class RUISMenu : MonoBehaviour {
 				gridStyle.onActive.textColor = darkGreen;
 				gridStyle.onNormal.textColor = darkGreen;
 			
+				/*
                 GUILayout.Space(additionalSpacing);
 				GUI.color = lightGrey;
                 GUILayout.Label("Rift magnetometer drift correction:");
 				GUI.color = Color.white;
-                string[] magnetometerNames = System.Enum.GetNames(typeof(RUISInputManager.RiftMagnetometer));
-                inputManager.riftMagnetometerMode = (RUISInputManager.RiftMagnetometer)GUILayout.SelectionGrid((int)inputManager.riftMagnetometerMode, 
-																												magnetometerNames, 1, gridStyle);
+                */
+                //string[] magnetometerNames = System.Enum.GetNames(typeof(RUISInputManager.RiftMagnetometer));
+                //inputManager.riftMagnetometerMode = (RUISInputManager.RiftMagnetometer)GUILayout.SelectionGrid((int)inputManager.riftMagnetometerMode, 
+			//																									magnetometerNames, 1, gridStyle);
 			
                 GUILayout.Space(additionalSpacing);
 
@@ -240,6 +260,12 @@ public class RUISMenu : MonoBehaviour {
 			
                 GUILayout.Space(2*additionalSpacing);
 
+	
+				if (GUILayout.Button("Calibration"))
+				{
+					menuState = MenuState.CalibrationOptions;
+				}
+				
                 if (GUILayout.Button("Display Management"))
                 {
                     SwitchKeystoneEditingState();
@@ -305,10 +331,86 @@ public class RUISMenu : MonoBehaviour {
                     menuState = MenuState.Main;
                 }
                 break;
-            case MenuState.EditingInputConfiguration:
+          	  case MenuState.EditingInputConfiguration:
                 
                 break;
+                
+				case MenuState.CalibrationOptions:
+					/*
+					firstDeviceSelected 
+					*/
+					bool firstDeviceSelected = false;
+					RUISDevice selectedFirstDevice = RUISDevice.Null;
+					foreach(var key in firstDevice.Keys)
+					{
+						if(firstDevice[key]) { 
+							firstDeviceSelected = true;
+							selectedFirstDevice = key;
+						}
+					}
+					
+					GUILayout.Label("Select first device:");
+					if(!(firstDeviceSelected && selectedFirstDevice != RUISDevice.Kinect_1)) firstDevice[RUISDevice.Kinect_1] = GUILayout.Toggle(firstDevice[RUISDevice.Kinect_1], "Kinect");
+					if(!(firstDeviceSelected && selectedFirstDevice != RUISDevice.Kinect_2)) firstDevice[RUISDevice.Kinect_2] =  GUILayout.Toggle(firstDevice[RUISDevice.Kinect_2], "Kinect 2");
+					if(!(firstDeviceSelected && selectedFirstDevice != RUISDevice.PS_Move)) firstDevice[RUISDevice.PS_Move] =  GUILayout.Toggle(firstDevice[RUISDevice.PS_Move], "PSMove");
+				
+					
+				
+					if(firstDeviceSelected) 
+					{
+						bool secondDeviceSelected = false;
+						RUISDevice selectedSecondDevice = RUISDevice.Null;
+						foreach(var key in firstDevice.Keys)
+						{
+							if(secondDevice[key]) { 
+								secondDeviceSelected = true;
+								selectedSecondDevice = key;
+							}
+						}
+					
+						GUILayout.Label("Select second device:");
+						if(!firstDevice[RUISDevice.Kinect_1] && !(secondDeviceSelected && selectedSecondDevice != RUISDevice.Kinect_1)) secondDevice[RUISDevice.Kinect_1] = GUILayout.Toggle(secondDevice[RUISDevice.Kinect_1], "Kinect");
+						if(!firstDevice[RUISDevice.Kinect_2] && !(secondDeviceSelected && selectedSecondDevice != RUISDevice.Kinect_2)) secondDevice[RUISDevice.Kinect_2] =  GUILayout.Toggle(secondDevice[RUISDevice.Kinect_2], "Kinect 2");
+						if(!firstDevice[RUISDevice.PS_Move] && !(secondDeviceSelected && selectedSecondDevice != RUISDevice.PS_Move)) secondDevice[RUISDevice.PS_Move] =  GUILayout.Toggle(secondDevice[RUISDevice.PS_Move], "PSMove");
+					}
+					else if(secondDevice.ContainsValue(true))
+					{
+						print ("reset");
+						foreach(var key in secondDevice.Keys)
+						{
+							firstDevice[key] = false;
+						}
+					}
+					
+			
+			
+					if (GUILayout.Button("Calibrate devices"))
+					{
+						inputManager.Export(inputManager.filename);
+						SaveInputChanges();
+						
+						DontDestroyOnLoad(this);
+						
+						Debug.Log("Loading calibration screen.");
+						
+						gameObject.transform.parent = null;
+						
+						previousSceneId = Application.loadedLevel;
+						
+						menuState = MenuState.Calibrating;
+						
+						isShowing = false;
+						
+						Application.LoadLevel("calibration");
+					}
+					if (GUILayout.Button("Return"))
+					{
+						menuState = MenuState.Main;
+					}
+					
+				break;
         }
+
 		
 		originalBackground = GUI.backgroundColor;
         GUI.DragWindow();
@@ -345,7 +447,7 @@ public class RUISMenu : MonoBehaviour {
         originalEnableKinect = inputManager.enableKinect;
         originalEnableJumpGesture = inputManager.jumpGestureEnabled;
         originalEnableHydra = inputManager.enableRazerHydra;
-        originalMagnetometerMode = inputManager.riftMagnetometerMode;
+ //       originalMagnetometerMode = inputManager.riftMagnetometerMode;
 		originalKinectDriftCorrection = inputManager.kinectDriftCorrectionPreferred;
     }
 
@@ -366,7 +468,7 @@ public class RUISMenu : MonoBehaviour {
         }
 		inputManager.jumpGestureEnabled = originalEnableJumpGesture;
         inputManager.enableRazerHydra = originalEnableHydra;
-        inputManager.riftMagnetometerMode = originalMagnetometerMode;
+//        inputManager.riftMagnetometerMode = originalMagnetometerMode;
 		inputManager.kinectDriftCorrectionPreferred = originalKinectDriftCorrection;
     }
 
@@ -376,7 +478,7 @@ public class RUISMenu : MonoBehaviour {
         originalEnableKinect != inputManager.enableKinect ||
         originalEnableJumpGesture != inputManager.jumpGestureEnabled ||
         originalEnableHydra != inputManager.enableRazerHydra ||
-        originalMagnetometerMode != inputManager.riftMagnetometerMode ||
+//        originalMagnetometerMode != inputManager.riftMagnetometerMode ||
 		originalKinectDriftCorrection != inputManager.kinectDriftCorrectionPreferred;
     }
 }

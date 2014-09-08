@@ -144,6 +144,7 @@ public class YawDriftCorrector : MonoBehaviour {
 		switch(driftingSensor) 
 		{
 			case DriftingRotation.OculusRift:
+				/*
 				if(OVRDevice.IsSensorPresent(oculusID))
 				{
 					OVRDevice.GetOrientation(oculusID, ref driftingRot);
@@ -153,6 +154,7 @@ public class YawDriftCorrector : MonoBehaviour {
 						oculusCamController.SetYRotation(-finalYawDifference.eulerAngles.y);
 					}
 				}
+				*/
 				break;
 			case DriftingRotation.RazerHydra:
 				// TODO

@@ -176,6 +176,10 @@ public class RUISWandSelector : MonoBehaviour {
         switch (selectionRayType)
         {
             case SelectionRayType.HeadToWand:
+				if(!headTransform) {
+				Debug.LogError(name + ": Head transform not assigned");
+					return null;
+				}
                 RaycastHit headToWandHit;
 				headToWandDirection = transform.position - headTransform.position;
                 selectionRay = new Ray(headTransform.position + selectionRayStartDistance*headToWandDirection, headToWandDirection);

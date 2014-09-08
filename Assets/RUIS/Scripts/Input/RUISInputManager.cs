@@ -56,17 +56,36 @@ public class RUISInputManager : MonoBehaviour
 	
 	private RUISCoordinateSystem coordinateSystem = null;
     private OpenNI.SceneAnalyzer sceneAnalyzer = null;
-	private RUISM2KCalibration moveKinectCalibration;
 	//private bool usingExistingSceneAnalyzer = false;
 	
     public RUISPSMoveWand[] moveControllers;
 
-    public RiftMagnetometer riftMagnetometerMode = RiftMagnetometer.Off;
+   // public RiftMagnetometer riftMagnetometerMode = RiftMagnetometer.Off;
 
     public bool jumpGestureEnabled = true;
 
+	RUISMenuNGUI ruisNGUIMenu;
+
     public void Awake()
     {
+    	// Check if we are in calibration scene
+		ruisNGUIMenu = FindObjectOfType(typeof(RUISMenuNGUI)) as RUISMenuNGUI;
+    	
+		if(ruisNGUIMenu != null) 
+		{
+			if(ruisNGUIMenu.currentMenuState == RUISMenuNGUI.RUISMenuStates.calibration) 
+			{
+				this.enablePSMove = ruisNGUIMenu.originalEnablePSMove;
+				this.enableKinect = ruisNGUIMenu.originalEnableKinect;
+				this.enableKinect2 = ruisNGUIMenu.originalEnableKinect2;
+				this.jumpGestureEnabled = ruisNGUIMenu.originalEnableJumpGesture;
+				this.enableRazerHydra = ruisNGUIMenu.originalEnableHydra;
+				this.kinectDriftCorrectionPreferred = ruisNGUIMenu.originalKinectDriftCorrection;
+				this.PSMoveIP = ruisNGUIMenu.originalPSMoveIP;
+				this.PSMovePort = ruisNGUIMenu.originalPSMovePort;
+			}
+		}
+    	
 		wandDelayed = new bool[4] {moveWand0, moveWand1, moveWand2, moveWand3};
 		disabledWands = new List<GameObject>();
 		
@@ -228,19 +247,13 @@ public class RUISInputManager : MonoBehaviour
 		{
 			kinectFloorDetection = true;
 			
-			moveKinectCalibration = FindObjectOfType(typeof(RUISM2KCalibration)) as RUISM2KCalibration;
-			if(!moveKinectCalibration)
+			if(sceneAnalyzer == null)
 			{
-				if(sceneAnalyzer == null)
-				{
-					sceneAnalyzer = new OpenNI.SceneAnalyzer((FindObjectOfType(typeof(OpenNISettingsManager)) 
-															as OpenNISettingsManager).CurrentContext.BasicContext);
-					sceneAnalyzer.StartGenerating();
-					Debug.Log ("Creating sceneAnalyzer");
-				}
+				sceneAnalyzer = new OpenNI.SceneAnalyzer((FindObjectOfType(typeof(OpenNISettingsManager)) 
+														as OpenNISettingsManager).CurrentContext.BasicContext);
+				sceneAnalyzer.StartGenerating();
+				Debug.Log ("Creating sceneAnalyzer");
 			}
-			else
-	    		StartCoroutine("attemptStartingSceneAnalyzer");
 			
 	    	StartCoroutine("attemptUpdatingFloorNormal");
 		}
@@ -301,23 +314,6 @@ public class RUISInputManager : MonoBehaviour
 		}
     }
 	
-    private IEnumerator attemptStartingSceneAnalyzer()
-    {
-        if(kinectFloorDetection)
-        {	
-        	yield return new WaitForSeconds(2.0f);
-			
-			if(sceneAnalyzer == null)
-			{
-				Debug.Log ("Using existing sceneAnalyzer");
-				sceneAnalyzer = moveKinectCalibration.sceneAnalyzer;
-				//usingExistingSceneAnalyzer = true;
-				//if(!sceneAnalyzer.IsGenerating) // Seems to be always on
-	    		//	sceneAnalyzer.StartGenerating();
-			}
-		}
-	}
-	
     private IEnumerator attemptUpdatingFloorNormal()
     {
         yield return new WaitForSeconds(5.0f);
@@ -342,8 +338,8 @@ public class RUISInputManager : MonoBehaviour
 	{
         if(coordinateSystem)
         {
-			coordinateSystem.ResetKinectFloorNormal();
-			coordinateSystem.ResetKinectDistanceFromFloor();
+			coordinateSystem.ResetFloorNormal();
+			coordinateSystem.ResetDistanceFromFloor();
 	
 	        OpenNI.Plane3D floor = sceneAnalyzer.Floor;
 	        Vector3 newFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized;
@@ -363,9 +359,8 @@ public class RUISInputManager : MonoBehaviour
 	        //floorPlane.transform.position = closestFloorPointToKinect;
 	
 	
-	        coordinateSystem.SetKinectFloorNormal(newFloorNormal);
-	        //floorNormal = newFloorNormal.normalized;
-	        coordinateSystem.SetKinectDistanceFromFloor(closestFloorPointToKinect.magnitude);
+			coordinateSystem.SetFloorNormal(newFloorNormal);
+	        coordinateSystem.SetDistanceFromFloor(closestFloorPointToKinect.magnitude);
 			
 			//if(!usingExistingSceneAnalyzer)
 			//	sceneAnalyzer.StopGenerating();

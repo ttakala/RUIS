@@ -44,11 +44,12 @@ public class RUISInputManagerEditor : Editor {
 	SerializedProperty enableRazerHydra;
 
     SerializedProperty riftMagnetometerMode;
+
     
     void OnEnable()
     {
         inputConfig = target as RUISInputManager;
-
+		
         xmlSchema = serializedObject.FindProperty("xmlSchema");
         filename = serializedObject.FindProperty("filename");
 
@@ -180,10 +181,10 @@ public class RUISInputManagerEditor : Editor {
 
         EditorGUILayout.Space();
 		
-        EditorGUILayout.PropertyField(riftMagnetometerMode, new GUIContent("Rift Drift Correction", "Choose whether Oculus Rift's "
-                                                                    + "magnetometer is calibrated at the beginning of the scene (for yaw "
-                                                                    + "drift correction). It can always be (re)calibrated in-game with the "
-                                                                    + "buttons defined in RUISOculusHUD component of RUISMenu."));
+//        EditorGUILayout.PropertyField(riftMagnetometerMode, new GUIContent("Rift Drift Correction", "Choose whether Oculus Rift's "
+ //                                                                   + "magnetometer is calibrated at the beginning of the scene (for yaw "
+  //                                                                  + "drift correction). It can always be (re)calibrated in-game with the "
+   //                                                                 + "buttons defined in RUISOculusHUD component of RUISMenu."));
 
 
         serializedObject.ApplyModifiedProperties();

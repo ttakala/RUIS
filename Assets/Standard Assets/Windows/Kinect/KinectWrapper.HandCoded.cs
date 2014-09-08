@@ -9,27 +9,57 @@ public class MonoPInvokeCallbackAttribute : System.Attribute
     public MonoPInvokeCallbackAttribute(System.Type t) { RootType = t; }
 }
 
-namespace Windows.Foundation
+namespace Windows.Kinect
 {
-    public struct Point
+    [RootSystem.Runtime.InteropServices.StructLayout(RootSystem.Runtime.InteropServices.LayoutKind.Sequential)]
+    public struct PointF
     {
-    }
-}
+        public float X { get; set; }
+        public float Y { get; set; }
 
-namespace Windows.Storage.Streams
-{
-    public partial class IBuffer : RootSystem.IDisposable
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
+        }
+
+        public override bool Equals (object obj)
+        {
+            if (!(obj is PointF))
+            {
+                return false;
+            }
+
+            return this.Equals((ColorSpacePoint)obj);
+        }
+
+        public bool Equals(ColorSpacePoint obj)
+        {
+            return (X == obj.X) && (Y == obj.Y);
+        }
+
+        public static bool operator ==(PointF a, PointF b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(PointF a, PointF b)
+        {
+            return !(a.Equals(b));
+        }
+    }
+
+    public sealed partial class Buffer : RootSystem.IDisposable
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
         
         // Constructors and Finalizers
-        internal IBuffer(RootSystem.IntPtr pNative)
+        internal Buffer(RootSystem.IntPtr pNative)
         {
             _pNative = pNative;
             Windows_Storage_Streams_IBuffer_AddRefObject(ref _pNative);
         }
         
-        ~IBuffer()
+        ~Buffer()
         {
             Dispose(false);
         }
@@ -42,7 +72,7 @@ namespace Windows.Storage.Streams
             {
                 if (_pNative == RootSystem.IntPtr.Zero)
                 {
-                    throw new RootSystem.ObjectDisposedException("IBuffer");
+                    throw new RootSystem.ObjectDisposedException("Buffer");
                 }
                 
                 return Windows_Storage_Streams_IBuffer_get_UnderlyingBuffer(_pNative);
@@ -53,7 +83,7 @@ namespace Windows.Storage.Streams
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
-                throw new RootSystem.ObjectDisposedException("IBuffer");
+                throw new RootSystem.ObjectDisposedException("Buffer");
             }
             
             Dispose(true);
@@ -66,14 +96,14 @@ namespace Windows.Storage.Streams
         private static extern void Windows_Storage_Streams_IBuffer_AddRefObject(ref RootSystem.IntPtr pNative);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Storage_Streams_IBuffer_Dispose(RootSystem.IntPtr pNative);
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
                 return;
             }
             
-            Helper.NativeObjectCache.RemoveObject<IBuffer>(_pNative);
+            Helper.NativeObjectCache.RemoveObject<Buffer>(_pNative);
             Windows_Storage_Streams_IBuffer_ReleaseObject(ref _pNative);
             
             if (disposing)
@@ -84,69 +114,26 @@ namespace Windows.Storage.Streams
             _pNative = RootSystem.IntPtr.Zero;
         }
         
-        public static implicit operator RootSystem.IntPtr(IBuffer other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-        
-        public static explicit operator IBuffer(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<IBuffer>(other);
-            if(obj == null)
-            {
-                obj = new IBuffer(other);
-                Helper.NativeObjectCache.AddObject<IBuffer>(other, obj);
-            }
-            return obj;
-        }
-        
         // Public Properties
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern uint Windows_Storage_Streams_IBuffer_get_Capacity(RootSystem.IntPtr pNative);
-        public  uint Capacity
-        {
-            get
-            {
-                if (_pNative == RootSystem.IntPtr.Zero)
-                {
-                    throw new RootSystem.ObjectDisposedException("IBuffer");
-                }
-                
-                return Windows_Storage_Streams_IBuffer_get_Capacity(_pNative);
-            }
-        }
-        
-        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern uint Windows_Storage_Streams_IBuffer_get_Length(RootSystem.IntPtr pNative);
-        public  uint Length
+        public uint Size
         {
             get
             {
                 if (_pNative == RootSystem.IntPtr.Zero)
                 {
-                    throw new RootSystem.ObjectDisposedException("IBuffer");
+                    throw new RootSystem.ObjectDisposedException("Buffer");
                 }
                 
                 return Windows_Storage_Streams_IBuffer_get_Length(_pNative);
             }
         }
     }
-}
 
-namespace Windows.Kinect
-{
-    internal partial class AudioStream : System.IO.Stream
+    internal sealed partial class AudioStream : System.IO.Stream
     {
-        protected internal RootSystem.IntPtr _pNative;
+        internal RootSystem.IntPtr _pNative;
         
         // Constructors and Finalizers
         internal AudioStream(RootSystem.IntPtr pNative)
@@ -195,31 +182,6 @@ namespace Windows.Kinect
             RootSystem.GC.SuppressFinalize(this);
         }
         
-        public static implicit operator RootSystem.IntPtr(AudioStream other)
-        {
-            if(other != null)
-            {
-                return other._pNative;
-            }
-            return RootSystem.IntPtr.Zero;
-        }
-        
-        public static explicit operator AudioStream(RootSystem.IntPtr other)
-        {
-            if(other == RootSystem.IntPtr.Zero)
-            {
-                return null;
-            }
-            other = Helper.NativeObjectCache.MapToIUnknown(other);
-            var obj = Helper.NativeObjectCache.GetObject<AudioStream>(other);
-            if(obj == null)
-            {
-                obj = new AudioStream(other);
-                Helper.NativeObjectCache.AddObject<AudioStream>(other, obj);
-            }
-            return obj;
-        }
-
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern void Windows_Kinect_IStream_Read(
             RootSystem.IntPtr pNative,
@@ -297,7 +259,7 @@ namespace Windows.Kinect
         }
     }
     
-    public partial class AudioBeam
+    public sealed partial class AudioBeam
     {
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern RootSystem.IntPtr Windows_Kinect_AudioBeam_OpenInputStream(RootSystem.IntPtr pNative);
@@ -321,11 +283,55 @@ namespace Windows.Kinect
         }
     }
 
-    public partial class AudioBeamFrame
+    public sealed partial class AudioBeamSubFrame
+    {
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern RootSystem.IntPtr Windows_Kinect_AudioBeamSubFrame_LockAudioBuffer(RootSystem.IntPtr pNative);
+        public Windows.Kinect.Buffer LockAudioBuffer()
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("AudioBeamSubFrame");
+            }
+
+            RootSystem.IntPtr objectPointer = Windows_Kinect_AudioBeamSubFrame_LockAudioBuffer(_pNative);
+            if (objectPointer == RootSystem.IntPtr.Zero)
+            {
+                return null;
+            }
+
+            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
+            var obj = Helper.NativeObjectCache.GetObject<Windows.Kinect.Buffer>(objectPointer);
+            if (obj == null)
+            {
+                obj = new Windows.Kinect.Buffer(objectPointer);
+                Helper.NativeObjectCache.AddObject<Windows.Kinect.Buffer>(objectPointer, obj);
+            }
+
+            return obj;
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport(
+            "KinectForUnity", 
+            EntryPoint="Windows_Kinect_AudioBeamSubFrame_CopyFrameDataToArray",
+            CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_AudioBeamSubFrame_CopyFrameDataToIntPtr(RootSystem.IntPtr pNative, RootSystem.IntPtr frameData, uint frameDataSize);
+        public void CopyFrameDataToIntPtr(RootSystem.IntPtr frameData, uint size)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("AudioBeamSubFrame");
+            }
+
+            Windows_Kinect_AudioBeamSubFrame_CopyFrameDataToIntPtr(_pNative, frameData, size);
+        }
+    }
+
+    public sealed partial class AudioBeamFrame
     {
         private Windows.Kinect.AudioBeamSubFrame[] _subFrames = null;
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
@@ -370,7 +376,7 @@ namespace Windows.Kinect
         private static extern int Windows_Kinect_AudioBeamFrame_get_SubFrames(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] RootSystem.IntPtr[] outCollection, int collectionSize);
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
         private static extern int Windows_Kinect_AudioBeamFrame_get_SubFrames_Length(RootSystem.IntPtr pNative);
-        public  Windows.Kinect.AudioBeamSubFrame[] SubFrames
+        public System.Collections.Generic.IList<Windows.Kinect.AudioBeamSubFrame> SubFrames
         {
             get
             {
@@ -410,74 +416,400 @@ namespace Windows.Kinect
         }
     }
 
-    public partial class CoordinateMapper
+    public sealed partial class BodyFrame
     {
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern void Windows_Kinect_CoordinateMapper_MapColorFrameToDepthSpace(RootSystem.IntPtr pNative, RootSystem.IntPtr depthFrameData, uint depthFrameDataSize, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.DepthSpacePoint[] depthSpacePoints, int depthSpacePointsSize);
-        public void MapColorFrameToDepthSpace(Windows.Storage.Streams.IBuffer depthFrameData, Windows.Kinect.DepthSpacePoint[] depthSpacePoints)
+        private static extern void Windows_Kinect_BodyFrame_get_FloorClipPlane(RootSystem.IntPtr pNative, ref Windows.Kinect.Vector4 pValue);
+        public Windows.Kinect.Vector4 FloorClipPlane
+        {
+            get
+            {
+                if (_pNative == RootSystem.IntPtr.Zero)
+                {
+                    throw new RootSystem.ObjectDisposedException("BodyFrame");
+                }
+
+                Windows.Kinect.Vector4 value = new Windows.Kinect.Vector4();
+                Windows_Kinect_BodyFrame_get_FloorClipPlane(_pNative, ref value);
+                return value;
+            }
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_BodyFrame_GetAndRefreshBodyData(RootSystem.IntPtr pNative, [RootSystem.Runtime.InteropServices.Out] RootSystem.IntPtr[] bodies, int bodiesSize);
+        public void GetAndRefreshBodyData(RootSystem.Collections.Generic.IList<Windows.Kinect.Body> bodies)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("BodyFrame");
+            }
+
+            int _bodies_idx=0;
+            var _bodies = new RootSystem.IntPtr[bodies.Count];
+            for (int i = 0; i < bodies.Count; i++)
+            {
+                if (bodies[i] == null)
+                {
+                    bodies[i] = new Body();
+                }
+
+                _bodies[_bodies_idx] = bodies[i].GetIntPtr();
+                _bodies_idx++;
+            }
+
+            Windows_Kinect_BodyFrame_GetAndRefreshBodyData(_pNative, _bodies, bodies.Count);
+            for (int i = 0; i < bodies.Count; i++)
+            {
+                bodies[i].SetIntPtr(_bodies[i]);
+            }
+        }
+    }
+
+    public sealed partial class Body
+    {
+        internal void SetIntPtr(RootSystem.IntPtr value) { _pNative = value; }
+        internal RootSystem.IntPtr GetIntPtr() { return _pNative; }
+
+        internal Body() { }
+
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern Windows.Kinect.PointF Windows_Kinect_Body_get_Lean(RootSystem.IntPtr pNative);
+        public Windows.Kinect.PointF Lean
+        {
+            get
+            {
+                if (_pNative == RootSystem.IntPtr.Zero)
+                {
+                    throw new RootSystem.ObjectDisposedException("Body");
+                }
+
+                return Windows_Kinect_Body_get_Lean(_pNative);
+            }
+        }
+    }
+
+    public sealed partial class ColorFrame
+    {
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern RootSystem.IntPtr Windows_Kinect_ColorFrame_LockRawImageBuffer(RootSystem.IntPtr pNative);
+        public Windows.Kinect.Buffer LockRawImageBuffer()
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("ColorFrame");
+            }
+
+            RootSystem.IntPtr objectPointer = Windows_Kinect_ColorFrame_LockRawImageBuffer(_pNative);
+            if (objectPointer == RootSystem.IntPtr.Zero)
+            {
+                return null;
+            }
+
+            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
+            var obj = Helper.NativeObjectCache.GetObject<Windows.Kinect.Buffer>(objectPointer);
+            if (obj == null)
+            {
+                obj = new Windows.Kinect.Buffer(objectPointer);
+                Helper.NativeObjectCache.AddObject<Windows.Kinect.Buffer>(objectPointer, obj);
+            }
+
+            return obj;
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport(
+            "KinectForUnity", 
+            EntryPoint="Windows_Kinect_ColorFrame_CopyRawFrameDataToArray",
+            CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_ColorFrame_CopyRawFrameDataToIntPtr(RootSystem.IntPtr pNative, IntPtr frameData, uint frameDataSize);
+        public void CopyRawFrameDataToIntPtr(RootSystem.IntPtr frameData, uint size)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("ColorFrame");
+            }
+
+            Windows_Kinect_ColorFrame_CopyRawFrameDataToIntPtr(_pNative, frameData, size);
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport(
+            "KinectForUnity", 
+            EntryPoint="Windows_Kinect_ColorFrame_CopyConvertedFrameDataToArray",
+            CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_ColorFrame_CopyConvertedFrameDataToIntPtr(RootSystem.IntPtr pNative, IntPtr frameData, uint frameDataSize, Windows.Kinect.ColorImageFormat colorFormat);
+        public void CopyConvertedFrameDataToIntPtr(RootSystem.IntPtr frameData, uint size, Windows.Kinect.ColorImageFormat colorFormat)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("ColorFrame");
+            }
+
+            Windows_Kinect_ColorFrame_CopyConvertedFrameDataToIntPtr(_pNative, frameData, size, colorFormat);
+        }
+    }
+
+    public sealed partial class DepthFrame
+    {
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern RootSystem.IntPtr Windows_Kinect_DepthFrame_LockImageBuffer(RootSystem.IntPtr pNative);
+        public Windows.Kinect.Buffer LockImageBuffer()
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("DepthFrame");
+            }
+
+            RootSystem.IntPtr objectPointer = Windows_Kinect_DepthFrame_LockImageBuffer(_pNative);
+            if (objectPointer == RootSystem.IntPtr.Zero)
+            {
+                return null;
+            }
+
+            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
+            var obj = Helper.NativeObjectCache.GetObject<Windows.Kinect.Buffer>(objectPointer);
+            if (obj == null)
+            {
+                obj = new Windows.Kinect.Buffer(objectPointer);
+                Helper.NativeObjectCache.AddObject<Windows.Kinect.Buffer>(objectPointer, obj);
+            }
+
+            return obj;
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport(
+            "KinectForUnity", 
+            EntryPoint="Windows_Kinect_DepthFrame_CopyFrameDataToArray",
+            CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_DepthFrame_CopyFrameDataToIntPtr(RootSystem.IntPtr pNative, IntPtr frameData, uint frameDataSize);
+        public void CopyFrameDataToIntPtr(RootSystem.IntPtr frameData, uint size)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("DepthFrame");
+            }
+
+            Windows_Kinect_DepthFrame_CopyFrameDataToIntPtr(_pNative, frameData, size / sizeof(ushort));
+        }
+    }
+
+    public sealed partial class BodyIndexFrame
+    {
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern RootSystem.IntPtr Windows_Kinect_BodyIndexFrame_LockImageBuffer(RootSystem.IntPtr pNative);
+        public Windows.Kinect.Buffer LockImageBuffer()
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("BodyIndexFrame");
+            }
+
+            RootSystem.IntPtr objectPointer = Windows_Kinect_BodyIndexFrame_LockImageBuffer(_pNative);
+            if (objectPointer == RootSystem.IntPtr.Zero)
+            {
+                return null;
+            }
+
+            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
+            var obj = Helper.NativeObjectCache.GetObject<Windows.Kinect.Buffer>(objectPointer);
+            if (obj == null)
+            {
+                obj = new Windows.Kinect.Buffer(objectPointer);
+                Helper.NativeObjectCache.AddObject<Windows.Kinect.Buffer>(objectPointer, obj);
+            }
+
+            return obj;
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport(
+            "KinectForUnity", 
+            EntryPoint="Windows_Kinect_BodyIndexFrame_CopyFrameDataToArray",
+            CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_BodyIndexFrame_CopyFrameDataToIntPtr(RootSystem.IntPtr pNative, IntPtr frameData, uint frameDataSize);
+        public void CopyFrameDataToIntPtr(RootSystem.IntPtr frameData, uint size)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("BodyIndexFrame");
+            }
+
+            Windows_Kinect_BodyIndexFrame_CopyFrameDataToIntPtr(_pNative, frameData, size);
+        }
+    }
+
+    public sealed partial class InfraredFrame
+    {
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern RootSystem.IntPtr Windows_Kinect_InfraredFrame_LockImageBuffer(RootSystem.IntPtr pNative);
+        public Windows.Kinect.Buffer LockImageBuffer()
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("InfraredFrame");
+            }
+
+            RootSystem.IntPtr objectPointer = Windows_Kinect_InfraredFrame_LockImageBuffer(_pNative);
+            if (objectPointer == RootSystem.IntPtr.Zero)
+            {
+                return null;
+            }
+
+            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
+            var obj = Helper.NativeObjectCache.GetObject<Windows.Kinect.Buffer>(objectPointer);
+            if (obj == null)
+            {
+                obj = new Windows.Kinect.Buffer(objectPointer);
+                Helper.NativeObjectCache.AddObject<Windows.Kinect.Buffer>(objectPointer, obj);
+            }
+
+            return obj;
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport(
+            "KinectForUnity", 
+            EntryPoint="Windows_Kinect_InfraredFrame_CopyFrameDataToArray",
+            CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_InfraredFrame_CopyFrameDataToIntPtr(RootSystem.IntPtr pNative, IntPtr frameData, uint frameDataSize);
+        public void CopyFrameDataToIntPtr(RootSystem.IntPtr frameData, uint size)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("InfraredFrame");
+            }
+
+            Windows_Kinect_InfraredFrame_CopyFrameDataToIntPtr(_pNative, frameData, size / sizeof(ushort));
+        }
+    }
+
+    public sealed partial class LongExposureInfraredFrame
+    {
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern RootSystem.IntPtr Windows_Kinect_LongExposureInfraredFrame_LockImageBuffer(RootSystem.IntPtr pNative);
+        public Windows.Kinect.Buffer LockImageBuffer()
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("LongExposureInfraredFrame");
+            }
+
+            RootSystem.IntPtr objectPointer = Windows_Kinect_LongExposureInfraredFrame_LockImageBuffer(_pNative);
+            if (objectPointer == RootSystem.IntPtr.Zero)
+            {
+                return null;
+            }
+
+            objectPointer = Helper.NativeObjectCache.MapToIUnknown(objectPointer);
+            var obj = Helper.NativeObjectCache.GetObject<Windows.Kinect.Buffer>(objectPointer);
+            if (obj == null)
+            {
+                obj = new Windows.Kinect.Buffer(objectPointer);
+                Helper.NativeObjectCache.AddObject<Windows.Kinect.Buffer>(objectPointer, obj);
+            }
+
+            return obj;
+        }
+
+        [RootSystem.Runtime.InteropServices.DllImport(
+            "KinectForUnity", 
+            EntryPoint="Windows_Kinect_LongExposureInfraredFrame_CopyFrameDataToArray",
+            CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_LongExposureInfraredFrame_CopyFrameDataToIntPtr(RootSystem.IntPtr pNative, IntPtr frameData, uint frameDataSize);
+        public void CopyFrameDataToIntPtr(RootSystem.IntPtr frameData, uint size)
+        {
+            if (_pNative == RootSystem.IntPtr.Zero)
+            {
+                throw new RootSystem.ObjectDisposedException("LongExposureInfraredFrame");
+            }
+
+            Windows_Kinect_LongExposureInfraredFrame_CopyFrameDataToIntPtr(_pNative, frameData, size / sizeof(ushort));
+        }
+    }
+
+    public sealed partial class CoordinateMapper
+    {
+        [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
+        private static extern void Windows_Kinect_CoordinateMapper_MapColorFrameToDepthSpace(
+            RootSystem.IntPtr pNative, 
+            RootSystem.IntPtr depthFrameData, 
+            uint depthFrameDataSize, 
+            RootSystem.IntPtr depthSpacePoints, 
+            uint depthSpacePointsSize);
+        public void MapColorFrameToDepthSpaceUsingIntPtr(RootSystem.IntPtr depthFrameData, uint depthFrameSize, RootSystem.IntPtr depthSpacePoints, uint depthSpacePointsSize)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
                 throw new RootSystem.ObjectDisposedException("CoordinateMapper");
             }
             
-            uint length = depthFrameData.Length / sizeof(UInt16);
-            Windows_Kinect_CoordinateMapper_MapColorFrameToDepthSpace(_pNative, depthFrameData, length, depthSpacePoints, depthSpacePoints.Length);
+            uint length = depthFrameSize / sizeof(UInt16);
+            Windows_Kinect_CoordinateMapper_MapColorFrameToDepthSpace(_pNative, depthFrameData, length, depthSpacePoints, depthSpacePointsSize);
         }
         
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern void Windows_Kinect_CoordinateMapper_MapColorFrameToCameraSpace(RootSystem.IntPtr pNative, RootSystem.IntPtr depthFrameData, uint depthFrameDataSize, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.CameraSpacePoint[] cameraSpacePoints, int cameraSpacePointsSize);
-        public void MapColorFrameToCameraSpace(Windows.Storage.Streams.IBuffer depthFrameData, Windows.Kinect.CameraSpacePoint[] cameraSpacePoints)
+        private static extern void Windows_Kinect_CoordinateMapper_MapColorFrameToCameraSpace(
+            RootSystem.IntPtr pNative, 
+            RootSystem.IntPtr depthFrameData, 
+            uint depthFrameDataSize,
+            RootSystem.IntPtr cameraSpacePoints, 
+            uint cameraSpacePointsSize);
+        public void MapColorFrameToCameraSpaceUsingIntPtr(RootSystem.IntPtr depthFrameData, int depthFrameSize, RootSystem.IntPtr cameraSpacePoints, uint cameraSpacePointsSize)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
                 throw new RootSystem.ObjectDisposedException("CoordinateMapper");
             }
             
-            uint length = depthFrameData.Length / sizeof(UInt16);
-            Windows_Kinect_CoordinateMapper_MapColorFrameToCameraSpace(_pNative, depthFrameData, length, cameraSpacePoints, cameraSpacePoints.Length);
+            uint length = (uint)depthFrameSize / sizeof(UInt16);
+            Windows_Kinect_CoordinateMapper_MapColorFrameToCameraSpace(_pNative, depthFrameData, length, cameraSpacePoints, cameraSpacePointsSize);
         }
         
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern void Windows_Kinect_CoordinateMapper_MapDepthFrameToColorSpace(RootSystem.IntPtr pNative, RootSystem.IntPtr depthFrameData, uint depthFrameDataSize, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.ColorSpacePoint[] colorSpacePoints, int colorSpacePointsSize);
-        public void MapDepthFrameToColorSpace(Windows.Storage.Streams.IBuffer depthFrameData, Windows.Kinect.ColorSpacePoint[] colorSpacePoints)
+        private static extern void Windows_Kinect_CoordinateMapper_MapDepthFrameToColorSpace(
+            RootSystem.IntPtr pNative,
+            RootSystem.IntPtr depthFrameData,
+            uint depthFrameDataSize, 
+            RootSystem.IntPtr colorSpacePoints,
+            uint colorSpacePointsSize);
+        public void MapDepthFrameToColorSpaceUsingIntPtr(RootSystem.IntPtr depthFrameData, int depthFrameSize, RootSystem.IntPtr colorSpacePoints, uint colorSpacePointsSize)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
                 throw new RootSystem.ObjectDisposedException("CoordinateMapper");
             }
             
-            uint length = depthFrameData.Length / sizeof(UInt16);
-            Windows_Kinect_CoordinateMapper_MapDepthFrameToColorSpace(_pNative, depthFrameData, length, colorSpacePoints, colorSpacePoints.Length);
+            uint length = (uint)depthFrameSize / sizeof(UInt16);
+            Windows_Kinect_CoordinateMapper_MapDepthFrameToColorSpace(_pNative, depthFrameData, length, colorSpacePoints, colorSpacePointsSize);
         }
        
         
         [RootSystem.Runtime.InteropServices.DllImport("KinectForUnity", CallingConvention=RootSystem.Runtime.InteropServices.CallingConvention.Cdecl)]
-        private static extern void Windows_Kinect_CoordinateMapper_MapDepthFrameToCameraSpace(RootSystem.IntPtr pNative, IntPtr depthFrameData, uint depthFrameDataSize, [RootSystem.Runtime.InteropServices.Out] Windows.Kinect.CameraSpacePoint[] cameraSpacePoints, int cameraSpacePointsSize);
-        public void MapDepthFrameToCameraSpace(Windows.Storage.Streams.IBuffer depthFrameData, Windows.Kinect.CameraSpacePoint[] cameraSpacePoints)
+        private static extern void Windows_Kinect_CoordinateMapper_MapDepthFrameToCameraSpace(
+            RootSystem.IntPtr pNative, 
+            IntPtr depthFrameData, 
+            uint depthFrameDataSize, 
+            RootSystem.IntPtr cameraSpacePoints,
+            uint cameraSpacePointsSize);
+        public void MapDepthFrameToCameraSpaceUsingIntPtr(RootSystem.IntPtr depthFrameData, int depthFrameSize, RootSystem.IntPtr cameraSpacePoints, uint cameraSpacePointsSize)
         {
             if (_pNative == RootSystem.IntPtr.Zero)
             {
                 throw new RootSystem.ObjectDisposedException("CoordinateMapper");
             }
             
-            uint length = depthFrameData.Length / sizeof(UInt16);
-            Windows_Kinect_CoordinateMapper_MapDepthFrameToCameraSpace(_pNative, depthFrameData.UnderlyingBuffer, length, cameraSpacePoints, cameraSpacePoints.Length);
+            uint length = (uint)depthFrameSize / sizeof(UInt16);
+            Windows_Kinect_CoordinateMapper_MapDepthFrameToCameraSpace(_pNative, depthFrameData, length, cameraSpacePoints, cameraSpacePointsSize);
         }
     }
 }
 
 namespace Helper
 {
-    public static class NativeObjectCache
+    internal static class NativeObjectCache
     {
         private static object _lock = new object();
         private static Dictionary<Type, Dictionary<IntPtr, WeakReference>> _objectCache = new Dictionary<Type, Dictionary<IntPtr, WeakReference>>();
         
         public static IntPtr MapToIUnknown(IntPtr nativePtr)
         {
-            //private static Guid _guidIUnknown = new Guid("00000000-0000-0000-C000-000000000046");
-            // NOTE: The IntPtr needs to use the IUnknown identity
+            // Not necessary at the moment, but may be important later
             return nativePtr;
         }
         
