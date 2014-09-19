@@ -47,7 +47,6 @@ public class RUISCoordinateSystem : MonoBehaviour
 	public RUISDevice rootDevice; 
 	
 	OVRCameraController ovrCameraController;
-	Vector3 testVector3;
 	
 	void Awake() {
 		ovrCameraController = MonoBehaviour.FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
@@ -77,7 +76,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 
 	private void createExampleXML(string filename) {
 		
-		Quaternion exampleFloorNormal = Quaternion.identity;
+		Vector3 exampleFloorNormal = new Vector3(0, 1, 0);
 		float exampleDistanceFromFloor = 0.0f;
 		
 		XmlDocument xmlDoc = new XmlDocument();
@@ -124,7 +123,6 @@ public class RUISCoordinateSystem : MonoBehaviour
 		kinectFloorNormalElement.SetAttribute("x", exampleFloorNormal.x.ToString());
 		kinectFloorNormalElement.SetAttribute("y", exampleFloorNormal.y.ToString());
 		kinectFloorNormalElement.SetAttribute("z", exampleFloorNormal.z.ToString());
-		kinectFloorNormalElement.SetAttribute("w", exampleFloorNormal.w.ToString());
 		
 		floorDataWrapperElement.AppendChild(kinectFloorNormalElement);
 		
@@ -209,8 +207,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 								float xValue = float.Parse(element.Attributes["x"].Value);
 								float yValue = float.Parse(element.Attributes["y"].Value);
 								float zValue = float.Parse(element.Attributes["z"].Value);
-								float wValue = float.Parse(element.Attributes["w"].Value);
-								floorPitchRotation = new Quaternion(xValue, yValue, zValue, wValue);
+								floorPitchRotation = Quaternion.LookRotation(Vector3.forward, new Vector3(xValue, yValue, zValue));
 							break;
 								
 							case "distanceFromFloor":
@@ -347,11 +344,10 @@ public class RUISCoordinateSystem : MonoBehaviour
 		groupElement.AppendChild(wrapperElement);
 		
 		XmlElement kinectFloorNormalElement = xmlDoc.CreateElement("floorNormal");
-		kinectFloorNormalElement.SetAttribute("x", normal.x.ToString());
-		kinectFloorNormalElement.SetAttribute("y", normal.y.ToString());
-		kinectFloorNormalElement.SetAttribute("z", normal.z.ToString());
-		kinectFloorNormalElement.SetAttribute("w", normal.w.ToString());
-
+		Vector3 normalVector = normal * Vector3.up;
+		kinectFloorNormalElement.SetAttribute("x", normalVector.x.ToString());
+		kinectFloorNormalElement.SetAttribute("y", normalVector.y.ToString());
+		kinectFloorNormalElement.SetAttribute("z", normalVector.z.ToString());
 		wrapperElement.AppendChild(kinectFloorNormalElement);
 		
 		XmlElement kinectDistanceFromFloorElement = xmlDoc.CreateElement("distanceFromFloor");

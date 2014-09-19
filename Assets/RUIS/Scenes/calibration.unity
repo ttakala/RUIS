@@ -355,13 +355,12 @@ Transform:
 --- !u!114 &226127816
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400030, guid: 7e2baee5779349340b6a78274c032bf7,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 226127814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e74aed0503c9d24290a1ae5438fddc3, type: 3}
+  m_Script: {fileID: 11500000, guid: f7961501233b2ba46a58d55f65b99105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &239541149
@@ -3478,6 +3477,7 @@ MonoBehaviour:
   guiScaleX: 1
   guiScaleY: 1
   hideMouseOnPlay: 0
+  menuCursorPrefab: {fileID: 0}
 --- !u!1 &1712279123
 GameObject:
   m_ObjectHideFlags: 0
@@ -3729,7 +3729,8 @@ MonoBehaviour:
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 3}
   loadFromXML: 1
   yawOffset: 0
-  floorNormal: {x: 0, y: 0, z: 0, w: 1}
+  floorNormal: {x: 0, y: 0, z: 0}
+  floorPitchRotation: {x: 0, y: 0, z: 0, w: 1}
   applyToRootCoordinates: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
@@ -3823,7 +3824,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400020, guid: 26fb1af95c8dcf446ad45be1b7cf29b6, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: 26fb1af95c8dcf446ad45be1b7cf29b6, type: 2}
       propertyPath: bodyTrackingDevice
@@ -3943,9 +3944,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f5948038f443a94bbaa1808e09eb88e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstDevice: 3
+  firstDevice: 0
   secondDevice: 1
-  numberOfSamplesToTake: 50
+  numberOfSamplesToTake: 10
   samplesPerSecond: 5
   calibrationSpherePrefab: {fileID: 0}
   calibrationCubePrefab: {fileID: 0}
@@ -4352,24 +4353,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customRoot: {fileID: 0}
-  customHead: {fileID: 0}
-  customNeck: {fileID: 0}
-  customTorso: {fileID: 0}
-  customRightShoulder: {fileID: 0}
-  customRightElbow: {fileID: 0}
-  customRightHand: {fileID: 0}
-  customRightHip: {fileID: 0}
-  customRightKnee: {fileID: 0}
-  customRightFoot: {fileID: 0}
-  customLeftShoulder: {fileID: 0}
-  customLeftElbow: {fileID: 0}
-  customLeftHand: {fileID: 0}
-  customLeftHip: {fileID: 0}
-  customLeftKnee: {fileID: 0}
-  customLeftFoot: {fileID: 0}
-  customLeftThumb: {fileID: 0}
-  customRightThumb: {fileID: 0}
   root: {fileID: 2093014173}
   head: {fileID: 817678350}
   neck: {fileID: 0}
@@ -4388,6 +4371,24 @@ MonoBehaviour:
   leftFoot: {fileID: 551658452}
   leftThumb: {fileID: 0}
   rightThumb: {fileID: 0}
+  customRoot: {fileID: 0}
+  customHead: {fileID: 0}
+  customNeck: {fileID: 0}
+  customTorso: {fileID: 0}
+  customRightShoulder: {fileID: 0}
+  customRightElbow: {fileID: 0}
+  customRightHand: {fileID: 0}
+  customRightHip: {fileID: 0}
+  customRightKnee: {fileID: 0}
+  customRightFoot: {fileID: 0}
+  customLeftShoulder: {fileID: 0}
+  customLeftElbow: {fileID: 0}
+  customLeftHand: {fileID: 0}
+  customLeftHip: {fileID: 0}
+  customLeftKnee: {fileID: 0}
+  customLeftFoot: {fileID: 0}
+  customLeftThumb: {fileID: 0}
+  customRightThumb: {fileID: 0}
   fistCurlFingers: 0
   trackThumbs: 0
   trackAnkle: 0
@@ -4400,6 +4401,8 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 0
   scaleHierarchicalModelBones: 0
+  scaleBoneLengthOnly: 0
+  boneLengthAxis: 0
   maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360

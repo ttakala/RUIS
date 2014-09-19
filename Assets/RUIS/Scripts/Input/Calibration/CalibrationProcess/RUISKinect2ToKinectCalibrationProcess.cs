@@ -195,7 +195,6 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		this.guiTextLowerLocal = "Step in front of the camera.";
 		updateBodyData();
 		kinectTrackingID = 0;
-		
 		for(int a = 0; a < trackingIDs.Length; a++) {
 			if(trackingIDs[a].isTracking) {
 				kinectTrackingID = trackingIDs[a].trackingId;
@@ -390,14 +389,17 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		transformMatrix = MathUtil.MatrixToMatrix4x4(transformMatrixSolution);//CreateTransformMatrix(transformMatrixSolution);
 		Debug.Log(transformMatrix);
 		
-		// TODO: Set floor normal for Kinect 1 and Kinect 2
 		UpdateFloorNormal();
 		
 		coordinateSystem.SetDeviceToRootTransforms(rotationMatrix, transformMatrix);
 		coordinateSystem.SaveTransformData(xmlFilename,RUISDevice.Kinect_2, RUISDevice.Kinect_1); 
 		coordinateSystem.SaveFloorData(xmlFilename,RUISDevice.Kinect_1, kinect1PitchRotation, kinect1DistanceFromFloor);
 		coordinateSystem.SaveFloorData(xmlFilename,RUISDevice.Kinect_2, kinect2PitchRotation, kinect2DistanceFromFloor);
-		                               
+		
+		string devicePairName = RUISDevice.Kinect_1.ToString() + "-" + RUISDevice.Kinect_2.ToString();
+		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
+		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = kinect1DistanceFromFloor;
+		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;                                                                                                                            
 	}
 	
 	
@@ -428,42 +430,63 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	
 	private void UpdateFloorNormal()
 	{
-		// TODO: For Kinect 1 and Kinect 2
-		
+				
 		coordinateSystem.ResetFloorNormal();
 		
-		OpenNI.Plane3D floor = sceneAnalyzer.Floor;
-		Vector3 oneFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized; // Kinect 1 floor normal
-		Vector3 newFloorPosition = (new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z))*RUISCoordinateSystem.kinectToUnityScale; 
+		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
+		Vector3 kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
+		kinect2FloorNormal.Normalize();
 		
+		kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
+		
+		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
+		
+		kinect2PitchRotation = kinect2FloorRotator;
+		kinect2ModelObject.transform.rotation = kinect2FloorRotator;
+		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
+		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor);
+		coordinateSystem.SetFloorNormal(kinect2FloorNormal);
+		
+		
+		OpenNI.Plane3D floor;
+		
+		try{
+			floor = sceneAnalyzer.Floor;
+		}
+		catch(System.Exception e)
+		{
+			Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor. Are you using Windows 8?");
+			return;
+			//throw e;
+		}
+		
+		Quaternion kinectFloorRotator = Quaternion.identity;
+		Vector3 normalVector = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
+		Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
+		kinectFloorRotator = Quaternion.FromToRotation(normalVector, Vector3.up); 
+		kinect1DistanceFromFloor = closestDistanceFromFloor(normalVector, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
+		kinect1PitchRotation = kinectFloorRotator;
+		kinect1ModelObject.transform.rotation = kinectFloorRotator;
+		kinect1ModelObject.transform.localPosition = new Vector3(0, kinect1DistanceFromFloor, 0);
+	}
+	
+	public float closestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 
+	{
+		
+		float closestDistanceFromFloor = 0;
+		
+		floorNormal = floorNormal.normalized;
+		Vector3 newFloorPosition = (new Vector3(floorPoint.x, floorPoint.y, floorPoint.z)) * scaling; 
 		//Project the position of the kinect camera onto the floor
 		//http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
 		//http://en.wikipedia.org/wiki/Plane_(geometry)
-		float d = oneFloorNormal.x * newFloorPosition.x + oneFloorNormal.y * newFloorPosition.y + oneFloorNormal.z * newFloorPosition.z;
-		Vector3 closestFloorPointToKinect1 = new Vector3(oneFloorNormal.x, oneFloorNormal.y, oneFloorNormal.z);
-		closestFloorPointToKinect1 = (closestFloorPointToKinect1 * d) / closestFloorPointToKinect1.sqrMagnitude;
-		
+		float d = floorNormal.x * newFloorPosition.x + floorNormal.y * newFloorPosition.y + floorNormal.z * newFloorPosition.z;
+		Vector3 closestFloorPoint = new Vector3(floorNormal.x, floorNormal.y, floorNormal.z);
+		closestFloorPoint = (closestFloorPoint * d) / closestFloorPoint.sqrMagnitude;
 		//transform the point from Kinect's coordinate system rotation to Unity's rotation
-		closestFloorPointToKinect1 = Quaternion.FromToRotation(oneFloorNormal, Vector3.up)  * closestFloorPointToKinect1;
-		floorPlane.transform.position = closestFloorPointToKinect1;
+		closestDistanceFromFloor = closestFloorPoint.magnitude;
 		
-		//show the tilt of the kinect camera on the kinect model
-		//kinectModelObject.transform.rotation = Quaternion.FromToRotation(Vector3.up, newFloorNormal);
-		
-		// TODO: Calculate Vector3 twoFloorNormal and closestFloorPointToKinect2
-//		coordinateSystem.SetFloorNormal(twoFloorNormal);
-//		coordinateSystem.SetDistanceFromFloor(closestFloorPointToKinect2.magnitude);
-		
-		Quaternion kinectFloorRotator = Quaternion.identity;
-		kinectFloorRotator.SetFromToRotation(Vector3.up, oneFloorNormal);
-		kinect1PitchRotation = kinectFloorRotator;
-		
-		kinectFloorRotator = Quaternion.identity;
-//		kinectFloorRotator.SetFromToRotation(Vector3.up, twoFloorNormal); // TODO: Uncomment
-		kinect2PitchRotation = kinectFloorRotator;
-		
-		kinect1DistanceFromFloor = closestFloorPointToKinect1.magnitude;
-		//kinect2DistanceFromFloor = closestFloorPointToKinect2.magnitude;
+		return closestDistanceFromFloor;
 	}
 	
 	private void updateBodyData() {

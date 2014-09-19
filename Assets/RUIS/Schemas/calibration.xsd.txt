@@ -63,7 +63,6 @@
 		<attribute name="x" type="float" use="required" />
 		<attribute name="y" type="float" use="required" />
 		<attribute name="z" type="float" use="required" />
-		<attribute name="w" type="float" use="required" />
 	</complexType>
 
 	<complexType name="DistanceFromFloorType">

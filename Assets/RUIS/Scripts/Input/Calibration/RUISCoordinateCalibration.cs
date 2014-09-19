@@ -216,6 +216,12 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		else {
 			currentPhase = RUISCalibrationPhase.Initial;
 		}
+		string devicePairName = firstDevice.ToString() + "-" + secondDevice.ToString();
+		
+		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = Matrix4x4.identity;
+		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[firstDevice] = 0.0f;
+		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[firstDevice] = Quaternion.identity;
+    	
     }
 
 	void Update ()
@@ -247,8 +253,10 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 				
 				case RUISCalibrationPhase.ShowResults: 
 					currentPhase = calibrationProcess.ShowResultsPhase(Time.deltaTime);	
-					ruisNGUIMenu.calibrationReady = true;	
-					ruisNGUIMenu.menuIsVisible = true;
+					if(ruisNGUIMenu != null) {
+						ruisNGUIMenu.calibrationReady = true;	
+						ruisNGUIMenu.menuIsVisible = true;
+					}
 				break;
 			}	
 		}

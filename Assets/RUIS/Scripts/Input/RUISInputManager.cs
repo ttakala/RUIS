@@ -55,7 +55,7 @@ public class RUISInputManager : MonoBehaviour
 	private SixenseInput sixense = null;
 	
 	private RUISCoordinateSystem coordinateSystem = null;
-    private OpenNI.SceneAnalyzer sceneAnalyzer = null;
+    public OpenNI.SceneAnalyzer sceneAnalyzer = null;
 	//private bool usingExistingSceneAnalyzer = false;
 	
     public RUISPSMoveWand[] moveControllers;
@@ -189,7 +189,14 @@ public class RUISInputManager : MonoBehaviour
 
     void Start()
     {
-        //check whether the kinect camera is actually connected
+		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
+		Quaternion dictionaryFloorNormal = coordinateSystem.RUISCalibrationResultsFloorPitchRotation[coordinateSystem.rootDevice];
+		float dictionaryDistanceFromFloor = coordinateSystem.RUISCalibrationResultsDistanceFromFloor[coordinateSystem.rootDevice];
+		Vector3 normalVector = dictionaryFloorNormal * Vector3.up;
+		coordinateSystem.SetFloorNormal(normalVector);
+		coordinateSystem.SetDistanceFromFloor(dictionaryDistanceFromFloor);
+			
+		//check whether the kinect camera is actually connected
         if (enableKinect)
         {
             OpenNISettingsManager settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
@@ -319,8 +326,7 @@ public class RUISInputManager : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         if(kinectFloorDetection)
         {
-			coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-            if (!coordinateSystem)
+			if (!coordinateSystem)
             {
                 Debug.LogError("Could not find coordinate system!");
             }
@@ -341,7 +347,18 @@ public class RUISInputManager : MonoBehaviour
 			coordinateSystem.ResetFloorNormal();
 			coordinateSystem.ResetDistanceFromFloor();
 	
-	        OpenNI.Plane3D floor = sceneAnalyzer.Floor;
+			
+			OpenNI.Plane3D floor;
+			try
+			{
+				floor = sceneAnalyzer.Floor;
+			}
+			catch(System.Exception e)
+			{
+				Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor. Are you using Windows 8?");
+				return;
+			}
+	
 	        Vector3 newFloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z).normalized;
 			Vector3 newFloorPosition = (new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z))*RUISCoordinateSystem.kinectToUnityScale; 
 			//Vector3 newFloorPosition = coordinateSystem.ConvertKinectPosition(floor.Point);
