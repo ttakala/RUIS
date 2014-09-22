@@ -44,14 +44,17 @@ public class XmlImportExport {
 		
 		xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
 		
-		XmlElement inputManagerRootElement = xmlDoc.CreateElement("ns2", "ruisInputManager", "http://ruisystem.net/ruisInputManager");
+		XmlElement inputManagerRootElement = xmlDoc.CreateElement("ns2", "RUISInputManager", "http://ruisystem.net/RUISInputManager");
 		xmlDoc.AppendChild(inputManagerRootElement);
 		
+		XmlComment booleanComment = xmlDoc.CreateComment("Boolean values always with a lower case, e.g. \"true\" or \"false\"");
+		inputManagerRootElement.AppendChild(booleanComment);
+
 		XmlElement psMoveSettingsElement = xmlDoc.CreateElement("PSMoveSettings");
 		inputManagerRootElement.AppendChild(psMoveSettingsElement);
-		
+
 		XmlElement psMoveEnabledElement = xmlDoc.CreateElement("enabled");
-		psMoveEnabledElement.SetAttribute("value", inputManager.enablePSMove.ToString());
+		psMoveEnabledElement.SetAttribute("value", inputManager.enablePSMove.ToString().ToLowerInvariant());
 		psMoveSettingsElement.AppendChild(psMoveEnabledElement);
 		
 		XmlElement psMoveIPElement = xmlDoc.CreateElement("ip");
@@ -63,11 +66,11 @@ public class XmlImportExport {
 		psMoveSettingsElement.AppendChild(psMovePortElement);
 		
 		XmlElement psMoveAutoConnectElement = xmlDoc.CreateElement("autoConnect");
-		psMoveAutoConnectElement.SetAttribute("value", inputManager.connectToPSMoveOnStartup.ToString());
+		psMoveAutoConnectElement.SetAttribute("value", inputManager.connectToPSMoveOnStartup.ToString().ToLowerInvariant());
 		psMoveSettingsElement.AppendChild(psMoveAutoConnectElement);
 		
 		XmlElement psMoveEnableInGameCalibration = xmlDoc.CreateElement("enableInGameCalibration");
-		psMoveEnableInGameCalibration.SetAttribute("value", inputManager.enableMoveCalibrationDuringPlay.ToString());
+		psMoveEnableInGameCalibration.SetAttribute("value", inputManager.enableMoveCalibrationDuringPlay.ToString().ToLowerInvariant());
 		psMoveSettingsElement.AppendChild(psMoveEnableInGameCalibration);
 		
 		XmlElement psMoveMaxControllersElement = xmlDoc.CreateElement("maxControllers");
@@ -80,7 +83,7 @@ public class XmlImportExport {
 		inputManagerRootElement.AppendChild(kinectSettingsElement);
 		
 		XmlElement kinectEnabledElement = xmlDoc.CreateElement("enabled");
-		kinectEnabledElement.SetAttribute("value", inputManager.enableKinect.ToString());
+		kinectEnabledElement.SetAttribute("value", inputManager.enableKinect.ToString().ToLowerInvariant());
 		kinectSettingsElement.AppendChild(kinectEnabledElement);
 		
 		XmlElement maxKinectPlayersElement = xmlDoc.CreateElement("maxPlayers");
@@ -88,27 +91,29 @@ public class XmlImportExport {
 		kinectSettingsElement.AppendChild(maxKinectPlayersElement);
 		
 		XmlElement kinectFloorDetectionElement = xmlDoc.CreateElement("floorDetection");
-		kinectFloorDetectionElement.SetAttribute("value", inputManager.kinectFloorDetection.ToString());
+		kinectFloorDetectionElement.SetAttribute("value", inputManager.kinectFloorDetection.ToString().ToLowerInvariant());
 		kinectSettingsElement.AppendChild(kinectFloorDetectionElement);
 		
 		XmlElement jumpGestureElement = xmlDoc.CreateElement("jumpGestureEnabled");
-		jumpGestureElement.SetAttribute("value", inputManager.jumpGestureEnabled.ToString());
+		jumpGestureElement.SetAttribute("value", inputManager.jumpGestureEnabled.ToString().ToLowerInvariant());
 		kinectSettingsElement.AppendChild(jumpGestureElement);
-		
-		
+
 		XmlElement kinect2SettingsElement = xmlDoc.CreateElement("Kinect2Settings");
 		inputManagerRootElement.AppendChild(kinect2SettingsElement);
 		
 		XmlElement kinect2EnabledElement = xmlDoc.CreateElement("enabled");
-		kinect2EnabledElement.SetAttribute("value", inputManager.enableKinect2.ToString());
+		kinect2EnabledElement.SetAttribute("value", inputManager.enableKinect2.ToString().ToLowerInvariant());
 		kinect2SettingsElement.AppendChild(kinect2EnabledElement);
 		
+		XmlElement kinect2FloorDetectionElement = xmlDoc.CreateElement("floorDetection");
+		kinect2FloorDetectionElement.SetAttribute("value", inputManager.kinect2FloorDetection.ToString().ToLowerInvariant());
+		kinect2SettingsElement.AppendChild(kinect2FloorDetectionElement);
 		
 		XmlElement razerSettingsElement = xmlDoc.CreateElement("RazerSettings");
 		inputManagerRootElement.AppendChild(razerSettingsElement);
 		
 		XmlElement razerEnabledElement = xmlDoc.CreateElement("enabled");
-		razerEnabledElement.SetAttribute("value", inputManager.enableRazerHydra.ToString());
+		razerEnabledElement.SetAttribute("value", inputManager.enableRazerHydra.ToString().ToLowerInvariant());
 		razerSettingsElement.AppendChild(razerEnabledElement);
 		
 		
@@ -121,7 +126,7 @@ public class XmlImportExport {
 		//riftDriftSettingsElement.AppendChild(magnetometerDriftCorrectionElement);
 		
 		XmlElement kinectDriftCorrectionElement = xmlDoc.CreateElement("kinectDriftCorrectionIfAvailable");
-		kinectDriftCorrectionElement.SetAttribute("value", inputManager.kinectDriftCorrectionPreferred.ToString());
+		kinectDriftCorrectionElement.SetAttribute("value", inputManager.kinectDriftCorrectionPreferred.ToString().ToLowerInvariant());
 		riftDriftSettingsElement.AppendChild(kinectDriftCorrectionElement);
 		
 		XMLUtil.SaveXmlToFile(filename, xmlDoc);

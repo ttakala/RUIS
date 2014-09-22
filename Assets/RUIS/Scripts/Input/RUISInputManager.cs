@@ -50,6 +50,7 @@ public class RUISInputManager : MonoBehaviour
 	public bool kinectDriftCorrectionPreferred = false;
 
 	public bool enableKinect2 = false;
+	public bool kinect2FloorDetection = true;
 	
 	public bool enableRazerHydra = false;
 	private SixenseInput sixense = null;
@@ -205,13 +206,6 @@ public class RUISInputManager : MonoBehaviour
                 Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
                 GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
             }
-			else 
-			{	// If PSMove is enabled, it's better to load the floor normal from XML (if such exists)
-				if(kinectFloorDetection)
-				{
-					StartFloorDetection();
-				}
-			}
         }
 
 		if (!enableKinect2)
@@ -220,9 +214,12 @@ public class RUISInputManager : MonoBehaviour
 			BodySourceManager kinect2Manager = GetComponentInChildren<BodySourceManager>();
 			if(kinect2Manager)
 				kinect2Manager.gameObject.SetActive(false);
-		} 
+		}
 
-        if (enablePSMove)
+		if((enableKinect && kinectFloorDetection) || (enableKinect2 && kinect2FloorDetection))
+			StartFloorDetection();
+		
+		if (enablePSMove)
         {
             RUISPSMoveWand[] controllers = GetComponentsInChildren<RUISPSMoveWand>();
             moveControllers = new RUISPSMoveWand[controllers.Length];
@@ -250,6 +247,7 @@ public class RUISInputManager : MonoBehaviour
 	
 	public void StartFloorDetection()
 	{
+		bool startDetection = false;
 		if (enableKinect)
 		{
 			kinectFloorDetection = true;
@@ -259,11 +257,16 @@ public class RUISInputManager : MonoBehaviour
 				sceneAnalyzer = new OpenNI.SceneAnalyzer((FindObjectOfType(typeof(OpenNISettingsManager)) 
 														as OpenNISettingsManager).CurrentContext.BasicContext);
 				sceneAnalyzer.StartGenerating();
-				Debug.Log ("Creating sceneAnalyzer");
+				Debug.Log ("OpenNI: Starting sceneAnalyzer for floor detection purposes.");
 			}
-			
-	    	StartCoroutine("attemptUpdatingFloorNormal");
+			startDetection = true;
 		}
+
+		if(enableKinect2)
+			startDetection = true;
+		
+		if(startDetection)
+			StartCoroutine("attemptUpdatingFloorNormal");
 		else
 			Debug.LogError("Kinect is not enabled! You can enable it from RUIS InputManager.");
 	}
@@ -324,7 +327,7 @@ public class RUISInputManager : MonoBehaviour
     private IEnumerator attemptUpdatingFloorNormal()
     {
         yield return new WaitForSeconds(5.0f);
-        if(kinectFloorDetection)
+        if(enableKinect && kinectFloorDetection)
         {
 			if (!coordinateSystem)
             {
@@ -334,18 +337,32 @@ public class RUISInputManager : MonoBehaviour
 				Debug.LogError("Failed to access OpenNI sceneAnalyzer!");
 			else 
 			{
-				Debug.Log ("Updating Kinect floor normal");
 				updateKinectFloorData();
 			}
+
+			if(enableKinect2 && kinect2FloorDetection)
+			{
+				if (!coordinateSystem)
+				{
+					Debug.LogError("Could not find coordinate system!");
+				}
+				else 
+				{
+					updateKinect2FloorData();
+				}
+			}
 		}
-    }
+	}
 	
 	private void updateKinectFloorData()
 	{
         if(coordinateSystem)
         {
-			coordinateSystem.ResetFloorNormal();
-			coordinateSystem.ResetDistanceFromFloor();
+			if(coordinateSystem.rootDevice == RUISDevice.Kinect_1)
+			{
+				coordinateSystem.ResetFloorNormal();
+				coordinateSystem.ResetDistanceFromFloor();
+			}
 	
 			
 			OpenNI.Plane3D floor;
@@ -370,21 +387,60 @@ public class RUISInputManager : MonoBehaviour
 	        Vector3 closestFloorPointToKinect = new Vector3(newFloorNormal.x, newFloorNormal.y, newFloorNormal.z);
 	        closestFloorPointToKinect = (closestFloorPointToKinect * d) / closestFloorPointToKinect.sqrMagnitude;
 	
-	        //transform the point from Kinect's coordinate system rotation to Unity's rotation
-	        closestFloorPointToKinect = Quaternion.FromToRotation(newFloorNormal, Vector3.up)  * closestFloorPointToKinect;
-	
 	        //floorPlane.transform.position = closestFloorPointToKinect;
-	
-	
-			coordinateSystem.SetFloorNormal(newFloorNormal);
-	        coordinateSystem.SetDistanceFromFloor(closestFloorPointToKinect.magnitude);
+
+			Quaternion kinectFloorRotator = Quaternion.FromToRotation(newFloorNormal, Vector3.up);
+
+			//transform the point from Kinect's coordinate system rotation to Unity's rotation
+			closestFloorPointToKinect = kinectFloorRotator * closestFloorPointToKinect;
+
+			coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = Quaternion.Inverse(kinectFloorRotator); // NOTE: Why is this inverse??
+			coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = closestFloorPointToKinect.magnitude;
 			
-			//if(!usingExistingSceneAnalyzer)
-			//	sceneAnalyzer.StopGenerating();
-        }
+			if(coordinateSystem.rootDevice == RUISDevice.Kinect_1)
+			{
+				coordinateSystem.SetFloorNormal(newFloorNormal);
+		        coordinateSystem.SetDistanceFromFloor(closestFloorPointToKinect.magnitude);
+			}
+			Debug.Log ("Updated Kinect floor normal " + newFloorNormal + " and floor distance (" + closestFloorPointToKinect.magnitude + ")");
+		}
 	}
-	
-    private void DisableUnneededMoveWands()
+
+	private void updateKinect2FloorData()
+	{
+		Kinect2SourceManager kinect2SourceManager = FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
+
+		if(coordinateSystem != null && kinect2SourceManager != null)
+		{
+			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
+			{
+				coordinateSystem.ResetFloorNormal();
+				coordinateSystem.ResetDistanceFromFloor();
+			}
+
+
+			Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
+			Vector3 kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
+			kinect2FloorNormal.Normalize();
+			
+			float kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
+			
+			Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
+
+
+			coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2FloorRotator;
+			coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
+
+			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
+			{
+				coordinateSystem.SetFloorNormal(kinect2FloorNormal);
+				coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor);
+			}
+			Debug.Log ("Updated Kinect 2 floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
+		}
+	}
+			
+			private void DisableUnneededMoveWands()
     {
         List<RUISPSMoveWand> childWands = new List<RUISPSMoveWand>(GetComponentsInChildren<RUISPSMoveWand>());
 

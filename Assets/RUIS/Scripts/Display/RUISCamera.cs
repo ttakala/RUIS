@@ -63,15 +63,27 @@ public class RUISCamera : MonoBehaviour {
 	public void Awake()
 	{
         keystoningConfiguration = GetComponent<RUISKeystoningConfiguration>();
-		ovrController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
+		if(!keystoningConfiguration)
+			Debug.LogError( "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
+			               + "but is missing " + typeof(RUISKeystoningConfiguration) + " component!");
 		
         centerCamera = camera;
-        leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
-        rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
+		try
+		{
+			
+			leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
+			rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
+		}
+		catch (System.NullReferenceException e)
+		{
+			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
+			               + "but it is missing either CameraLeft or CameraRight child object.");
+			gameObject.SetActive(false);
+		}
 
 		if(centerCamera == null)
 		{
-			Debug.LogError(  "GameObject " + name + " has " + this.GetType().Name + " script, "
+			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
 			               + "but is missing camera component!");
 			
 			gameObject.SetActive(false);
@@ -84,17 +96,23 @@ public class RUISCamera : MonoBehaviour {
 		
 		try
 		{
-			if (!associatedDisplay.enableOculusRift)
+			if (associatedDisplay != null && !associatedDisplay.enableOculusRift)
 			{
-				GetComponent<OVRCameraController>().enabled = false;
-				GetComponent<OVRDevice>().enabled = false;
-				leftCamera.GetComponent<OVRCamera>().enabled = false;
+				if(GetComponent<OVRCameraController>())
+					GetComponent<OVRCameraController>().enabled = false;
+				if(GetComponent<OVRDevice>())
+					GetComponent<OVRDevice>().enabled = false;
+				if(GetComponent<OVRCamera>())
+					leftCamera.GetComponent<OVRCamera>().enabled = false;
 				// leftCamera.GetComponent<OVRLensCorrection>().enabled = false;
-				rightCamera.GetComponent<OVRCamera>().enabled = false;
+				if(GetComponent<OVRCamera>())
+					rightCamera.GetComponent<OVRCamera>().enabled = false;
 				// rightCamera.GetComponent<OVRLensCorrection>().enabled = false;
 			}
 			else
 			{
+//				Debug.LogWarning(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, but no " + typeof(RUISDisplay) 
+//				                 + " was associated with it upon Awake(). Leaving OVR scripts on.");
 				foreach (RUISKeystoningBorderDrawer drawer in GetComponentsInChildren<RUISKeystoningBorderDrawer>())
 				{
 					drawer.enabled = false;
@@ -104,7 +122,7 @@ public class RUISCamera : MonoBehaviour {
 		catch (System.NullReferenceException e)
 		{
 			Debug.LogWarning(e.ToString(), this);
-			Debug.LogWarning("Seems like the RUISCamera prefab you were using was outdated, please update... " + name, this);
+			Debug.LogWarning("GameObject '" + name + "': Error in disabling one of the following Oculus scripts: OVRCameraController, OVRDevice, or OVRCamera.", this);
 		}
 		
 
@@ -123,7 +141,7 @@ public class RUISCamera : MonoBehaviour {
 		catch (System.NullReferenceException e)
 		{
 			Debug.LogError(e.ToString(), this);
-			Debug.LogError(  "GameObject " + name + " has " + this.GetType().Name + " script, "
+			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
 			               + "but it is missing either CameraLeft or CameraRight child object or their Camera components.");
 			gameObject.SetActive(false);
 			return;
@@ -141,7 +159,7 @@ public class RUISCamera : MonoBehaviour {
 			else
 				differingMasksList += isDifferentRightMask?", CameraRight":"";
 
-			Debug.LogWarning(  "GameObject " + name + " has " + this.GetType().Name + " script, whose "
+			Debug.LogWarning(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, whose "
 			                 + "Culling Mask property has overwritten Culling Masks of its [" + differingMasksList + "]." );
 
 		}
@@ -154,7 +172,7 @@ public class RUISCamera : MonoBehaviour {
 	public void Start () {
 		if (!associatedDisplay)
 		{
-			Debug.LogError(  "GameObject " + name + " has " + this.GetType().Name + " script, "
+			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
 			               + "but it is not associated to any display in DisplayManager, disabling " + name, this);
 			gameObject.SetActive(false);
 			return;
@@ -170,10 +188,7 @@ public class RUISCamera : MonoBehaviour {
 					rightCamera.fieldOfView = 170;
 			}
 		}
-		
-       
-		
-		
+
 		UpdateStereo();
 		UpdateStereoType();
 		
@@ -426,14 +441,17 @@ public class RUISCamera : MonoBehaviour {
 
     private void ApplyKeystoneCorrection()
     {
+		if(keystoningConfiguration)
+		{
         //Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
-        //Debug.Log(centerCamera.projectionMatrix * keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
-        centerCamera.projectionMatrix = keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix() * centerCamera.projectionMatrix;
-        leftCamera.projectionMatrix = keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix() * leftCamera.projectionMatrix;
-        rightCamera.projectionMatrix = keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix() * rightCamera.projectionMatrix;
-        //Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
-        //leftCamera.projectionMatrix *= keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix();
-        //rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
+	        //Debug.Log(centerCamera.projectionMatrix * keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
+	        centerCamera.projectionMatrix = keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix() * centerCamera.projectionMatrix;
+	        leftCamera.projectionMatrix = keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix() * leftCamera.projectionMatrix;
+	        rightCamera.projectionMatrix = keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix() * rightCamera.projectionMatrix;
+	        //Debug.Log(keystoningConfiguration.centerCameraKeystoningSpec.GetMatrix());
+	        //leftCamera.projectionMatrix *= keystoningConfiguration.leftCameraKeystoningSpec.GetMatrix();
+	        //rightCamera.projectionMatrix *= keystoningConfiguration.rightCameraKeystoningSpec.GetMatrix();
+		}
     }
 
     virtual public void SetupCameraViewports(float relativeLeft, float relativeBottom, float relativeWidth, float relativeHeight, float aspectRatio)

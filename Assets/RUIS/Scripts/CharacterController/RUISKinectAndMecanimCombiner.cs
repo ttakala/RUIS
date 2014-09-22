@@ -402,7 +402,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		Vector3 mecanimTorsoForward = transform.forward; //-transform.right;
         mecanimTorsoForward.y = 0;
         mecanimTorsoForward.Normalize();
-		Vector3 mecanimTorsoUp = Vector3.up; //transform.forward;
+		//Vector3 mecanimTorsoUp = Vector3.up; //transform.forward;
         //mecanimTorsoUp.y = 0;
         //mecanimTorsoUp.Normalize();
 //        Quaternion mecanimTorsoRotation = Quaternion.LookRotation(mecanimTorsoForward, mecanimTorsoUp);

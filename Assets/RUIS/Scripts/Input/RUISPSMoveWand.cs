@@ -38,11 +38,9 @@ public class RUISPSMoveWand : RUISWand {
     protected RUISCoordinateSystem coordinateSystem;
 
     public Renderer whereToCopyColor;
-	private RUISInputManager inputManager;
 	
 	public void Awake ()
     {
-		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
     
         if (psMoveWrapper == null)
         {

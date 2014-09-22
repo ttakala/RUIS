@@ -539,7 +539,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xmlSchema: {fileID: 4900000, guid: a07a36ac9f438794596e1ee51310972d, type: 3}
-  filename: inputConfig2.xml
+  filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
   PSMoveIP: 127.0.0.1
@@ -559,6 +559,7 @@ MonoBehaviour:
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
   enableKinect2: 0
+  kinect2FloorDetection: 1
   enableRazerHydra: 0
   moveControllers: []
   jumpGestureEnabled: 1
@@ -693,11 +694,12 @@ MonoBehaviour:
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 3}
   loadFromXML: 1
   yawOffset: 0
-  floorNormal: {x: 0, y: 0, z: 0, w: 1}
+  floorNormal: {x: 0, y: 0, z: 0}
+  floorPitchRotation: {x: 0, y: 0, z: 0, w: 1}
   applyToRootCoordinates: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  rootDevice: 1
+  rootDevice: 0
 --- !u!114 &11400016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -794,6 +796,7 @@ MonoBehaviour:
   guiScaleX: 1
   guiScaleY: 1
   hideMouseOnPlay: 0
+  menuCursorPrefab: {fileID: 100000, guid: da3e5cecbc9e9bc499740e29034fcc6f, type: 2}
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1

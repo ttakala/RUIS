@@ -37,13 +37,14 @@ public class RUISInputManagerEditor : Editor {
 	
     SerializedProperty kinectEnabled;
     SerializedProperty maxNumberOfKinectPlayers;
-	SerializedProperty floorDetectionOnSceneStart;
+	SerializedProperty kinect1FloorDetectionOnSceneStart;
 
 	SerializedProperty kinect2Enabled;
+	SerializedProperty kinect2FloorDetectionOnSceneStart;
 
 	SerializedProperty enableRazerHydra;
 
-    SerializedProperty riftMagnetometerMode;
+//    SerializedProperty riftMagnetometerMode;
 
     
     void OnEnable()
@@ -70,13 +71,14 @@ public class RUISInputManagerEditor : Editor {
 		
         kinectEnabled = serializedObject.FindProperty("enableKinect");
         maxNumberOfKinectPlayers = serializedObject.FindProperty("maxNumberOfKinectPlayers");
-		floorDetectionOnSceneStart = serializedObject.FindProperty("kinectFloorDetection");
+		kinect1FloorDetectionOnSceneStart = serializedObject.FindProperty("kinectFloorDetection");
 
 		kinect2Enabled = serializedObject.FindProperty("enableKinect2");
+		kinect2FloorDetectionOnSceneStart = serializedObject.FindProperty("kinect2FloorDetection");
 
 		enableRazerHydra = serializedObject.FindProperty("enableRazerHydra");
 
-        riftMagnetometerMode = serializedObject.FindProperty("riftMagnetometerMode");
+//        riftMagnetometerMode = serializedObject.FindProperty("riftMagnetometerMode");
         
 	}
 
@@ -168,16 +170,30 @@ public class RUISInputManagerEditor : Editor {
             EditorGUI.indentLevel += 2;
 
             EditorGUILayout.PropertyField(maxNumberOfKinectPlayers, new GUIContent("Max Kinect Players", "Number of concurrently tracked skeletons"));
-			EditorGUILayout.PropertyField(floorDetectionOnSceneStart, new GUIContent(  "Floor Detection On Scene Start", "Kinect tries to detect "
+			EditorGUILayout.PropertyField(kinect1FloorDetectionOnSceneStart, new GUIContent(  "Floor Detection On Scene Start", "Kinect tries to detect "
 			                                                                         + "floor and adjusts the coordinate system automatically when "
 			                                                                         + "the scene is run. You should DISABLE this if you intend to "
-			                                                                         + "use Kinect and PS Move in a calibrated coordinate system. "
-			                                                                         + "Enabling this setting ignores whatever normal is stored in "
-			                                                                         + "'calibration.xml'."));
+			                                                                         + "use Kinect and another sensor (e.g. PS Move) in a calibrated "
+			                                                                         + "coordinate system. Enabling this setting ignores whatever normal "
+			                                                                         + "is stored in 'calibration.xml'."));
             EditorGUI.indentLevel -= 2;
         }
 		EditorGUILayout.Space();
+
 		EditorGUILayout.PropertyField(kinect2Enabled, new GUIContent("Kinect 2 Enabled"));
+		
+		if (kinect2Enabled.boolValue)
+		{
+			EditorGUI.indentLevel += 2;
+			
+			EditorGUILayout.PropertyField(kinect2FloorDetectionOnSceneStart, new GUIContent(  "Floor Detection On Scene Start", "Kinect 2 tries to detect "
+			                                                                                + "floor and adjusts the coordinate system automatically when "
+			                                                                                + "the scene is run. You should DISABLE this if you intend to "
+			                                                                                + "use Kinect 2 and another sensor (e.g. PS Move) in a calibrated "
+			                                                                                + "coordinate system. Enabling this setting ignores whatever normal "
+			                                                                                + "is stored in 'calibration.xml'."));
+			EditorGUI.indentLevel -= 2;
+		}
 
         EditorGUILayout.Space();
 		

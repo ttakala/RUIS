@@ -566,6 +566,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		}
 		
 		outputRotation = Quaternion.Euler(0, yawOffset, 0) * RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputRotation;
+		//print (RUISCalibrationResultsFloorPitchRotation[rootDevice]);
 		
 		return outputRotation;
 	}
