@@ -50,6 +50,9 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	Hmd oculusDK2HmdObject;
 	
+	Quaternion kinect2PitchRotation = Quaternion.identity;
+	float kinect2DistanceFromFloor = 0;
+	
 	public RUISKinect2ToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
 		this.inputDevice1 = RUISDevice.Kinect_2;
@@ -103,6 +106,8 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		// Icons
 		this.oculusDK2Icon = GameObject.Find ("OculusDK2 Icon");
 		this.kinect2Icon = GameObject.Find ("Kinect2 Icon");
+		
+		this.floorPlane = GameObject.Find ("Floor");
 		
 		this.oculusDK2Icon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
 		
@@ -248,7 +253,8 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			averageError = distance / calibrationSpheres.Count;
 			
 			calibrationResultPhaseObjects.SetActive(true);
-			oculusDK2ModelObject.transform.position = transformMatrix.MultiplyPoint3x4(oculusDK2ModelObject.transform.position);
+			kinect2ModelObject.transform.position = transformMatrix.MultiplyPoint3x4(oculusDK2ModelObject.transform.position);
+			kinect2ModelObject.transform.rotation = QuaternionFromMatrix(rotationMatrix);
 			
 			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",
 			                                       totalErrorDistance, averageError);
@@ -258,6 +264,19 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		return RUISCalibrationPhase.ShowResults;
 	}
 	
+	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
+		// Source: http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
+		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+		Quaternion q = new Quaternion();
+		q.w = Mathf.Sqrt( Mathf.Max( 0, 1 + m[0,0] + m[1,1] + m[2,2] ) ) / 2;
+		q.x = Mathf.Sqrt( Mathf.Max( 0, 1 + m[0,0] - m[1,1] - m[2,2] ) ) / 2;
+		q.y = Mathf.Sqrt( Mathf.Max( 0, 1 - m[0,0] + m[1,1] - m[2,2] ) ) / 2;
+		q.z = Mathf.Sqrt( Mathf.Max( 0, 1 - m[0,0] - m[1,1] + m[2,2] ) ) / 2;
+		q.x *= Mathf.Sign( q.x * ( m[2,1] - m[1,2] ) );
+		q.y *= Mathf.Sign( q.y * ( m[0,2] - m[2,0] ) );
+		q.z *= Mathf.Sign( q.z * ( m[1,0] - m[0,1] ) );
+		return q;
+	}
 	
 	// Custom functionsRUISCalibrationPhase.Stopped
 	private void TakeSample(float deltaTime)
@@ -384,12 +403,18 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		transformMatrix = MathUtil.MatrixToMatrix4x4(transformMatrixSolution);//CreateTransformMatrix(transformMatrixSolution);
 		Debug.Log(transformMatrix);
 		
-		UpdateFloorNormal(); // TODO: <-- coordinateSystem.SetFloorNormal(floorPitchRotation);
+		UpdateFloorNormal(); 
 		
 		coordinateSystem.SetDeviceToRootTransforms(rotationMatrix, transformMatrix);
-		coordinateSystem.SaveTransformData(xmlFilename,RUISDevice.Kinect_2, RUISDevice.Oculus_DK2); 
-		coordinateSystem.SaveFloorData(xmlFilename,RUISDevice.Kinect_2, coordinateSystem.floorPitchRotation, distanceFromFloor);
+		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.Kinect_2, RUISDevice.Oculus_DK2); 
+		coordinateSystem.SaveFloorData(xmlFilename,RUISDevice.Kinect_2, kinect2PitchRotation, kinect2DistanceFromFloor);
 		
+		string devicePairName = RUISDevice.Kinect_2.ToString() + "-" + RUISDevice.Oculus_DK2.ToString();
+		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
+		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
+		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2PitchRotation;     
+		
+		this.floorPlane.transform.localPosition += new Vector3(0, kinect2DistanceFromFloor, 0);    
 	}
 	
 	
@@ -420,11 +445,21 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	private void UpdateFloorNormal()
 	{
-		// TODO
+		coordinateSystem.ResetFloorNormal();
 		
-		// calculate Vector3 floorNormal and closestFloorPointToKinect
-		//coordinateSystem.SetFloorNormal(floorNormal);
-		//coordinateSystem.SetDistanceFromFloor(closestFloorPointToKinect.magnitude);
+		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
+		Vector3 kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
+		kinect2FloorNormal.Normalize();
+		
+		kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
+		
+		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
+		
+		kinect2PitchRotation = kinect2FloorRotator;
+		kinect2ModelObject.transform.rotation = kinect2FloorRotator;
+		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
+		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor);
+		coordinateSystem.SetFloorNormal(kinect2FloorNormal);
 	}
 	
 	private void updateBodyData() {

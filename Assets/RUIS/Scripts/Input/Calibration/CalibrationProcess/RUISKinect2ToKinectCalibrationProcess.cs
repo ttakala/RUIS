@@ -108,6 +108,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		this.Kinect1Icon = GameObject.Find ("Kinect Icon");
 		this.Kinect2Icon = GameObject.Find ("Kinect2 Icon");
 
+		this.floorPlane = GameObject.Find ("Floor");
+
 		this.Kinect1Icon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
 		
 		foreach (Transform child in this.deviceModelObjects.transform)
@@ -263,7 +265,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 			averageError = distance / calibrationSpheres.Count;
 			
 			calibrationResultPhaseObjects.SetActive(true);
-			kinect1ModelObject.transform.position = transformMatrix.MultiplyPoint3x4(kinect1ModelObject.transform.position);
+			kinect2ModelObject.transform.position = transformMatrix.MultiplyPoint3x4(kinect2ModelObject.transform.position);
+			kinect2ModelObject.transform.rotation = QuaternionFromMatrix(rotationMatrix);
 			
 			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",
 			                                       totalErrorDistance, averageError);
@@ -273,6 +276,19 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		return RUISCalibrationPhase.ShowResults;
 	}
 	
+	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
+		// Source: http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
+		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+		Quaternion q = new Quaternion();
+		q.w = Mathf.Sqrt( Mathf.Max( 0, 1 + m[0,0] + m[1,1] + m[2,2] ) ) / 2;
+		q.x = Mathf.Sqrt( Mathf.Max( 0, 1 + m[0,0] - m[1,1] - m[2,2] ) ) / 2;
+		q.y = Mathf.Sqrt( Mathf.Max( 0, 1 - m[0,0] + m[1,1] - m[2,2] ) ) / 2;
+		q.z = Mathf.Sqrt( Mathf.Max( 0, 1 - m[0,0] - m[1,1] + m[2,2] ) ) / 2;
+		q.x *= Mathf.Sign( q.x * ( m[2,1] - m[1,2] ) );
+		q.y *= Mathf.Sign( q.y * ( m[0,2] - m[2,0] ) );
+		q.z *= Mathf.Sign( q.z * ( m[1,0] - m[0,1] ) );
+		return q;
+	}
 	
 	// Custom functionsRUISCalibrationPhase.Stopped
 	private void TakeSample(float deltaTime)
@@ -392,14 +408,16 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		UpdateFloorNormal();
 		
 		coordinateSystem.SetDeviceToRootTransforms(rotationMatrix, transformMatrix);
-		coordinateSystem.SaveTransformData(xmlFilename,RUISDevice.Kinect_2, RUISDevice.Kinect_1); 
+		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.Kinect_2, RUISDevice.Kinect_1); 
 		coordinateSystem.SaveFloorData(xmlFilename,RUISDevice.Kinect_1, kinect1PitchRotation, kinect1DistanceFromFloor);
 		coordinateSystem.SaveFloorData(xmlFilename,RUISDevice.Kinect_2, kinect2PitchRotation, kinect2DistanceFromFloor);
 		
 		string devicePairName = RUISDevice.Kinect_1.ToString() + "-" + RUISDevice.Kinect_2.ToString();
 		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = kinect1DistanceFromFloor;
-		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;                                                                                                                            
+		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;   
+		
+		this.floorPlane.transform.localPosition += new Vector3(0, kinect1DistanceFromFloor, 0);                                                                                                                                                                                                                                                
 	}
 	
 	

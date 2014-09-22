@@ -251,7 +251,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return true;
 	}
 
-    public void SaveTransformData(string filename, RUISDevice device1, RUISDevice device2)
+    public void SaveTransformDataToXML(string filename, RUISDevice device1, RUISDevice device2)
 	{	
 		string wrapperElementName = device1.ToString() + "-" + device2.ToString();
 	

@@ -3750,7 +3750,7 @@ MonoBehaviour:
   xmlSchema: {fileID: 4900000, guid: a07a36ac9f438794596e1ee51310972d, type: 3}
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
-  enablePSMove: 0
+  enablePSMove: 1
   PSMoveIP: 130.233.46.218
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
@@ -3945,8 +3945,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstDevice: 0
-  secondDevice: 1
-  numberOfSamplesToTake: 10
+  secondDevice: 2
+  numberOfSamplesToTake: 50
   samplesPerSecond: 5
   calibrationSpherePrefab: {fileID: 0}
   calibrationCubePrefab: {fileID: 0}

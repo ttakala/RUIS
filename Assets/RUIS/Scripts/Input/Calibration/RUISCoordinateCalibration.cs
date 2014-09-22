@@ -93,17 +93,10 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		{
 			if(ruisNGUIMenu.currentMenuState == RUISMenuNGUI.RUISMenuStates.calibration) 
 			{
-				
+				numberOfSamplesToTake = 50;
+				samplesPerSecond = 5;
 				switch(ruisNGUIMenu.calibrationDropDownSelection)  
 				{
-					case "Kinect floor data":
-						firstDevice = RUISDevice.Kinect_1;
-						secondDevice = RUISDevice.Null;
-					break;
-					case "Kinect 2 floor data":
-						firstDevice = RUISDevice.Kinect_2;
-						secondDevice = RUISDevice.Null;
-					break;
 					case "Kinect - Kinect2":
 						firstDevice = RUISDevice.Kinect_1;
 						secondDevice = RUISDevice.Kinect_2;
@@ -119,6 +112,22 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 					case "Kinect 2 - Oculus DK2":
 						firstDevice = RUISDevice.Kinect_2;
 						secondDevice = RUISDevice.Oculus_DK2;
+					break;
+					case "Kinect - Oculus DK2":
+						firstDevice = RUISDevice.Kinect_1;
+						secondDevice = RUISDevice.Oculus_DK2;
+					break;
+					case "PSMove - Oculus DK2":
+						firstDevice = RUISDevice.Kinect_1;
+						secondDevice = RUISDevice.Oculus_DK2;
+					break;
+					case "Kinect floor data":
+						firstDevice = RUISDevice.Kinect_1;
+						secondDevice = RUISDevice.Kinect_1;
+					break;
+					case "Kinect 2 floor data":
+						firstDevice = RUISDevice.Kinect_2;
+						secondDevice = RUISDevice.Kinect_2;
 					break;
 					default:
 						firstDevice = RUISDevice.Null;
@@ -187,6 +196,33 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 					coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 					calibrationProcess = new RUISKinect2ToPSMoveCalibrationProcess(calibrationProcessSettings);
 		}
+		else if(	(firstDevice == RUISDevice.PS_Move  && secondDevice == RUISDevice.Oculus_DK2)
+		        ||	(secondDevice == RUISDevice.PS_Move && firstDevice == RUISDevice.Oculus_DK2 )) 
+		{
+			skeletonController.bodyTrackingDeviceID = 2;
+			coordinateSystem.rootDevice = RUISDevice.Oculus_DK2;
+			calibrationProcess = new RUISPSMoveToOculusDK2CalibrationProcess(calibrationProcessSettings);
+		}
+		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Oculus_DK2)
+		   		||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Oculus_DK2 )) 
+		{
+			skeletonController.bodyTrackingDeviceID = 0;
+			coordinateSystem.rootDevice = RUISDevice.Oculus_DK2;
+			calibrationProcess = new RUISKinectToOculusDK2CalibrationProcess(calibrationProcessSettings);
+		}
+		else if(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_1 ) 
+		{
+			skeletonController.bodyTrackingDeviceID = 0;
+			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
+			calibrationProcess = new RUISKinectFloorDataCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.Kinect_2 ) 
+		{
+			skeletonController.bodyTrackingDeviceID = 0;
+			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
+			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
+		}
+		
 		else {
 			calibrationProcess = null;
 		}	
@@ -217,10 +253,16 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 			currentPhase = RUISCalibrationPhase.Initial;
 		}
 		string devicePairName = firstDevice.ToString() + "-" + secondDevice.ToString();
+		string devicePairName2 = secondDevice.ToString() + "-" + firstDevice.ToString();
 		
 		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = Matrix4x4.identity;
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[firstDevice] = 0.0f;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[firstDevice] = Quaternion.identity;
+		
+		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName2] = Matrix4x4.identity;
+		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[secondDevice] = 0.0f;
+		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[secondDevice] = Quaternion.identity;
+		
     	
     }
 

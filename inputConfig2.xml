@@ -9,7 +9,7 @@
     <maxControllers value="4" />
   </PSMoveSettings>
   <KinectSettings>
-    <enabled value="False" />
+    <enabled value="True" />
     <maxPlayers value="2" />
     <floorDetection value="True" />
     <jumpGestureEnabled value="True" />

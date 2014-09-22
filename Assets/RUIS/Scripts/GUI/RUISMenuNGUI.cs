@@ -541,6 +541,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
 		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");
 		if(isRiftConnected && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - Oculus DK2");
+		if(isRiftConnected && inputManager.enableKinect) dropDownChoices.Add ("Kinect - Oculus DK2");
+		if(isRiftConnected && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - Oculus DK2");
 		
 		if(dropDownChoices.Count == 0) 
 		{
