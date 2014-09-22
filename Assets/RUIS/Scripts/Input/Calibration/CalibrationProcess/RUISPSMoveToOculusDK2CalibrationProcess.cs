@@ -114,7 +114,6 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		this.oculusDK2Icon.SetActive(true);
 		this.calibrationPhaseObjects.SetActive(true);
 		this.calibrationResultPhaseObjects.SetActive(false);
-		this.depthView.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 	}
 	
@@ -124,7 +123,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		timeSinceScriptStart += deltaTime;
 		
 		if(timeSinceScriptStart < 3) {
-			this.guiTextLowerLocal = "Calibration of PS Move and Kinect\n\n Starting up...";
+			this.guiTextLowerLocal = "Calibration of PS Move and Oculus Rift DK2\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
 		
@@ -198,7 +197,6 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			timeSinceScriptStart = 0;
 			this.calibrationPhaseObjects.SetActive(false);
 			this.calibrationResultPhaseObjects.SetActive(true);
-			this.depthView.SetActive(false);
 			return RUISCalibrationPhase.ShowResults;
 		}
 		else 
@@ -385,6 +383,9 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		string devicePairName = RUISDevice.PS_Move.ToString() + "-" + RUISDevice.Oculus_DK2.ToString();
 		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
+		
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
 	}
 	
 	

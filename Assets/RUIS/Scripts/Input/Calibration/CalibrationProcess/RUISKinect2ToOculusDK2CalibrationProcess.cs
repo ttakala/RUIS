@@ -414,6 +414,9 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2PitchRotation;     
 		
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
+		
 		this.floorPlane.transform.localPosition += new Vector3(0, kinect2DistanceFromFloor, 0);    
 	}
 	
@@ -452,7 +455,6 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		kinect2FloorNormal.Normalize();
 		
 		kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
-		
 		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
 		kinect2PitchRotation = kinect2FloorRotator;

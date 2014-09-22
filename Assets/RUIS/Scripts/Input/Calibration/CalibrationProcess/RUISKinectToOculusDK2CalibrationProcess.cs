@@ -55,7 +55,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	public RUISKinectToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
-		this.inputDevice1 = RUISDevice.Kinect_2;
+		this.inputDevice1 = RUISDevice.Kinect_1;
 		this.inputDevice2 = RUISDevice.Oculus_DK2;
 		
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
@@ -83,6 +83,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		samples_OculusDK2 = new List<Vector3>();
 		samples_Kinect = new List<Vector3>();
+		
+		oculusDK2HmdObject = Hmd.GetHmd();
 		
 		this.calibrationCube = calibrationSettings.calibrationCubePrefab;
 		this.calibrationSphere = calibrationSettings.calibrationSpherePrefab;
@@ -142,7 +144,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		timeSinceScriptStart += deltaTime;
 		
 		if(timeSinceScriptStart < 3) {
-			this.guiTextLowerLocal = "Calibration of Kinect 2 and Oculus DK2\n\n Starting up...";
+			this.guiTextLowerLocal = "Calibration of Kinect 1 and Oculus DK2\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
 		
@@ -314,7 +316,6 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 				}
 				else {
 					this.guiTextUpperLocal = "Not enough hand movement.";
-					MonoBehaviour.print(Vector3.Distance(tempSample, lastKinectSample));
 				}
 			}
 		}
@@ -403,6 +404,9 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = kinect1DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;     
+		
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
 		
 		this.floorPlane.transform.localPosition += new Vector3(0, kinect1DistanceFromFloor, 0);    	
 	}

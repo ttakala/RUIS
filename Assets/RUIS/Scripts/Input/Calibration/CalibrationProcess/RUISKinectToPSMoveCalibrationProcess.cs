@@ -332,7 +332,6 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 				}
 				else {
 					this.guiTextUpperLocal = "Not enough hand movement.";
-					MonoBehaviour.print(Vector3.Distance(tempSample, lastKinectSample));
 				}
 			}
 		}
@@ -413,6 +412,9 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = kinect1DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;     
+	
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
 	
 		this.floorPlane.transform.localPosition += new Vector3(0, kinect1DistanceFromFloor, 0);    
 	}

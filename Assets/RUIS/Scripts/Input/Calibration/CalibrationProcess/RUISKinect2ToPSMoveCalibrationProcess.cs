@@ -273,8 +273,8 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 			averageError = distance / calibrationSpheres.Count;
 			
 			calibrationResultPhaseObjects.SetActive(true);
-			kinect2ModelObject.transform.position = transformMatrix.MultiplyPoint3x4(psEyeModelObject.transform.position);
-			kinect2ModelObject.transform.rotation = QuaternionFromMatrix(rotationMatrix);
+			psEyeModelObject.transform.position = transformMatrix.MultiplyPoint3x4(psEyeModelObject.transform.position);
+			psEyeModelObject.transform.rotation = QuaternionFromMatrix(rotationMatrix);
 			
 			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",
 			                                  totalErrorDistance, averageError);
@@ -424,6 +424,9 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2PitchRotation;  
+		
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
 		
 		this.floorPlane.transform.localPosition += new Vector3(0, kinect2DistanceFromFloor, 0);       
 	}

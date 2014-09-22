@@ -417,6 +417,9 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = kinect1DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;   
 		
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
+		
 		this.floorPlane.transform.localPosition += new Vector3(0, kinect1DistanceFromFloor, 0);                                                                                                                                                                                                                                                
 	}
 	
@@ -454,9 +457,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
 		Vector3 kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
 		kinect2FloorNormal.Normalize();
-		
 		kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
-		
 		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
 		kinect2PitchRotation = kinect2FloorRotator;
