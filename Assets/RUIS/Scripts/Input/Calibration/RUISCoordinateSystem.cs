@@ -81,7 +81,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		XmlDocument xmlDoc = new XmlDocument();
 		xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
-		XmlNode calibrationMatrixElement = xmlDoc.CreateElement("ns2", "RUISClibrationMatrix", "http://ruisystem.net/m2k");
+		XmlNode calibrationMatrixElement = xmlDoc.CreateElement("ns2", "RUISPairwiseCalibration", "http://ruisystem.net/RUISPairwiseCalibration");
 		xmlDoc.AppendChild(calibrationMatrixElement);
 		
 		XmlElement groupElementTransforms = xmlDoc.CreateElement("Transforms");
