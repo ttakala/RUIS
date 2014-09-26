@@ -53,6 +53,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	
 	Quaternion kinect2PitchRotation = Quaternion.identity;
 	float kinect2DistanceFromFloor = 0;
+	Vector3 kinect2FloorNormal = Vector3.up;
 	
 	public RUISKinect2ToPSMoveCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
@@ -273,8 +274,6 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 			averageError = distance / calibrationSpheres.Count;
 			
 			calibrationResultPhaseObjects.SetActive(true);
-			psEyeModelObject.transform.position = transformMatrix.MultiplyPoint3x4(psEyeModelObject.transform.position);
-			psEyeModelObject.transform.rotation = QuaternionFromMatrix(rotationMatrix);
 			
 			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",
 			                                  totalErrorDistance, averageError);
@@ -413,22 +412,40 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		transformMatrix = MathUtil.MatrixToMatrix4x4(transformMatrixSolution);//CreateTransformMatrix(transformMatrixSolution);
 		Debug.Log(transformMatrix);
 		
-		UpdateFloorNormal(); 
+		UpdateFloorNormalAndDistance(); 
 		
 		
-		coordinateSystem.SetDeviceToRootTransforms(rotationMatrix, transformMatrix);
-		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.PS_Move, RUISDevice.Kinect_2);
-		coordinateSystem.SaveFloorData(xmlFilename,RUISDevice.Kinect_2, kinect2PitchRotation, kinect2DistanceFromFloor);
+		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
+		coordinateSystem.SaveTransformDataToXML(xmlFilename, RUISDevice.PS_Move, RUISDevice.Kinect_2);
+		coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Kinect_2, kinect2FloorNormal, kinect2DistanceFromFloor);
 		
-		string devicePairName = RUISDevice.PS_Move.ToString() + "-" + RUISDevice.Kinect_2.ToString();
-		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+		Vector3 translate = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
+		updateDictionaries(coordinateSystem.RUISCalibrationResultsInVector3, 
+		                   coordinateSystem.RUISCalibrationResultsInQuaternion,
+		                   coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
+		                   translate, rotationQuaternion, transformMatrix,
+		                   RUISDevice.PS_Move, RUISDevice.Kinect_2);
+		
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2PitchRotation;  
 		
+		kinect2ModelObject.transform.rotation = kinect2PitchRotation;
+		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
+		
+		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.PS_Move);
+		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.PS_Move);
+		
+		/*
+		string devicePairName = RUISDevice.PS_Move.ToString() + "-" + RUISDevice.Kinect_2.ToString();
+		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
+		
+		
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
 		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
+		*/
 		
-		this.floorPlane.transform.localPosition += new Vector3(0, kinect2DistanceFromFloor, 0);       
+		this.floorPlane.transform.localPosition = new Vector3(0, 0, 0);       
 	}
 	
 	
@@ -457,12 +474,12 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		return result;
 	}
 	
-	private void UpdateFloorNormal()
+	private void UpdateFloorNormalAndDistance()
 	{
-		coordinateSystem.ResetFloorNormal();
+		coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_2);
 		
 		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
-		Vector3 kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
+		kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
 		kinect2FloorNormal.Normalize();
 		
 		kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
@@ -470,10 +487,8 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
 		kinect2PitchRotation = kinect2FloorRotator;
-		kinect2ModelObject.transform.rotation = kinect2FloorRotator;
-		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
-		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor);
-		coordinateSystem.SetFloorNormal(kinect2FloorNormal);
+		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, RUISDevice.Kinect_2);
+		coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
 	}
 
 	private void updateBodyData() {

@@ -24,13 +24,8 @@ public class RUISCoordinateSystem : MonoBehaviour
     public const float moveToUnityScale = 0.1f;
     
 	private Matrix4x4 deviceToRootTransform = Matrix4x4.identity;
-    private Quaternion deviceToRootRotation = Quaternion.identity;
     
 	public float yawOffset = 0;
-	
-	public Vector3 floorNormal = Vector3.up; // TODO: This needs to be assigned everywhere where floorPitchRotation is assigned
-	public Quaternion floorPitchRotation = Quaternion.identity;
-	private float distanceFromFloor = 0;
 	
     public bool applyToRootCoordinates = true;
     public bool setKinectOriginToFloor = false;
@@ -148,7 +143,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 			foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
 			{	
 				Vector3 vector3 = new Vector3(0, 0, 0);
-				Matrix4x4 moveToKinectTransform = new Matrix4x4();
+				Matrix4x4 device1ToDevice2Transform = new Matrix4x4();
 				Quaternion quaternion = new Quaternion();
 				
 				if(node.Name == "Transforms") 
@@ -160,21 +155,21 @@ public class RUISCoordinateSystem : MonoBehaviour
 						float y = float.Parse(translationElement.Attributes["y"].Value);
 						float z = float.Parse(translationElement.Attributes["z"].Value);
 						vector3 = new Vector3(x, y, z);
-						moveToKinectTransform.SetColumn(3, new Vector4(x, y, z, 1.0f));
+						device1ToDevice2Transform.SetColumn(3, new Vector4(x, y, z, 1.0f));
 			
 						XmlNode rotationElement = groupElement.SelectSingleNode("rotate");
 						
-						moveToKinectTransform.m00 = float.Parse(rotationElement.Attributes["r00"].Value);
-						moveToKinectTransform.m01 = float.Parse(rotationElement.Attributes["r01"].Value);
-						moveToKinectTransform.m02 = float.Parse(rotationElement.Attributes["r02"].Value);
-						moveToKinectTransform.m10 = float.Parse(rotationElement.Attributes["r10"].Value);
-						moveToKinectTransform.m11 = float.Parse(rotationElement.Attributes["r11"].Value);
-						moveToKinectTransform.m12 = float.Parse(rotationElement.Attributes["r12"].Value);
-						moveToKinectTransform.m20 = float.Parse(rotationElement.Attributes["r20"].Value);
-						moveToKinectTransform.m21 = float.Parse(rotationElement.Attributes["r21"].Value);
-						moveToKinectTransform.m22 = float.Parse(rotationElement.Attributes["r22"].Value);
+						device1ToDevice2Transform.m00 = float.Parse(rotationElement.Attributes["r00"].Value);
+						device1ToDevice2Transform.m01 = float.Parse(rotationElement.Attributes["r01"].Value);
+						device1ToDevice2Transform.m02 = float.Parse(rotationElement.Attributes["r02"].Value);
+						device1ToDevice2Transform.m10 = float.Parse(rotationElement.Attributes["r10"].Value);
+						device1ToDevice2Transform.m11 = float.Parse(rotationElement.Attributes["r11"].Value);
+						device1ToDevice2Transform.m12 = float.Parse(rotationElement.Attributes["r12"].Value);
+						device1ToDevice2Transform.m20 = float.Parse(rotationElement.Attributes["r20"].Value);
+						device1ToDevice2Transform.m21 = float.Parse(rotationElement.Attributes["r21"].Value);
+						device1ToDevice2Transform.m22 = float.Parse(rotationElement.Attributes["r22"].Value);
 						
-						List<Vector3> rotationVectors = MathUtil.Orthonormalize(MathUtil.ExtractRotationVectors(moveToKinectTransform));
+						List<Vector3> rotationVectors = MathUtil.Orthonormalize(MathUtil.ExtractRotationVectors(device1ToDevice2Transform));
 						Matrix4x4 rotationMatrix = new Matrix4x4();
 						rotationMatrix.SetColumn(0, rotationVectors[0]);
 						rotationMatrix.SetColumn(1, rotationVectors[1]);
@@ -183,14 +178,14 @@ public class RUISCoordinateSystem : MonoBehaviour
 						quaternion = MathUtil.QuaternionFromMatrix(rotationMatrix); 
 						
 						RUISCalibrationResultsInVector3[groupElement.Name] = vector3;
-						RUISCalibrationResultsIn4x4Matrix[groupElement.Name] = moveToKinectTransform;
+						RUISCalibrationResultsIn4x4Matrix[groupElement.Name] = device1ToDevice2Transform;
 						RUISCalibrationResultsInQuaternion[groupElement.Name] = quaternion;		
 						
 						// Inverses
 						string[] parts = groupElement.Name.Split('-');
 						string inverseName = parts[1] + "-" + parts[0];
 						RUISCalibrationResultsInVector3[inverseName] = -vector3;
-						RUISCalibrationResultsIn4x4Matrix[inverseName] = moveToKinectTransform.inverse;
+						RUISCalibrationResultsIn4x4Matrix[inverseName] = device1ToDevice2Transform.inverse;
 						RUISCalibrationResultsInQuaternion[inverseName] = Quaternion.Inverse(quaternion);		
 					}
 				}
@@ -199,6 +194,8 @@ public class RUISCoordinateSystem : MonoBehaviour
 				{
 					foreach (XmlNode groupElement in node.ChildNodes)	
 					{
+						Quaternion floorPitchRotation = Quaternion.identity;
+						float distanceFromFloor = 0;
 						foreach (XmlNode element in groupElement.ChildNodes)	
 						{
 							switch(element.Name) 
@@ -207,7 +204,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 								float xValue = float.Parse(element.Attributes["x"].Value);
 								float yValue = float.Parse(element.Attributes["y"].Value);
 								float zValue = float.Parse(element.Attributes["z"].Value);
-								floorPitchRotation = Quaternion.LookRotation(Vector3.forward, new Vector3(xValue, yValue, zValue));
+								floorPitchRotation = Quaternion.Inverse(Quaternion.FromToRotation(new Vector3(xValue, yValue, zValue), Vector3.up));
 							break;
 								
 							case "distanceFromFloor":
@@ -317,7 +314,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		xmlFileStream.Close();
 	}
 
-	public void SaveFloorData(string filename, RUISDevice device, Quaternion normal, float distance)
+	public void SaveFloorData(string filename, RUISDevice device, Vector3 normal, float distance)
 	{	
 		string wrapperElementName = device.ToString();
 	
@@ -344,10 +341,10 @@ public class RUISCoordinateSystem : MonoBehaviour
 		groupElement.AppendChild(wrapperElement);
 		
 		XmlElement kinectFloorNormalElement = xmlDoc.CreateElement("floorNormal");
-		Vector3 normalVector = normal * Vector3.up;
-		kinectFloorNormalElement.SetAttribute("x", normalVector.x.ToString());
-		kinectFloorNormalElement.SetAttribute("y", normalVector.y.ToString());
-		kinectFloorNormalElement.SetAttribute("z", normalVector.z.ToString());
+		
+		kinectFloorNormalElement.SetAttribute("x", normal.x.ToString());
+		kinectFloorNormalElement.SetAttribute("y", normal.y.ToString());
+		kinectFloorNormalElement.SetAttribute("z", normal.z.ToString());
 		wrapperElement.AppendChild(kinectFloorNormalElement);
 		
 		XmlElement kinectDistanceFromFloorElement = xmlDoc.CreateElement("distanceFromFloor");
@@ -375,37 +372,63 @@ public class RUISCoordinateSystem : MonoBehaviour
 		xmlFileStream.Close();
 	}
    
-	public void SetFloorNormal(Vector3 newFloorNormal)
+	public void SetFloorNormal(Vector3 newFloorNormal, RUISDevice floorDetectingDevice)
     {
+    	
 		Quaternion kinectFloorRotator = Quaternion.identity;
-		kinectFloorRotator.SetFromToRotation(Vector3.up, newFloorNormal);
-		floorPitchRotation = kinectFloorRotator;
+		kinectFloorRotator.SetFromToRotation(newFloorNormal, Vector3.up);
+		kinectFloorRotator = Quaternion.Inverse(kinectFloorRotator);
+		
+		switch(floorDetectingDevice)
+		{
+			case RUISDevice.Kinect_1:
+				RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinectFloorRotator;
+			break;
+			case RUISDevice.Kinect_2:
+				RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinectFloorRotator;
+			break;
+			default:
+				Debug.LogError("Currently floor detection with " + floorDetectingDevice.ToString() + " is not supported!");
+			break;
+		}
     }
 
-    public void ResetFloorNormal()
+	public void ResetFloorNormal(RUISDevice floorDetectingDevice)
     {
-		floorPitchRotation = Quaternion.identity;
+    	RUISCalibrationResultsFloorPitchRotation[floorDetectingDevice] = Quaternion.identity;
     }
 
-    public void SetDistanceFromFloor(float distance)
+	public void SetDistanceFromFloor(float distance, RUISDevice floorDetectingDevice)
     {
-        distanceFromFloor = distance;
+     	switch(floorDetectingDevice)
+		{
+			case RUISDevice.Kinect_1:
+					RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = distance;
+				break;
+			case RUISDevice.Kinect_2:
+					RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = distance;
+				break;
+			default:
+				Debug.LogError("Currently floor detection with " + floorDetectingDevice.ToString() + " is not supported!");
+				break;
+		}
     }
 	
-	public float GetDistanceFromFloor()
+	public void ResetDistanceFromFloor(RUISDevice floorDetectingDevice)
 	{
-		return distanceFromFloor;
+		RUISCalibrationResultsDistanceFromFloor[floorDetectingDevice] = 0;
 	}
+	
+	// TODO: Implement below for all devices
+//	public float GetDistanceFromFloor(RUISDevice device)
+//	{
+//		return distanceFromFloor;
+//	}
 
-    public void ResetDistanceFromFloor()
-    {
-        distanceFromFloor = 0;
-    }
-
-	public void SetDeviceToRootTransforms(Matrix4x4 rotationMatrix, Matrix4x4 transformMatrix) 
+	// TODO: Pass the transform matrix as an argument to SaveTransformDataToXML(), delete deviceToRootTransform parameter
+	public void SetDeviceToRootTransforms(Matrix4x4 transformMatrix) 
 	{
 		deviceToRootTransform = transformMatrix;
-		deviceToRootRotation = MathUtil.QuaternionFromMatrix(rotationMatrix);
 	}
 	
 	
@@ -533,7 +556,8 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return newPosition;
 	}
 	
-	public Vector3 ConvertLocation(Vector3 inputLocation, RUISDevice device) {
+	public Vector3 ConvertLocation(Vector3 inputLocation, RUISDevice device)
+	{
 
 		Vector3 outputLocation = inputLocation;
 		string devicePairString = device.ToString() + "-" + rootDevice.ToString();

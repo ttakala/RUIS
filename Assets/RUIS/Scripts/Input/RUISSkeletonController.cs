@@ -415,7 +415,7 @@ public class RUISSkeletonController : MonoBehaviour
 //																				 handRollAngleMinimum,  handRollAngleMaximum);
 				//}
 
-				if(trackAnkle) {
+				if(trackAnkle || !useHierarchicalModel) {
 					UpdateTransform (ref leftFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot);
 					UpdateTransform (ref rightFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot);
 					

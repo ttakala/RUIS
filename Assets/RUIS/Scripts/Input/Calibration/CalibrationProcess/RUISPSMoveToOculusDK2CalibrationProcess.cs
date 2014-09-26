@@ -236,8 +236,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			averageError = distance / calibrationSpheres.Count;
 			
 			calibrationResultPhaseObjects.SetActive(true);
-			psEyeModelObject.transform.position = transformMatrix.MultiplyPoint3x4(psEyeModelObject.transform.position);
-			psEyeModelObject.transform.rotation = QuaternionFromMatrix(rotationMatrix);
+			
 			
 			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",
 			                                       totalErrorDistance, averageError);
@@ -378,14 +377,28 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		transformMatrix = MathUtil.MatrixToMatrix4x4(transformMatrixSolution);//CreateTransformMatrix(transformMatrixSolution);
 		Debug.Log(transformMatrix);
 		
-		coordinateSystem.SetDeviceToRootTransforms(rotationMatrix, transformMatrix);
+		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
 		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.PS_Move, RUISDevice.Oculus_DK2);
 		
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+		Vector3 translate = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
+		updateDictionaries(coordinateSystem.RUISCalibrationResultsInVector3, 
+		                   coordinateSystem.RUISCalibrationResultsInQuaternion,
+		                   coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
+		                   translate, rotationQuaternion, transformMatrix,
+		                   RUISDevice.PS_Move, RUISDevice.Oculus_DK2);
+		
+		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.PS_Move);
+		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.PS_Move);
+		
+		/*
 		string devicePairName = RUISDevice.PS_Move.ToString() + "-" + RUISDevice.Oculus_DK2.ToString();
 		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
 		
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
 		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
+	
+		*/
 	}
 	
 	

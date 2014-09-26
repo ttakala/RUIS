@@ -142,7 +142,7 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 			else 
 			{
 				this.guiTextLowerLocal = "Calibration finished!\n\nDistance from floor: " + kinect1DistanceFromFloor + "\n\nFloor normal: " + normalVector.ToString();
-				coordinateSystem.SaveFloorData(xmlFilename,RUISDevice.Kinect_1, kinect1PitchRotation, kinect1DistanceFromFloor);
+				coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Kinect_1, normalVector, kinect1DistanceFromFloor);
 			}
 			calibrationFinnished = true;
 		}	
@@ -151,7 +151,7 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 	
 	private void UpdateFloorNormal()
 	{
-		coordinateSystem.ResetFloorNormal();
+		coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_1);
 		
 		OpenNI.Plane3D floor;
 		

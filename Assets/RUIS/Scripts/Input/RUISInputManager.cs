@@ -194,8 +194,8 @@ public class RUISInputManager : MonoBehaviour
 		Quaternion dictionaryFloorNormal = coordinateSystem.RUISCalibrationResultsFloorPitchRotation[coordinateSystem.rootDevice];
 		float dictionaryDistanceFromFloor = coordinateSystem.RUISCalibrationResultsDistanceFromFloor[coordinateSystem.rootDevice];
 		Vector3 normalVector = dictionaryFloorNormal * Vector3.up;
-		coordinateSystem.SetFloorNormal(normalVector);
-		coordinateSystem.SetDistanceFromFloor(dictionaryDistanceFromFloor);
+		coordinateSystem.SetFloorNormal(normalVector, coordinateSystem.rootDevice);
+		coordinateSystem.SetDistanceFromFloor(dictionaryDistanceFromFloor, coordinateSystem.rootDevice);
 			
 		//check whether the kinect camera is actually connected
         if (enableKinect)
@@ -360,11 +360,10 @@ public class RUISInputManager : MonoBehaviour
         {
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_1)
 			{
-				coordinateSystem.ResetFloorNormal();
-				coordinateSystem.ResetDistanceFromFloor();
+				coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_1);
+				coordinateSystem.ResetDistanceFromFloor(RUISDevice.Kinect_1);
 			}
 	
-			
 			OpenNI.Plane3D floor;
 			try
 			{
@@ -393,14 +392,11 @@ public class RUISInputManager : MonoBehaviour
 
 			//transform the point from Kinect's coordinate system rotation to Unity's rotation
 			closestFloorPointToKinect = kinectFloorRotator * closestFloorPointToKinect;
-
-			coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = Quaternion.Inverse(kinectFloorRotator); // NOTE: Why is this inverse??
-			coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = closestFloorPointToKinect.magnitude;
 			
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_1)
 			{
-				coordinateSystem.SetFloorNormal(newFloorNormal);
-		        coordinateSystem.SetDistanceFromFloor(closestFloorPointToKinect.magnitude);
+				coordinateSystem.SetFloorNormal(newFloorNormal, RUISDevice.Kinect_1);
+				coordinateSystem.SetDistanceFromFloor(closestFloorPointToKinect.magnitude, RUISDevice.Kinect_1);
 			}
 			Debug.Log ("Updated Kinect floor normal " + newFloorNormal + " and floor distance (" + closestFloorPointToKinect.magnitude + ")");
 		}
@@ -414,8 +410,8 @@ public class RUISInputManager : MonoBehaviour
 		{
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
 			{
-				coordinateSystem.ResetFloorNormal();
-				coordinateSystem.ResetDistanceFromFloor();
+				coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_2);
+				coordinateSystem.ResetDistanceFromFloor(RUISDevice.Kinect_2);
 			}
 
 
@@ -433,8 +429,8 @@ public class RUISInputManager : MonoBehaviour
 
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
 			{
-				coordinateSystem.SetFloorNormal(kinect2FloorNormal);
-				coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor);
+				coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
+				coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor,  RUISDevice.Kinect_2);
 			}
 			Debug.Log ("Updated Kinect 2 floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
 		}

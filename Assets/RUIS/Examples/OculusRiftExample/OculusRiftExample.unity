@@ -2196,7 +2196,7 @@ MonoBehaviour:
   trackThumbs: 0
   trackAnkle: 0
   rotateWristFromElbow: 0
-  bodyTrackingDevice: 1
+  bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 0
   updateRootPosition: 1
@@ -26955,7 +26955,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400026, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: bodyTrackingDevice
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400074, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: headTrackers.Array.data[4]
@@ -36479,7 +36479,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: loadFromTextFileInEditor
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: isStereo
@@ -36489,6 +36489,22 @@ Prefab:
       propertyPath: menuCursorPrefab
       value: 
       objectReference: {fileID: 100000, guid: da3e5cecbc9e9bc499740e29034fcc6f, type: 2}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: kinectFloorDetection
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: rootDevice
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: enableKinect2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: kinect2FloorDetection
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1659611844}
@@ -38394,8 +38410,6 @@ MonoBehaviour:
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 3}
   loadFromXML: 1
   yawOffset: 0
-  floorNormal: {x: 0, y: 0, z: 0}
-  floorPitchRotation: {x: 0, y: 0, z: 0, w: 1}
   applyToRootCoordinates: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
@@ -38413,8 +38427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xmlSchema: {fileID: 4900000, guid: a07a36ac9f438794596e1ee51310972d, type: 3}
-  filename: inputConfig2.xml
-  loadFromTextFileInEditor: 1
+  filename: inputConfig.xml
+  loadFromTextFileInEditor: 0
   enablePSMove: 0
   PSMoveIP: 130.233.46.218
   PSMovePort: 7899
@@ -38430,9 +38444,10 @@ MonoBehaviour:
   moveWand3: 0
   enableKinect: 1
   maxNumberOfKinectPlayers: 2
-  kinectFloorDetection: 1
+  kinectFloorDetection: 0
   kinectDriftCorrectionPreferred: 0
-  enableKinect2: 0
+  enableKinect2: 1
+  kinect2FloorDetection: 0
   enableRazerHydra: 0
   moveControllers: []
   jumpGestureEnabled: 1

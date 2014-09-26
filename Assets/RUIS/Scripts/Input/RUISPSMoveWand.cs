@@ -348,7 +348,7 @@ public class RUISPSMoveWand : RUISWand {
 	
     private Vector3 TransformPosition(Vector3 value)
     {
-		return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawPSMoveLocation(value),RUISDevice.PS_Move);
+		return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawPSMoveLocation(value), RUISDevice.PS_Move);
     }
 	
 	// Returns angularVelocity in wand's local coordinate system

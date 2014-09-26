@@ -43,6 +43,22 @@ public abstract class RUISCalibrationProcess {
 	abstract public RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime);
 	abstract public RUISCalibrationPhase CalibrationPhase(float deltaTime);
 	abstract public RUISCalibrationPhase ShowResultsPhase(float deltaTime);
+	
+	public void updateDictionaries(Dictionary<string, Vector3> RUISCalibrationResultsInVector3, 
+	                        Dictionary<string, Quaternion> RUISCalibrationResultsInQuaternion,
+	                        Dictionary<string, Matrix4x4> RUISCalibrationResultsIn4x4Matrix,
+	                        Vector3 translate, Quaternion rotation, Matrix4x4 pairwiseTransform,
+	                        RUISDevice device1, RUISDevice device2)
+	{
+		RUISCalibrationResultsInVector3[device1.ToString() + "-" + device2.ToString()] = translate;
+		RUISCalibrationResultsIn4x4Matrix[device1.ToString() + "-" + device2.ToString()] = pairwiseTransform;
+		RUISCalibrationResultsInQuaternion[device1.ToString() + "-" + device2.ToString()] = rotation;		
+		
+		// Inverses
+		RUISCalibrationResultsInVector3[device2.ToString() + "-" + device1.ToString()] = -translate;
+		RUISCalibrationResultsIn4x4Matrix[device2.ToString() + "-" + device1.ToString()] = pairwiseTransform.inverse;
+		RUISCalibrationResultsInQuaternion[device2.ToString() + "-" + device1.ToString()] = Quaternion.Inverse(rotation);		
+	}
 }
 
 public class RUISCalibrationProcessSettings {
