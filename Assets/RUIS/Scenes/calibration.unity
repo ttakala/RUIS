@@ -3991,9 +3991,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f5948038f443a94bbaa1808e09eb88e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstDevice: 1
+  sampleCube: {fileID: 100000, guid: 506c0085727fa7a47a749e5c27c65db2, type: 2}
+  sampleSphere: {fileID: 100000, guid: 1f41274c93d59074eaa3d7a1a929adaa, type: 2}
+  firstDevice: 2
   secondDevice: 0
-  numberOfSamplesToTake: 100
+  numberOfSamplesToTake: 10
   samplesPerSecond: 5
   calibrationSpherePrefab: {fileID: 0}
   calibrationCubePrefab: {fileID: 0}

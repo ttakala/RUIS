@@ -20,7 +20,8 @@ public class RUISCoordinateCalibrationEditor : Editor
 	SerializedProperty numberOfSamplesToTake;
 	SerializedProperty samplesPerSecond;
 	SerializedProperty xmlFilename;
-
+	SerializedProperty sampleCube;
+	SerializedProperty sampleSphere;
 	
 	public void OnEnable()
 	{
@@ -29,6 +30,8 @@ public class RUISCoordinateCalibrationEditor : Editor
 		numberOfSamplesToTake = serializedObject.FindProperty("numberOfSamplesToTake");
 		samplesPerSecond = serializedObject.FindProperty("samplesPerSecond");
 		xmlFilename = serializedObject.FindProperty("xmlFilename");
+		sampleCube = serializedObject.FindProperty("sampleCube");
+		sampleSphere = serializedObject.FindProperty("sampleSphere");
 	}
 	
 	public override void OnInspectorGUI()
@@ -42,7 +45,10 @@ public class RUISCoordinateCalibrationEditor : Editor
 		
 		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.PropertyField(xmlFilename, new GUIContent("Calibration XML File Name", ""));
+		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(sampleCube, new GUIContent("Cube prefab", "Prefab of a cube that is used to visualize device samples"));
+		EditorGUILayout.PropertyField(sampleSphere, new GUIContent("Sphere prefab", "Prefab of a sphere that is used to visualize device samples"));
 		serializedObject.ApplyModifiedProperties();
 	}
 

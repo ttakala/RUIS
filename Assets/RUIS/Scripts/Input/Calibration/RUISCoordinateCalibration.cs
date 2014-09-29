@@ -77,6 +77,9 @@ public class RUISCoordinateCalibration : MonoBehaviour {
     
 	private GUIText upperText, lowerText;
 	
+	public GameObject sampleCube;
+	public GameObject sampleSphere;
+	
 	public RUISDevice firstDevice;
 	public RUISDevice secondDevice;
 	public int numberOfSamplesToTake = 50;
@@ -173,8 +176,8 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		calibrationProcessSettings.xmlFilename = xmlFilename;
 		calibrationProcessSettings.numberOfSamplesToTake = numberOfSamplesToTake;
 		calibrationProcessSettings.numberOfSamplesPerSecond = samplesPerSecond;
-		calibrationProcessSettings.calibrationCubePrefab = (GameObject)Instantiate(Resources.Load("RUIS/Prefabs/Calibration/MoveCalibrationCube", typeof(GameObject))); //calibrationCubePrefab;
-		calibrationProcessSettings.calibrationSpherePrefab = (GameObject)Instantiate(Resources.Load("RUIS/Prefabs/Calibration/Calibration Sphere",typeof(GameObject)));//calibrationSpherePrefab;
+		calibrationProcessSettings.calibrationCubePrefab = this.sampleCube;
+		calibrationProcessSettings.calibrationSpherePrefab = this.sampleSphere;
 		calibrationProcessSettings.calibrationPhaseObjects = this.calibrationPhaseObjects;
 		calibrationProcessSettings.calibrationResultPhaseObjects = this.calibrationResultPhaseObjects;
 		calibrationProcessSettings.deviceModelObjects = deviceModels;

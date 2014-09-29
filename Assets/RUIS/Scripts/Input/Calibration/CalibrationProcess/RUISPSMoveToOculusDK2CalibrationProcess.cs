@@ -34,7 +34,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
 	oculusDK2Object, floorPlane, calibrationSphere, calibrationCube, depthView,
-	psMoveIcon, oculusDK2Icon, deviceModelObjects, depthViewObjects, iconObjects;
+	psMoveIcon, oculusDK2Icon, deviceModelObjects, depthViewObjects, iconObjects, PSMoveWandObject;
 	
 	private Vector3 lastPSMoveSample, lastOculusDK2Sample;
 	private string xmlFilename;
@@ -83,6 +83,8 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		this.depthViewObjects = calibrationSettings.depthViewObjects;
 		this.iconObjects = calibrationSettings.iconObjects;
 		
+		this.PSMoveWandObject = GameObject.Find ("PSMoveWand");
+				
 		// Models
 		this.psEyeModelObject = GameObject.Find ("PS Eye");
 		this.oculusDK2Object = GameObject.Find ("OculusDK2Camera");
@@ -167,6 +169,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) {
 		this.guiTextLowerLocal = "Take a Move controller into your right hand.\nWave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
+		this.guiTextLowerLocal += string.Format("\nPSMove camera pitch angle: {0}", Mathf.Rad2Deg * psMoveWrapper.state.gemStates[0].camera_pitch_angle);
 		
 		bool xButtonPressed = false;
 		for (int i = 0; i < 4; i++) {
@@ -236,6 +239,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			averageError = distance / calibrationSpheres.Count;
 			
 			calibrationResultPhaseObjects.SetActive(true);
+			this.PSMoveWandObject.GetComponent<RUISPSMoveWand>().controllerId = calibratingPSMoveControllerId;
 			
 			
 			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",

@@ -35,7 +35,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
 	kinect2ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
-	psMoveIcon, KinectIcon, deviceModelObjects, depthViewObjects, iconObjects;
+	psMoveIcon, KinectIcon, deviceModelObjects, depthViewObjects, iconObjects, PSMoveWandObject;
 	
 	private Vector3 lastPSMoveSample, lastKinect2Sample;
 	private string xmlFilename;
@@ -94,6 +94,8 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		this.deviceModelObjects = calibrationSettings.deviceModelObjects;
 		this.depthViewObjects = calibrationSettings.depthViewObjects;
 		this.iconObjects = calibrationSettings.iconObjects;
+		
+		this.PSMoveWandObject = GameObject.Find ("PSMoveWand");
 		
 		// Models
 		this.psEyeModelObject = GameObject.Find ("PS Eye");
@@ -197,6 +199,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) {
 		this.guiTextLowerLocal = "Take a Move controller into your right hand.\nWave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
+		this.guiTextLowerLocal += string.Format("\nPSMove camera pitch angle: {0}", Mathf.Rad2Deg * psMoveWrapper.state.gemStates[0].camera_pitch_angle);
 		
 		updateBodyData();
 		
@@ -274,6 +277,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 			averageError = distance / calibrationSpheres.Count;
 			
 			calibrationResultPhaseObjects.SetActive(true);
+			this.PSMoveWandObject.GetComponent<RUISPSMoveWand>().controllerId = calibratingPSMoveControllerId;
 			
 			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",
 			                                  totalErrorDistance, averageError);
