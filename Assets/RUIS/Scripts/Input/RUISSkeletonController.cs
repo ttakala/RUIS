@@ -119,7 +119,9 @@ public class RUISSkeletonController : MonoBehaviour
 	private float torsoScale = 1.0f;
 
     public float neckHeightTweaker = 0.0f;
-    private Vector3 neckOriginalLocalPosition;
+	private Vector3 neckOriginalLocalPosition;
+	private Transform chest;
+	private Vector3 chestOriginalLocalPosition;
 
     public float forearmLengthRatio = 1.0f;
     private Vector3 originalRightForearmScale;
@@ -186,6 +188,11 @@ public class RUISSkeletonController : MonoBehaviour
             if (neck)
             {
                 neckOriginalLocalPosition = neck.localPosition;
+				if(neck.parent)
+				{
+					chest = neck.parent;
+					chestOriginalLocalPosition = chest.localPosition;
+				}
             }
         }
 
@@ -457,34 +464,15 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					UpdateBoneScalings ();
 
-					//
-
-					// Clone JointData instance
-//					adjustedTorsoJoint.position = torsoJoint.position + adjustVerticalTorsoLocation*torsoToHead.normalized;
-//					print (adjustedTorsoJoint.position);
-//					adjustedTorsoJoint.rotation = torsoJoint.rotation;
-//					adjustedTorsoJoint.positionConfidence = torsoJoint.positionConfidence;
-//					adjustedTorsoJoint.rotationConfidence = torsoJoint.rotationConfidence;
-//					adjustedTorsoJoint.TrackingState = torsoJoint.TrackingState;
-					//
-
 					Vector3 torsoDirection = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation * Vector3.down;
 					torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
 					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalTorsoLocation));
-
-//					if(neck)
-//						neck.position = neck.position + adjustVerticalTorsoLocation*torsoDirection;
 
 					ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
 					ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
 					ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
 					ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
 
-//					if(neck)
-//					{
-//						rightShoulder.position += adjustVerticalTorsoLocation*torsoDirection;
-//						leftShoulder.position  += adjustVerticalTorsoLocation*torsoDirection;
-//					}
 				}
 			}
 
@@ -535,6 +523,8 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 			}
 		}
+
+		TweakChestHeight();
 		TweakNeckHeight();
     }
 
@@ -785,9 +775,19 @@ public class RUISSkeletonController : MonoBehaviour
 
     private void TweakNeckHeight()
     {
-        if (!neck) return;
-        neck.localPosition = neckOriginalLocalPosition - neck.InverseTransformDirection(Vector3.up) * neckHeightTweaker;
+        if (!neck)
+			return;
+		neck.localPosition = neckOriginalLocalPosition - neck.InverseTransformDirection(Vector3.up) * neckHeightTweaker;
     }
+
+	private void TweakChestHeight()
+	{
+		if (!chest)
+			return;
+		// TODO: Below needs to be modified
+		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(Vector3.up) * adjustVerticalTorsoLocation/torsoScale;
+
+	}
 
     public bool ConfidenceGoodEnoughForScaling()
     {
