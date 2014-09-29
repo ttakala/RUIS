@@ -10,11 +10,12 @@ Licensing  :	RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using OVR;
 
 public class RUISHeadTrackerAssigner : MonoBehaviour {
 	
 	RUISInputManager inputManager;
-	public List<RUISTracker> headTrackers = new List<RUISTracker>(5);
+	public List<RUISTracker> headTrackers = new List<RUISTracker>(6);
 	public RUISDisplay display;
 	public bool allowMultipleAssigners = false;
 	public bool applyKinectDriftCorrectionPreference = false;
@@ -36,16 +37,31 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 		bool kinect = false;
 		bool psmove = false;
 		bool razer = false;
-		
-		int trackerCount = 0;
-		
+		bool oculusDK2 = false;
+
+		// Find out if an Oculus HMD is connected
+		var HMD = OVR.Hmd.GetHmd();
+		ovrTrackingState riftState = HMD.GetTrackingState();      
+		bool isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+
+		// Find out the Oculus HMD version
+		Hmd oculusHmdObject = Hmd.GetHmd();
+		ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
+		ovrHmdType ovrHmdVersion = ovrDesc.Type;
+
+		print (isRiftConnected);
+
 		if(inputManager)
 		{
+			if(isRiftConnected && (ovrHmdVersion == ovrHmdType.ovrHmd_DK2 || ovrHmdVersion != ovrHmdType.ovrHmd_Other)) 
+				oculusDK2 = true;
+
 			kinect2 = inputManager.enableKinect2;
-			kinect = inputManager.enableKinect;
-			psmove = inputManager.enablePSMove;
-			razer  = inputManager.enableRazerHydra;
+			kinect  = inputManager.enableKinect;
+			psmove  = inputManager.enablePSMove;
+			razer   = inputManager.enableRazerHydra;
 			
+			int trackerCount = 0;
 			RUISTracker closestMatch = null;
 			int currentMatchScore = 0;
 
@@ -72,13 +88,21 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					int foundTrackerScore = 0;
 					
 					// Give score to found head trackers
-					if(psmove && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.PSMove)
+					if(oculusDK2 && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OculusDK2)
 					{
-						foundTrackerScore = 5;
+						foundTrackerScore = 7;
+					}
+					else if(psmove && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.PSMove)
+					{
+						foundTrackerScore = 6;
 					}
 					else if(	razer && trackerScript.isRazerBaseMobile
 							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
 							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.InputTransform	)
+					{
+						foundTrackerScore = 5;
+					}
+					else if(kinect2 && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect2)
 					{
 						foundTrackerScore = 4;
 					}
@@ -88,9 +112,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					{
 						foundTrackerScore = 3;
 					}
-					else if((kinect || kinect2) 
-						&& (trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect
-					    || trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect2))
+					else if(kinect && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect)
 					{
 						foundTrackerScore = 2;
 					}
