@@ -49,13 +49,11 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 		ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
 		ovrHmdType ovrHmdVersion = ovrDesc.Type;
 
-		print (isRiftConnected);
-
 		if(inputManager)
 		{
-			if(isRiftConnected && (ovrHmdVersion == ovrHmdType.ovrHmd_DK2 || ovrHmdVersion != ovrHmdType.ovrHmd_Other)) 
+			if(isRiftConnected && (ovrHmdVersion == ovrHmdType.ovrHmd_DK2 || ovrHmdVersion == ovrHmdType.ovrHmd_Other)) 
 				oculusDK2 = true;
-
+			
 			kinect2 = inputManager.enableKinect2;
 			kinect  = inputManager.enableKinect;
 			psmove  = inputManager.enablePSMove;
@@ -91,6 +89,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					if(oculusDK2 && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OculusDK2)
 					{
 						foundTrackerScore = 7;
+						print (trackerScript);
 					}
 					else if(psmove && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.PSMove)
 					{
@@ -138,6 +137,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			string logString = "";
 			string names = "";
 			RUISCamera ruisCamera = null;
+			
 			if(closestMatch == null)
 			{
 				// Disable all but the first active head tracker from the headTrackers list
@@ -192,6 +192,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 								names = names + ", ";
 							names = names + headTrackers[i].gameObject.name;
 							headTrackers[i].gameObject.SetActive(false);
+							
 						}
 						else
 						{
