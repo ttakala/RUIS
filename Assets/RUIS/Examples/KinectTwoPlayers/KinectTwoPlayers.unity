@@ -1057,6 +1057,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
+  _Center: {x: .5, y: .5}
+  _ScaleIn: {x: 1, y: 1}
+  _Scale: {x: 1, y: 1}
+  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
+  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
+  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
 --- !u!114 &46529461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2019,7 +2026,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891d7f34be3a15347a2c23df6d69ec62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonController: {fileID: 1689802948}
   maxHeightChange: 5
   maxPositionChange: 10
   colliderHeightTweaker: 0
@@ -13417,6 +13423,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
+  _Center: {x: .5, y: .5}
+  _ScaleIn: {x: 1, y: 1}
+  _Scale: {x: 1, y: 1}
+  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
+  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
+  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
 --- !u!114 &945730646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16991,6 +17004,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
+  _Center: {x: .5, y: .5}
+  _ScaleIn: {x: 1, y: 1}
+  _Scale: {x: 1, y: 1}
+  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
+  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
+  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
 --- !u!114 &1158576544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20043,6 +20063,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
+  _Center: {x: .5, y: .5}
+  _ScaleIn: {x: 1, y: 1}
+  _Scale: {x: 1, y: 1}
+  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
+  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
+  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
 --- !u!114 &1351951186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20158,6 +20185,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
+  _Center: {x: .5, y: .5}
+  _ScaleIn: {x: 1, y: 1}
+  _Scale: {x: 1, y: 1}
+  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
+  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
+  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
 --- !u!114 &1353052527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22293,6 +22327,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
+  _Center: {x: .5, y: .5}
+  _ScaleIn: {x: 1, y: 1}
+  _Scale: {x: 1, y: 1}
+  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
+  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
+  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
 --- !u!114 &1461927076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23640,7 +23681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xmlSchema: {fileID: 4900000, guid: a07a36ac9f438794596e1ee51310972d, type: 3}
-  filename: inputConfig2.xml
+  filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
   PSMoveIP: 127.0.0.1
@@ -23660,6 +23701,7 @@ MonoBehaviour:
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
   enableKinect2: 0
+  kinect2FloorDetection: 1
   enableRazerHydra: 0
   moveControllers: []
   jumpGestureEnabled: 1
@@ -23679,11 +23721,10 @@ MonoBehaviour:
   coordinateSchema: {fileID: 4900000, guid: 91d695470798ef445abca35891244d0c, type: 3}
   loadFromXML: 1
   yawOffset: 0
-  floorNormal: {x: 0, y: 0, z: 0, w: 1}
   applyToRootCoordinates: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  rootDevice: 1
+  rootDevice: 0
 --- !u!1 &1530380028
 GameObject:
   m_ObjectHideFlags: 0
@@ -26449,24 +26490,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customRoot: {fileID: 0}
-  customHead: {fileID: 0}
-  customNeck: {fileID: 0}
-  customTorso: {fileID: 0}
-  customRightShoulder: {fileID: 0}
-  customRightElbow: {fileID: 0}
-  customRightHand: {fileID: 0}
-  customRightHip: {fileID: 0}
-  customRightKnee: {fileID: 0}
-  customRightFoot: {fileID: 0}
-  customLeftShoulder: {fileID: 0}
-  customLeftElbow: {fileID: 0}
-  customLeftHand: {fileID: 0}
-  customLeftHip: {fileID: 0}
-  customLeftKnee: {fileID: 0}
-  customLeftFoot: {fileID: 0}
-  customLeftThumb: {fileID: 0}
-  customRightThumb: {fileID: 0}
   root: {fileID: 997247622}
   head: {fileID: 304591598}
   neck: {fileID: 1530380029}
@@ -26485,6 +26508,24 @@ MonoBehaviour:
   leftFoot: {fileID: 677159575}
   leftThumb: {fileID: 2053640233}
   rightThumb: {fileID: 1262145141}
+  customRoot: {fileID: 0}
+  customHead: {fileID: 0}
+  customNeck: {fileID: 0}
+  customTorso: {fileID: 0}
+  customRightShoulder: {fileID: 0}
+  customRightElbow: {fileID: 0}
+  customRightHand: {fileID: 0}
+  customRightHip: {fileID: 0}
+  customRightKnee: {fileID: 0}
+  customRightFoot: {fileID: 0}
+  customLeftShoulder: {fileID: 0}
+  customLeftElbow: {fileID: 0}
+  customLeftHand: {fileID: 0}
+  customLeftHip: {fileID: 0}
+  customLeftKnee: {fileID: 0}
+  customLeftFoot: {fileID: 0}
+  customLeftThumb: {fileID: 0}
+  customRightThumb: {fileID: 0}
   fistCurlFingers: 1
   trackThumbs: 0
   trackAnkle: 0
@@ -26497,6 +26538,8 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
+  scaleBoneLengthOnly: 0
+  boneLengthAxis: 0
   maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360
@@ -26651,7 +26694,7 @@ MonoBehaviour:
   cameraPitchAngle: 0
   isConnected: 0
   isCameraResume: 0
-  ipAddress: 130.233.46.218
+  ipAddress: 127.0.0.1
   port: 7899
   isFixedIP: 1
   enableDefaultInGameCalibrate: 1
@@ -27837,6 +27880,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
+  _Center: {x: .5, y: .5}
+  _ScaleIn: {x: 1, y: 1}
+  _Scale: {x: 1, y: 1}
+  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
+  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
+  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
 --- !u!114 &1760111228
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28772,6 +28822,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5be85f8438ca3145aac56e800a217cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: fa77fe97b0170804ab2b486d1cf3042f, type: 2}
+  _Center: {x: .5, y: .5}
+  _ScaleIn: {x: 1, y: 1}
+  _Scale: {x: 1, y: 1}
+  _HmdWarpParam: {x: 1, y: 0, z: 0, w: 0}
+  material_CA: {fileID: 2100000, guid: 700ec7db7ac6ff24f9f4a3d4cd157910, type: 2}
+  _ChromaticAberration: {x: .995999992, y: .991999984, z: 1.01400006, w: 1.01400006}
 --- !u!114 &1835127669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31700,7 +31757,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891d7f34be3a15347a2c23df6d69ec62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeletonController: {fileID: 2135021963}
   maxHeightChange: 5
   maxPositionChange: 10
   colliderHeightTweaker: 0
@@ -33737,24 +33793,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  customRoot: {fileID: 0}
-  customHead: {fileID: 0}
-  customNeck: {fileID: 0}
-  customTorso: {fileID: 0}
-  customRightShoulder: {fileID: 0}
-  customRightElbow: {fileID: 0}
-  customRightHand: {fileID: 0}
-  customRightHip: {fileID: 0}
-  customRightKnee: {fileID: 0}
-  customRightFoot: {fileID: 0}
-  customLeftShoulder: {fileID: 0}
-  customLeftElbow: {fileID: 0}
-  customLeftHand: {fileID: 0}
-  customLeftHip: {fileID: 0}
-  customLeftKnee: {fileID: 0}
-  customLeftFoot: {fileID: 0}
-  customLeftThumb: {fileID: 0}
-  customRightThumb: {fileID: 0}
   root: {fileID: 458469551}
   head: {fileID: 1598000354}
   neck: {fileID: 1344391515}
@@ -33773,6 +33811,24 @@ MonoBehaviour:
   leftFoot: {fileID: 98183817}
   leftThumb: {fileID: 1182007556}
   rightThumb: {fileID: 1367030385}
+  customRoot: {fileID: 0}
+  customHead: {fileID: 0}
+  customNeck: {fileID: 0}
+  customTorso: {fileID: 0}
+  customRightShoulder: {fileID: 0}
+  customRightElbow: {fileID: 0}
+  customRightHand: {fileID: 0}
+  customRightHip: {fileID: 0}
+  customRightKnee: {fileID: 0}
+  customRightFoot: {fileID: 0}
+  customLeftShoulder: {fileID: 0}
+  customLeftElbow: {fileID: 0}
+  customLeftHand: {fileID: 0}
+  customLeftHip: {fileID: 0}
+  customLeftKnee: {fileID: 0}
+  customLeftFoot: {fileID: 0}
+  customLeftThumb: {fileID: 0}
+  customRightThumb: {fileID: 0}
   fistCurlFingers: 1
   trackThumbs: 0
   trackAnkle: 0
@@ -33785,6 +33841,8 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
+  scaleBoneLengthOnly: 0
+  boneLengthAxis: 0
   maxScaleFactor: .5
   minimumConfidenceToUpdate: .5
   rotationDamping: 360

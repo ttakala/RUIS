@@ -33955,7 +33955,7 @@ MonoBehaviour:
   cameraPitchAngle: 0
   isConnected: 0
   isCameraResume: 0
-  ipAddress: 130.233.46.218
+  ipAddress: 127.0.0.1
   port: 7899
   isFixedIP: 1
   enableDefaultInGameCalibrate: 1
@@ -36451,7 +36451,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: PSMoveIP
-      value: 130.233.46.218
+      value: 127.0.0.1
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
@@ -36495,7 +36495,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: rootDevice
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect2
@@ -38417,7 +38417,7 @@ MonoBehaviour:
   applyToRootCoordinates: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  rootDevice: 1
+  rootDevice: 0
 --- !u!114 &1909005358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38434,7 +38434,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 130.233.46.218
+  PSMoveIP: 127.0.0.1
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}

@@ -104,10 +104,16 @@ public class RUISCamera : MonoBehaviour {
 					GetComponent<OVRDevice>().enabled = false;
 				if(GetComponent<OVRCamera>())
 					leftCamera.GetComponent<OVRCamera>().enabled = false;
-				// leftCamera.GetComponent<OVRLensCorrection>().enabled = false;
+				
 				if(GetComponent<OVRCamera>())
 					rightCamera.GetComponent<OVRCamera>().enabled = false;
-				// rightCamera.GetComponent<OVRLensCorrection>().enabled = false;
+				
+				if(rightCamera.GetComponent<OVRCamera>()) 
+					rightCamera.GetComponent<OVRCamera>().enabled = false;	
+				
+				if(leftCamera.GetComponent<OVRCamera>())
+					leftCamera.GetComponent<OVRCamera>().enabled = false;
+				
 			}
 			else
 			{
