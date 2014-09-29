@@ -551,7 +551,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		Vector3 newPosition = Vector3.zero;
 		newPosition.x = position.x;
 		newPosition.y = position.y;
-		newPosition.z = -(position.z + 1);
+		newPosition.z = -(position.z + 1); // TODO: This probably depends on some DK2 setting, that can be affected with some kind of ResetCoordinateSystem() etc.
 		
 		return newPosition;
 	}

@@ -364,7 +364,7 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.PropertyField(adjustVerticalTorsoLocation, new GUIContent(  "Torso Vertical Tweaker", "Offset the tracked torso point "
 		                                                                          + "location in the spine direction (usually vertical axis). "
 			                                                                          + "Only used if Hierarchical Model is enabled"));
-		EditorGUILayout.PropertyField(adjustVerticalHipsLocation, new GUIContent(  "Torso Vertical Tweaker", "Offset the tracked torso point "
+		EditorGUILayout.PropertyField(adjustVerticalHipsLocation, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
 		                                                                          + "location in the spine direction (usually vertical axis). "
 		                                                                          + "Only used if Hierarchical Model is enabled"));
 

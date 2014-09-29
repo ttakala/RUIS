@@ -112,7 +112,7 @@ public class RUISSkeletonController : MonoBehaviour
 	
 	public float adjustVerticalTorsoLocation = 0;
 	public float adjustVerticalHipsLocation  = 0;
-	private RUISSkeletonManager.JointData adjustedTorsoJoint = new RUISSkeletonManager.JointData();
+	private RUISSkeletonManager.JointData adjustedHipJoint = new RUISSkeletonManager.JointData();
 
     private float torsoOffset = 0.0f;
 
@@ -470,12 +470,21 @@ public class RUISSkeletonController : MonoBehaviour
 
 					Vector3 torsoDirection = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation * Vector3.down;
 					torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
-					                                           								- torsoDirection * torsoOffset * (torsoScale + adjustVerticalTorsoLocation));
+					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalTorsoLocation));
+
+//					if(neck)
+//						neck.position = neck.position + adjustVerticalTorsoLocation*torsoDirection;
 
 					ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
 					ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
 					ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
 					ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
+
+//					if(neck)
+//					{
+//						rightShoulder.position += adjustVerticalTorsoLocation*torsoDirection;
+//						leftShoulder.position  += adjustVerticalTorsoLocation*torsoDirection;
+//					}
 				}
 			}
 
