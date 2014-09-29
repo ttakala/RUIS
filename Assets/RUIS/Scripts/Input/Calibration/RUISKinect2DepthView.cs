@@ -35,6 +35,8 @@ public class RUISKinect2DepthView : MonoBehaviour
 	
 	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
 	
+	DepthSpacePoint depthSpacePoint_1, depthSpacePoint_2;
+	
 	void Start () 
 	{
 		trackingIDs = new trackedBody[6]; 
@@ -110,6 +112,10 @@ public class RUISKinect2DepthView : MonoBehaviour
 		_BodyData = _SourceManager.GetBodyData();
 		_BodyIndexData = _SourceManager.GetBodyIndexData();
 		
+		Color[] mapPixels = new Color[(imageWidth / _DownsampleSize) * (imageHeight / _DownsampleSize)];
+		
+		
+		
 		if(_DepthData != null && _BodyIndexData != null &&  _Sensor != null) {
 			for (int y = 0; y < imageHeight; y += _DownsampleSize)
 			{
@@ -145,8 +151,53 @@ public class RUISKinect2DepthView : MonoBehaviour
 					
 				}
 			}
-			texture.Apply();
-		} 
+			
+		}
+		if(_BodyData != null) {
+			foreach(var body in _BodyData) {
+				if(body.IsTracked) {
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.HandRight, Windows.Kinect.JointType.ElbowRight);
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.HandLeft, Windows.Kinect.JointType.ElbowLeft);
+					
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.ShoulderRight, Windows.Kinect.JointType.SpineShoulder);
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.ShoulderLeft, Windows.Kinect.JointType.SpineShoulder);
+					
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.ElbowRight, Windows.Kinect.JointType.ShoulderRight);
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.ElbowLeft, Windows.Kinect.JointType.ShoulderLeft);
+					
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.SpineShoulder, Windows.Kinect.JointType.Head);
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.SpineShoulder, Windows.Kinect.JointType.SpineBase);
+					
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.SpineBase, Windows.Kinect.JointType.HipRight);
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.SpineBase, Windows.Kinect.JointType.HipLeft);
+					
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.HipRight, Windows.Kinect.JointType.KneeRight);
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.HipLeft, Windows.Kinect.JointType.KneeLeft);
+					
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.KneeRight, Windows.Kinect.JointType.AnkleRight);
+					drawLineBetweenJoints(ref mapPixels, body, Windows.Kinect.JointType.KneeLeft, Windows.Kinect.JointType.AnkleLeft);
+				}
+			}
+			for(int i = 0; i < mapPixels.Length; i++) {
+				if(mapPixels[i] == Color.white) {
+					texture.SetPixel((int)Mathf.Round(i % (imageWidth / _DownsampleSize)) , (int)Mathf.Round(i / (imageWidth / _DownsampleSize )), Color.white);
+				}
+			}
+		}
+		
+		texture.Apply();
+	}
+	
+	void drawLineBetweenJoints(ref Color[] mapPixels, Windows.Kinect.Body body, Windows.Kinect.JointType jointA, Windows.Kinect.JointType jointB) {
+		
+		depthSpacePoint_1 = _Sensor.CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[jointA].Position);
+		depthSpacePoint_2 = _Sensor.CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[jointB].Position);
+		
+		DrawLine.DrawSimpleLine(ref mapPixels,
+		                        (int)depthSpacePoint_1.X / _DownsampleSize, (int)depthSpacePoint_1.Y / _DownsampleSize, 
+		                        (int)depthSpacePoint_2.X / _DownsampleSize, (int)depthSpacePoint_2.Y / _DownsampleSize, 
+		                        imageWidth / _DownsampleSize, imageHeight / _DownsampleSize,
+		                        Color.white);
 	}
 	
 	void OnGUI()
