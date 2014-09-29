@@ -130,7 +130,7 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 	
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) 
 	{
-		UpdateFloorNormal(); 
+		UpdateFloorNormalAndDistance(); 
 		return RUISCalibrationPhase.ShowResults;
 	}
 	
@@ -149,7 +149,7 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 		return RUISCalibrationPhase.ShowResults;
 	}
 	
-	private void UpdateFloorNormal()
+	private void UpdateFloorNormalAndDistance()
 	{
 		coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_1);
 		
@@ -171,7 +171,7 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 		Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
 		kinectFloorRotator = Quaternion.FromToRotation(normalVector, Vector3.up); 
 		kinect1DistanceFromFloor = closestDistanceFromFloor(normalVector, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
-		kinect1PitchRotation = kinectFloorRotator;
+		kinect1PitchRotation = Quaternion.Inverse (kinectFloorRotator);
 	}
 	
 	public float closestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 

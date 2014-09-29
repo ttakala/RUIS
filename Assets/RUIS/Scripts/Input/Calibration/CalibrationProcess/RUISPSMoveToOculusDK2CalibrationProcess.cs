@@ -34,7 +34,8 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
 	oculusDK2Object, floorPlane, calibrationSphere, calibrationCube, depthView,
-	psMoveIcon, oculusDK2Icon, deviceModelObjects, depthViewObjects, iconObjects, PSMoveWandObject;
+	psMoveIcon, oculusDK2Icon, deviceModelObjects, depthViewObjects, iconObjects, PSMoveWandObject,
+	mannequin;
 	
 	private Vector3 lastPSMoveSample, lastOculusDK2Sample;
 	private string xmlFilename;
@@ -84,7 +85,8 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		this.iconObjects = calibrationSettings.iconObjects;
 		
 		this.PSMoveWandObject = GameObject.Find ("PSMoveWand");
-				
+		this.mannequin = GameObject.Find ("Mannequin");		
+		
 		// Models
 		this.psEyeModelObject = GameObject.Find ("PS Eye");
 		this.oculusDK2Object = GameObject.Find ("OculusDK2Camera");
@@ -110,6 +112,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			child.gameObject.SetActive(false);
 		}
 		
+		this.mannequin.SetActive(false);
 		this.psEyeModelObject.SetActive(true);
 		this.oculusDK2Object.SetActive(true);
 		this.psMoveIcon.SetActive(true);
@@ -168,7 +171,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) {
-		this.guiTextLowerLocal = "Take a Move controller into your right hand.\nWave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
+		this.guiTextLowerLocal = "Take a Move controller into your right \nhand. Wave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
 		this.guiTextLowerLocal += string.Format("\nPSMove camera pitch angle: {0}", Mathf.Rad2Deg * psMoveWrapper.state.gemStates[0].camera_pitch_angle);
 		
 		bool xButtonPressed = false;

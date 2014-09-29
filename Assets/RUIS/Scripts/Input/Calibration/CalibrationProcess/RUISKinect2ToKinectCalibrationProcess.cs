@@ -35,7 +35,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	private bool kinectChecked = false, kinect2Checked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, kinect1ModelObject, 
-	kinect2ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
+	kinect2ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView, depthView2,
 	Kinect1Icon, Kinect2Icon, deviceModelObjects, depthViewObjects, iconObjects;
 	
 	private Vector3 lastPSMoveSample, lastKinect2Sample, lastKinectSample;
@@ -106,7 +106,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		
 		// Depth view
 		this.depthView = GameObject.Find ("KinectDepthView");
-		
+		this.depthView2 = GameObject.Find ("Kinect2DepthView");
 		// Icons
 		this.Kinect1Icon = GameObject.Find ("Kinect Icon");
 		this.Kinect2Icon = GameObject.Find ("Kinect2 Icon");
@@ -137,6 +137,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		this.calibrationPhaseObjects.SetActive(true);
 		this.calibrationResultPhaseObjects.SetActive(false);
 		this.depthView.SetActive(true);
+		this.depthView2.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 	}
 	
@@ -220,7 +221,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
 		
-		this.guiTextLowerLocal = string.Format("Calibrating... {0}/{1} samples taken.", numberOfSamplesTaken, numberOfSamplesToTake);
+		this.guiTextLowerLocal = string.Format("Calibrating... {0}/{1} samples taken. \n\nPlease make sure that both cameras can \nsee your right hand at all times.", numberOfSamplesTaken, numberOfSamplesToTake);
 		TakeSample(deltaTime);
 		
 		if(numberOfSamplesTaken >= numberOfSamplesToTake) 
@@ -263,9 +264,6 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 				sphere.transform.parent = calibrationResultPhaseObjects.transform;
 				cube.transform.parent = calibrationResultPhaseObjects.transform;
 			}
-			
-			for(int i = 0; i<samples_Kinect2.Count; ++i)
-				Debug.LogError(samples_Kinect2[i] + " " + samples_Kinect1[i]);
 			
 			totalErrorDistance = distance;
 			averageError = distance / calibrationSpheres.Count;
@@ -471,13 +469,13 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 				
 		coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_2);
 		
-		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
+		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFlootClipPlane();
 		kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
 		kinect2FloorNormal.Normalize();
 		kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
 		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
-		kinect2PitchRotation = kinect2FloorRotator;
+		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
 		
 		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, RUISDevice.Kinect_2);
 		coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);

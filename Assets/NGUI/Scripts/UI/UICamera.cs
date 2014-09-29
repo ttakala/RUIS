@@ -804,8 +804,10 @@ public class UICamera : MonoBehaviour
 	// CORE HACK by heikki.j.heiskanen@aalto.fi
 	void Start() 
 	{
-		ruisCamera = this.transform.parent.GetComponent<RUISCamera>();
-		if(!ruisCamera) ruisCamera = this.transform.GetComponent<RUISCamera>(); // Non stereo camera
+		if(this.transform.parent) {
+			ruisCamera = this.transform.parent.GetComponent<RUISCamera>();
+			if(!ruisCamera) ruisCamera = this.transform.GetComponent<RUISCamera>(); // Non stereo camera
+		}
 	}
 	// END CORE HACK
 	

@@ -9,14 +9,14 @@ public class Kinect2SourceManager : MonoBehaviour
     private Body[] _BodyData = null;
 	private ushort[] _DepthData = null;
 	private byte[] _BodyIndexData = null;
-	private Windows.Kinect.Vector4 floorNormal;
+	private Windows.Kinect.Vector4 floorClipPlane;
 	
 	public KinectSensor GetSensor() {
 		return _Sensor;
 	}
 	
-	public Windows.Kinect.Vector4 GetFloorNormal() {
-		return floorNormal;
+	public Windows.Kinect.Vector4 GetFlootClipPlane() {
+		return floorClipPlane;
 	}
 	
     public Body[] GetBodyData()
@@ -61,7 +61,7 @@ public class Kinect2SourceManager : MonoBehaviour
                 // Update body data
 				var bodyFrame = frame.BodyFrameReference.AcquireFrame();
 				if(bodyFrame  != null) {
-					floorNormal = bodyFrame.FloorClipPlane;
+					floorClipPlane = bodyFrame.FloorClipPlane;
 	                if (_BodyData == null)
 	                {
 	                    _BodyData = new Body[_Sensor.BodyFrameSource.BodyCount];

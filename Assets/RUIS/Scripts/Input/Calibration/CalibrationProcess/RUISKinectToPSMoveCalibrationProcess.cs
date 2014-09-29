@@ -194,7 +194,7 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	
 	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) {
-		this.guiTextLowerLocal = "Take a Move controller into your right hand.\nWave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
+		this.guiTextLowerLocal = "Take a Move controller into your right \nhand. Wave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
 		this.guiTextLowerLocal += string.Format("\nPSMove camera pitch angle: {0}", Mathf.Rad2Deg * psMoveWrapper.state.gemStates[0].camera_pitch_angle);
 		
 		if (kinectSelection.GetNumberOfSelectedPlayers() < 1) {
@@ -477,7 +477,7 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
 		kinectFloorRotator = Quaternion.FromToRotation(kinect1FloorNormal, Vector3.up); 
 		kinect1DistanceFromFloor = closestDistanceFromFloor(kinect1FloorNormal, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
-		kinect1PitchRotation = Quaternion.Inverse(kinectFloorRotator); // Check that this works
+		kinect1PitchRotation = Quaternion.Inverse(kinectFloorRotator); 
 	}
 	
 	public float closestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 

@@ -327,29 +327,26 @@ public class RUISInputManager : MonoBehaviour
     private IEnumerator attemptUpdatingFloorNormal()
     {
         yield return new WaitForSeconds(5.0f);
-        if(enableKinect && kinectFloorDetection)
-        {
-			if (!coordinateSystem)
-            {
-                Debug.LogError("Could not find coordinate system!");
-            }
-			else if(sceneAnalyzer == null)
-				Debug.LogError("Failed to access OpenNI sceneAnalyzer!");
-			else 
+        
+		if (!coordinateSystem)
+	    {
+	        Debug.LogError("Could not find coordinate system!");
+	    }
+    	else
+    	{
+			if(enableKinect && kinectFloorDetection )
 			{
-				updateKinectFloorData();
-			}
-
-			if(enableKinect2 && kinect2FloorDetection)
-			{
-				if (!coordinateSystem)
-				{
-					Debug.LogError("Could not find coordinate system!");
-				}
+				if(sceneAnalyzer == null)
+					Debug.LogError("Failed to access OpenNI sceneAnalyzer!");
 				else 
 				{
-					updateKinect2FloorData();
+					updateKinectFloorData();
 				}
+			}
+	
+			if(enableKinect2 && kinect2FloorDetection)
+			{
+				updateKinect2FloorData();
 			}
 		}
 	}
@@ -415,17 +412,14 @@ public class RUISInputManager : MonoBehaviour
 			}
 
 
-			Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
+			Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFlootClipPlane();
+			
+			//print (kinect2FloorPlane.X + " " + kinect2FloorPlane.Y + " " + kinect2FloorPlane.Z  + " " +  kinect2FloorPlane.W);
+			
 			Vector3 kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
 			kinect2FloorNormal.Normalize();
 			
 			float kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
-			
-			Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
-
-
-			coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2FloorRotator;
-			coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
 
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
 			{
@@ -436,7 +430,7 @@ public class RUISInputManager : MonoBehaviour
 		}
 	}
 			
-			private void DisableUnneededMoveWands()
+	private void DisableUnneededMoveWands()
     {
         List<RUISPSMoveWand> childWands = new List<RUISPSMoveWand>(GetComponentsInChildren<RUISPSMoveWand>());
 

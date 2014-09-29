@@ -198,7 +198,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	
 	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) {
-		this.guiTextLowerLocal = "Take a Move controller into your right hand.\nWave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
+		this.guiTextLowerLocal = "Take a Move controller into your right \nhand. Wave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
 		this.guiTextLowerLocal += string.Format("\nPSMove camera pitch angle: {0}", Mathf.Rad2Deg * psMoveWrapper.state.gemStates[0].camera_pitch_angle);
 		
 		updateBodyData();
@@ -482,7 +482,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	{
 		coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_2);
 		
-		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
+		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFlootClipPlane();
 		kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
 		kinect2FloorNormal.Normalize();
 		
@@ -490,7 +490,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		
 		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
-		kinect2PitchRotation = kinect2FloorRotator;
+		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
 		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, RUISDevice.Kinect_2);
 		coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
 	}

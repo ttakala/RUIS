@@ -37,12 +37,16 @@ public class RUISKinect2DepthView : MonoBehaviour
 	
 	DepthSpacePoint depthSpacePoint_1, depthSpacePoint_2;
 	
+	RUISCoordinateCalibration coordinateCalibration;
+	
 	void Start () 
 	{
 		trackingIDs = new trackedBody[6]; 
 		for(int y = 0; y < trackingIDs.Length; y++) {
 			trackingIDs[y] = new trackedBody(-1, false, 1);
 		}
+		coordinateCalibration = FindObjectOfType(typeof(RUISCoordinateCalibration)) as RUISCoordinateCalibration;
+		
 		_SourceManager = SourceManager.GetComponent<Kinect2SourceManager>();
 		_Sensor = _SourceManager.GetSensor();
 		if(_Sensor != null) {
@@ -50,7 +54,6 @@ public class RUISKinect2DepthView : MonoBehaviour
 			imageHeight = _Sensor.DepthFrameSource.FrameDescription.Height;
 			texture = new Texture2D(imageWidth / _DownsampleSize, imageHeight / _DownsampleSize);
 		}
-		
 	}
 	
 	void Update()
@@ -137,7 +140,7 @@ public class RUISKinect2DepthView : MonoBehaviour
 						for(int a = 0; a < trackingIDs.Length; a++) {
 							if(trackingIDs[a].kinect2ArrayIndex == kinect2ArrayIndex && trackingIDs[a].isTracking) {
 								if(trackingIDs[a].index == 0) texture.SetPixel(x / _DownsampleSize, y / _DownsampleSize, new Color(0.0f, (float)depth, 0.0f, 1));	// Green
-								else texture.SetPixel(x / _DownsampleSize, y / _DownsampleSize, new Color(0.0f, 0.0f, (float)depth, 1)); // Blue
+								else texture.SetPixel(x / _DownsampleSize, y / _DownsampleSize, Color.red); 
 								found = true;
 							}
 						}
@@ -202,7 +205,15 @@ public class RUISKinect2DepthView : MonoBehaviour
 	
 	void OnGUI()
 	{	
-		GUI.DrawTexture(new Rect(0, Screen.height/2, Screen.width/2, -Screen.height/2), texture, ScaleMode.StretchToFill, false);
+		if(	(coordinateCalibration.firstDevice == RUISDevice.Kinect_1  && coordinateCalibration.secondDevice == RUISDevice.Kinect_2)
+		   ||	(coordinateCalibration.secondDevice == RUISDevice.Kinect_1 && coordinateCalibration.firstDevice == RUISDevice.Kinect_2 )) 
+		{
+			GUI.DrawTexture(new Rect(Screen.width, Screen.height, -Screen.width / 2, -Screen.height/2), texture, ScaleMode.StretchToFill, false);
+		}
+		else 
+		{
+			GUI.DrawTexture(new Rect(0, Screen.height/2, Screen.width/2, -Screen.height/2), texture, ScaleMode.StretchToFill, false);
+		}
 	}
 	
 	private double GetAvg(ushort[] depthData, int x, int y, int width, int height)

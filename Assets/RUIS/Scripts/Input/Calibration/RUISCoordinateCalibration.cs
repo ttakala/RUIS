@@ -191,7 +191,7 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		  		 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.Oculus_DK2 )) 
 		{
 					skeletonController.bodyTrackingDeviceID = 1;
-					coordinateSystem.rootDevice = RUISDevice.Oculus_DK2;
+					coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 					calibrationProcess = new RUISKinect2ToOculusDK2CalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_2)
@@ -226,7 +226,7 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		   		||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Oculus_DK2 )) 
 		{
 			skeletonController.bodyTrackingDeviceID = 0;
-			coordinateSystem.rootDevice = RUISDevice.Oculus_DK2;
+			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
 			calibrationProcess = new RUISKinectToOculusDK2CalibrationProcess(calibrationProcessSettings);
 		}
 		else if(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_1 ) 

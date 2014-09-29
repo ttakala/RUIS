@@ -137,7 +137,7 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 	{
 		coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_2);
 		
-		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFloorNormal();
+		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFlootClipPlane();
 		kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
 		kinect2FloorNormal.Normalize();
 		
@@ -145,7 +145,7 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 		
 		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
-		kinect2PitchRotation = kinect2FloorRotator;
+		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
 		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, RUISDevice.Kinect_2);
 		coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
 	}

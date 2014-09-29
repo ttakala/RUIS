@@ -230,13 +230,16 @@ public class RUISDisplayManager : MonoBehaviour {
 	{
 		if(ruisMenuPrefab == null)
 			return;
-		GameObject ruisMenu = Instantiate(ruisMenuPrefab) as GameObject;
-		if(		ruisMenu == null || displays[guiDisplayChoice].GetComponent<RUISDisplay>() == null
+		
+		if(	 displays[guiDisplayChoice].GetComponent<RUISDisplay>() == null
 		   	||	displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera == null			)
 		{
 			return;
 		}
 		
+		GameObject ruisMenu = Instantiate(ruisMenuPrefab) as GameObject;
+		if(ruisMenu == null)
+			return;
 		
 		if(!displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo
 		   && !displays[guiDisplayChoice].GetComponent<RUISDisplay>().enableOculusRift)

@@ -1992,13 +1992,13 @@ GUIText:
   serializedVersion: 3
   m_Text: Lower Info Text
   m_Anchor: 4
-  m_Alignment: 1
+  m_Alignment: 0
   m_PixelOffset: {x: 0, y: 0}
   m_LineSpacing: 1
   m_TabSize: 4
   m_Font: {fileID: 12800000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
   m_Material: {fileID: 2100000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
-  m_FontSize: 20
+  m_FontSize: 19
   m_FontStyle: 0
   m_Color:
     serializedVersion: 2
@@ -3993,9 +3993,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sampleCube: {fileID: 100000, guid: 506c0085727fa7a47a749e5c27c65db2, type: 2}
   sampleSphere: {fileID: 100000, guid: 1f41274c93d59074eaa3d7a1a929adaa, type: 2}
-  firstDevice: 2
-  secondDevice: 1
-  numberOfSamplesToTake: 10
+  firstDevice: 3
+  secondDevice: 2
+  numberOfSamplesToTake: 50
   samplesPerSecond: 5
   calibrationSpherePrefab: {fileID: 0}
   calibrationCubePrefab: {fileID: 0}
