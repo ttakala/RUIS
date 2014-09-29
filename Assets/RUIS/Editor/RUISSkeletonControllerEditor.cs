@@ -58,7 +58,9 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty neckHeightTweaker;
 	SerializedProperty forearmLengthTweaker;
 	SerializedProperty shinLengthTweaker;
-	
+	SerializedProperty adjustVerticalTorsoLocation;
+	SerializedProperty adjustVerticalHipsLocation;
+
 	SerializedProperty fistCurlFingers;
 	SerializedProperty trackThumbs;
 	SerializedProperty trackAnkle;
@@ -124,6 +126,8 @@ public class RUISSkeletonControllerEditor : Editor
 		trackAnkle = serializedObject.FindProperty ("trackAnkle");
 		rotateWristFromElbow = serializedObject.FindProperty ("rotateWristFromElbow");
 		
+		adjustVerticalTorsoLocation = serializedObject.FindProperty("adjustVerticalTorsoLocation");
+		adjustVerticalHipsLocation = serializedObject.FindProperty("adjustVerticalHipsLocation");
         maxScaleFactor = serializedObject.FindProperty("maxScaleFactor");
         minimumConfidenceToUpdate = serializedObject.FindProperty("minimumConfidenceToUpdate");
         rotationDamping = serializedObject.FindProperty("rotationDamping");
@@ -349,22 +353,30 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.LabelField("Tweaking", EditorStyles.boldLabel);
         GUI.enabled = scaleHierarchicalModelBones.boolValue;
         EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Max Scale Rate", "The maximum amount the scale of a bone can "
-		                                                             + "change per second when using hierarchical model bone scaling"));
+		                                                             + "change per second when using Hierarchical Model and Scale Bones"));
         GUI.enabled = true;
         EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Min Confidence to Update", "The minimum confidence in joint "
 		                                                                        + "positions and rotations needed to update these values. "
 		                                                                        + "The confidence is either 0; 0,5; or 1."));
         EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
 		                                                              + "for damping character bone movement (smaller values)"));
+
+		EditorGUILayout.PropertyField(adjustVerticalTorsoLocation, new GUIContent(  "Torso Vertical Tweaker", "Offset the tracked torso point "
+		                                                                          + "location in the spine direction (usually vertical axis). "
+			                                                                          + "Only used if Hierarchical Model is enabled"));
+		EditorGUILayout.PropertyField(adjustVerticalHipsLocation, new GUIContent(  "Torso Vertical Tweaker", "Offset the tracked torso point "
+		                                                                          + "location in the spine direction (usually vertical axis). "
+		                                                                          + "Only used if Hierarchical Model is enabled"));
+
         EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent("Neck Height Tweaker", "The height offset for the neck"));
 
 		GUI.enabled = useHierarchicalModel.boolValue;
 		EditorGUILayout.PropertyField(forearmLengthTweaker, new GUIContent(  "Forearm Length Tweaker", "The forearm length ratio "
 		                                                                   + "compared to the real-world value, use this to lengthen "
-		                                                                   + "or shorten the forearms. Only used for hierarchical models"));
+		                                                                   + "or shorten the forearms. Only used if Hierarchical Model is enabled"));
 		EditorGUILayout.PropertyField(shinLengthTweaker, new GUIContent(  "Shin Length Tweaker", "The shin length ratio compared to the "
 		                                                                + "real-world value, use this to lengthen or shorten the "
-		                                                                + "shins. Only used for hierarchical models"));
+		                                                                + "shins. Only used if Hierarchical Model is enabled"));
 		EditorGUILayout.Space();
 		
 		GUI.enabled = true;
