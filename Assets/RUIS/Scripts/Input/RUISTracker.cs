@@ -325,10 +325,10 @@ public class RUISTracker : MonoBehaviour
 		}
     
 		if(headPositionInput == HeadPositionSource.Kinect) {
-			kinectSensorID = 0;
+			kinectSensorID = RUISSkeletonManager.kinect1SensorID;
 		}
 		if(headPositionInput == HeadPositionSource.Kinect2) {
-			kinectSensorID = 1;
+			kinectSensorID = RUISSkeletonManager.kinect2SensorID;
 		}
 		
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
@@ -355,8 +355,9 @@ public class RUISTracker : MonoBehaviour
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 		if(		!skeletonManager
 			&&  (	headPositionInput == HeadPositionSource.Kinect
-			     || (headRotationInput == HeadRotationSource.Kinect && !useOculusRiftRotation)
-			     || (externalDriftCorrection && compass == CompassSource.Kinect)))
+		     	 || headPositionInput == HeadPositionSource.Kinect2
+		     	 || (!useOculusRiftRotation && (headRotationInput == HeadRotationSource.Kinect || headRotationInput == HeadRotationSource.Kinect2))
+		     	 || (externalDriftCorrection && (compass == CompassSource.Kinect || compass == CompassSource.Kinect2))))
 		{
 			Debug.LogError("RUISSkeletonManager script is missing from this scene!");
 		}
@@ -364,15 +365,15 @@ public class RUISTracker : MonoBehaviour
 		if(inputManager && !inputManager.enableRazerHydra)
 		{
 			if(headPositionInput == HeadPositionSource.RazerHydra)
-				Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
+				Debug.LogWarning(		"Your settings indicate that you want to use Razer Hydra for "
 								+	"position tracking, but you have disabled Razer Hydra from RUIS "
 								+	"InputManager.");
 			if(headRotationInput == HeadRotationSource.RazerHydra)
-				Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
+				Debug.LogWarning(		"Your settings indicate that you want to use Razer Hydra for "
 								+	"rotation tracking, but you have disabled Razer Hydra from RUIS "
 								+	"InputManager.");
 			if(externalDriftCorrection && compass == CompassSource.RazerHydra)
-				Debug.LogError(		"Your settings indicate that you want to use Razer Hydra for "
+				Debug.LogWarning(		"Your settings indicate that you want to use Razer Hydra for "
 								+	"yaw drift correction, but you have disabled Razer Hydra from RUIS "
 								+	"InputManager.");
 		}
@@ -397,6 +398,20 @@ public class RUISTracker : MonoBehaviour
 			Debug.LogError(	 "Your settings indicate that you want to do yaw drift correction with a "
 						   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		
+		if(headPositionInput == HeadPositionSource.Kinect2 && positionJoint == RUISSkeletonManager.Joint.None)
+			Debug.LogError(	 "Your settings indicate that you want to track position with a "
+			               + "Kinect2 joint, but you have left its value to None in Unity inspector!");
+		
+		if(		headRotationInput == HeadRotationSource.Kinect2 && rotationJoint == RUISSkeletonManager.Joint.None
+		   &&	!useOculusRiftRotation																			 )
+			Debug.LogError(	 "Your settings indicate that you want to track rotation with a "
+			               + "Kinect2 joint, but you have left its value to None in Unity inspector!");
+		
+		if(		externalDriftCorrection && compass == CompassSource.Kinect2 && compassJoint == RUISSkeletonManager.Joint.None
+		   &&  !compassIsPositionTracker && (useOculusRiftRotation || headRotationInput == HeadRotationSource.InputTransform))
+			Debug.LogError(	 "Your settings indicate that you want to do yaw drift correction with a "
+			               + "Kinect2 joint, but you have left its value to None in Unity inspector!");
+
 		if(		externalDriftCorrection && compass == CompassSource.InputTransform && !compassTransform 
 			&&  !compassIsPositionTracker && (useOculusRiftRotation || headRotationInput == HeadRotationSource.InputTransform))
 			Debug.LogError("Yaw drift corrector's Input Transform is none, you need to set it in Unity inspector!");
@@ -472,6 +487,7 @@ public class RUISTracker : MonoBehaviour
 		if(useOculusRiftRotation)
 			headRotationInput = HeadRotationSource.None;
 		else if(	headRotationInput == HeadRotationSource.Kinect
+		        ||	headRotationInput == HeadRotationSource.Kinect2
 				||  headRotationInput == HeadRotationSource.PSMove
 				||  headRotationInput == HeadRotationSource.RazerHydra
 				||  headRotationInput == HeadRotationSource.None	  )
@@ -816,6 +832,7 @@ public class RUISTracker : MonoBehaviour
 					// under this GameObject
 				//	break;
 				case HeadRotationSource.Kinect:
+				case HeadRotationSource.Kinect2:
 			        if (   skeletonManager 
 				    && skeletonManager.skeletons[kinectSensorID, rotationPlayerID].torso.rotationConfidence >= 1)
 			        {
@@ -935,6 +952,7 @@ public class RUISTracker : MonoBehaviour
 		switch(headRotationInput)
 		{
 			case HeadRotationSource.Kinect:
+			case HeadRotationSource.Kinect2:
 		        if (skeletonManager)
 		        {
 				jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID, kinectSensorID);
@@ -1056,7 +1074,8 @@ public class RUISTracker : MonoBehaviour
 		switch(compass) 
 		{
 			case CompassSource.Kinect:
-			if (!skeletonManager || !skeletonManager.skeletons[kinectSensorID, compassPlayerID].isTracking)
+			case CompassSource.Kinect2:
+				if (!skeletonManager || !skeletonManager.skeletons[kinectSensorID, compassPlayerID].isTracking)
 		        {
 		            break;
 		        }
@@ -1153,8 +1172,8 @@ public class RUISTracker : MonoBehaviour
 		
 		// If Kinect is used for drift correction, it can be set to apply correction only when
 		// skeleton is facing the sensor
-		if(compass != CompassSource.Kinect || (	  !correctOnlyWhenFacingForward 
-											   || (compassYaw*Vector3.forward).z >= 0))
+		if(		!(compass == CompassSource.Kinect || compass == CompassSource.Kinect2) 
+		   ||   (	  !correctOnlyWhenFacingForward || (compassYaw*Vector3.forward).z >= 0))
 		{
 			if(enableVisualizers)
 			{

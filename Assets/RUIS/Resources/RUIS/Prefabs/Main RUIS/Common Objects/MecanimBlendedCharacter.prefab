@@ -507,7 +507,6 @@ GameObject:
   - 124: {fileID: 12400008}
   - 114: {fileID: 11400050}
   - 114: {fileID: 11400048}
-  - 92: {fileID: 9200000}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: Untagged
@@ -998,6 +997,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400120}
   - 114: {fileID: 11400098}
+  - 81: {fileID: 8100008}
   m_Layer: 0
   m_Name: OculusDK2HeadTracker
   m_TagString: Untagged
@@ -1143,7 +1143,6 @@ GameObject:
   - 124: {fileID: 12400016}
   - 114: {fileID: 11400106}
   - 114: {fileID: 11400104}
-  - 92: {fileID: 9200002}
   m_Layer: 0
   m_Name: CameraLeft
   m_TagString: Untagged
@@ -2203,7 +2202,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100118}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.38059664, y: .941147089, z: -10.0317783}
+  m_LocalPosition: {x: 1.38059664, y: .941147089, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400006}
@@ -3195,19 +3194,12 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100152}
   m_Enabled: 1
---- !u!92 &9200000
-Behaviour:
+--- !u!81 &8100008
+AudioListener:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100060}
-  m_Enabled: 1
---- !u!92 &9200002
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100138}
+  m_GameObject: {fileID: 100120}
   m_Enabled: 1
 --- !u!95 &9500000
 Animator:
@@ -3820,7 +3812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &11400046
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4475,7 +4467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &11400102
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4531,7 +4523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &11400110
 MonoBehaviour:
   m_ObjectHideFlags: 1

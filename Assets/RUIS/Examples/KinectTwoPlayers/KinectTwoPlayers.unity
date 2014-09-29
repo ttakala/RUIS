@@ -1965,7 +1965,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &127753268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3545,7 +3545,6 @@ GameObject:
   - 124: {fileID: 214224076}
   - 114: {fileID: 214224075}
   - 114: {fileID: 214224074}
-  - 92: {fileID: 214224073}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: Untagged
@@ -3565,14 +3564,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 426162714}
   m_RootOrder: 1
---- !u!92 &214224073
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9200000, guid: 2657edab8bf15334fb4b3866031359c1,
-    type: 2}
-  m_PrefabInternal: {fileID: 1270173464}
-  m_GameObject: {fileID: 214224071}
-  m_Enabled: 1
 --- !u!114 &214224074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4418,7 +4409,7 @@ AudioListener:
     type: 2}
   m_PrefabInternal: {fileID: 1270173464}
   m_GameObject: {fileID: 265270887}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &265270890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8558,7 +8549,6 @@ GameObject:
   - 124: {fileID: 524911839}
   - 114: {fileID: 524911838}
   - 114: {fileID: 524911837}
-  - 92: {fileID: 524911836}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: Untagged
@@ -8578,14 +8568,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 342470975}
   m_RootOrder: 1
---- !u!92 &524911836
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9200000, guid: 2657edab8bf15334fb4b3866031359c1,
-    type: 2}
-  m_PrefabInternal: {fileID: 637347516}
-  m_GameObject: {fileID: 524911834}
-  m_Enabled: 1
 --- !u!114 &524911837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9420,6 +9402,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 594126015}
   - 114: {fileID: 594126016}
+  - 81: {fileID: 594126017}
   m_Layer: 0
   m_Name: OculusDK2HeadTracker
   m_TagString: Untagged
@@ -9538,6 +9521,14 @@ MonoBehaviour:
   compassDirectionVisualizer: {fileID: 0}
   correctedDirectionVisualizer: {fileID: 0}
   driftVisualizerPosition: {fileID: 0}
+--- !u!81 &594126017
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 8100008, guid: 2657edab8bf15334fb4b3866031359c1,
+    type: 2}
+  m_PrefabInternal: {fileID: 1270173464}
+  m_GameObject: {fileID: 594126014}
+  m_Enabled: 0
 --- !u!1 &600765457
 GameObject:
   m_ObjectHideFlags: 0
@@ -9691,7 +9682,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &602975684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10923,6 +10914,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 698969833}
   - 114: {fileID: 698969834}
+  - 81: {fileID: 698969835}
   m_Layer: 0
   m_Name: OculusDK2HeadTracker
   m_TagString: Untagged
@@ -11041,6 +11033,14 @@ MonoBehaviour:
   compassDirectionVisualizer: {fileID: 0}
   correctedDirectionVisualizer: {fileID: 0}
   driftVisualizerPosition: {fileID: 0}
+--- !u!81 &698969835
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 8100008, guid: 2657edab8bf15334fb4b3866031359c1,
+    type: 2}
+  m_PrefabInternal: {fileID: 637347516}
+  m_GameObject: {fileID: 698969832}
+  m_Enabled: 1
 --- !u!1 &701410201
 GameObject:
   m_ObjectHideFlags: 0
@@ -11438,7 +11438,7 @@ AudioListener:
     type: 2}
   m_PrefabInternal: {fileID: 1270173464}
   m_GameObject: {fileID: 719721881}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &719721884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15443,7 +15443,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &996948916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16645,7 +16645,7 @@ AudioListener:
     type: 2}
   m_PrefabInternal: {fileID: 1270173464}
   m_GameObject: {fileID: 1074240162}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &1074240165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16722,7 +16722,7 @@ MonoBehaviour:
   rotationNoiseCovarianceHydra: 1
   rotationNoiseCovarianceTransform: 500
   externalDriftCorrection: 0
-  compass: 2
+  compass: 3
   compassIsPositionTracker: 1
   compassPlayerID: 0
   compassJoint: 1
@@ -18629,7 +18629,7 @@ AudioListener:
     type: 2}
   m_PrefabInternal: {fileID: 1270173464}
   m_GameObject: {fileID: 1241337462}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &1241337465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18706,7 +18706,7 @@ MonoBehaviour:
   rotationNoiseCovarianceHydra: 1
   rotationNoiseCovarianceTransform: 500
   externalDriftCorrection: 0
-  compass: 0
+  compass: 3
   compassIsPositionTracker: 0
   compassPlayerID: 0
   compassJoint: 2
@@ -19167,7 +19167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &1261320138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19395,7 +19395,36 @@ Prefab:
       propertyPath: bodyTrackingDevice
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 11400030, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: compass
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400118, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: compass
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8100002, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8100004, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8100006, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8100008, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 9200002, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 208648399}
   m_IsPrefabParent: 0
@@ -19830,7 +19859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &1292386916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22957,7 +22986,6 @@ GameObject:
   - 124: {fileID: 1461224087}
   - 114: {fileID: 1461224086}
   - 114: {fileID: 1461224085}
-  - 92: {fileID: 1461224084}
   m_Layer: 0
   m_Name: CameraLeft
   m_TagString: Untagged
@@ -22977,14 +23005,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 426162714}
   m_RootOrder: 0
---- !u!92 &1461224084
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9200002, guid: 2657edab8bf15334fb4b3866031359c1,
-    type: 2}
-  m_PrefabInternal: {fileID: 1270173464}
-  m_GameObject: {fileID: 1461224082}
-  m_Enabled: 1
 --- !u!114 &1461224085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23593,7 +23613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &1477627393
 MonoBehaviour:
   m_ObjectHideFlags: 0

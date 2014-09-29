@@ -95,8 +95,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 
     public Vector3 rootSpeedScaling = Vector3.one;
 
-	private static int kinectSensorID = 0;
-	private static int kinect2SensorID = 1;
+	public static int kinect1SensorID = 0;
+	public static int kinect2SensorID = 1;
 
     void Awake()
     {
@@ -125,26 +125,26 @@ public class RUISSkeletonManager : MonoBehaviour {
 		if (inputManager.enableKinect) {
 			for (int i = 0; i < playerManager.m_MaxNumberOfPlayers; i++) 
 				{
-					skeletons [kinectSensorID, i].isTracking = playerManager.GetPlayer (i).Tracking;
+					skeletons [kinect1SensorID, i].isTracking = playerManager.GetPlayer (i).Tracking;
 	
-					if (!skeletons [kinectSensorID, i].isTracking)
+					if (!skeletons [kinect1SensorID, i].isTracking)
 							continue;
 	
 					UpdateKinectRootData (i);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.Head, i, ref skeletons [kinectSensorID, i].head);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.Torso, i, ref skeletons [kinectSensorID, i].torso);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons [kinectSensorID, i].leftShoulder);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftElbow, i, ref skeletons [kinectSensorID, i].leftElbow);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftHand, i, ref skeletons [kinectSensorID, i].leftHand);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.RightShoulder, i, ref skeletons [kinectSensorID, i].rightShoulder);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.RightElbow, i, ref skeletons [kinectSensorID, i].rightElbow);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.RightHand, i, ref skeletons [kinectSensorID, i].rightHand);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftHip, i, ref skeletons [kinectSensorID, i].leftHip);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftKnee, i, ref skeletons [kinectSensorID, i].leftKnee);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftFoot, i, ref skeletons [kinectSensorID, i].leftFoot);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.RightHip, i, ref skeletons [kinectSensorID, i].rightHip);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.RightKnee, i, ref skeletons [kinectSensorID, i].rightKnee);
-					UpdateKinectJointData (OpenNI.SkeletonJoint.RightFoot, i, ref skeletons [kinectSensorID, i].rightFoot);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.Head, i, ref skeletons [kinect1SensorID, i].head);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.Torso, i, ref skeletons [kinect1SensorID, i].torso);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons [kinect1SensorID, i].leftShoulder);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftElbow, i, ref skeletons [kinect1SensorID, i].leftElbow);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftHand, i, ref skeletons [kinect1SensorID, i].leftHand);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.RightShoulder, i, ref skeletons [kinect1SensorID, i].rightShoulder);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.RightElbow, i, ref skeletons [kinect1SensorID, i].rightElbow);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.RightHand, i, ref skeletons [kinect1SensorID, i].rightHand);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftHip, i, ref skeletons [kinect1SensorID, i].leftHip);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftKnee, i, ref skeletons [kinect1SensorID, i].leftKnee);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.LeftFoot, i, ref skeletons [kinect1SensorID, i].leftFoot);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.RightHip, i, ref skeletons [kinect1SensorID, i].rightHip);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.RightKnee, i, ref skeletons [kinect1SensorID, i].rightKnee);
+					UpdateKinectJointData (OpenNI.SkeletonJoint.RightFoot, i, ref skeletons [kinect1SensorID, i].rightFoot);
 				}
 		}
 
@@ -319,12 +319,12 @@ public class RUISSkeletonManager : MonoBehaviour {
 		Vector3 newRootPosition = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinectLocation(data.Position.Position), RUISDevice.Kinect_1);
 		
 		newRootPosition = Vector3.Scale(newRootPosition, rootSpeedScaling);
-		skeletons[kinectSensorID, player].root.position = newRootPosition;
-		skeletons[kinectSensorID, player].root.positionConfidence = data.Position.Confidence;
-		skeletons[kinectSensorID, player].root.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);
+		skeletons[kinect1SensorID, player].root.position = newRootPosition;
+		skeletons[kinect1SensorID, player].root.positionConfidence = data.Position.Confidence;
+		skeletons[kinect1SensorID, player].root.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);
 		
 		
-		skeletons[kinectSensorID, player].root.rotationConfidence = data.Orientation.Confidence;
+		skeletons[kinect1SensorID, player].root.rotationConfidence = data.Orientation.Confidence;
     }
 
     private void UpdateKinectJointData(OpenNI.SkeletonJoint joint, int player, ref JointData jointData)

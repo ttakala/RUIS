@@ -94,41 +94,52 @@ public class RUISCamera : MonoBehaviour {
 		bool isDifferentLeftMask = false;
 		bool isDifferentRightMask = false;
 		
-		try
+		if (associatedDisplay != null && !associatedDisplay.enableOculusRift)
 		{
-			if (associatedDisplay != null && !associatedDisplay.enableOculusRift)
+			try
 			{
-				if(GetComponent<OVRCameraController>())
-					GetComponent<OVRCameraController>().enabled = false;
-				if(GetComponent<OVRDevice>())
-					GetComponent<OVRDevice>().enabled = false;
-				if(GetComponent<OVRCamera>())
-					leftCamera.GetComponent<OVRCamera>().enabled = false;
-				
-				if(GetComponent<OVRCamera>())
-					rightCamera.GetComponent<OVRCamera>().enabled = false;
-				
-				if(rightCamera.GetComponent<OVRCamera>()) 
-					rightCamera.GetComponent<OVRCamera>().enabled = false;	
-				
-				if(leftCamera.GetComponent<OVRCamera>())
-					leftCamera.GetComponent<OVRCamera>().enabled = false;
-				
+				GetComponent<OVRCameraController>().enabled = false;
 			}
-			else
+			catch (System.NullReferenceException e)
 			{
-//				Debug.LogWarning(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, but no " + typeof(RUISDisplay) 
-//				                 + " was associated with it upon Awake(). Leaving OVR scripts on.");
-				foreach (RUISKeystoningBorderDrawer drawer in GetComponentsInChildren<RUISKeystoningBorderDrawer>())
-				{
-					drawer.enabled = false;
-				}
+				Debug.LogError("GameObject '" + name + "': OVRCameraController was not found.", this);
+			}
+			
+			try
+			{
+				GetComponent<OVRDevice>().enabled = false;
+			}
+			catch (System.NullReferenceException e)
+			{
+				Debug.LogError("GameObject '" + name + "': OVRDevice was not found.", this);
+			}
+
+			try
+			{
+				rightCamera.GetComponent<OVRCamera>().enabled = false;
+			}
+			catch (System.NullReferenceException e)
+			{
+				Debug.LogError("GameObject '" + name + "': OVRCamera was not found.", this);
+			}
+				
+			try
+			{
+				leftCamera.GetComponent<OVRCamera>().enabled = false;
+			}
+			catch (System.NullReferenceException e)
+			{
+				Debug.LogError("GameObject '" + name + "': OVRCamera was not found.", this);
 			}
 		}
-		catch (System.NullReferenceException e)
+		else
 		{
-			Debug.LogWarning(e.ToString(), this);
-			Debug.LogWarning("GameObject '" + name + "': Error in disabling one of the following Oculus scripts: OVRCameraController, OVRDevice, or OVRCamera.", this);
+			//				Debug.LogWarning(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, but no " + typeof(RUISDisplay) 
+			//				                 + " was associated with it upon Awake(). Leaving OVR scripts on.");
+			foreach (RUISKeystoningBorderDrawer drawer in GetComponentsInChildren<RUISKeystoningBorderDrawer>())
+			{
+				drawer.enabled = false;
+			}
 		}
 		
 

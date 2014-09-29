@@ -27,12 +27,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
     void Awake()
     {
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
-	
-    }
-	
-	// Use this for initialization
-	void Start () 
-	{
+
 		bool kinect2 = false;
 		bool kinect = false;
 		bool psmove = false;

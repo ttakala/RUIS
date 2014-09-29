@@ -340,7 +340,6 @@ GameObject:
   - 124: {fileID: 12400016}
   - 114: {fileID: 11400098}
   - 114: {fileID: 11400100}
-  - 92: {fileID: 9200000}
   m_Layer: 0
   m_Name: CameraLeft
   m_TagString: Untagged
@@ -398,7 +397,6 @@ GameObject:
   - 124: {fileID: 12400018}
   - 114: {fileID: 11400114}
   - 114: {fileID: 11400116}
-  - 92: {fileID: 9200002}
   m_Layer: 0
   m_Name: CameraRight
   m_TagString: Untagged
@@ -1193,20 +1191,6 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100036}
   m_Enabled: 1
---- !u!92 &9200000
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100034}
-  m_Enabled: 1
---- !u!92 &9200002
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100040}
-  m_Enabled: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1222,10 +1206,11 @@ MonoBehaviour:
   - {fileID: 11400096}
   - {fileID: 11400094}
   - {fileID: 11400092}
+  - {fileID: 11400102}
   - {fileID: 11400090}
   display: {fileID: 0}
-  allowMultipleAssigners: 0
-  applyKinectDriftCorrectionPreference: 1
+  allowMultipleAssigners: 1
+  applyKinectDriftCorrectionPreference: 0
   changePivotIfNoKinect: 1
   onlyRazerOffset: {x: 0, y: .5, z: .300000012}
   razerWandParent: {fileID: 0}
@@ -1256,7 +1241,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1302,7 +1287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1348,7 +1333,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1464,7 +1449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeckPosition: {x: 0, y: 0, z: 0}
   EyePosition: {x: 0, y: .0900000036, z: .159999996}
-  RightEye: 0
+  RightEye: 1
 --- !u!114 &11400034
 MonoBehaviour:
   m_ObjectHideFlags: 1
