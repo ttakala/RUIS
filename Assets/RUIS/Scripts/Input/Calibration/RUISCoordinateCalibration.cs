@@ -137,7 +137,7 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 						secondDevice = RUISDevice.Oculus_DK2;
 					break;
 					case "PSMove - Oculus DK2":
-						firstDevice = RUISDevice.Kinect_1;
+						firstDevice = RUISDevice.PS_Move;
 						secondDevice = RUISDevice.Oculus_DK2;
 					break;
 					case "Kinect floor data":
