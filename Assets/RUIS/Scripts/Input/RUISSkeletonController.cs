@@ -112,7 +112,7 @@ public class RUISSkeletonController : MonoBehaviour
 	
 	public float adjustVerticalTorsoLocation = 0;
 	public float adjustVerticalHipsPosition  = 0;
-	private Vector3 hipOffset = Vector3.zero;
+	private Vector3 spineDirection = Vector3.zero;
 	//private RUISSkeletonManager.JointData adjustedHipJoint = new RUISSkeletonManager.JointData();
 
     private float torsoOffset = 0.0f;
@@ -192,6 +192,12 @@ public class RUISSkeletonController : MonoBehaviour
 				if(neck.parent)
 				{
 					chest = neck.parent;
+					if(chest == torso)
+					{
+						Debug.Log(	typeof(RUISSkeletonController) + ": Hierarchical model stored in GameObject " + this.name 
+						          + " does not have enough joints between neck and torso for Hips Vertical Tweaker to work.");
+						chest = null;
+					}
 					chestOriginalLocalPosition = chest.localPosition;
 				}
             }
@@ -470,10 +476,11 @@ public class RUISSkeletonController : MonoBehaviour
 					torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
 					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
 
-					hipOffset = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
-					                                           - torsoDirection * (torsoOffset * torsoScale));
+					spineDirection = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
+					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
 					
-					hipOffset = torso.position - hipOffset;
+					spineDirection = torso.position - spineDirection;
+					spineDirection.Normalize();
 
 					ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
 					ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
@@ -769,7 +776,7 @@ public class RUISSkeletonController : MonoBehaviour
 		float playerLength = (Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position) +
 		                      Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
 		
-        float newScale = playerLength / modelLength;
+        float newScale = Mathf.Abs(playerLength / modelLength);
 		torso.localScale = new Vector3(newScale, newScale, newScale);
         return newScale;
     }
@@ -784,7 +791,7 @@ public class RUISSkeletonController : MonoBehaviour
     {
         if (!neck)
 			return;
-		neck.localPosition = neckOriginalLocalPosition - neck.InverseTransformDirection(Vector3.up) * neckHeightTweaker;
+		neck.localPosition = neckOriginalLocalPosition + neck.InverseTransformDirection(spineDirection) * neckHeightTweaker/torsoScale;
     }
 
 	private void TweakHipPosition()
@@ -793,7 +800,7 @@ public class RUISSkeletonController : MonoBehaviour
 			return;
 		// TODO: Below needs to be modified
 		//chest.position -= hipOffset;
-		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(hipOffset.normalized) * adjustVerticalHipsPosition/torsoScale;
+		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(spineDirection.normalized) * adjustVerticalHipsPosition/torsoScale;
 
 	}
 
