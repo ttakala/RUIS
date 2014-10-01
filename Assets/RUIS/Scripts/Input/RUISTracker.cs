@@ -315,11 +315,20 @@ public class RUISTracker : MonoBehaviour
 			}
 			else 
 			{
-				RUISCoordinateSystem RUIScoordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-				Vector3 convertedLocation = RUIScoordinateSystem.ConvertLocation(new Vector3(0,0.0f,-1.0f), RUISDevice.Oculus_DK2); // TODO: plz no unknown tweaks
-				this.transform.localPosition = convertedLocation;
-				Quaternion convertedRotation = RUIScoordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
-				ovrCameraController.SetYRotation(convertedRotation.eulerAngles.y);
+				RUISCoordinateSystem coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
+				if(coordinateSystem)
+				{
+					Vector3 convertedLocation = coordinateSystem.ConvertLocation(new Vector3(0,0.0f,-1.0f), RUISDevice.Oculus_DK2); // TODO: plz no unknown tweaks
+					this.transform.localPosition = convertedLocation;
+					Quaternion convertedRotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+					if(oculusCamController)
+						ovrCameraController.SetYRotation(convertedRotation.eulerAngles.y);
+				}
+				
+				if(oculusCamController == null)
+					Debug.LogError(	typeof(RUISTracker) + ": Did not find OVRCameraController in a child "
+					               + "gameObject. In the sole case when Position Tracker is OculusDK2, RUISCamera "
+					               + "prefab with OVRCameraController should be found as a child gameObject!");
 				return;
 			}
 		}
@@ -435,8 +444,8 @@ public class RUISTracker : MonoBehaviour
 		if(useOculusRiftRotation && headPositionInput != HeadPositionSource.OculusDK2 && oculusCamController)
 		{
 			oculusCamController.EnablePosition = false;
-			Debug.Log(	"Position input is " + headPositionInput + " and OVRCameraController found in a child gameObject, "
-			          + "turning off its Oculus Rift position tracking.");
+			Debug.Log(  typeof(RUISTracker) + ": Position Tracker is " + headPositionInput + " and OVRCameraController "
+			          + "found in a child gameObject, turning off its Oculus Rift position tracking.");
 		}
 
 		if(oculusCamController && Application.isEditor)
