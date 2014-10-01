@@ -264,7 +264,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.6577282, y: -3.27261353, z: -4.67083359}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400026}
@@ -329,7 +329,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.65089035, y: -1.50521469, z: -7.12974167}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400026}
@@ -341,7 +341,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100014}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.11584806, y: .882640362, z: -5.06498909}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400026}
@@ -377,7 +377,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .489945412, y: -.323875904, z: 1.13231397}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400024}
@@ -542,7 +542,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 127.0.0.1
+  PSMoveIP: 127.0.01
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
@@ -558,7 +558,7 @@ MonoBehaviour:
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
-  enableKinect2: 0
+  enableKinect2: 1
   kinect2FloorDetection: 1
   enableRazerHydra: 0
   moveControllers: []
@@ -666,7 +666,7 @@ MonoBehaviour:
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
-  enableOculusRift: 0
+  enableOculusRift: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 0}
@@ -697,7 +697,7 @@ MonoBehaviour:
   applyToRootCoordinates: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  rootDevice: 0
+  rootDevice: 1
 --- !u!114 &11400016
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -789,8 +789,8 @@ MonoBehaviour:
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   guiDisplayChoice: 0
   guiX: -.100000001
-  guiY: 0
-  guiZ: 1.20000005
+  guiY: .100000001
+  guiZ: .550000012
   guiScaleX: 1
   guiScaleY: 1
   hideMouseOnPlay: 0

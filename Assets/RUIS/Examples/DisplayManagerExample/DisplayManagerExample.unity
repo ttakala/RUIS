@@ -3754,7 +3754,7 @@ Transform:
   m_PrefabInternal: {fileID: 409639001}
   m_GameObject: {fileID: 352624151}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.11584806, y: .882640362, z: -5.06498909}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1815957554}
@@ -4707,6 +4707,14 @@ Prefab:
       objectReference: {fileID: 100000, guid: da3e5cecbc9e9bc499740e29034fcc6f, type: 2}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableOculusRift
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: enableKinect2
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: rootDevice
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -9166,7 +9174,7 @@ Transform:
   m_PrefabInternal: {fileID: 409639001}
   m_GameObject: {fileID: 812511106}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .489945412, y: -.323875904, z: 1.13231397}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1067680523}
@@ -11566,8 +11574,8 @@ MonoBehaviour:
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   guiDisplayChoice: 0
   guiX: -.100000001
-  guiY: 0
-  guiZ: 1.20000005
+  guiY: .100000001
+  guiZ: .550000012
   guiScaleX: 1
   guiScaleY: 1
   hideMouseOnPlay: 0
@@ -14575,7 +14583,7 @@ Transform:
   m_PrefabInternal: {fileID: 409639001}
   m_GameObject: {fileID: 1336916624}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.6577282, y: -3.27261353, z: -4.67083359}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1815957554}
@@ -20275,7 +20283,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 127.0.0.1
+  PSMoveIP: 127.0.01
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
@@ -23448,7 +23456,7 @@ Transform:
   m_PrefabInternal: {fileID: 409639001}
   m_GameObject: {fileID: 2110025981}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.65089035, y: -1.50521469, z: -7.12974167}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1815957554}
