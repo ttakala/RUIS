@@ -457,6 +457,10 @@ Prefab:
       propertyPath: enableOculusRift
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: guiZ
+      value: 1.25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1706231380}
@@ -768,7 +772,7 @@ MonoBehaviour:
   guiDisplayChoice: 0
   guiX: -.100000001
   guiY: .100000001
-  guiZ: .550000012
+  guiZ: 1.25
   guiScaleX: 1
   guiScaleY: 1
   hideMouseOnPlay: 0
