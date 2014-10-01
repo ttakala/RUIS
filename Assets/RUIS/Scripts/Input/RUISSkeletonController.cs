@@ -111,8 +111,9 @@ public class RUISSkeletonController : MonoBehaviour
 
 	
 	public float adjustVerticalTorsoLocation = 0;
-	public float adjustVerticalHipsLocation  = 0;
-	private RUISSkeletonManager.JointData adjustedHipJoint = new RUISSkeletonManager.JointData();
+	public float adjustVerticalHipsPosition  = 0;
+	private Vector3 hipOffset = Vector3.zero;
+	//private RUISSkeletonManager.JointData adjustedHipJoint = new RUISSkeletonManager.JointData();
 
     private float torsoOffset = 0.0f;
 
@@ -465,8 +466,14 @@ public class RUISSkeletonController : MonoBehaviour
 					UpdateBoneScalings ();
 
 					Vector3 torsoDirection = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation * Vector3.down;
+
 					torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
-					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalTorsoLocation));
+					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
+
+					hipOffset = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
+					                                           - torsoDirection * (torsoOffset * torsoScale));
+					
+					hipOffset = torso.position - hipOffset;
 
 					ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
 					ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
@@ -524,7 +531,7 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 
-		TweakChestHeight();
+		TweakHipPosition();
 		TweakNeckHeight();
     }
 
@@ -780,12 +787,13 @@ public class RUISSkeletonController : MonoBehaviour
 		neck.localPosition = neckOriginalLocalPosition - neck.InverseTransformDirection(Vector3.up) * neckHeightTweaker;
     }
 
-	private void TweakChestHeight()
+	private void TweakHipPosition()
 	{
 		if (!chest)
 			return;
 		// TODO: Below needs to be modified
-		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(Vector3.up) * adjustVerticalTorsoLocation/torsoScale;
+		//chest.position -= hipOffset;
+		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(hipOffset.normalized) * adjustVerticalHipsPosition/torsoScale;
 
 	}
 

@@ -160,7 +160,7 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 		}
 		catch(System.Exception e)
 		{
-			Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor. Are you using Windows 8?");
+			Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor.");
 			kinectError = true;
 			return;
 			//throw e;

@@ -431,7 +431,14 @@ public class RUISTracker : MonoBehaviour
 				Debug.LogError(	 "Your settings indicate that you want to track Razer Hydra base station with a "
 							   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		}
-		
+
+		if(useOculusRiftRotation && headPositionInput != HeadPositionSource.OculusDK2 && oculusCamController)
+		{
+			oculusCamController.EnablePosition = false;
+			Debug.Log(	"Position input is " + headPositionInput + " and OVRCameraController found in a child gameObject, "
+			          + "turning off its Oculus Rift position tracking.");
+		}
+
 		if(oculusCamController && Application.isEditor)
 			Debug.Log("OVRCameraController script detected in a child object of this " + gameObject.name
 					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "

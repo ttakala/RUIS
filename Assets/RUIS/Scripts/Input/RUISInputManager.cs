@@ -368,7 +368,7 @@ public class RUISInputManager : MonoBehaviour
 			}
 			catch(System.Exception e)
 			{
-				Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor. Are you using Windows 8?");
+				Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor.");
 				return;
 			}
 	

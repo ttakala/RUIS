@@ -58,8 +58,8 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty neckHeightTweaker;
 	SerializedProperty forearmLengthTweaker;
 	SerializedProperty shinLengthTweaker;
-	SerializedProperty adjustVerticalTorsoLocation;
-	SerializedProperty adjustVerticalHipsLocation;
+//	SerializedProperty adjustVerticalTorsoPosition;
+	SerializedProperty adjustVerticalHipsPosition;
 
 	SerializedProperty fistCurlFingers;
 	SerializedProperty trackThumbs;
@@ -126,8 +126,8 @@ public class RUISSkeletonControllerEditor : Editor
 		trackAnkle = serializedObject.FindProperty ("trackAnkle");
 		rotateWristFromElbow = serializedObject.FindProperty ("rotateWristFromElbow");
 		
-		adjustVerticalTorsoLocation = serializedObject.FindProperty("adjustVerticalTorsoLocation");
-		adjustVerticalHipsLocation = serializedObject.FindProperty("adjustVerticalHipsLocation");
+//		adjustVerticalTorsoPosition = serializedObject.FindProperty("adjustVerticalTorsoPosition");
+		adjustVerticalHipsPosition = serializedObject.FindProperty("adjustVerticalHipsPosition");
         maxScaleFactor = serializedObject.FindProperty("maxScaleFactor");
         minimumConfidenceToUpdate = serializedObject.FindProperty("minimumConfidenceToUpdate");
         rotationDamping = serializedObject.FindProperty("rotationDamping");
@@ -361,11 +361,11 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
 		                                                              + "for damping character bone movement (smaller values)"));
 
-		EditorGUILayout.PropertyField(adjustVerticalTorsoLocation, new GUIContent(  "Torso Vertical Tweaker", "Offset the tracked torso point "
-		                                                                          + "location in the spine direction (usually vertical axis). "
-			                                                                          + "Only used if Hierarchical Model is enabled"));
-		EditorGUILayout.PropertyField(adjustVerticalHipsLocation, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
-		                                                                          + "location in the spine direction (usually vertical axis). "
+//		EditorGUILayout.PropertyField(adjustVerticalTorsoPosition, new GUIContent(  "Torso Vertical Tweaker", "Offset the tracked torso point "
+//		                                                                          + "position in the spine direction (usually vertical axis). "
+//			                                                                          + "Only used if Hierarchical Model is enabled"));
+		EditorGUILayout.PropertyField(adjustVerticalHipsPosition, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
+		                                                                          + "position in the spine direction (usually vertical axis). "
 		                                                                          + "Only used if Hierarchical Model is enabled"));
 
         EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent("Neck Height Tweaker", "The height offset for the neck"));
