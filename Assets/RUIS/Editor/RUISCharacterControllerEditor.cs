@@ -17,7 +17,6 @@ public class RUISCharacterControllerEditor : Editor
 {
 	int maxPSMoveControllers = 4;
     SerializedProperty characterPivotType;
-	SerializedProperty kinectPlayerId;
     SerializedProperty moveControllerId;
     SerializedProperty ignorePitchAndRoll;
     SerializedProperty groundLayers;
@@ -27,10 +26,11 @@ public class RUISCharacterControllerEditor : Editor
 	SerializedProperty psmoveOffset;
 	SerializedProperty feetAlsoAffectGrounding;
 
+	RUISCharacterController characterController;
+
     public void OnEnable()
     {
         characterPivotType = serializedObject.FindProperty("characterPivotType");
-		kinectPlayerId = serializedObject.FindProperty("kinectPlayerId");
         moveControllerId = serializedObject.FindProperty("moveControllerId");
         ignorePitchAndRoll = serializedObject.FindProperty("ignorePitchAndRoll");
         groundLayers = serializedObject.FindProperty("groundLayers");
@@ -39,6 +39,8 @@ public class RUISCharacterControllerEditor : Editor
         dynamicMaterial = serializedObject.FindProperty("dynamicMaterial");
 		psmoveOffset = serializedObject.FindProperty("psmoveOffset");
 		feetAlsoAffectGrounding = serializedObject.FindProperty("feetAlsoAffectGrounding");
+		
+		characterController = target as RUISCharacterController;
     }
 
     public override void OnInspectorGUI()
@@ -49,19 +51,33 @@ public class RUISCharacterControllerEditor : Editor
 		                                                                 + "words, what is the rotation center for the character when turning with "
 		                                                                 + "the " + typeof(RUISCharacterLocomotion).Name + " script. Torso is "
 		                                                                 + "recommended for Kinect."));
-		
-		
+		RUISSkeletonController.bodyTrackingDeviceType bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
+		int kinectPlayerId = 0;
+		int bodyTrackingDeviceID = 0;
+		if(characterController)
+		{
+			RUISSkeletonController skeletonController = characterController.GetComponentInChildren(typeof(RUISSkeletonController)) as RUISSkeletonController;
+			if(skeletonController)
+			{
+				kinectPlayerId = skeletonController.playerId;
+				bodyTrackingDevice = skeletonController.bodyTrackingDevice;
+				if(bodyTrackingDevice == RUISSkeletonController.bodyTrackingDeviceType.Kinect2)
+				   bodyTrackingDeviceID = 1;
+			}
+
+		}
+
         EditorGUI.indentLevel += 2;
         switch (characterPivotType.enumValueIndex)
         {
 			
 			case (int)RUISCharacterController.CharacterPivotType.KinectHead:
-				EditorGUILayout.LabelField(new GUIContent(	  "Kinect Player ID " + kinectPlayerId.intValue, "You can change this value from " 
-				                                          + typeof(RUISSkeletonController).ToString() + " script that is in one of the child objects."));
+			EditorGUILayout.LabelField(new GUIContent("Kinect " + ((bodyTrackingDeviceID==0)?1:2) + " Player ID " + kinectPlayerId,  
+			                                          "You can change this value from " + typeof(RUISSkeletonController).ToString() + " script that is in one of the child objects."));
 				break;
 			case (int)RUISCharacterController.CharacterPivotType.KinectTorso:
-           		EditorGUILayout.LabelField(new GUIContent(	  "Kinect Player ID " + kinectPlayerId.intValue, "You can change this value from " 
-                          									+ typeof(RUISSkeletonController).ToString() + " script that is in one of the child objects."));
+				EditorGUILayout.LabelField(new GUIContent("Kinect " + ((bodyTrackingDeviceID==0)?1:2) + " Player ID " + kinectPlayerId, "You can change this value from " 
+	                          							  + typeof(RUISSkeletonController).ToString() + " script that is in one of the child objects."));
 				break;
             case (int)RUISCharacterController.CharacterPivotType.MoveController:
 			{
