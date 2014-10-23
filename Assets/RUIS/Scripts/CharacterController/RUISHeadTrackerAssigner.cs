@@ -34,15 +34,32 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 		bool razer = false;
 		bool oculusDK2 = false;
 
-		// Find out if an Oculus HMD is connected
-		var HMD = OVR.Hmd.GetHmd();
-		ovrTrackingState riftState = HMD.GetTrackingState();      
-		bool isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+		bool isRiftConnected = false;
 
-		// Find out the Oculus HMD version
-		Hmd oculusHmdObject = Hmd.GetHmd();
-		ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
-		ovrHmdType ovrHmdVersion = ovrDesc.Type;
+		ovrTrackingState riftState;
+		Hmd oculusHmdObject;
+		ovrHmdDesc ovrDesc;
+		ovrHmdType ovrHmdVersion = ovrHmdType.ovrHmd_None;
+
+		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+		{
+			try
+			{
+				// Find out if an Oculus HMD is connected
+				var HMD = OVR.Hmd.GetHmd();
+				riftState = HMD.GetTrackingState();      
+				isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+				
+				// Find out the Oculus HMD version
+				oculusHmdObject = Hmd.GetHmd();
+				ovrDesc = oculusHmdObject.GetDesc();
+				ovrHmdVersion = ovrDesc.Type;
+			}
+			catch(UnityException e)
+			{
+				Debug.LogError(e);
+			}
+		}
 
 		if(inputManager)
 		{

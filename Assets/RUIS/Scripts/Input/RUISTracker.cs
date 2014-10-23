@@ -100,7 +100,7 @@ public class RUISTracker : MonoBehaviour
 	
 	public int oculusID = 0;
 	OVRCameraController oculusCamController;
-	ovrHmdType ovrHmdVersion;
+	ovrHmdType ovrHmdVersion = ovrHmdType.ovrHmd_None;
 	public bool useOculusRiftRotation = false;
 	public KeyCode resetKey;
 
@@ -303,11 +303,29 @@ public class RUISTracker : MonoBehaviour
 		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
 			OVRCameraController ovrCameraController = MonoBehaviour.FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
-			
-			var HMD = OVR.Hmd.GetHmd();
-			ovrTrackingState riftState = HMD.GetTrackingState();      
-			bool isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
-			
+			bool isRiftConnected = false;
+
+			if(UnityEditorInternal.InternalEditorUtility.HasPro())
+			{
+				try
+				{
+					var HMD = OVR.Hmd.GetHmd();
+					ovrTrackingState riftState = HMD.GetTrackingState();      
+					isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+					
+					Hmd oculusHmdObject = Hmd.GetHmd();
+					if(oculusHmdObject != null)
+					{
+						ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
+						ovrHmdVersion = ovrDesc.Type;
+					}
+				}
+				catch(UnityException e)
+				{
+					Debug.LogError(e);
+				}
+			}
+
 			if(!isRiftConnected) 
 			{
 				headPositionInput = HeadPositionSource.None;
@@ -466,13 +484,7 @@ public class RUISTracker : MonoBehaviour
 //						  + "OVRCameraController.");
 //			}
 //		}
-		
-		Hmd oculusHmdObject = Hmd.GetHmd();
-		if(oculusHmdObject != null)
-		{
-			ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
-			ovrHmdVersion = ovrDesc.Type;
-		}
+
 	}
 		
 	void Update () 

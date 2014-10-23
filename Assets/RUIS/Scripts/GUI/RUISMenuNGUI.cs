@@ -384,40 +384,56 @@ public class RUISMenuNGUI : MonoBehaviour {
 		GameObject 	infotext_Oculus_DK1_detected = this.transform.Find("Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK1 detected").gameObject;
 		GameObject 	infotext_Oculus_DK2_detected = this.transform.Find("Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK2 detected").gameObject;
 		
-		
-		var HMD = OVR.Hmd.GetHmd();
-		ovrTrackingState riftState = HMD.GetTrackingState();      
-		bool isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
-		/*
-		if(!isRiftConnected) {
+		bool isRiftConnected = false;
+
+		ovrTrackingState riftState;
+		Hmd oculusHmdObject;
+		ovrHmdDesc ovrDesc;
+		ovrHmdType ovrHmdVersion = ovrHmdType.ovrHmd_None;
+
+		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+		{
+			try
+			{
+				var HMD = OVR.Hmd.GetHmd();
+				riftState = HMD.GetTrackingState();      
+				isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+				/*
+				if(!isRiftConnected) {
+					infotext_Rift_not_Detected.SetActive(true);
+					infotext_Oculus_DK1_detected.SetActive(false);
+					infotext_Oculus_DK2_detected.SetActive(false); 
+				}
+				else 
+				{
+				*/
+				oculusHmdObject = Hmd.GetHmd();
+				ovrDesc = oculusHmdObject.GetDesc();
+				ovrHmdVersion = ovrDesc.Type;
+			}
+			catch(UnityException e)
+			{
+				Debug.LogError(e);
+			}
+		}
+
+		if(ovrHmdVersion == ovrHmdType.ovrHmd_DK1) 
+		{
+			infotext_Rift_not_Detected.SetActive(false);
+			infotext_Oculus_DK1_detected.SetActive(true); 
+			infotext_Oculus_DK2_detected.SetActive(false);
+		}
+		else if(ovrHmdVersion == ovrHmdType.ovrHmd_DK2 && isRiftConnected) 
+		{
+			infotext_Rift_not_Detected.SetActive(false);
+			infotext_Oculus_DK2_detected.SetActive(true);
+			infotext_Oculus_DK1_detected.SetActive(false);  
+		}
+		else {
 			infotext_Rift_not_Detected.SetActive(true);
 			infotext_Oculus_DK1_detected.SetActive(false);
 			infotext_Oculus_DK2_detected.SetActive(false); 
 		}
-		else 
-		{
-		*/
-			Hmd oculusHmdObject = Hmd.GetHmd();
-			ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
-			ovrHmdType ovrHmdVersion = ovrDesc.Type;
-
-			if(ovrHmdVersion == ovrHmdType.ovrHmd_DK1) 
-			{
-				infotext_Rift_not_Detected.SetActive(false);
-				infotext_Oculus_DK1_detected.SetActive(true); 
-				infotext_Oculus_DK2_detected.SetActive(false);
-			}
-			else if(ovrHmdVersion == ovrHmdType.ovrHmd_DK2 && isRiftConnected) 
-			{
-				infotext_Rift_not_Detected.SetActive(false);
-				infotext_Oculus_DK2_detected.SetActive(true);
-				infotext_Oculus_DK1_detected.SetActive(false);  
-			}
-			else {
-				infotext_Rift_not_Detected.SetActive(true);
-				infotext_Oculus_DK1_detected.SetActive(false);
-				infotext_Oculus_DK2_detected.SetActive(false); 
-			}
 			
 		if(!XmlImportExport.XmlHandlingFunctionalityAvailable()) 
 		{
@@ -532,11 +548,22 @@ public class RUISMenuNGUI : MonoBehaviour {
 		//dropDownChoices.Add ("Select device(s)");
 		if(inputManager.enableKinect) dropDownChoices.Add ("Kinect floor data");
 		if(inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 floor data");
-		
-		var HMD = OVR.Hmd.GetHmd();
-		ovrTrackingState riftState = HMD.GetTrackingState();      
-		bool isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
-		
+		    
+		bool isRiftConnected = false;
+
+		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+		{
+			try
+			{
+				var HMD = OVR.Hmd.GetHmd();
+				ovrTrackingState riftState = HMD.GetTrackingState();  
+				isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+			}
+			catch(UnityException e)
+			{
+				Debug.LogError (e);
+			}
+		}
 		if(inputManager.enableKinect && inputManager.enableKinect2) dropDownChoices.Add ("Kinect - Kinect2");
 		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
 		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");
