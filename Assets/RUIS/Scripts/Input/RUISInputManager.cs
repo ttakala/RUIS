@@ -389,7 +389,12 @@ public class RUISInputManager : MonoBehaviour
 
 			//transform the point from Kinect's coordinate system rotation to Unity's rotation
 			closestFloorPointToKinect = kinectFloorRotator * closestFloorPointToKinect;
-			
+
+			if(float.IsNaN(closestFloorPointToKinect.magnitude))
+				closestFloorPointToKinect = Vector3.zero;
+			if(newFloorNormal.sqrMagnitude < 0.1f)
+				newFloorNormal = Vector3.up;
+
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_1)
 			{
 				coordinateSystem.SetFloorNormal(newFloorNormal, RUISDevice.Kinect_1);
@@ -420,6 +425,11 @@ public class RUISInputManager : MonoBehaviour
 			kinect2FloorNormal.Normalize();
 			
 			float kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
+
+			if(float.IsNaN(kinect2DistanceFromFloor))
+				kinect2DistanceFromFloor = 0;
+			if(kinect2FloorNormal.sqrMagnitude < 0.1f)
+				kinect2FloorNormal = Vector3.up;
 
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
 			{

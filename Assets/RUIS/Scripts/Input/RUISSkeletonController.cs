@@ -78,6 +78,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public int bodyTrackingDeviceID = 0;
     public int playerId = 0;
+	public bool switchToAvailableKinect = false;
 
     private Vector3 skeletonPosition = Vector3.zero;
 
@@ -148,6 +149,25 @@ public class RUISSkeletonController : MonoBehaviour
 	
     void Awake()
     {
+		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+
+		if(inputManager)
+		{
+			if(switchToAvailableKinect)
+			{
+				if(   bodyTrackingDevice == bodyTrackingDeviceType.Kinect1
+				   && !inputManager.enableKinect && inputManager.enableKinect2)
+				{
+					bodyTrackingDevice = bodyTrackingDeviceType.Kinect2;
+				}
+				else if(   bodyTrackingDevice == bodyTrackingDeviceType.Kinect2
+				   && !inputManager.enableKinect2 && inputManager.enableKinect)
+				{
+					bodyTrackingDevice = bodyTrackingDeviceType.Kinect1;
+				}
+			}
+		}
+		
 		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1) bodyTrackingDeviceID = 0;
 		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2)  bodyTrackingDeviceID = 1;
 		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)  bodyTrackingDeviceID = 2;
@@ -258,7 +278,6 @@ public class RUISSkeletonController : MonoBehaviour
 			originalLeftShinScale = leftKnee.localScale;
 		}
 
-		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(inputManager)
 		{
 

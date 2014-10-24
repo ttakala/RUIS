@@ -472,7 +472,15 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFlootClipPlane();
 		kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
 		kinect2FloorNormal.Normalize();
+		
+		if(kinect2FloorNormal.sqrMagnitude < 0.1f)
+			kinect2FloorNormal = Vector3.up;
+
 		kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
+		
+		if(float.IsNaN(kinect2DistanceFromFloor))
+			kinect2DistanceFromFloor = 0;
+
 		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
 		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
@@ -495,6 +503,10 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		
 		Quaternion kinectFloorRotator = Quaternion.identity;
 		kinect1FloorNormal = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
+		
+		if(kinect1FloorNormal.sqrMagnitude < 0.1f)
+			kinect1FloorNormal = Vector3.up;
+
 		Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
 		kinectFloorRotator = Quaternion.FromToRotation(kinect1FloorNormal, Vector3.up); 
 		kinect1DistanceFromFloor = closestDistanceFromFloor(kinect1FloorNormal, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
@@ -517,7 +529,10 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		closestFloorPoint = (closestFloorPoint * d) / closestFloorPoint.sqrMagnitude;
 		//transform the point from Kinect's coordinate system rotation to Unity's rotation
 		closestDistanceFromFloor = closestFloorPoint.magnitude;
-		
+
+		if(float.IsNaN(closestDistanceFromFloor))
+			closestDistanceFromFloor = 0;
+
 		return closestDistanceFromFloor;
 	}
 	

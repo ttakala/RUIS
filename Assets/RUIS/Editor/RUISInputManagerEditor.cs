@@ -113,10 +113,15 @@ public class RUISInputManagerEditor : Editor {
             }
         EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.PropertyField(filename, new GUIContent("Filename"));
-        EditorGUILayout.PropertyField(xmlSchema, new GUIContent("XML Schema"));
+        EditorGUILayout.PropertyField(filename, new GUIContent(  "Filename", "Name of the XML file where RUIS InputManager settings will be loaded/saved. If the file doesn't exist "
+		                                                       + "it will be created. In Unity Editor the file will be located in the project root folder, and in a built project "
+		                                                       + "the file it will be located in the same folder where the executable file is."));
+        EditorGUILayout.PropertyField(xmlSchema, new GUIContent(  "XML Schema", "Location of the file that defines the XML format of the above file. You should not change this "
+		                                                        + "value, which should always point to inputManager.xsd."));
 
-        EditorGUILayout.PropertyField(loadFromTextFileInEditor, new GUIContent("Load from File in Editor", "Load PSMove IP and Port from " + filename.stringValue + " while in editor. Otherwise use the values specified here. Outside the editor the applicable values are loaded from the external file."));
+        EditorGUILayout.PropertyField(loadFromTextFileInEditor, new GUIContent(  "Load from File in Editor", "Load RUIS InputManager settings (which devices are enabled and "
+		                                                                       + "their configuration) from the above defined XML file while in Unity Editor. Otherwise use the "
+		                                                                       + "values specified below. In built projects the values are always loaded from the external file."));
 
 
         RUISEditorUtility.HorizontalRuler();
@@ -128,7 +133,7 @@ public class RUISInputManagerEditor : Editor {
             EditorGUI.indentLevel += 2;
 
             EditorGUILayout.PropertyField(psMoveIp, new GUIContent("PS Move IP", "PS Move IP address"));
-            EditorGUILayout.PropertyField(psMovePort, new GUIContent("PS Move Port"));
+			EditorGUILayout.PropertyField(psMovePort, new GUIContent("PS Move Port", "In most cases you should use the default value of 7899."));
 
             EditorGUILayout.PropertyField(connectToMoveOnStartup, new GUIContent("Auto-connect to Move.Me", "Connect to the Move.me server on startup."));
 

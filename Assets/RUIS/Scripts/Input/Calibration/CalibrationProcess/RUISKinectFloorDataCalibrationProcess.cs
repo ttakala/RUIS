@@ -168,10 +168,20 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 		
 		Quaternion kinectFloorRotator = Quaternion.identity;
 		normalVector = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
+
+		if(normalVector.sqrMagnitude < 0.1f)
+			normalVector = Vector3.up;
+
 		Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
 		kinectFloorRotator = Quaternion.FromToRotation(normalVector, Vector3.up); 
 		kinect1DistanceFromFloor = closestDistanceFromFloor(normalVector, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
 		kinect1PitchRotation = Quaternion.Inverse (kinectFloorRotator);
+		
+		if(float.IsNaN(kinect1DistanceFromFloor))
+			kinect1DistanceFromFloor = 0;
+		
+		coordinateSystem.SetDistanceFromFloor(kinect1DistanceFromFloor, RUISDevice.Kinect_1);
+		coordinateSystem.SetFloorNormal(normalVector, RUISDevice.Kinect_1);
 	}
 	
 	public float closestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 

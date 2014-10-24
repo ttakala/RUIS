@@ -474,9 +474,17 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		Quaternion kinectFloorRotator = Quaternion.identity;
 		kinect1FloorNormal= new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
+		
+		if(kinect1FloorNormal.sqrMagnitude < 0.1f)
+			kinect1FloorNormal = Vector3.up;
+
 		Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
 		kinectFloorRotator = Quaternion.FromToRotation(kinect1FloorNormal, Vector3.up); 
 		kinect1DistanceFromFloor = closestDistanceFromFloor(kinect1FloorNormal, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
+
+		if(float.IsNaN(kinect1DistanceFromFloor))
+			kinect1DistanceFromFloor = 0;
+
 		kinect1PitchRotation = Quaternion.Inverse (kinectFloorRotator);
 	}
 	

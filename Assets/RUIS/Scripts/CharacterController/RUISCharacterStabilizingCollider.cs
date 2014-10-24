@@ -57,15 +57,6 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	void Awake () 
 	{
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
-
-		if(skeletonController != null) 
-		{
-			playerId = skeletonController.playerId;
-			bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
-		}
-//		else
-//			Debug.LogError(   "The public variable 'Skeleton Controller' is not assigned! Using skeleton "
-//							+ "ID 0 as the pivot source.");
 		
 		if(gameObject.transform.parent != null)
 		{
@@ -87,6 +78,16 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	void Start()
 	{
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
+		
+		if(transform.parent)
+		{
+			skeletonController = transform.parent.gameObject.GetComponentInChildren(typeof(RUISSkeletonController)) as RUISSkeletonController;
+			if(skeletonController)
+			{
+				playerId = skeletonController.playerId;
+				bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+			}
+		}
 	}
 	
 	void FixedUpdate () 

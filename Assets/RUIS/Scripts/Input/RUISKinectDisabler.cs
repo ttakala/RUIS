@@ -21,5 +21,10 @@ public class RUISKinectDisabler : MonoBehaviour {
             Debug.LogWarning("Disabling Skeleton Wand: " + wand.name);
             wand.gameObject.SetActive(false);
         }
+		NIPlayerManagerCOMSelection[] playerManagers = FindObjectsOfType(typeof(NIPlayerManagerCOMSelection)) as NIPlayerManagerCOMSelection[];
+		foreach (NIPlayerManagerCOMSelection playerManager in playerManagers)
+		{
+			playerManager.enabled = false;
+		}
     }
 }
