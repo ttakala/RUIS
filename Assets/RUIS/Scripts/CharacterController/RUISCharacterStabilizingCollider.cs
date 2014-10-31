@@ -153,15 +153,15 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
                 }
                 else
                 {
-                    colliderHeight = defaultColliderHeight;
-                    transform.localPosition = defaultColliderPosition;
+                    //colliderHeight = defaultColliderHeight;
+                    //transform.localPosition = defaultColliderPosition;
                     return;
                 }
             }
             else
             {
-                colliderHeight = defaultColliderHeight;
-                transform.localPosition = defaultColliderPosition;
+                //colliderHeight = defaultColliderHeight;
+                //transform.localPosition = defaultColliderPosition;
                 return;
             }
         }

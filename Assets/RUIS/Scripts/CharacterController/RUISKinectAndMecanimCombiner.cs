@@ -94,6 +94,23 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
     void Start()
 	{
 		skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
+		
+		skeletonController = GetComponent<RUISSkeletonController>();
+		//		if (	!inputManager.enableKinect && !inputManager.enableKinect2 
+		//		    &&  (skeletonController.bodyTrackingDevice != RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker))
+		if(skeletonController != null && skeletonController.followMoveController)
+		{
+			// Without the below if-clause the legs will twist with PS Move head tracker (when Move is enabled but Kinect is not)
+			//if(!inputManager.enablePSMove)
+			torsoBlendWeight = 1;
+			headBlendWeight = 1;		
+			rightArmBlendWeight = 1;
+			leftArmBlendWeight = 1;
+			rightLegBlendWeight = 1;
+			leftLegBlendWeight = 1;
+//			forceArmStartPosition = false;
+//			forceLegStartPosition = false;
+		}
 
         if (!childrenInstantiated)
         {
@@ -168,20 +185,6 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		//rightLegBlendWeight = 1;
 		//leftLegBlendWeight = 1;
 		// end for debug
-		if (	!inputManager.enableKinect && !inputManager.enableKinect2 
-			&&  (skeletonController.bodyTrackingDevice != RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker))
-        {
-			// Without the below if-clause the legs will twist with PS Move head tracker (when Move is enabled but Kinect is not)
-			if(!inputManager.enablePSMove)
-	            torsoBlendWeight = 1;
-            headBlendWeight = 1;		
-            rightArmBlendWeight = 1;
-            leftArmBlendWeight = 1;
-            rightLegBlendWeight = 1;
-            leftLegBlendWeight = 1;
-            forceArmStartPosition = false;
-            forceLegStartPosition = false;
-        }
 
         if (torsoIsRoot)
         {
@@ -389,8 +392,11 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		Vector3 kinectTorsoForward = torsoRoot.kinectTransform.forward; // The old and occasionally buggy way (kinectTorsoForward is set again below)
 		Vector3 kinectTorsoUp = Vector3.up; //torsoRoot.kinectTransform.up;
 
-		if(skeletonManager != null && skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
-			kinectTorsoForward = skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId].torso.rotation*Vector3.forward;
+		if(skeletonController != null && skeletonController.followMoveController) // If Move controller is character pivot
+			kinectTorsoForward = skeletonController.moveYawRotation * Vector3.forward;
+		else // If Kinect torso/head is character pivot
+			if(skeletonManager != null && skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
+				kinectTorsoForward = skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId].torso.rotation*Vector3.forward;
 
 		//kinectTorsoUp.y = 0;
 		//kinectTorsoUp.Normalize();

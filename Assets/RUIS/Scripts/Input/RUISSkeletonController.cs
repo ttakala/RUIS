@@ -101,6 +101,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool followMoveController { get; private set; }
 	private int followMoveID = 0;
 	private RUISPSMoveWand psmove;
+	public Quaternion moveYawRotation { get; private set; }
 	
 	private KalmanFilter positionKalman;
 	private double[] measuredPos = {0, 0, 0};
@@ -173,6 +174,7 @@ public class RUISSkeletonController : MonoBehaviour
 		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)  bodyTrackingDeviceID = 2;
 
 		followMoveController = false;
+		Quaternion moveYawRotation = Quaternion.identity;
 		
         jointInitialRotations = new Dictionary<Transform, Quaternion>();
         jointInitialDistances = new Dictionary<KeyValuePair<Transform, Transform>, float>();
@@ -464,14 +466,14 @@ public class RUISSkeletonController : MonoBehaviour
 				
 			}
 	
-			if(fistCurlFingers) handleFingersCurling(trackThumbs);
+			if(fistCurlFingers)
+				handleFingersCurling(trackThumbs);
 
 			if(trackThumbs && rightThumb && leftThumb) 
 			{
 				UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb);
 				UpdateTransform (ref leftThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb);
 			}
-			
 
 			if (!useHierarchicalModel) 
 			{
@@ -531,28 +533,30 @@ public class RUISSkeletonController : MonoBehaviour
 				psmove = inputManager.GetMoveWand (followMoveID);
 				if (psmove) 
 				{
-					Quaternion moveYaw = Quaternion.Euler (0, psmove.localRotation.eulerAngles.y, 0);
+					float moveYaw = psmove.localRotation.eulerAngles.y;
+					moveYawRotation = Quaternion.Euler (0, moveYaw, 0);
 
-					skeletonPosition = psmove.localPosition - moveYaw * characterController.psmoveOffset;
+					skeletonPosition = psmove.localPosition - moveYawRotation * characterController.psmoveOffset;
 					skeletonPosition.y = 0;
 
 					if (updateRootPosition)
 							transform.localPosition = skeletonPosition;
-
-					UpdateTransformWithPSMove (ref head, moveYaw);
+					
+					//					UpdateTransformWithPSMove (ref root,  moveYaw);
 					UpdateTransformWithPSMove (ref torso, moveYaw);
-					UpdateTransformWithPSMove (ref leftShoulder, moveYaw);
-					UpdateTransformWithPSMove (ref leftElbow, moveYaw);
-					UpdateTransformWithPSMove (ref leftHand, moveYaw);
-					UpdateTransformWithPSMove (ref rightShoulder, moveYaw);
-					UpdateTransformWithPSMove (ref rightElbow, moveYaw);
-					UpdateTransformWithPSMove (ref rightHand, moveYaw);
-					UpdateTransformWithPSMove (ref leftHip, moveYaw);
-					UpdateTransformWithPSMove (ref leftKnee, moveYaw);
-					UpdateTransformWithPSMove (ref leftFoot, moveYaw);
-					UpdateTransformWithPSMove (ref rightHip, moveYaw);
-					UpdateTransformWithPSMove (ref rightKnee, moveYaw);
-					UpdateTransformWithPSMove (ref rightFoot, moveYaw);
+//					UpdateTransformWithPSMove (ref head, moveYawRotation);
+//					UpdateTransformWithPSMove (ref leftShoulder, moveYawRotation);
+//					UpdateTransformWithPSMove (ref leftElbow, moveYawRotation);
+//					UpdateTransformWithPSMove (ref leftHand, moveYawRotation);
+//					UpdateTransformWithPSMove (ref rightShoulder, moveYawRotation);
+//					UpdateTransformWithPSMove (ref rightElbow, moveYawRotation);
+//					UpdateTransformWithPSMove (ref rightHand, moveYawRotation);
+//					UpdateTransformWithPSMove (ref leftHip, moveYawRotation);
+//					UpdateTransformWithPSMove (ref leftKnee, moveYawRotation);
+//					UpdateTransformWithPSMove (ref leftFoot, moveYawRotation);
+//					UpdateTransformWithPSMove (ref rightHip, moveYawRotation);
+//					UpdateTransformWithPSMove (ref rightKnee, moveYawRotation);
+//					UpdateTransformWithPSMove (ref rightFoot, moveYawRotation);
 				}
 			}
 		}
@@ -588,7 +592,7 @@ public class RUISSkeletonController : MonoBehaviour
         }
     }
 	
-	private void UpdateTransformWithPSMove(ref Transform transformToUpdate, Quaternion moveYaw)
+	private void UpdateTransformWithPSMove(ref Transform transformToUpdate, float controllerYaw)
     {
 		if (transformToUpdate == null) return;
 		
@@ -601,13 +605,13 @@ public class RUISSkeletonController : MonoBehaviour
 //                Quaternion newRotation = transform.rotation * jointToGet.rotation *
 //                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 //                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDamping);
-                Quaternion newRotation = transform.rotation * moveYaw *
+				Quaternion newRotation = transform.rotation * Quaternion.Euler(new Vector3(0, controllerYaw, 0)) *
                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
                 transformToUpdate.rotation = newRotation;
             }
             else
             {
-				transformToUpdate.localRotation = moveYaw;
+				transformToUpdate.localRotation = Quaternion.Euler(new Vector3(0, controllerYaw, 0));
 //                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDamping);
             }
 		}
