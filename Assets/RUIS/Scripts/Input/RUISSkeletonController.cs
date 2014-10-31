@@ -526,24 +526,24 @@ public class RUISSkeletonController : MonoBehaviour
 				transform.localPosition = new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]); //newRootPosition;
 			}
 		} 
-		else 
-		{ // Kinect is not tracking
-			if (followMoveController && characterController && inputManager)
+		 
+		// If character controller pivot is PS Move
+		if (followMoveController && characterController && inputManager)
+		{
+			psmove = inputManager.GetMoveWand (followMoveID);
+			if (psmove) 
 			{
-				psmove = inputManager.GetMoveWand (followMoveID);
-				if (psmove) 
-				{
-					float moveYaw = psmove.localRotation.eulerAngles.y;
-					moveYawRotation = Quaternion.Euler (0, moveYaw, 0);
+				float moveYaw = psmove.localRotation.eulerAngles.y;
+				moveYawRotation = Quaternion.Euler (0, moveYaw, 0);
 
-					skeletonPosition = psmove.localPosition - moveYawRotation * characterController.psmoveOffset;
-					skeletonPosition.y = 0;
+				skeletonPosition = psmove.localPosition - moveYawRotation * characterController.psmoveOffset;
+				skeletonPosition.y = 0;
 
-					if (updateRootPosition)
-							transform.localPosition = skeletonPosition;
-					
-					//					UpdateTransformWithPSMove (ref root,  moveYaw);
-					UpdateTransformWithPSMove (ref torso, moveYaw);
+				if (updateRootPosition)
+					transform.localPosition = skeletonPosition;
+				
+//					UpdateTransformWithPSMove (ref root,  moveYaw);
+				UpdateTransformWithPSMove (ref torso, moveYaw);
 //					UpdateTransformWithPSMove (ref head, moveYawRotation);
 //					UpdateTransformWithPSMove (ref leftShoulder, moveYawRotation);
 //					UpdateTransformWithPSMove (ref leftElbow, moveYawRotation);
@@ -557,7 +557,6 @@ public class RUISSkeletonController : MonoBehaviour
 //					UpdateTransformWithPSMove (ref rightHip, moveYawRotation);
 //					UpdateTransformWithPSMove (ref rightKnee, moveYawRotation);
 //					UpdateTransformWithPSMove (ref rightFoot, moveYawRotation);
-				}
 			}
 		}
 
