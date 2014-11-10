@@ -2,7 +2,7 @@
 <ns2:RUISInputManager xmlns:ns2="http://ruisystem.net/RUISInputManager">
   <!--Boolean values always with a lower case, e.g. "true" or "false"-->
   <PSMoveSettings>
-    <enabled value="true" />
+    <enabled value="false" />
     <ip value="130.233.46.218" />
     <port value="7899" />
     <autoConnect value="true" />
@@ -11,13 +11,13 @@
   </PSMoveSettings>
   <KinectSettings>
     <enabled value="true" />
-    <maxPlayers value="1" />
-    <floorDetection value="false" />
+    <maxPlayers value="2" />
+    <floorDetection value="true" />
     <jumpGestureEnabled value="true" />
   </KinectSettings>
   <Kinect2Settings>
-    <enabled value="true" />
-    <floorDetection value="false" />
+    <enabled value="false" />
+    <floorDetection value="true" />
   </Kinect2Settings>
   <RazerSettings>
     <enabled value="false" />

@@ -127,6 +127,17 @@ public class RUISMenuNGUI : MonoBehaviour {
 		
 		SaveInputChanges(); // Save initial settings
 		updateCalibratableDevices();
+
+		this.transform.localPosition = new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
+		this.transform.localScale = new Vector3(displayManager.guiScaleX * 0.002777778f, displayManager.guiScaleY * 0.002777778f, 1 * 0.002777778f);
+		
+		if(displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum && !displayManager.displays[displayManager.guiDisplayChoice].enableOculusRift)
+		{
+			this.transform.localRotation = Quaternion.LookRotation(-displayManager.displays[displayManager.guiDisplayChoice].DisplayNormal, 
+			                                                        displayManager.displays[displayManager.guiDisplayChoice].DisplayUp     );
+			this.transform.localPosition = displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition
+											+ this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
+		}
 	}
 	
 	
@@ -250,10 +261,13 @@ public class RUISMenuNGUI : MonoBehaviour {
 		}
 		else 
 		{
-		
-			this.transform.localPosition = new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
-			this.transform.localScale = new Vector3(displayManager.guiScaleX * 0.002777778f, displayManager.guiScaleY * 0.002777778f, 1 * 0.002777778f);
-			
+			// For interactively adjusting the menu position and scale in Unity Editor
+			if(Application.isEditor)
+			{
+				this.transform.localPosition = displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition
+												+ this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
+				this.transform.localScale = new Vector3(displayManager.guiScaleX * 0.002777778f, displayManager.guiScaleY * 0.002777778f, 1 * 0.002777778f);
+			}
 			
 			this.transform.Find("Panel").gameObject.SetActive(true);
 			this.transform.Find("planeCollider").gameObject.SetActive(true);

@@ -10904,14 +10904,15 @@ MonoBehaviour:
   totalRawResolutionY: 1080
   allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
+  menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
+  menuLayerName: RUISMenu
   guiDisplayChoice: 0
   guiX: -.100000001
   guiY: .100000001
-  guiZ: .550000012
+  guiZ: .699999988
   guiScaleX: 1
   guiScaleY: 1
   hideMouseOnPlay: 0
-  menuCursorPrefab: {fileID: 100000, guid: da3e5cecbc9e9bc499740e29034fcc6f, type: 2}
 --- !u!1 &807122979
 GameObject:
   m_ObjectHideFlags: 0
@@ -17018,6 +17019,7 @@ MonoBehaviour:
   bodyTrackingDevice: 1
   bodyTrackingDeviceID: 0
   playerId: 0
+  switchToAvailableKinect: 0
   updateRootPosition: 1
   updateJointPositions: 0
   updateJointRotations: 1
@@ -21987,6 +21989,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: enableOculusRift
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: guiZ
+      value: .699999988
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 1659611844}
@@ -24919,7 +24929,7 @@ MonoBehaviour:
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
-  enableKinect2: 1
+  enableKinect2: 0
   kinect2FloorDetection: 1
   enableRazerHydra: 0
   moveControllers: []

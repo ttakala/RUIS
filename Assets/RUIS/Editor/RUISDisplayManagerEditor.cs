@@ -42,8 +42,7 @@ public class RUISDisplayManagerEditor : Editor {
 	
     void OnEnable()
     {
-    
-		displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
+		displayManager = target as RUISDisplayManager;
 		
         displays = serializedObject.FindProperty("displays");
 		ruisMenuPrefab = serializedObject.FindProperty("ruisMenuPrefab");

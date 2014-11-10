@@ -22,6 +22,8 @@ public class RUISDisplayManager : MonoBehaviour {
     public bool allowResolutionDialog;
 
 	public GameObject ruisMenuPrefab;
+	public GameObject menuCursorPrefab;
+	public string menuLayerName = "RUISMenu";
 	public int guiDisplayChoice = 0;
 	
 	public float guiX;  
@@ -31,8 +33,7 @@ public class RUISDisplayManager : MonoBehaviour {
 	public float guiScaleX = 1;
 	public float guiScaleY = 1;
 	public bool hideMouseOnPlay = false;
-	
-	public GameObject menuCursorPrefab;
+
 	
     public class ScreenPoint
     {
@@ -240,7 +241,11 @@ public class RUISDisplayManager : MonoBehaviour {
 		GameObject ruisMenu = Instantiate(ruisMenuPrefab) as GameObject;
 		if(ruisMenu == null)
 			return;
-		
+	
+		if(LayerMask.NameToLayer(menuLayerName) == -1)
+			Debug.LogError(  "Could not find layer '" + menuLayerName + "', the RUIS menu cursor will not work without this layer! "
+			               + "The prefab '" + ruisMenuPrefab.name + "' and its children should be on this layer.");
+
 		if(!displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo
 		   && !displays[guiDisplayChoice].GetComponent<RUISDisplay>().enableOculusRift)
 		{
@@ -254,8 +259,7 @@ public class RUISDisplayManager : MonoBehaviour {
 		
 		ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform;
 		
-		
-		ruisMenu.transform.localPosition = new Vector3(guiX,guiY,guiZ);
 		ruisMenu.transform.localRotation = Quaternion.identity;
+		ruisMenu.transform.localPosition = new Vector3(guiX,guiY,guiZ);
 	}
 }

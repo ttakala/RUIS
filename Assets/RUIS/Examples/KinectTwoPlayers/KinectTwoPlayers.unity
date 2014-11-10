@@ -12504,7 +12504,7 @@ Prefab:
     - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: menuCursorPrefab
       value: 
-      objectReference: {fileID: 100000, guid: da3e5cecbc9e9bc499740e29034fcc6f, type: 2}
+      objectReference: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect2
       value: 0
@@ -13854,6 +13854,7 @@ MonoBehaviour:
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 0
+  switchToAvailableKinect: 0
   updateRootPosition: 1
   updateJointPositions: 0
   updateJointRotations: 1
@@ -32938,6 +32939,7 @@ MonoBehaviour:
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 1
+  switchToAvailableKinect: 0
   updateRootPosition: 1
   updateJointPositions: 0
   updateJointRotations: 1
@@ -34086,6 +34088,8 @@ MonoBehaviour:
   totalRawResolutionY: 1080
   allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
+  menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
+  menuLayerName: RUISMenu
   guiDisplayChoice: 0
   guiX: -.100000001
   guiY: 0
@@ -34093,7 +34097,6 @@ MonoBehaviour:
   guiScaleX: 1
   guiScaleY: 1
   hideMouseOnPlay: 0
-  menuCursorPrefab: {fileID: 100000, guid: da3e5cecbc9e9bc499740e29034fcc6f, type: 2}
 --- !u!1 &2068071198
 GameObject:
   m_ObjectHideFlags: 0

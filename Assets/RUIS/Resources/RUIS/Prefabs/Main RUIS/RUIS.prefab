@@ -558,7 +558,7 @@ MonoBehaviour:
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
-  enableKinect2: 1
+  enableKinect2: 0
   kinect2FloorDetection: 1
   enableRazerHydra: 0
   moveControllers: []
@@ -666,7 +666,7 @@ MonoBehaviour:
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
-  enableOculusRift: 1
+  enableOculusRift: 0
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 0}
@@ -787,14 +787,15 @@ MonoBehaviour:
   totalRawResolutionY: 1080
   allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
+  menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
+  menuLayerName: RUISMenu
   guiDisplayChoice: 0
   guiX: -.100000001
   guiY: .100000001
-  guiZ: .550000012
+  guiZ: 1.25
   guiScaleX: 1
   guiScaleY: 1
   hideMouseOnPlay: 0
-  menuCursorPrefab: {fileID: 100000, guid: da3e5cecbc9e9bc499740e29034fcc6f, type: 2}
 --- !u!114 &11400028
 MonoBehaviour:
   m_ObjectHideFlags: 1
