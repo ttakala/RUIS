@@ -17,6 +17,7 @@ public class RUISCharacterControllerEditor : Editor
 {
 	int maxPSMoveControllers = 4;
     SerializedProperty characterPivotType;
+	SerializedProperty useOculusPositionalTracking;
     SerializedProperty moveControllerId;
     SerializedProperty ignorePitchAndRoll;
     SerializedProperty groundLayers;
@@ -30,7 +31,8 @@ public class RUISCharacterControllerEditor : Editor
 
     public void OnEnable()
     {
-        characterPivotType = serializedObject.FindProperty("characterPivotType");
+		characterPivotType = serializedObject.FindProperty("characterPivotType");
+		useOculusPositionalTracking = serializedObject.FindProperty("useOculusPositionalTracking");
         moveControllerId = serializedObject.FindProperty("moveControllerId");
         ignorePitchAndRoll = serializedObject.FindProperty("ignorePitchAndRoll");
         groundLayers = serializedObject.FindProperty("groundLayers");
@@ -47,10 +49,10 @@ public class RUISCharacterControllerEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(characterPivotType, new GUIContent(  "Character Pivot Type", "Rotation pivot for the character, in other "
-		                                                                 + "words, what is the rotation center for the character when turning with "
-		                                                                 + "the " + typeof(RUISCharacterLocomotion).Name + " script. Torso is "
-		                                                                 + "recommended for Kinect."));
+		EditorGUILayout.PropertyField(characterPivotType, new GUIContent(  "Character Pivot Type", "Rotation pivot for the character, in other words, "
+		                                                                 + "what is the rotation center for the character when turning with the "
+		                                                                 + typeof(RUISCharacterLocomotion).Name + " script. Pivot orientation also defines "
+		                                                                 + "the Forward movement direction. Torso is the recommended pivot when using Kinect."));
 		RUISSkeletonController.bodyTrackingDeviceType bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 		int kinectPlayerId = 0;
 		int bodyTrackingDeviceID = 0;
@@ -91,6 +93,16 @@ public class RUISCharacterControllerEditor : Editor
 			}
 
         }
+
+		
+		EditorGUILayout.PropertyField(useOculusPositionalTracking, new GUIContent(  "Use Oculus Positional Tracking", "Use Oculus Rift's tracked position (DK2 or newer) as "
+		                                                                          + "the primary character pivot position, and fall back to the above defined pivot only in "
+		                                                                          + "situations where Oculus Rift is not seen by its camera. NOTE: The above defined pivot device "
+		                                                                          + "(Kinect/PS Move) must have its coordinate system calibrated with Oculus Rift using the RUIS "
+		                                                                          + "device calibration (in runtime press ESC to enter RUIS Menu), otherwise the head position "
+		                                                                          + "will jump into a completely different location when Oculus Rift camera loses track of the "
+		                                                                          + "head position."));
+
         EditorGUI.indentLevel -= 2;
 
         EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent(  "Ignore Pitch and Roll", "Should the pitch and roll values of the pivot "

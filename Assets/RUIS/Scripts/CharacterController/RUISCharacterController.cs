@@ -10,6 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using OVR;
 
 public class RUISCharacterController : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class RUISCharacterController : MonoBehaviour
 
     public CharacterPivotType characterPivotType = CharacterPivotType.KinectTorso;
 
+	public bool useOculusPositionalTracking = false;
 
     public int kinectPlayerId;
 	public int bodyTrackingDeviceID;
@@ -48,7 +50,9 @@ public class RUISCharacterController : MonoBehaviour
 	private bool tempGrounded = false;
 	private bool rayIntersected = false;
 	
-    private RUISCharacterStabilizingCollider stabilizingCollider;
+	private RUISCharacterStabilizingCollider stabilizingCollider;
+	RUISCoordinateSystem coordinateSystem;
+	Vector3 headPosition = Vector3.zero;
 	
 	public bool dynamicFriction = true;
 	public PhysicMaterial dynamicMaterial;
@@ -59,6 +63,9 @@ public class RUISCharacterController : MonoBehaviour
 	public bool feetAlsoAffectGrounding = true;
 	List<Transform> bodyParts = new List<Transform>(2);
 	RUISSkeletonController skeletonController;
+
+	ovrHmdType ovrHmdVersion = ovrHmdType.ovrHmd_None;
+	Hmd oculusHmdObject;
 
     void Awake()
     {
@@ -86,6 +93,8 @@ public class RUISCharacterController : MonoBehaviour
 			Debug.LogError(  "RUISCharacterController script in game object '" + gameObject.name 
 			               + "' did not find RUISSkeletonController component from it's child objects!");
 		}
+		
+		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 
 		if(stabilizingCollider)
 		{	
@@ -95,7 +104,6 @@ public class RUISCharacterController : MonoBehaviour
 				if(    characterPivotType == CharacterPivotType.KinectHead
 				    || characterPivotType == CharacterPivotType.KinectTorso)
 				{
-					RUISCoordinateSystem coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 					if(coordinateSystem && inputManager.enableKinect && !coordinateSystem.setKinectOriginToFloor)
 						Debug.LogWarning("It is best to enable 'setKinectOriginToFloor' from RUISCoordinateSystem " +
 						                 "when using Kinect and RUISCharacterController script.");
@@ -136,10 +144,37 @@ public class RUISCharacterController : MonoBehaviour
 			               + "object '" + skeletonController.gameObject.name + "). Make sure that these two values are "
 			               + "the same.");
 
+		if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+		{
+			try
+			{
+				var HMD = OVR.Hmd.GetHmd();
+				ovrTrackingState riftState = HMD.GetTrackingState();      
+				bool isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+				
+				oculusHmdObject = Hmd.GetHmd();
+				if(oculusHmdObject != null)
+				{
+					ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
+					ovrHmdVersion = ovrDesc.Type;
+
+					if(ovrHmdVersion == ovrHmdType.ovrHmd_DK1 || ovrHmdVersion == ovrHmdType.ovrHmd_DKHD || ovrHmdVersion == ovrHmdType.ovrHmd_None)
+					{
+						Debug.LogError("Can't use Oculus Rift's tracked position as a pivot with Oculus Rift DK1/DKHD/ovrHmd_None.");
+						useOculusPositionalTracking = false;
+					}
+				}
+			}
+			catch(UnityException e)
+			{
+				useOculusPositionalTracking = false;
+				Debug.LogError(e);
+			}
+		}
 	}
 	
     void Update()
-    {
+	{
 		// Check whether character collider (aka stabilizingCollider) is grounded
         raycastPosition = stabilizingCollider ? stabilizingCollider.transform.position : transform.position;
 
@@ -278,27 +313,37 @@ public class RUISCharacterController : MonoBehaviour
 
     private Vector3 GetPivotPositionInTrackerCoordinates()
     {
-        switch (characterPivotType)
-        {
-            case CharacterPivotType.KinectHead:
-			{
-			if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-				return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.position;
-				break;
-			}
-            case CharacterPivotType.KinectTorso:
-			{
-			if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-				return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position;
-				break;
-			}
-            case CharacterPivotType.MoveController:
-			{
-				if(inputManager.GetMoveWand(moveControllerId))
-	                return inputManager.GetMoveWand(moveControllerId).handlePosition;
-				break;
-			}
-        }
+		if(useOculusPositionalTracking && OVRDevice.IsCameraTracking() && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+		{
+			ovrTrackingState trackingState = oculusHmdObject.GetTrackingState(Hmd.GetTimeInSeconds());
+
+			headPosition = new Vector3(trackingState.HeadPose.ThePose.Position.x, trackingState.HeadPose.ThePose.Position.y, trackingState.HeadPose.ThePose.Position.z);
+			return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
+		}
+		else
+		{
+	        switch (characterPivotType)
+	        {
+	            case CharacterPivotType.KinectHead:
+				{
+				if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+					return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.position;
+					break;
+				}
+	            case CharacterPivotType.KinectTorso:
+				{
+				if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+					return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position;
+					break;
+				}
+	            case CharacterPivotType.MoveController:
+				{
+					if(inputManager.GetMoveWand(moveControllerId))
+		                return inputManager.GetMoveWand(moveControllerId).handlePosition;
+					break;
+				}
+	        }
+		}
 
         return Vector3.zero;
     }

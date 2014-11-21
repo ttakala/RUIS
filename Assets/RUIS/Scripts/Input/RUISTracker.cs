@@ -302,7 +302,7 @@ public class RUISTracker : MonoBehaviour
     {
 		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
-			OVRCameraController ovrCameraController = MonoBehaviour.FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
+			OVRCameraController ovrCameraController = GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
 			bool isRiftConnected = false;
 
 			if(UnityEditorInternal.InternalEditorUtility.HasPro())

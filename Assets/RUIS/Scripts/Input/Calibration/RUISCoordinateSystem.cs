@@ -41,11 +41,8 @@ public class RUISCoordinateSystem : MonoBehaviour
 	
 	public RUISDevice rootDevice; 
 	
-	OVRCameraController ovrCameraController;
-	
-	void Awake() {
-		ovrCameraController = MonoBehaviour.FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
-	
+	void Awake() 
+	{
 		string[] names = System.Enum.GetNames( typeof( RUISDevice ) );
 		foreach(string device in names) {
 			RUISDevice device1Enum = (RUISDevice) System.Enum.Parse( typeof(RUISDevice), device, true );

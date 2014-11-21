@@ -38,7 +38,6 @@ public class RUISCamera : MonoBehaviour {
     private RUISDisplay.StereoType oldStereoTypeValue;
 
     RUISKeystoningConfiguration keystoningConfiguration;
-	OVRCameraController ovrController;
 	
     public float near = 0.3f;
     public float far = 1000;

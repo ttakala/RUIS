@@ -49,7 +49,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				var HMD = OVR.Hmd.GetHmd();
 				riftState = HMD.GetTrackingState();      
 				isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
-				
+
 				// Find out the Oculus HMD version
 				oculusHmdObject = Hmd.GetHmd();
 				ovrDesc = oculusHmdObject.GetDesc();
