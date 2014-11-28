@@ -197,31 +197,67 @@ public class RUISSkeletonWand : RUISWand
     public override bool SelectionButtonWasPressed()
     {
         if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) return false;
-        if (gestureRecognizer.GestureTriggered() && wandSelector.HighlightedObject)
-        {
-            gestureRecognizer.ResetProgress();
-            return true;
-        }
-		
-        return false;
+        
+		if(gestureRecognizer.IsBinaryGesture())
+		{
+			return gestureRecognizer.GestureTriggered();
+		}
+		else 
+		{
+           if (gestureRecognizer.GestureTriggered() && wandSelector.HighlightedObject)
+	        {
+	            gestureRecognizer.ResetProgress();
+	            return true;
+	        }
+	        else 
+	        {
+	        	return false;
+	        }
+		}
     }
 
     public override bool SelectionButtonWasReleased()
     {
-        if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) return false;
-        if (gestureRecognizer.GestureTriggered())
+        if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) 
         {
-            gestureRecognizer.ResetProgress();
-            return true;
+			if(   !wandSelector.toggleSelection
+			   //|| (wandSelector.toggleSelection && wandSelector.selectionButtonReleasedAfterSelection)
+			   )
+	        	return true;
+	        else
+				return false;
         }
-
-        return false;
+        
+		if(gestureRecognizer.IsBinaryGesture())
+		{
+			return !gestureRecognizer.GestureTriggered();
+		}
+		else
+		{
+	        if (gestureRecognizer.GestureTriggered())
+	        {
+	            gestureRecognizer.ResetProgress();
+	            return true;
+	        }
+	        else
+	        { 
+	        	return false;
+	        }
+        }
     }
 
     public override bool SelectionButtonIsDown()
     {
         if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) return false;
-        return gestureRecognizer.GestureTriggered();
+		
+		if(gestureRecognizer.IsBinaryGesture())
+		{
+			return gestureRecognizer.GestureTriggered();
+		}
+		else 
+		{
+        	return gestureRecognizer.GestureTriggered();
+        }
     }
 
     public override bool IsSelectionButtonStandard()

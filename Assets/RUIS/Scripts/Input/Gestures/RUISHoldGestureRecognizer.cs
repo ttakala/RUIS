@@ -95,4 +95,10 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
         gestureEnabled = false;
         ResetData();
     }
+    
+	
+	public override bool IsBinaryGesture()
+	{
+		return false;
+	}
 }

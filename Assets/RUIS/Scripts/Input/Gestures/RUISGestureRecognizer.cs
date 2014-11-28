@@ -17,5 +17,7 @@ public abstract class RUISGestureRecognizer : MonoBehaviour {
     public abstract void ResetProgress();
 
     public abstract void EnableGesture();
-    public abstract void DisableGesture();
+	public abstract void DisableGesture();
+	
+	public abstract bool IsBinaryGesture();
 }

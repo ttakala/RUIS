@@ -160,4 +160,9 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
 
         isTrackingBufferTimeFinished = true;
     }
+    
+	public override bool IsBinaryGesture()
+	{
+		return true;
+	}
 }
