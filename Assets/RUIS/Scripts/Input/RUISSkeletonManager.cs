@@ -78,8 +78,15 @@ public class RUISSkeletonManager : MonoBehaviour {
 		public JointData rightThumb = new JointData();
 		public JointData neck = new JointData();
 
-		public bool rightHandClosed = false;
-		public bool leftHandClosed = false;
+		public handState rightHandStatus = handState.unknown;
+		public handState leftHandStatus = handState.unknown;
+		
+		public enum handState {
+			closed,
+			open,
+			pointing,
+			unknown
+		}
 		
 		public ulong trackingId = 0;
     }
@@ -97,6 +104,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 	public static int kinect1SensorID = 0;
 	public static int kinect2SensorID = 1;
+	
+	public bool isNewKinect2Frame { get; private set; }
 
     void Awake()
     {
@@ -113,11 +122,15 @@ public class RUISSkeletonManager : MonoBehaviour {
             coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
         }
 
-		for (int x = 0; x < 2; x++) {
-					for (int i = 0; i < 6; i++) {
-							skeletons [x, i] = new Skeleton ();
-					}
+		for (int x = 0; x < 2; x++) 
+		{
+			for (int i = 0; i < 6; i++) 
+			{
+					skeletons [x, i] = new Skeleton ();
 			}
+		}
+		
+		isNewKinect2Frame = false;
     }
 	
 	void Update () {
@@ -148,9 +161,11 @@ public class RUISSkeletonManager : MonoBehaviour {
 				}
 		}
 
-		if (inputManager.enableKinect2) {
-
-			Kinect.Body[] data = RUISKinect2Data.getData ();
+		if (inputManager.enableKinect2) 
+		{
+			bool isNewFrame = false;
+			Kinect.Body[] data = RUISKinect2Data.getData(out isNewFrame);
+			isNewKinect2Frame = isNewFrame;
 			
 			if (data != null) {
 				
@@ -281,8 +296,36 @@ public class RUISSkeletonManager : MonoBehaviour {
 						skeletons [kinect2SensorID, playerID].rightHand.rotation *= Quaternion.Euler(0, 180, 90);
 						
 						// Fist curling
-						skeletons [kinect2SensorID, playerID].leftHandClosed = (body.HandLeftState == Kinect.HandState.Closed) ? true : false;
-						skeletons [kinect2SensorID, playerID].rightHandClosed = (body.HandRightState == Kinect.HandState.Closed) ? true : false;
+						switch(body.HandLeftState) {
+							case Kinect.HandState.Closed:
+								skeletons [kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.closed;
+							break;	
+							case Kinect.HandState.Open:
+								skeletons [kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.open;
+							break;	
+							case Kinect.HandState.Lasso:
+								skeletons [kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.pointing;
+							break;
+							case Kinect.HandState.Unknown:
+							case Kinect.HandState.NotTracked:
+								skeletons [kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.unknown;
+							break;
+						}
+						switch(body.HandRightState) {
+							case Kinect.HandState.Closed:
+								skeletons [kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.closed;
+								break;	
+							case Kinect.HandState.Open:
+								skeletons [kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.open;
+								break;	
+							case Kinect.HandState.Lasso:
+								skeletons [kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.pointing;
+								break;
+							case Kinect.HandState.Unknown:
+							case Kinect.HandState.NotTracked:
+								skeletons [kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.unknown;
+								break;
+						}
 						
 						// Thumbs
 						relativePos = skeletons [kinect2SensorID, playerID].leftThumb.position - skeletons [kinect2SensorID, playerID].leftHand.position;

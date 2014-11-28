@@ -55,8 +55,9 @@ public class RUISKinect2Data : MonoBehaviour {
 //		{ Kinect.JointType.Neck, Kinect.JointType.Head },
 //	};
 	
-	public Kinect.Body[] getData() 
+	public Kinect.Body[] getData(out bool newFrame) 
 	{
+		newFrame = _SourceManager.isNewFrame;
 		if(_SourceManager)
 			return _SourceManager.GetBodyData();
 		else

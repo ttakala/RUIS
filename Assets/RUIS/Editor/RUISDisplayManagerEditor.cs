@@ -54,7 +54,7 @@ public class RUISDisplayManagerEditor : Editor {
 		guiScaleY = serializedObject.FindProperty("guiScaleY");
 		hideMouseOnPlay = serializedObject.FindProperty("hideMouseOnPlay");
 		
-		displayManagerLink = new SerializedObject(displayManager);// target is the object that you are trying to make editor changes for. In this case Uni.
+		displayManagerLink = new SerializedObject(displayManager);
 		guiDisplayChoiceLink = displayManagerLink.FindProperty("guiDisplayChoice");
 		
         allowResolutionDialog = serializedObject.FindProperty("allowResolutionDialog");

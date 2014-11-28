@@ -844,11 +844,11 @@ public class RUISSkeletonController : MonoBehaviour
 		for (int i = 0; i < 2; i++)  { // Hands
 			
 			if (i == 0) {
-				closeHand = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandClosed;
+				closeHand = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandStatus == RUISSkeletonManager.Skeleton.handState.closed);
 				invert = -1;
 			}
 			else {
-				closeHand = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandClosed;	
+				closeHand = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
 				invert = 1;
 			}
 			// Thumb rotation correction

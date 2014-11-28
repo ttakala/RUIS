@@ -11,6 +11,8 @@ public class Kinect2SourceManager : MonoBehaviour
 	private byte[] _BodyIndexData = null;
 	private Windows.Kinect.Vector4 floorClipPlane;
 	
+	public bool isNewFrame { get; private set; }
+	
 	public KinectSensor GetSensor() {
 		return _Sensor;
 	}
@@ -37,6 +39,7 @@ public class Kinect2SourceManager : MonoBehaviour
     void Awake () 
     {
         _Sensor = KinectSensor.GetDefault();
+		isNewFrame = false;
 
         if (_Sensor != null)
         {
@@ -53,12 +56,11 @@ public class Kinect2SourceManager : MonoBehaviour
     {
         if (_Reader != null)
         {
-            var frame = _Reader.AcquireLatestFrame();
+        	var frame = _Reader.AcquireLatestFrame();
             if (frame != null)
             {
-            
-				
-                // Update body data
+				isNewFrame = true;
+            	// Update body data
 				var bodyFrame = frame.BodyFrameReference.AcquireFrame();
 				if(bodyFrame  != null) {
 					floorClipPlane = bodyFrame.FloorClipPlane;
@@ -92,6 +94,8 @@ public class Kinect2SourceManager : MonoBehaviour
 				}       
 	            frame = null;
             }
+            else
+				isNewFrame = false;
         }    
     }
     

@@ -13,41 +13,53 @@ using System.Collections.Generic;
 [AddComponentMenu("RUIS/Input/RUISSkeletonWand")]
 public class RUISSkeletonWand : RUISWand
 {
+
+	public int playerId = 0;
+	public RUISSkeletonController.bodyTrackingDeviceType bodyTrackingDevice = 0;
+	public int bodyTrackingDeviceID;
+	public int gestureSelectionMethod;
+	public string gestureSelectionScriptName;
     public RUISSkeletonManager.Joint wandStart = RUISSkeletonManager.Joint.RightElbow;
     public RUISSkeletonManager.Joint wandEnd = RUISSkeletonManager.Joint.RightHand;
-
-    public RUISGestureRecognizer gestureRecognizer;
-
-    private RUISSkeletonManager skeletonManager;
-
-    RUISDisplayManager displayManager;
-
-    public Color wandColor = Color.white;
-
-    public int playerId = 0;
-	public int bodyTrackingDeviceID = 0;
-
+    private KalmanFilteredRotation rotationFilter;
+    public float rotationNoiseCovariance = 500;
+	public float visualizerThreshold = 0.25f;
+	public int visualizerWidth = 32;
+	public int visualizerHeight = 32;
+	public Color wandColor = Color.white;
+	private RUISGestureRecognizer gestureRecognizer;
+	public GameObject wandPositionVisualizer;
+	
+	
+	private Texture2D[] selectionVisualizers;
+	public RUISSkeletonManager skeletonManager;
+    private RUISDisplayManager displayManager;
     private const int amountOfSelectionVisualizerImages = 8;
-    Texture2D[] selectionVisualizers;
-
-    public int visualizerWidth = 32;
-    public int visualizerHeight = 32;
-
-    public float visualizerThreshold = 0.25f;
-
+   
     private RUISWandSelector wandSelector;
-
     private bool isTracking = false;
-
-    public GameObject wandPositionVisualizer;
-
     private RUISSelectable highlightStartObject;
+	
+	
 	
 	// Tuukka:
 	private Quaternion tempRotation;
+	private Quaternion filteredRotation;
 
     public void Awake()
     {
+		rotationFilter = new KalmanFilteredRotation();
+		rotationFilter.skipIdenticalMeasurements = true;
+		rotationFilter.rotationNoiseCovariance = rotationNoiseCovariance;
+		
+		bodyTrackingDeviceID = (int)bodyTrackingDevice;
+		RUISGestureRecognizer[] gestureRecognizerScripts = GetComponents<RUISGestureRecognizer>();
+		
+		foreach(RUISGestureRecognizer script in gestureRecognizerScripts) {
+			if(script.ToString() != gestureSelectionScriptName) script.enabled = false;
+			else gestureRecognizer = script;
+		}
+		
         if (!skeletonManager)
         {
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
@@ -124,13 +136,15 @@ public class RUISSkeletonWand : RUISWand
 			// First calculate local rotation
             if (startData != null && startData.positionConfidence >= 0.5f)
             {
-                tempRotation = Quaternion.LookRotation(endData.position - startData.position);
+				tempRotation = Quaternion.LookRotation(endData.position - startData.position);
+				filteredRotation = rotationFilter.Update(tempRotation, Time.deltaTime);
             }
             else if (endData.rotationConfidence >= 0.5f)
             {
-                tempRotation = endData.rotation;
+				tempRotation = endData.rotation;
+				filteredRotation = rotationFilter.Update(tempRotation, Time.deltaTime);
             }
-			
+            
 			if (rigidbody)
 	        {
 				// TUUKKA:
@@ -138,19 +152,19 @@ public class RUISSkeletonWand : RUISWand
 				{
 					// If the wand has a parent, we need to apply its transformation first
 	            	rigidbody.MovePosition(transform.parent.TransformPoint(endData.position));
-	            	rigidbody.MoveRotation(transform.parent.rotation * tempRotation);
+					rigidbody.MoveRotation(transform.parent.rotation * filteredRotation);
 				}
 				else
 				{
 	            	rigidbody.MovePosition(endData.position);
-	            	rigidbody.MoveRotation(tempRotation);
+					rigidbody.MoveRotation(filteredRotation);
 				}
 	        }
 			else
 	        {
 				// If there is no rigidBody, then just change localPosition & localRotation
 				transform.localPosition = endData.position;
-	            transform.localRotation = tempRotation;
+				transform.localRotation = filteredRotation;
 	        }
 			
         }
@@ -188,7 +202,7 @@ public class RUISSkeletonWand : RUISWand
             gestureRecognizer.ResetProgress();
             return true;
         }
-
+		
         return false;
     }
 

@@ -49,6 +49,7 @@ Transform:
   m_Children:
   - {fileID: 400002}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!4 &400002
 Transform:
   m_ObjectHideFlags: 1
@@ -60,6 +61,7 @@ Transform:
   m_LocalScale: {x: .0299999993, y: .0299999993, z: .150000006}
   m_Children: []
   m_Father: {fileID: 400000}
+  m_RootOrder: 0
 --- !u!23 &2300000
 Renderer:
   m_ObjectHideFlags: 1
@@ -78,9 +80,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -147,14 +148,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1212d2f5dee044e4d81deccbb6efa05a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 0
+  bodyTrackingDevice: 1
+  bodyTrackingDeviceID: 0
+  gestureSelectionMethod: 0
   wandStart: 7
   wandEnd: 8
-  gestureRecognizer: {fileID: 11400000}
-  wandColor: {r: 1, g: 1, b: 1, a: 1}
-  playerId: 0
+  visualizerThreshold: .5
   visualizerWidth: 32
   visualizerHeight: 32
-  visualizerThreshold: .5
+  wandColor: {r: 1, g: 1, b: 1, a: 1}
+  gestureRecognizer: {fileID: 11400000}
   wandPositionVisualizer: {fileID: 100002}
 --- !u!120 &12000000
 LineRenderer:
@@ -174,9 +178,8 @@ LineRenderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
   m_Positions: []
   m_Parameters:
     startWidth: .00999999978

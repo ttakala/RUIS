@@ -56,7 +56,7 @@ public class RUISHoldGestureRecognizer : RUISGestureRecognizer
     }
 
     public override bool GestureTriggered()
-    {
+    {	
         return gestureProgress >= 0.99f;
     }
 
