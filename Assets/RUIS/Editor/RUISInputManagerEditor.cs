@@ -98,7 +98,7 @@ public class RUISInputManagerEditor : Editor {
                 else
                 {
                     //failure
-                }
+                }	
             }
             if (GUILayout.Button("Export to XML"))
             {

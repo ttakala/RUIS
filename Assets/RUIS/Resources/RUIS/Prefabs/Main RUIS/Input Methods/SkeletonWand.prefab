@@ -152,14 +152,16 @@ MonoBehaviour:
   bodyTrackingDevice: 1
   bodyTrackingDeviceID: 0
   gestureSelectionMethod: 0
+  gestureSelectionScriptName: SkeletonWand (RUISHoldGestureRecognizer)
   wandStart: 7
   wandEnd: 8
+  rotationNoiseCovariance: 500
   visualizerThreshold: .5
   visualizerWidth: 32
   visualizerHeight: 32
   wandColor: {r: 1, g: 1, b: 1, a: 1}
-  gestureRecognizer: {fileID: 11400000}
   wandPositionVisualizer: {fileID: 100002}
+  skeletonManager: {fileID: 0}
 --- !u!120 &12000000
 LineRenderer:
   m_ObjectHideFlags: 1

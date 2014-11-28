@@ -29,7 +29,7 @@ public class RUISSkeletonWand : RUISWand
 	public Color wandColor = Color.white;
 	private RUISGestureRecognizer gestureRecognizer;
 	public GameObject wandPositionVisualizer;
-	
+	public bool showVisualizer = true;
 	
 	private Texture2D[] selectionVisualizers;
 	public RUISSkeletonManager skeletonManager;
@@ -172,6 +172,7 @@ public class RUISSkeletonWand : RUISWand
 
     public void OnGUI()
     {
+		if(!showVisualizer) return;
         if (!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking || !gestureRecognizer) return;
 
         float gestureProgress = gestureRecognizer.GetGestureProgress();

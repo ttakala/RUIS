@@ -136,8 +136,10 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 	
 	public override float GetGestureProgress()
 	{
-		if(handClosed) return 1;
-		else return 0;
+		if(handClosed)
+			return 1;
+		else 
+			return 0;
 	}
 	
 	public override void ResetProgress()

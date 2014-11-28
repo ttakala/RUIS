@@ -21,6 +21,7 @@ public class RUISSkeletonWandEditor : Editor
 	SerializedObject gestureSelectionMethodLink; 
 	SerializedProperty guiGestureSelectionMethodChoiceLink;
 	SerializedProperty gestureScriptLink;
+	SerializedProperty showVisualizer;
 	
 	RUISSkeletonWand skeletonWand;
 	RUISGestureRecognizer[] gestureRecognizerScripts;
@@ -38,6 +39,7 @@ public class RUISSkeletonWandEditor : Editor
 		wandColor = serializedObject.FindProperty("wandColor");
 		gestureRecognizer = serializedObject.FindProperty("gestureRecognizer");
 		wandPositionVisualizer = serializedObject.FindProperty("wandPositionVisualizer");
+		showVisualizer = serializedObject.FindProperty("showVisualizer");
 		
 		skeletonWand = target as RUISSkeletonWand;
 		
@@ -74,9 +76,15 @@ public class RUISSkeletonWandEditor : Editor
 		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", ""));
 		EditorGUILayout.PropertyField(wandStart, new GUIContent("Wand Start Point", ""));
 		EditorGUILayout.PropertyField(wandEnd, new GUIContent("Wand End Point", ""));
-		EditorGUILayout.PropertyField(visualizerThreshold, new GUIContent("Visualizer Threshold", ""));
-		EditorGUILayout.PropertyField(visualizerWidth, new GUIContent("Visualizer Width", ""));
-		EditorGUILayout.PropertyField(visualizerHeight, new GUIContent("Visualize Height", ""));
+		
+		EditorGUILayout.PropertyField(showVisualizer, new GUIContent("Show Visualizer", ""));
+		if(showVisualizer.boolValue) {
+			EditorGUI.indentLevel += 2;
+			EditorGUILayout.PropertyField(visualizerThreshold, new GUIContent("Visualizer Threshold", ""));
+			EditorGUILayout.PropertyField(visualizerWidth, new GUIContent("Visualizer Width", ""));
+			EditorGUILayout.PropertyField(visualizerHeight, new GUIContent("Visualizer Height", ""));
+			EditorGUI.indentLevel -= 2;	
+		}
 		EditorGUILayout.PropertyField(wandColor, new GUIContent("Wand Color", ""));
 		EditorGUILayout.PropertyField(wandPositionVisualizer, new GUIContent("Wand Position Visualizer", ""));
 		serializedObject.ApplyModifiedProperties();

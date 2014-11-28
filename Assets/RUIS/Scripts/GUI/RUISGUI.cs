@@ -13,7 +13,7 @@ using System.Collections;
 public class RUISGUI {
     public static void DrawTextureViewportSafe(Rect where, Camera camera, Texture texture, bool flipYCoordinate = true)
     {
-        if (!camera)
+		 if (!camera)
         {
             Debug.Log("null camera! " + where);
             return;
@@ -74,6 +74,7 @@ public class RUISGUI {
             texCoords = new Rect(textureU, textureV, textureWidth, textureHeight);
         }
         
-        GUI.DrawTextureWithTexCoords(newWhere, texture, texCoords);
+        //GUI.DrawTextureWithTexCoords(newWhere, texture, texCoords);
+		Graphics.DrawTexture(newWhere, texture, null);
     }
 }
