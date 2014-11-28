@@ -95,8 +95,7 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 			}
 			else  {
 				return RUISCalibrationPhase.Preparation;
-			}	
-			kinectChecked = true;	
+			}
 		}
 		
 		return RUISCalibrationPhase.Invalid; // Loop should not get this far

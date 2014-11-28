@@ -174,7 +174,7 @@ public class RUISSkeletonController : MonoBehaviour
 		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)  bodyTrackingDeviceID = 2;
 
 		followMoveController = false;
-		Quaternion moveYawRotation = Quaternion.identity;
+		moveYawRotation = Quaternion.identity;
 		
         jointInitialRotations = new Dictionary<Transform, Quaternion>();
         jointInitialDistances = new Dictionary<KeyValuePair<Transform, Transform>, float>();

@@ -60,8 +60,8 @@ public class RUISCharacterAnimationController : MonoBehaviour
         }
         else // The character is in the air
         {
-            animationCombiner.leftLegBlendWeight = 1;
-            animationCombiner.rightLegBlendWeight = 1;
+//            animationCombiner.leftLegBlendWeight = 1;
+//            animationCombiner.rightLegBlendWeight = 1;
         }
 	}
 }

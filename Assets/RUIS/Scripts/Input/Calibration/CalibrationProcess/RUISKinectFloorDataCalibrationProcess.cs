@@ -108,7 +108,6 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 				sceneAnalyzer.StartGenerating();
 				return RUISCalibrationPhase.Preparation;
 			}
-			kinectChecked = true;	
 		}	
 		
 		return RUISCalibrationPhase.Invalid; // Loop should not get this far

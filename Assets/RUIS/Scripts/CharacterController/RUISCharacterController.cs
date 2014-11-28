@@ -151,7 +151,7 @@ public class RUISCharacterController : MonoBehaviour
 				var HMD = OVR.Hmd.GetHmd();
 				ovrTrackingState riftState = HMD.GetTrackingState();      
 				bool isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
-				
+
 				oculusHmdObject = Hmd.GetHmd();
 				if(oculusHmdObject != null)
 				{
@@ -164,6 +164,12 @@ public class RUISCharacterController : MonoBehaviour
 						useOculusPositionalTracking = false;
 					}
 				}
+				if(!isRiftConnected)
+				{
+					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot because Oculus Rift is not connected.");
+					useOculusPositionalTracking = false;
+				}
+
 			}
 			catch(UnityException e)
 			{
@@ -313,12 +319,15 @@ public class RUISCharacterController : MonoBehaviour
 
     private Vector3 GetPivotPositionInTrackerCoordinates()
     {
-		if(useOculusPositionalTracking && OVRDevice.IsCameraTracking() && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+		if(useOculusPositionalTracking && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
 		{
-			ovrTrackingState trackingState = oculusHmdObject.GetTrackingState(Hmd.GetTimeInSeconds());
+			if(OVRDevice.IsCameraTracking())
+			{
+				ovrTrackingState trackingState = oculusHmdObject.GetTrackingState(Hmd.GetTimeInSeconds());
 
-			headPosition = new Vector3(trackingState.HeadPose.ThePose.Position.x, trackingState.HeadPose.ThePose.Position.y, trackingState.HeadPose.ThePose.Position.z);
-			return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
+				headPosition = new Vector3(trackingState.HeadPose.ThePose.Position.x, trackingState.HeadPose.ThePose.Position.y, trackingState.HeadPose.ThePose.Position.z);
+				return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
+			}
 		}
 		else
 		{

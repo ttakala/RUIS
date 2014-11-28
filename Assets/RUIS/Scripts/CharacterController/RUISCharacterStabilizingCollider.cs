@@ -9,17 +9,19 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 using UnityEngine;
 using System.Collections;
+using OVR;
 
-//assumes kinect ground is at Y = 0
+// Assumes that Kinect ground is at Y = 0
 [RequireComponent(typeof(CapsuleCollider))]
 public class RUISCharacterStabilizingCollider : MonoBehaviour 
 {
+	RUISSkeletonManager skeletonManager;
     RUISSkeletonController skeletonController;
+	RUISCharacterController characterController;
 
 	private RUISCoordinateSystem coordinateSystem;
 	private float coordinateYOffset = 0;
 
-    RUISSkeletonManager skeletonManager;
     int playerId = 0;
 	int bodyTrackingDeviceID = 0;
     private CapsuleCollider capsuleCollider;
@@ -38,7 +40,12 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	private double[] measuredPos = {0, 0, 0};
 	private double[] pos = {0, 0, 0};
 	private float positionNoiseCovariance = 1500;
-
+	
+	Vector3 headPosition = Vector3.zero;
+	Vector3 torsoPosition = Vector3.zero;
+	Vector3 newLocalPosition = Vector3.zero;
+	
+	Hmd oculusHmdObject;
 
     private float _colliderHeight;
     public float colliderHeight
@@ -88,6 +95,21 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 				bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
 			}
 		}
+
+		if(transform.parent)
+			characterController = transform.parent.GetComponent<RUISCharacterController>();
+
+		if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+		{
+			try
+			{
+				oculusHmdObject = Hmd.GetHmd();
+			}
+			catch(UnityException e)
+			{
+				Debug.LogError(e);
+			}
+		}
 	}
 	
 	void FixedUpdate () 
@@ -97,9 +119,31 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 			coordinateYOffset = coordinateSystem.positionOffset.y;
 		}
 
-		Vector3 torsoPos;
-		Vector3 newLocalPosition;
-		
+//		if(characterController != null && characterController.useOculusPositionalTracking && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+//		{
+//			if(OVRDevice.IsCameraTracking() && oculusHmdObject != null)
+//			{
+//				ovrTrackingState trackingState = oculusHmdObject.GetTrackingState(Hmd.GetTimeInSeconds());
+//				
+//				headPosition = new Vector3(trackingState.HeadPose.ThePose.Position.x, trackingState.HeadPose.ThePose.Position.y, trackingState.HeadPose.ThePose.Position.z);
+//				torsoPosition = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
+//
+//				measuredPos[0] = torsoPosition.x;
+//				measuredPos[1] = torsoPosition.y;
+//				measuredPos[2] = torsoPosition.z;
+//				positionKalman.setR(Time.fixedDeltaTime * positionNoiseCovariance);
+//				positionKalman.predict();
+//				positionKalman.update(measuredPos);
+//				pos = positionKalman.getState();
+//				torsoPosition.x = (float) pos[0];
+//				torsoPosition.y = (float) pos[1] - coordinateYOffset;
+//				torsoPosition.z = (float) pos[2];
+//
+//				newLocalPosition = torsoPosition;
+//				newLocalPosition.y = (torsoPosition.y)/ 2 + coordinateYOffset; 
+//			}
+//		}
+
 		if (!skeletonManager || !skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking) 
 		{
 			
@@ -135,21 +179,21 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
                 {
 					// TODO *** Check that this works with other models. Before with grandma model torsoPos value was:
                     //torsoPos = skeletonController.transform.localPosition + defaultColliderHeight * Vector3.up;
-					torsoPos = skeletonController.transform.localPosition;
-					torsoPos.y = defaultColliderHeight; // torsoPos.y is lerped and 0 doesn't seem to work
-					newLocalPosition = torsoPos;
+					torsoPosition = skeletonController.transform.localPosition;
+					torsoPosition.y = defaultColliderHeight; // torsoPos.y is lerped and 0 doesn't seem to work
+					newLocalPosition = torsoPosition;
 					newLocalPosition.y = defaultColliderPosition.y;
 					
-					measuredPos[0] = torsoPos.x;
-					measuredPos[1] = torsoPos.y;
-					measuredPos[2] = torsoPos.z;
+					measuredPos[0] = torsoPosition.x;
+					measuredPos[1] = torsoPosition.y;
+					measuredPos[2] = torsoPosition.z;
 					positionKalman.setR(Time.fixedDeltaTime * positionNoiseCovariance);
 				    positionKalman.predict();
 				    positionKalman.update(measuredPos);
 					pos = positionKalman.getState();
-					torsoPos.x = (float) pos[0];
-					torsoPos.y = (float) pos[1];
-					torsoPos.z = (float) pos[2];
+					torsoPosition.x = (float) pos[0];
+					torsoPosition.y = (float) pos[1];
+					torsoPosition.z = (float) pos[2];
                 }
                 else
                 {
@@ -167,26 +211,26 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         }
         else
         {
-        	torsoPos = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position;
+        	torsoPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position;
 			
-			measuredPos[0] = torsoPos.x;
-			measuredPos[1] = torsoPos.y;
-			measuredPos[2] = torsoPos.z;
+			measuredPos[0] = torsoPosition.x;
+			measuredPos[1] = torsoPosition.y;
+			measuredPos[2] = torsoPosition.z;
 			positionKalman.setR(Time.fixedDeltaTime * positionNoiseCovariance);
 		    positionKalman.predict();
 		    positionKalman.update(measuredPos);
 			pos = positionKalman.getState();
-			torsoPos.x = (float) pos[0];
-			torsoPos.y = (float) pos[1] - coordinateYOffset;
-			torsoPos.z = (float) pos[2];
+			torsoPosition.x = (float) pos[0];
+			torsoPosition.y = (float) pos[1] - coordinateYOffset;
+			torsoPosition.z = (float) pos[2];
 
 			// Capsule collider is from floor up till torsoPos, therefore the capsule's center point is half of that
-			newLocalPosition = torsoPos;
-			newLocalPosition.y = (torsoPos.y)/ 2 + coordinateYOffset; 
+			newLocalPosition = torsoPosition;
+			newLocalPosition.y = (torsoPosition.y)/ 2 + coordinateYOffset; 
         }
 
 		// Updated collider height (from floor to torsoPos)
-		colliderHeight = Mathf.Lerp(capsuleCollider.height, torsoPos.y + colliderHeightTweaker, maxHeightChange * Time.fixedDeltaTime);
+		colliderHeight = Mathf.Lerp(capsuleCollider.height, torsoPosition.y + colliderHeightTweaker, maxHeightChange * Time.fixedDeltaTime);
 
 		// Updated collider position
         transform.localPosition = Vector3.MoveTowards(transform.localPosition, newLocalPosition, maxPositionChange * Time.fixedDeltaTime);

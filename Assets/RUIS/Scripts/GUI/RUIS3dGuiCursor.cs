@@ -22,6 +22,9 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 	{
 		menuScript = this.GetComponent<RUISMenuNGUI>();
 		this.guiPlane = this.transform.Find ("planeCollider").GetComponent<Collider>();
+		if(this.guiPlane == null)
+			Debug.LogError( "Did not find RUISMenu collider object, onto which mouse selection ray is projected!" );
+
 		ruisCamera = this.transform.parent.parent.GetComponent<RUISCamera>();
 		if(this.transform.parent == null)
 		{

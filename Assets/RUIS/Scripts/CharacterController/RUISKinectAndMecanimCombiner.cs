@@ -81,14 +81,14 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     private bool childrenInstantiated = false;
 
-	private RUISInputManager inputManager;
+	//private RUISInputManager inputManager;
 	private RUISSkeletonManager skeletonManager;
 
     private bool torsoIsRoot = false;
 
     void Awake()
     {
-        inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+        //inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
     }
 
     void Start()

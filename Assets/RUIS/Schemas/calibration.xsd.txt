@@ -17,8 +17,8 @@
 			<element name="PS_Move-Kinect_1" type="tns:TransformsFieldsType"/>
 			<element name="PS_Move-Kinect_2" type="tns:TransformsFieldsType"/>
 			<element name="PS_Move-Oculus_DK2" type="tns:TransformsFieldsType"/>
-			<element name="Kinect_1-Oculus_DK2" type="tns:TransformsFieldsType"/>
-			<element name="Kinect_2-Oculus_DK2" type="tns:TransformsFieldsType"/>
+			<element name="Oculus_DK2-Kinect_1" type="tns:TransformsFieldsType"/>
+			<element name="Oculus_DK2-Kinect_2" type="tns:TransformsFieldsType"/>
 			<element name="Kinect_2-Kinect_1" type="tns:TransformsFieldsType"/>
 		</all>
 	</complexType>

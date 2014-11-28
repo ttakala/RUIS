@@ -174,7 +174,6 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 			else {
 				return RUISCalibrationPhase.Preparation;
 			}
-			PSMoveChecked = true;
 		}
 		
 		return RUISCalibrationPhase.Invalid; // Loop should not get this far
@@ -306,8 +305,7 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		
 		Vector3 Kinect_sample = getSample (this.inputDevice1);
 		Vector3 PSMove_sample = getSample (this.inputDevice2);
-		
-		if(Kinect_sample == null || PSMove_sample == null) return; // No data from device
+
 		if (PSMove_sample == Vector3.zero || Kinect_sample == Vector3.zero) //Data not valid
 		{
 			return;
