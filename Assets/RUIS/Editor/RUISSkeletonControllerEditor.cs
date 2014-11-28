@@ -167,12 +167,12 @@ public class RUISSkeletonControllerEditor : Editor
 		 
 		EditorGUILayout.Space();
 		 
-		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", "")); 
+		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", "The source device for body tracking.")); 
 		
 		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(playerId, new GUIContent("Skeleton ID", "The player ID number"));
 		if (bodyTrackingDevice.enumValueIndex == 0 || bodyTrackingDevice.enumValueIndex == 1) 
 		{
-			EditorGUILayout.PropertyField(playerId, new GUIContent("Kinect Player ID", "The Kinect player ID number"));
 			EditorGUILayout.PropertyField(switchToAvailableKinect, new GUIContent(  "Switch To Available Kinect", "Examine RUIS InputManager settings, and "
 			                                                                      + "switch Body Tracking Device from Kinect 1 to Kinect 2 in run-time if "
 			                                                                      + "the latter is enabled but the former is not, and vice versa."));

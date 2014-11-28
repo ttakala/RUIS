@@ -74,11 +74,13 @@ public class RUISCharacterControllerEditor : Editor
         {
 			
 			case (int)RUISCharacterController.CharacterPivotType.KinectHead:
-			EditorGUILayout.LabelField(new GUIContent("Kinect " + ((bodyTrackingDeviceID==0)?1:2) + " Player ID " + kinectPlayerId,  
-			                                          "You can change this value from " + typeof(RUISSkeletonController).ToString() + " script that is in one of the child objects."));
+				
+			EditorGUILayout.LabelField(new GUIContent(bodyTrackingDevice.ToString() + " Skeleton ID " + kinectPlayerId,  
+			                                          "You can change this value from " + typeof(RUISSkeletonController).ToString() 
+			                                          + " script that is in one of the child objects."));
 				break;
 			case (int)RUISCharacterController.CharacterPivotType.KinectTorso:
-				EditorGUILayout.LabelField(new GUIContent("Kinect " + ((bodyTrackingDeviceID==0)?1:2) + " Player ID " + kinectPlayerId, "You can change this value from " 
+				EditorGUILayout.LabelField(new GUIContent(bodyTrackingDevice.ToString() + " Skeleton ID " + kinectPlayerId, "You can change this value from " 
 	                          							  + typeof(RUISSkeletonController).ToString() + " script that is in one of the child objects."));
 				break;
             case (int)RUISCharacterController.CharacterPivotType.MoveController:

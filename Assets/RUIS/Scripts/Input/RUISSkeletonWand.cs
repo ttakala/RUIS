@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   A basic wand to use with a Kinect-tracked skeleton
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Heikki Heiskanen, Tuukka Takala
+Copyright  :   Copyright 2014 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -23,6 +23,7 @@ public class RUISSkeletonWand : RUISWand
     public RUISSkeletonManager.Joint wandEnd = RUISSkeletonManager.Joint.RightHand;
     private KalmanFilteredRotation rotationFilter;
     public float rotationNoiseCovariance = 500;
+	[Range(0f, 1f)]
 	public float visualizerThreshold = 0.25f;
 	public int visualizerWidth = 32;
 	public int visualizerHeight = 32;
@@ -39,10 +40,9 @@ public class RUISSkeletonWand : RUISWand
     private RUISWandSelector wandSelector;
     private bool isTracking = false;
     private RUISSelectable highlightStartObject;
-	
-	
-	
-	// Tuukka:
+
+	public bool switchToAvailableKinect = true;
+
 	private Quaternion tempRotation;
 	private Quaternion filteredRotation;
 
@@ -82,6 +82,45 @@ public class RUISSkeletonWand : RUISWand
 
         PlayerLost();
     }
+
+	public void Start()
+	{
+		RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+		if(inputManager)
+		{
+			if(switchToAvailableKinect)
+			{
+				if(   bodyTrackingDevice == RUISSkeletonController.bodyTrackingDeviceType.Kinect1
+				   && !inputManager.enableKinect && inputManager.enableKinect2)
+				{
+					bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect2;
+				}
+				else if(   bodyTrackingDevice == RUISSkeletonController.bodyTrackingDeviceType.Kinect2
+				        && !inputManager.enableKinect2 && inputManager.enableKinect)
+				{
+					bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
+
+					RUISHoldGestureRecognizer holdGestureRecognizer = GetComponent<RUISHoldGestureRecognizer>();
+
+					if(gestureRecognizer != holdGestureRecognizer)
+					{
+						gestureRecognizer.enabled = false;
+						holdGestureRecognizer.enabled = true;
+						gestureRecognizer = holdGestureRecognizer;
+						Debug.LogWarning(  "Switched gesture recognizer of '" + name + "' to " + typeof(RUISHoldGestureRecognizer) + " because "
+						                 + "Kinect 1 is enabled instead of Kinect 2, and at the moment that is the only supported Kinect 1 gesture.");
+						gestureSelectionScriptName = holdGestureRecognizer.ToString();
+					}
+				}
+				else if(!inputManager.enableKinect2 && !inputManager.enableKinect)
+				{
+					Debug.LogWarning("Kinect 1 and 2 are not enabled in RUIS InputManager, disabling Skeleton Wand gameobject '" + name + "'.");
+					gameObject.SetActive(false);
+				}
+				bodyTrackingDeviceID = (int)bodyTrackingDevice;
+			}
+		}
+	}
 
     public void Update()
     {
