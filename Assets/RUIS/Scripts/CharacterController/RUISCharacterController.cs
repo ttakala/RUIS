@@ -148,10 +148,11 @@ public class RUISCharacterController : MonoBehaviour
 			try
 			{
 				bool isRiftConnected = OVRManager.display.isPresent;
+				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
 	
 				if(ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD || ovrHmdVersion == Ovr.HmdType.None)
 				{
-					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot with Oculus Rift DK1/DKHD/ovrHmd_None.");
+					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot with Oculus Rift " + ovrHmdVersion);
 					useOculusPositionalTracking = false;
 				}
 				
