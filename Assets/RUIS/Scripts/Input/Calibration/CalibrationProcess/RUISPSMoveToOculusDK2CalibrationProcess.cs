@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CSML;
 using Kinect = Windows.Kinect;
-using OVR;
+using Ovr;
 
 public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	 
@@ -42,8 +42,6 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	private Matrix4x4 rotationMatrix, transformMatrix;
 	
-	Hmd oculusDK2HmdObject;
-	
 	Quaternion kinect1PitchRotation = Quaternion.identity;
 	float kinect1DistanceFromFloor = 0;
 	
@@ -60,7 +58,6 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		inputManager = MonoBehaviour.FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		
-		oculusDK2HmdObject = Hmd.GetHmd();
 		
 		this.timeSinceScriptStart = 0;
 		this.timeBetweenSamples = 1 / (float)numberOfSamplesPerSecond;
@@ -139,7 +136,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		if(!oculusChecked && timeSinceScriptStart > 4) {
 			oculusChecked = true;	
-			if (oculusDK2HmdObject  == null) {
+			if (!OVRManager.display.isPresent) {
 				this.guiTextLowerLocal = "Connecting to Oculus Rift DK2. \n\n Error: Could not connect to Oculus Rift DK2.";
 				return RUISCalibrationPhase.Invalid;
 			}
@@ -295,16 +292,17 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		if(device == RUISDevice.Oculus_DK2) 
 		{
-			ovrTrackingState ss = oculusDK2HmdObject.GetTrackingState(Hmd.GetTimeInSeconds());
 			
-			float px = ss.HeadPose.ThePose.Position.x;
-			float py = ss.HeadPose.ThePose.Position.y;
-			float pz = ss.HeadPose.ThePose.Position.z;
+			OVRPose headpose = OVRManager.display.GetHeadPose();
+			
+			float px = headpose.position.x;
+			float py = headpose.position.y;
+			float pz = headpose.position.z;
 			
 			tempSample = new Vector3(px, py, pz);
 			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);
 			if((Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
-			   && ((ss.StatusFlags & (uint)ovrStatusBits.ovrStatus_PositionTracked) != 0)) 
+			   && OVRManager.tracker.isPositionTracked) 
 			{
 				sample = tempSample;
 				lastOculusDK2Sample = sample;

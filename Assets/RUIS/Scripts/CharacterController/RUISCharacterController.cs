@@ -10,7 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using OVR;
+using Ovr;
 
 public class RUISCharacterController : MonoBehaviour
 {
@@ -64,9 +64,8 @@ public class RUISCharacterController : MonoBehaviour
 	List<Transform> bodyParts = new List<Transform>(2);
 	RUISSkeletonController skeletonController;
 
-	ovrHmdType ovrHmdVersion = ovrHmdType.ovrHmd_None;
-	Hmd oculusHmdObject;
-
+	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
+	
     void Awake()
     {
         inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
@@ -148,22 +147,14 @@ public class RUISCharacterController : MonoBehaviour
 		{
 			try
 			{
-				var HMD = OVR.Hmd.GetHmd();
-				ovrTrackingState riftState = HMD.GetTrackingState();      
-				bool isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
-
-				oculusHmdObject = Hmd.GetHmd();
-				if(oculusHmdObject != null)
+				bool isRiftConnected = OVRManager.display.isPresent;
+	
+				if(ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD || ovrHmdVersion == Ovr.HmdType.None)
 				{
-					ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
-					ovrHmdVersion = ovrDesc.Type;
-
-					if(ovrHmdVersion == ovrHmdType.ovrHmd_DK1 || ovrHmdVersion == ovrHmdType.ovrHmd_DKHD || ovrHmdVersion == ovrHmdType.ovrHmd_None)
-					{
-						Debug.LogError("Can't use Oculus Rift's tracked position as a pivot with Oculus Rift DK1/DKHD/ovrHmd_None.");
-						useOculusPositionalTracking = false;
-					}
+					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot with Oculus Rift DK1/DKHD/ovrHmd_None.");
+					useOculusPositionalTracking = false;
 				}
+				
 				if(!isRiftConnected)
 				{
 					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot because Oculus Rift is not connected.");
@@ -321,11 +312,11 @@ public class RUISCharacterController : MonoBehaviour
     {
 		if(useOculusPositionalTracking && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
 		{
-			if(OVRDevice.IsCameraTracking())
+			if(OVRManager.tracker.isPositionTracked)
 			{
-				ovrTrackingState trackingState = oculusHmdObject.GetTrackingState(Hmd.GetTimeInSeconds());
-
-				headPosition = new Vector3(trackingState.HeadPose.ThePose.Position.x, trackingState.HeadPose.ThePose.Position.y, trackingState.HeadPose.ThePose.Position.z);
+				OVRPose headpose = OVRManager.display.GetHeadPose();
+				
+				headPosition = new Vector3(headpose.position.x, headpose.position.y, headpose.position.z);
 				return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
 			}
 		}

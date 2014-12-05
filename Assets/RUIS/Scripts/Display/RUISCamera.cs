@@ -95,40 +95,14 @@ public class RUISCamera : MonoBehaviour {
 		
 		if (associatedDisplay != null && !associatedDisplay.enableOculusRift)
 		{
-			try
+			// TODO: Recreate RUISCamera for SDK 0.4.4
+			try 
 			{
-				GetComponent<OVRCameraController>().enabled = false;
+				GetComponent<OVRManager>().enabled = false;
 			}
 			catch (System.NullReferenceException e)
 			{
-				Debug.LogError("GameObject '" + name + "': OVRCameraController was not found.", this);
-			}
-			
-			try
-			{
-				GetComponent<OVRDevice>().enabled = false;
-			}
-			catch (System.NullReferenceException e)
-			{
-				Debug.LogError("GameObject '" + name + "': OVRDevice was not found.", this);
-			}
-
-			try
-			{
-				rightCamera.GetComponent<OVRCamera>().enabled = false;
-			}
-			catch (System.NullReferenceException e)
-			{
-				Debug.LogError("GameObject '" + name + "': OVRCamera was not found.", this);
-			}
-				
-			try
-			{
-				leftCamera.GetComponent<OVRCamera>().enabled = false;
-			}
-			catch (System.NullReferenceException e)
-			{
-				Debug.LogError("GameObject '" + name + "': OVRCamera was not found.", this);
+				Debug.LogError("GameObject '" + name + "': OVRManager was not found.", this);
 			}
 		}
 		else

@@ -10,7 +10,7 @@ Licensing  :	RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using OVR;
+using Ovr;
 
 public class RUISHeadTrackerAssigner : MonoBehaviour {
 	
@@ -24,6 +24,8 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 //	public Vector3 onlyMouseOffset = Vector3.zero;
 	public Transform razerWandParent;
 	
+	Ovr.HmdType ovrHmdVersion;
+	
     void Awake()
     {
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
@@ -36,24 +38,15 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 
 		bool isRiftConnected = false;
 
-		ovrTrackingState riftState;
-		Hmd oculusHmdObject;
-		ovrHmdDesc ovrDesc;
-		ovrHmdType ovrHmdVersion = ovrHmdType.ovrHmd_None;
-
 		if(UnityEditorInternal.InternalEditorUtility.HasPro())
 		{
 			try
 			{
 				// Find out if an Oculus HMD is connected
-				var HMD = OVR.Hmd.GetHmd();
-				riftState = HMD.GetTrackingState();      
-				isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+				isRiftConnected = (OVRManager.capiHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) != 0; //OVRManager.display.isPresent;
 
 				// Find out the Oculus HMD version
-				oculusHmdObject = Hmd.GetHmd();
-				ovrDesc = oculusHmdObject.GetDesc();
-				ovrHmdVersion = ovrDesc.Type;
+				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
 			}
 			catch(UnityException e)
 			{
@@ -63,7 +56,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 
 		if(inputManager)
 		{
-			if(isRiftConnected && (ovrHmdVersion == ovrHmdType.ovrHmd_DK2 || ovrHmdVersion == ovrHmdType.ovrHmd_Other)) 
+			if(isRiftConnected && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other)) 
 				oculusDK2 = true;
 			
 			kinect2 = inputManager.enableKinect2;

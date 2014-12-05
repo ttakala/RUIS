@@ -3,7 +3,7 @@
   <!--Boolean values always with a lower case, e.g. "true" or "false"-->
   <PSMoveSettings>
     <enabled value="false" />
-    <ip value="130.233.46.218" />
+    <ip value="127.0.01" />
     <port value="7899" />
     <autoConnect value="true" />
     <enableInGameCalibration value="false" />
@@ -11,12 +11,12 @@
   </PSMoveSettings>
   <KinectSettings>
     <enabled value="true" />
-    <maxPlayers value="2" />
+    <maxPlayers value="1" />
     <floorDetection value="true" />
     <jumpGestureEnabled value="true" />
   </KinectSettings>
   <Kinect2Settings>
-    <enabled value="false" />
+    <enabled value="true" />
     <floorDetection value="true" />
   </Kinect2Settings>
   <RazerSettings>

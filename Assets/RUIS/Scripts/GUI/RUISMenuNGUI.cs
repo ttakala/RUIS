@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using OVR;
+using Ovr;
 
 public class RUISMenuNGUI : MonoBehaviour {
 
@@ -400,30 +400,14 @@ public class RUISMenuNGUI : MonoBehaviour {
 		
 		bool isRiftConnected = false;
 
-		ovrTrackingState riftState;
-		Hmd oculusHmdObject;
-		ovrHmdDesc ovrDesc;
-		ovrHmdType ovrHmdVersion = ovrHmdType.ovrHmd_None;
+		Ovr.HmdType ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
 
 		if(UnityEditorInternal.InternalEditorUtility.HasPro())
 		{
 			try
 			{
-				var HMD = OVR.Hmd.GetHmd();
-				riftState = HMD.GetTrackingState();      
-				isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
-				/*
-				if(!isRiftConnected) {
-					infotext_Rift_not_Detected.SetActive(true);
-					infotext_Oculus_DK1_detected.SetActive(false);
-					infotext_Oculus_DK2_detected.SetActive(false); 
-				}
-				else 
-				{
-				*/
-				oculusHmdObject = Hmd.GetHmd();
-				ovrDesc = oculusHmdObject.GetDesc();
-				ovrHmdVersion = ovrDesc.Type;
+				isRiftConnected = OVRManager.display.isPresent;
+				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
 			}
 			catch(UnityException e)
 			{
@@ -431,13 +415,13 @@ public class RUISMenuNGUI : MonoBehaviour {
 			}
 		}
 
-		if(ovrHmdVersion == ovrHmdType.ovrHmd_DK1) 
+		if(ovrHmdVersion == Ovr.HmdType.DK1) 
 		{
 			infotext_Rift_not_Detected.SetActive(false);
 			infotext_Oculus_DK1_detected.SetActive(true); 
 			infotext_Oculus_DK2_detected.SetActive(false);
 		}
-		else if(ovrHmdVersion == ovrHmdType.ovrHmd_DK2 && isRiftConnected) 
+		else if(ovrHmdVersion == Ovr.HmdType.DK2 && isRiftConnected) 
 		{
 			infotext_Rift_not_Detected.SetActive(false);
 			infotext_Oculus_DK2_detected.SetActive(true);
@@ -569,9 +553,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		{
 			try
 			{
-				var HMD = OVR.Hmd.GetHmd();
-				ovrTrackingState riftState = HMD.GetTrackingState();  
-				isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
+				isRiftConnected = OVRManager.display.isPresent;
 			}
 			catch(UnityException e)
 			{

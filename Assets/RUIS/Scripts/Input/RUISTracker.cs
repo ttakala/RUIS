@@ -9,7 +9,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 using UnityEngine;
 using System.Collections;
-using OVR;
+using Ovr;
 
 public class RUISTracker : MonoBehaviour 
 {
@@ -99,8 +99,6 @@ public class RUISTracker : MonoBehaviour
 	public Vector3 localPosition {get; private set;}
 	
 	public int oculusID = 0;
-	OVRCameraController oculusCamController;
-	ovrHmdType ovrHmdVersion = ovrHmdType.ovrHmd_None;
 	public bool useOculusRiftRotation = false;
 	public KeyCode resetKey;
 
@@ -249,6 +247,9 @@ public class RUISTracker : MonoBehaviour
 	public Transform driftVisualizerPosition;
 	// End of Yaw Drift Corrector members
 	
+	OVRManager ovrManager;
+	Ovr.HmdType ovrHmdVersion;
+	
     void Awake()
     {
 		localPosition = Vector3.zero;
@@ -281,9 +282,8 @@ public class RUISTracker : MonoBehaviour
 		hydraBasePosition = new Vector3(0, 0, 0);
 		hydraBaseRotation = Quaternion.identity;
 		
-		oculusCamController = gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
 		
-		if(oculusCamController)
+		if(OVRManager.display.isPresent)
 		{
 			useOculusRiftRotation = true;
 		}
@@ -291,9 +291,9 @@ public class RUISTracker : MonoBehaviour
 		{
 			useOculusRiftRotation = false;
 		}
-		//oculusCamController = FindObjectOfType(typeof(OVRCameraController)) as OVRCameraController;
+		//oculusCamController = FindObjectOfType(typeof(OVRManager)) as OVRManager;
 		//if(headRotationInput == HeadRotationSource.OculusRift && !oculusCamController)
-		//	Debug.LogError("OVRCameraController script is missing from this scene!");
+		//	Debug.LogError("OVRManager script is missing from this scene!");
 		
 		filterPosition = false;
     }
@@ -302,23 +302,14 @@ public class RUISTracker : MonoBehaviour
     {
 		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
-			OVRCameraController ovrCameraController = GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
 			bool isRiftConnected = false;
-
+			
 			if(UnityEditorInternal.InternalEditorUtility.HasPro())
 			{
 				try
 				{
-					var HMD = OVR.Hmd.GetHmd();
-					ovrTrackingState riftState = HMD.GetTrackingState();      
-					isRiftConnected = (riftState.StatusFlags & (uint)ovrStatusBits.ovrStatus_HmdConnected) != 0; // TODO: Use OVR methods when they start to work
-					
-					Hmd oculusHmdObject = Hmd.GetHmd();
-					if(oculusHmdObject != null)
-					{
-						ovrHmdDesc ovrDesc = oculusHmdObject.GetDesc();
-						ovrHmdVersion = ovrDesc.Type;
-					}
+					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
+					isRiftConnected = OVRManager.display.isPresent;
 				}
 				catch(UnityException e)
 				{
@@ -339,14 +330,15 @@ public class RUISTracker : MonoBehaviour
 					Vector3 convertedLocation = coordinateSystem.ConvertLocation(new Vector3(0,0.0f,-1.0f), RUISDevice.Oculus_DK2); // TODO: plz no unknown tweaks
 					this.transform.localPosition = convertedLocation;
 					Quaternion convertedRotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
-					if(oculusCamController)
-						ovrCameraController.SetYRotation(convertedRotation.eulerAngles.y);
+					
+					
+						// TODO: Test below transform.localRotation
+						//transform.localRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0));
+						// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
+					
 				}
 				
-				if(oculusCamController == null)
-					Debug.LogError(	typeof(RUISTracker) + ": Did not find OVRCameraController in a child "
-					               + "gameObject. In the sole case when Position Tracker is OculusDK2, RUISCamera "
-					               + "prefab with OVRCameraController should be found as a child gameObject!");
+				
 				return;
 			}
 		}
@@ -459,17 +451,17 @@ public class RUISTracker : MonoBehaviour
 							   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		}
 
-		if(useOculusRiftRotation && headPositionInput != HeadPositionSource.OculusDK2 && oculusCamController)
+		if(useOculusRiftRotation && headPositionInput != HeadPositionSource.OculusDK2 && ovrManager)
 		{
-			oculusCamController.EnablePosition = false;
-			Debug.Log(  typeof(RUISTracker) + ": Position Tracker is " + headPositionInput + " and OVRCameraController "
+			OVRManager.tracker.isEnabled = false;
+			Debug.Log(  typeof(RUISTracker) + ": Position Tracker is " + headPositionInput + " and OVRManager "
 			          + "found in a child gameObject, turning off its Oculus Rift position tracking.");
 		}
 
-		if(oculusCamController && Application.isEditor)
-			Debug.Log("OVRCameraController script detected in a child object of this " + gameObject.name
+		if(ovrManager && Application.isEditor)
+			Debug.Log("OVRManager script detected in a child object of this " + gameObject.name
 					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
-					+ "trackers when you remove the OVRCameraController component from the child object(s).");
+			          + "trackers when you remove the OVRManager component from the child object(s).");
 		
 //		if(useOculusRiftRotation && inputManager)
 //		{
@@ -481,7 +473,7 @@ public class RUISTracker : MonoBehaviour
 //				oculusCamController.SetNeckPosition(Vector3.zero);
 //				oculusCamController.SetEyeCenterPosition(Vector3.zero);
 //				Debug.Log(	"Head position tracker found, setting NeckPosition and EyeCenterPosition to zero from "
-//						  + "OVRCameraController.");
+		//						  + "OVRManager.");
 //			}
 //		}
 
@@ -856,8 +848,8 @@ public class RUISTracker : MonoBehaviour
 			switch(headRotationInput) 
 			{
 				//case HeadRotationSource.OculusRift:
-			        // In this case rotation is applied by OVRCameraController which should be parented
-					// under this GameObject
+				// In this case rotation is applied by OVRManager which should be parented
+				// under this GameObject
 				//	break;
 				case HeadRotationSource.Kinect:
 				case HeadRotationSource.Kinect2:
@@ -942,7 +934,10 @@ public class RUISTracker : MonoBehaviour
 		}
 		else
 		{
-			if(!useOculusRiftRotation || (ovrHmdVersion == ovrHmdType.ovrHmd_DK1 || ovrHmdVersion == ovrHmdType.ovrHmd_DKHD))
+			if(!useOculusRiftRotation 
+			   || (		ovrHmdVersion == Ovr.HmdType.DK1 
+			    	||  ovrHmdVersion == Ovr.HmdType.DKHD 
+			    	||  ovrHmdVersion == Ovr.HmdType.None))
 			{
 				localRotation = driftCorrectedRotation(tempLocalRotation, deltaT);
 				transform.localRotation = localRotation;
@@ -962,7 +957,9 @@ public class RUISTracker : MonoBehaviour
 		{
 			
 			finalYawDifference = Quaternion.identity;
-			OVRDevice.ResetOrientation(); //(oculusID);
+			// OVRManager.display.RecenterPose(); //TODO
+			//OVRPlayerController.ResetOrientation();
+			
 			
 		}
 	}

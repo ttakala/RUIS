@@ -10,13 +10,13 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using Ovr;
 
 [CustomEditor(typeof(RUISTracker))]
 [CanEditMultipleObjects]
 public class RUISTrackerEditor : Editor
 {
 	RUISTracker trackerScript;
-	OVRCameraController oculusCamController;
 	bool riftFound = false;
 	string movingBaseAnnouncement = "";
 	
@@ -299,9 +299,8 @@ public class RUISTrackerEditor : Editor
 		if(serializedObject.targetObject is RUISTracker)
 		{
 			trackerScript = (RUISTracker) serializedObject.targetObject;
-			oculusCamController = trackerScript.gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController;
 			
-			if(oculusCamController)
+			if(OVRManager.display.isPresent)
 			{
 				riftFound = true;
 			}
