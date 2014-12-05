@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   A class to manage Kinect/OpenNI skeleton data
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Heikki Heiskanen, Tuukka Takala
+Copyright  :   Copyright 2014 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -91,6 +91,53 @@ public class RUISSkeletonManager : MonoBehaviour {
 		public ulong trackingId = 0;
     }
  
+//	// Kinect 1 position filtering parameters
+//	[Range(0f, 1f)]
+//	public float kinect1Smoothing;             // [0..1], lower values closer to raw data
+//	[Range(0f, 1f)]
+//	public float kinect1Correction;            // [0..1], lower values slower to correct towards the raw data
+//	[Range(0f, 1f)]
+//	public float kinect1Prediction;            // [0..n], the number of frames to predict into the future
+//	[Range(0f, 1f)]
+//	public float kinect1JitterRadius;          // The radius in meters for jitter reduction
+//	[Range(0f, 1f)]
+//	public float kinect1MaxDeviationRadius;    // The maximum radius in meters that filtered positions are allowed to deviate from raw data
+//	
+//	// Kinect 2 position filtering parameters
+//	[Range(0f, 1f)]
+//	public float kinect2Smoothing;            
+//	[Range(0f, 1f)]
+//	public float kinect2Correction;      
+//	[Range(0f, 1f)]
+//	public float kinect2Prediction;            
+//	[Range(0f, 1f)]
+//	public float kinect2JitterRadius;          
+//	[Range(0f, 1f)]
+//	public float kinect2MaxDeviationRadius;    
+//	
+//	// Generic motion tracker position filtering parameters
+//	[Range(0f, 1f)]
+//	public float genericSmoothing;           
+//	[Range(0f, 1f)]
+//	public float genericCorrection;            
+//	[Range(0f, 1f)]
+//	public float genericPrediction;           
+//	[Range(0f, 1f)]
+//	public float genericJitterRadius;         
+//	[Range(0f, 1f)]
+//	public float genericMaxDeviationRadius; 
+//
+//	public class FilterDoubleExponentialData
+//	{
+//		public Vector3 m_vRawPosition;
+//		public Vector3 m_vFilteredPosition;
+//		public Vector3 m_vTrend;
+//		public int m_dwFrameCount;
+//	}
+//
+//	Vector3[][][] m_pFilteredJoints;
+//	FilterDoubleExponentialData[][][] m_pHistory;
+
 
 	NIPlayerManager playerManager;
 	RUISInputManager inputManager;
@@ -378,7 +425,7 @@ public class RUISSkeletonManager : MonoBehaviour {
         {
             return;
         }
-		
+
 		jointData.position = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinectLocation(data.Position.Position), RUISDevice.Kinect_1);
         jointData.positionConfidence = data.Position.Confidence;
 		jointData.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);
