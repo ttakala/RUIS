@@ -92,7 +92,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400010}
   - 20: {fileID: 2000000}
-  - 124: {fileID: 12400000}
   - 114: {fileID: 11400008}
   m_Layer: 0
   m_Name: CameraLeft
@@ -110,7 +109,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400012}
   - 20: {fileID: 2000002}
-  - 124: {fileID: 12400002}
   - 114: {fileID: 11400012}
   m_Layer: 0
   m_Name: CameraRight
@@ -195,7 +193,6 @@ GameObject:
   - 114: {fileID: 11400022}
   - 114: {fileID: 11400020}
   - 114: {fileID: 11400018}
-  - 114: {fileID: 11400016}
   m_Layer: 0
   m_Name: RUISCamera
   m_TagString: MainCamera
@@ -242,7 +239,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400028}
   - 20: {fileID: 2000006}
-  - 124: {fileID: 12400004}
   - 114: {fileID: 11400028}
   m_Layer: 0
   m_Name: CameraLeft
@@ -325,7 +321,6 @@ GameObject:
   - 114: {fileID: 11400038}
   - 114: {fileID: 11400036}
   - 114: {fileID: 11400034}
-  - 114: {fileID: 11400032}
   m_Layer: 0
   m_Name: RUISCamera
   m_TagString: MainCamera
@@ -480,7 +475,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400058}
   - 20: {fileID: 2000010}
-  - 124: {fileID: 12400006}
   - 114: {fileID: 11400046}
   m_Layer: 0
   m_Name: CameraRight
@@ -498,7 +492,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400060}
   - 20: {fileID: 2000012}
-  - 124: {fileID: 12400008}
   - 114: {fileID: 11400050}
   m_Layer: 0
   m_Name: CameraRight
@@ -516,7 +509,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400062}
   - 20: {fileID: 2000014}
-  - 124: {fileID: 12400010}
   - 114: {fileID: 11400054}
   m_Layer: 0
   m_Name: CameraLeft
@@ -553,7 +545,6 @@ GameObject:
   - 114: {fileID: 11400062}
   - 114: {fileID: 11400060}
   - 114: {fileID: 11400058}
-  - 114: {fileID: 11400056}
   m_Layer: 0
   m_Name: RUISCamera
   m_TagString: MainCamera
@@ -665,7 +656,6 @@ GameObject:
   - 114: {fileID: 11400074}
   - 114: {fileID: 11400072}
   - 114: {fileID: 11400070}
-  - 114: {fileID: 11400068}
   m_Layer: 0
   m_Name: RUISCamera
   m_TagString: MainCamera
@@ -745,7 +735,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400090}
   - 20: {fileID: 2000020}
-  - 124: {fileID: 12400012}
   - 114: {fileID: 11400080}
   m_Layer: 0
   m_Name: CameraLeft
@@ -767,7 +756,6 @@ GameObject:
   - 114: {fileID: 11400088}
   - 114: {fileID: 11400086}
   - 114: {fileID: 11400084}
-  - 114: {fileID: 11400082}
   m_Layer: 0
   m_Name: RUISCamera
   m_TagString: MainCamera
@@ -1049,7 +1037,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400128}
   - 20: {fileID: 2000024}
-  - 124: {fileID: 12400014}
   - 114: {fileID: 11400102}
   m_Layer: 0
   m_Name: CameraRight
@@ -1128,7 +1115,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400138}
   - 20: {fileID: 2000026}
-  - 124: {fileID: 12400016}
   - 114: {fileID: 11400106}
   m_Layer: 0
   m_Name: CameraLeft
@@ -1176,7 +1162,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400144}
   - 20: {fileID: 2000028}
-  - 124: {fileID: 12400018}
   - 114: {fileID: 11400110}
   m_Layer: 0
   m_Name: CameraRight
@@ -1433,7 +1418,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400176}
   - 20: {fileID: 2000030}
-  - 124: {fileID: 12400020}
   - 114: {fileID: 11400128}
   m_Layer: 0
   m_Name: CameraLeft
@@ -1455,7 +1439,6 @@ GameObject:
   - 114: {fileID: 11400134}
   - 114: {fileID: 11400136}
   - 114: {fileID: 11400138}
-  - 114: {fileID: 11400140}
   m_Layer: 0
   m_Name: RUISCamera
   m_TagString: MainCamera
@@ -1472,7 +1455,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400180}
   - 20: {fileID: 2000034}
-  - 124: {fileID: 12400022}
   - 114: {fileID: 11400142}
   m_Layer: 0
   m_Name: CameraRight
@@ -2362,7 +2344,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100118}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: .941147089, z: 0}
+  m_LocalPosition: {x: 0, y: .92900002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400006}
@@ -3695,7 +3677,7 @@ MonoBehaviour:
   bodyTrackingDevice: 1
   bodyTrackingDeviceID: 0
   playerId: 0
-  switchToAvailableKinect: 0
+  switchToAvailableKinect: 1
   updateRootPosition: 1
   updateJointPositions: 0
   updateJointRotations: 1
@@ -3755,26 +3737,6 @@ MonoBehaviour:
   maxHeightChange: 5
   maxPositionChange: 10
   colliderHeightTweaker: 0
---- !u!114 &11400016
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100022}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nativeTextureScale: 1
-  virtualTextureScale: 1
-  usePositionTracking: 1
-  eyeTextureFormat: 7
-  eyeTextureDepth: 24
-  timeWarp: 1
-  freezeTimeWarp: 0
-  resetTrackerOnLoad: 1
-  monoscopic: 0
 --- !u!114 &11400018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3948,26 +3910,6 @@ MonoBehaviour:
   compassDirectionVisualizer: {fileID: 0}
   correctedDirectionVisualizer: {fileID: 0}
   driftVisualizerPosition: {fileID: 0}
---- !u!114 &11400032
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nativeTextureScale: 1
-  virtualTextureScale: 1
-  usePositionTracking: 1
-  eyeTextureFormat: 7
-  eyeTextureDepth: 24
-  timeWarp: 1
-  freezeTimeWarp: 0
-  resetTrackerOnLoad: 1
-  monoscopic: 0
 --- !u!114 &11400034
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4041,9 +3983,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: 0, z: 0}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 1
-  headRotationInput: 0
+  headRotationInput: 1
   mobileRazerBase: 0
   pickRotationSource: 0
   oculusID: 0
@@ -4169,26 +4111,6 @@ MonoBehaviour:
   whichCamera: 1
   keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
   keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
---- !u!114 &11400056
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nativeTextureScale: 1
-  virtualTextureScale: 1
-  usePositionTracking: 1
-  eyeTextureFormat: 7
-  eyeTextureDepth: 24
-  timeWarp: 1
-  freezeTimeWarp: 0
-  resetTrackerOnLoad: 1
-  monoscopic: 0
 --- !u!114 &11400058
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4348,26 +4270,6 @@ MonoBehaviour:
   compassDirectionVisualizer: {fileID: 0}
   correctedDirectionVisualizer: {fileID: 0}
   driftVisualizerPosition: {fileID: 0}
---- !u!114 &11400068
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nativeTextureScale: 1
-  virtualTextureScale: 1
-  usePositionTracking: 1
-  eyeTextureFormat: 7
-  eyeTextureDepth: 24
-  timeWarp: 1
-  freezeTimeWarp: 0
-  resetTrackerOnLoad: 1
-  monoscopic: 0
 --- !u!114 &11400070
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4444,26 +4346,6 @@ MonoBehaviour:
   whichCamera: 1
   keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
   keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
---- !u!114 &11400082
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100092}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nativeTextureScale: 1
-  virtualTextureScale: 1
-  usePositionTracking: 1
-  eyeTextureFormat: 7
-  eyeTextureDepth: 24
-  timeWarp: 1
-  freezeTimeWarp: 0
-  resetTrackerOnLoad: 1
-  monoscopic: 0
 --- !u!114 &11400084
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5037,26 +4919,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11400140
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nativeTextureScale: 1
-  virtualTextureScale: 1
-  usePositionTracking: 1
-  eyeTextureFormat: 7
-  eyeTextureDepth: 24
-  timeWarp: 1
-  freezeTimeWarp: 0
-  resetTrackerOnLoad: 1
-  monoscopic: 0
 --- !u!114 &11400142
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5082,7 +4944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: 0, z: 0}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 0
   headRotationInput: 0
   mobileRazerBase: 0
@@ -5230,90 +5092,6 @@ LineRenderer:
       serializedVersion: 2
       rgba: 4294967295
   m_UseWorldSpace: 1
---- !u!124 &12400000
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100010}
-  m_Enabled: 1
---- !u!124 &12400002
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100012}
-  m_Enabled: 1
---- !u!124 &12400004
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100028}
-  m_Enabled: 1
---- !u!124 &12400006
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100058}
-  m_Enabled: 1
---- !u!124 &12400008
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100060}
-  m_Enabled: 1
---- !u!124 &12400010
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100062}
-  m_Enabled: 1
---- !u!124 &12400012
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100090}
-  m_Enabled: 1
---- !u!124 &12400014
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100128}
-  m_Enabled: 1
---- !u!124 &12400016
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100138}
-  m_Enabled: 1
---- !u!124 &12400018
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100144}
-  m_Enabled: 1
---- !u!124 &12400020
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100176}
-  m_Enabled: 1
---- !u!124 &12400022
-Behaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100180}
-  m_Enabled: 1
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

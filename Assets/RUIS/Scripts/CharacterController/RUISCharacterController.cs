@@ -147,8 +147,11 @@ public class RUISCharacterController : MonoBehaviour
 		{
 			try
 			{
-				bool isRiftConnected = OVRManager.display.isPresent;
-				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
+				bool isRiftConnected = false;
+				if(OVRManager.display != null)
+					isRiftConnected = OVRManager.display.isPresent;
+				if(OVRManager.capiHmd != null)
+					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
 	
 				if(ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD || ovrHmdVersion == Ovr.HmdType.None)
 				{
@@ -313,7 +316,7 @@ public class RUISCharacterController : MonoBehaviour
     {
 		if(useOculusPositionalTracking && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
 		{
-			if(OVRManager.tracker.isPositionTracked)
+			if(OVRManager.tracker != null && OVRManager.tracker.isPositionTracked && OVRManager.display != null)
 			{
 				OVRPose headpose = OVRManager.display.GetHeadPose();
 				

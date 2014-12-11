@@ -17,6 +17,7 @@ using Ovr;
 public class RUISTrackerEditor : Editor
 {
 	RUISTracker trackerScript;
+	OVRCameraRig ovrCameraRig;
 	bool riftFound = false;
 	string movingBaseAnnouncement = "";
 	
@@ -201,7 +202,21 @@ public class RUISTrackerEditor : Editor
 
         EditorGUILayout.PropertyField(defaultPosition, new GUIContent("Default Position (meters)", "Head position before tracking starts"));
         //EditorGUILayout.PropertyField(skeletonManager, new GUIContent("skeletonManager", "Can be None"));
-		
+
+		if(serializedObject.targetObject is RUISTracker)
+		{
+			trackerScript = (RUISTracker) serializedObject.targetObject;
+			if(trackerScript)
+				ovrCameraRig = trackerScript.gameObject.GetComponentInChildren<OVRCameraRig>();
+			if(ovrCameraRig)
+			{
+				riftFound = true;
+			}
+			else
+			{
+				riftFound = false;
+			}
+		}
 		
 		if(!riftFound)
 		{
@@ -295,20 +310,7 @@ public class RUISTrackerEditor : Editor
 //		}
 				
         EditorGUI.indentLevel -= 2;
-		
-		if(serializedObject.targetObject is RUISTracker)
-		{
-			trackerScript = (RUISTracker) serializedObject.targetObject;
-			
-			if(OVRManager.display.isPresent)
-			{
-				riftFound = true;
-			}
-			else
-			{
-				riftFound = false;
-			}
-		}
+
 		
         EditorGUILayout.Space();
 		
@@ -323,10 +325,10 @@ public class RUISTrackerEditor : Editor
 			
 			
 			EditorStyles.textField.wordWrap = true;
-			EditorGUILayout.TextArea("OVRCameraController script detected in a child object of this " + trackerScript.gameObject.name
+			EditorGUILayout.TextArea(typeof(OVRCameraRig) + " script detected in a child object of this " + trackerScript.gameObject.name
 										+ ". Assuming that you want to use rotation from Oculus Rift. Disabling other Rotation Tracker "
 										+ "options. You can access other rotation trackers when you remove or disable the child object "
-										+ "that has the OVRCameraController component.", GUILayout.Height(120));
+			                         + "that has the " + typeof(OVRCameraRig) + " component.", GUILayout.Height(120));
 			
 			EditorGUILayout.LabelField( new GUIContent("Reset Orientation Button(s):", "The button(s) that reset Oculus Rift's yaw "
 										+ "rotation to zero."), 

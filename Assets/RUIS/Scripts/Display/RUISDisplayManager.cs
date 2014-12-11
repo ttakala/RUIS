@@ -56,7 +56,25 @@ public class RUISDisplayManager : MonoBehaviour {
 
 
         LoadDisplaysFromXML();
-		
+
+		// Disable OVRManager script if there are no Oculus Rift displays
+		bool hasOculusDisplay = false;
+		foreach (RUISDisplay display in displays)
+		{
+			if(display.linkedCamera && display.enableOculusRift)
+			{
+				hasOculusDisplay = true;
+				break;
+			}
+		}
+		if(!hasOculusDisplay)
+		{
+			if(GetComponent<OVRManager>())
+				GetComponent<OVRManager>().enabled = false;
+			if(camera)
+				camera.enabled = false;
+		}
+
 		InitRUISMenu(ruisMenuPrefab, guiDisplayChoice);
 	}
 

@@ -43,10 +43,12 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			try
 			{
 				// Find out if an Oculus HMD is connected
-				isRiftConnected = (OVRManager.capiHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) != 0; //OVRManager.display.isPresent;
+				if(OVRManager.display != null)
+					isRiftConnected = OVRManager.display.isPresent;
 
 				// Find out the Oculus HMD version
-				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
+				if(OVRManager.capiHmd != null)
+					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
 			}
 			catch(UnityException e)
 			{
@@ -349,9 +351,5 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				}
 			}
 		}
-		
-		
-		// When we have inferred the right RUISTracker 
-		//oculusCamController = gameObject.GetComponentInChildren(typeof(OVRCameraController)) as OVRCameraController; // Is needed? ***
 	}
 }

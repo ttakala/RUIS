@@ -98,11 +98,11 @@ public class RUISCamera : MonoBehaviour {
 			// TODO: Recreate RUISCamera for SDK 0.4.4
 			try 
 			{
-				GetComponent<OVRManager>().enabled = false;
+				GetComponent<OVRCameraRig>().enabled = false;
 			}
 			catch (System.NullReferenceException e)
 			{
-				Debug.LogError("GameObject '" + name + "': OVRManager was not found.", this);
+				Debug.LogError("GameObject '" + name + "': " + typeof(OVRCameraRig) + " was not found.", this);
 			}
 		}
 		else
@@ -509,7 +509,7 @@ public class RUISCamera : MonoBehaviour {
     {
         if (associatedDisplay.isStereo)
         {
-			if(!associatedDisplay.enableOculusRift) centerCamera.enabled = false;
+			/*if(!associatedDisplay.enableOculusRift)*/ centerCamera.enabled = false;
             leftCamera.enabled = true;
             rightCamera.enabled = true;
         }

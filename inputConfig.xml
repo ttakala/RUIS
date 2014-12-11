@@ -10,13 +10,13 @@
     <maxControllers value="4" />
   </PSMoveSettings>
   <KinectSettings>
-    <enabled value="true" />
+    <enabled value="false" />
     <maxPlayers value="1" />
     <floorDetection value="true" />
     <jumpGestureEnabled value="true" />
   </KinectSettings>
   <Kinect2Settings>
-    <enabled value="true" />
+    <enabled value="false" />
     <floorDetection value="true" />
   </Kinect2Settings>
   <RazerSettings>

@@ -855,20 +855,20 @@ public class RUISSkeletonController : MonoBehaviour
 			clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x * invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
 			for(int a = 0; a < 5; a++) { // Fingers
 				if(!closeHand && !(a == 4 && trackThumbs)) {
-					fingerTransforms[i, a, 0].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], Time.deltaTime * rotationSpeed);
-					fingerTransforms[i, a, 1].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], Time.deltaTime * rotationSpeed);
-					fingerTransforms[i, a, 2].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], Time.deltaTime * rotationSpeed);
+					fingerTransforms[i, a, 0].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], Time.deltaTime * rotationSpeed);
+					fingerTransforms[i, a, 1].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], Time.deltaTime * rotationSpeed);
+					fingerTransforms[i, a, 2].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], Time.deltaTime * rotationSpeed);
 					}
 				else {
 					if(a != 4) {
-						fingerTransforms[i, a, 0].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, Time.deltaTime * rotationSpeed);
-						fingerTransforms[i, a, 1].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationPIP, Time.deltaTime * rotationSpeed);
-						fingerTransforms[i, a, 2].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 0].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 1].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationPIP, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 2].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, Time.deltaTime * rotationSpeed);
 					}
 					else if(!trackThumbs) { // Thumbs (if separate thumb  tracking is not enabled)
-						fingerTransforms[i, a, 0].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, Time.deltaTime * rotationSpeed);
-						fingerTransforms[i, a, 1].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
-						fingerTransforms[i, a, 2].localRotation =  Quaternion.Lerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 0].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 1].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 2].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP, Time.deltaTime * rotationSpeed);
 					}	
 				}	
 			}
