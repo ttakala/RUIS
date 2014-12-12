@@ -187,10 +187,6 @@ public class RUISCamera : MonoBehaviour {
 			Debug.LogError("Cameras not set properly in RUISCamera: " + name, this);
 		}
 		
-		if (!associatedDisplay.enableOculusRift)
-		{
-		}
-		
 		if(associatedDisplay)
 		{
             if (associatedDisplay.enableOculusRift)
@@ -482,13 +478,14 @@ public class RUISCamera : MonoBehaviour {
 		        {
 		            leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
 		            rightCamera.rect = new Rect(leftCamera.rect);
-		        }
+				}
+
+				leftCamera.aspect = aspectRatio;
+				rightCamera.aspect = aspectRatio;
 			}
 		}
-			
-        leftCamera.aspect = aspectRatio;
-        rightCamera.aspect = aspectRatio;
-    }
+		
+	}
 	
 	private void SetupCameraTransforms()
 	{

@@ -757,6 +757,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 126785527}
+  - 81: {fileID: 126785528}
   m_Layer: 0
   m_Name: CenterEyeAnchor
   m_TagString: Untagged
@@ -776,6 +777,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 431496783}
   m_RootOrder: 1
+--- !u!81 &126785528
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 8100000, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 1631958411}
+  m_GameObject: {fileID: 126785526}
+  m_Enabled: 1
 --- !u!1 &146558234
 GameObject:
   m_ObjectHideFlags: 0
@@ -3459,6 +3468,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 421772920}
+  - 81: {fileID: 421772921}
   m_Layer: 0
   m_Name: CenterEyeAnchor
   m_TagString: Untagged
@@ -3478,6 +3488,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 632743622}
   m_RootOrder: 1
+--- !u!81 &421772921
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 8100000, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 729540694}
+  m_GameObject: {fileID: 421772919}
+  m_Enabled: 1
 --- !u!1 &422957758
 GameObject:
   m_ObjectHideFlags: 0
@@ -11521,8 +11539,9 @@ MonoBehaviour:
 --- !u!114 &1061070666
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabParentObject: {fileID: 11400038, guid: d6219459e0eefe144b152057cb448933,
+    type: 2}
+  m_PrefabInternal: {fileID: 721853624}
   m_GameObject: {fileID: 1061070663}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -11536,7 +11555,7 @@ MonoBehaviour:
   eyeTextureDepth: 24
   timeWarp: 1
   freezeTimeWarp: 0
-  resetTrackerOnLoad: 0
+  resetTrackerOnLoad: 1
   monoscopic: 0
 --- !u!1 &1071815039
 GameObject:
@@ -17468,6 +17487,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1630622948}
+  - 81: {fileID: 1630622949}
   m_Layer: 0
   m_Name: CenterEyeAnchor
   m_TagString: Untagged
@@ -17487,6 +17507,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 755089092}
   m_RootOrder: 1
+--- !u!81 &1630622949
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 8100000, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 1077044271}
+  m_GameObject: {fileID: 1630622947}
+  m_Enabled: 1
 --- !u!1001 &1631958411
 Prefab:
   m_ObjectHideFlags: 0

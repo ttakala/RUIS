@@ -580,7 +580,6 @@ GameObject:
   - 114: {fileID: 78531014}
   - 114: {fileID: 78531013}
   - 114: {fileID: 78531012}
-  - 114: {fileID: 78531011}
   - 114: {fileID: 78531018}
   m_Layer: 0
   m_Name: RUISCamera Second
@@ -589,27 +588,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &78531011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400008, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb,
-    type: 2}
-  m_PrefabInternal: {fileID: 580047969}
-  m_GameObject: {fileID: 78531010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nativeTextureScale: 1
-  virtualTextureScale: 1
-  usePositionTracking: 1
-  eyeTextureFormat: 7
-  eyeTextureDepth: 24
-  timeWarp: 1
-  freezeTimeWarp: 0
-  resetTrackerOnLoad: 1
-  monoscopic: 0
 --- !u!114 &78531012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6598,6 +6576,7 @@ Prefab:
     m_RemovedComponents:
     - {fileID: 8100000, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
     - {fileID: 8100002, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
+    - {fileID: 11400008, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
   m_RootGameObject: {fileID: 1795501598}
   m_IsPrefabParent: 0
@@ -13685,6 +13664,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1290670709}
+  - 81: {fileID: 1290670710}
   m_Layer: 0
   m_Name: CenterEyeAnchor
   m_TagString: Untagged
@@ -13704,6 +13684,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2063474222}
   m_RootOrder: 1
+--- !u!81 &1290670710
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 8100000, guid: 6fad6e06135894d4da88e7273313f430,
+    type: 2}
+  m_PrefabInternal: {fileID: 236150305}
+  m_GameObject: {fileID: 1290670708}
+  m_Enabled: 1
 --- !u!1 &1303017173
 GameObject:
   m_ObjectHideFlags: 0
