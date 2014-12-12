@@ -37,8 +37,10 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 		bool oculusDK2 = false;
 
 		bool isRiftConnected = false;
-
+		
+		#if UNITY_EDITOR
 		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+		#endif
 		{
 			try
 			{

@@ -305,8 +305,9 @@ public class RUISTracker : MonoBehaviour
 		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
 			bool isRiftConnected = false;
-			
+			#if UNITY_EDITOR
 			if(UnityEditorInternal.InternalEditorUtility.HasPro())
+			#endif
 			{
 				try
 				{
@@ -328,26 +329,7 @@ public class RUISTracker : MonoBehaviour
 			}
 			else 
 			{
-				if(coordinateSystem)
-				{
-						
-					Quaternion convertedRotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
-					// TODO: Test below transform.localRotation
-					convertedRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0));
-					// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-					transform.localRotation = convertedRotation;
-					// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-					
-					if(OVRManager.capiHmd != null)
-					{
-						currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
-						currentOvrCameraPose.z = -currentOvrCameraPose.z;
-						convertedLocation = coordinateSystem.ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
-						//convertedLocation = coordinateSystem.ConvertLocation(new Vector3(0, 0, -1.0f), RUISDevice.Oculus_DK2); 
-						this.transform.localPosition = convertedLocation;
-					}
-				}
-				return;
+				OculusCounterPoseOffset();
 			}
 		}
     
@@ -505,7 +487,30 @@ public class RUISTracker : MonoBehaviour
         eyeCenterPosition = transform.localPosition;
 		// End of invocations that are needed by RUISCamera's oblique frustum creation
 	}
-	
+
+	private void OculusCounterPoseOffset()
+	{
+		if(coordinateSystem)
+		{
+			Quaternion convertedRotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+			// TODO: Test below transform.localRotation
+			convertedRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0));
+			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
+			transform.localRotation = convertedRotation;
+			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
+			
+			if(OVRManager.capiHmd != null)
+			{
+				currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
+				currentOvrCameraPose.z = -currentOvrCameraPose.z;
+
+				convertedLocation = coordinateSystem.ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
+				//convertedLocation = coordinateSystem.ConvertLocation(new Vector3(0, 0, -1.0f), RUISDevice.Oculus_DK2); 
+				this.transform.localPosition = convertedLocation;
+			}
+		}
+	}
+
 	private void updateTracker(float deltaT)
 	{
 		
@@ -585,15 +590,7 @@ public class RUISTracker : MonoBehaviour
 		
 		if(headPositionInput == HeadPositionSource.OculusDK2) 
 		{
-			if(coordinateSystem)
-			{
-			/*
-				currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
-				currentOvrCameraPose.z = -currentOvrCameraPose.z;
-				convertedLocation = coordinateSystem.ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
-				this.transform.localPosition = convertedLocation;
-				*/
-			}
+			OculusCounterPoseOffset();
 			return;
 		}
 		

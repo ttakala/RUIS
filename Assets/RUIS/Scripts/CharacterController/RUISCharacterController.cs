@@ -142,8 +142,9 @@ public class RUISCharacterController : MonoBehaviour
 			               + "is different from the Kinect Player Id of the RUISSkeletonController script (located in child "
 			               + "object '" + skeletonController.gameObject.name + "). Make sure that these two values are "
 			               + "the same.");
-
+		#if UNITY_EDITOR
 		if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+		#endif
 		{
 			try
 			{
@@ -314,15 +315,19 @@ public class RUISCharacterController : MonoBehaviour
 
     private Vector3 GetPivotPositionInTrackerCoordinates()
     {
-		if(useOculusPositionalTracking && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+
+		if(useOculusPositionalTracking) // TODO: remove when Oculus works in free version
 		{
-			if(OVRManager.tracker != null && OVRManager.tracker.isPositionTracked && OVRManager.display != null)
-			{
-				OVRPose headpose = OVRManager.display.GetHeadPose();
-				
-				headPosition = new Vector3(headpose.position.x, headpose.position.y, headpose.position.z);
-				return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
-			}
+			#if UNITY_EDITOR
+			if(UnityEditorInternal.InternalEditorUtility.HasPro())
+			#endif
+				if(OVRManager.tracker != null && OVRManager.tracker.isPositionTracked && OVRManager.display != null)
+				{
+					OVRPose headpose = OVRManager.display.GetHeadPose();
+					
+					headPosition = new Vector3(headpose.position.x, headpose.position.y, headpose.position.z);
+					return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
+				}
 		}
 		else
 		{

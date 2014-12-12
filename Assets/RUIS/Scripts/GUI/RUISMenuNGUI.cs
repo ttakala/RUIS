@@ -401,8 +401,10 @@ public class RUISMenuNGUI : MonoBehaviour {
 		bool isRiftConnected = false;
 
 		Ovr.HmdType ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
-
+		
+		#if UNITY_EDITOR
 		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+		#endif
 		{
 			try
 			{
@@ -548,8 +550,9 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 floor data");
 		    
 		bool isRiftConnected = false;
-
+		#if UNITY_EDITOR
 		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+		#endif
 		{
 			try
 			{
