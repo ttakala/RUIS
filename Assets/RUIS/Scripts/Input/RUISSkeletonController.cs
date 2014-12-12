@@ -64,6 +64,9 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool trackAnkle;
 	public bool rotateWristFromElbow;
 	
+	private RUISSkeletonManager.Skeleton.handState leftHandStatus, lastLeftHandStatus;
+	private RUISSkeletonManager.Skeleton.handState rightHandStatus, lastRightHandStatus;
+	
 	private RUISInputManager inputManager;
     private RUISSkeletonManager skeletonManager;
 	private RUISCharacterController characterController;
@@ -841,14 +844,30 @@ public class RUISSkeletonController : MonoBehaviour
 		float rotationSpeed = 10.0f; // Per second
 		Quaternion clenchedRotationThumbTM_corrected;
 		
+		leftHandStatus = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandStatus);
+		rightHandStatus = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandStatus);
+		
+		if(leftHandStatus == RUISSkeletonManager.Skeleton.handState.unknown || leftHandStatus ==  RUISSkeletonManager.Skeleton.handState.pointing) 
+		{
+			leftHandStatus = lastLeftHandStatus;
+		}
+		
+		if(rightHandStatus == RUISSkeletonManager.Skeleton.handState.unknown || rightHandStatus ==  RUISSkeletonManager.Skeleton.handState.pointing) 
+		{
+			rightHandStatus = lastRightHandStatus;
+		}
+		
+		lastLeftHandStatus = leftHandStatus ;
+		lastRightHandStatus = rightHandStatus;
+		
 		for (int i = 0; i < 2; i++)  { // Hands
 			
 			if (i == 0) {
-				closeHand = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandStatus == RUISSkeletonManager.Skeleton.handState.closed);
+				closeHand = (rightHandStatus  == RUISSkeletonManager.Skeleton.handState.closed);
 				invert = -1;
 			}
 			else {
-				closeHand = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
+				closeHand = (leftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
 				invert = 1;
 			}
 			// Thumb rotation correction
