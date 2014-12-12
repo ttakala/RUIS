@@ -545,10 +545,16 @@ public class RUISCoordinateSystem : MonoBehaviour
 	}
 	
 	public Vector3 ConvertRawOculusDK2Location(Vector3 position) {
+		Vector3 currentcameraPosition = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
+		
+		// TODO: Try combinations of this: position = OVRManager.capiHmd.GetTrackingState().CameraPose.Orientation * position
+		
 		Vector3 newPosition = Vector3.zero;
-		newPosition.x = position.x;
-		newPosition.y = position.y;
-		newPosition.z = -(position.z + 1); // TODO: This probably depends on some DK2 setting, that can be affected with some kind of ResetCoordinateSystem() etc.
+		newPosition.x = position.x - currentcameraPosition.x;
+		newPosition.y = position.y - currentcameraPosition.y;
+		newPosition.z = -(position.z + currentcameraPosition.z); // TODO: This probably depends on some DK2 setting, that can be affected with some kind of ResetCoordinateSystem() etc.
+		
+		//newPosition = newPosition - currentcameraPosition;
 		
 		return newPosition;
 	}

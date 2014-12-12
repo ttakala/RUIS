@@ -250,8 +250,13 @@ public class RUISTracker : MonoBehaviour
 	OVRCameraRig ovrCameraRig;
 	Ovr.HmdType ovrHmdVersion;
 	
+	RUISCoordinateSystem coordinateSystem;
+	Vector3 currentOvrCameraPose;
+	Vector3 convertedLocation; 
+	
     void Awake()
     {
+		coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		localPosition = Vector3.zero;
 		localRotation = Quaternion.identity;
 		rawRotation = Quaternion.identity;
@@ -323,21 +328,25 @@ public class RUISTracker : MonoBehaviour
 			}
 			else 
 			{
-				RUISCoordinateSystem coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 				if(coordinateSystem)
 				{
-					Vector3 convertedLocation = coordinateSystem.ConvertLocation(new Vector3(0,0.0f,-1.0f), RUISDevice.Oculus_DK2); // TODO: plz no unknown tweaks
-					this.transform.localPosition = convertedLocation;
+						
 					Quaternion convertedRotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+					// TODO: Test below transform.localRotation
+					convertedRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0));
+					// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
+					transform.localRotation = convertedRotation;
+					// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
 					
-					
-						// TODO: Test below transform.localRotation
-						//transform.localRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0));
-						// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-					
+					if(OVRManager.capiHmd != null)
+					{
+						currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
+						currentOvrCameraPose.z = -currentOvrCameraPose.z;
+						convertedLocation = coordinateSystem.ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
+						//convertedLocation = coordinateSystem.ConvertLocation(new Vector3(0, 0, -1.0f), RUISDevice.Oculus_DK2); 
+						this.transform.localPosition = convertedLocation;
+					}
 				}
-				
-				
 				return;
 			}
 		}
@@ -576,6 +585,15 @@ public class RUISTracker : MonoBehaviour
 		
 		if(headPositionInput == HeadPositionSource.OculusDK2) 
 		{
+			if(coordinateSystem)
+			{
+			/*
+				currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
+				currentOvrCameraPose.z = -currentOvrCameraPose.z;
+				convertedLocation = coordinateSystem.ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
+				this.transform.localPosition = convertedLocation;
+				*/
+			}
 			return;
 		}
 		

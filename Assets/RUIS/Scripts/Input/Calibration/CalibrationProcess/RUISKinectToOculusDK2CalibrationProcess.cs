@@ -53,8 +53,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	Vector3 kinect1FloorNormal = Vector3.up;
 	
 	public RUISKinectToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
-		
-		
+				
 		this.inputDevice1 = RUISDevice.Oculus_DK2;
 		this.inputDevice2 = RUISDevice.Kinect_1;
 		
@@ -153,7 +152,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		if(!oculusChecked && timeSinceScriptStart > 4) {
 			oculusChecked = true;	
-			if (!OVRManager.display.isPresent) {
+			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0) { // Code from OVRManager.cs
 				this.guiTextLowerLocal = "Connecting to Oculus Rift DK2. \n\n Error: Could not connect to Oculus Rift DK2.";
 				return RUISCalibrationPhase.Invalid;
 			}
@@ -316,16 +315,15 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		}
 		if(device == RUISDevice.Oculus_DK2) 
 		{
-			OVRPose headpose = OVRManager.display.GetHeadPose();
-			
-			float px = headpose.position.x;
-			float py = headpose.position.y;
-			float pz = headpose.position.z;
+			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;
+			float px = headpose.Position.x;
+			float py = headpose.Position.y;
+			float pz = headpose.Position.z;
 			
 			tempSample = new Vector3(px, py, pz);
 			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);
 			if((Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
-			   && OVRManager.tracker.isPositionTracked) 
+			   && (RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)  // Code from OVRManager.cs
 			{
 				sample = tempSample;
 				lastOculusDK2Sample = sample;

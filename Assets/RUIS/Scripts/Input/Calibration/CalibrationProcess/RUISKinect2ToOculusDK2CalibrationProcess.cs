@@ -33,7 +33,8 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, oculusDK2ModelObject, 
 	kinect2ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
-	oculusDK2Icon, kinect2Icon, deviceModelObjects, depthViewObjects, iconObjects;
+	oculusDK2Icon, kinect2Icon, deviceModelObjects, depthViewObjects, iconObjects,
+	oculusRiftModel;
 	
 	private Vector3 lastPSMoveSample, lastKinect2Sample, lastOculusDK2Sample;
 	private string xmlFilename;
@@ -51,9 +52,9 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	Quaternion kinect2PitchRotation = Quaternion.identity;
 	float kinect2DistanceFromFloor = 0;
 	Vector3 kinect2FloorNormal = Vector3.up;
-	
+	RUISOVRManager ruisOvrManager;
+
 	public RUISKinect2ToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
-		
 		
 		this.inputDevice1 = RUISDevice.Oculus_DK2;
 		this.inputDevice2 = RUISDevice.Kinect_2;
@@ -97,6 +98,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		// Models
 		this.oculusDK2ModelObject = GameObject.Find ("OculusDK2Camera");
 		this.kinect2ModelObject = GameObject.Find ("Kinect2Camera");
+		this.oculusRiftModel = GameObject.Find ("OculusRift");
 		
 		// Depth view
 		this.depthView = GameObject.Find ("Kinect2DepthView");
@@ -126,6 +128,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		this.oculusDK2ModelObject.SetActive(true);
 		this.kinect2ModelObject.SetActive(true);
+		this.oculusRiftModel.SetActive(true);
 		this.oculusDK2Icon.SetActive(true);
 		this.kinect2Icon.SetActive(true);
 		this.calibrationPhaseObjects.SetActive(true);
@@ -150,8 +153,9 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		}
 		
 		if(!oculusChecked && timeSinceScriptStart > 4) {
-			oculusChecked = true;	
-			if (!OVRManager.display.isPresent) {
+			oculusChecked = true;
+			
+			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0) { // Code from OVRManager.cs
 				this.guiTextLowerLocal = "Connecting to Oculus Rift DK2. \n\n Error: Could not connect to Oculus Rift DK2.";
 				return RUISCalibrationPhase.Invalid;
 			}
@@ -326,16 +330,16 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		}
 		if(device == RUISDevice.Oculus_DK2) 
 		{
-			OVRPose headpose = OVRManager.display.GetHeadPose();
+			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;
+			float px = headpose.Position.x;
+			float py = headpose.Position.y;
+			float pz = headpose.Position.z;
 			
-			float px = headpose.position.x;
-			float py = headpose.position.y;
-			float pz = headpose.position.z;
-						
 			tempSample = new Vector3(px, py, pz);
 			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);
+			
 			if((Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
-			   && OVRManager.tracker.isPositionTracked) 
+			   && (RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)  // Code from OVRManager.cs
 			{
 				sample = tempSample;
 				lastOculusDK2Sample = sample;

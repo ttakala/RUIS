@@ -47,15 +47,25 @@ public class RUISSelectable : MonoBehaviour {
     private Vector3 latestVelocity = Vector3.zero;
     private Vector3 lastPosition = Vector3.zero;
 
-    private List<Vector3> velocityBuffer;
+//    private List<Vector3> velocityBuffer;
+	
+	private KalmanFilter positionKalman;
+	private double[] measuredPos = {0, 0, 0};
+	private double[] pos = {0, 0, 0};
+	private float positionNoiseCovariance = 1000;
+	Vector3 filteredVelocity = Vector3.zero;
 
     private bool transformHasBeenUpdated = false;
 
     public void Awake()
     {
-        velocityBuffer = new List<Vector3>();
+//        velocityBuffer = new List<Vector3>();
 		if(rigidbody)
 			oldCollisionMode = rigidbody.collisionDetectionMode;
+			
+		positionKalman = new KalmanFilter();
+		positionKalman.initialize(3,3);
+		positionKalman.skipIdenticalMeasurements = true;
     }
 
     public void Update()
@@ -66,8 +76,20 @@ public class RUISSelectable : MonoBehaviour {
 								/ Mathf.Max(Time.deltaTime, Time.fixedDeltaTime);
             lastPosition = transform.position;
 
-            velocityBuffer.Add(latestVelocity);
-            LimitBufferSize(velocityBuffer, 2);
+			
+			measuredPos[0] = latestVelocity.x;
+			measuredPos[1] = latestVelocity.y;
+			measuredPos[2] = latestVelocity.z;
+			positionKalman.setR(Time.deltaTime * positionNoiseCovariance);
+			positionKalman.predict();
+			positionKalman.update(measuredPos);
+			pos = positionKalman.getState();
+			filteredVelocity.x = (float) pos[0];
+			filteredVelocity.y = (float) pos[1];
+			filteredVelocity.z = (float) pos[2];
+			
+//            velocityBuffer.Add(latestVelocity);
+//            LimitBufferSize(velocityBuffer, 2);
 
             transformHasBeenUpdated = false;
         }
@@ -132,7 +154,9 @@ public class RUISSelectable : MonoBehaviour {
 
         if (maintainMomentumAfterRelease && rigidbody && !rigidbody.isKinematic)
         {
-            rigidbody.AddForce(AverageBufferContent(velocityBuffer), ForceMode.VelocityChange);
+//            rigidbody.AddForce(AverageBufferContent(velocityBuffer), ForceMode.VelocityChange);
+
+			rigidbody.AddForce(filteredVelocity, ForceMode.VelocityChange);
 			if(selector) // Put this if-clause here just in case because once received NullReferenceException
 			{
 				if(selector.transform.parent)
@@ -227,20 +251,20 @@ public class RUISSelectable : MonoBehaviour {
         }
     }
 
-    private Vector3 AverageBufferContent(List<Vector3> buffer)
-    {
-        if (buffer.Count == 0) return Vector3.zero;
-
-        Vector3 averagedContent = new Vector3();
-        foreach (Vector3 v in buffer)
-        {
-            averagedContent += v;
-        }
-
-        averagedContent = averagedContent / buffer.Count;
-
-        return averagedContent;
-    }
+//    private Vector3 AverageBufferContent(List<Vector3> buffer)
+//    {
+//        if (buffer.Count == 0) return Vector3.zero;
+//
+//        Vector3 averagedContent = new Vector3();
+//        foreach (Vector3 v in buffer)
+//        {
+//            averagedContent += v;
+//        }
+//
+//        averagedContent = averagedContent / buffer.Count;
+//
+//        return averagedContent;
+//    }
 
     private void AddMaterial(Material m, Renderer r)
     {
