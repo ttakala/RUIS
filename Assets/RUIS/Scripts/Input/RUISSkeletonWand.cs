@@ -21,8 +21,9 @@ public class RUISSkeletonWand : RUISWand
 	public string gestureSelectionScriptName;
     public RUISSkeletonManager.Joint wandStart = RUISSkeletonManager.Joint.RightElbow;
     public RUISSkeletonManager.Joint wandEnd = RUISSkeletonManager.Joint.RightHand;
-    private KalmanFilteredRotation rotationFilter;
-    public float rotationNoiseCovariance = 500;
+	private KalmanFilteredRotation rotationFilter;
+	[Range(0.001f, 2000f)]
+	public float rotationNoiseCovariance = 100;
 	[Range(0f, 1f)]
 	public float visualizerThreshold = 0.25f;
 	public int visualizerWidth = 32;
@@ -176,7 +177,7 @@ public class RUISSkeletonWand : RUISWand
             if (startData != null && startData.positionConfidence >= 0.5f)
             {
 				tempRotation = Quaternion.LookRotation(endData.position - startData.position);
-				filteredRotation = rotationFilter.Update(tempRotation, Time.deltaTime);
+				filteredRotation = rotationFilter.Update(tempRotation, Time.deltaTime); // HACK with kinect2 filtering is done in SkeletonManager
             }
             else if (endData.rotationConfidence >= 0.5f)
             {

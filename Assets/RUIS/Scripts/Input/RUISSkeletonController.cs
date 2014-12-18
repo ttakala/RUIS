@@ -59,10 +59,10 @@ public class RUISSkeletonController : MonoBehaviour
 	public Transform customLeftThumb;
 	public Transform customRightThumb;
 
-	public bool fistCurlFingers;
-	public bool trackThumbs;
-	public bool trackAnkle;
-	public bool rotateWristFromElbow;
+	public bool fistCurlFingers = true;
+	public bool trackThumbs = false;
+	public bool trackAnkle = true;
+	public bool rotateWristFromElbow = true;
 	
 	private RUISSkeletonManager.Skeleton.handState leftHandStatus, lastLeftHandStatus;
 	private RUISSkeletonManager.Skeleton.handState rightHandStatus, lastRightHandStatus;
@@ -111,7 +111,10 @@ public class RUISSkeletonController : MonoBehaviour
 	private double[] pos = {0, 0, 0};
 	private float positionNoiseCovariance = 500;
 	
-    private Dictionary<Transform, Quaternion> jointInitialRotations;
+	public bool filterRotations = false;
+	public float rotationNoiseCovariance = 500;
+
+	private Dictionary<Transform, Quaternion> jointInitialRotations;
     private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
 
 	
@@ -303,6 +306,13 @@ public class RUISSkeletonController : MonoBehaviour
 											 +	"Character Pivot in " + gameObject.name + "'s parent GameObject");
 					}
 			}
+		}
+
+		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRotations = filterRotations;
+		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rotationNoiseCovariance = rotationNoiseCovariance;
+		for(int i=0; i < skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot.Length; ++i)
+		{
+			skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot[i].rotationNoiseCovariance = rotationNoiseCovariance;
 		}
     }
 

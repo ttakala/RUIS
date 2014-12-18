@@ -68,6 +68,7 @@ public class RUISSelectable : MonoBehaviour {
 		positionKalman.skipIdenticalMeasurements = true;
     }
 
+	// TODO: Ideally there would not be any calls to Update() and FixedUpdate(), so that CPU resources are spared
     public void Update()
     {
         if (transformHasBeenUpdated)
@@ -76,24 +77,30 @@ public class RUISSelectable : MonoBehaviour {
 								/ Mathf.Max(Time.deltaTime, Time.fixedDeltaTime);
             lastPosition = transform.position;
 
-			
-			measuredPos[0] = latestVelocity.x;
-			measuredPos[1] = latestVelocity.y;
-			measuredPos[2] = latestVelocity.z;
-			positionKalman.setR(Time.deltaTime * positionNoiseCovariance);
-			positionKalman.predict();
-			positionKalman.update(measuredPos);
-			pos = positionKalman.getState();
-			filteredVelocity.x = (float) pos[0];
-			filteredVelocity.y = (float) pos[1];
-			filteredVelocity.z = (float) pos[2];
-			
+			if(isSelected)
+			{
+				updateVelocity(positionNoiseCovariance, Time.deltaTime);
+			}
 //            velocityBuffer.Add(latestVelocity);
 //            LimitBufferSize(velocityBuffer, 2);
 
             transformHasBeenUpdated = false;
         }
     }
+
+	private void updateVelocity(float noiseCovariance, float deltaTime)
+	{
+		measuredPos[0] = latestVelocity.x;
+		measuredPos[1] = latestVelocity.y;
+		measuredPos[2] = latestVelocity.z;
+		positionKalman.setR(deltaTime * noiseCovariance);
+		positionKalman.predict();
+		positionKalman.update(measuredPos);
+		pos = positionKalman.getState();
+		filteredVelocity.x = (float) pos[0];
+		filteredVelocity.y = (float) pos[1];
+		filteredVelocity.z = (float) pos[2];
+	}
 
     public void FixedUpdate()
     {
@@ -115,6 +122,9 @@ public class RUISSelectable : MonoBehaviour {
     public virtual void OnSelection(RUISWandSelector selector)
     {
         this.selector = selector;
+
+		// "Reset" filtered velocity by temporarily using position noise covariance of 10
+		updateVelocity(10, Time.deltaTime);
 
         positionAtSelection = transform.position;
         rotationAtSelection = transform.rotation;

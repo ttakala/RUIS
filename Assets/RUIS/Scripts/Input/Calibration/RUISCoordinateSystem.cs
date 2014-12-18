@@ -550,8 +550,8 @@ public class RUISCoordinateSystem : MonoBehaviour
 		// TODO: Try combinations of this: position = OVRManager.capiHmd.GetTrackingState().CameraPose.Orientation * position
 		
 		Vector3 newPosition = Vector3.zero;
-		newPosition.x = position.x - currentcameraPosition.x;
-		newPosition.y = position.y - currentcameraPosition.y;
+		newPosition.x =  position.x - currentcameraPosition.x;
+		newPosition.y =  position.y - currentcameraPosition.y;
 		newPosition.z = -(position.z + currentcameraPosition.z); // TODO: This probably depends on some DK2 setting, that can be affected with some kind of ResetCoordinateSystem() etc.
 		
 		//newPosition = newPosition - currentcameraPosition;

@@ -2,7 +2,7 @@
 
 Content    :   A class to manage the Kinect depth map image to also the skeleton on top of the user
 Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -31,14 +31,17 @@ public class RUISUserViewer : MonoBehaviour {
     public Color depthMapColor;
     public int factor = 4;
 
-    public bool update = true;
+    public bool Kinect1Update = true;
 
-	void Start () {
+	void Start () 
+	{
+
+		// Below is only for Kinect 1
         settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
-
-        if (!settingsManager.UserGenrator.Valid || settingsManager.CurrentContext.Depth == null)
+	
+		if (settingsManager == null || !settingsManager.UserGenrator.Valid || settingsManager.CurrentContext.Depth == null)
         {
-            update = false;
+            Kinect1Update = false;
             return;
         }
 
@@ -59,7 +62,7 @@ public class RUISUserViewer : MonoBehaviour {
 	}
 	
 	void Update () {
-        if (!update) return;
+        if (!Kinect1Update) return;
 
         settingsManager.CurrentContext.Depth.GetMetaData(metaData);
 
@@ -99,7 +102,7 @@ public class RUISUserViewer : MonoBehaviour {
 
     void OnGUI()
     {
-        if (!update) return;
+        if (!Kinect1Update) return;
 
         GUI.DrawTexture(new Rect(0, 0, Screen.width/2, Screen.height/2), texture, ScaleMode.StretchToFill, false);
     }

@@ -12,6 +12,7 @@ public class RUISSkeletonWandEditor : Editor
 //	SerializedProperty gestureSelectionMethod;
 	SerializedProperty wandStart;
 	SerializedProperty wandEnd;
+	SerializedProperty rotationNoiseCovariance;
 	SerializedProperty visualizerThreshold;
 	SerializedProperty visualizerWidth;
 	SerializedProperty visualizerHeight;
@@ -34,6 +35,7 @@ public class RUISSkeletonWandEditor : Editor
 //		gestureSelectionMethod = serializedObject.FindProperty("gestureSelectionMethod");
 		wandStart = serializedObject.FindProperty("wandStart");
 		wandEnd = serializedObject.FindProperty("wandEnd");
+		rotationNoiseCovariance = serializedObject.FindProperty("rotationNoiseCovariance");
 		visualizerThreshold = serializedObject.FindProperty("visualizerThreshold");
 		visualizerWidth = serializedObject.FindProperty("visualizerWidth");
 		visualizerHeight = serializedObject.FindProperty("visualizerHeight");
@@ -85,6 +87,10 @@ public class RUISSkeletonWandEditor : Editor
 		EditorGUILayout.PropertyField(wandStart, new GUIContent("Wand Start Point", "Body joint that together with Wand End Point define selection ray direction"));
 		EditorGUILayout.PropertyField(wandEnd, new GUIContent("Wand End Point", "Body joint that defines the Skeleton Wand position"));
 		
+		EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing (basic Kalman filter). "
+		                                                                      						+"Larger values make the rotation smoother, but makes it less "
+		                                                                      						+"responsive. Default value is 500."));
+
 		EditorGUILayout.PropertyField(showVisualizer, new GUIContent("Show Visualizer", "Show animation that illustrates gesture detection state / progress"));
 		if(showVisualizer.boolValue) {
 			EditorGUI.indentLevel += 2;

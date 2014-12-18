@@ -110,6 +110,7 @@ Assets/Plugins/libOculusPlugin.so -text
 Assets/Plugins/sixense.dll -text
 Assets/Plugins/x86/KinectUnityAddin.dll -text
 Assets/Plugins/x86/OculusPlugin.dll -text
+Assets/Plugins/x86/sixense.dll -text
 Assets/Plugins/x86_64/KinectUnityAddin.dll -text
 Assets/Plugins/x86_64/OculusPlugin.dll -text
 Assets/Plugins/x86_64/libOculusPlugin.so -text

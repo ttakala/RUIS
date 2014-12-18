@@ -3584,6 +3584,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3672,8 +3673,8 @@ MonoBehaviour:
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
   trackThumbs: 0
-  trackAnkle: 0
-  rotateWristFromElbow: 0
+  trackAnkle: 1
+  rotateWristFromElbow: 1
   bodyTrackingDevice: 1
   bodyTrackingDeviceID: 0
   playerId: 0
@@ -3690,6 +3691,8 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
+  filterRotations: 1
+  rotationNoiseCovariance: 500
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0

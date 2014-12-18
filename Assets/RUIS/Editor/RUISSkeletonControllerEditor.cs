@@ -30,6 +30,9 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty scaleBoneLengthOnly;
 	SerializedProperty boneLengthAxis;
 
+	SerializedProperty filterRotations;
+	SerializedProperty rotationNoiseCovariance;
+
     SerializedProperty rootBone;
     SerializedProperty headBone;
     SerializedProperty neckBone;
@@ -102,6 +105,9 @@ public class RUISSkeletonControllerEditor : Editor
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
 		boneLengthAxis = serializedObject.FindProperty("boneLengthAxis");
+
+		filterRotations = serializedObject.FindProperty("filterRotations");
+		rotationNoiseCovariance = serializedObject.FindProperty("rotationNoiseCovariance");
 
         rootBone = serializedObject.FindProperty("root");
         headBone = serializedObject.FindProperty("head");
@@ -195,6 +201,17 @@ public class RUISSkeletonControllerEditor : Editor
 
         EditorGUILayout.PropertyField(updateJointRotations, new GUIContent(  "Update Joint Rotations", "Enabling this is especially "
 		                                                                   + "important for hierarchical models."));
+
+		
+		EditorGUI.indentLevel++;
+		
+		EditorGUILayout.PropertyField(filterRotations, new GUIContent(  "Filter Rotations",   "Smoothen rotations with a basic Kalman filter. For now this is "
+		                                                              						+ "only done for the arm joints of Kinect 2 tracked skeletons."));
+		EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing. "
+		                                                                      +"Larger values make the rotation smoother, but makes it less "
+		                                                                      +"responsive. Default value is 500."));
+		
+		EditorGUI.indentLevel--;
 
         GUI.enabled = useHierarchicalModel.boolValue;
         EditorGUILayout.PropertyField(scaleHierarchicalModelBones, new GUIContent(  "Scale Bones", "Scale the bones of the model based on the "

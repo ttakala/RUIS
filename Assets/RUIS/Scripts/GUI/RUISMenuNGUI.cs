@@ -1,4 +1,13 @@
-﻿using UnityEngine;
+﻿/*****************************************************************************
+
+Content    :   A manager for display configurations
+Authors    :   Heikki Heiskanen, Tuukka Takala
+Copyright  :   Copyright 2015 Tuukka Takala, Heikki Heiskanen. All Rights reserved.
+Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+
+******************************************************************************/
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Ovr;

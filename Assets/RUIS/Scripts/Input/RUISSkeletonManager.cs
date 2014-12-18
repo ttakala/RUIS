@@ -87,6 +87,13 @@ public class RUISSkeletonManager : MonoBehaviour {
 			pointing,
 			unknown
 		}
+
+		// HACK for filtering Kinect 2 arm rotations
+		public bool filterRotations = false;
+		public float rotationNoiseCovariance = 500;
+		public KalmanFilteredRotation[] filterRot = new KalmanFilteredRotation[10];
+		public Quaternion[] previousRotation = new Quaternion[10];
+		public int[] filterUpdateCount = new int[10];
 		
 		public ulong trackingId = 0;
     }
@@ -173,13 +180,59 @@ public class RUISSkeletonManager : MonoBehaviour {
 		{
 			for (int i = 0; i < 6; i++) 
 			{
-					skeletons [x, i] = new Skeleton ();
+				skeletons [x, i] = new Skeleton ();
+
+				// HACK  for filtering Kinect 2 arm rotations
+				if(x == kinect2SensorID)
+				{
+					for(int k = 0; k < skeletons[x, i].filterRot.Length; ++k)
+					{
+						skeletons[x, i].filterRot[k] = new KalmanFilteredRotation();
+						skeletons[x, i].filterRot[k].skipIdenticalMeasurements = true;
+						skeletons[x, i].filterRot[k].rotationNoiseCovariance = skeletons[x, i].rotationNoiseCovariance;
+						skeletons[x, i].previousRotation[k] = Quaternion.identity;
+						skeletons[x, i].filterUpdateCount[k] = 0;
+					}
+				}
 			}
 		}
 		
 		isNewKinect2Frame = false;
     }
 	
+	// HACK for filtering Kinect 2 arm rotations
+	//void filterJointRotation(ref Quaternion measuredRotation, ref Quaternion previousRotation, ref KalmanFilteredRotation kalmanFilter, float kalmanDeltaTime)
+	void filterJointRotation(ref Skeleton skeleton, ref JointData joint, int jointID, float kalmanDeltaTime)
+	{
+		float updateAngle = 0.01f;
+		float angleThreshold = 15;
+		float rotateSpeed = 30;
+
+		if (jointID < 2)
+		{
+			joint.rotation = Quaternion.Slerp (skeleton.previousRotation [jointID], joint.rotation, rotateSpeed * kalmanDeltaTime );
+			return;
+		}
+
+		updateAngle = Mathf.Abs(Quaternion.Angle(joint.rotation, skeleton.previousRotation[jointID])); // New measurement vs previous rotation
+		if (updateAngle < angleThreshold)
+		{
+			joint.rotation = Quaternion.Slerp (skeleton.previousRotation [jointID], joint.rotation, rotateSpeed * kalmanDeltaTime );
+			skeleton.filterRot[jointID].rotationNoiseCovariance = skeleton.rotationNoiseCovariance*(0.05f + 0.95f*(angleThreshold-updateAngle)/angleThreshold);
+			joint.rotation = skeleton.filterRot[jointID].Update(joint.rotation, kalmanDeltaTime);
+//			if(Time.time < 10)
+//				Debug.Log(1);
+//				joint.rotation = skeleton.filterRot[jointID].Update(joint.rotation, kalmanDeltaTime);
+//			print(Time.time);
+		}
+		else 
+		{
+			skeleton.filterRot[jointID].rotationNoiseCovariance = 0.05f*skeleton.rotationNoiseCovariance;
+			joint.rotation = skeleton.filterRot[jointID].Update(joint.rotation, kalmanDeltaTime);
+		}
+		skeleton.previousRotation[jointID] = joint.rotation;
+	}
+
 	void Update () {
 
 		if (inputManager.enableKinect) {
@@ -214,7 +267,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 			Kinect.Body[] data = RUISKinect2Data.getData(out isNewFrame);
 			isNewKinect2Frame = isNewFrame;
 			
-			if (data != null) {
+			if (data != null && isNewFrame) {
 				
 				Vector3 relativePos;
 				int playerID = 0;
@@ -259,15 +312,21 @@ public class RUISSkeletonManager : MonoBehaviour {
 								}
 							}
 						}
-						
+
+
 						trackingIDtoIndex[body.TrackingId] = playerID;
 						skeletons [kinect2SensorID, playerID].trackingId = body.TrackingId;
 						
+						// HACK TO make things faster, remove later
+//						if(playerID > 0)
+//							return;
+
 						UpdateKinect2RootData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID);
 
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.Head], body.JointOrientations[Kinect.JointType.Head]), playerID, ref skeletons [kinect2SensorID, playerID].head);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.Neck], body.JointOrientations[Kinect.JointType.Neck]), playerID, ref skeletons [kinect2SensorID, playerID].neck);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].torso);
+						//UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].torso);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].midSpine);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineShoulder], body.JointOrientations[Kinect.JointType.SpineShoulder]), playerID, ref skeletons [kinect2SensorID, playerID].shoulderSpine);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.ShoulderLeft], body.JointOrientations[Kinect.JointType.ShoulderLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftShoulder);
@@ -297,7 +356,62 @@ public class RUISSkeletonManager : MonoBehaviour {
 						
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.FootLeft], body.JointOrientations[Kinect.JointType.FootLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftFoot);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.FootRight], body.JointOrientations[Kinect.JointType.FootRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightFoot);
+
 						
+						// HACK for filtering Kinect 2 arm rotations
+						if(isNewKinect2Frame && skeletons[kinect2SensorID, playerID].filterRotations)
+						{
+							float kalmanDeltaTime = 0.0333f;
+
+							//if(skeletons[kinect2SensorID, playerID].leftShoulder.rotationConfidence >= 0.5f)
+							{
+								filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].leftShoulder, 0, kalmanDeltaTime);
+							}
+							//if(skeletons[kinect2SensorID, playerID].rightShoulder.rotationConfidence >= 0.5f)
+							{
+								filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightShoulder, 1, kalmanDeltaTime);
+							}
+							//if(skeletons[kinect2SensorID, playerID].leftElbow.rotationConfidence >= 0.5f)
+							{
+								filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].leftElbow, 2, kalmanDeltaTime);
+							}
+							//if(skeletons[kinect2SensorID, playerID].rightElbow.rotationConfidence >= 0.5f)
+							{
+								filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightElbow, 3, kalmanDeltaTime);
+							}
+							
+//							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].root, 4, kalmanDeltaTime);
+//
+////							measuredRotation = skeletons[kinect2SensorID, playerID].root.rotation;
+////							skeletons[kinect2SensorID, playerID].root.rotation = skeletons[kinect2SensorID, playerID].filterRot[4].Update(measuredRotation, kalmanDeltaTime);
+//							
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].torso, 5, kalmanDeltaTime);
+//
+////							measuredRotation = skeletons[kinect2SensorID, playerID].torso.rotation;
+////							skeletons[kinect2SensorID, playerID].torso.rotation = skeletons[kinect2SensorID, playerID].filterRot[5].Update(measuredRotation, kalmanDeltaTime);
+//							
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].midSpine, 6, kalmanDeltaTime);
+//
+////							measuredRotation = skeletons[kinect2SensorID, playerID].midSpine.rotation;
+////							skeletons[kinect2SensorID, playerID].midSpine.rotation = skeletons[kinect2SensorID, playerID].filterRot[6].Update(measuredRotation, kalmanDeltaTime);
+//							
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].shoulderSpine, 7, kalmanDeltaTime);
+//
+////							measuredRotation = skeletons[kinect2SensorID, playerID].shoulderSpine.rotation;
+////							skeletons[kinect2SensorID, playerID].shoulderSpine.rotation = skeletons[kinect2SensorID, playerID].filterRot[7].Update(measuredRotation, kalmanDeltaTime);
+							
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].leftHand, 8, kalmanDeltaTime);
+
+//							measuredRotation = skeletons[kinect2SensorID, playerID].leftHand.rotation;
+//							skeletons[kinect2SensorID, playerID].leftHand.rotation = skeletons[kinect2SensorID, playerID].filterRot[8].Update(measuredRotation, kalmanDeltaTime);
+							
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightHand, 9, kalmanDeltaTime);
+
+//							measuredRotation = skeletons[kinect2SensorID, playerID].rightHand.rotation;
+//							skeletons[kinect2SensorID, playerID].rightHand.rotation = skeletons[kinect2SensorID, playerID].filterRot[9].Update(measuredRotation, kalmanDeltaTime);
+
+						}
+
 						/*
 						 * 	Rotation corrections
 						 */

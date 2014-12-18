@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   Comprehensive virtual reality camera class
-Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala, Heikki Heiskanen
+Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/

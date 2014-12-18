@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   A display used by RUIS in the display configurations, allows e.g. multiple displays & stereoscopy
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/

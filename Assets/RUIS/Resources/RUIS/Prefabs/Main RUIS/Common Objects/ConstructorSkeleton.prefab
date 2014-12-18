@@ -1701,10 +1701,10 @@ MonoBehaviour:
   customLeftFoot: {fileID: 0}
   customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
-  fistCurlFingers: 0
+  fistCurlFingers: 1
   trackThumbs: 0
-  trackAnkle: 0
-  rotateWristFromElbow: 0
+  trackAnkle: 1
+  rotateWristFromElbow: 1
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 0
@@ -1721,6 +1721,8 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
+  filterRotations: 0
+  rotationNoiseCovariance: 500
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0

@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   A manager for display configurations
-Authors    :   Mikael Matveinen, Heikki Heiskanen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. All Rights reserved.
+Authors    :   Mikael Matveinen, Heikki Heiskanen, Tuukka Takala
+Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -34,6 +34,7 @@ public class RUISDisplayManager : MonoBehaviour {
 	public float guiScaleY = 1;
 	public bool hideMouseOnPlay = false;
 
+	private bool hasOculusDisplay = false;
 	
     public class ScreenPoint
     {
@@ -49,6 +50,9 @@ public class RUISDisplayManager : MonoBehaviour {
         {
             UpdateResolutionsOnTheFly();
         }
+		
+		hasOculusDisplay = HasOculusDisplay();
+
 
         UpdateDisplays();
 
@@ -57,16 +61,11 @@ public class RUISDisplayManager : MonoBehaviour {
 
         LoadDisplaysFromXML();
 
+		// Second substitution because displays might have been updated via XML etc.
+		hasOculusDisplay = HasOculusDisplay();
+
 		// Disable OVRManager script if there are no Oculus Rift displays
-		bool hasOculusDisplay = false;
-		foreach (RUISDisplay display in displays)
-		{
-			if(display.linkedCamera && display.enableOculusRift)
-			{
-				hasOculusDisplay = true;
-				break;
-			}
-		}
+
 		if(!hasOculusDisplay)
 		{
 			if(GetComponent<OVRManager>())
@@ -100,9 +99,24 @@ public class RUISDisplayManager : MonoBehaviour {
 
         if (displays.Count > 1 || (displays.Count == 1 && !allowResolutionDialog))
         {
-            Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, false);
+			if(!hasOculusDisplay) // TODO: if external oculus mode, and we have multiple displays, then execute below clause anyway
+			{
+				Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, false);
+			}
         }
     }
+
+	public bool HasOculusDisplay()
+	{
+		foreach (RUISDisplay display in displays)
+		{
+			if(display.linkedCamera && display.enableOculusRift)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 
     public void CalculateTotalResolution()
     {

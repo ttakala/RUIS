@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   Comprehensive 6DOF tracker class with yaw drift correction
-Authors    :   Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Tuukka Takala, Heikki Heiskanen
+Copyright  :   Copyright 2015 Tuukka Takala, Heikki Heiskanen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -494,7 +494,7 @@ public class RUISTracker : MonoBehaviour
 		{
 			Quaternion convertedRotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
 			// TODO: Test below transform.localRotation
-			convertedRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0));
+			convertedRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0)); // TODO: Tuukka tried adding 180. This was probably not right. Find correct solution.
 			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
 			transform.localRotation = convertedRotation;
 			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
@@ -502,8 +502,9 @@ public class RUISTracker : MonoBehaviour
 			if(OVRManager.capiHmd != null)
 			{
 				currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
-				currentOvrCameraPose.z = -currentOvrCameraPose.z;
+				currentOvrCameraPose.z = -currentOvrCameraPose.z; // TODO: Tuukka commented this (was unclear), test if it was ok to comment
 
+				// TODO: Tuukka tried adding minus and commenting the above currentOvrCameraPose.z = - ...  This didn't work
 				convertedLocation = coordinateSystem.ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
 				//convertedLocation = coordinateSystem.ConvertLocation(new Vector3(0, 0, -1.0f), RUISDevice.Oculus_DK2); 
 				this.transform.localPosition = convertedLocation;

@@ -2,7 +2,7 @@
 
 Content    :   A Script to handle controlling a rigidbody character using Kinect and some traditional input method
 Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -325,7 +325,8 @@ public class RUISCharacterController : MonoBehaviour
 				{
 					OVRPose headpose = OVRManager.display.GetHeadPose();
 					
-					headPosition = new Vector3(headpose.position.x, headpose.position.y, headpose.position.z);
+					// TODO: Tuukka added minus to z. This is probably not right. ConvertRawOculusDK2Location and places that use it probably have a bug.
+					headPosition = new Vector3(headpose.position.x, headpose.position.y, -headpose.position.z); 
 					return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
 				}
 		}

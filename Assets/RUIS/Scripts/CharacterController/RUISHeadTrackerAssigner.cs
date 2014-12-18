@@ -3,7 +3,7 @@
 Content    :	Leaves one head tracker enabled (that best matches RUISInputManager 
 				settings) from a input list of GameObjects with RUISTracker script.
 Authors    :	Tuukka Takala
-Copyright  :	Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :	Copyright 2015 Tuukka Takala, Heikki Heiskanen. All Rights reserved.
 Licensing  :	RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
