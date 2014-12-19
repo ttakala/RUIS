@@ -30,7 +30,8 @@ public class RUISOVRManager : MonoBehaviour {
 	public static Hmd ovrHmd;
 	private bool isQuitting = false;
 	
-	void Awake () {
+	void Awake () 
+	{
 		if(OVRManager.capiHmd == null) 
 		{
 		 OVR_Initialize();

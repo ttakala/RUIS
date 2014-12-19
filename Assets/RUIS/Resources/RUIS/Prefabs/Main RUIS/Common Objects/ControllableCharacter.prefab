@@ -3833,7 +3833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: .782956779, z: .100000001}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 2
   headRotationInput: 5
   mobileRazerBase: 0
