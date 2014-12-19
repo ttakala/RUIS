@@ -499,9 +499,12 @@ public class UICamera : MonoBehaviour
 			if (pos.x < 0f || pos.x > 1f || pos.y < 0f || pos.y > 1f) continue;
 
 			// CORE HACK by heikki.j.heiskanen@aalto.fi
-			if(ruisCamera) {
-				if(ruisCamera.associatedDisplay.enableOculusRift) {
-					inPos *= 2.5f;	
+			if(ruisCamera != null && ruisCamera.associatedDisplay != null) 
+			{
+				if(ruisCamera.associatedDisplay.enableOculusRift) 
+				{
+					inPos = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(inPos);
+					//inPos *= 2.5f;	
 				}
 			}
 			// END CORE HACK

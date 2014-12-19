@@ -217,7 +217,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				
 				ruisCamera = closestMatch.gameObject.GetComponentInChildren<RUISCamera>();
 				
-				if(		changePivotIfNoKinect && psmove && !kinect 
+				if(		changePivotIfNoKinect && psmove && !kinect && !kinect2
 					&&  closestMatch.headPositionInput == RUISTracker.HeadPositionSource.PSMove )
 				{
 					RUISCharacterController characterController = gameObject.GetComponentInChildren<RUISCharacterController>();

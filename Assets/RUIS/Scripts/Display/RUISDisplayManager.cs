@@ -23,7 +23,7 @@ public class RUISDisplayManager : MonoBehaviour {
 
 	public GameObject ruisMenuPrefab;
 	public GameObject menuCursorPrefab;
-	public string menuLayerName = "RUISMenu";
+	public int menuLayer = 0;
 	public int guiDisplayChoice = 0;
 	
 	public float guiX;  
@@ -135,7 +135,7 @@ public class RUISDisplayManager : MonoBehaviour {
         }
     }
 
-    public Ray ScreenPointToRay(Vector2 screenPoint)
+	public Ray ScreenPointToRay(Vector2 screenPoint)
     {
         RUISDisplay display = GetDisplayForScreenPoint(screenPoint);
 
@@ -143,10 +143,16 @@ public class RUISDisplayManager : MonoBehaviour {
         if (display)
         {
             Camera camera = display.GetCameraForScreenPoint(screenPoint);
-            
+			
             if (camera)
             {   
-                return camera.ScreenPointToRay(screenPoint);
+				if(display.enableOculusRift)
+				{
+					screenPoint = display.ConvertOculusScreenPoint(screenPoint);
+					return camera.ScreenPointToRay(screenPoint);
+				}
+				else
+                	return camera.ScreenPointToRay(screenPoint);
             }
         }
          
@@ -274,8 +280,8 @@ public class RUISDisplayManager : MonoBehaviour {
 		if(ruisMenu == null)
 			return;
 	
-		if(LayerMask.NameToLayer(menuLayerName) == -1)
-			Debug.LogError(  "Could not find layer '" + menuLayerName + "', the RUIS menu cursor will not work without this layer! "
+		if(menuLayer == -1)
+			Debug.LogError(  "Could not find layer '" + LayerMask.LayerToName(menuLayer) + "', the RUIS menu cursor will not work without this layer! "
 			               + "The prefab '" + ruisMenuPrefab.name + "' and its children should be on this layer.");
 
 		if(!displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo

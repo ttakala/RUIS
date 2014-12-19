@@ -41,6 +41,8 @@ public class RUISSkeletonWand : RUISWand
     private RUISWandSelector wandSelector;
     private bool isTracking = false;
     private RUISSelectable highlightStartObject;
+    
+	LineRenderer lineRenderer;
 
 	public bool switchToAvailableKinect = true;
 
@@ -317,7 +319,10 @@ public class RUISSkeletonWand : RUISWand
     {
         isTracking = true;
         gestureRecognizer.EnableGesture();
-        GetComponent<LineRenderer>().enabled = true;
+		lineRenderer = GetComponent<LineRenderer>();
+		print (lineRenderer);
+		if(lineRenderer)
+			lineRenderer.enabled = true;
         if (wandPositionVisualizer)
         {
             wandPositionVisualizer.SetActive(true);
@@ -327,8 +332,10 @@ public class RUISSkeletonWand : RUISWand
     private void PlayerLost()
     {
         isTracking = false;
-        gestureRecognizer.DisableGesture();
-        GetComponent<LineRenderer>().enabled = false;
+		gestureRecognizer.DisableGesture();
+		lineRenderer = GetComponent<LineRenderer>();
+		if(lineRenderer)
+			lineRenderer.enabled = false;
         if (wandPositionVisualizer)
         {
             wandPositionVisualizer.SetActive(false);

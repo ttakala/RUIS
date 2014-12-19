@@ -312,7 +312,8 @@ public class RUISSkeletonController : MonoBehaviour
 		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rotationNoiseCovariance = rotationNoiseCovariance;
 		for(int i=0; i < skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot.Length; ++i)
 		{
-			skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot[i].rotationNoiseCovariance = rotationNoiseCovariance;
+			if(skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot[i] != null)
+				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot[i].rotationNoiseCovariance = rotationNoiseCovariance;
 		}
     }
 

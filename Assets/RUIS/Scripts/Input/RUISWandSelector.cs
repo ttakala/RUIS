@@ -257,7 +257,7 @@ public class RUISWandSelector : MonoBehaviour {
     {
         if(!lineRenderer) return;
 
-        lineRenderer.enabled = selection == null && selectionRayType == SelectionRayType.WandDirection;
+//        lineRenderer.enabled = selection == null && selectionRayType == SelectionRayType.WandDirection;
 
         lineRenderer.SetColors(wand.color, wand.color);
 

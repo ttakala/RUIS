@@ -39,6 +39,7 @@ public class RUISDisplayManagerEditor : Editor {
 	RUISDisplayManager displayManager; 
 	
 	SerializedProperty menuCursorPrefab;
+	SerializedProperty menuLayer;
 	
     void OnEnable()
     {
@@ -71,6 +72,7 @@ public class RUISDisplayManagerEditor : Editor {
         stereoDisplayTexture = Resources.Load("RUIS/Editor/Textures/stereodisplay") as Texture2D;
 		
 		menuCursorPrefab = serializedObject.FindProperty("menuCursorPrefab");
+		menuLayer = serializedObject.FindProperty("menuLayer");
     }
 
     public override void OnInspectorGUI()
@@ -85,7 +87,7 @@ public class RUISDisplayManagerEditor : Editor {
         //if there is only one display we want to give the user the opportunity to set fullscreen
         if (displays.arraySize == 1)
         {
-            allowResolutionDialog.boolValue = EditorGUILayout.Toggle(new GUIContent("Allow resolution dialog", "Allow the usage of the resolution dialog"), allowResolutionDialog.boolValue);
+            allowResolutionDialog.boolValue = EditorGUILayout.Toggle(new GUIContent("Allow Resolution Dialog", "Allow the usage of the resolution dialog"), allowResolutionDialog.boolValue);
             if (allowResolutionDialog.boolValue)
             {
                 PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
@@ -101,7 +103,7 @@ public class RUISDisplayManagerEditor : Editor {
             allowResolutionDialog.boolValue = false;
         }
 
-        if (GUILayout.Button("Add display"))
+        if (GUILayout.Button("Add Display"))
         {
             displays.arraySize++;
             SerializedProperty newDisplayProperty = displays.GetArrayElementAtIndex(displays.arraySize - 1);
@@ -129,12 +131,12 @@ public class RUISDisplayManagerEditor : Editor {
 
                 if (displays.arraySize > 1)
                 {
-                    if (GUILayout.Button("Move up", GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button("Move Up", GUILayout.ExpandWidth(false)))
                     {
                         MoveUp(i);
                     }
 
-                    if (GUILayout.Button("Move down", GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button("Move Down", GUILayout.ExpandWidth(false)))
                     {
                         MoveDown(i);
                     }
@@ -189,7 +191,7 @@ public class RUISDisplayManagerEditor : Editor {
         EditorGUILayout.EndHorizontal();
 
 		EditorGUILayout.BeginHorizontal();
-		EditorGUILayout.LabelField("Display with RUIS Menu:");
+		EditorGUILayout.LabelField("Display With RUIS Menu:");
 		guiDisplayChoices = new List<string>();
 		for(int i = 0; i < displayManager.displays.Count; ++i)
 		{
@@ -205,17 +207,22 @@ public class RUISDisplayManagerEditor : Editor {
 
 		
 		
-		EditorGUILayout.LabelField("RUIS Menu local coordinates:");
-		EditorGUILayout.PropertyField(guiX,  new GUIContent("X", ""));
-		EditorGUILayout.PropertyField(guiY,  new GUIContent("Y", ""));
-		EditorGUILayout.PropertyField(guiZ,  new GUIContent("Z", ""));
-		EditorGUILayout.LabelField("RUIS Menu scale:");
-		EditorGUILayout.PropertyField(guiScaleX,  new GUIContent("X-scale", ""));
-		EditorGUILayout.PropertyField(guiScaleY,  new GUIContent("Y-scale", ""));
+		EditorGUILayout.LabelField("RUIS Menu Local Coordinates:");
+		EditorGUILayout.PropertyField(guiX,  new GUIContent("X", "X-offset from camera"));
+		EditorGUILayout.PropertyField(guiY,  new GUIContent("Y", "Y-offset from camera"));
+		EditorGUILayout.PropertyField(guiZ,  new GUIContent("Z", "Z-offset from camera"));
+		
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(hideMouseOnPlay,  new GUIContent("Hide mouse on play", ""));
+		
+		EditorGUILayout.LabelField("RUIS Menu Scale:");
+		EditorGUILayout.PropertyField(guiScaleX,  new GUIContent("X-scale", "Scales menu horizontally"));
+		EditorGUILayout.PropertyField(guiScaleY,  new GUIContent("Y-scale", "Scales menu vertically"));
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(menuCursorPrefab,  new GUIContent("Menu cursor prefab", ""));
+		EditorGUILayout.PropertyField(hideMouseOnPlay,  new GUIContent("Hide Mouse On Play", "Operating system mouse cursor will be hidden"));
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(menuCursorPrefab,  new GUIContent(  "Menu Cursor Prefab", "The prefab that will be instantiated when RUIS Menu is "
+																		+ "invoked (ESC key)"));
+		menuLayer.intValue = EditorGUILayout.LayerField(new GUIContent("Menu Layer", "RUIS Menu mouse cursor ray is cast against objects on this layer only"), menuLayer.intValue);
 		
 
         serializedObject.ApplyModifiedProperties();

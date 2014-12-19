@@ -32,9 +32,8 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 		menuScript = this.GetComponent<RUISMenuNGUI>();
 		this.guiPlane = this.transform.Find ("planeCollider").GetComponent<Collider>();
 		if(this.guiPlane == null)
-			Debug.LogError( "Did not find RUISMenu collider object, onto which mouse selection ray is projected!" );
+			Debug.LogError( "Did not find RUIS Menu collider object, onto which mouse selection ray is projected!" );
 
-		ruisCamera = this.transform.parent.parent.GetComponent<RUISCamera>();
 		if(this.transform.parent == null)
 		{
 			Debug.LogError(  "The parent of GameObject '" + name 
@@ -45,7 +44,12 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			Debug.LogError(  "The grand parent of GameObject '" + name 
 			               + "is null and RUIS Menu will not function. Something is wrong with 'RUIS NGUI Menu' prefab or you "
 			               + "are misusing the " + typeof(RUIS3dGuiCursor) + " script.");
-
+		
+		ruisCamera = this.transform.parent.parent.GetComponent<RUISCamera>();
+		if(ruisCamera == null)
+			Debug.LogError(  typeof(RUIS3dGuiCursor) + " script did not find "  + typeof(RUISCamera) + " from its grandparent "
+			               + "gameobject! RUIS Menu is unavailable.");
+			               
 		ruisDisplayManager =  FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
 
 		if(ruisDisplayManager == null) 
@@ -113,9 +117,10 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 				} 
 			*/
 				
-			if(ruisCamera.associatedDisplay.enableOculusRift) 
+			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift) 
 			{
-				mouseInputCoordinates = 2.5f * Input.mousePosition;
+				//mouseInputCoordinates = 2.5f * Input.mousePosition;
+				mouseInputCoordinates = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(Input.mousePosition);
 //				mouseInputCoordinates.x = Input.mousePosition.x;
 //				mouseInputCoordinates.y = Input.mousePosition.y;
 //				mouseInputCoordinates.z = Input.mousePosition.z;
@@ -123,13 +128,13 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			else 
 			{
 				mouseInputCoordinates = Input.mousePosition; 	
-			}	
+			}
 			
 			Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(mouseInputCoordinates);
 			
 			instancedCursor.transform.rotation = ruisCamera.transform.rotation;
 
-			if(ruisCamera.associatedDisplay.isObliqueFrustum)
+			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isObliqueFrustum)
 			{
 				wallOrientation = Quaternion.LookRotation(-ruisCamera.associatedDisplay.DisplayNormal, ruisCamera.associatedDisplay.DisplayUp);
 				
@@ -144,7 +149,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 
 			}
 
-			if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask(ruisDisplayManager.menuLayerName)))
+			if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask(LayerMask.LayerToName(ruisDisplayManager.menuLayer))))
 			{ 
 				if(instancedCursor)
 				{

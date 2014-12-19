@@ -57,8 +57,8 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 	
 	void LateUpdate()
 	{
-		rightFistStatusInSensor = skeletonWand.skeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].rightHandStatus;
-		leftFistStatusInSensor = skeletonWand.skeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].leftHandStatus;
+		rightFistStatusInSensor = ruisSkeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].rightHandStatus;
+		leftFistStatusInSensor  = ruisSkeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].leftHandStatus;
 		
 		if(leftOrRightFist == fistSide.LeftFist) fistStatusInSensor = leftFistStatusInSensor;
 		else fistStatusInSensor = rightFistStatusInSensor;

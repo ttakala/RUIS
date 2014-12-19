@@ -287,4 +287,12 @@ public class RUISDisplay : MonoBehaviour {
 			Gizmos.color = color;
 		}
     }
+    
+	public Vector2 ConvertOculusScreenPoint(Vector2 screenPoint) {
+		Vector2 newScreenpoint = Vector2.zero;
+		newScreenpoint.x = 1.25f*(1920f/Mathf.Max((float)this.rawResolutionX, 1)) * (screenPoint.x );//% (0.5f*((float)this.rawResolutionX))));
+		newScreenpoint.y = 1.25f*(1080f/Mathf.Max((float)this.rawResolutionY, 1)) * screenPoint.y;
+		return newScreenpoint;
+	}
+	
 }
