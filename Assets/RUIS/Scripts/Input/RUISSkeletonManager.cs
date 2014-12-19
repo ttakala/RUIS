@@ -267,52 +267,59 @@ public class RUISSkeletonManager : MonoBehaviour {
 			Kinect.Body[] data = RUISKinect2Data.getData(out isNewFrame);
 			isNewKinect2Frame = isNewFrame;
 			
-			if (data != null && isNewFrame) {
-				
+			if (data != null && isNewFrame) 
+			{
 				Vector3 relativePos;
 				int playerID = 0;
 				bool newBody = true;
 				int i = 0;
 				
 				// Refresh skeleton tracking status
-				for(int y = 0; y < skeletons.GetLength(1); y++) {
+				for(int y = 0; y < skeletons.GetLength(1); y++) 
 					skeletons [kinect2SensorID, y].isTracking = false; 
-				}
 				
-				foreach(var body in data) {
-					if(body.IsTracked) {
-						for(int y = 0; y < skeletons.GetLength(1); y++) {
-							if(skeletons [kinect2SensorID, y].trackingId == body.TrackingId) {
+				foreach(var body in data) 
+				{
+					if(body.IsTracked) 
+					{
+						for(int y = 0; y < skeletons.GetLength(1); y++) 
+						{
+							if(skeletons [kinect2SensorID, y].trackingId == body.TrackingId) 
 								skeletons [kinect2SensorID, y].isTracking = true;
-							}
 						}
 					}
 				}
 				
-				foreach(var body in data) {	
-					
-					if(i > skeletons.GetLength(1) - 1) break;
-					if (body == null) continue;
+				foreach(var body in data)
+				{		
+					if(i >= skeletons.GetLength(1)) 
+						break;
+					if (body == null) 
+						continue;
 					newBody = true;
 					playerID = 0;
 					
 					// Check if trackingID has been assigned to certaint index before and use that index
-					if(trackingIDtoIndex.ContainsKey(body.TrackingId) && body.IsTracked) {
+					if(trackingIDtoIndex.ContainsKey(body.TrackingId) && body.IsTracked)
+					{
 						playerID = trackingIDtoIndex[body.TrackingId];
 						newBody = false;
 					} 
 					
-					if(body.IsTracked) {
-						if(newBody) {
+					if(body.IsTracked) 
+					{
+						if(newBody) 
+						{
 							// Find the first unused slot in skeletons array
-							for(int y = 0; y < skeletons.GetLength(1); y++) {
-								if(!skeletons [kinect2SensorID, y].isTracking) {
+							for(int y = 0; y < skeletons.GetLength(1); y++) 
+							{
+								if(!skeletons [kinect2SensorID, y].isTracking) 
+								{
 									playerID = y;
 									break;
 								}
 							}
 						}
-
 
 						trackingIDtoIndex[body.TrackingId] = playerID;
 						skeletons [kinect2SensorID, playerID].trackingId = body.TrackingId;
