@@ -217,7 +217,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 					break;
 					
 					case "Button - Quit Application": 
-						Application.Quit();
+						if (!Application.isEditor) System.Diagnostics.Process.GetCurrentProcess().Kill(); 
+						else Application.Quit();
 					break;
 				
 				}
