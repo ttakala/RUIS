@@ -100,7 +100,7 @@ public class RUISCharacterControllerEditor : Editor
 		                                                                          + "(Kinect/PS Move) must have its coordinate system calibrated with Oculus Rift using the RUIS "
 		                                                                          + "device calibration (in runtime press ESC to enter RUIS Menu), otherwise the head position "
 		                                                                          + "will jump into a completely different location when Oculus Rift camera loses track of the "
-		                                                                          + "head position."));
+		                                                                          + "head position. 'Root Speed Scaling' must be (1,1,1) in " + typeof(RUISSkeletonController) + "."));
 
         EditorGUI.indentLevel -= 2;
 

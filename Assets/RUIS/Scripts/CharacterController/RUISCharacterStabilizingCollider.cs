@@ -39,7 +39,12 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	private KalmanFilter positionKalman;
 	private double[] measuredPos = {0, 0, 0};
 	private double[] pos = {0, 0, 0};
-	private float positionNoiseCovariance = 1500;
+	
+	[Tooltip(  "Position smoothing strength (noise covariance for a basic Kalman filter). Bigger values reduce "
+		     + "jitter but make the character collider more sluggish. This jitter adds to head tracking jitter "
+	         + "if a head tracking camera is parented under the character gameobject. Default value is 1500.")]
+	[Range(0.0001f, 10000f)]
+	public float positionSmoothing = 1500;
 	
 //	Vector3 headPosition = Vector3.zero;
 	Vector3 torsoPosition = Vector3.zero;
@@ -176,7 +181,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 					measuredPos[0] = torsoPosition.x;
 					measuredPos[1] = torsoPosition.y;
 					measuredPos[2] = torsoPosition.z;
-					positionKalman.setR(Time.fixedDeltaTime * positionNoiseCovariance);
+					positionKalman.setR(Time.fixedDeltaTime * positionSmoothing);
 				    positionKalman.predict();
 				    positionKalman.update(measuredPos);
 					pos = positionKalman.getState();
@@ -199,13 +204,17 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
             }
         }
         else
-        {
-        	torsoPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position;
+		{
+			// Apply root scaling
+			if(skeletonController)
+				torsoPosition = Vector3.Scale(skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position, skeletonController.rootSpeedScaling);
+			else
+				torsoPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position;
 			
 			measuredPos[0] = torsoPosition.x;
 			measuredPos[1] = torsoPosition.y;
 			measuredPos[2] = torsoPosition.z;
-			positionKalman.setR(Time.fixedDeltaTime * positionNoiseCovariance);
+			positionKalman.setR(Time.fixedDeltaTime * positionSmoothing);
 		    positionKalman.predict();
 		    positionKalman.update(measuredPos);
 			pos = positionKalman.getState();

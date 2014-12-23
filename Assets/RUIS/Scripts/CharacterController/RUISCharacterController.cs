@@ -64,6 +64,9 @@ public class RUISCharacterController : MonoBehaviour
 	List<Transform> bodyParts = new List<Transform>(2);
 	RUISSkeletonController skeletonController;
 
+	private bool kinectAndMecanimCombinerExists = false;
+	private bool combinerChildrenInstantiated = false;
+
 	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
 	
     void Awake()
@@ -72,6 +75,7 @@ public class RUISCharacterController : MonoBehaviour
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
         stabilizingCollider = GetComponentInChildren<RUISCharacterStabilizingCollider>();
 		lastJumpTime = 0;
+		skeletonController = gameObject.GetComponentInChildren<RUISSkeletonController>();
     }
 	
     void Start()
@@ -79,6 +83,7 @@ public class RUISCharacterController : MonoBehaviour
 		colliding = false;
 		grounded = false;
 	
+		// Second substitution, because RUISKinectAndMecanimCombiner might have already erased the original one and re-created it
 		skeletonController = gameObject.GetComponentInChildren<RUISSkeletonController>();
 		if(skeletonController)
 		{
@@ -173,10 +178,16 @@ public class RUISCharacterController : MonoBehaviour
 				Debug.LogError(e);
 			}
 		}
+		
+		if(GetComponentInChildren<RUISKinectAndMecanimCombiner>())
+			kinectAndMecanimCombinerExists = true;
 	}
 	
     void Update()
 	{
+		if(!combinerChildrenInstantiated)
+			skeletonController = getSkeletonController();
+
 		// Check whether character collider (aka stabilizingCollider) is grounded
         raycastPosition = stabilizingCollider ? stabilizingCollider.transform.position : transform.position;
 
@@ -336,14 +347,24 @@ public class RUISCharacterController : MonoBehaviour
 	        {
 	            case CharacterPivotType.KinectHead:
 				{
-				if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-					return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.position;
+					if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+					{
+						if(skeletonController) // Add root speed scaling
+							return Vector3.Scale(skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.position, skeletonController.rootSpeedScaling);
+						else
+							return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.position;
+					}
 					break;
 				}
 	            case CharacterPivotType.KinectTorso:
 				{
-				if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-					return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position;
+					if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+					{
+						if(skeletonController) // Add root speed scaling
+							return Vector3.Scale(skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position, skeletonController.rootSpeedScaling);
+						else
+							return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position;
+					}
 					break;
 				}
 	            case CharacterPivotType.MoveController:
@@ -377,5 +398,26 @@ public class RUISCharacterController : MonoBehaviour
 		wasColliding = true;
 		//Debug.LogError(other.gameObject.name);
 		//}
+	}
+
+	RUISSkeletonController getSkeletonController()
+	{
+		// Original skeletonController has been destroyed because the GameObject which had
+		// it has been split in three parts: Kinect, Mecanim, Blended. Lets fetch the new one.
+		if (!combinerChildrenInstantiated && kinectAndMecanimCombinerExists)
+		{
+			RUISKinectAndMecanimCombiner combiner = GetComponentInChildren<RUISKinectAndMecanimCombiner>();
+			if (combiner && combiner.isChildrenInstantiated())
+			{
+				skeletonController = combiner.skeletonController;
+				
+				if(skeletonController == null)
+					Debug.LogError(  "Could not find Component " + typeof(RUISSkeletonController) + " from "
+					               + "children of " + gameObject.name
+					               + ", something is very wrong with this character setup!");
+				combinerChildrenInstantiated = true;
+			}
+		}
+		return skeletonController;
 	}
 }
