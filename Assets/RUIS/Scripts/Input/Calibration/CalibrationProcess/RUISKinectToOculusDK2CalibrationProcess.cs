@@ -29,7 +29,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	private OpenNI.SceneAnalyzer sceneAnalyzer;
 	private List<Vector3> samples_Kinect1, samples_OculusDK2;
 	private int numberOfSamplesTaken, numberOfSamplesToTake, numberOfSamplesPerSecond;
-	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart, distanceFromFloor = 0;
+	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart = 0;
 	public RUISCoordinateSystem coordinateSystem;
 	public RUISInputManager inputManager;
 	private bool oculusChecked = false, kinectChecked = false, calibrationFinnished = false;
@@ -44,7 +44,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	private Matrix4x4 rotationMatrix, transformMatrix;
 	
 	private trackedBody[] trackingIDs = null; // Defined in RUISKinect2DepthView
-	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
+//	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
 	private int kinectTrackingIndex;
 	private ulong kinectTrackingID;
 	
@@ -460,9 +460,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		}
 		catch(System.Exception e)
 		{
-			Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor.");
+			Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
 			return;
-			//throw e;
 		}
 		
 		Quaternion kinectFloorRotator = Quaternion.identity;

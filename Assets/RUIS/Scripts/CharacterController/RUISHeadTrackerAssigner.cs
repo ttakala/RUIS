@@ -15,6 +15,7 @@ using Ovr;
 public class RUISHeadTrackerAssigner : MonoBehaviour {
 	
 	RUISInputManager inputManager;
+	public bool scriptEnabled = true;
 	public List<RUISTracker> headTrackers = new List<RUISTracker>(6);
 	public RUISDisplay display;
 	public bool allowMultipleAssigners = false;
@@ -28,6 +29,9 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	
     void Awake()
     {
+		if(!scriptEnabled)
+			return;
+
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 
 		bool kinect2 = false;
@@ -116,11 +120,11 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					}
 					else if(	kinect && razer && trackerScript.isRazerBaseMobile
 							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
-							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.Kinect			)
+							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.Kinect1			)
 					{
 						foundTrackerScore = 3;
 					}
-					else if(kinect && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect)
+					else if(kinect && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect1)
 					{
 						foundTrackerScore = 2;
 					}
@@ -183,10 +187,10 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 						logString = logString + ", and disabling the following: " + names;
 					logString =   logString + ". This choice was made using a pre-selected list of "
 								+ "head trackers.";
+				
+					ruisCamera = headTrackers[leftEnabledIndex].gameObject.GetComponentInChildren<RUISCamera>();
 				}
 				Debug.LogError(logString);
-				
-				ruisCamera = headTrackers[leftEnabledIndex].gameObject.GetComponentInChildren<RUISCamera>();
 			}
 			else
 			{
@@ -268,9 +272,12 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				}
 			}
 			else
-				Debug.LogError(  positionTracker + " did not have a child with RUISCamera component, "
-							   + "and therefore it is not used to draw on any of the displays in "
-							   + "DisplayManager.");
+			{
+				if(closestMatch)
+					Debug.LogError(  positionTracker + " did not have a child with RUISCamera component, "
+								   + "and therefore it is not used to draw on any of the displays in "
+								   + "DisplayManager.");
+			}
 			
 			// If we are using Razer with a static base for head tracking, then apply onlyRazerOffset
 			// on the parent objects of the Razer head tracker and the hand-held Razer
@@ -324,11 +331,11 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					// Preference is to use Kinect for drift correction (if PS Move is not used for head tracking)
 					switch(closestMatch.headPositionInput)
 					{
-						case RUISTracker.HeadPositionSource.Kinect:
+						case RUISTracker.HeadPositionSource.Kinect1:
 							if(!psmove && kinect)
 							{
 								closestMatch.externalDriftCorrection = true;
-								closestMatch.compass = RUISTracker.CompassSource.Kinect;
+								closestMatch.compass = RUISTracker.CompassSource.Kinect1;
 							}
 							break;
 						
@@ -338,7 +345,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 								if(closestMatch.isRazerBaseMobile)
 								{
 									closestMatch.externalDriftCorrection = true;
-									closestMatch.compass = RUISTracker.CompassSource.Kinect;
+									closestMatch.compass = RUISTracker.CompassSource.Kinect1;
 								}
 							}
 							break;
@@ -347,7 +354,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				else
 				{
 					// Preference is NOT to use Kinect for drift correction
-					if(		closestMatch.headPositionInput == RUISTracker.HeadPositionSource.Kinect
+					if(		closestMatch.headPositionInput == RUISTracker.HeadPositionSource.Kinect1
 						&&  !psmove && kinect															)
 						closestMatch.externalDriftCorrection = false;
 				}

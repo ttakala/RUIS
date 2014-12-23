@@ -21,7 +21,7 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 	
 	RUISSkeletonWand skeletonWand;
 	RUISSkeletonManager.Skeleton.handState fistStatusInSensor;
-	bool gestureEnabled;
+	bool gestureEnabled = true;
 	
 	float fistClosedTime, fistOpenTime;
 	RUISSkeletonManager.Skeleton.handState leftFistStatusInSensor, rightFistStatusInSensor;
@@ -57,6 +57,13 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 	
 	void LateUpdate()
 	{
+		
+		if (!gestureEnabled) 
+		{
+			handClosed = false;
+			return;
+		}
+
 		rightFistStatusInSensor = ruisSkeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].rightHandStatus;
 		leftFistStatusInSensor  = ruisSkeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].leftHandStatus;
 		

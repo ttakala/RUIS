@@ -93,12 +93,10 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 	private Vector3 floorNormal;
 	RUISCalibrationProcess calibrationProcess;
 	RUISCalibrationPhase currentPhase, nextPhase, lastPhase;
-	bool calibrationReady = false;
 	
 	RUISCalibrationProcessSettings calibrationProcessSettings;
 	
 	RUISSkeletonController skeletonController;
-	RUISInputManager inputManager;
 	RUISCoordinateSystem coordinateSystem;
 	RUISMenuNGUI ruisNGUIMenu;
 	
@@ -168,7 +166,6 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		lowerText = GameObject.Find ("Lower Text").GetComponent<GUIText>();
 		
 		skeletonController = FindObjectOfType(typeof(RUISSkeletonController)) as RUISSkeletonController;
-		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		coordinateSystem  = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		
 		// Pass variables and objects to calibrationProcess

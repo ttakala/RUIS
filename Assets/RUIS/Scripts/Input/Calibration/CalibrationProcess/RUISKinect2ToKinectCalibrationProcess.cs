@@ -41,7 +41,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	private Vector3 lastPSMoveSample, lastKinect2Sample, lastKinectSample;
 	private string xmlFilename;
 	Quaternion kinect1PitchRotation = Quaternion.identity;
-	Quaternion kinect2PitchRotation = Quaternion.identity;
+//	Quaternion kinect2PitchRotation = Quaternion.identity;
 	float kinect1DistanceFromFloor = 0;
 	float kinect2DistanceFromFloor = 0;
 	Vector3 kinect1FloorNormal = Vector3.up;
@@ -54,7 +54,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	
 	private trackedBody[] trackingIDs = null; // Defined in RUISKinect2DepthView
 	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
-	private int kinectTrackingIndex;
+//	private int kinectTrackingIndex;
 	private ulong kinectTrackingID;
 	
 	public RUISKinect2ToKinectCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
@@ -204,7 +204,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		for(int a = 0; a < trackingIDs.Length; a++) {
 			if(trackingIDs[a].isTracking) {
 				kinectTrackingID = trackingIDs[a].trackingId;
-				kinectTrackingIndex = trackingIDs[a].index;
+//				kinectTrackingIndex = trackingIDs[a].index;
 			}
 		}
 		
@@ -390,7 +390,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		//the solution is the same with (A^T)Ax = (A^T)B -> x = ((A^T)A)'(A^T)B
 		Matrix transformMatrixSolution = (kinect2Matrix.Transpose() * kinect2Matrix).Inverse() * kinect2Matrix.Transpose() * kinect1Matrix;
 		
-		Matrix error = kinect2Matrix * transformMatrixSolution - kinect1Matrix;
+//		Matrix error = kinect2Matrix * transformMatrixSolution - kinect1Matrix;
 		
 		transformMatrixSolution = transformMatrixSolution.Transpose();
 		
@@ -481,9 +481,9 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		if(float.IsNaN(kinect2DistanceFromFloor))
 			kinect2DistanceFromFloor = 0;
 
-		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
+//		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
-		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
+//		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
 		
 		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, RUISDevice.Kinect_2);
 		coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
@@ -496,7 +496,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		}
 		catch(System.Exception e)
 		{
-			Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor.");
+			Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
 			return;
 			//throw e;
 		}

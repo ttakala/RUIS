@@ -1507,7 +1507,7 @@ Transform:
   - {fileID: 966137373}
   - {fileID: 2109373737}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
 --- !u!1001 &117213394
 Prefab:
   m_ObjectHideFlags: 0
@@ -1545,7 +1545,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400118, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
@@ -1912,6 +1912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rootSpeedScaling: {x: 1, y: 1, z: 1}
+  kinect2TorsoOffset: .5
 --- !u!114 &181162675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2672,7 +2673,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 808b2784203ff7c449311585d3d42724, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 808b2784203ff7c449311585d3d42724, type: 2}
@@ -3629,7 +3630,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1 &304188168
 GameObject:
   m_ObjectHideFlags: 0
@@ -7465,7 +7466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: .782956779, z: .100000001}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 2
   headRotationInput: 5
   mobileRazerBase: 0
@@ -10821,13 +10822,13 @@ MonoBehaviour:
   allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
-  menuLayerName: RUISMenu
+  menuLayer: 17
   guiDisplayChoice: 0
-  guiX: -.100000001
-  guiY: .100000001
-  guiZ: .699999988
-  guiScaleX: 1
-  guiScaleY: 1
+  guiX: 0
+  guiY: 0
+  guiZ: .400000006
+  guiScaleX: .600000024
+  guiScaleY: .600000024
   hideMouseOnPlay: 0
 --- !u!114 &806790498
 MonoBehaviour:
@@ -15227,6 +15228,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: .436176836
       objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
   m_RootGameObject: {fileID: 117002799}
@@ -16955,8 +16960,8 @@ MonoBehaviour:
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
   trackThumbs: 0
-  trackAnkle: 0
-  rotateWristFromElbow: 0
+  trackAnkle: 1
+  rotateWristFromElbow: 1
   bodyTrackingDevice: 1
   bodyTrackingDeviceID: 0
   playerId: 0
@@ -16973,6 +16978,8 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
+  filterRotations: 1
+  rotationNoiseCovariance: 500
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
@@ -20408,7 +20415,7 @@ Transform:
   - {fileID: 436559938}
   - {fileID: 346821037}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 1
 --- !u!114 &1548449692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20421,6 +20428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6d48bae5094dc4589d36200a4054fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scriptEnabled: 1
   headTrackers:
   - {fileID: 1271116553}
   - {fileID: 519743375}
@@ -21846,7 +21854,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableOculusRift
@@ -21854,7 +21862,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: guiZ
-      value: .699999988
+      value: .400000006
       objectReference: {fileID: 0}
     - target: {fileID: 11400034, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: resetTrackerOnLoad
@@ -21863,6 +21871,14 @@ Prefab:
     - target: {fileID: 11400034, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: guiScaleX
+      value: .600000024
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: guiScaleY
+      value: .600000024
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
@@ -22441,7 +22457,7 @@ Transform:
   - {fileID: 1909005356}
   - {fileID: 806790496}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 0
 --- !u!1 &1665953459
 GameObject:
   m_ObjectHideFlags: 0

@@ -230,7 +230,7 @@ public class RUISTrackerEditor : Editor
         EditorGUI.indentLevel += 2;
         switch (headPositionInput.enumValueIndex)
         {
-            case (int)RUISTracker.HeadPositionSource.Kinect:
+            case (int)RUISTracker.HeadPositionSource.Kinect1:
 			case (int)RUISTracker.HeadPositionSource.Kinect2:
 				positionPlayerID.intValue = Mathf.Clamp(positionPlayerID.intValue, 0, maxKinectSkeletons - 1);
 				if(positionNoiseCovarianceKinect.floatValue < minNoiseCovariance)
@@ -360,9 +360,9 @@ public class RUISTrackerEditor : Editor
 			{
 				switch (headPositionInput.enumValueIndex)
         		{	
-					case (int)RUISTracker.HeadPositionSource.Kinect:
+					case (int)RUISTracker.HeadPositionSource.Kinect1:
 					{
-						headRotationInput.enumValueIndex = (int)RUISTracker.HeadRotationSource.Kinect;
+						headRotationInput.enumValueIndex = (int)RUISTracker.HeadRotationSource.Kinect1;
 						rotationPlayerID.intValue = positionPlayerID.intValue;
 						rotationJoint.enumValueIndex = positionJoint.enumValueIndex;
 						break;
@@ -408,7 +408,7 @@ public class RUISTrackerEditor : Editor
 			
 	        switch (headRotationInput.enumValueIndex)
 	        {
-	            case (int)RUISTracker.HeadRotationSource.Kinect:
+	            case (int)RUISTracker.HeadRotationSource.Kinect1:
 				case (int)RUISTracker.HeadRotationSource.Kinect2:
 					rotationPlayerID.intValue = Mathf.Clamp(rotationPlayerID.intValue, 0, maxKinectSkeletons - 1);
 					if(rotationNoiseCovarianceKinect.floatValue < minNoiseCovariance)
@@ -507,7 +507,7 @@ public class RUISTrackerEditor : Editor
 			EditorGUI.BeginDisabledGroup(true);
 	        EditorGUILayout.PropertyField(externalDriftCorrection, new GUIContent("Yaw Drift Correction", "Enables external yaw drift correction "
 																		+ "using Kinect, PS Move, or some other device"));
-			if(	  headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.Kinect
+			if(	  headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.Kinect1
 			   || headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.Kinect2)
 				EditorGUILayout.LabelField("Kinect joints don't need drift correction");
 			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.PSMove)
@@ -535,9 +535,9 @@ public class RUISTrackerEditor : Editor
 				{
 					switch(headPositionInput.enumValueIndex)
 					{
-						case (int)RUISTracker.HeadPositionSource.Kinect:
+						case (int)RUISTracker.HeadPositionSource.Kinect1:
 						{
-							compass.enumValueIndex = (int)RUISTracker.CompassSource.Kinect;
+							compass.enumValueIndex = (int)RUISTracker.CompassSource.Kinect1;
 							compassPlayerID.intValue = positionPlayerID.intValue;
 							compassJoint.enumValueIndex = positionJoint.enumValueIndex;
 							break;
@@ -586,7 +586,7 @@ public class RUISTrackerEditor : Editor
 				else
 			        switch (compass.enumValueIndex)
 			        {
-						case (int)RUISTracker.CompassSource.Kinect:
+						case (int)RUISTracker.CompassSource.Kinect1:
 						case (int)RUISTracker.CompassSource.Kinect2:
 							compassPlayerID.intValue = Mathf.Clamp(compassPlayerID.intValue, 0, maxKinectSkeletons - 1);
 							driftCorrectionRateKinect.floatValue = Mathf.Clamp(driftCorrectionRateKinect.floatValue, minDriftCorrectionRate, 
@@ -726,7 +726,7 @@ public class RUISTrackerEditor : Editor
 			}
 			switch(mobileRazerBase.enumValueIndex)
 			{
-				case (int) RUISTracker.RazerHydraBase.Kinect:
+				case (int) RUISTracker.RazerHydraBase.Kinect1:
 					hydraBaseKinectPlayerID.intValue = Mathf.Clamp(hydraBaseKinectPlayerID.intValue, 0, maxKinectSkeletons - 1);
 					if(hydraBasePositionCovarianceKinect.floatValue < minNoiseCovariance)
 						hydraBasePositionCovarianceKinect.floatValue = minNoiseCovariance;

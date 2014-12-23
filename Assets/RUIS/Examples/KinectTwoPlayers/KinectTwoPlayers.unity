@@ -1247,7 +1247,7 @@ Transform:
   - {fileID: 242348409}
   - {fileID: 55120564}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!114 &86632543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1316,6 +1316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6d48bae5094dc4589d36200a4054fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scriptEnabled: 0
   headTrackers:
   - {fileID: 1246043439}
   - {fileID: 698969834}
@@ -1680,12 +1681,11 @@ Transform:
   m_LocalPosition: {x: -.0780088603, y: 3.45358896, z: -19.8514748}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2027111734}
   - {fileID: 1697092111}
   - {fileID: 430682446}
   - {fileID: 966551113}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!20 &115874249
 Camera:
   m_ObjectHideFlags: 0
@@ -3357,7 +3357,7 @@ Transform:
   - {fileID: 1239391005}
   - {fileID: 1132652836}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!114 &208648401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3426,6 +3426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e6d48bae5094dc4589d36200a4054fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scriptEnabled: 0
   headTrackers:
   - {fileID: 1074240165}
   - {fileID: 594126016}
@@ -4426,7 +4427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: 0, z: 0}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 1
   headRotationInput: 1
   mobileRazerBase: 0
@@ -6969,7 +6970,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 115874248}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!81 &430682448
 AudioListener:
   m_ObjectHideFlags: 0
@@ -9422,7 +9423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: .782956779, z: .100000001}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 2
   headRotationInput: 5
   mobileRazerBase: 0
@@ -10236,6 +10237,18 @@ Prefab:
       propertyPath: bodyTrackingDevice
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 400118, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 100104, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400096, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: scriptEnabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 86632541}
@@ -10875,7 +10888,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: .782956779, z: .100000001}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 2
   headRotationInput: 5
   mobileRazerBase: 0
@@ -12185,23 +12198,23 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 115874248}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_LocalPosition.x
-      value: .0780088603
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.73672271
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 19.9629326
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_LocalRotation.x
-      value: -.153633326
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_LocalRotation.y
@@ -12213,11 +12226,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_LocalRotation.w
-      value: .988127947
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: maxNumberOfKinectPlayers
@@ -12241,11 +12254,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: guiX
-      value: -.100000001
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: guiZ
-      value: 1.20000005
+      value: .400000006
       objectReference: {fileID: 0}
     - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: guiY
@@ -12257,19 +12270,23 @@ Prefab:
       objectReference: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
     - target: {fileID: 11400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableKinect2
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: rootDevice
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: enableOculusRift
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: applyToRootCoordinates
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
@@ -12368,6 +12385,10 @@ Prefab:
     - target: {fileID: 400000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
@@ -13508,6 +13529,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &890729364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13599,13 +13621,14 @@ MonoBehaviour:
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
   trackThumbs: 0
-  trackAnkle: 0
-  rotateWristFromElbow: 0
+  trackAnkle: 1
+  rotateWristFromElbow: 1
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 0
-  switchToAvailableKinect: 0
+  switchToAvailableKinect: 1
   updateRootPosition: 1
+  rootSpeedScaling: {x: 1, y: 1, z: 1}
   updateJointPositions: 0
   updateJointRotations: 1
   useHierarchicalModel: 1
@@ -13617,6 +13640,8 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
+  filterRotations: 1
+  rotationNoiseCovariance: 500
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
@@ -14089,13 +14114,17 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
@@ -15023,7 +15052,7 @@ Transform:
   - {fileID: 1875215630}
   - {fileID: 1345437047}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1 &965576116
 GameObject:
   m_ObjectHideFlags: 0
@@ -15093,7 +15122,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 115874248}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!20 &966551114
 Camera:
   m_ObjectHideFlags: 0
@@ -19453,6 +19482,14 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 8100008, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100104, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400096, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: scriptEnabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -24152,7 +24189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: 0, z: 0}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 0
   headRotationInput: 0
   mobileRazerBase: 0
@@ -24668,11 +24705,11 @@ MonoBehaviour:
   moveWand1: 0
   moveWand2: 0
   moveWand3: 0
-  enableKinect: 1
+  enableKinect: 0
   maxNumberOfKinectPlayers: 2
   kinectFloorDetection: 1
   kinectDriftCorrectionPreferred: 0
-  enableKinect2: 0
+  enableKinect2: 1
   kinect2FloorDetection: 1
   enableRazerHydra: 0
   moveControllers: []
@@ -24696,7 +24733,7 @@ MonoBehaviour:
   applyToRootCoordinates: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  rootDevice: 0
+  rootDevice: 1
 --- !u!1 &1538275481
 GameObject:
   m_ObjectHideFlags: 0
@@ -24876,7 +24913,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1555886697
 Transform:
   m_ObjectHideFlags: 0
@@ -27211,7 +27248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: 0, z: 0}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 0
   headRotationInput: 0
   mobileRazerBase: 0
@@ -27752,7 +27789,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 115874248}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!20 &1697092112
 Camera:
   m_ObjectHideFlags: 0
@@ -28389,7 +28426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1738746933
 Transform:
   m_ObjectHideFlags: 0
@@ -29989,7 +30026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rootSpeedScaling: {x: 1, y: 1, z: 1}
+  torsoOffsetKinect2: .300000012
 --- !u!114 &1834727837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31570,7 +31607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: 0, z: 0}
+  defaultPosition: {x: 0, y: 1.60000002, z: 0}
   headPositionInput: 1
   headRotationInput: 1
   mobileRazerBase: 0
@@ -32290,6 +32327,7 @@ Animator:
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &2008382216
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32381,13 +32419,14 @@ MonoBehaviour:
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
   trackThumbs: 0
-  trackAnkle: 0
-  rotateWristFromElbow: 0
+  trackAnkle: 1
+  rotateWristFromElbow: 1
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 1
-  switchToAvailableKinect: 0
+  switchToAvailableKinect: 1
   updateRootPosition: 1
+  rootSpeedScaling: {x: 1, y: 1, z: 1}
   updateJointPositions: 0
   updateJointRotations: 1
   useHierarchicalModel: 1
@@ -32399,6 +32438,8 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
+  filterRotations: 1
+  rotationNoiseCovariance: 500
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
@@ -32867,13 +32908,13 @@ Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_PrefabInternal: {fileID: 768030089}
   m_GameObject: {fileID: 2027111733}
-  m_LocalRotation: {x: -.153633326, y: 0, z: 0, w: .988127947}
-  m_LocalPosition: {x: .0780088603, y: 2.73672271, z: 19.9629326}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1525314271}
   - {fileID: 2058747545}
-  m_Father: {fileID: 115874248}
+  m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!1 &2029797561
 GameObject:
@@ -33503,13 +33544,13 @@ MonoBehaviour:
   allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
-  menuLayerName: RUISMenu
+  menuLayer: 17
   guiDisplayChoice: 0
-  guiX: -.100000001
+  guiX: 0
   guiY: 0
-  guiZ: 1.20000005
-  guiScaleX: 1
-  guiScaleY: 1
+  guiZ: .400000006
+  guiScaleX: .300000012
+  guiScaleY: .300000012
   hideMouseOnPlay: 0
 --- !u!114 &2058747547
 MonoBehaviour:

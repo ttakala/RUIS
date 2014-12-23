@@ -15,7 +15,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnityEngine;
 
 public class RUISOVRManager : MonoBehaviour {
 
@@ -28,7 +27,6 @@ public class RUISOVRManager : MonoBehaviour {
 	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]
 	private static extern void OVR_Destroy();
 	public static Hmd ovrHmd;
-	private bool isQuitting = false;
 	
 	void Awake () 
 	{

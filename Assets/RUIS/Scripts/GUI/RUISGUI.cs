@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   Some utility functions for GUI drawing, should probably not be used in regular VR applications..
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2014 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -15,7 +15,7 @@ public class RUISGUI {
     {
 		 if (!camera)
         {
-            Debug.Log("null camera! " + where);
+            Debug.LogError("Camera was null! " + where);
             return;
         }
 
@@ -51,28 +51,20 @@ public class RUISGUI {
                                         Mathf.Min(where.xMax, viewport.xMax), Mathf.Min(where.yMax, viewport.yMax));
         }
         
-        
-
-
-        
-        //Debug.Log("newWhere: " + newWhere);
-
-        //Debug.Log("newWhere: " + newWhere);
-
         //figure out which part of the texture gets drawn based on the newWhere and where
-        Rect texCoords; 
-        if (where.width.Equals(newWhere.width) && where.height.Equals(newWhere.height))
-        {
-            texCoords = new Rect(0, 0, 1, 1);
-        }
-        else
-        {
-            float textureWidth = newWhere.width / where.width;
-            float textureHeight = newWhere.height / where.height;
-            float textureU = (newWhere.x - where.x) / where.width;
-            float textureV = 1 - ((newWhere.y + newWhere.height) - (where.y + where.height)) / where.height; //since the y coordinates might be flipped, we need to do some magic
-            texCoords = new Rect(textureU, textureV, textureWidth, textureHeight);
-        }
+//        Rect texCoords; 
+//        if (where.width.Equals(newWhere.width) && where.height.Equals(newWhere.height))
+//        {
+//            texCoords = new Rect(0, 0, 1, 1);
+//        }
+//        else
+//        {
+//            float textureWidth = newWhere.width / where.width;
+//            float textureHeight = newWhere.height / where.height;
+//            float textureU = (newWhere.x - where.x) / where.width;
+//            float textureV = 1 - ((newWhere.y + newWhere.height) - (where.y + where.height)) / where.height; //since the y coordinates might be flipped, we need to do some magic
+//            texCoords = new Rect(textureU, textureV, textureWidth, textureHeight);
+//        }
         
         //GUI.DrawTextureWithTexCoords(newWhere, texture, texCoords);
 		Graphics.DrawTexture(newWhere, texture, null);

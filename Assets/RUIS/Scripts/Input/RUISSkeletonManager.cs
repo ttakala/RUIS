@@ -154,12 +154,16 @@ public class RUISSkeletonManager : MonoBehaviour {
 	public Skeleton[,] skeletons = new Skeleton[3,6];
 	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
 
-    public Vector3 rootSpeedScaling = Vector3.one;
-
 	public static int kinect1SensorID = 0;
 	public static int kinect2SensorID = 1;
 	
 	public bool isNewKinect2Frame { get; private set; }
+
+	[Tooltip(  "How much is Kinect 2 skeletons' torso position interpolated towards base of the spine, in order to make the torso "
+	         + "position better correspond that of Kinect 1")]
+	[Range(0f, 1f)]
+	public float torsoOffsetKinect2 = 0.3f;
+	private Vector3 tempVector = Vector3.zero;
 
     void Awake()
     {
@@ -328,12 +332,23 @@ public class RUISSkeletonManager : MonoBehaviour {
 //						if(playerID > 0)
 //							return;
 
+
 						UpdateKinect2RootData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID);
 
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.Head], body.JointOrientations[Kinect.JointType.Head]), playerID, ref skeletons [kinect2SensorID, playerID].head);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.Neck], body.JointOrientations[Kinect.JointType.Neck]), playerID, ref skeletons [kinect2SensorID, playerID].neck);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].torso);
-						//UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].torso);
+						
+						// Kinect 2 SpineMid position adjusted to correspond to Kinect 1's torso position (so that hip-torso segment doesn't stretch):
+						// First get SpineBase position
+						tempVector = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawKinect2Location(
+																				GetKinect2JointData(body.Joints[Kinect.JointType.SpineBase], 
+								                    												body.JointOrientations[Kinect.JointType.SpineMid]).position), RUISDevice.Kinect_2);
+						// tempVector = torsoPosition + offset * (spineBasePosition - torsoPosition)
+						tempVector = skeletons [kinect2SensorID, playerID].torso.position + torsoOffsetKinect2 * (tempVector - skeletons[kinect2SensorID, playerID].torso.position);
+						skeletons[kinect2SensorID, playerID].root.position  = tempVector;
+						skeletons[kinect2SensorID, playerID].torso.position = tempVector;
+
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].midSpine);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineShoulder], body.JointOrientations[Kinect.JointType.SpineShoulder]), playerID, ref skeletons [kinect2SensorID, playerID].shoulderSpine);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.ShoulderLeft], body.JointOrientations[Kinect.JointType.ShoulderLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftShoulder);
@@ -528,8 +543,7 @@ public class RUISSkeletonManager : MonoBehaviour {
         }
 
 		Vector3 newRootPosition = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinectLocation(data.Position.Position), RUISDevice.Kinect_1);
-		
-		newRootPosition = Vector3.Scale(newRootPosition, rootSpeedScaling);
+
 		skeletons[kinect1SensorID, player].root.position = newRootPosition;
 		skeletons[kinect1SensorID, player].root.positionConfidence = data.Position.Confidence;
 		skeletons[kinect1SensorID, player].root.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);

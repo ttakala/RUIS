@@ -524,7 +524,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400056}
-  - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: HeadTrackers
   m_TagString: Untagged
@@ -543,6 +542,7 @@ GameObject:
   - 54: {fileID: 5400000}
   - 114: {fileID: 11400086}
   - 114: {fileID: 11400088}
+  - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: ControllableCharacter
   m_TagString: Untagged
@@ -3367,12 +3367,13 @@ MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100060}
+  m_GameObject: {fileID: 100062}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e6d48bae5094dc4589d36200a4054fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scriptEnabled: 1
   headTrackers:
   - {fileID: 11400040}
   - {fileID: 11400038}
@@ -4519,7 +4520,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 575cb7dc5eb8ea94e8f0ab6fde7e92f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPivotType: 2
+  characterPivotType: 0
   useOculusPositionalTracking: 0
   kinectPlayerId: 0
   bodyTrackingDeviceID: 0
@@ -4613,7 +4614,7 @@ MonoBehaviour:
   trackThumbs: 1
   trackAnkle: 1
   rotateWristFromElbow: 1
-  bodyTrackingDevice: 0
+  bodyTrackingDevice: 1
   bodyTrackingDeviceID: 0
   playerId: 0
   switchToAvailableKinect: 1

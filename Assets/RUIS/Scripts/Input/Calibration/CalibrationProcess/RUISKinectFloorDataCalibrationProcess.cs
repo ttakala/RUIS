@@ -21,18 +21,18 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 	public override string guiTextLower { get{return getLowerText();} }
 	
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
-	oculusDK2Object, floorPlane, calibrationSphere, calibrationCube, depthView,
+	oculusDK2Object, floorPlane, depthView,
 	KinectIcon, deviceModelObjects, depthViewObjects, iconObjects;
 	
 	private string xmlFilename;
 	
 	private float timeSinceScriptStart;
-	Quaternion kinect1PitchRotation = Quaternion.identity;
+//	Quaternion kinect1PitchRotation = Quaternion.identity;
 	float kinect1DistanceFromFloor = 0;
 	
 	private bool kinectChecked = false, calibrationFinnished = false;
 	
-	private NIPlayerManagerCOMSelection kinectSelection;
+//	private NIPlayerManagerCOMSelection kinectSelection;
 	private OpenNISettingsManager settingsManager;
 	private OpenNI.SceneAnalyzer sceneAnalyzer;
 	public RUISCoordinateSystem coordinateSystem;
@@ -42,8 +42,6 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 	
 	public RUISKinectFloorDataCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) 
 	{
-		this.calibrationCube = calibrationSettings.calibrationCubePrefab;
-		this.calibrationSphere = calibrationSettings.calibrationSpherePrefab;
 		this.calibrationPhaseObjects = calibrationSettings.calibrationPhaseObjects;
 		this.calibrationResultPhaseObjects = calibrationSettings.calibrationResultPhaseObjects;
 		
@@ -71,7 +69,7 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 		this.calibrationResultPhaseObjects.SetActive(false);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 		coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-		kinectSelection = MonoBehaviour.FindObjectOfType(typeof(NIPlayerManagerCOMSelection)) as NIPlayerManagerCOMSelection;
+//		kinectSelection = MonoBehaviour.FindObjectOfType(typeof(NIPlayerManagerCOMSelection)) as NIPlayerManagerCOMSelection;
 		settingsManager = MonoBehaviour.FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
 	}
 	
@@ -159,22 +157,22 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 		}
 		catch(System.Exception e)
 		{
-			Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor.");
+			Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
 			kinectError = true;
 			return;
 			//throw e;
 		}
 		
-		Quaternion kinectFloorRotator = Quaternion.identity;
+//		Quaternion kinectFloorRotator = Quaternion.identity;
 		normalVector = new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
 
 		if(normalVector.sqrMagnitude < 0.1f)
 			normalVector = Vector3.up;
 
 		Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
-		kinectFloorRotator = Quaternion.FromToRotation(normalVector, Vector3.up); 
+//		kinectFloorRotator = Quaternion.FromToRotation(normalVector, Vector3.up); 
 		kinect1DistanceFromFloor = closestDistanceFromFloor(normalVector, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
-		kinect1PitchRotation = Quaternion.Inverse (kinectFloorRotator);
+//		kinect1PitchRotation = Quaternion.Inverse (kinectFloorRotator);
 		
 		if(float.IsNaN(kinect1DistanceFromFloor))
 			kinect1DistanceFromFloor = 0;

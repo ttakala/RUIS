@@ -85,7 +85,7 @@ public class XMLUtil {
         }
         catch (System.Exception e)
         {
-        	Debug.LogWarning("Could not find file: " + xmlFilename);
+			Debug.LogWarning(": Could not find file: " + xmlFilename + ". Error type: " +  e.GetType().ToString());
             if(fs != null) fs.Close();
             if(validatingReader != null) validatingReader.Close();
             if(textReader != null) textReader.Close();

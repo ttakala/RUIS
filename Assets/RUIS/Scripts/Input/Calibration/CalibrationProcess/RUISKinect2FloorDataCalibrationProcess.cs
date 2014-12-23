@@ -21,13 +21,13 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 	public override string guiTextLower { get{return getLowerText();} }
 	
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
-	oculusDK2Object, floorPlane, calibrationSphere, calibrationCube, depthView,
+	oculusDK2Object, floorPlane, depthView,
 	KinectIcon, deviceModelObjects, depthViewObjects, iconObjects;
 	
 	private string xmlFilename;
 	
 	private float timeSinceScriptStart;
-	Quaternion kinect2PitchRotation = Quaternion.identity;
+//	Quaternion kinect2PitchRotation = Quaternion.identity;
 	float kinect2DistanceFromFloor = 0;
 	
 	private bool kinectChecked = false, calibrationFinnished = false;
@@ -40,8 +40,6 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 	
 	public RUISKinect2FloorDataCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) 
 	{
-		this.calibrationCube = calibrationSettings.calibrationCubePrefab;
-		this.calibrationSphere = calibrationSettings.calibrationSpherePrefab;
 		this.calibrationPhaseObjects = calibrationSettings.calibrationPhaseObjects;
 		this.calibrationResultPhaseObjects = calibrationSettings.calibrationResultPhaseObjects;
 		
@@ -145,9 +143,9 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 
 		kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
 		
-		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
+//		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
 		
-		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
+//		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
 
 		if(float.IsNaN(kinect2DistanceFromFloor))
 			kinect2DistanceFromFloor = 0;

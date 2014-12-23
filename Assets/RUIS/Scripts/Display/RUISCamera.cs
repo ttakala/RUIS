@@ -73,9 +73,9 @@ public class RUISCamera : MonoBehaviour {
 			leftCamera = transform.FindChild("CameraLeft").GetComponent<Camera>();
 			rightCamera = transform.FindChild("CameraRight").GetComponent<Camera>();
 		}
-		catch (System.NullReferenceException e)
+		catch (System.Exception e)
 		{
-			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
+			Debug.LogError(  e.TargetSite + ": GameObject " + name + " has " + typeof(RUISCamera) + " script, "
 			               + "but it is missing either CameraLeft or CameraRight child object.");
 			gameObject.SetActive(false);
 		}
@@ -100,9 +100,9 @@ public class RUISCamera : MonoBehaviour {
 			{
 				GetComponent<OVRCameraRig>().enabled = false;
 			}
-			catch (System.NullReferenceException e)
+			catch (System.Exception e)
 			{
-				Debug.LogError("GameObject '" + name + "': " + typeof(OVRCameraRig) + " was not found.", this);
+				Debug.LogError(e.TargetSite + ": GameObject '" + name + "': " + typeof(OVRCameraRig) + " was not found.", this);
 			}
 		}
 		else

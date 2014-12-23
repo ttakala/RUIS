@@ -55,7 +55,6 @@ public class RUISCharacterControllerEditor : Editor
 		                                                                 + "the Forward movement direction. Torso is the recommended pivot when using Kinect."));
 		RUISSkeletonController.bodyTrackingDeviceType bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 		int kinectPlayerId = 0;
-		int bodyTrackingDeviceID = 0;
 		if(characterController)
 		{
 			RUISSkeletonController skeletonController = characterController.GetComponentInChildren(typeof(RUISSkeletonController)) as RUISSkeletonController;
@@ -63,8 +62,6 @@ public class RUISCharacterControllerEditor : Editor
 			{
 				kinectPlayerId = skeletonController.playerId;
 				bodyTrackingDevice = skeletonController.bodyTrackingDevice;
-				if(bodyTrackingDevice == RUISSkeletonController.bodyTrackingDeviceType.Kinect2)
-				   bodyTrackingDeviceID = 1;
 			}
 
 		}

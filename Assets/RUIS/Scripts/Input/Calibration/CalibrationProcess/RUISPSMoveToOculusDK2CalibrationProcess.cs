@@ -27,13 +27,13 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	private PSMoveWrapper psMoveWrapper;
 	private List<Vector3> samples_PSMove, samples_OculusDK2;
 	private int numberOfSamplesTaken, numberOfSamplesToTake, calibratingPSMoveControllerId, numberOfSamplesPerSecond;
-	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart, distanceFromFloor = 0;
+	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart = 0;
 	public RUISCoordinateSystem coordinateSystem;
 	public RUISInputManager inputManager;
 	private bool oculusChecked = false, PSMoveChecked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
-	oculusDK2Object, floorPlane, calibrationSphere, calibrationCube, depthView,
+	oculusDK2Object, calibrationSphere, calibrationCube, depthView,
 	psMoveIcon, oculusDK2Icon, deviceModelObjects, depthViewObjects, iconObjects, PSMoveWandObject,
 	mannequin;
 	
@@ -42,8 +42,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	private Matrix4x4 rotationMatrix, transformMatrix;
 	
-	Quaternion kinect1PitchRotation = Quaternion.identity;
-	float kinect1DistanceFromFloor = 0;
+//	Quaternion kinect1PitchRotation = Quaternion.identity;
 	
 	public RUISPSMoveToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
@@ -92,7 +91,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		this.psMoveIcon = GameObject.Find ("PS Move Icon");
 		this.oculusDK2Icon = GameObject.Find ("OculusDK2 Icon");
 		
-		this.floorPlane = GameObject.Find ("Floor");
+//		this.floorPlane = GameObject.Find ("Floor");
 		
 		foreach (Transform child in this.deviceModelObjects.transform)
 		{

@@ -48,10 +48,11 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	private int previousSceneId;
 	
-	private bool calibrationInfoMessageShown = false;
+//	private bool calibrationInfoMessageShown = false;
 	
 	// selectAndConfigureDevices phase initial GUI element positions
-	Vector3 psMoveOrigGUIPos, kinectOrigGUIPos, kinect2OrigGUIPos, hydraOrigGUIPos, buttonsOrigGUIPos, infotextOrigGUIPos; 
+	Vector3 kinectOrigGUIPos, kinect2OrigGUIPos, hydraOrigGUIPos, infotextOrigGUIPos;
+//	Vector3 psMoveOrigGUIPos, buttonsOrigGUIPos;
 	
 	public string calibrationDropDownSelection;
 	
@@ -88,13 +89,13 @@ public class RUISMenuNGUI : MonoBehaviour {
 		
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
-		
-		psMoveOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/PSMove").transform.localPosition;
+
 		kinectOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect").transform.localPosition;
 		kinect2OrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect2").transform.localPosition;
 		hydraOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Hydra").transform.localPosition;
 		infotextOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Infotexts").transform.localPosition;
-		buttonsOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Buttons").transform.localPosition;
+//		psMoveOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/PSMove").transform.localPosition;
+//		buttonsOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Buttons").transform.localPosition;
 	}
 		
 	void Start () 
@@ -340,15 +341,14 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	private void handleSelectAndConfigureDevicesGUISpacing() 
 	{
-		Transform PSMoveGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/PSMove").transform;
+//		Transform PSMoveGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/PSMove").transform;
 		Transform KinectGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect").transform;
 		Transform Kinect2GUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect2").transform;
 		Transform HydraGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Hydra").transform;
 		Transform InfotextsGUIObject = this.transform.Find ("Panel/selectAndConfigureDevices/Infotexts").transform;
 		
-		Transform ButtonsGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Buttons").transform;
-		
-		
+//		Transform ButtonsGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Buttons").transform;
+
 		bool kinectSelected = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked;
 		bool kinect2Selected = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked;
 		bool psMoveSelected = this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked;
@@ -359,7 +359,6 @@ public class RUISMenuNGUI : MonoBehaviour {
 		Vector3 kinect2Offset = new Vector3(0,0,0);
 		Vector3 hydraOffset = new Vector3(0,0,0);
 		Vector3 infotextsOffset = new Vector3(0,0,0);
-		Vector3 buttonsOffset = new Vector3(0,0,0);
 		
 		if(psMoveSelected) { 
 			overAllOffset += new Vector3(0, -70.0f, 0);  

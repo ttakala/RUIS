@@ -28,7 +28,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	private PSMoveWrapper psMoveWrapper;
 	private List<Vector3> samples_PSMove, samples_Kinect2;
 	private int numberOfSamplesTaken, numberOfSamplesToTake, calibratingPSMoveControllerId, numberOfSamplesPerSecond;
-	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart, distanceFromFloor = 0;
+	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart = 0;
 	public RUISCoordinateSystem coordinateSystem;
 	public RUISInputManager inputManager;
 	private bool kinectChecked = false, PSMoveChecked = false, calibrationFinnished = false;
@@ -39,7 +39,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	
 	private Vector3 lastPSMoveSample, lastKinect2Sample;
 	private string xmlFilename;
-	Quaternion floorNormal = Quaternion.identity;
+//	Quaternion floorNormal = Quaternion.identity;
 	
 	private Matrix4x4 rotationMatrix, transformMatrix;
 	

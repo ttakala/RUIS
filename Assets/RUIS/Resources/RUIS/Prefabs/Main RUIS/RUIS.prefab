@@ -650,6 +650,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rootSpeedScaling: {x: 1, y: 1, z: 1}
+  kinect2TorsoOffset: .5
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -789,13 +790,13 @@ MonoBehaviour:
   allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
-  menuLayerName: RUISMenu
+  menuLayer: 17
   guiDisplayChoice: 0
-  guiX: -.100000001
-  guiY: .100000001
-  guiZ: 1.25
-  guiScaleX: 1
-  guiScaleY: 1
+  guiX: 0
+  guiY: 0
+  guiZ: .400000006
+  guiScaleX: .300000012
+  guiScaleY: .300000012
   hideMouseOnPlay: 0
 --- !u!114 &11400028
 MonoBehaviour:

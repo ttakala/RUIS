@@ -78,7 +78,7 @@ public class RUISCoordinateSystemEditor : Editor
 		                                                                     + "Calibration XML File so that sensors that are calibrated pairwise with the Master "
 		                                                                     + "Coordinate System Sensor will have their RUIS tracked objects appear in the "
 		                                                                     + "same coordinate system. If this option is disabled, then each sensor will use "
-		                                                                     + "their own sensor-centric coordinate system for tracked RUIS objects."));
+		                                                                     + "their own sensor-centric coordinate system for tracked targets."));
 
 		serializedObject.ApplyModifiedProperties();
 	}

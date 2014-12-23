@@ -25,6 +25,8 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty updateRootPosition;
     SerializedProperty updateJointPositions;
     SerializedProperty updateJointRotations;
+	
+	SerializedProperty rootSpeedScaling;
 
 	SerializedProperty scaleHierarchicalModelBones;
 	SerializedProperty scaleBoneLengthOnly;
@@ -101,6 +103,8 @@ public class RUISSkeletonControllerEditor : Editor
         updateRootPosition = serializedObject.FindProperty("updateRootPosition");
         updateJointPositions = serializedObject.FindProperty("updateJointPositions");
         updateJointRotations = serializedObject.FindProperty("updateJointRotations");
+		
+		rootSpeedScaling = serializedObject.FindProperty("rootSpeedScaling");
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
@@ -191,6 +195,15 @@ public class RUISSkeletonControllerEditor : Editor
 
         EditorGUILayout.PropertyField(updateRootPosition, new GUIContent(  "Update Root Position", "Update the position of this GameObject according "
 		                                                                 + "to the skeleton root position"));
+		
+		GUI.enabled = updateRootPosition.boolValue;
+		EditorGUI.indentLevel++;
+		EditorGUILayout.PropertyField(rootSpeedScaling, new GUIContent(  "Root Speed Scaling", "Multiply Kinect root position, making the character move "
+		                                                               + "larger distances than Kinect tracking area allows. This is not propagated to "
+		                                                               + "Skeleton Wands or other devices that are calibrated with Kinect's coordinate system. "
+		                                                               + "Default and recommended value is (1,1,1)."));
+		EditorGUI.indentLevel--;
+		GUI.enabled = true;
 
         GUI.enabled = !useHierarchicalModel.boolValue;
 		EditorGUILayout.PropertyField(updateJointPositions, new GUIContent(  "Update Joint Positions", "Unavailable for hierarchical "
@@ -374,24 +387,24 @@ public class RUISSkeletonControllerEditor : Editor
 		RUISEditorUtility.HorizontalRuler();
 		
         EditorGUILayout.LabelField("Tweaking", EditorStyles.boldLabel);
-        GUI.enabled = scaleHierarchicalModelBones.boolValue;
-        EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Max Scale Rate", "The maximum amount the scale of a bone can "
-		                                                             + "change per second when using Hierarchical Model and Scale Bones"));
-        GUI.enabled = true;
         EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Min Confidence to Update", "The minimum confidence in joint "
 		                                                                        + "positions and rotations needed to update these values. "
 		                                                                        + "The confidence is either 0; 0,5; or 1."));
         EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
 		                                                              + "for damping character bone movement (smaller values)"));
 
-//		EditorGUILayout.PropertyField(adjustVerticalTorsoPosition, new GUIContent(  "Torso Vertical Tweaker", "Offset the tracked torso point "
-//		                                                                          + "position in the spine direction (usually vertical axis). "
-//			                                                                          + "Only used if Hierarchical Model is enabled"));
-		EditorGUILayout.PropertyField(adjustVerticalHipsPosition, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
-		                                                                          + "position in the spine direction (usually vertical axis). "
-		                                                                          + "Only used if Hierarchical Model is enabled"));
+		GUI.enabled = scaleHierarchicalModelBones.boolValue;
+		EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Max Scale Rate", "The maximum amount the scale of a bone can "
+		                                                             + "change per second when using Hierarchical Model and Scale Bones"));
 
-        EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent("Neck Height Tweaker", "The height offset for the neck"));
+		EditorGUILayout.PropertyField(adjustVerticalHipsPosition, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
+		                                                                         + "position in the spine direction (usually vertical axis) "
+		                                                                         + "when using Hierarchical Model and Scale Bones is enabled."));
+
+		EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent(  "Neck Height Tweaker", "Offset the tracked neck position in the spine "
+		                                                                + "direction (usually vertical axis) when using Hierarchical Model and "
+		                                                                + "Scale Bones is enabled."));
+		GUI.enabled = true;
 
 		GUI.enabled = useHierarchicalModel.boolValue;
 		EditorGUILayout.PropertyField(forearmLengthTweaker, new GUIContent(  "Forearm Length Tweaker", "The forearm length ratio "

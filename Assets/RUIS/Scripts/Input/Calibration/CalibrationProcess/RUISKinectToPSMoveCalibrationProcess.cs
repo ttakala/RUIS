@@ -29,7 +29,7 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 	private PSMoveWrapper psMoveWrapper;
 	private List<Vector3> samples_PSMove, samples_Kinect;
 	private int numberOfSamplesTaken, numberOfSamplesToTake, calibratingPSMoveControllerId, numberOfSamplesPerSecond;
-	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart, distanceFromFloor = 0;
+	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart = 0;
 	public RUISCoordinateSystem coordinateSystem;
 	public RUISInputManager inputManager;
 	private bool kinectChecked = false, PSMoveChecked = false, calibrationFinnished = false;
@@ -386,7 +386,7 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		//the solution is the same with (A^T)Ax = (A^T)B -> x = ((A^T)A)'(A^T)B
 		Matrix transformMatrixSolution = (moveMatrix.Transpose() * moveMatrix).Inverse() * moveMatrix.Transpose() * kinectMatrix;
 		
-		Matrix error = moveMatrix * transformMatrixSolution - kinectMatrix;
+//		Matrix error = moveMatrix * transformMatrixSolution - kinectMatrix;
 		
 		transformMatrixSolution = transformMatrixSolution.Transpose();
 		
@@ -465,9 +465,8 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		}
 		catch(System.Exception e)
 		{
-			Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor.");
+			Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
 			return;
-			//throw e;
 		}
 		
 		Quaternion kinectFloorRotator = Quaternion.identity;

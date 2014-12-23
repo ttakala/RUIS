@@ -17,7 +17,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 {
 	RUISSkeletonManager skeletonManager;
     RUISSkeletonController skeletonController;
-	RUISCharacterController characterController;
+//	RUISCharacterController characterController;
 
 	private RUISCoordinateSystem coordinateSystem;
 	private float coordinateYOffset = 0;
@@ -41,7 +41,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	private double[] pos = {0, 0, 0};
 	private float positionNoiseCovariance = 1500;
 	
-	Vector3 headPosition = Vector3.zero;
+//	Vector3 headPosition = Vector3.zero;
 	Vector3 torsoPosition = Vector3.zero;
 	Vector3 newLocalPosition = Vector3.zero;
 	
@@ -96,8 +96,8 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 			}
 		}
 
-		if(transform.parent)
-			characterController = transform.parent.GetComponent<RUISCharacterController>();
+//		if(transform.parent)
+//			characterController = transform.parent.GetComponent<RUISCharacterController>();
 
 	}
 	

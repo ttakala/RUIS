@@ -254,9 +254,18 @@ public class RUISInputManager : MonoBehaviour
 			
 			if(sceneAnalyzer == null)
 			{
-				sceneAnalyzer = new OpenNI.SceneAnalyzer((FindObjectOfType(typeof(OpenNISettingsManager)) 
-														as OpenNISettingsManager).CurrentContext.BasicContext);
-				sceneAnalyzer.StartGenerating();
+				try
+				{
+					OpenNISettingsManager niSettings = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
+					if(niSettings != null && niSettings.CurrentContext != null && niSettings.CurrentContext.BasicContext != null)
+						sceneAnalyzer = new OpenNI.SceneAnalyzer(niSettings.CurrentContext.BasicContext);
+					if(sceneAnalyzer != null)
+						sceneAnalyzer.StartGenerating();
+				}
+				catch(System.Exception e)
+				{
+					Debug.LogError(e.Message);
+				}
 				Debug.Log ("OpenNI: Starting sceneAnalyzer for floor detection purposes.");
 			}
 			startDetection = true;
@@ -368,7 +377,7 @@ public class RUISInputManager : MonoBehaviour
 			}
 			catch(System.Exception e)
 			{
-				Debug.LogError("Failed to get OpenNI.SceneAnalyzer.Floor.");
+				Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
 				return;
 			}
 	

@@ -26,7 +26,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	// Custom variables
 	private List<Vector3> samples_Kinect2, samples_OculusDK2;
 	private int numberOfSamplesTaken, numberOfSamplesToTake, numberOfSamplesPerSecond;
-	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart, distanceFromFloor = 0;
+	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart = 0;
 	public RUISCoordinateSystem coordinateSystem;
 	public RUISInputManager inputManager;
 	private bool oculusChecked = false, kinect2Checked = false, calibrationFinnished = false;
@@ -46,7 +46,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	private trackedBody[] trackingIDs = null; // Defined in RUISKinect2DepthView
 	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
-	private int kinectTrackingIndex;
+//	private int kinectTrackingIndex;
 	private ulong kinectTrackingID;
 	
 	Quaternion kinect2PitchRotation = Quaternion.identity;
@@ -190,7 +190,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		for(int a = 0; a < trackingIDs.Length; a++) {
 			if(trackingIDs[a].isTracking) {
 				kinectTrackingID = trackingIDs[a].trackingId;
-				kinectTrackingIndex = trackingIDs[a].index;
+//				kinectTrackingIndex = trackingIDs[a].index;
 			}
 		}
 		
