@@ -201,6 +201,15 @@ public class RUISSkeletonController : MonoBehaviour
 				Debug.LogError("The scene is missing " + typeof(RUISSkeletonManager) + " script!");
 		}
 
+		// Disable features that are only available for Kinect2 or custom motion tracker
+		if (bodyTrackingDevice == bodyTrackingDeviceType.Kinect1) 
+		{
+			fistCurlFingers = false;
+			trackThumbs = false;
+			trackAnkle = false;
+			rotateWristFromElbow = false;
+		}
+
         if (useHierarchicalModel)
         {
             //fix all shoulder and hip rotations to match the default kinect rotations
@@ -251,6 +260,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 		SaveInitialRotation(leftThumb);
 		SaveInitialRotation(rightThumb);
+
 		saveInitialFingerRotations();
 		
         SaveInitialDistance(rightShoulder, rightElbow);
@@ -485,13 +495,18 @@ public class RUISSkeletonController : MonoBehaviour
 				
 			}
 	
-			if(fistCurlFingers)
-				handleFingersCurling(trackThumbs);
-
-			if(trackThumbs && rightThumb && leftThumb) 
+			if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)
 			{
-				UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb);
-				UpdateTransform (ref leftThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb);
+				if(fistCurlFingers)
+					handleFingersCurling(trackThumbs);
+
+				if(trackThumbs) 
+				{
+					if(rightThumb)
+						UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb);
+					if(leftThumb)
+						UpdateTransform (ref leftThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb);
+				}
 			}
 
 			if (!useHierarchicalModel) 
@@ -891,61 +906,84 @@ public class RUISSkeletonController : MonoBehaviour
 		lastLeftHandStatus = leftHandStatus ;
 		lastRightHandStatus = rightHandStatus;
 		
-		for (int i = 0; i < 2; i++)  { // Hands
-			
-			if (i == 0) {
+		for (int i = 0; i < 2; i++)  
+		{ // Hands
+			if (i == 0) 
+			{
 				closeHand = (rightHandStatus  == RUISSkeletonManager.Skeleton.handState.closed);
 				invert = -1;
 			}
-			else {
+			else 
+			{
 				closeHand = (leftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
 				invert = 1;
 			}
 			// Thumb rotation correction
-			clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x * invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
-			for(int a = 0; a < 5; a++) { // Fingers
-				if(!closeHand && !(a == 4 && trackThumbs)) {
-					fingerTransforms[i, a, 0].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], Time.deltaTime * rotationSpeed);
-					fingerTransforms[i, a, 1].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], Time.deltaTime * rotationSpeed);
-					fingerTransforms[i, a, 2].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], Time.deltaTime * rotationSpeed);
+			clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x 
+			                                                     * invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
+			for(int a = 0; a < 5; a++) 
+			{ // Fingers
+				if(!closeHand && !(a == 4 && trackThumbs)) 
+				{
+					if(fingerTransforms[i, a, 0])
+						fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], Time.deltaTime * rotationSpeed);
+					if(fingerTransforms[i, a, 1])
+						fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], Time.deltaTime * rotationSpeed);
+					if(fingerTransforms[i, a, 2])
+						fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], Time.deltaTime * rotationSpeed);
 					}
-				else {
-					if(a != 4) {
-						fingerTransforms[i, a, 0].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, Time.deltaTime * rotationSpeed);
-						fingerTransforms[i, a, 1].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationPIP, Time.deltaTime * rotationSpeed);
-						fingerTransforms[i, a, 2].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, Time.deltaTime * rotationSpeed);
+				else 
+				{
+					if(a != 4) 
+					{
+						if(fingerTransforms[i, a, 0])
+							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, Time.deltaTime * rotationSpeed);
+						if(fingerTransforms[i, a, 1])
+							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationPIP, Time.deltaTime * rotationSpeed);
+						if(fingerTransforms[i, a, 2])
+							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, Time.deltaTime * rotationSpeed);
 					}
-					else if(!trackThumbs) { // Thumbs (if separate thumb  tracking is not enabled)
-						fingerTransforms[i, a, 0].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, Time.deltaTime * rotationSpeed);
-						fingerTransforms[i, a, 1].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
-						fingerTransforms[i, a, 2].localRotation =  Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP, Time.deltaTime * rotationSpeed);
+					else if(!trackThumbs) 
+					{ // Thumbs (if separate thumb  tracking is not enabled)
+						if(fingerTransforms[i, a, 0])
+							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, Time.deltaTime*rotationSpeed);
+						if(fingerTransforms[i, a, 1])
+							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
+						if(fingerTransforms[i, a, 2])
+							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP, Time.deltaTime * rotationSpeed);
 					}	
 				}	
 			}
 		}
 	}
 
-	private void saveInitialFingerRotations() {
-		
+	private void saveInitialFingerRotations() 
+	{	
 		Transform handObject;
 		
 		for (int i = 0; i < 2; i++) { 
 			if (i == 0) handObject = rightHand;
 			else handObject = leftHand;
-			
+
+			if(handObject == null)
+				continue;
+
 			Transform[] fingers = handObject.GetComponentsInChildren<Transform> ();
 			
 			int fingerIndex = 0;
 			int index = 0;
-			foreach (Transform finger in fingers) {
-			
+			foreach (Transform finger in fingers) 
+			{
 				if (finger.parent.transform.gameObject == handObject.transform.gameObject
-				    && (finger.gameObject.name.Contains("finger") || finger.gameObject.name.Contains("Finger"))) {
+				    && (finger.gameObject.name.Contains("finger") || finger.gameObject.name.Contains("Finger"))) 
+				{
 				
-					if(fingerIndex > 4) break; // No mutants allowed!
+					if(fingerIndex > 4) break; // No mutant fingers allowed!
 					
-					if(finger == rightThumb || finger == leftThumb) index = 4; // thumb
-					else {
+					if(finger == rightThumb || finger == leftThumb)
+						index = 4; // Force thumb to have index == 4
+					else 
+					{
 						index = fingerIndex;
 						fingerIndex++;
 					}
@@ -954,16 +992,20 @@ public class RUISSkeletonController : MonoBehaviour
 					initialFingerRotations[i, index, 0] = finger.localRotation;
 					fingerTransforms[i, index, 0] = finger;
 					Transform[] nextFingerParts = finger.gameObject.GetComponentsInChildren<Transform> ();
-					foreach (Transform part1 in nextFingerParts) {
+					foreach (Transform part1 in nextFingerParts) 
+					{
 						if (part1.parent.transform.gameObject == finger.gameObject
-						    && (part1.gameObject.name.Contains("finger") || part1.gameObject.name.Contains("Finger"))) {
+						    && (part1.gameObject.name.Contains("finger") || part1.gameObject.name.Contains("Finger"))) 
+						{
 							// Second bone
 							initialFingerRotations[i, index, 1] = part1.localRotation;
 							fingerTransforms[i, index, 1] = part1;
 							Transform[] nextFingerParts2 = finger.gameObject.GetComponentsInChildren<Transform> ();
-							foreach (Transform part2 in nextFingerParts2) {
+							foreach (Transform part2 in nextFingerParts2) 
+							{
 								if (part2.parent.transform.gameObject == part1.gameObject
-								    && (part2.gameObject.name.Contains("finger") || part2.gameObject.name.Contains("Finger"))) {
+								    && (part2.gameObject.name.Contains("finger") || part2.gameObject.name.Contains("Finger"))) 
+								{
 									// Third bone
 									initialFingerRotations[i, index, 2] = part2.localRotation;
 									fingerTransforms[i, index, 2] = part2; 

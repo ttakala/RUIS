@@ -379,7 +379,10 @@ public class RUISSkeletonControllerEditor : Editor
 				EditorGUILayout.EndHorizontal ();
 			
 			
-			EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent("Track Fist Curling", "Should finger in fist be curled when closing hand?"));
+			EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent(  "Track Fist Clenching", "When user is making a fist, curl finger joints "
+			                                                              + "(child gameObjects under 'Left Hand' and 'Right Hand' whose name include "
+			                                                              + "the substring 'finger' or 'Finger'.). If you have assigned 'Left Thumb' " +
+			                                                              	"and 'Right Thumb', they will receive a slightly different finger curling."));
 			EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track Thumbs", "Track thumb movement."));
 			
 		}
