@@ -221,7 +221,9 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
 		
-		this.guiTextLowerLocal = string.Format("Calibrating... {0}/{1} samples taken. \n\nPlease make sure that both cameras can \nsee your right hand at all times.", numberOfSamplesTaken, numberOfSamplesToTake);
+		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken. \n\nMake wide, calm motions with your\n"
+		                                       + "right hand. Have both Kinects see it.", 
+		                                       numberOfSamplesTaken, numberOfSamplesToTake);
 		TakeSample(deltaTime);
 		
 		if(numberOfSamplesTaken >= numberOfSamplesToTake) 

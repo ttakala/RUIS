@@ -138,7 +138,8 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 			if(kinectError) this.guiTextLowerLocal = "Error: Could not read Kinect floor data!";
 			else 
 			{
-				this.guiTextLowerLocal = "Calibration finished!\n\nDistance from floor: " + kinect1DistanceFromFloor + "\n\nFloor normal: " + normalVector.ToString();
+				this.guiTextLowerLocal =   "Calibration finished!\n\nDistance from floor: " + kinect1DistanceFromFloor 
+										 + "\n\nFloor normal: " + normalVector.ToString();
 				coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Kinect_1, normalVector, kinect1DistanceFromFloor);
 			}
 			calibrationFinnished = true;

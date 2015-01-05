@@ -881,7 +881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rootSpeedScaling: {x: 1, y: 1, z: 1}
+  torsoOffsetKinect2: .300000012
 --- !u!114 &616115110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -940,7 +940,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 636060971}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd0ba132b6f5f3c458bf82f8b123d654, type: 3}
+  m_Script: {fileID: 11500000, guid: e5bdd671134308f4292acf501adc6935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!23 &636060974
@@ -1459,7 +1459,7 @@ MonoBehaviour:
   playerSelection: {fileID: 616115110}
   depthMapColor: {r: .904411793, g: .13965185, b: .13965185, a: 0}
   factor: 4
-  update: 1
+  Kinect1Update: 1
 --- !u!1 &838978607
 GameObject:
   m_ObjectHideFlags: 0
@@ -3685,7 +3685,7 @@ MonoBehaviour:
   allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 0}
   menuCursorPrefab: {fileID: 0}
-  menuLayerName: RUISMenu
+  menuLayer: 0
   guiDisplayChoice: 0
   guiX: 0
   guiY: 0
@@ -4703,15 +4703,16 @@ MonoBehaviour:
   customLeftFoot: {fileID: 0}
   customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
-  fistCurlFingers: 0
+  fistCurlFingers: 1
   trackThumbs: 0
-  trackAnkle: 0
-  rotateWristFromElbow: 0
+  trackAnkle: 1
+  rotateWristFromElbow: 1
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 0
   switchToAvailableKinect: 1
   updateRootPosition: 1
+  rootSpeedScaling: {x: 1, y: 1, z: 1}
   updateJointPositions: 1
   updateJointRotations: 1
   useHierarchicalModel: 0
@@ -4723,6 +4724,8 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
+  filterRotations: 0
+  rotationNoiseCovariance: 500
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0

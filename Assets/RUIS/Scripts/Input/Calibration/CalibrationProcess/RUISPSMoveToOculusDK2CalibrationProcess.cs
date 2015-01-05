@@ -166,7 +166,9 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) {
-		this.guiTextLowerLocal = "Take a Move controller into your right \nhand. Wave the controller around until\nthe pitch angle seems to converge.\nPress X to start calibrating.\n";
+		this.guiTextLowerLocal =  "Take a Move controller into your hand. \nWave the controller around until the pitch \n"
+								+ "angle seems to converge. When ready, \nput Oculus Rift and Move calibrating.\n"
+								+ "controller together and press X to start\n";
 		this.guiTextLowerLocal += string.Format("\nPSMove camera pitch angle: {0}", Mathf.Rad2Deg * psMoveWrapper.state.gemStates[0].camera_pitch_angle);
 		
 		bool xButtonPressed = false;
@@ -190,7 +192,10 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
 		
-		this.guiTextLowerLocal = string.Format("Calibrating... {0}/{1} samples taken.", numberOfSamplesTaken, numberOfSamplesToTake);
+		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken.\n\n"
+											   + "Keep Oculus Rift and the Move controller \n"
+		                                       + "together and make wide, calm motions with \n"
+		                                       + "them. Have both sensors see them.", numberOfSamplesTaken, numberOfSamplesToTake);
 		TakeSample(deltaTime);
 		
 		if(numberOfSamplesTaken >= numberOfSamplesToTake) 

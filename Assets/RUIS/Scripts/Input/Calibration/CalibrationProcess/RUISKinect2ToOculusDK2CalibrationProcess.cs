@@ -183,7 +183,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	
 	public override RUISCalibrationPhase PreparationPhase(float deltaTime) {
-		this.guiTextLowerLocal = "Step in front of the camera.";
+		this.guiTextLowerLocal = "Step in front of the camera. \nHold Oculus Rift in your right hand.";
 		updateBodyData();
 		kinectTrackingID = 0;
 		
@@ -207,7 +207,10 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
 		
-		this.guiTextLowerLocal = string.Format("Calibrating... {0}/{1} samples taken.", numberOfSamplesTaken, numberOfSamplesToTake);
+		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken.\n\n"
+		                                       + "Keep the Oculus Rift in your right hand\n"
+		                                       + "and make wide, calm motions with it.\n"
+		                                       + "Have both sensors see it.", numberOfSamplesTaken, numberOfSamplesToTake);
 		TakeSample(deltaTime);
 		
 		if(numberOfSamplesTaken >= numberOfSamplesToTake) 
