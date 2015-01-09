@@ -467,32 +467,35 @@ public class RUISSkeletonController : MonoBehaviour
 			UpdateTransform (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
 			UpdateTransform (ref leftKnee, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee);
 			UpdateTransform (ref rightKnee, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee);
-
-			if(rotateWristFromElbow)
-			{
-				UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand);
-				UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand);
-			}
-			else 
-			{
-				UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow);
-				UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow);
-			}
 			
-			// Hand rotation constraint 
-			//if(bodyTrackingDeviceID == 1) {
-			//	GameObject.Find("SCube").transform.localRotation = rightElbow.rotation) *
-			//		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightWrist.rotation;
-//				rightHand.localRotation = limitZRotation(Quaternion.Inverse(rightElbow.rotation) *
-//				                                         skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightWrist.rotation,  
-//																				 handRollAngleMinimum,  handRollAngleMaximum);
-			//}
+			UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow);
+			UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow);
 
 			if(trackAnkle || !useHierarchicalModel) 
 			{
 				UpdateTransform (ref leftFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot);
 				UpdateTransform (ref rightFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot);
 				
+			}
+			
+			if(rotateWristFromElbow && bodyTrackingDevice == bodyTrackingDeviceType.Kinect2)
+			{
+				if (useHierarchicalModel)
+				{
+					if(leftElbow && leftHand)
+						leftElbow.rotation  = leftHand.rotation;
+					if(rightElbow && rightHand)
+						rightElbow.rotation = rightHand.rotation;
+				}
+				else
+				{
+					if(leftElbow && leftHand)
+						leftElbow.localRotation  = leftHand.localRotation;
+					if(rightElbow && rightHand)
+						rightElbow.localRotation = rightHand.localRotation;
+				}
+				//				UpdateTransform (ref rightElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand);
+				//				UpdateTransform (ref leftElbow, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand);
 			}
 	
 			if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)

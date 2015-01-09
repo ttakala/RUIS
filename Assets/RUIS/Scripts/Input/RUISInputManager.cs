@@ -437,7 +437,7 @@ public class RUISInputManager : MonoBehaviour
 
 			if(float.IsNaN(kinect2DistanceFromFloor))
 				kinect2DistanceFromFloor = 0;
-			if(kinect2FloorNormal.sqrMagnitude < 0.1f)
+			if(float.IsNaN(kinect2FloorNormal.x) || kinect2FloorNormal.sqrMagnitude < 0.1f)
 				kinect2FloorNormal = Vector3.up;
 
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)

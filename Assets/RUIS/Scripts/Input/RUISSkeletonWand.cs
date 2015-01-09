@@ -320,7 +320,7 @@ public class RUISSkeletonWand : RUISWand
         isTracking = true;
         gestureRecognizer.EnableGesture();
 		lineRenderer = GetComponent<LineRenderer>();
-		print (lineRenderer);
+
 		if(lineRenderer)
 			lineRenderer.enabled = true;
         if (wandPositionVisualizer)

@@ -62,8 +62,10 @@ public class RUISCoordinateSystemEditor : Editor
 		                                                                     + "Kinect floor detection has been successful). This is useful if you want "
 		                                                                     + "tracked avatars to always have their feet on the ground level, regardless "
 		                                                                     + "of how high your Kinect sensor is placed. The Y offset can be loaded from "
-		                                                                     + "Calibration XML File or calculated upon scene start if that option "
-		                                                                     + "is enabled from RUISInputManager."));
+		                                                                     + "Calibration XML File or calculated upon scene start if Kinect 1/2 'Floor Detection' "
+		                                                                     + "option is enabled from RUISInputManager. NOTE: If 'Use Master Coordinate System' "
+		                                                                     + "is enabled, then 'Master Coordinate System Sensor' must be Kinect 1 or 2 for this "
+		                                                                     + "setting to have any effect."));
 		EditorGUILayout.PropertyField(rootDevice, new GUIContent(  "Master Coordinate System Sensor", "The sensor that defines the Master Coordinate System "
 		                                                         + "(sensor location is the origin and its orientation aligns the coordinate system axes). All "
 		                                                         + "other sensors that are pairwise calibrated with the master sensor will have their RUIS "

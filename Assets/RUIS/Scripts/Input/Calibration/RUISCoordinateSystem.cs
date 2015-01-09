@@ -432,6 +432,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 	/*
 	*	Device specific functions
 	*/
+
 	/*
 	*	PSMove
 	*/
@@ -444,6 +445,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 
         return newPosition;
     }
+
 	public Quaternion ConvertRawPSMoveRotation(Quaternion rotation)
 	{
 		Quaternion newRotation = rotation;
@@ -454,8 +456,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		return newRotation;
 	}
-	
-	// TUUKKA:
+
 	public Vector3 ConvertMoveVelocity(Vector3 velocity)
     {
         //flip the z coordinate to get into unity's coordinate system
@@ -503,8 +504,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		return newPosition;
 	}
-	
-	
+
  	public Quaternion ConvertRawKinectRotation(OpenNI.SkeletonJointOrientation rotation)
     {
         Vector3 up = new Vector3(rotation.Y1, rotation.Y2, rotation.Y3);
@@ -544,7 +544,11 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return newRotation;
 	}
 	
-	public Vector3 ConvertRawOculusDK2Location(Vector3 position) {
+	/*
+	 * 	Oculus Rift
+	 */
+	public Vector3 ConvertRawOculusDK2Location(Vector3 position)
+	{
 		Vector3 currentcameraPosition = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
 		
 		// TODO: Try combinations of this: position = OVRManager.capiHmd.GetTrackingState().CameraPose.Orientation * position
@@ -559,32 +563,89 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return newPosition;
 	}
 	
+	// Get Oculus Rift rotation in master coordinate system
+	public Quaternion GetOculusRiftOrientation()
+	{
+		OVRPose rightEye;
+		if(OVRManager.display != null)
+		{
+			rightEye = OVRManager.display.GetEyePose(OVREye.Right);
+			return OculusCameraYRotation() * rightEye.orientation;
+		}
+		else 
+			return OculusCameraYRotation();
+	}
+
+	// Oculus positional tracking camera's coordinate system origin in master coordinate system
+	public Vector3 OculusCameraOrigin()
+	{
+		if (OVRManager.capiHmd != null) 
+		{
+			Vector3 currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3 ();
+			currentOvrCameraPose.z = -currentOvrCameraPose.z; // TODO: Tuukka commented this (was unclear), test if it was ok to comment
+			// TODO: Tuukka tried adding minus and commenting the above currentOvrCameraPose.z = - ...  This didn't work
+			
+			currentOvrCameraPose = ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
+			
+			return currentOvrCameraPose;
+		} else
+			return Vector3.zero;
+	}
+	
+	// Oculus positional tracking camera's orientation around Y-axis in master coordinate system
+	public Quaternion OculusCameraYRotation()
+	{
+		// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
+		Quaternion convertedRotation = ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+		
+		// TODO: Tuukka tried adding 180. This was probably not right. Find correct solution.
+		return Quaternion.Euler(new Vector3 (0, convertedRotation.eulerAngles.y, 0));
+	}
+
+	
+	/*
+	 * 	Convert locations obtained with a certain device to master coordinate system, apply position offset, and set Kinect origin to floor if applicable
+	 */
 	public Vector3 ConvertLocation(Vector3 inputLocation, RUISDevice device)
 	{
-
 		Vector3 outputLocation = inputLocation;
 		string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 
+		// Transform location into master coordinate system
 		if (applyToRootCoordinates && rootDevice != device) 
 		{
 			outputLocation = RUISCalibrationResultsIn4x4Matrix[devicePairString].MultiplyPoint3x4(outputLocation);
 		}
-		
+
+		// Apply yaw offset
 		outputLocation = Quaternion.Euler(0, yawOffset, 0) * RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputLocation;
-		
+
+		// Set Kinect 1/2 origin to floor
 		if (setKinectOriginToFloor)
 		{
-			outputLocation.y += RUISCalibrationResultsDistanceFromFloor[rootDevice];
+			if (applyToRootCoordinates)
+				outputLocation.y += RUISCalibrationResultsDistanceFromFloor[rootDevice];
+			else
+			{
+				if(device == RUISDevice.Kinect_2)
+					outputLocation.y += RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2];
+				else if(device == RUISDevice.Kinect_1)
+					outputLocation.y += RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1];
+			}
 		}
-		
-		outputLocation += positionOffset;
+
+		// Position offset
+		if (applyToRootCoordinates || device == rootDevice)
+			outputLocation += positionOffset;
 		
 		return outputLocation;
 	}
 	
-	
-	public Quaternion ConvertRotation(Quaternion inputRotation, RUISDevice device) {
-		
+	/*
+	 * 	Convert rotations obtained with a certain device to master coordinate system, apply yaw offset, and apply Kinect pitch correction
+	 */
+	public Quaternion ConvertRotation(Quaternion inputRotation, RUISDevice device)
+	{
 		Quaternion outputRotation = inputRotation;
 		
 		if (applyToRootCoordinates && rootDevice != device) {
@@ -592,9 +653,22 @@ public class RUISCoordinateSystem : MonoBehaviour
 			outputRotation = RUISCalibrationResultsInQuaternion[devicePairString] * outputRotation;
 		}
 		
-		outputRotation = Quaternion.Euler(0, yawOffset, 0) * RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputRotation;
-		//print (RUISCalibrationResultsFloorPitchRotation[rootDevice]);
+//		outputRotation = Quaternion.Euler(0, yawOffset, 0) * RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputRotation;
+
+		if (applyToRootCoordinates)
+			outputRotation = RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputRotation;
+		else
+		{
+			if(device == RUISDevice.Kinect_2)
+				outputRotation = RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] * outputRotation;
+			else if(device == RUISDevice.Kinect_1)
+				outputRotation = RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] * outputRotation;
+		}
 		
+		// Apply yaw offset
+		if (applyToRootCoordinates || device == rootDevice)
+			outputRotation = Quaternion.Euler(0, yawOffset, 0) * outputRotation;
+
 		return outputRotation;
 	}
 	

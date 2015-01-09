@@ -246,7 +246,8 @@ public class RUISTracker : MonoBehaviour
 	public GameObject correctedDirectionVisualizer;
 	public Transform driftVisualizerPosition;
 	// End of Yaw Drift Corrector members
-	
+
+	OVRManager ovrManager;
 	OVRCameraRig ovrCameraRig;
 	Ovr.HmdType ovrHmdVersion;
 	
@@ -296,32 +297,79 @@ public class RUISTracker : MonoBehaviour
 		{
 			useOculusRiftRotation = false;
 		}
+
+		// Enforce rotation settings if rotation source is set to be same as position source
+		if (!pickRotationSource) 
+		{
+			switch (headPositionInput)
+			{	
+				case HeadPositionSource.Kinect1:
+				{
+					headRotationInput = HeadRotationSource.Kinect1;
+					rotationPlayerID = positionPlayerID;
+					rotationJoint = positionJoint;
+					break;
+				}
+				case HeadPositionSource.Kinect2:
+				{
+					headRotationInput = HeadRotationSource.Kinect2;
+					rotationPlayerID = positionPlayerID;
+					rotationJoint = positionJoint;
+					break;
+				}
+				case HeadPositionSource.PSMove:
+				{
+					headRotationInput = HeadRotationSource.PSMove;
+					rotationPSMoveID = positionPSMoveID;
+					break;
+				}
+				case HeadPositionSource.RazerHydra:
+				{
+					headRotationInput = HeadRotationSource.RazerHydra;
+					rotationRazerID = positionRazerID;
+					break;
+				}
+				case HeadPositionSource.InputTransform:
+				{
+					headRotationInput = HeadRotationSource.InputTransform;
+					rotationInput = positionInput;
+					break;
+				}
+				case HeadPositionSource.None:
+				{
+					headRotationInput = HeadRotationSource.None;
+					break;
+				}
+			}
+		}
 		
 		filterPosition = false;
     }
 		
 	void Start()
-    {
+	{
+		// Get information about Oculus Rift version and if it is connected
+		ovrManager = FindObjectOfType<OVRManager>();
+		bool isRiftConnected = false;
+		#if UNITY_EDITOR
+		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+			#endif
+		{
+			try
+			{
+				if(OVRManager.capiHmd != null)
+					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
+				if(OVRManager.display != null)
+					isRiftConnected = OVRManager.display.isPresent;
+			}
+			catch(UnityException e)
+			{
+				Debug.LogError(e);
+			}
+		}
+
 		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
-			bool isRiftConnected = false;
-			#if UNITY_EDITOR
-			if(UnityEditorInternal.InternalEditorUtility.HasPro())
-			#endif
-			{
-				try
-				{
-					if(OVRManager.capiHmd != null)
-						ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
-					if(OVRManager.display != null)
-						isRiftConnected = OVRManager.display.isPresent;
-				}
-				catch(UnityException e)
-				{
-					Debug.LogError(e);
-				}
-			}
-
 			if(!isRiftConnected) 
 			{
 				headPositionInput = HeadPositionSource.None;
@@ -443,7 +491,11 @@ public class RUISTracker : MonoBehaviour
 
 		if(useOculusRiftRotation && headPositionInput != HeadPositionSource.OculusDK2 && OVRManager.tracker != null && ovrCameraRig != null)
 		{
-			OVRManager.tracker.isEnabled = false;
+			DisableOculusPositionalTracking();
+
+			// OVR manager is not necessarily initialized, so lets do the above disabling later as well
+			StartCoroutine(DelayedDisableOculusPositionalTracking());
+
 			Debug.Log(  typeof(RUISTracker) + ": Position Tracker is " + headPositionInput + " and " + typeof(OVRCameraRig)
 			          + " found in a child gameObject, turning off Oculus Rift position tracking altogether. If you do not "
 			          + "want this, then remove the " + typeof(OVRCameraRig) + " component from the child object(s).");
@@ -467,11 +519,43 @@ public class RUISTracker : MonoBehaviour
 		//						  + "OVRManager.");
 //			}
 //		}
+	}
 
+	private void DisableOculusPositionalTracking()
+	{
+		if(ovrManager)
+			ovrManager.usePositionTracking = false;
+		if(OVRManager.tracker != null)
+			OVRManager.tracker.isEnabled = false;
+
+		if (coordinateSystem) 
+		{
+			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
+			transform.localRotation = coordinateSystem.OculusCameraYRotation();
+		}
+	}
+
+	IEnumerator DelayedDisableOculusPositionalTracking()
+	{
+		yield return new WaitForSeconds(0);
+		DisableOculusPositionalTracking();
+	}
+	
+	public void OculusCounterPoseOffset()
+	{
+		if(coordinateSystem)
+		{
+			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
+			transform.localRotation = coordinateSystem.OculusCameraYRotation();
+			
+			if(OVRManager.capiHmd != null)
+				this.transform.localPosition = coordinateSystem.OculusCameraOrigin();
+		}
 	}
 		
 	void Update () 
 	{
+//		print (OculusCameraOrigin ());
 		if(!filterInFixedUpdate)
 			updateTracker(Time.deltaTime);
 	}
@@ -487,30 +571,6 @@ public class RUISTracker : MonoBehaviour
 		// Beginning of invocations that are needed by RUISCamera's oblique frustum creation
         eyeCenterPosition = transform.localPosition;
 		// End of invocations that are needed by RUISCamera's oblique frustum creation
-	}
-
-	private void OculusCounterPoseOffset()
-	{
-		if(coordinateSystem)
-		{
-			Quaternion convertedRotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
-			// TODO: Test below transform.localRotation
-			convertedRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0)); // TODO: Tuukka tried adding 180. This was probably not right. Find correct solution.
-			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-			transform.localRotation = convertedRotation;
-			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-			
-			if(OVRManager.capiHmd != null)
-			{
-				currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
-				currentOvrCameraPose.z = -currentOvrCameraPose.z; // TODO: Tuukka commented this (was unclear), test if it was ok to comment
-
-				// TODO: Tuukka tried adding minus and commenting the above currentOvrCameraPose.z = - ...  This didn't work
-				convertedLocation = coordinateSystem.ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
-				//convertedLocation = coordinateSystem.ConvertLocation(new Vector3(0, 0, -1.0f), RUISDevice.Oculus_DK2); 
-				this.transform.localPosition = convertedLocation;
-			}
-		}
 	}
 
 	private void updateTracker(float deltaT)
@@ -590,7 +650,7 @@ public class RUISTracker : MonoBehaviour
 		if(Input.GetKeyDown(resetKey))
 			ResetOrientation();
 		
-		if(headPositionInput == HeadPositionSource.OculusDK2) 
+		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
 			OculusCounterPoseOffset();
 			return;
@@ -848,7 +908,25 @@ public class RUISTracker : MonoBehaviour
 		}
 		
 		// Determine whether rotation source is Oculus Rift or some other device
-		if(!useOculusRiftRotation) // If the Rift is rotation source, then it is applied by OVRCameraRig 
+		if(useOculusRiftRotation) // TODO: *** Depending on OVR version, the below section might change
+		{
+			// If we are using Oculus for rotation tracking but NOT positional tracking, then add a counter translation
+			//			print (Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.parent.localScale));
+			if(ovrCameraRig)
+			{
+				Vector3 oculusPositionOffset = ovrCameraRig.centerEyeAnchor.localPosition;
+				if(coordinateSystem)
+					transform.localPosition = transform.localPosition - transform.localRotation
+						* Vector3.Scale(oculusPositionOffset, ovrCameraRig.transform.parent.localScale);
+			}
+			
+			// Get Oculus Rift rotation
+			if(coordinateSystem)
+			{
+				tempLocalRotation = coordinateSystem.GetOculusRiftOrientation();
+			}
+		}
+		else // useOculusRiftRotation == false 
 		{
 			switch(headRotationInput) 
 			{
@@ -939,7 +1017,8 @@ public class RUISTracker : MonoBehaviour
 		}
 		else
 		{
-			if(!useOculusRiftRotation 
+			if(!useOculusRiftRotation
+			   || (ovrManager != null && ovrManager.usePositionTracking == false)
 			   || (		ovrHmdVersion == Ovr.HmdType.DK1 
 			    	||  ovrHmdVersion == Ovr.HmdType.DKHD 
 			    	||  ovrHmdVersion == Ovr.HmdType.None))
@@ -960,12 +1039,11 @@ public class RUISTracker : MonoBehaviour
 		
 		if(useOculusRiftRotation)
 		{
-			
 			finalYawDifference = Quaternion.identity;
-			// OVRManager.display.RecenterPose(); //TODO
+			if(OVRManager.display != null)
+				OVRManager.display.RecenterPose(); //TODO
 			//OVR ... .ResetOrientation();
-			
-			
+
 		}
 	}
 	
@@ -1042,33 +1120,19 @@ public class RUISTracker : MonoBehaviour
 	{
 		doYawFiltering(driftedRotation, deltaT);
 		// driftingEuler and finalYawDifference are private members set in doYawFiltering()
-		return Quaternion.Euler(new Vector3( driftingEuler.x, 
-											 (360 + driftingEuler.y 
-												  - finalYawDifference.eulerAngles.y)%360, 
-											 driftingEuler.z)							  );
+
+		if (useOculusRiftRotation) 
+		{ 
+			return Quaternion.Euler (new Vector3 (0, (360 + (coordinateSystem?coordinateSystem.OculusCameraYRotation().eulerAngles.y:0)
+			                                          - finalYawDifference.eulerAngles.y) % 360, 0));
+		}
+		else
+			return Quaternion.Euler(new Vector3( driftingEuler.x, (360 + driftingEuler.y - finalYawDifference.eulerAngles.y)%360, driftingEuler.z));
 	}
 	
 	
 	private void doYawFiltering(Quaternion driftingOrientation, float deltaT)
 	{
-		// If Oculus Rift DK1 is HeadRotationSource, we need to apply the yaw correction to it
-		if(useOculusRiftRotation)
-		{
-			// TODO: re-enable drift correction with DK1
-			/*
-			if(OVRDevice.IsSensorPresent(oculusID))
-			{
-				if(oculusCamController) 
-				{
-					
-					// In the future OVR SDK oculusCamController will have oculusID?
-					oculusCamController.SetYRotation(-finalYawDifference.eulerAngles.y);
-					
-				}
-			}
-			*/
-		}
-		
 		driftingEuler = driftingOrientation.eulerAngles;
 		
 		// You can set compassIsPositionTracker to true in a script and it will work as
