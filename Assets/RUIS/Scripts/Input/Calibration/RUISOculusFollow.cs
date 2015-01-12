@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Ovr;
 
-public class RUISOculusFollow : MonoBehaviour {
+public class RUISOculusFollow : MonoBehaviour 
+{
 	RUISCoordinateSystem coordinateSystem;
 	
-	void Start() {
+	void Start() 
+	{
 		coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 	}
 	
-	void Update () {
+	void Update () 
+	{
 		if(RUISOVRManager.ovrHmd != null)
 		{
 			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;
@@ -21,10 +25,20 @@ public class RUISOculusFollow : MonoBehaviour {
 			Vector3 convertedLocation = coordinateSystem.ConvertLocation(tempSample, RUISDevice.Oculus_DK2); 
 			
 			this.transform.localPosition = convertedLocation;
-			
-			Quaternion convertedRotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
-			// TODO: Test below transform.localRotation
-			transform.localRotation = Quaternion.Euler(new Vector3(0, convertedRotation.eulerAngles.y, 0));
+			if(OVRManager.capiHmd != null)
+			{
+				TrackingState state = OVRManager.capiHmd.GetTrackingState();
+				try
+				{
+					this.transform.localRotation = OVRManager.capiHmd.GetTrackingState().HeadPose.ThePose.Orientation.ToQuaternion();
+				}
+				catch(System.Exception e)
+				{
+					Debug.LogError(e.Message);
+				}
+			}
+			// Scene doesn't have a real OVRManager (only some DLLs are loaded), that's why below doesn't work
+//			this.transform.localRotation = coordinateSystem.GetOculusRiftOrientation();
 		}
 	}
 }

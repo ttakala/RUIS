@@ -96,7 +96,7 @@ Transform:
   m_PrefabInternal: {fileID: 106441256}
   m_GameObject: {fileID: 78422529}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: .898000002, z: 1.57799995}
   m_LocalScale: {x: .200000003, y: .200000003, z: .200000003}
   m_Children:
   - {fileID: 1073423919}
@@ -227,11 +227,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9aeb8386bbfecf248ae6f02fa1ca4952, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: .898000002
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9aeb8386bbfecf248ae6f02fa1ca4952, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1.57799995
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9aeb8386bbfecf248ae6f02fa1ca4952, type: 2}
       propertyPath: m_LocalRotation.x
@@ -251,7 +251,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9aeb8386bbfecf248ae6f02fa1ca4952, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9aeb8386bbfecf248ae6f02fa1ca4952, type: 2}
       propertyPath: m_LocalScale.x
@@ -955,7 +955,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: da9d48c1655d02d429da65040ccbbd6b, type: 2}
+  - {fileID: 2100000, guid: 29ef6c52109ccc84eb839082815b5f3f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -2980,7 +2980,7 @@ GUITexture:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1396785029}
   m_Enabled: 1
-  m_Texture: {fileID: 2800000, guid: 4c68098cb515dce4abb967b4c579466c, type: 3}
+  m_Texture: {fileID: 2800000, guid: 2a7bfbe395a4ce0458d84a5a66ab4f55, type: 3}
   m_Color: {r: .597014904, g: .597014904, b: .597014904, a: .501960814}
   m_PixelInset:
     serializedVersion: 2
@@ -4044,11 +4044,11 @@ MonoBehaviour:
   moveWand1: 0
   moveWand2: 0
   moveWand3: 0
-  enableKinect: 1
+  enableKinect: 0
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 0
   kinectDriftCorrectionPreferred: 0
-  enableKinect2: 1
+  enableKinect2: 0
   kinect2FloorDetection: 0
   enableRazerHydra: 0
   moveControllers: []
