@@ -9,6 +9,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class RUISDisplayManager : MonoBehaviour {
     public List<RUISDisplay> displays;
@@ -42,7 +43,8 @@ public class RUISDisplayManager : MonoBehaviour {
         public Camera camera;
     }
 
-	void Start () {
+	void Start () 
+	{
 
         CalculateTotalResolution();
 
@@ -73,10 +75,25 @@ public class RUISDisplayManager : MonoBehaviour {
 			if(camera)
 				camera.enabled = false;
 		}
+		else 
+		{
+			if(GetComponent<OVRManager>()) 
+			{
+				StartCoroutine(HideOVRHealthMessage(1.0F));
+			}
+		}
 
 		InitRUISMenu(ruisMenuPrefab, guiDisplayChoice);
+		
+		
 	}
-
+	
+	IEnumerator HideOVRHealthMessage(float waitTime) 
+	{
+		yield return new WaitForSeconds(waitTime);
+		OVRManager.DismissHSWDisplay();
+	}
+	
     void Update()
     {
         if (Application.isEditor && (Screen.width != totalRawResolutionX || Screen.height != totalRawResolutionY))
@@ -84,7 +101,7 @@ public class RUISDisplayManager : MonoBehaviour {
             UpdateResolutionsOnTheFly();
             UpdateDisplays();
         }
-    }
+    }	
 
     public void UpdateDisplays()
     {

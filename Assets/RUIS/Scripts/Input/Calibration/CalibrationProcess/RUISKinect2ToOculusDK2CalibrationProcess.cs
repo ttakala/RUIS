@@ -54,6 +54,8 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	Vector3 kinect2FloorNormal = Vector3.up;
 	RUISOVRManager ruisOvrManager;
 
+	bool device1Error, device2Error;
+	
 	public RUISKinect2ToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
 		this.inputDevice1 = RUISDevice.Oculus_DK2;
@@ -308,28 +310,41 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	{
 		Vector3 sample = new Vector3(0,0,0);
 		Vector3 tempSample;
-		
+		updateBodyData();
 		if(device == RUISDevice.Kinect_2) 
 		{
 			Kinect.Body[] data = kinect2SourceManager.GetBodyData();
+			bool trackedBodyFound = false;
+			int foundBodies = 0;
 			foreach(var body in data) {
-				if(body.IsTracked && body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) 
-				{
-					tempSample = new Vector3(body.Joints[Kinect.JointType.HandRight].Position.X,
-					                         body.Joints[Kinect.JointType.HandRight].Position.Y,
-					                         body.Joints[Kinect.JointType.HandRight].Position.Z);
-					tempSample = coordinateSystem.ConvertRawKinect2Location(tempSample);
-					if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) {
-						sample = tempSample;
-						lastKinect2Sample = sample;
-						this.guiTextUpperLocal = "";
-					}
-					else {
-						this.guiTextUpperLocal = "Not enough hand movement.";
+				foundBodies++;
+				if(body.IsTracked){
+					if(trackingIDtoIndex[body.TrackingId] == 0) {
+						trackedBodyFound = true;
+				 		if(body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) {
+				 			tempSample = new Vector3(body.Joints[Kinect.JointType.HandRight].Position.X,
+							                         body.Joints[Kinect.JointType.HandRight].Position.Y,
+							                         body.Joints[Kinect.JointType.HandRight].Position.Z);
+							tempSample = coordinateSystem.ConvertRawKinect2Location(tempSample);
+							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) {
+								sample = tempSample;
+								lastKinect2Sample = sample;
+								device1Error = false;
+								if(!device2Error) this.guiTextUpperLocal = "";
+							}
+							else {
+								device1Error = true;
+								this.guiTextUpperLocal = "Not enough hand movement.";
+							}
+						}
 					}
 				}
+				
 			}
-			
+			if(!trackedBodyFound && foundBodies > 1) {
+				device1Error = true;
+				this.guiTextUpperLocal = "Step out of the Kinect's\nview and come back.";
+			}
 		}
 		if(device == RUISDevice.Oculus_DK2) 
 		{
@@ -346,9 +361,11 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			{
 				sample = tempSample;
 				lastOculusDK2Sample = sample;
-				this.guiTextUpperLocal = "";
+				device2Error = false;
+				if(!device1Error) this.guiTextUpperLocal = "";
 			}
 			else {
+				device2Error = true;
 				this.guiTextUpperLocal = "Not enough hand movement.";
 			}
 

@@ -42,9 +42,9 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 
 		bool isRiftConnected = false;
 		
-		#if UNITY_EDITOR
-		if(UnityEditorInternal.InternalEditorUtility.HasPro())
-		#endif
+		//#if UNITY_EDITOR
+		//if(UnityEditorInternal.InternalEditorUtility.HasPro())
+		//#endif
 		{
 			try
 			{

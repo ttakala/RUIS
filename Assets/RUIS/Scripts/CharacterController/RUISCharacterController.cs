@@ -152,9 +152,9 @@ public class RUISCharacterController : MonoBehaviour
 		
 		ovrManager = FindObjectOfType<OVRManager>();
 
-		#if UNITY_EDITOR
-		if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
-		#endif
+		//#if UNITY_EDITOR
+		//if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+		//#endif
 		{
 			try
 			{
@@ -334,9 +334,9 @@ public class RUISCharacterController : MonoBehaviour
 
 		if(useOculusPositionalTracking && ovrManager != null && ovrManager.usePositionTracking)
 		{
-			#if UNITY_EDITOR
-			if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
-			#endif
+			//#if UNITY_EDITOR
+			//if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+			//#endif
 				if(OVRManager.display != null)
 				{
 					OVRPose headpose = OVRManager.display.GetHeadPose();
