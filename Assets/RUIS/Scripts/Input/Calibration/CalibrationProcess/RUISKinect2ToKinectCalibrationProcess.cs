@@ -324,7 +324,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	private Vector3 getSample(RUISDevice device) {
 		Vector3 sample = new Vector3(0,0,0);
 		Vector3 tempSample;
-		
+		updateBodyData();
 		if(device == RUISDevice.Kinect_2) {
 			Kinect.Body[] data = kinect2SourceManager.GetBodyData();
 			bool trackedBodyFound = false;
