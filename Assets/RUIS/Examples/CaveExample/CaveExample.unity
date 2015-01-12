@@ -11447,7 +11447,7 @@ MonoBehaviour:
   allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
-  menuLayer: 17
+  menuLayer: 12
   guiDisplayChoice: 1
   guiX: 0
   guiY: 0
