@@ -528,10 +528,18 @@ public class RUISTracker : MonoBehaviour
 		if(OVRManager.tracker != null)
 			OVRManager.tracker.isEnabled = false;
 
-		if (coordinateSystem) 
+		// Set the current Oculus IR camera origin and HMD position so that we only get rotation-based neck offset in left/rightEye cameras
+		if(headPositionInput == HeadPositionSource.None)
+			OVRManager.display.RecenterPose();
+		else
 		{
-			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-			transform.localRotation = coordinateSystem.OculusCameraYRotation();
+			// Position tracking is from another source than DK2+ IR camera.
+			if (coordinateSystem) 
+			{
+				// Apply master coordinate system rotation to Oculus HMD's coordinate system if applicable
+				transform.localRotation = coordinateSystem.GetOculusCameraYRotation();
+				// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
+			}
 		}
 	}
 
@@ -546,10 +554,10 @@ public class RUISTracker : MonoBehaviour
 		if(coordinateSystem)
 		{
 			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-			transform.localRotation = coordinateSystem.OculusCameraYRotation();
+			transform.localRotation = coordinateSystem.GetOculusCameraYRotation();
 			
 			if(OVRManager.capiHmd != null)
-				this.transform.localPosition = coordinateSystem.OculusCameraOrigin();
+				this.transform.localPosition = coordinateSystem.GetOculusCameraOrigin();
 		}
 	}
 		
@@ -898,11 +906,6 @@ public class RUISTracker : MonoBehaviour
         }
 		else
 		{
-			//if((localPosition - measuredHeadPosition).magnitude > 0.3f)
-			//	Debug.LogError("aa " + (localPosition - measuredHeadPosition).magnitude + "locR " 
-			///           + localRotation + "bPos " + hydraBasePosition+ "bRot " + hydraBaseRotation);
-			//else print ("ok " + (localPosition - measuredHeadPosition).magnitude + "locR "
-			//            + localRotation + "bPos " + hydraBasePosition+ "bRot " + hydraBaseRotation);
 			localPosition = measuredHeadPosition;
 			transform.localPosition = measuredHeadPosition;
 		}
@@ -911,13 +914,12 @@ public class RUISTracker : MonoBehaviour
 		if(useOculusRiftRotation) // TODO: *** Depending on OVR version, the below section might change
 		{
 			// If we are using Oculus for rotation tracking but NOT positional tracking, then add a counter translation
-			//			print (Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.parent.localScale));
 			if(ovrCameraRig)
 			{
-				Vector3 oculusPositionOffset = ovrCameraRig.centerEyeAnchor.localPosition;
-				if(coordinateSystem)
+				// Negate completely Oculus position tracking, including rotation-based neck offset
+				if(headPositionInput != HeadPositionSource.None)
 					transform.localPosition = transform.localPosition - transform.localRotation
-						* Vector3.Scale(oculusPositionOffset, ovrCameraRig.transform.parent.localScale);
+						* Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.parent.lossyScale);
 			}
 			
 			// Get Oculus Rift rotation
@@ -1036,14 +1038,15 @@ public class RUISTracker : MonoBehaviour
 	{
 		if(externalDriftCorrection && compass != CompassSource.PSMove) 
 			filterDrift.reset(); // Reset yaw filter correction to zero
-		
+		// PS Move always gives correct orientation (if its coord. system calibration matches with other devices)
+
 		if(useOculusRiftRotation)
 		{
-			finalYawDifference = Quaternion.identity;
 			if(OVRManager.display != null)
-				OVRManager.display.RecenterPose(); //TODO
-			//OVR ... .ResetOrientation();
+				OVRManager.display.RecenterPose();
 
+			if(!externalDriftCorrection)
+				transform.localRotation = Quaternion.identity;
 		}
 	}
 	
@@ -1123,7 +1126,7 @@ public class RUISTracker : MonoBehaviour
 
 		if (useOculusRiftRotation) 
 		{ 
-			return Quaternion.Euler (new Vector3 (0, (360 + (coordinateSystem?coordinateSystem.OculusCameraYRotation().eulerAngles.y:0)
+			return Quaternion.Euler (new Vector3 (0, (360 + (coordinateSystem?coordinateSystem.GetOculusCameraYRotation().eulerAngles.y:0)
 			                                          - finalYawDifference.eulerAngles.y) % 360, 0));
 		}
 		else

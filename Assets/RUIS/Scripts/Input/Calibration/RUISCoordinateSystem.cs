@@ -549,10 +549,12 @@ public class RUISCoordinateSystem : MonoBehaviour
 	 */
 	public Vector3 ConvertRawOculusDK2Location(Vector3 position)
 	{
-		Vector3 currentcameraPosition = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
-		
+		Vector3 currentcameraPosition = Vector3.zero;
+		if (OVRManager.capiHmd != null)
+			currentcameraPosition = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
+			
 		// TODO: Try combinations of this: position = OVRManager.capiHmd.GetTrackingState().CameraPose.Orientation * position
-		
+			
 		Vector3 newPosition = Vector3.zero;
 		newPosition.x =  position.x - currentcameraPosition.x;
 		newPosition.y =  position.y - currentcameraPosition.y;
@@ -562,38 +564,42 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		return newPosition;
 	}
-	
-	// Get Oculus Rift rotation in master coordinate system
+
+	// Get Oculus Rift rotation in master coordinate system (sort of, only Y-rotation of master)
 	public Quaternion GetOculusRiftOrientation()
 	{
-		OVRPose rightEye;
+		OVRPose head;
 		if(OVRManager.display != null)
 		{
-			rightEye = OVRManager.display.GetEyePose(OVREye.Right);
-			return OculusCameraYRotation() * rightEye.orientation;
+//			rightEye = OVRManager.display.GetEyePose(OVREye.Right);
+			head = OVRManager.display.GetHeadPose();
+			return GetOculusCameraYRotation() * head.orientation;
 		}
 		else 
-			return OculusCameraYRotation();
+			return GetOculusCameraYRotation();
 	}
-
-	// Oculus positional tracking camera's coordinate system origin in master coordinate system
-	public Vector3 OculusCameraOrigin()
+	
+	// Oculus positional tracking camera's coordinate system origin in Unity Coordinates
+	public Vector3 GetOculusCameraOriginRaw()
 	{
 		if (OVRManager.capiHmd != null) 
 		{
 			Vector3 currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3 ();
 			currentOvrCameraPose.z = -currentOvrCameraPose.z; // TODO: Tuukka commented this (was unclear), test if it was ok to comment
 			// TODO: Tuukka tried adding minus and commenting the above currentOvrCameraPose.z = - ...  This didn't work
-			
-			currentOvrCameraPose = ConvertLocation(currentOvrCameraPose, RUISDevice.Oculus_DK2); 
-			
 			return currentOvrCameraPose;
 		} else
 			return Vector3.zero;
 	}
+
+	// Oculus positional tracking camera's coordinate system origin in master coordinate system
+	public Vector3 GetOculusCameraOrigin()
+	{
+		return ConvertLocation(GetOculusCameraOriginRaw(), RUISDevice.Oculus_DK2);
+	}
 	
-	// Oculus positional tracking camera's orientation around Y-axis in master coordinate system
-	public Quaternion OculusCameraYRotation()
+	// Oculus positional tracking camera's orientation around master coordinate system's Y-axis
+	public Quaternion GetOculusCameraYRotation()
 	{
 		// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
 		Quaternion convertedRotation = ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);

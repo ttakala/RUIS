@@ -63,7 +63,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 		markerObject = ruisDisplayManager.menuCursorPrefab;
 	}
 	
-	void Update() 
+	void LateUpdate() 
 	{
 		// If we are in calibration scene, disable 3d cursor
 		if(this.transform.parent == null) 
@@ -84,6 +84,20 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 
 		if(!menuScript.menuIsVisible)
 			return;
+
+		if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift) 
+		{
+			mouseInputCoordinates = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(Input.mousePosition);
+			if(instancedCursor && ruisCamera.rightCamera && ruisCamera.rightCamera.transform)
+			{
+				instancedCursor.transform.rotation = ruisCamera.rightCamera.transform.rotation;
+			}
+		}
+		else 
+		{
+			mouseInputCoordinates = Input.mousePosition;
+			instancedCursor.transform.rotation = ruisCamera.transform.rotation;	
+		}
 
 		RaycastHit hit;	
 		
@@ -116,23 +130,8 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 					continue;
 				} 
 			*/
-				
-			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift) 
-			{
-				//mouseInputCoordinates = 2.5f * Input.mousePosition;
-				mouseInputCoordinates = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(Input.mousePosition);
-//				mouseInputCoordinates.x = Input.mousePosition.x;
-//				mouseInputCoordinates.y = Input.mousePosition.y;
-//				mouseInputCoordinates.z = Input.mousePosition.z;
-			}
-			else 
-			{
-				mouseInputCoordinates = Input.mousePosition; 	
-			}
 			
 			Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(mouseInputCoordinates);
-			
-			instancedCursor.transform.rotation = ruisCamera.transform.rotation;
 
 			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isObliqueFrustum)
 			{
