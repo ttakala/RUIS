@@ -111,7 +111,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 90181724}
   - 114: {fileID: 90181725}
-  m_Layer: 16
+  m_Layer: 10
   m_Name: Kinect2DepthView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -788,7 +788,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 592665128}
   - 131: {fileID: 592665129}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: PS Move Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1129,8 +1129,8 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions: []
   m_Parameters:
-    startWidth: .0500000007
-    endWidth: .0500000007
+    startWidth: .00999999978
+    endWidth: .00999999978
     m_StartColor:
       serializedVersion: 2
       rgba: 4294967295
@@ -1276,7 +1276,7 @@ GameObject:
   - 20: {fileID: 768562861}
   - 124: {fileID: 768562860}
   - 92: {fileID: 768562859}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: screen-up-left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1333,7 +1333,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 98304
+    m_Bits: 1024
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1426,7 +1426,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 829980329}
   - 114: {fileID: 829980330}
-  m_Layer: 15
+  m_Layer: 10
   m_Name: KinectDepthView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1499,7 +1499,7 @@ GameObject:
   - 20: {fileID: 840301737}
   - 124: {fileID: 840301736}
   - 92: {fileID: 840301735}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: screen-down-left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1544,7 +1544,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 24576
+    m_Bits: 4352
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2044,7 +2044,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 996223844}
   - 132: {fileID: 996223845}
-  m_Layer: 14
+  m_Layer: 8
   m_Name: Lower Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2168,7 +2168,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1040817634}
   - 131: {fileID: 1040817635}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Kinect Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2954,7 +2954,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1396785030}
   - 131: {fileID: 1396785031}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: OculusDK2 Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3119,7 +3119,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294938621
+    m_Bits: 4294959871
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3527,7 +3527,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294950393
+    m_Bits: 4294966527
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -3731,7 +3731,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1731472546}
   - 132: {fileID: 1731472547}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Upper Text
   m_TagString: StatusText
   m_Icon: {fileID: 0}
@@ -4454,7 +4454,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 2028833844}
   - 131: {fileID: 2028833845}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Kinect2 Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4815,7 +4815,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294938623
+    m_Bits: 4294959871
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -4891,7 +4891,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294942719
+    m_Bits: 4294962943
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400000}
   - 114: {fileID: 11400000}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24,7 +24,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400002}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Hydra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400004}
   - 114: {fileID: 11400002}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400004}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkbox - Use Kinect Drift Correction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400008}
   - 114: {fileID: 11400012}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400010}
   - 65: {fileID: 6500002}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: planeCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400012}
   - 114: {fileID: 11400014}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400014}
   - 114: {fileID: 11400016}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400016}
   - 114: {fileID: 11400018}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400018}
   - 114: {fileID: 11400020}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   - 114: {fileID: 11400026}
   - 114: {fileID: 11400024}
   - 114: {fileID: 11400230}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: RUIS NGUI Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ GameObject:
   - 114: {fileID: 11400032}
   - 114: {fileID: 11400030}
   - 114: {fileID: 11400028}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - Discard Configuration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211,7 +211,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400024}
   - 114: {fileID: 11400036}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400026}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: PSMove
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -242,7 +242,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400028}
   - 114: {fileID: 11400038}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -258,7 +258,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400030}
   - 114: {fileID: 11400040}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -274,7 +274,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400032}
   - 114: {fileID: 11400042}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - PSMove IP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400034}
   - 114: {fileID: 11400044}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400036}
   - 114: {fileID: 11400046}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -322,7 +322,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400038}
   - 114: {fileID: 11400048}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - Changes saved
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -337,7 +337,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400040}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Infotexts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +357,7 @@ GameObject:
   - 114: {fileID: 11400062}
   - 114: {fileID: 11400060}
   - 114: {fileID: 11400058}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - Display Management
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -373,7 +373,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400044}
   - 114: {fileID: 11400066}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +388,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400046}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: selectAndConfigureDevices
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -404,7 +404,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400048}
   - 114: {fileID: 11400068}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -420,7 +420,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400050}
   - 114: {fileID: 11400070}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +436,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400052}
   - 114: {fileID: 11400072}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +452,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400054}
   - 114: {fileID: 11400074}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -468,7 +468,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400056}
   - 114: {fileID: 11400076}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -488,7 +488,7 @@ GameObject:
   - 114: {fileID: 11400082}
   - 114: {fileID: 11400080}
   - 114: {fileID: 11400078}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - End Display Editing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,7 +504,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400060}
   - 114: {fileID: 11400086}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -520,7 +520,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400062}
   - 114: {fileID: 11400088}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -536,7 +536,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400064}
   - 114: {fileID: 11400090}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -552,7 +552,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400066}
   - 114: {fileID: 11400092}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,7 +572,7 @@ GameObject:
   - 114: {fileID: 11400098}
   - 114: {fileID: 11400096}
   - 114: {fileID: 11400094}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - Save Configurations
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -592,7 +592,7 @@ GameObject:
   - 114: {fileID: 11400106}
   - 114: {fileID: 11400104}
   - 114: {fileID: 11400102}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - Save Config & Restart Scene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -608,7 +608,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400072}
   - 114: {fileID: 11400110}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -624,7 +624,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400074}
   - 114: {fileID: 11400112}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -644,7 +644,7 @@ GameObject:
   - 114: {fileID: 11400118}
   - 114: {fileID: 11400116}
   - 114: {fileID: 11400114}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkbox - Use Hydra
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -664,7 +664,7 @@ GameObject:
   - 114: {fileID: 11400126}
   - 114: {fileID: 11400124}
   - 114: {fileID: 11400122}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkbox - Use Kinect 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -680,7 +680,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400080}
   - 114: {fileID: 11400130}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -695,7 +695,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400082}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -711,7 +711,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400084}
   - 114: {fileID: 11400132}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -728,7 +728,7 @@ GameObject:
   - 4: {fileID: 400086}
   - 65: {fileID: 6500020}
   - 114: {fileID: 11400134}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Input - PSMove IP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -744,7 +744,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400088}
   - 114: {fileID: 11400050}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - Oculus DK2 detected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -760,7 +760,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400090}
   - 114: {fileID: 11400138}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -775,7 +775,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400092}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: guiCameraForRift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +791,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400094}
   - 114: {fileID: 11400142}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -811,7 +811,7 @@ GameObject:
   - 114: {fileID: 11400148}
   - 114: {fileID: 11400146}
   - 114: {fileID: 11400144}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - Load Old Configurations
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -827,7 +827,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400098}
   - 114: {fileID: 11400152}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -842,7 +842,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400100}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Kinect2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -862,7 +862,7 @@ GameObject:
   - 114: {fileID: 11400158}
   - 114: {fileID: 11400156}
   - 114: {fileID: 11400154}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - Calibration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -878,7 +878,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400104}
   - 114: {fileID: 11400162}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -893,7 +893,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400106}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: keyStoneConfiguration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -910,7 +910,7 @@ GameObject:
   - 4: {fileID: 400108}
   - 65: {fileID: 6500026}
   - 114: {fileID: 11400164}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Input - PSMove Port
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -926,7 +926,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400110}
   - 114: {fileID: 11400166}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -942,7 +942,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400112}
   - 114: {fileID: 11400168}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -962,7 +962,7 @@ GameObject:
   - 114: {fileID: 11400174}
   - 114: {fileID: 11400172}
   - 114: {fileID: 11400170}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkbox - Use PSMove
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -978,7 +978,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400116}
   - 114: {fileID: 11400178}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -994,7 +994,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400118}
   - 114: {fileID: 11400180}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - RUIS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1010,7 +1010,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400120}
   - 114: {fileID: 11400182}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - PSMove Port
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1030,7 +1030,7 @@ GameObject:
   - 114: {fileID: 11400188}
   - 114: {fileID: 11400186}
   - 114: {fileID: 11400184}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - Reset Keystoning
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1046,7 +1046,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400124}
   - 114: {fileID: 11400198}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1062,7 +1062,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400126}
   - 114: {fileID: 11400200}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1081,7 +1081,7 @@ GameObject:
   - 114: {fileID: 11400196}
   - 114: {fileID: 11400194}
   - 114: {fileID: 11400192}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Dropdown - Calibration Devices
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1097,7 +1097,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400130}
   - 114: {fileID: 11400202}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1113,7 +1113,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400134}
   - 114: {fileID: 11400204}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1129,7 +1129,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400132}
   - 114: {fileID: 11400206}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkmark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1149,7 +1149,7 @@ GameObject:
   - 114: {fileID: 11400212}
   - 114: {fileID: 11400210}
   - 114: {fileID: 11400208}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Checkbox - Use Kinect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1164,7 +1164,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400138}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Kinect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1179,7 +1179,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400140}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Rift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1194,7 +1194,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 400142}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Saving
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1210,7 +1210,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400144}
   - 114: {fileID: 11400216}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1226,7 +1226,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400146}
   - 114: {fileID: 11400218}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1246,7 +1246,7 @@ GameObject:
   - 114: {fileID: 11400224}
   - 114: {fileID: 11400222}
   - 114: {fileID: 11400220}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Button - Quit Application
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1262,7 +1262,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400150}
   - 114: {fileID: 11400228}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Plane - Calibration Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1278,7 +1278,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400152}
   - 114: {fileID: 11400052}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - Oculus DK1 detected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1294,7 +1294,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400154}
   - 114: {fileID: 11400054}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - Changes are not saved in free version
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1310,7 +1310,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400156}
   - 114: {fileID: 11400056}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - Changes not saved yet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1326,7 +1326,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 400158}
   - 114: {fileID: 11400136}
-  m_Layer: 17
+  m_Layer: 12
   m_Name: Label - Rift not detected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
