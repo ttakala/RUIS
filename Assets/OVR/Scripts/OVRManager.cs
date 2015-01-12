@@ -319,7 +319,7 @@ public class OVRManager : MonoBehaviour
 			DestroyImmediate(this);
 			return;
 		}
-		
+
 		instance = this;
 
 #if !UNITY_ANDROID || UNITY_EDITOR
@@ -518,7 +518,7 @@ public class OVRManager : MonoBehaviour
 
 		wasPositionTracked = tracker.isPositionTracked;
 		
-		if (isHSWDisplayed /* && Input.anyKeyDown */)
+		if (isHSWDisplayed && Input.anyKeyDown)
 		{
 			DismissHSWDisplay();
 			

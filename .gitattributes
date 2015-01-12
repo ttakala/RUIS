@@ -78,6 +78,7 @@ Assets/OVR/Materials/GUIHUD.mat -text
 Assets/OVR/Materials/MagHUDRef.mat -text
 Assets/OVR/Materials/MagHUDTracked.mat -text
 Assets/OVR/Prefabs/OVRPlayerController.prefab -text
+Assets/OVR/Resources/DINPro-Bold.otf -text
 Assets/OVR/Resources/OVRGuiObjectMain.prefab -text
 Assets/OVR/Textures/Black.png -text
 Assets/OVR/Textures/CircleCrossHair.png -text
@@ -85,6 +86,7 @@ Assets/OVR/Textures/Crosshair.tga -text
 Assets/OVR/Textures/Icons/OculusIcon.png -text
 Assets/OVR/Textures/Logos/OculusLogo.png -text
 Assets/OVR/Textures/Tuscany_OculusCube.tga -text
+Assets/OVR/Textures/UIBackground.psd -text
 Assets/OpenNI/OpenNI.Net.dll -text
 Assets/OpenNI/OpenNI/Images/calibrate_sample.png -text
 Assets/OpenNI/OpenNI/Prefabs/Main[!!-~]OpenNI[!!-~]Prefabs/InputController.prefab -text

@@ -14,7 +14,7 @@ PlayerSettings:
   productName: RUIS
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  defaultScreenWidth: 3840
+  defaultScreenWidth: 1920
   defaultScreenHeight: 1080
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
@@ -56,7 +56,7 @@ PlayerSettings:
   visibleInBackground: 1
   macFullscreenMode: 2
   d3d9FullscreenMode: 0
-  d3d11ForceExclusiveMode: 0
+  d3d11ForceExclusiveMode: 1
   xboxSpeechDB: 0
   xboxEnableHeadOrientation: 0
   xboxEnableGuest: 0
@@ -117,6 +117,7 @@ PlayerSettings:
     m_DynamicBatching: 1
   webPlayerTemplate: APPLICATION:Default
   m_TemplateCustomTags: {}
+  locationUsageDescription: 
   XboxTitleId: 
   XboxImageXexPath: 
   XboxSpaPath: 
