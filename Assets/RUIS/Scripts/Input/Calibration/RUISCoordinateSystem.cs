@@ -564,19 +564,22 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		return newPosition;
 	}
+	
+	// Get Oculus Rift rotation in Unity coordinate system
+	public Quaternion GetOculusRiftOrientationRaw()
+	{
+		if(OVRManager.display != null)
+		{
+			return OVRManager.display.GetHeadPose().orientation;
+		}
+		else 
+			return Quaternion.identity;
+	}
 
 	// Get Oculus Rift rotation in master coordinate system (sort of, only Y-rotation of master)
 	public Quaternion GetOculusRiftOrientation()
 	{
-		OVRPose head;
-		if(OVRManager.display != null)
-		{
-//			rightEye = OVRManager.display.GetEyePose(OVREye.Right);
-			head = OVRManager.display.GetHeadPose();
-			return GetOculusCameraYRotation() * head.orientation;
-		}
-		else 
-			return GetOculusCameraYRotation();
+		return GetOculusCameraYRotation() * GetOculusRiftOrientationRaw();
 	}
 	
 	// Oculus positional tracking camera's coordinate system origin in Unity Coordinates

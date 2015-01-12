@@ -156,6 +156,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 	public static int kinect1SensorID = 0;
 	public static int kinect2SensorID = 1;
+	public static int customSensorID  = 2;
 	
 	public bool isNewKinect2Frame { get; private set; }
 

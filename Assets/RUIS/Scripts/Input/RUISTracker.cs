@@ -351,9 +351,9 @@ public class RUISTracker : MonoBehaviour
 		// Get information about Oculus Rift version and if it is connected
 		ovrManager = FindObjectOfType<OVRManager>();
 		bool isRiftConnected = false;
-		#if UNITY_EDITOR
-		if(UnityEditorInternal.InternalEditorUtility.HasPro())
-			#endif
+//		#if UNITY_EDITOR
+//		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+//		#endif
 		{
 			try
 			{
@@ -529,15 +529,25 @@ public class RUISTracker : MonoBehaviour
 			OVRManager.tracker.isEnabled = false;
 
 		// Set the current Oculus IR camera origin and HMD position so that we only get rotation-based neck offset in left/rightEye cameras
-		if(headPositionInput == HeadPositionSource.None)
+		if(headPositionInput == HeadPositionSource.None && OVRManager.display != null)
 			OVRManager.display.RecenterPose();
 		else
 		{
 			// Position tracking is from another source than DK2+ IR camera.
 			if (coordinateSystem) 
 			{
-				// Apply master coordinate system rotation to Oculus HMD's coordinate system if applicable
-				transform.localRotation = coordinateSystem.GetOculusCameraYRotation();
+				// Apply master coordinate system rotation to Oculus DK2+'s coordinate system if applicable
+				if(		 ovrHmdVersion != Ovr.HmdType.DK1 
+					 &&  ovrHmdVersion != Ovr.HmdType.DKHD 
+					 &&  ovrHmdVersion != Ovr.HmdType.None )
+				{
+					transform.localRotation = coordinateSystem.GetOculusCameraYRotation();
+				}
+				else // We are using DK1 or something without position tracking (and a reference heading)
+				{
+					if(OVRManager.display != null)
+						OVRManager.display.RecenterPose();
+				}
 				// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
 			}
 		}
@@ -925,7 +935,12 @@ public class RUISTracker : MonoBehaviour
 			// Get Oculus Rift rotation
 			if(coordinateSystem)
 			{
-				tempLocalRotation = coordinateSystem.GetOculusRiftOrientation();
+				if (	ovrHmdVersion != Ovr.HmdType.DK1 
+				    &&  ovrHmdVersion != Ovr.HmdType.DKHD 
+				    &&  ovrHmdVersion != Ovr.HmdType.None )
+					tempLocalRotation = coordinateSystem.GetOculusRiftOrientation();
+				else
+					tempLocalRotation = coordinateSystem.GetOculusRiftOrientationRaw();
 			}
 		}
 		else // useOculusRiftRotation == false 
@@ -1124,13 +1139,16 @@ public class RUISTracker : MonoBehaviour
 		doYawFiltering(driftedRotation, deltaT);
 		// driftingEuler and finalYawDifference are private members set in doYawFiltering()
 
-		if (useOculusRiftRotation) 
-		{ 
+		if (useOculusRiftRotation && ovrHmdVersion != Ovr.HmdType.DK1 
+						          && ovrHmdVersion != Ovr.HmdType.DKHD 
+						          && ovrHmdVersion != Ovr.HmdType.None )
+		{
 			return Quaternion.Euler (new Vector3 (0, (360 + (coordinateSystem?coordinateSystem.GetOculusCameraYRotation().eulerAngles.y:0)
 			                                          - finalYawDifference.eulerAngles.y) % 360, 0));
 		}
 		else
-			return Quaternion.Euler(new Vector3( driftingEuler.x, (360 + driftingEuler.y - finalYawDifference.eulerAngles.y)%360, driftingEuler.z));
+			return Quaternion.Euler(new Vector3( 0, (360 + driftingEuler.y - finalYawDifference.eulerAngles.y)%360, 0));
+//			return Quaternion.Euler(new Vector3( driftingEuler.x, (360 + driftingEuler.y - finalYawDifference.eulerAngles.y)%360, driftingEuler.z));
 	}
 	
 	

@@ -108,11 +108,6 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	
 	void FixedUpdate () 
 	{
-		if(coordinateSystem)
-		{
-			coordinateYOffset = coordinateSystem.positionOffset.y;
-		}
-
 //		if(characterController != null && characterController.useOculusPositionalTracking && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
 //		{
 //			if(OVRDevice.IsCameraTracking() && oculusHmdObject != null)
@@ -205,6 +200,15 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         }
         else
 		{
+			
+			if(coordinateSystem && (	coordinateSystem.applyToRootCoordinates 
+			                        || (bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && coordinateSystem.rootDevice == RUISDevice.Kinect_2)
+			                        || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && coordinateSystem.rootDevice == RUISDevice.Kinect_1)))
+			{
+				coordinateYOffset = coordinateSystem.positionOffset.y;
+			}
+
+
 			// Apply root scaling
 			if(skeletonController)
 				torsoPosition = Vector3.Scale(skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position, skeletonController.rootSpeedScaling);

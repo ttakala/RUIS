@@ -4480,7 +4480,7 @@ MonoBehaviour:
   hydraBaseRotationCovarianceTransform: 1000
   positionInput: {fileID: 0}
   rotationInput: {fileID: 0}
-  positionOffsetKinect: {x: 0, y: 0, z: 0}
+  positionOffsetKinect: {x: 0, y: .150000006, z: -.0500000007}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
@@ -4866,7 +4866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPivotType: 1
-  useOculusPositionalTracking: 1
+  useOculusPositionalTracking: 0
   kinectPlayerId: 0
   bodyTrackingDeviceID: 0
   moveControllerId: 0
@@ -4875,7 +4875,7 @@ MonoBehaviour:
   ignorePitchAndRoll: 1
   groundLayers:
     serializedVersion: 2
-    m_Bits: 2561
+    m_Bits: 513
   groundedErrorTweaker: .100000001
   dynamicFriction: 1
   dynamicMaterial: {fileID: 0}

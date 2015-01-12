@@ -59,6 +59,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 	public bool setOnce;
 	
 	public bool calibrationReady;
+
+	Ovr.HmdType ovrHmdVersion;
 	
 	void Awake() 
 	{
@@ -409,16 +411,16 @@ public class RUISMenuNGUI : MonoBehaviour {
 		
 		bool isRiftConnected = false;
 
-		Ovr.HmdType ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
-		
-		#if UNITY_EDITOR
-		if(UnityEditorInternal.InternalEditorUtility.HasPro())
-		#endif
+//		#if UNITY_EDITOR
+//		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+//		#endif
 		{
 			try
 			{
-				isRiftConnected = OVRManager.display.isPresent;
-				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
+				if(OVRManager.display != null)
+					isRiftConnected = OVRManager.display.isPresent;
+				if(OVRManager.capiHmd != null)
+					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
 			}
 			catch(UnityException e)
 			{
@@ -429,13 +431,15 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(ovrHmdVersion == Ovr.HmdType.DK1) 
 		{
 			infotext_Rift_not_Detected.SetActive(false);
-			infotext_Oculus_DK1_detected.SetActive(true); 
+			if(isRiftConnected)
+				infotext_Oculus_DK1_detected.SetActive(true); 
 			infotext_Oculus_DK2_detected.SetActive(false);
 		}
-		else if(ovrHmdVersion == Ovr.HmdType.DK2 && isRiftConnected) 
+		else if(ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other)
 		{
 			infotext_Rift_not_Detected.SetActive(false);
-			infotext_Oculus_DK2_detected.SetActive(true);
+			if(isRiftConnected)
+				infotext_Oculus_DK2_detected.SetActive(true);
 			infotext_Oculus_DK1_detected.SetActive(false);  
 		}
 		else {
@@ -558,14 +562,18 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(inputManager.enableKinect) dropDownChoices.Add ("Kinect floor data");
 		if(inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 floor data");
 		    
-		bool isRiftConnected = false;
-		#if UNITY_EDITOR
-		if(UnityEditorInternal.InternalEditorUtility.HasPro())
-		#endif
+		bool isPositionTrackedOculusPresent = false;
+//		#if UNITY_EDITOR
+//		if(UnityEditorInternal.InternalEditorUtility.HasPro())
+//		#endif
 		{
 			try
 			{
-				isRiftConnected = OVRManager.display.isPresent;
+				if(OVRManager.capiHmd != null)
+					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
+				if(OVRManager.display != null)
+					isPositionTrackedOculusPresent = 	OVRManager.display.isPresent 
+													 && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other);
 			}
 			catch(UnityException e)
 			{
@@ -575,9 +583,9 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(inputManager.enableKinect && inputManager.enableKinect2) dropDownChoices.Add ("Kinect - Kinect2");
 		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
 		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");
-		if(isRiftConnected && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - Oculus DK2");
-		if(isRiftConnected && inputManager.enableKinect) dropDownChoices.Add ("Kinect - Oculus DK2");
-		if(isRiftConnected && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - Oculus DK2");
+		if(isPositionTrackedOculusPresent && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - Oculus DK2");
+		if(isPositionTrackedOculusPresent && inputManager.enableKinect) dropDownChoices.Add ("Kinect - Oculus DK2");
+		if(isPositionTrackedOculusPresent && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - Oculus DK2");
 		
 		if(dropDownChoices.Count == 0) 
 		{

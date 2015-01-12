@@ -177,9 +177,9 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 		
-		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1) bodyTrackingDeviceID = 0;
-		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2)  bodyTrackingDeviceID = 1;
-		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)  bodyTrackingDeviceID = 2;
+		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1) bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2) bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker) bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 
 		followMoveController = false;
 		moveYawRotation = Quaternion.identity;

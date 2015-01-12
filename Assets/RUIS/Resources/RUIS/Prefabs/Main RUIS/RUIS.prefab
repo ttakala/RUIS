@@ -649,8 +649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rootSpeedScaling: {x: 1, y: 1, z: 1}
-  kinect2TorsoOffset: .5
+  torsoOffsetKinect2: .300000012
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
