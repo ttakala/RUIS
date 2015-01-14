@@ -108,7 +108,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	
 	void FixedUpdate () 
 	{
-//		if(characterController != null && characterController.useOculusPositionalTracking && UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+//		if(characterController != null && characterController.useOculusPositionalTracking /*&& UnityEditorInternal.InternalEditorUtility.HasPro()*/) 
 //		{
 //			if(OVRDevice.IsCameraTracking() && oculusHmdObject != null)
 //			{

@@ -153,7 +153,7 @@ public class RUISCharacterController : MonoBehaviour
 		ovrManager = FindObjectOfType<OVRManager>();
 
 		//#if UNITY_EDITOR
-		//if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+		//if(UnityEditorInternal.InternalEditorUtility.HasPro())
 		//#endif
 		{
 			try
@@ -163,14 +163,14 @@ public class RUISCharacterController : MonoBehaviour
 					isRiftConnected = OVRManager.display.isPresent;
 				if(OVRManager.capiHmd != null)
 					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
-	
-				if(ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD || ovrHmdVersion == Ovr.HmdType.None)
+
+				if(useOculusPositionalTracking && ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD || ovrHmdVersion == Ovr.HmdType.None)
 				{
 					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot with Oculus Rift " + ovrHmdVersion);
 					useOculusPositionalTracking = false;
 				}
 				
-				if(!isRiftConnected)
+				if(useOculusPositionalTracking && !isRiftConnected)
 				{
 					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot because Oculus Rift is not connected.");
 					useOculusPositionalTracking = false;
@@ -331,11 +331,11 @@ public class RUISCharacterController : MonoBehaviour
 
     private Vector3 GetPivotPositionInTrackerCoordinates()
     {
-
-		if(useOculusPositionalTracking && ovrManager != null && ovrManager.usePositionTracking)
+		if(   useOculusPositionalTracking 
+		   && OVRManager.tracker != null && OVRManager.tracker.isPositionTracked)
 		{
 			//#if UNITY_EDITOR
-			//if(UnityEditorInternal.InternalEditorUtility.HasPro()) // TODO: remove when Oculus works in free version
+			//if(UnityEditorInternal.InternalEditorUtility.HasPro())
 			//#endif
 				if(OVRManager.display != null)
 				{

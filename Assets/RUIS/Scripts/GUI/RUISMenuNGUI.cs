@@ -428,18 +428,16 @@ public class RUISMenuNGUI : MonoBehaviour {
 			}
 		}
 
-		if(ovrHmdVersion == Ovr.HmdType.DK1) 
+		if(isRiftConnected && ovrHmdVersion == Ovr.HmdType.DK1) 
 		{
 			infotext_Rift_not_Detected.SetActive(false);
-			if(isRiftConnected)
-				infotext_Oculus_DK1_detected.SetActive(true); 
+			infotext_Oculus_DK1_detected.SetActive(true); 
 			infotext_Oculus_DK2_detected.SetActive(false);
 		}
-		else if(ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other)
+		else if(isRiftConnected && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other))
 		{
 			infotext_Rift_not_Detected.SetActive(false);
-			if(isRiftConnected)
-				infotext_Oculus_DK2_detected.SetActive(true);
+			infotext_Oculus_DK2_detected.SetActive(true);
 			infotext_Oculus_DK1_detected.SetActive(false);  
 		}
 		else {

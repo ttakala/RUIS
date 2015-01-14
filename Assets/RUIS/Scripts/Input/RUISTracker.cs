@@ -537,9 +537,10 @@ public class RUISTracker : MonoBehaviour
 			if (coordinateSystem) 
 			{
 				// Apply master coordinate system rotation to Oculus DK2+'s coordinate system if applicable
-				if(		 ovrHmdVersion != Ovr.HmdType.DK1 
-					 &&  ovrHmdVersion != Ovr.HmdType.DKHD 
-					 &&  ovrHmdVersion != Ovr.HmdType.None )
+				if(		useOculusRiftRotation 
+				   	 && ovrHmdVersion != Ovr.HmdType.DK1 
+					 && ovrHmdVersion != Ovr.HmdType.DKHD 
+					 && ovrHmdVersion != Ovr.HmdType.None )
 				{
 					transform.localRotation = coordinateSystem.GetOculusCameraYRotation();
 				}
