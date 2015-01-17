@@ -187,54 +187,54 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		if(			(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.Oculus_DK2)
 		  		 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.Oculus_DK2 )) 
 		{
-					skeletonController.bodyTrackingDeviceID = 1;
-					coordinateSystem.rootDevice = RUISDevice.Kinect_2;
-					calibrationProcess = new RUISKinect2ToOculusDK2CalibrationProcess(calibrationProcessSettings);
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
+			calibrationProcess = new RUISKinect2ToOculusDK2CalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_2)
 		   		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Kinect_2 )) 
 		{
-					skeletonController.bodyTrackingDeviceID = 0;
-					coordinateSystem.rootDevice = RUISDevice.Kinect_1;
-					calibrationProcess = new RUISKinect2ToKinectCalibrationProcess(calibrationProcessSettings);
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
+			calibrationProcess = new RUISKinect2ToKinectCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.PS_Move)
 		  		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.PS_Move )) 
 		{
-					skeletonController.bodyTrackingDeviceID = 0;
-					coordinateSystem.rootDevice = RUISDevice.Kinect_1;
-					calibrationProcess = new RUISKinectToPSMoveCalibrationProcess(calibrationProcessSettings);
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
+			calibrationProcess = new RUISKinectToPSMoveCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.PS_Move)
 		       	 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.PS_Move )) 
 		{
-					skeletonController.bodyTrackingDeviceID = 1;
-					coordinateSystem.rootDevice = RUISDevice.Kinect_2;
-					calibrationProcess = new RUISKinect2ToPSMoveCalibrationProcess(calibrationProcessSettings);
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
+			calibrationProcess = new RUISKinect2ToPSMoveCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.PS_Move  && secondDevice == RUISDevice.Oculus_DK2)
 		        ||	(secondDevice == RUISDevice.PS_Move && firstDevice == RUISDevice.Oculus_DK2 )) 
 		{
-			skeletonController.bodyTrackingDeviceID = 2;
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			coordinateSystem.rootDevice = RUISDevice.Oculus_DK2;
 			calibrationProcess = new RUISPSMoveToOculusDK2CalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Oculus_DK2)
 		   		||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Oculus_DK2 )) 
 		{
-			skeletonController.bodyTrackingDeviceID = 0;
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
 			calibrationProcess = new RUISKinectToOculusDK2CalibrationProcess(calibrationProcessSettings);
 		}
 		else if(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_1 ) 
 		{
-			skeletonController.bodyTrackingDeviceID = 0;
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
 			calibrationProcess = new RUISKinectFloorDataCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.Kinect_2 ) 
 		{
-			skeletonController.bodyTrackingDeviceID = 0;
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
 		}

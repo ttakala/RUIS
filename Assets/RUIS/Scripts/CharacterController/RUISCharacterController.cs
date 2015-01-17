@@ -68,7 +68,6 @@ public class RUISCharacterController : MonoBehaviour
 	private bool combinerChildrenInstantiated = false;
 
 	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
-	OVRManager ovrManager;
 	
     void Awake()
     {
@@ -148,9 +147,6 @@ public class RUISCharacterController : MonoBehaviour
 			               + "is different from the Kinect Player Id of the RUISSkeletonController script (located in child "
 			               + "object '" + skeletonController.gameObject.name + "). Make sure that these two values are "
 			               + "the same.");
-
-		
-		ovrManager = FindObjectOfType<OVRManager>();
 
 		//#if UNITY_EDITOR
 		//if(UnityEditorInternal.InternalEditorUtility.HasPro())
@@ -341,8 +337,7 @@ public class RUISCharacterController : MonoBehaviour
 				{
 					OVRPose headpose = OVRManager.display.GetHeadPose();
 					
-					// TODO: Tuukka added minus to z. This is probably not right. ConvertRawOculusDK2Location and places that use it probably have a bug.
-					headPosition = new Vector3(headpose.position.x, headpose.position.y, -headpose.position.z); 
+					headPosition = new Vector3(headpose.position.x, headpose.position.y, headpose.position.z); 
 					return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
 				}
 		}

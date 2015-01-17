@@ -33,9 +33,9 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	private bool oculusChecked = false, PSMoveChecked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
-	oculusDK2Object, calibrationSphere, calibrationCube, depthView,
+	oculusDK2CameraObject, calibrationSphere, calibrationCube, depthView,
 	psMoveIcon, oculusDK2Icon, deviceModelObjects, depthViewObjects, iconObjects, PSMoveWandObject,
-	mannequin;
+	mannequin, oculusRiftModel;
 	
 	private Vector3 lastPSMoveSample, lastOculusDK2Sample;
 	private string xmlFilename;
@@ -85,7 +85,8 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		// Models
 		this.psEyeModelObject = GameObject.Find ("PS Eye");
-		this.oculusDK2Object = GameObject.Find ("OculusDK2Camera");
+		this.oculusDK2CameraObject = GameObject.Find ("OculusDK2Camera");
+		this.oculusRiftModel = GameObject.Find ("OculusRift");
 		
 		// Icons
 		this.psMoveIcon = GameObject.Find ("PS Move Icon");
@@ -108,13 +109,24 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			child.gameObject.SetActive(false);
 		}
 		
-		this.mannequin.SetActive(false);
-		this.psEyeModelObject.SetActive(true);
-		this.oculusDK2Object.SetActive(true);
-		this.psMoveIcon.SetActive(true);
-		this.oculusDK2Icon.SetActive(true);
-		this.calibrationPhaseObjects.SetActive(true);
-		this.calibrationResultPhaseObjects.SetActive(false);
+		if(this.mannequin)
+			this.mannequin.SetActive(false);
+		if(this.psEyeModelObject)
+			this.psEyeModelObject.SetActive(true);
+		if(this.PSMoveWandObject)
+			this.PSMoveWandObject.SetActive(true);
+		if(this.oculusRiftModel)
+			this.oculusRiftModel.SetActive(true);
+		if(this.oculusDK2CameraObject)
+			this.oculusDK2CameraObject.SetActive(true);
+		if(this.psMoveIcon)
+			this.psMoveIcon.SetActive(true);
+		if(this.oculusDK2Icon)
+			this.oculusDK2Icon.SetActive(true);
+		if(this.calibrationPhaseObjects)
+			this.calibrationPhaseObjects.SetActive(true);
+		if(this.calibrationResultPhaseObjects)
+			this.calibrationResultPhaseObjects.SetActive(false);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 	}
 	
@@ -135,7 +147,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		if(!oculusChecked && timeSinceScriptStart > 4) {
 			oculusChecked = true;	
-			if (!OVRManager.display.isPresent) {
+			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0) {
 				this.guiTextLowerLocal = "Connecting to Oculus Rift DK2. \n\n Error: Could not connect to Oculus Rift DK2.";
 				return RUISCalibrationPhase.Invalid;
 			}
@@ -179,12 +191,14 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			}
 		}
 		
-		if(xButtonPressed) {
+		if(xButtonPressed) 
+		{
 			lastPSMoveSample = new Vector3(0,0,0);
 			lastOculusDK2Sample = new Vector3(0,0,0);
 			return RUISCalibrationPhase.Calibration;
 		}
-		else {
+		else 
+		{
 			return RUISCalibrationPhase.ReadyToCalibrate;
 		}
 	}
@@ -297,16 +311,16 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		if(device == RUISDevice.Oculus_DK2) 
 		{
 			
-			OVRPose headpose = OVRManager.display.GetHeadPose();
-			
-			float px = headpose.position.x;
-			float py = headpose.position.y;
-			float pz = headpose.position.z;
+			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;
+			float px =  headpose.Position.x;
+			float py =  headpose.Position.y;
+			float pz = -headpose.Position.z; // This needs to be negated TODO: might change with future OVR version
 			
 			tempSample = new Vector3(px, py, pz);
 			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);
-			if((Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
-			   && OVRManager.tracker.isPositionTracked) 
+			
+			if(   (Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
+			   && (RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)
 			{
 				sample = tempSample;
 				lastOculusDK2Sample = sample;

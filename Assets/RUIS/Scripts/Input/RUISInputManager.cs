@@ -63,7 +63,7 @@ public class RUISInputManager : MonoBehaviour
 
    // public RiftMagnetometer riftMagnetometerMode = RiftMagnetometer.Off;
 
-    public bool jumpGestureEnabled = true;
+    public bool jumpGestureEnabled = false;
 
 	RUISMenuNGUI ruisNGUIMenu;
 

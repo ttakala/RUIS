@@ -288,8 +288,8 @@ public class RUISTracker : MonoBehaviour
 		hydraBasePosition = new Vector3(0, 0, 0);
 		hydraBaseRotation = Quaternion.identity;
 		
-		ovrCameraRig = FindObjectOfType<OVRCameraRig>();
-		if(OVRManager.display != null && OVRManager.display.isPresent)
+		ovrCameraRig = GetComponentInChildren<OVRCameraRig>();
+		if(ovrCameraRig != null && OVRManager.display != null && OVRManager.display.isPresent)
 		{
 			useOculusRiftRotation = true;
 		}
@@ -360,7 +360,14 @@ public class RUISTracker : MonoBehaviour
 				if(OVRManager.capiHmd != null)
 					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
 				if(OVRManager.display != null)
+				{
 					isRiftConnected = OVRManager.display.isPresent;
+					
+					if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+					{
+						OVRManager.display.RecenteredPose += RecenterPoseWarning;
+					}	
+				}
 			}
 			catch(UnityException e)
 			{
@@ -489,7 +496,7 @@ public class RUISTracker : MonoBehaviour
 							   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		}
 
-		if(useOculusRiftRotation && headPositionInput != HeadPositionSource.OculusDK2 && OVRManager.tracker != null && ovrCameraRig != null)
+		if(useOculusRiftRotation && headPositionInput != HeadPositionSource.OculusDK2 && ovrCameraRig != null)
 		{
 			DisableOculusPositionalTracking();
 
@@ -560,15 +567,41 @@ public class RUISTracker : MonoBehaviour
 		DisableOculusPositionalTracking();
 	}
 	
+	public void RecenterPoseWarning()
+	{
+		Debug.LogError(  typeof(RUISCoordinateSystem) + " has the option 'Use Master Coordinate System' enabled, "
+		               + "therefore " + typeof(OVRDisplay) + ".RecenterPose() has no effect!");
+	}
+	
 	public void OculusCounterPoseOffset()
 	{
-		if(coordinateSystem)
+		if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
 		{
-			// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-			transform.localRotation = coordinateSystem.GetOculusCameraYRotation();
+//			transform.localRotation = 
+//				coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
+//				                                 RUISDevice.Oculus_DK2); //coordinateSystem.GetOculusCameraYRotation();
+			
+			// Extract y-rotation from the below converted rotation [Quaternion.Euler(0, quat.eulerAngles.y, 0) did not work for some reason]
+			Vector3 projected = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
+																 RUISDevice.Oculus_DK2) * Vector3.forward;
+			projected.y = 0;
+			
+			// Make sure that the projection is not pointing too much up
+			if(projected.sqrMagnitude > 0.01)
+				transform.localRotation = Quaternion.LookRotation(projected);
+			else // The Oculus Camera or it's calibration with master coordinate system is peculiar
+				transform.localRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
+																		   RUISDevice.Oculus_DK2); 
 			
 			if(OVRManager.capiHmd != null)
-				this.transform.localPosition = coordinateSystem.GetOculusCameraOrigin();
+			{
+				// Second term offsets the localPosition of each eye camera, which is set by ovrCameraRig
+				this.transform.localPosition =    coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2)
+												- transform.localRotation * Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale);
+												
+				//this.transform.localPosition = Vector3.Scale(-coordinateSystem.GetOculusCameraOriginRaw(), ovrCameraRig.transform.lossyScale);
+				
+			}
 		}
 	}
 		
@@ -930,7 +963,7 @@ public class RUISTracker : MonoBehaviour
 				// Negate completely Oculus position tracking, including rotation-based neck offset
 				if(headPositionInput != HeadPositionSource.None)
 					transform.localPosition = transform.localPosition - transform.localRotation
-						* Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.parent.lossyScale);
+						* Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale);
 			}
 			
 			// Get Oculus Rift rotation

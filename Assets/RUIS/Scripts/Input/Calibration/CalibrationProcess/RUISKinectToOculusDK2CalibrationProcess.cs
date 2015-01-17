@@ -34,9 +34,9 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	public RUISInputManager inputManager;
 	private bool oculusChecked = false, kinectChecked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
-	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, oculusDK2ModelObject, 
+	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, oculusDK2CameraObject, 
 	kinect1ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
-	oculusDK2Icon, kinectIcon, deviceModelObjects, depthViewObjects, iconObjects;
+	oculusDK2Icon, kinectIcon, deviceModelObjects, depthViewObjects, iconObjects, oculusRiftModel;
 	
 	private Vector3 lastPSMoveSample, lastKinectSample, lastOculusDK2Sample;
 	private string xmlFilename;
@@ -96,8 +96,13 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		if(GameObject.Find ("PSMoveWand") != null) GameObject.Find ("PSMoveWand").SetActive(false);
 		
 		// Models
-		this.oculusDK2ModelObject = GameObject.Find ("OculusDK2Camera");
+		this.oculusDK2CameraObject = GameObject.Find ("OculusDK2Camera");
 		this.kinect1ModelObject = GameObject.Find ("KinectCamera");
+		this.oculusRiftModel = GameObject.Find ("OculusRift");
+		
+		FixedFollowTransform followTransform = Component.FindObjectOfType<FixedFollowTransform>();
+		if(followTransform && this.oculusRiftModel)
+			followTransform.transformToFollow = this.oculusRiftModel.transform;
 		
 		// Depth view
 		this.depthView = GameObject.Find ("KinectDepthView");
@@ -108,7 +113,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		this.floorPlane = GameObject.Find ("Floor");
 		
-		this.oculusDK2Icon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
+		if(this.oculusDK2Icon && this.oculusDK2Icon.GetComponent<GUITexture>())
+			this.oculusDK2Icon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
 		
 		foreach (Transform child in this.deviceModelObjects.transform)
 		{
@@ -125,13 +131,22 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			child.gameObject.SetActive(false);
 		}
 		
-		this.oculusDK2ModelObject.SetActive(true);
-		this.kinect1ModelObject.SetActive(true);
-		this.oculusDK2Icon.SetActive(true);
-		this.kinectIcon.SetActive(true);
-		this.calibrationPhaseObjects.SetActive(true);
-		this.calibrationResultPhaseObjects.SetActive(false);
-		this.depthView.SetActive(true);
+		if(this.oculusDK2CameraObject)
+			this.oculusDK2CameraObject.SetActive(true);
+		if(this.kinect1ModelObject)
+			this.kinect1ModelObject.SetActive(true);
+		if(this.oculusRiftModel)
+			this.oculusRiftModel.SetActive(true);
+		if(this.oculusDK2Icon)
+			this.oculusDK2Icon.SetActive(true);
+		if(this.kinectIcon)
+			this.kinectIcon.SetActive(true);
+		if(this.calibrationPhaseObjects)
+			this.calibrationPhaseObjects.SetActive(true);
+		if(this.calibrationResultPhaseObjects)
+			this.calibrationResultPhaseObjects.SetActive(false);
+		if(this.depthView)
+			this.depthView.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 	}
 	
@@ -319,13 +334,13 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		if(device == RUISDevice.Oculus_DK2) 
 		{
 			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;
-			float px = headpose.Position.x;
-			float py = headpose.Position.y;
-			float pz = headpose.Position.z;
+			float px =  headpose.Position.x;
+			float py =  headpose.Position.y;
+			float pz = -headpose.Position.z; // This needs to be negated TODO: might change with future OVR version
 			
 			tempSample = new Vector3(px, py, pz);
 			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);
-			if((Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
+			if(   (Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
 			   && (RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)  // Code from OVRManager.cs
 			{
 				sample = tempSample;
@@ -411,8 +426,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		kinect1ModelObject.transform.rotation = kinect1PitchRotation;
 		kinect1ModelObject.transform.localPosition = new Vector3(0, kinect1DistanceFromFloor, 0);
 		
-		oculusDK2ModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
-		oculusDK2ModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+		oculusDK2CameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
+		oculusDK2CameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
 		
 		
 		/*
@@ -423,7 +438,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
 		*/
 		
-		this.floorPlane.transform.localPosition = new Vector3(0, 0, 0);    	
+		if(this.floorPlane)
+			this.floorPlane.transform.position = new Vector3(0, 0, 0);
 	}
 	
 	

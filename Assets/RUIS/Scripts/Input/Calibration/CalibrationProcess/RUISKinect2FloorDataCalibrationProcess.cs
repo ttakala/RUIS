@@ -47,6 +47,8 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 		this.depthViewObjects = calibrationSettings.depthViewObjects;
 		this.iconObjects = calibrationSettings.iconObjects;
 		
+		this.floorPlane = GameObject.Find ("Floor");
+		
 		foreach (Transform child in this.deviceModelObjects.transform)
 		{
 			child.gameObject.SetActive(false);
@@ -62,9 +64,10 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 			child.gameObject.SetActive(false);
 		}
 		
-		this.calibrationResultPhaseObjects.SetActive(false);
-		this.calibrationPhaseObjects.SetActive(true);
-		this.calibrationResultPhaseObjects.SetActive(false);
+		if(this.calibrationPhaseObjects)
+			this.calibrationPhaseObjects.SetActive(true);
+		if(this.calibrationResultPhaseObjects)
+			this.calibrationResultPhaseObjects.SetActive(false);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 		coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		
@@ -116,6 +119,8 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) 
 	{
 		UpdateFloorNormalAndDistance(); 
+		if(this.floorPlane)
+			this.floorPlane.transform.position = new Vector3(0, 0, 0);
 		return RUISCalibrationPhase.ShowResults;
 	}
 	

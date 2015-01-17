@@ -127,13 +127,22 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 			child.gameObject.SetActive(false);
 		}
 		
-		this.psEyeModelObject.SetActive(true);
-		this.kinect2ModelObject.SetActive(true);
-		this.psMoveIcon.SetActive(true);
-		this.KinectIcon.SetActive(true);
-		this.calibrationPhaseObjects.SetActive(true);
-		this.calibrationResultPhaseObjects.SetActive(false);
-		this.depthView.SetActive(true);
+		if(this.psEyeModelObject)
+			this.psEyeModelObject.SetActive(true);
+		if(this.PSMoveWandObject)
+			this.PSMoveWandObject.SetActive(true);
+		if(this.kinect2ModelObject)
+			this.kinect2ModelObject.SetActive(true);
+		if(this.psMoveIcon)
+			this.psMoveIcon.SetActive(true);
+		if(this.KinectIcon)
+			this.KinectIcon.SetActive(true);
+		if(this.calibrationPhaseObjects)
+			this.calibrationPhaseObjects.SetActive(true);
+		if(this.calibrationResultPhaseObjects)
+			this.calibrationResultPhaseObjects.SetActive(false);
+		if(this.depthView)
+			this.depthView.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 	}
 	
@@ -469,7 +478,8 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
 		*/
 		
-		this.floorPlane.transform.localPosition = new Vector3(0, 0, 0);       
+		if(this.floorPlane)
+			this.floorPlane.transform.position = new Vector3(0, 0, 0);
 	}
 	
 	

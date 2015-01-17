@@ -100,11 +100,20 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		this.depthViewObjects = calibrationSettings.depthViewObjects;
 		this.iconObjects = calibrationSettings.iconObjects;
 		
-		if(GameObject.Find ("PSMoveWand") != null) GameObject.Find ("PSMoveWand").SetActive(false);
+		if(GameObject.Find ("PSMoveWand") != null)
+			GameObject.Find ("PSMoveWand").SetActive(false);
 		
 		// Models
 		this.kinect1ModelObject = GameObject.Find ("KinectCamera");
 		this.kinect2ModelObject = GameObject.Find ("Kinect2Camera");
+		
+		RUISSkeletonController skeletonController = Component.FindObjectOfType<RUISSkeletonController>();
+		Transform rightHand = null;
+		if(skeletonController)
+			rightHand = skeletonController.rightHand;
+		FixedFollowTransform followTransform = Component.FindObjectOfType<FixedFollowTransform>();
+		if(followTransform && rightHand)
+			followTransform.transformToFollow = rightHand;
 		
 		// Depth view
 		this.depthView = GameObject.Find ("KinectDepthView");
@@ -115,7 +124,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 
 		this.floorPlane = GameObject.Find ("Floor");
 
-		this.Kinect1Icon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
+		if(this.Kinect1Icon && this.Kinect1Icon.GetComponent<GUITexture>())
+			this.Kinect1Icon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
 		
 		foreach (Transform child in this.deviceModelObjects.transform)
 		{
@@ -132,14 +142,22 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 			child.gameObject.SetActive(false);
 		}
 		
-		this.kinect1ModelObject.SetActive(true);
-		this.kinect2ModelObject.SetActive(true);
-		this.Kinect1Icon.SetActive(true);
-		this.Kinect2Icon.SetActive(true);
-		this.calibrationPhaseObjects.SetActive(true);
-		this.calibrationResultPhaseObjects.SetActive(false);
-		this.depthView.SetActive(true);
-		this.depthView2.SetActive(true);
+		if(this.kinect1ModelObject)
+			this.kinect1ModelObject.SetActive(true);
+		if(this.kinect2ModelObject)
+			this.kinect2ModelObject.SetActive(true);
+		if(this.Kinect1Icon)
+			this.Kinect1Icon.SetActive(true);
+		if(this.Kinect2Icon)
+			this.Kinect2Icon.SetActive(true);
+		if(this.calibrationPhaseObjects)
+			this.calibrationPhaseObjects.SetActive(true);
+		if(this.calibrationResultPhaseObjects)
+			this.calibrationResultPhaseObjects.SetActive(false);
+		if(this.depthView)
+			this.depthView.SetActive(true);
+		if(this.depthView2)
+			this.depthView2.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 	}
 	
@@ -454,7 +472,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		kinect2ModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Kinect_2);
 		kinect2ModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Kinect_2);
 		
-		this.floorPlane.transform.position = new Vector3(0, 0, 0);                                                                                                                                                                                                                                           
+		if(this.floorPlane)
+			this.floorPlane.transform.position = new Vector3(0, 0, 0);
 	}
 	
 	
