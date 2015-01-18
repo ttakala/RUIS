@@ -10,6 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Ovr;
 
 public class RUISDisplayManager : MonoBehaviour {
     public List<RUISDisplay> displays;
@@ -79,7 +80,7 @@ public class RUISDisplayManager : MonoBehaviour {
 		{
 			if(GetComponent<OVRManager>()) 
 			{
-				StartCoroutine(HideOVRHealthMessage(1.0F));
+				StartCoroutine(ForceOculusSettings(1.0f));
 			}
 		}
 
@@ -87,15 +88,66 @@ public class RUISDisplayManager : MonoBehaviour {
 		
 		
 	}
-	
-	IEnumerator HideOVRHealthMessage(float waitTime) 
+
+	// TODO: Depends on OVR version
+	IEnumerator ForceOculusSettings(float waitTime) 
 	{
 		yield return new WaitForSeconds(waitTime);
 		OVRManager.DismissHSWDisplay();
+
+		// Enforce Low Persistence settings
+		// TODO: In the distant future it might be possible to have multiple Rifts in the same computer with different LP settings?
+		RUISDisplay oculusDisplay = GetOculusRiftDisplay();
+		if(oculusDisplay)
+		{
+			// HACK: Counter hack to OVRDisplays hack which forces LP on in the first frame
+			for(int i=0; i<2; ++i)
+			{
+				if(oculusDisplay.oculusLowPersistence != getOculusLowPersistence())
+					setOculusLowPersistence(oculusDisplay.oculusLowPersistence);
+				yield return new WaitForSeconds(2);
+			}
+		}
+	}
+
+	// TODO: Depends on OVR version
+	public bool getOculusLowPersistence()
+	{
+		uint caps = OVRManager.capiHmd.GetEnabledCaps();
+		return (caps & (uint)HmdCaps.LowPersistence) != 0;
+	}
+
+	// TODO: Depends on OVR version
+	public void setOculusLowPersistence(bool enabled)
+	{
+		if(OVRManager.capiHmd == null)
+			return;
+
+		uint caps = OVRManager.capiHmd.GetEnabledCaps();
+		
+		if(enabled)
+			OVRManager.capiHmd.SetEnabledCaps(caps | (uint)HmdCaps.LowPersistence);
+		else
+			OVRManager.capiHmd.SetEnabledCaps(caps & ~(uint)HmdCaps.LowPersistence);
+
+		return;
 	}
 	
     void Update()
     {
+		// Toggle Oculus LowPersistence mode
+//		if(Input.GetKeyDown(KeyCode.Backspace))
+//		{
+//			uint caps = OVRManager.capiHmd.GetEnabledCaps();
+//			uint bitmask = caps & (uint)HmdCaps.LowPersistence;
+//			if(bitmask == 0) // LowPersistence is now disabled
+//				setOculusLowPersistence(true);
+//			else
+//			{
+//				setOculusLowPersistence(false);
+//			}
+//		}
+
         if (Application.isEditor && (Screen.width != totalRawResolutionX || Screen.height != totalRawResolutionY))
         {
             UpdateResolutionsOnTheFly();

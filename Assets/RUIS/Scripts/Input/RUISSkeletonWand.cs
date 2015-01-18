@@ -48,6 +48,7 @@ public class RUISSkeletonWand : RUISWand
 
 	private Quaternion tempRotation;
 	private Quaternion filteredRotation;
+	private Vector3 tempVector;
 
     public void Awake()
     {
@@ -58,9 +59,12 @@ public class RUISSkeletonWand : RUISWand
 		bodyTrackingDeviceID = (int)bodyTrackingDevice;
 		RUISGestureRecognizer[] gestureRecognizerScripts = GetComponents<RUISGestureRecognizer>();
 		
-		foreach(RUISGestureRecognizer script in gestureRecognizerScripts) {
-			if(script.ToString() != gestureSelectionScriptName) script.enabled = false;
-			else gestureRecognizer = script;
+		foreach(RUISGestureRecognizer script in gestureRecognizerScripts) 
+		{
+			if(script.ToString() != gestureSelectionScriptName) 
+				script.enabled = false;
+			else 
+				gestureRecognizer = script;
 		}
 		
         if (!skeletonManager)
@@ -176,16 +180,21 @@ public class RUISSkeletonWand : RUISWand
 //            }
 			
 			// First calculate local rotation
-            if (startData != null && startData.positionConfidence >= 0.5f)
+			if (	startData != null && startData.positionConfidence >= 0.5f )
             {
-				tempRotation = Quaternion.LookRotation(endData.position - startData.position);
+				tempVector = endData.position - startData.position;
+				if(Vector3.Angle(startData.rotation * Vector3.up, tempVector) > 5)
+					tempRotation = Quaternion.LookRotation(endData.position - startData.position, startData.rotation * Vector3.up);
+				else
+					tempRotation = Quaternion.LookRotation(endData.position - startData.position, startData.rotation * Vector3.right);
+
 				filteredRotation = rotationFilter.Update(tempRotation, Time.deltaTime); // HACK with kinect2 filtering is done in SkeletonManager
             }
-            else if (endData.rotationConfidence >= 0.5f)
-            {
-				tempRotation = endData.rotation;
-				filteredRotation = rotationFilter.Update(tempRotation, Time.deltaTime);
-            }
+//            else if (endData.rotationConfidence >= 0.5f)
+//            {
+//				tempRotation = endData.rotation;
+//				filteredRotation = rotationFilter.Update(tempRotation, Time.deltaTime);
+//            }
             
 			if (rigidbody)
 	        {

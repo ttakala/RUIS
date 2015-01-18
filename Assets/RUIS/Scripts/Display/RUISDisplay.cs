@@ -13,7 +13,8 @@ using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 
-public class RUISDisplay : MonoBehaviour {
+public class RUISDisplay : MonoBehaviour 
+{
     public TextAsset displaySchema;
     public string xmlFilename = "defaultDisplay.xml";
     public bool loadFromFileInEditor = false;
@@ -59,7 +60,8 @@ public class RUISDisplay : MonoBehaviour {
         }
     }
 
-    public bool enableOculusRift = false;
+	public bool enableOculusRift = false;
+	public bool oculusLowPersistence = true;
 
     public bool isStereo = false;
     public float eyeSeparation = 0.06f;

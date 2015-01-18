@@ -24,7 +24,8 @@ public class RUISDisplayEditor : Editor {
     SerializedProperty displayHeight;
 
     SerializedProperty isStereo;
-    SerializedProperty isHMD;
+	SerializedProperty enableOculusRift;
+	SerializedProperty oculusLowPersistence;
     SerializedProperty isObliqueFrustum;
     SerializedProperty isKeystoneCorrected;
     SerializedProperty camera;
@@ -41,6 +42,8 @@ public class RUISDisplayEditor : Editor {
     private Texture2D monoDisplayTexture;
     private Texture2D stereoDisplayTexture;
 
+	private bool previousOculusLowPersistenceValue;
+
     RUISDisplayManager displayManager;
 
     void OnEnable()
@@ -55,7 +58,8 @@ public class RUISDisplayEditor : Editor {
         displayHeight = serializedObject.FindProperty("height");
 
         isStereo = serializedObject.FindProperty("isStereo");
-        isHMD = serializedObject.FindProperty("enableOculusRift");
+        enableOculusRift = serializedObject.FindProperty("enableOculusRift");
+		oculusLowPersistence = serializedObject.FindProperty("oculusLowPersistence");
         isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
         isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
         camera = serializedObject.FindProperty("_linkedCamera");
@@ -79,6 +83,7 @@ public class RUISDisplayEditor : Editor {
 
         displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
 
+		previousOculusLowPersistenceValue = oculusLowPersistence.boolValue;
     }
 
     public void OnGUI()
@@ -112,16 +117,32 @@ public class RUISDisplayEditor : Editor {
 
         
 
-        EditorGUILayout.PropertyField(isHMD, new GUIContent("Enable Oculus Rift", "Is this display an Oculus Rift?"));
+		EditorGUILayout.PropertyField(enableOculusRift, new GUIContent("Enable Oculus Rift", "Is this display an Oculus Rift?"));
 
-        if (!isHMD.boolValue)
+		// TODO: Depends on OVR version
+		EditorGUI.indentLevel++;
+		GUI.enabled = enableOculusRift.boolValue;
+		EditorGUILayout.PropertyField(oculusLowPersistence, new GUIContent(  "Low Persistence", "Low persistence reduces pixel blur. Try disabling this option if "
+		                                                                   + "the Oculus Rift view suffers from 'judder' when rotating your head. NOTE: Disabling "
+		                                                                   + "this option might cause issues with Oculus runtime 0.4.4 if you're using DX11!"));
+		if(enableOculusRift.boolValue && EditorApplication.isPlaying && previousOculusLowPersistenceValue != oculusLowPersistence.boolValue && displayManager)
+		{
+			// Low Persistence value changed, enforce it if application is running in Editor
+			displayManager.setOculusLowPersistence(oculusLowPersistence.boolValue);
+		}
+
+		EditorGUI.indentLevel--;
+
+		GUI.enabled = !enableOculusRift.boolValue;
+		
+		RUISEditorUtility.HorizontalRuler();
+		EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked CAVE Display", "Should the projection matrix be skewed to use this display as a head tracked CAVE viewport"));
+
+		GUI.enabled = true;
+
+        if (!enableOculusRift.boolValue)
         {
             //disabled for now EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
-
-            EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked CAVE Display", "Should the projection matrix be skewed to use this display as a head tracked CAVE viewport"));
-
-
-
             if (isObliqueFrustum.boolValue)
             {
                 EditorGUI.indentLevel++;
@@ -141,6 +162,8 @@ public class RUISDisplayEditor : Editor {
             isObliqueFrustum.boolValue = false;
             isKeystoneCorrected.boolValue = false;
         }
+
+		previousOculusLowPersistenceValue = oculusLowPersistence.boolValue;
 
         serializedObject.ApplyModifiedProperties();
 

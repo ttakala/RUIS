@@ -107,11 +107,19 @@ public class RUISSkeletonController : MonoBehaviour
 	private int followMoveID = 0;
 	private RUISPSMoveWand psmove;
 	public Quaternion moveYawRotation { get; private set; }
-	
+
+	private Vector3 newRootPosition = Vector3.zero;
+	private Vector3 torsoDirection = Vector3.down;
+	private Quaternion torsoRotation = Quaternion.identity;
+
 	private KalmanFilter positionKalman;
 	private double[] measuredPos = {0, 0, 0};
 	private double[] pos = {0, 0, 0};
 	private float positionNoiseCovariance = 500;
+
+	private KalmanFilter[] fourJointsKalman = new KalmanFilter[4];
+	private float fourJointsNoiseCovariance = 300;
+	private Vector3[] fourJointPositions = new Vector3[4];
 	
 	public bool filterRotations = false;
 	public float rotationNoiseCovariance = 500;
@@ -189,6 +197,13 @@ public class RUISSkeletonController : MonoBehaviour
 		
 		positionKalman = new KalmanFilter();
 		positionKalman.initialize(3,3);
+
+		for(int i=0; i<fourJointsKalman.Length; ++i)
+		{
+			fourJointsKalman[i] = new KalmanFilter();
+			fourJointsKalman[i].initialize(3,3);
+			fourJointPositions[i] = Vector3.zero;
+		}
     }
 
     void Start()
@@ -529,10 +544,14 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					UpdateBoneScalings ();
 
-					Vector3 torsoDirection = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation * Vector3.down;
+					torsoRotation = Quaternion.Slerp(torsoRotation, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotation, Time.deltaTime*rotationDamping);
+					torsoDirection = torsoRotation * Vector3.down;
 
-					torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
-					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
+					if(torso == root)
+						torso.position = transform.TransformPoint (- torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
+					else
+						torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
+						                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
 
 					spineDirection = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
 					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
@@ -540,30 +559,28 @@ public class RUISSkeletonController : MonoBehaviour
 					spineDirection = torso.position - spineDirection;
 					spineDirection.Normalize();
 
-					ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder);
-					ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder);
-					ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip);
-					ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip);
+					ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder, 0);
+					ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder, 1);
+					ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip, 2);
+					ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip, 3);
 
 				}
 			}
 
 			if (updateRootPosition) 
 			{
-				Vector3 newRootPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position;
-
-				measuredPos [0] = newRootPosition.x;
-				measuredPos [1] = newRootPosition.y;
-				measuredPos [2] = newRootPosition.z;
-				positionKalman.setR (Time.deltaTime * positionNoiseCovariance);
-//				positionKalman.setR (Time.deltaTime * positionNoiseCovariance * Mathf.Max(Mathf.Max(rootSpeedScaling.x, 
-//				                                                                                    rootSpeedScaling.y), rootSpeedScaling.z));
-				positionKalman.predict ();
-				positionKalman.update (measuredPos);
-				pos = positionKalman.getState ();
+//				Vector3 newRootPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position;
+//				measuredPos [0] = newRootPosition.x;
+//				measuredPos [1] = newRootPosition.y;
+//				measuredPos [2] = newRootPosition.z;
+//				positionKalman.setR (Time.deltaTime * positionNoiseCovariance);
+//				positionKalman.predict ();
+//				positionKalman.update (measuredPos);
+//				pos = positionKalman.getState ();
 
 				// Root speed scaling is applied here
-				transform.localPosition = Vector3.Scale(new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]), rootSpeedScaling);
+				transform.localPosition = Vector3.Scale(skeletonPosition, rootSpeedScaling);
+//				transform.localPosition = Vector3.Scale(new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]), rootSpeedScaling);
 			}
 		} 
 		 
@@ -656,21 +673,46 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
-    private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet)
+    private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, int jointID)
     {
         if (transformToUpdate == null)
 			return;
 
-        transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);//transform.position + transform.rotation * (jointToGet.position - skeletonPosition);
+		measuredPos [0] = jointToGet.position.x;
+		measuredPos [1] = jointToGet.position.y;
+		measuredPos [2] = jointToGet.position.z;
+
+		fourJointsKalman[jointID].setR (Time.deltaTime * fourJointsNoiseCovariance);
+		fourJointsKalman[jointID].predict ();
+		fourJointsKalman[jointID].update (measuredPos);
+		pos = fourJointsKalman[jointID].getState ();
+
+		fourJointPositions[jointID].Set((float)pos [0], (float)pos [1], (float)pos [2]);
+
+		transformToUpdate.position = transform.TransformPoint(fourJointPositions[jointID] - skeletonPosition);
+//		transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
     }
 
     //gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
     private void UpdateSkeletonPosition()
     {
-		if (skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.positionConfidence >= minimumConfidenceToUpdate)
-        {
-			skeletonPosition = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.position;
-        }
+		
+		Vector3 newRootPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position;
+		
+		measuredPos [0] = newRootPosition.x;
+		measuredPos [1] = newRootPosition.y;
+		measuredPos [2] = newRootPosition.z;
+		positionKalman.setR (Time.deltaTime * positionNoiseCovariance);
+		positionKalman.predict ();
+		positionKalman.update (measuredPos);
+		pos = positionKalman.getState ();
+
+		skeletonPosition = new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]);
+
+//		if (skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.positionConfidence >= minimumConfidenceToUpdate)
+//        {
+//			skeletonPosition = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.position;
+//        }
     }
 
     private void SaveInitialRotation(Transform bodyPart)
@@ -844,16 +886,24 @@ public class RUISSkeletonController : MonoBehaviour
         //we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
         float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
                             jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
-		float playerLength = (Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position, 
-		                                       skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position) +
-		                      Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position, 
-		                 					   skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
+//		float playerLength = (Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position, 
+//		                                       skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position) +
+//		                      Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position, 
+//		                 					   skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
+		float playerLength = (Vector3.Distance(fourJointPositions[0] /* rightShoulder.position */, 
+		                                       fourJointPositions[1] /* leftShoulder.position */  ) +
+		                      Vector3.Distance(fourJointPositions[2] /* rightHip.position */, 
+		                 					   fourJointPositions[3] /* leftHip.position*/ )) / 2;
 		
-        float newScale = Mathf.Abs(playerLength / modelLength);
-		torso.localScale = new Vector3(newScale, newScale, newScale);
-        return newScale;
-    }
+		float newScale = Mathf.Abs(playerLength / modelLength);
 
+		// Here we halve the maxScaleFactor because the torso is bigger than the limbs
+		torsoScale = Mathf.Lerp(torsoScale, newScale, 0.5f*maxScaleFactor * Time.deltaTime);
+
+		torso.localScale = new Vector3(torsoScale, torsoScale, torsoScale);
+		return torsoScale;
+	}
+	
     private Quaternion FindFixingRotation(Vector3 fromJoint, Vector3 toJoint, Vector3 wantedDirection)
     {
         Vector3 boneVector = toJoint - fromJoint;
