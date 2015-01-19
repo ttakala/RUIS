@@ -56,8 +56,6 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	public string calibrationDropDownSelection;
 	
-	public bool setOnce;
-	
 	public bool calibrationReady;
 
 	Ovr.HmdType ovrHmdVersion;
@@ -66,43 +64,42 @@ public class RUISMenuNGUI : MonoBehaviour {
 	{
 		// BUTTONS
 		// Phase: select and configure devices
-		buttons.Add(this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Button - Calibration").gameObject);
-		buttons.Add(this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Button - Display Management").gameObject);
-		buttons.Add(this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Button - Save Config & Restart Scene").gameObject);
-		buttons.Add(this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Button - Discard Configuration").gameObject);
-		buttons.Add(this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Button - Quit Application").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Button - Calibration").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Button - Display Management").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Button - Save Config & Restart Scene").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Button - Discard Configuration").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Button - Quit Application").gameObject);
 		
 		// Phase: key stone configuration
-		buttons.Add(this.transform.Find ("Panel/keyStoneConfiguration/Button - Reset Keystoning").gameObject);
-		buttons.Add(this.transform.Find ("Panel/keyStoneConfiguration/Button - Save Configurations").gameObject);
-		buttons.Add(this.transform.Find ("Panel/keyStoneConfiguration/Button - Load Old Configurations").gameObject);
-		buttons.Add(this.transform.Find ("Panel/keyStoneConfiguration/Button - End Display Editing").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/keyStoneConfiguration/Button - Reset Keystoning").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/keyStoneConfiguration/Button - Save Configurations").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/keyStoneConfiguration/Button - Load Old Configurations").gameObject);
+		buttons.Add(this.transform.Find ("NGUIControls/Panel/keyStoneConfiguration/Button - End Display Editing").gameObject);
 		
 		// CHECKBOXES
-		checkBoxes.Add (this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").gameObject);
-		checkBoxes.Add (this.transform.Find ("Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").gameObject);
-		checkBoxes.Add (this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject);
-		checkBoxes.Add (this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").gameObject);
-		checkBoxes.Add (this.transform.Find ("Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").gameObject);
+		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").gameObject);
+		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").gameObject);
+		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject);
+		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").gameObject);
+		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").gameObject);
 		
 		// TEXTFIELDS
-		textFields.Add (this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").gameObject);
-		textFields.Add (this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject);
+		textFields.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").gameObject);
+		textFields.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject);
 		
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
 
-		kinectOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect").transform.localPosition;
-		kinect2OrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect2").transform.localPosition;
-		hydraOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Hydra").transform.localPosition;
-		infotextOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Infotexts").transform.localPosition;
-//		psMoveOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/PSMove").transform.localPosition;
-//		buttonsOrigGUIPos = this.transform.Find ("Panel/selectAndConfigureDevices/Buttons").transform.localPosition;
+		kinectOrigGUIPos = this.transform.Find ( "NGUIControls/Panel/selectAndConfigureDevices/Kinect").transform.localPosition;
+		kinect2OrigGUIPos = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2").transform.localPosition;
+		hydraOrigGUIPos = this.transform.Find (  "NGUIControls/Panel/selectAndConfigureDevices/Hydra").transform.localPosition;
+		infotextOrigGUIPos = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Infotexts").transform.localPosition;
+//		psMoveOrigGUIPos = this.transform.Find  ("NGUIControls/Panel/selectAndConfigureDevices/PSMove").transform.localPosition;
+//		buttonsOrigGUIPos = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons").transform.localPosition;
 	}
 		
 	void Start () 
 	{
-		setOnce = false;
 		if(this.transform.parent == null) 
 		{
 			this.currentMenuState = RUISMenuStates.calibration;
@@ -139,9 +136,14 @@ public class RUISMenuNGUI : MonoBehaviour {
 		
 		SaveInputChanges(); // Save initial settings
 		updateCalibratableDevices();
+		
+		
+		// Menu is hidden upon init
+		this.transform.Find("NGUIControls/Panel").gameObject.SetActive(false);
+		this.transform.Find("NGUIControls/planeCollider").gameObject.SetActive(false);
 
 		this.transform.localPosition = new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
-		this.transform.localScale = new Vector3(displayManager.guiScaleX * 0.002777778f, displayManager.guiScaleY * 0.002777778f, 1 * 0.002777778f);
+		this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
 		
 		if(displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum && !displayManager.displays[displayManager.guiDisplayChoice].enableOculusRift)
 		{
@@ -195,7 +197,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 					calibrationReady = false;
 					menuIsVisible = false;
 						inputManager.Export(inputManager.filename);
-						calibrationDropDownSelection = this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
+						calibrationDropDownSelection = this.transform.Find (
+													"NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
 						SaveInputChanges();
 						DontDestroyOnLoad(this);
 						this.transform.parent = null;
@@ -264,65 +267,68 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if ((!ruisMenuButtonDefined && Input.GetKeyDown(KeyCode.Escape)) || (ruisMenuButtonDefined && Input.GetButtonDown("RUISMenu"))) 
 		{
 			menuIsVisible = !menuIsVisible;
+			
+			if(!menuIsVisible) 
+			{
+				this.transform.Find("NGUIControls/Panel").gameObject.SetActive(false);
+				this.transform.Find("NGUIControls/planeCollider").gameObject.SetActive(false);
+				//this.transform.Find("guiCameraForRift").gameObject.SetActive(false);
+			}
+			else 
+			{
+				this.transform.Find("NGUIControls/Panel").gameObject.SetActive(true);
+				this.transform.Find("NGUIControls/planeCollider").gameObject.SetActive(true);
+			}
 		}
-		
-		if(!menuIsVisible) 
-		{
-			this.transform.Find("Panel").gameObject.SetActive(false);
-			this.transform.Find("planeCollider").gameObject.SetActive(false);
-			//this.transform.Find("guiCameraForRift").gameObject.SetActive(false);
-		}
-		else 
+
+		if(menuIsVisible) 
 		{
 			// For interactively adjusting the menu position and scale in Unity Editor
 			if(Application.isEditor)
 			{
 				this.transform.localPosition = displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition
 												+ this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
-				this.transform.localScale = new Vector3(displayManager.guiScaleX * 0.002777778f, displayManager.guiScaleY * 0.002777778f, 1 * 0.002777778f);
+				this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
 			}
 			
-			this.transform.Find("Panel").gameObject.SetActive(true);
-			this.transform.Find("planeCollider").gameObject.SetActive(true);
-			//this.transform.Find("guiCameraForRift").gameObject.SetActive(true);
-			
-			
-			
+//			this.transform.Find("Panel").gameObject.SetActive(true);
+//			this.transform.Find("planeCollider").gameObject.SetActive(true);
+
 			switch(currentMenuState) 
 			{
 				
 				case RUISMenuStates.calibration: 
-					this.transform.Find("Panel/selectAndConfigureDevices").gameObject.SetActive(false);
-					this.transform.Find("Panel/keyStoneConfiguration").gameObject.SetActive(false);
+					this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices").gameObject.SetActive(false);
+					this.transform.Find("NGUIControls/Panel/keyStoneConfiguration").gameObject.SetActive(false);
 					// Show nothing, use 2d menu to exit calibration scene
 				break;
 				
 				case RUISMenuStates.selectAndConfigureDevices: 
-					this.transform.Find("Panel/selectAndConfigureDevices").gameObject.SetActive(true);
-					this.transform.Find("Panel/keyStoneConfiguration").gameObject.SetActive(false);
+					this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices").gameObject.SetActive(true);
+					this.transform.Find("NGUIControls/Panel/keyStoneConfiguration").gameObject.SetActive(false);
 					
-					if(this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked) 
+					if(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked) 
 					{
-						this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Label - PSMove IP").gameObject.SetActive(true);
-						this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Label - PSMove Port").gameObject.SetActive(true);
-						this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").gameObject.SetActive(true);
-						this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject.SetActive(true);	
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Label - PSMove IP").gameObject.SetActive(true);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Label - PSMove Port").gameObject.SetActive(true);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").gameObject.SetActive(true);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject.SetActive(true);	
 					}
 					else 
 					{
-						this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Label - PSMove IP").gameObject.SetActive(false);
-						this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Label - PSMove Port").gameObject.SetActive(false);
-						this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").gameObject.SetActive(false);
-						this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject.SetActive(false);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Label - PSMove IP").gameObject.SetActive(false);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Label - PSMove Port").gameObject.SetActive(false);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").gameObject.SetActive(false);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject.SetActive(false);
 					}
 					
-					if(this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked) 
+					if(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked) 
 					{
-						this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject.SetActive(true);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject.SetActive(true);
 					}
 					else 
 					{
-						this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject.SetActive(false);
+						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject.SetActive(false);
 					}
 					
 					handleSelectAndConfigureDevicesGUISpacing();
@@ -331,8 +337,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 				break;
 				
 				case RUISMenuStates.keyStoneConfiguration:
-					this.transform.Find("Panel/selectAndConfigureDevices").gameObject.SetActive(false);
-					this.transform.Find("Panel/keyStoneConfiguration").gameObject.SetActive(true);
+					this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices").gameObject.SetActive(false);
+					this.transform.Find("NGUIControls/Panel/keyStoneConfiguration").gameObject.SetActive(true);
 				break;
 			}
 			UpdateGUI();
@@ -343,18 +349,18 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	private void handleSelectAndConfigureDevicesGUISpacing() 
 	{
-//		Transform PSMoveGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/PSMove").transform;
-		Transform KinectGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect").transform;
-		Transform Kinect2GUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect2").transform;
-		Transform HydraGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Hydra").transform;
-		Transform InfotextsGUIObject = this.transform.Find ("Panel/selectAndConfigureDevices/Infotexts").transform;
+//		Transform PSMoveGUIObj = this.transform.Find      ("NGUIControls/Panel/selectAndConfigureDevices/PSMove").transform;
+		Transform KinectGUIObj = this.transform.Find      ("NGUIControls/Panel/selectAndConfigureDevices/Kinect").transform;
+		Transform Kinect2GUIObj = this.transform.Find     ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2").transform;
+		Transform HydraGUIObj = this.transform.Find       ("NGUIControls/Panel/selectAndConfigureDevices/Hydra").transform;
+		Transform InfotextsGUIObject = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Infotexts").transform;
 		
-//		Transform ButtonsGUIObj = this.transform.Find ("Panel/selectAndConfigureDevices/Buttons").transform;
+//		Transform ButtonsGUIObj = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons").transform;
 
-		bool kinectSelected = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked;
-		bool kinect2Selected = this.transform.Find ("Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked;
-		bool psMoveSelected = this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked;
-		bool hydraSelected = this.transform.Find ("Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked;
+		bool kinectSelected = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked;
+		bool kinect2Selected = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked;
+		bool psMoveSelected = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked;
+		bool hydraSelected = this.transform.Find  ("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked;
 		
 		Vector3 overAllOffset = new Vector3(0, 0, 0);
 		Vector3 kinectOffset = new Vector3(0,0,0);
@@ -402,12 +408,13 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	private void handleInfotexts() 
 	{
-		GameObject 	infotext_Changes_saved = this.transform.Find("Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes saved").gameObject;
-		GameObject 	infotext_Changes_are_not_saved_in_free_version = this.transform.Find("Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes are not saved in free version").gameObject;
-		GameObject  infotext_Changes_not_saved_yet = this.transform.Find("Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes not saved yet").gameObject;
-		GameObject 	infotext_Rift_not_Detected = this.transform.Find("Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Rift not detected").gameObject;
-		GameObject 	infotext_Oculus_DK1_detected = this.transform.Find("Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK1 detected").gameObject;
-		GameObject 	infotext_Oculus_DK2_detected = this.transform.Find("Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK2 detected").gameObject;
+		GameObject 	infotext_Changes_saved = this.transform.Find(        "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes saved").gameObject;
+		GameObject 	infotext_Changes_are_not_saved_in_free_version = this.transform.Find(
+														 "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes are not saved in free version").gameObject;
+		GameObject  infotext_Changes_not_saved_yet = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes not saved yet").gameObject;
+		GameObject 	infotext_Rift_not_Detected = this.transform.Find(    "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Rift not detected").gameObject;
+		GameObject 	infotext_Oculus_DK1_detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK1 detected").gameObject;
+		GameObject 	infotext_Oculus_DK2_detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK2 detected").gameObject;
 		
 		bool isRiftConnected = false;
 
@@ -473,9 +480,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 				infotext_Changes_saved.SetActive(false);
 			}
 		}
-		
-		
-			
+
 	}
 	
 	private void toggleKeystoneConfigurationLayer()
@@ -535,16 +540,17 @@ public class RUISMenuNGUI : MonoBehaviour {
 		{
 			if(inputManager.enablePSMove) 
 			{
-				this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").GetComponent<UIInput>().text = inputManager.PSMoveIP;
-				this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").GetComponent<UIInput>().text = inputManager.PSMovePort.ToString();
+				this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").GetComponent<UIInput>().text = inputManager.PSMoveIP;
+				this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").GetComponent<UIInput>().text = inputManager.PSMovePort.ToString();
 			}	
-			this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect;
-			this.transform.Find ("Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect2;
-			this.transform.Find ("Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked = inputManager.enablePSMove;
-			this.transform.Find ("Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked = inputManager.enableRazerHydra;
+			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect;
+			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect2;
+			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked = inputManager.enablePSMove;
+			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked = inputManager.enableRazerHydra;
 			if(inputManager.enableKinect) 
 			{
-				this.transform.Find ("Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").GetComponent<UICheckbox>().isChecked = inputManager.kinectDriftCorrectionPreferred;
+				this.transform.Find(
+					"NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").GetComponent<UICheckbox>().isChecked = inputManager.kinectDriftCorrectionPreferred;
 			}
 		}
 	}
@@ -554,7 +560,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 	{
 		List<string> dropDownChoices = new List<string>();
 		
-		string currentSelection = this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
+		string currentSelection = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
 		
 		//dropDownChoices.Add ("Select device(s)");
 		if(inputManager.enableKinect) dropDownChoices.Add ("Kinect floor data");
@@ -590,10 +596,10 @@ public class RUISMenuNGUI : MonoBehaviour {
 			dropDownChoices.Add ("Select device(s)");
 		}
 		
-		this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().items = dropDownChoices;
+		this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().items = dropDownChoices;
 		if(!dropDownChoices.Contains(currentSelection)) 
 		{
-			this.transform.Find ("Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection = dropDownChoices[0];
+			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection = dropDownChoices[0];
 		}
 		
 	}
@@ -611,7 +617,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 	{	
 		if(calibrationReady) 
 		{
-			GUILayout.Label("Calibration finnished.");
+			GUILayout.Label("Calibration finished.");
 			GUILayout.Space(20);
 			if(GUILayout.Button("Exit calibration"))
 			{
@@ -621,7 +627,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		}
 		else 
 		{
-			GUILayout.Label("Calibration not finnisehd yet.");
+			GUILayout.Label("Calibration not finished yet.");
 			GUILayout.Space(20);
 			if(GUILayout.Button("Abort calibration"))
 			{

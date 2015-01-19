@@ -589,7 +589,7 @@ public class RUISTracker : MonoBehaviour
 			// Make sure that the projection is not pointing too much up
 			if(projected.sqrMagnitude > 0.01)
 				transform.localRotation = Quaternion.LookRotation(projected);
-			else // The Oculus Camera or it's calibration with master coordinate system is peculiar
+			else // The Oculus Camera or it's calibration with master coordinate system is peculiar HACK
 				transform.localRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
 																		   RUISDevice.Oculus_DK2); 
 			

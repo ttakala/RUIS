@@ -339,8 +339,17 @@ public class RUISDisplayManager : MonoBehaviour {
 		if(ruisMenuPrefab == null)
 			return;
 		
-		if(	 displays[guiDisplayChoice].GetComponent<RUISDisplay>() == null
-		   	||	displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera == null			)
+		// HACK: displays is a list and accessing components by index might break if we modify the list in run-time
+		if(displays.Count <= guiDisplayChoice)
+		{
+			Debug.LogError(  "displays.Count is too small: " + displays.Count + ", because guiDisplayChoice == " + guiDisplayChoice 
+			               + ". Fix the guiDisplayChoice implementation so that it conforms to the displays variable (dynamic List<>).");
+			return;
+		}
+
+		if(	   displays[guiDisplayChoice] == null
+		    || displays[guiDisplayChoice].GetComponent<RUISDisplay>() == null
+		   	|| displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera == null )
 		{
 			return;
 		}
@@ -360,11 +369,14 @@ public class RUISDisplayManager : MonoBehaviour {
 		}
 		else 
 		{
-			displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform.gameObject.AddComponent<UICamera>();
-			displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraLeft").transform.gameObject.AddComponent<UICamera>();
+			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight"))
+				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform.gameObject.AddComponent<UICamera>();
+			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraLeft"))
+				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraLeft").transform.gameObject.AddComponent<UICamera>();
 		}
-		
-		ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform;
+
+		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight"))
+			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform;
 		
 		ruisMenu.transform.localRotation = Quaternion.identity;
 		ruisMenu.transform.localPosition = new Vector3(guiX,guiY,guiZ);

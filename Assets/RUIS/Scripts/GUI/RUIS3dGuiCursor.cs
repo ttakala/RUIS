@@ -30,25 +30,27 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 	void Start() 
 	{
 		menuScript = this.GetComponent<RUISMenuNGUI>();
-		this.guiPlane = this.transform.Find ("planeCollider").GetComponent<Collider>();
+		if(menuScript == null)
+			Debug.LogError( "Did not find " + typeof(RUISMenuNGUI) + " script!");
+
+		this.guiPlane = this.transform.Find ("NGUIControls/planeCollider").GetComponent<Collider>();
 		if(this.guiPlane == null)
 			Debug.LogError( "Did not find RUIS Menu collider object, onto which mouse selection ray is projected!" );
 
-		if(this.transform.parent == null)
-		{
-			Debug.LogError(  "The parent of GameObject '" + name 
-			               + "is null and RUIS Menu will not function. Something is wrong with 'RUIS NGUI Menu' prefab or you "
+		if(menuScript.transform.parent == null)
+			Debug.LogError(  "The parent of GameObject '" + menuScript.name 
+			               + " is null and RUIS Menu will not function. Something is wrong with 'RUIS NGUI Menu' prefab or you "
 			               + "are misusing the " + typeof(RUIS3dGuiCursor) + " script.");
-		}
-		else if(this.transform.parent.parent == null)
-			Debug.LogError(  "The grand parent of GameObject '" + name 
-			               + "is null and RUIS Menu will not function. Something is wrong with 'RUIS NGUI Menu' prefab or you "
+		else if(menuScript.transform.parent.parent == null)
+			Debug.LogError(  "The grand-parent of GameObject '" + menuScript.name 
+			               + " is null and RUIS Menu will not function. Something is wrong with 'RUIS NGUI Menu' prefab or you "
 			               + "are misusing the " + typeof(RUIS3dGuiCursor) + " script.");
-		
-		ruisCamera = this.transform.parent.parent.GetComponent<RUISCamera>();
+		else
+			ruisCamera = menuScript.transform.parent.parent.GetComponent<RUISCamera>();
+
 		if(ruisCamera == null)
-			Debug.LogError(  typeof(RUIS3dGuiCursor) + " script did not find "  + typeof(RUISCamera) + " from its grandparent "
-			               + "gameobject! RUIS Menu is unavailable.");
+			Debug.LogError(  typeof(RUIS3dGuiCursor) + " script did not find "  + typeof(RUISCamera) + " from the parent of "
+			               + menuScript.transform.name + "gameobject! RUIS Menu is unavailable.");
 			               
 		ruisDisplayManager =  FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
 
@@ -71,7 +73,8 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			this.enabled = false;
 			return;
 		}
-		cameras = this.transform.parent.parent.GetComponentsInChildren<UICamera>();
+
+		cameras = menuScript.transform.parent.parent.GetComponentsInChildren<UICamera>();
 		
 		if(menuScript.menuIsVisible && !instancedCursor) 
 		{

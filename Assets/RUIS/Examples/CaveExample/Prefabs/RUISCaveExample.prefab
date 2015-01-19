@@ -708,6 +708,7 @@ MonoBehaviour:
   resolutionY: 768
   useDoubleTheSpace: 0
   enableOculusRift: 0
+  oculusLowPersistence: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 0}
@@ -738,6 +739,7 @@ MonoBehaviour:
   resolutionY: 768
   useDoubleTheSpace: 0
   enableOculusRift: 0
+  oculusLowPersistence: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 0}
@@ -772,7 +774,7 @@ MonoBehaviour:
   totalRawResolutionX: 3072
   totalRawResolutionY: 768
   allowResolutionDialog: 0
-  ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
+  ruisMenuPrefab: {fileID: 193440, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
   menuLayer: 12
   guiDisplayChoice: 1
@@ -904,6 +906,7 @@ MonoBehaviour:
   resolutionY: 768
   useDoubleTheSpace: 0
   enableOculusRift: 0
+  oculusLowPersistence: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 0}

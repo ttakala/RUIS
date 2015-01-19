@@ -543,7 +543,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 127.0.01
+  PSMoveIP: 127.0.0.1
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
@@ -668,6 +668,7 @@ MonoBehaviour:
   resolutionY: 1080
   useDoubleTheSpace: 0
   enableOculusRift: 0
+  oculusLowPersistence: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 0}
@@ -787,7 +788,7 @@ MonoBehaviour:
   totalRawResolutionX: 1920
   totalRawResolutionY: 1080
   allowResolutionDialog: 0
-  ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
+  ruisMenuPrefab: {fileID: 193440, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
   menuLayer: 12
   guiDisplayChoice: 0
