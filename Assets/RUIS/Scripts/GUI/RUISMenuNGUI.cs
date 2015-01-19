@@ -137,6 +137,9 @@ public class RUISMenuNGUI : MonoBehaviour {
 		SaveInputChanges(); // Save initial settings
 		updateCalibratableDevices();
 		
+		UpdateGUI();
+		handleInfotexts();
+		handleSelectAndConfigureDevicesGUISpacing();
 		
 		// Menu is hidden upon init
 		this.transform.Find("NGUIControls/Panel").gameObject.SetActive(false);
