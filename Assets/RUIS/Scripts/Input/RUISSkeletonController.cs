@@ -108,7 +108,6 @@ public class RUISSkeletonController : MonoBehaviour
 	private RUISPSMoveWand psmove;
 	public Quaternion moveYawRotation { get; private set; }
 
-	private Vector3 newRootPosition = Vector3.zero;
 	private Vector3 torsoDirection = Vector3.down;
 	private Quaternion torsoRotation = Quaternion.identity;
 

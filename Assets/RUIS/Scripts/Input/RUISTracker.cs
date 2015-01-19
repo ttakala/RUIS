@@ -363,7 +363,7 @@ public class RUISTracker : MonoBehaviour
 				{
 					isRiftConnected = OVRManager.display.isPresent;
 					
-					if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+					if(coordinateSystem && coordinateSystem.applyToRootCoordinates && headPositionInput == HeadPositionSource.OculusDK2)
 					{
 						OVRManager.display.RecenteredPose += RecenterPoseWarning;
 					}	
@@ -577,19 +577,15 @@ public class RUISTracker : MonoBehaviour
 	{
 		if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
 		{
-//			transform.localRotation = 
-//				coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
-//				                                 RUISDevice.Oculus_DK2); //coordinateSystem.GetOculusCameraYRotation();
-			
-			// Extract y-rotation from the below converted rotation [Quaternion.Euler(0, quat.eulerAngles.y, 0) did not work for some reason]
+			// Extract Y-rotation from the below converted rotation. Quaternion.Euler(0, quat.eulerAngles.y, 0) did not work (gimbal lock?)
 			Vector3 projected = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
 																 RUISDevice.Oculus_DK2) * Vector3.forward;
 			projected.y = 0;
 			
 			// Make sure that the projection is not pointing too much up
 			if(projected.sqrMagnitude > 0.01)
-				transform.localRotation = Quaternion.LookRotation(projected);
-			else // The Oculus Camera or it's calibration with master coordinate system is peculiar HACK
+				transform.localRotation = Quaternion.LookRotation(projected); // Apply the extracted Y-rotation
+			else // The Oculus Camera's coordinate system Z-axis is parallel with the master coordinate system's Y-axis!
 				transform.localRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
 																		   RUISDevice.Oculus_DK2); 
 			
@@ -598,9 +594,6 @@ public class RUISTracker : MonoBehaviour
 				// Second term offsets the localPosition of each eye camera, which is set by ovrCameraRig
 				this.transform.localPosition =    coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2)
 												- transform.localRotation * Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale);
-												
-				//this.transform.localPosition = Vector3.Scale(-coordinateSystem.GetOculusCameraOriginRaw(), ovrCameraRig.transform.lossyScale);
-				
 			}
 		}
 	}

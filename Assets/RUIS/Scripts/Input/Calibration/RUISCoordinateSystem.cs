@@ -624,9 +624,16 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
 		Quaternion convertedRotation = ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+
+//		return Quaternion.Euler(new Vector3 (0, convertedRotation.eulerAngles.y, 0));
+
+		Vector3 projected = convertedRotation * Vector3.forward;
 		
-		// TODO: Tuukka tried adding 180. This was probably not right. Find correct solution.
-		return Quaternion.Euler(new Vector3 (0, convertedRotation.eulerAngles.y, 0));
+		// Make sure that the projection is not pointing too much up
+		if(projected.sqrMagnitude > 0.001)
+			return Quaternion.LookRotation(projected);
+		else // The Oculus Camera's view axis is parallel with the master coordinate system's Y-axis!
+			return Quaternion.identity;
 	}
 
 	

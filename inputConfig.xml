@@ -2,7 +2,7 @@
 <ns2:RUISInputManager xmlns:ns2="http://ruisystem.net/RUISInputManager">
   <!--Boolean values always with a lower case, e.g. "true" or "false"-->
   <PSMoveSettings>
-    <enabled value="true" />
+    <enabled value="false" />
     <ip value="130.233.46.218" />
     <port value="7899" />
     <autoConnect value="true" />
