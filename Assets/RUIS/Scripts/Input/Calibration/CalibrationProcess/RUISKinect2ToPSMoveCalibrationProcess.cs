@@ -344,27 +344,34 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		Vector3 sample = new Vector3(0,0,0);
 		Vector3 tempSample;
 		updateBodyData();
-		if(device == RUISDevice.Kinect_2) {
+		if(device == RUISDevice.Kinect_2) 
+		{
 			Kinect.Body[] data = kinect2SourceManager.GetBodyData();
 			bool trackedBodyFound = false;
 			int foundBodies = 0;
-			foreach(var body in data) {
+			foreach(var body in data) 
+			{
 				foundBodies++;
-				if(body.IsTracked){
-					if(trackingIDtoIndex[body.TrackingId] == 0) {
+				if(body.IsTracked)
+				{
+					if(trackingIDtoIndex[body.TrackingId] == 0) 
+					{
 						trackedBodyFound = true;
-						if(body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) {
+						if(body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) 
+						{
 							tempSample = new Vector3(body.Joints[Kinect.JointType.HandRight].Position.X,
 							                         body.Joints[Kinect.JointType.HandRight].Position.Y,
 							                         body.Joints[Kinect.JointType.HandRight].Position.Z);
 							tempSample = coordinateSystem.ConvertRawKinect2Location(tempSample);
-							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) {
+							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) 
+							{
 								sample = tempSample;
 								lastKinect2Sample = sample;
 								device1Error = false;
 								if(!device2Error) this.guiTextUpperLocal = "";
 							}
-							else {
+							else 
+							{
 								device1Error = true;
 								this.guiTextUpperLocal = "Not enough hand movement.";
 							}
@@ -373,22 +380,28 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 				}
 				
 			}
-			if(!trackedBodyFound && foundBodies > 1) {
+			if(!trackedBodyFound && foundBodies > 1) 
+			{
 				device1Error = true;
 				this.guiTextUpperLocal = "Step out of the Kinect's\nview and come back.";
 			}
 		}
-		if(device == RUISDevice.PS_Move) {
+		if(device == RUISDevice.PS_Move) 
+		{
 			if(psMoveWrapper.sphereVisible[calibratingPSMoveControllerId] && 
-			   psMoveWrapper.handleVelocity[calibratingPSMoveControllerId].magnitude <= 10.0f) {
+			   psMoveWrapper.handleVelocity[calibratingPSMoveControllerId].magnitude <= 10.0f) 
+			   {
 				tempSample = coordinateSystem.ConvertRawPSMoveLocation(psMoveWrapper.handlePosition[calibratingPSMoveControllerId]);
 				
-				if(Vector3.Distance(tempSample, lastPSMoveSample) > 0.1) {
+				if(Vector3.Distance(tempSample, lastPSMoveSample) > 0.1) 
+				{
 					sample = tempSample;
 					lastPSMoveSample = sample;
-					this.guiTextUpperLocal = "";
+					device2Error = false;
+					if(!device1Error) this.guiTextUpperLocal = "";
 				}
 				else {
+					device2Error = true;
 					this.guiTextUpperLocal = "Not enough hand movement.";
 				}
 			}

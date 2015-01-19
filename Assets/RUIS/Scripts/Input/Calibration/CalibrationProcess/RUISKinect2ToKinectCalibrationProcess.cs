@@ -343,27 +343,34 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		Vector3 sample = new Vector3(0,0,0);
 		Vector3 tempSample;
 		updateBodyData();
-		if(device == RUISDevice.Kinect_2) {
+		if(device == RUISDevice.Kinect_2) 
+		{
 			Kinect.Body[] data = kinect2SourceManager.GetBodyData();
 			bool trackedBodyFound = false;
 			int foundBodies = 0;
-			foreach(var body in data) {
+			foreach(var body in data) 
+			{
 				foundBodies++;
-				if(body.IsTracked){
-					if(trackingIDtoIndex[body.TrackingId] == 0) {
+				if(body.IsTracked)
+				{
+					if(trackingIDtoIndex[body.TrackingId] == 0) 
+					{
 						trackedBodyFound = true;
-						if(body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) {
+						if(body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) 
+						{
 							tempSample = new Vector3(body.Joints[Kinect.JointType.HandRight].Position.X,
 							                         body.Joints[Kinect.JointType.HandRight].Position.Y,
 							                         body.Joints[Kinect.JointType.HandRight].Position.Z);
 							tempSample = coordinateSystem.ConvertRawKinect2Location(tempSample);
-							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) {
+							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) 
+							{
 								sample = tempSample;
 								lastKinect2Sample = sample;
 								device1Error = false;
 								if(!device2Error) this.guiTextUpperLocal = "";
 							}
-							else {
+							else 
+							{
 								device1Error = true;
 								this.guiTextUpperLocal = "Not enough hand movement.";
 							}
@@ -372,25 +379,36 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 				}
 				
 			}
-			if(!trackedBodyFound && foundBodies > 1) {
+			if(!trackedBodyFound && foundBodies > 1) 
+			{
 				device1Error = true;
 				this.guiTextUpperLocal = "Step out of the Kinect's\nview and come back.";
 			}
 			
 		}
-		if(device == RUISDevice.Kinect_1) {
+		if(device == RUISDevice.Kinect_1) 
+		{
 			OpenNI.SkeletonJointPosition jointPosition;
 			bool success = kinectSelection.GetPlayer(0).GetSkeletonJointPosition(OpenNI.SkeletonJoint.RightHand, out jointPosition);
-			if(success && jointPosition.Confidence >= 0.5) { 
+			if(success && jointPosition.Confidence >= 0.5) 
+			{ 
 				tempSample = coordinateSystem.ConvertRawKinectLocation(jointPosition.Position);
-				if(Vector3.Distance(tempSample, lastKinectSample) > 0.1) {
+				if(Vector3.Distance(tempSample, lastKinectSample) > 0.1) 
+				{
 					sample = tempSample;
 					lastKinectSample = sample;
-					this.guiTextUpperLocal = "";
+					device2Error = false;
+					if(!device1Error) this.guiTextUpperLocal = "";
 				}
 				else {
+					device2Error = true;
 					this.guiTextUpperLocal = "Not enough hand movement.";
 				}
+			}
+			else 
+			{
+				device2Error = true;
+				this.guiTextUpperLocal = "Not enough hand movement.";
 			}
 		}
 		return sample;

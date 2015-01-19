@@ -329,23 +329,29 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			Kinect.Body[] data = kinect2SourceManager.GetBodyData();
 			bool trackedBodyFound = false;
 			int foundBodies = 0;
-			foreach(var body in data) {
+			foreach(var body in data) 
+			{
 				foundBodies++;
-				if(body.IsTracked){
-					if(trackingIDtoIndex[body.TrackingId] == 0) {
+				if(body.IsTracked)
+				{
+					if(trackingIDtoIndex[body.TrackingId] == 0)
+					{
 						trackedBodyFound = true;
-				 		if(body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) {
+				 		if(body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) 
+				 		{
 				 			tempSample = new Vector3(body.Joints[Kinect.JointType.HandRight].Position.X,
 							                         body.Joints[Kinect.JointType.HandRight].Position.Y,
 							                         body.Joints[Kinect.JointType.HandRight].Position.Z);
 							tempSample = coordinateSystem.ConvertRawKinect2Location(tempSample);
-							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) {
+							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) 
+							{
 								sample = tempSample;
 								lastKinect2Sample = sample;
 								device1Error = false;
 								if(!device2Error) this.guiTextUpperLocal = "";
 							}
-							else {
+							else 
+							{
 								device1Error = true;
 								this.guiTextUpperLocal = "Not enough hand movement.";
 							}
@@ -354,7 +360,8 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 				}
 				
 			}
-			if(!trackedBodyFound && foundBodies > 1) {
+			if(!trackedBodyFound && foundBodies > 1) 
+			{
 				device1Error = true;
 				this.guiTextUpperLocal = "Step out of the Kinect's\nview and come back.";
 			}
@@ -378,7 +385,8 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 				if(!device1Error) this.guiTextUpperLocal = "";
 				
 			}
-			else {
+			else 
+			{
 				device2Error = true;
 				this.guiTextUpperLocal = "Not enough hand movement.";
 			}
