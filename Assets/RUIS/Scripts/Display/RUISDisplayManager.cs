@@ -375,6 +375,13 @@ public class RUISDisplayManager : MonoBehaviour {
 				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraLeft").transform.gameObject.AddComponent<UICamera>();
 		}
 
+		UICamera[] NGUIcameras = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.GetComponentsInChildren<UICamera>();
+
+		foreach(UICamera camera in NGUIcameras)
+		{
+			camera.eventReceiverMask = LayerMask.GetMask(LayerMask.LayerToName(menuLayer));
+		}
+
 		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight"))
 			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform;
 		
