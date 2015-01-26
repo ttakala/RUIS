@@ -87,7 +87,13 @@ public class RUISDisplayManagerEditor : Editor {
         //if there is only one display we want to give the user the opportunity to set fullscreen
         if (displays.arraySize == 1)
         {
-            allowResolutionDialog.boolValue = EditorGUILayout.Toggle(new GUIContent("Allow Resolution Dialog", "Allow the usage of the resolution dialog"), allowResolutionDialog.boolValue);
+			allowResolutionDialog.boolValue = EditorGUILayout.Toggle(new GUIContent(  "Allow Resolution Dialog", "Enables the Resolution Dialog when your "
+			                                                                        + "standalone build starts if you have only one RUISDisplay. NOTE: In "
+			                                                                        + "all other cases the 'Display Resolution Dialog' setting in Unity's "
+			                                                                        + "Player Settings will be overriden with false. In those cases RUIS "
+			                                                                        + "will attempt to force the standalone game window to have the total "
+			                                                                        + "resolution that is the sum of your RUISDisplays arranged side-by-side."), 
+			                                                         allowResolutionDialog.boolValue);
             if (allowResolutionDialog.boolValue)
             {
                 PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
@@ -98,7 +104,11 @@ public class RUISDisplayManagerEditor : Editor {
             }
         }
         else
-        {
+		{
+			EditorStyles.textField.wordWrap = true;
+			EditorGUILayout.TextArea(  "Below configuration has multiple RUISDisplays. 'Display Resolution Dialog' setting is automatically disabled "
+			                         + "in Unity's Player Settings.", GUILayout.Height(60));
+
             PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
             allowResolutionDialog.boolValue = false;
         }

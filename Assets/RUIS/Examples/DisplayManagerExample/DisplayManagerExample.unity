@@ -1622,6 +1622,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 3
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &133134116
 GameObject:
   m_ObjectHideFlags: 0
@@ -1665,6 +1667,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &143736197
 GameObject:
   m_ObjectHideFlags: 0
@@ -4724,7 +4728,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400014, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: rootDevice
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: guiZ
@@ -4736,6 +4740,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400012, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
       propertyPath: isStereo
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400026, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: allowResolutionDialog
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -9245,6 +9253,8 @@ MonoBehaviour:
   resolutionY: 1080
   useDoubleTheSpace: 0
   enableOculusRift: 0
+  oculusLowPersistence: 1
+  oculusMirrorMode: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 2063474216}
@@ -9462,6 +9472,8 @@ MonoBehaviour:
   resolutionY: 1080
   useDoubleTheSpace: 0
   enableOculusRift: 0
+  oculusLowPersistence: 1
+  oculusMirrorMode: 1
   isStereo: 1
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 78531016}
@@ -9625,6 +9637,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 2
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &903546452
 GameObject:
   m_ObjectHideFlags: 0
@@ -11619,7 +11633,7 @@ MonoBehaviour:
   totalRawResolutionX: 3840
   totalRawResolutionY: 1080
   allowResolutionDialog: 0
-  ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
+  ruisMenuPrefab: {fileID: 193440, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
   menuLayer: 12
   guiDisplayChoice: 0
@@ -20306,9 +20320,10 @@ MonoBehaviour:
   loadFromXML: 1
   yawOffset: 0
   applyToRootCoordinates: 1
+  switchToAvailableDevice: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  rootDevice: 0
+  rootDevice: 1
 --- !u!114 &1815957556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20325,7 +20340,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 127.0.01
+  PSMoveIP: 127.0.0.1
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
@@ -20872,6 +20887,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 1
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &1876638320
 GameObject:
   m_ObjectHideFlags: 0

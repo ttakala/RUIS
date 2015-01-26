@@ -24,6 +24,8 @@ public class RUISCharacterController : MonoBehaviour
     public CharacterPivotType characterPivotType = CharacterPivotType.KinectTorso;
 
 	public bool useOculusPositionalTracking = false;
+	public bool headRotatesBody = true;
+	public bool headPointsWalkingDirection = false;
 
     public int kinectPlayerId;
 	public int bodyTrackingDeviceID;
@@ -52,7 +54,6 @@ public class RUISCharacterController : MonoBehaviour
 	
 	private RUISCharacterStabilizingCollider stabilizingCollider;
 	RUISCoordinateSystem coordinateSystem;
-	Vector3 headPosition = Vector3.zero;
 	
 	public bool dynamicFriction = true;
 	public PhysicMaterial dynamicMaterial;
@@ -67,7 +68,7 @@ public class RUISCharacterController : MonoBehaviour
 	private bool kinectAndMecanimCombinerExists = false;
 	private bool combinerChildrenInstantiated = false;
 
-	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
+	public Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
 	
     void Awake()
     {
@@ -289,29 +290,42 @@ public class RUISCharacterController : MonoBehaviour
     public Vector3 TransformDirection(Vector3 directionInCharacterCoordinates)
     {
         Vector3 characterForward = Vector3.forward;
+		if(skeletonController)
+			characterForward = skeletonController.transform.localRotation * Vector3.forward;
 
 		switch (characterPivotType)
 		{
-            case CharacterPivotType.KinectHead:
-			if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-				characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.rotation * Vector3.forward;
-				else 
-					characterForward = Vector3.forward;
-                break;
+			case CharacterPivotType.KinectHead:
+				if(   (bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
+				   || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect ))
+					break;
+				if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+					characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.rotation * Vector3.forward;
+					else 
+						characterForward = Vector3.forward;
+	                break;
 			case CharacterPivotType.KinectTorso:
-			if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-				characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.rotation * Vector3.forward;
-				else 
-					characterForward = Vector3.forward;
-                break;
+				if(   (bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
+				   || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect ))
+					break;
+				if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+					characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.rotation * Vector3.forward;
+					else 
+						characterForward = Vector3.forward;
+	                break;
             case CharacterPivotType.MoveController:
 			{
+				if(!inputManager.enablePSMove || !headPointsWalkingDirection)
+					break;
 				RUISPSMoveWand psmove = inputManager.GetMoveWand(moveControllerId);
 				if(psmove != null)
 	                characterForward = psmove.localRotation * Vector3.forward;
 			}
                 break;
         }
+
+		if(skeletonManager != null && (skeletonController.followOculusController || skeletonController.followMoveController) && headPointsWalkingDirection)
+			characterForward = skeletonController.trackedDeviceYawRotation * Vector3.forward;
 
         if (ignorePitchAndRoll)
         {
@@ -330,16 +344,14 @@ public class RUISCharacterController : MonoBehaviour
 		if(   useOculusPositionalTracking 
 		   && OVRManager.tracker != null && OVRManager.tracker.isPositionTracked)
 		{
-			//#if UNITY_EDITOR
-			//if(UnityEditorInternal.InternalEditorUtility.HasPro())
-			//#endif
-				if(OVRManager.display != null)
-				{
-					OVRPose headpose = OVRManager.display.GetHeadPose();
-					
-					headPosition = new Vector3(headpose.position.x, headpose.position.y, headpose.position.z); 
-					return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawOculusDK2Location(headPosition), RUISDevice.Oculus_DK2);
-				}
+			if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+			{
+				return coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2);
+			}
+			else if(OVRManager.display != null)
+			{
+				return OVRManager.display.GetHeadPose().position;
+			}
 		}
 		else
 		{
@@ -347,6 +359,10 @@ public class RUISCharacterController : MonoBehaviour
 	        {
 	            case CharacterPivotType.KinectHead:
 				{
+					if(    (bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
+				   		|| (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect ))
+						break;
+
 					if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
 					{
 						if(skeletonController) // Add root speed scaling
@@ -358,6 +374,10 @@ public class RUISCharacterController : MonoBehaviour
 				}
 	            case CharacterPivotType.KinectTorso:
 				{
+					if(   (bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
+					   || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect ))
+						break;
+
 					if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
 					{
 						if(skeletonController) // Add root speed scaling
@@ -369,6 +389,9 @@ public class RUISCharacterController : MonoBehaviour
 				}
 	            case CharacterPivotType.MoveController:
 				{
+					if(!inputManager.enablePSMove)
+						break;
+
 					if(inputManager.GetMoveWand(moveControllerId))
 		                return inputManager.GetMoveWand(moveControllerId).handlePosition;
 					break;
@@ -376,7 +399,10 @@ public class RUISCharacterController : MonoBehaviour
 	        }
 		}
 
-        return Vector3.zero;
+		if(skeletonController != null)
+			return skeletonController.transform.localPosition;
+		else
+	        return Vector3.zero;
     }
 
     public void OnDrawGizmosSelected()

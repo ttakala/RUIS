@@ -63,13 +63,11 @@ public class RUISPSMoveWand : RUISWand {
 	
 	void Update ()
     {        
-        
         if(!rigidbody)
 		{
             transform.localPosition = localPosition;
             transform.localRotation = localRotation;
         }
-
 
         if (whereToCopyColor != null)
         {
@@ -207,11 +205,35 @@ public class RUISPSMoveWand : RUISWand {
         return true;
     }
 
+
+	public bool motionSmoothing = false;
+	public float refreshRate = 50;
+	private float lastUpdateTime = 0;
+	private Vector3 previousPosition = Vector3.zero;
+	private Vector3 candidatePosition = Vector3.zero;
+	private Vector3 latestPosition = Vector3.zero;
+
     public Vector3 localPosition
     {
         get
         {
-            return TransformPosition(psMoveWrapper.position[controllerId]);
+			if(!motionSmoothing)
+				 return TransformPosition(psMoveWrapper.position[controllerId]);
+			else // HACK: PSMoveWrapper doesn't provide info about when a new "frame" arrived. Anyway, this hack doesn't seem to help.
+			{
+				float lerp = 0;
+				candidatePosition = psMoveWrapper.position[controllerId];
+				if(latestPosition.x == candidatePosition.x && latestPosition.y == candidatePosition.y && latestPosition.z == candidatePosition.z)
+					lerp = refreshRate * (Time.time - lastUpdateTime);
+				else
+				{
+					refreshRate = Mathf.Clamp(1/(Time.time - lastUpdateTime), 1, 100);
+					lastUpdateTime = Time.time;
+					previousPosition = latestPosition;
+					latestPosition = candidatePosition;
+				}
+				return TransformPosition(Vector3.Lerp(previousPosition, latestPosition, lerp));
+			}
         }
     }
 	

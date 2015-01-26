@@ -701,6 +701,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 2
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &117002799
 GameObject:
   m_ObjectHideFlags: 0
@@ -1315,6 +1317,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: -.100000001, y: -.0500000007, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 90, y: 0, z: 0}
@@ -3451,6 +3454,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &421772919
 GameObject:
   m_ObjectHideFlags: 0
@@ -4594,6 +4599,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 1
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &527809964
 GameObject:
   m_ObjectHideFlags: 0
@@ -5568,6 +5575,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 3
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &592158255
 GameObject:
   m_ObjectHideFlags: 0
@@ -10021,6 +10030,7 @@ MonoBehaviour:
   useDoubleTheSpace: 0
   enableOculusRift: 0
   oculusLowPersistence: 1
+  oculusMirrorMode: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 431496784}
@@ -10631,6 +10641,7 @@ MonoBehaviour:
   useDoubleTheSpace: 0
   enableOculusRift: 0
   oculusLowPersistence: 1
+  oculusMirrorMode: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 755089093}
@@ -19034,6 +19045,14 @@ Prefab:
       propertyPath: ruisMenuPrefab
       value: 
       objectReference: {fileID: 193440, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
+    - target: {fileID: 11400030, guid: d6219459e0eefe144b152057cb448933, type: 2}
+      propertyPath: enablePSMove
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400032, guid: d6219459e0eefe144b152057cb448933, type: 2}
+      propertyPath: rootDevice
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d6219459e0eefe144b152057cb448933, type: 2}
   m_RootGameObject: {fileID: 231584585}
@@ -22533,9 +22552,10 @@ MonoBehaviour:
   loadFromXML: 1
   yawOffset: 0
   applyToRootCoordinates: 1
+  switchToAvailableDevice: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  rootDevice: 0
+  rootDevice: 1
 --- !u!1 &2002616882
 GameObject:
   m_ObjectHideFlags: 0
@@ -22781,6 +22801,7 @@ MonoBehaviour:
   useDoubleTheSpace: 0
   enableOculusRift: 0
   oculusLowPersistence: 1
+  oculusMirrorMode: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 632743623}

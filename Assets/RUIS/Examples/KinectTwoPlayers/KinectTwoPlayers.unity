@@ -808,6 +808,10 @@ Prefab:
       propertyPath: gestureSelectionMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
+      propertyPath: showVisualizer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
   m_RootGameObject: {fileID: 55120563}
@@ -910,8 +914,8 @@ LineRenderer:
   m_PrefabInternal: {fileID: 44881036}
   m_GameObject: {fileID: 55120563}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
@@ -981,9 +985,9 @@ MonoBehaviour:
   visualizerThreshold: .5
   visualizerWidth: 32
   visualizerHeight: 32
-  wandColor: {r: 1, g: 1, b: 1, a: 1}
+  wandColor: {r: 1, g: 1, b: 1, a: .501960814}
   wandPositionVisualizer: {fileID: 663482032}
-  showVisualizer: 1
+  showVisualizer: 0
   skeletonManager: {fileID: 0}
   switchToAvailableKinect: 1
 --- !u!114 &55120570
@@ -1339,6 +1343,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPivotType: 1
   useOculusPositionalTracking: 0
+  headRotatesBody: 1
+  headPointsWalkingDirection: 1
   kinectPlayerId: 0
   bodyTrackingDeviceID: 0
   moveControllerId: 0
@@ -1352,6 +1358,7 @@ MonoBehaviour:
   dynamicFriction: 1
   dynamicMaterial: {fileID: 0}
   feetAlsoAffectGrounding: 1
+  ovrHmdVersion: 0
 --- !u!114 &86632544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1404,9 +1411,8 @@ MonoBehaviour:
   - {fileID: 1246043439}
   display: {fileID: 0}
   allowMultipleAssigners: 1
-  applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: .200000003, z: .300000012}
+  onlyRazerOffset: {x: 0, y: 0, z: 0}
   razerWandParent: {fileID: 1800999072}
 --- !u!54 &86632546
 Rigidbody:
@@ -2150,6 +2156,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &129720511
 GameObject:
   m_ObjectHideFlags: 0
@@ -3450,6 +3458,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPivotType: 1
   useOculusPositionalTracking: 0
+  headRotatesBody: 1
+  headPointsWalkingDirection: 1
   kinectPlayerId: 0
   bodyTrackingDeviceID: 0
   moveControllerId: 0
@@ -3463,6 +3473,7 @@ MonoBehaviour:
   dynamicFriction: 1
   dynamicMaterial: {fileID: 0}
   feetAlsoAffectGrounding: 1
+  ovrHmdVersion: 0
 --- !u!114 &208648402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3515,9 +3526,8 @@ MonoBehaviour:
   - {fileID: 1074240165}
   display: {fileID: 0}
   allowMultipleAssigners: 1
-  applyKinectDriftCorrectionPreference: 1
   changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: .200000003, z: .300000012}
+  onlyRazerOffset: {x: 0, y: 0, z: 0}
   razerWandParent: {fileID: 148978576}
 --- !u!54 &208648404
 Rigidbody:
@@ -4405,6 +4415,8 @@ MonoBehaviour:
   resolutionY: 1080
   useDoubleTheSpace: 0
   enableOculusRift: 0
+  oculusLowPersistence: 1
+  oculusMirrorMode: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 115874250}
@@ -4547,6 +4559,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: .150000006, z: -.0500000007}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -9713,6 +9726,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: .119999997, z: 0}
   positionOffsetHydra: {x: -.100000001, y: -.0500000007, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 90, y: 0, z: 0}
@@ -11008,6 +11022,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 2
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &692279999
 GameObject:
   m_ObjectHideFlags: 0
@@ -11178,6 +11194,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: .119999997, z: 0}
   positionOffsetHydra: {x: -.100000001, y: -.0500000007, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 90, y: 0, z: 0}
@@ -11305,6 +11322,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: -.100000001, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -11656,6 +11674,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: .119999997, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -11783,6 +11802,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: .150000006, z: -.0500000007}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -13997,9 +14017,11 @@ MonoBehaviour:
   customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
-  trackThumbs: 0
+  trackThumbs: 1
   trackAnkle: 1
   rotateWristFromElbow: 0
+  skeletonManager: {fileID: 0}
+  characterController: {fileID: 0}
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 0
@@ -14018,12 +14040,19 @@ MonoBehaviour:
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
   filterRotations: 1
-  rotationNoiseCovariance: 500
+  rotationNoiseCovariance: 200
+  thumbZRotationOffset: 45
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
   forearmLengthRatio: 1
   shinLengthRatio: 1
+  clenchedRotationThumbTM: {x: .382683456, y: 0, z: 0, w: .923879504}
+  clenchedRotationThumbMCP: {x: 0, y: 0, z: -.21643962, w: .976296008}
+  clenchedRotationThumbIP: {x: 0, y: 0, z: -.642787576, w: .766044438}
+  clenchedRotationMCP: {x: 0, y: 0, z: -.382683456, w: .923879504}
+  clenchedRotationPIP: {x: 0, y: 0, z: -.766044438, w: .642787635}
+  clenchedRotationDIP: {x: 0, y: 0, z: -.57357645, w: .819152057}
 --- !u!1 &892572131
 GameObject:
   m_ObjectHideFlags: 0
@@ -14708,6 +14737,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400006, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
       propertyPath: gestureSelectionMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400006, guid: 4acc5b37e406a4e4981c055f4fd21ffa, type: 2}
+      propertyPath: showVisualizer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -17293,6 +17326,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: -.119999997, z: 0}
   positionOffsetHydra: {x: -.100000001, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -18089,8 +18123,8 @@ LineRenderer:
   m_PrefabInternal: {fileID: 915890351}
   m_GameObject: {fileID: 1132652835}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
@@ -18160,9 +18194,9 @@ MonoBehaviour:
   visualizerThreshold: .5
   visualizerWidth: 32
   visualizerHeight: 32
-  wandColor: {r: 1, g: 1, b: 1, a: 1}
+  wandColor: {r: 1, g: 1, b: 1, a: .501960814}
   wandPositionVisualizer: {fileID: 1910162740}
-  showVisualizer: 1
+  showVisualizer: 0
   skeletonManager: {fileID: 0}
   switchToAvailableKinect: 1
 --- !u!114 &1132652842
@@ -18319,6 +18353,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: .150000006, z: -.0500000007}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -19521,6 +19556,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: -.100000001, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -19792,6 +19828,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: -.119999997, z: 0}
   positionOffsetHydra: {x: -.100000001, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -24941,7 +24978,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: .800000012, z: .0500000007}
+  defaultPosition: {x: 0, y: .800000012, z: .100000001}
   headPositionInput: 6
   headRotationInput: 0
   mobileRazerBase: 0
@@ -24981,6 +25018,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -25445,7 +25483,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 127.0.01
+  PSMoveIP: 127.0.0.1
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
@@ -25483,6 +25521,7 @@ MonoBehaviour:
   loadFromXML: 1
   yawOffset: 0
   applyToRootCoordinates: 1
+  switchToAvailableDevice: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
   rootDevice: 1
@@ -26703,6 +26742,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 1
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &1613472128
 GameObject:
   m_ObjectHideFlags: 0
@@ -27467,6 +27508,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &1656080711
 GameObject:
   m_ObjectHideFlags: 0
@@ -27676,6 +27719,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 3
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &1668803557
 GameObject:
   m_ObjectHideFlags: 0
@@ -28001,7 +28046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297763ddec51fe47870bc1ff8724d9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultPosition: {x: 0, y: .800000012, z: .0500000007}
+  defaultPosition: {x: 0, y: .800000012, z: .100000001}
   headPositionInput: 6
   headRotationInput: 0
   mobileRazerBase: 0
@@ -28041,6 +28086,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -30204,6 +30250,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &1778561245
 GameObject:
   m_ObjectHideFlags: 0
@@ -32555,6 +32603,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: .150000006, z: -.0500000007}
   positionOffsetPSMove: {x: 0, y: 0, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -33326,9 +33375,11 @@ MonoBehaviour:
   customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
-  trackThumbs: 0
+  trackThumbs: 1
   trackAnkle: 1
   rotateWristFromElbow: 0
+  skeletonManager: {fileID: 0}
+  characterController: {fileID: 0}
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 1
@@ -33347,12 +33398,19 @@ MonoBehaviour:
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
   filterRotations: 1
-  rotationNoiseCovariance: 500
+  rotationNoiseCovariance: 200
+  thumbZRotationOffset: 45
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
   forearmLengthRatio: 1
   shinLengthRatio: 1
+  clenchedRotationThumbTM: {x: .382683456, y: 0, z: 0, w: .923879504}
+  clenchedRotationThumbMCP: {x: 0, y: 0, z: -.21643962, w: .976296008}
+  clenchedRotationThumbIP: {x: 0, y: 0, z: -.642787576, w: .766044438}
+  clenchedRotationMCP: {x: 0, y: 0, z: -.382683456, w: .923879504}
+  clenchedRotationPIP: {x: 0, y: 0, z: -.766044438, w: .642787635}
+  clenchedRotationDIP: {x: 0, y: 0, z: -.57357645, w: .819152057}
 --- !u!1 &2012714288
 GameObject:
   m_ObjectHideFlags: 0
@@ -34051,6 +34109,7 @@ MonoBehaviour:
   positionOffsetKinect: {x: 0, y: 0, z: 0}
   positionOffsetPSMove: {x: 0, y: .119999997, z: 0}
   positionOffsetHydra: {x: 0, y: 0, z: 0}
+  positionOffsetOculus: {x: 0, y: 0, z: 0}
   rotationOffsetKinect: {x: 0, y: 0, z: 0}
   rotationOffsetPSMove: {x: 0, y: 0, z: 0}
   rotationOffsetHydra: {x: 0, y: 0, z: 0}
@@ -34450,7 +34509,7 @@ MonoBehaviour:
   totalRawResolutionX: 1920
   totalRawResolutionY: 1080
   allowResolutionDialog: 0
-  ruisMenuPrefab: {fileID: 100020, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
+  ruisMenuPrefab: {fileID: 193440, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
   menuLayer: 12
   guiDisplayChoice: 0

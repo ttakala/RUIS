@@ -1177,6 +1177,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &678814899
 GameObject:
   m_ObjectHideFlags: 0
@@ -2631,6 +2633,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &1233854551
 GameObject:
   m_ObjectHideFlags: 0
@@ -2834,6 +2838,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 2
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &1382319577
 GameObject:
   m_ObjectHideFlags: 0
@@ -3257,6 +3263,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 3
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!1 &1500913916
 GameObject:
   m_ObjectHideFlags: 0
@@ -4013,6 +4021,7 @@ MonoBehaviour:
   loadFromXML: 1
   yawOffset: 0
   applyToRootCoordinates: 1
+  switchToAvailableDevice: 0
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
   rootDevice: 1
@@ -4032,7 +4041,7 @@ MonoBehaviour:
   filename: inputConfig.xml
   loadFromTextFileInEditor: 0
   enablePSMove: 0
-  PSMoveIP: 130.233.46.218
+  PSMoveIP: 127.0.0.1
   PSMovePort: 7899
   connectToPSMoveOnStartup: 1
   psMoveWrapper: {fileID: 0}
@@ -4703,10 +4712,12 @@ MonoBehaviour:
   customLeftFoot: {fileID: 0}
   customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
-  fistCurlFingers: 1
+  fistCurlFingers: 0
   trackThumbs: 0
   trackAnkle: 1
   rotateWristFromElbow: 1
+  skeletonManager: {fileID: 0}
+  characterController: {fileID: 0}
   bodyTrackingDevice: 0
   bodyTrackingDeviceID: 0
   playerId: 0
@@ -4724,13 +4735,20 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
-  filterRotations: 0
-  rotationNoiseCovariance: 500
+  filterRotations: 1
+  rotationNoiseCovariance: 200
+  thumbZRotationOffset: 45
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
   forearmLengthRatio: 1
   shinLengthRatio: 1
+  clenchedRotationThumbTM: {x: .382683456, y: 0, z: 0, w: .923879504}
+  clenchedRotationThumbMCP: {x: 0, y: 0, z: -.21643962, w: .976296008}
+  clenchedRotationThumbIP: {x: 0, y: 0, z: -.642787576, w: .766044438}
+  clenchedRotationMCP: {x: 0, y: 0, z: -.382683456, w: .923879504}
+  clenchedRotationPIP: {x: 0, y: 0, z: -.766044438, w: .642787635}
+  clenchedRotationDIP: {x: 0, y: 0, z: -.57357645, w: .819152057}
 --- !u!54 &2093014175
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4930,6 +4948,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 1
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!4 &2139691591
 Transform:
   m_ObjectHideFlags: 0

@@ -90,7 +90,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 	void Start()
 	{
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-		
+
 		if(transform.parent)
 		{
 			skeletonController = transform.parent.gameObject.GetComponentInChildren(typeof(RUISSkeletonController)) as RUISSkeletonController;
@@ -132,39 +132,39 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 //				newLocalPosition.y = (torsoPosition.y)/ 2 + coordinateYOffset; 
 //			}
 //		}
+		
+		// Tuukka:
+		// Original skeletonController has been destroyed because the GameObject which had
+		// it has been split in three parts: Kinect, Mecanim, Blended. Lets fetch the new one.
+		if (!combinerChildrenInstantiated && kinectAndMecanimCombinerExists)
+		{
+			if (gameObject.transform.parent != null)
+			{
+				RUISKinectAndMecanimCombiner combiner =  gameObject.transform.parent.GetComponentInChildren<RUISKinectAndMecanimCombiner>();
+				if (combiner && combiner.isChildrenInstantiated())
+				{
+					skeletonController = combiner.skeletonController;
+					
+					if(skeletonController == null)
+						Debug.LogError(  "Could not find Component " + typeof(RUISSkeletonController) + " from "
+						               + "children of " + gameObject.transform.parent.name
+						               + ", something is very wrong with this character setup!");
+					
+					bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+					playerId = skeletonController.playerId;
+					combinerChildrenInstantiated = true;
+				}
+			}
+		}
 
 		if (!skeletonManager || !skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking) 
 		{
 			
             colliderHeight = defaultColliderHeight;
-            // Tuukka:
-            // Original skeletonController has been destroyed because the GameObject which had
-            // it has been split in three parts: Kinect, Mecanim, Blended. Lets fetch the new one.
-            if (!combinerChildrenInstantiated && kinectAndMecanimCombinerExists)
-            {
-                if (gameObject.transform.parent != null)
-                {
-                    RUISKinectAndMecanimCombiner combiner =
-                                gameObject.transform.parent.GetComponentInChildren<RUISKinectAndMecanimCombiner>();
-                    if (combiner && combiner.isChildrenInstantiated())
-                    {
-                        skeletonController = combiner.skeletonController;
-
-						if(skeletonController == null)
-							Debug.LogError(  "Could not find Component " + typeof(RUISSkeletonController) + " from "
-							               + "children of " + gameObject.transform.parent.name
-							               + ", something is very wrong with this character setup!");
-
-						bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
-						playerId = skeletonController.playerId;
-                        combinerChildrenInstantiated = true;
-                    }
-                }
-            }
 
             if (combinerChildrenInstantiated)
             {
-                if (skeletonController.followMoveController)
+				if ( skeletonController.followOculusController || skeletonController.followMoveController )
                 {
 					// TODO *** Check that this works with other models. Before with grandma model torsoPos value was:
                     //torsoPos = skeletonController.transform.localPosition + defaultColliderHeight * Vector3.up;

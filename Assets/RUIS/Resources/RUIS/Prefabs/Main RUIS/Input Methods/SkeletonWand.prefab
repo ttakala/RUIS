@@ -160,9 +160,9 @@ MonoBehaviour:
   visualizerThreshold: .5
   visualizerWidth: 32
   visualizerHeight: 32
-  wandColor: {r: 1, g: 1, b: 1, a: 1}
+  wandColor: {r: 1, g: 1, b: 1, a: .501960814}
   wandPositionVisualizer: {fileID: 100002}
-  showVisualizer: 1
+  showVisualizer: 0
   skeletonManager: {fileID: 0}
   switchToAvailableKinect: 1
 --- !u!114 &11400008
@@ -189,8 +189,8 @@ LineRenderer:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:

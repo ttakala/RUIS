@@ -153,6 +153,7 @@ public class RUISTracker : MonoBehaviour
 	public Vector3 positionOffsetKinect = new Vector3(0, 0, 0);
 	public Vector3 positionOffsetPSMove = new Vector3(0, 0.12f, 0);
 	public Vector3 positionOffsetHydra  = new Vector3(-0.1f, -0.05f, 0);
+	public Vector3 positionOffsetOculus = new Vector3(0, 0, 0);
 	
 	// Rift has its own methods for rotation offsetting
 	public Vector3 rotationOffsetKinect = new Vector3(0, 0, 0);
@@ -385,6 +386,8 @@ public class RUISTracker : MonoBehaviour
 			else 
 			{
 				OculusCounterPoseOffset();
+				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+					this.localRotation = coordinateSystem.GetOculusCameraYRotation();
 			}
 		}
     
@@ -575,25 +578,33 @@ public class RUISTracker : MonoBehaviour
 	
 	public void OculusCounterPoseOffset()
 	{
-		if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+		if(coordinateSystem)
 		{
-			// Extract Y-rotation from the below converted rotation. Quaternion.Euler(0, quat.eulerAngles.y, 0) did not work (gimbal lock?)
-			Vector3 projected = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
-																 RUISDevice.Oculus_DK2) * Vector3.forward;
-			projected.y = 0;
-			
-			// Make sure that the projection is not pointing too much up
-			if(projected.sqrMagnitude > 0.01)
-				transform.localRotation = Quaternion.LookRotation(projected); // Apply the extracted Y-rotation
-			else // The Oculus Camera's coordinate system Z-axis is parallel with the master coordinate system's Y-axis!
-				transform.localRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
-																		   RUISDevice.Oculus_DK2); 
-			
-			if(OVRManager.capiHmd != null)
+			if(coordinateSystem.applyToRootCoordinates)
 			{
-				// Second term offsets the localPosition of each eye camera, which is set by ovrCameraRig
-				this.transform.localPosition =    coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2)
-												- transform.localRotation * Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale);
+				// Extract Y-rotation from the below converted rotation. Quaternion.Euler(0, quat.eulerAngles.y, 0) did not work (gimbal lock?)
+				Vector3 projected = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
+																	 RUISDevice.Oculus_DK2) * Vector3.forward;
+				projected.y = 0;
+				
+				// Make sure that the projection is not pointing too much up
+				if(projected.sqrMagnitude > 0.01)
+					transform.localRotation = Quaternion.LookRotation(projected); // Apply the extracted Y-rotation
+				else // The Oculus Camera's coordinate system Z-axis is parallel with the master coordinate system's Y-axis!
+					transform.localRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()), 
+																			   RUISDevice.Oculus_DK2); 
+				
+				if(OVRManager.capiHmd != null)
+				{
+					// Second term offsets the localPosition of each eye camera, which is set by ovrCameraRig
+					this.transform.localPosition =    coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2)
+													- transform.localRotation * Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale)
+													+ coordinateSystem.GetOculusRiftOrientation() * positionOffsetOculus;
+				}
+			}
+			else
+			{
+				this.transform.localPosition = coordinateSystem.GetOculusRiftOrientation() * positionOffsetOculus + coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
 			}
 		}
 	}
@@ -684,16 +695,16 @@ public class RUISTracker : MonoBehaviour
 		if(checkPSMove && posePSMove != null)
 		{
 			if(posePSMove.moveButtonWasPressed)
-				ResetOrientation();
+				RecenterPose();
 		}
 		if(checkRazer && poseRazer != null && poseRazer.Enabled)
 		{
 			if(		poseRazer.GetButton(SixenseButtons.BUMPER)
 				&&  poseRazer.GetButtonDown(SixenseButtons.START) )
-				ResetOrientation();
+				RecenterPose();
 		}
 		if(Input.GetKeyDown(resetKey))
-			ResetOrientation();
+			RecenterPose();
 		
 		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
@@ -955,8 +966,8 @@ public class RUISTracker : MonoBehaviour
 			{
 				// Negate completely Oculus position tracking, including rotation-based neck offset
 				if(headPositionInput != HeadPositionSource.None)
-					transform.localPosition = transform.localPosition - transform.localRotation
-						* Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale);
+					transform.localPosition =  transform.localPosition 
+											 - transform.localRotation * (Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale) + positionOffsetOculus);
 			}
 			
 			// Get Oculus Rift rotation
@@ -1074,9 +1085,9 @@ public class RUISTracker : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Resets Oculus Rift orientation and yaw drift correction
+	/// Resets Oculus Rift orientation, position, and yaw drift correction
 	/// </summary>
-	public void ResetOrientation()
+	public void RecenterPose()
 	{
 		if(externalDriftCorrection && compass != CompassSource.PSMove) 
 			filterDrift.reset(); // Reset yaw filter correction to zero
@@ -1086,6 +1097,9 @@ public class RUISTracker : MonoBehaviour
 		{
 			if(OVRManager.display != null)
 				OVRManager.display.RecenterPose();
+
+			if(coordinateSystem && !coordinateSystem.applyToRootCoordinates)
+				this.localRotation = coordinateSystem.GetOculusCameraYRotation();
 
 			if(!externalDriftCorrection)
 				transform.localRotation = Quaternion.identity;
@@ -1174,8 +1188,13 @@ public class RUISTracker : MonoBehaviour
 			                                          - finalYawDifference.eulerAngles.y) % 360, 0));
 		}
 		else
-			return Quaternion.Euler(new Vector3( 0, (360 + driftingEuler.y - finalYawDifference.eulerAngles.y)%360, 0));
+		{
+			if(useOculusRiftRotation) // We are using DK1 or DKHD
+				return Quaternion.Euler(new Vector3( 0, (360 - finalYawDifference.eulerAngles.y)%360, 0));
+			else // The drifting rotation source is not Oculus Rift at all
+				return Quaternion.Euler(new Vector3( 0, (360 + driftingEuler.y - finalYawDifference.eulerAngles.y)%360, 0));
 //			return Quaternion.Euler(new Vector3( driftingEuler.x, (360 + driftingEuler.y - finalYawDifference.eulerAngles.y)%360, driftingEuler.z));
+		}
 	}
 	
 	

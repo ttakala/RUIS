@@ -26,6 +26,7 @@ public class RUISDisplayEditor : Editor {
     SerializedProperty isStereo;
 	SerializedProperty enableOculusRift;
 	SerializedProperty oculusLowPersistence;
+	SerializedProperty oculusMirrorMode;
     SerializedProperty isObliqueFrustum;
     SerializedProperty isKeystoneCorrected;
     SerializedProperty camera;
@@ -60,6 +61,7 @@ public class RUISDisplayEditor : Editor {
         isStereo = serializedObject.FindProperty("isStereo");
         enableOculusRift = serializedObject.FindProperty("enableOculusRift");
 		oculusLowPersistence = serializedObject.FindProperty("oculusLowPersistence");
+		oculusMirrorMode = serializedObject.FindProperty("oculusMirrorMode");
         isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
         isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
         camera = serializedObject.FindProperty("_linkedCamera");
@@ -125,10 +127,16 @@ public class RUISDisplayEditor : Editor {
 		EditorGUILayout.PropertyField(oculusLowPersistence, new GUIContent(  "Low Persistence", "Low persistence reduces pixel blur. Try disabling this option if "
 		                                                                   + "the Oculus Rift view suffers from 'judder' when rotating your head. NOTE: Disabling "
 		                                                                   + "this option might cause issues with Oculus runtime 0.4.4 if you're using DX11!"));
-		if(enableOculusRift.boolValue && EditorApplication.isPlaying && previousOculusLowPersistenceValue != oculusLowPersistence.boolValue && displayManager)
+		EditorGUILayout.PropertyField(oculusMirrorMode, new GUIContent(  "Mirror Mode", "Draw the Oculus viewports also to the main display when Direct Display Mode "
+		                                                               + "(Direct HMD Access) is enabled from the Oculus Configuration Utility. This setting has no "
+		                                                               + "effect when your application is playing inside the Unity Editor."));
+		if(enableOculusRift.boolValue && EditorApplication.isPlaying)
 		{
-			// Low Persistence value changed, enforce it if application is running in Editor
-			displayManager.setOculusLowPersistence(oculusLowPersistence.boolValue);
+			if(previousOculusLowPersistenceValue != oculusLowPersistence.boolValue && displayManager)
+			{
+				// Low Persistence value changed, enforce it if application is running in Editor
+				displayManager.setOculusLowPersistence(oculusLowPersistence.boolValue);
+			}
 		}
 
 		EditorGUI.indentLevel--;
@@ -136,7 +144,8 @@ public class RUISDisplayEditor : Editor {
 		GUI.enabled = !enableOculusRift.boolValue;
 		
 		RUISEditorUtility.HorizontalRuler();
-		EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked CAVE Display", "Should the projection matrix be skewed to use this display as a head tracked CAVE viewport"));
+		EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked CAVE Display",   "Should the projection matrix be skewed to use this display "
+		                                                               								+ "as a head tracked CAVE viewport"));
 
 		GUI.enabled = true;
 

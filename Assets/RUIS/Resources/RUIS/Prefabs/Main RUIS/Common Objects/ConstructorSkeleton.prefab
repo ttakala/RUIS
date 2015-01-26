@@ -197,7 +197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100026
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,7 +893,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: .941147089, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400026}
@@ -1681,8 +1681,8 @@ MonoBehaviour:
   leftHip: {fileID: 400090}
   leftKnee: {fileID: 400044}
   leftFoot: {fileID: 400004}
-  leftThumb: {fileID: 0}
-  rightThumb: {fileID: 0}
+  leftThumb: {fileID: 400078}
+  rightThumb: {fileID: 400040}
   customRoot: {fileID: 0}
   customHead: {fileID: 0}
   customNeck: {fileID: 0}
@@ -1702,14 +1702,17 @@ MonoBehaviour:
   customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
-  trackThumbs: 0
+  trackThumbs: 1
   trackAnkle: 1
   rotateWristFromElbow: 1
-  bodyTrackingDevice: 0
+  skeletonManager: {fileID: 0}
+  characterController: {fileID: 0}
+  bodyTrackingDevice: 1
   bodyTrackingDeviceID: 0
   playerId: 0
   switchToAvailableKinect: 1
   updateRootPosition: 1
+  rootSpeedScaling: {x: 1, y: 1, z: 1}
   updateJointPositions: 0
   updateJointRotations: 1
   useHierarchicalModel: 1
@@ -1721,13 +1724,20 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
-  filterRotations: 0
-  rotationNoiseCovariance: 500
+  filterRotations: 1
+  rotationNoiseCovariance: 200
+  thumbZRotationOffset: 45
   adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
   forearmLengthRatio: 1
   shinLengthRatio: 1
+  clenchedRotationThumbTM: {x: .382683456, y: 0, z: 0, w: .923879504}
+  clenchedRotationThumbMCP: {x: 0, y: 0, z: -.21643962, w: .976296008}
+  clenchedRotationThumbIP: {x: 0, y: 0, z: -.642787576, w: .766044438}
+  clenchedRotationMCP: {x: 0, y: 0, z: -.382683456, w: .923879504}
+  clenchedRotationPIP: {x: 0, y: 0, z: -.766044438, w: .642787635}
+  clenchedRotationDIP: {x: 0, y: 0, z: -.57357645, w: .819152057}
 --- !u!137 &13700000
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

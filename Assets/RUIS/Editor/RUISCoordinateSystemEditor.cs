@@ -11,6 +11,7 @@ public class RUISCoordinateSystemEditor : Editor
 	SerializedProperty loadFromXML;
 	SerializedProperty rootDevice; 
 	SerializedProperty applyToRootCoordinates;
+	SerializedProperty switchToAvailableDevice;
 	SerializedProperty setKinectOriginToFloor;
 	SerializedProperty positionOffset;
 	SerializedProperty yawOffset;
@@ -30,6 +31,7 @@ public class RUISCoordinateSystemEditor : Editor
 		loadFromXML = serializedObject.FindProperty("loadFromXML");
 		rootDevice = serializedObject.FindProperty("rootDevice"); 
 		applyToRootCoordinates = serializedObject.FindProperty("applyToRootCoordinates");
+		switchToAvailableDevice = serializedObject.FindProperty("switchToAvailableDevice");
 		setKinectOriginToFloor = serializedObject.FindProperty("setKinectOriginToFloor");
 		positionOffset = serializedObject.FindProperty("positionOffset");
 		yawOffset = serializedObject.FindProperty("yawOffset");
@@ -71,10 +73,15 @@ public class RUISCoordinateSystemEditor : Editor
 		                                                         + "other sensors that are pairwise calibrated with the master sensor will have their RUIS "
 		                                                         + "objects tracked in the master coordinate system."));
 		EditorGUI.indentLevel++;
+
+		EditorGUILayout.PropertyField(switchToAvailableDevice, new GUIContent(  "Switch To Available Sensor", "If the above defined 'Master Coordinate System Sensor' "
+			                                                         		  + "is not available upon start, switch to a sensor that is. If there are multiple "
+		                                                                      + "available sensors, then the following preference order will be used: Kinect 2, Kinect 1, "
+		                                                                      + "Oculus Rift DK2, PS Move."));
 		EditorGUILayout.PropertyField(positionOffset, new GUIContent(  "Location Offset", "This value offsets the Master Coordinate System (and other sensor "
-		                                                             + "coordinate systems as well, if 'Use Master Coordinate System' is enabled."));
+		                                                             + "coordinate systems as well, if 'Use Master Coordinate System' is enabled)."));
 		EditorGUILayout.PropertyField(yawOffset, new GUIContent(  "Y Rotation Offset", "This value rotates the Master Coordinate System around Y axis (and "
-		                                                        + "other sensor coordinate systems as well, if 'Use Master Coordinate System' is enabled."));
+		                                                        + "other sensor coordinate systems as well, if 'Use Master Coordinate System' is enabled)."));
 		EditorGUI.indentLevel--;
 		EditorGUILayout.PropertyField(applyToRootCoordinates, new GUIContent(  "Use Master Coordinate System", "Applies pairwise calibration transformations from "
 		                                                                     + "Calibration XML File so that sensors that are calibrated pairwise with the Master "

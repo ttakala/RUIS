@@ -15,14 +15,34 @@ using Ovr;
 public class RUISHeadTrackerAssigner : MonoBehaviour {
 	
 	RUISInputManager inputManager;
+
+	
+	[Tooltip(  "You can disable this script if necessary and it won't be run upon Awake().")]
 	public bool scriptEnabled = true;
+	[Tooltip(  "The script will iterate through the below list of RUISTrackers, and leave the best candidate enabled, "
+	         + "based on your RUISInputManager settings. If no suitable tracking devices are enabled in "
+	         + "RUISInputManager, then the first item on the list is chosen. If multiple tracking devices are enabled, "
+	         + "then the following preference order is used: Oculus DK2, PS Move, Kinect 2, Kinect 1, Razer Hydra.")]
 	public List<RUISTracker> headTrackers = new List<RUISTracker>(6);
+	[Tooltip(  "The chosen RUISTracker's child RUISCamera will draw to this display (if it doesn't have an attached "
+	         + "RUISCamera already). NOTE: If this member is None, then the first RUISDisplay without an attached "
+	         + "RUISCamera will be used.")]
 	public RUISDisplay display;
+	[Tooltip(  "If disabled, only one RUISHeadTrackerAssigner (the first one to be invoked) will be run.")]
 	public bool allowMultipleAssigners = false;
-	public bool applyKinectDriftCorrectionPreference = false;
+	private bool applyKinectDriftCorrectionPreference = false;
+	[Tooltip(  "If a RUISCharacterController script is found from this gameobject, and both Kinects are disabled "
+	         + "and PS Move is enabled in RUISInputManager, and the chosen RUISTracker is a PS Move controller, "
+	         + "then force the Character Pivot to that PS Move.")]
 	public bool changePivotIfNoKinect = true;
+	[Tooltip(  "If the chosen RUISTracker is Razer Hydra, this offset will be applied to its parent, "
+	         + "and to the below 'Razer Wand Parent' gameobject. You can ue this to offset the Razer "
+	         + "Hydra coordinate system.")]
 	public Vector3 onlyRazerOffset = Vector3.zero;
-//	public Vector3 onlyMouseOffset = Vector3.zero;
+	//	public Vector3 onlyMouseOffset = Vector3.zero;
+	[Tooltip(  "If the chosen RUISTracker is Razer Hydra, this Transform will receive the above "
+	         + "'Only Razer Offset' translation. Place the RazerHydraWand(s) under that gameobject, "
+	         + "if the 'Only Razer Offset' is non-zero.")]
 	public Transform razerWandParent;
 	
 	Ovr.HmdType ovrHmdVersion;
@@ -108,7 +128,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					{
 						foundTrackerScore = 6;
 					}
-					else if(	razer && trackerScript.isRazerBaseMobile
+					else if(	razer && trackerScript.isRazerBaseMobile // Legacy: Mobile Hydra Base (custom tracker) 
 							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
 							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.InputTransform	)
 					{
@@ -118,7 +138,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					{
 						foundTrackerScore = 4;
 					}
-					else if(	kinect && razer && trackerScript.isRazerBaseMobile
+					else if(	kinect && razer && trackerScript.isRazerBaseMobile // Legacy: Mobile Hydra Base (Kinect) 
 							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
 							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.Kinect1			)
 					{
@@ -128,7 +148,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					{
 						foundTrackerScore = 2;
 					}
-					else if(	razer && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
+					else if(	razer && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra // Plain ol' Razer Hydra
 							&&	!trackerScript.isRazerBaseMobile															)
 					{
 						foundTrackerScore = 1;
@@ -242,7 +262,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			{
 				if(display == null)
 				{
-					Debug.LogError( "No RUISDisplay attached to the RUISHeadTrackerAssigner script!");
+					Debug.LogWarning( "No RUISDisplay attached to the RUISHeadTrackerAssigner script!");
 					RUISDisplay[] displays = FindObjectsOfType(typeof(RUISDisplay)) as RUISDisplay[];
 					for(int i = 0; i < displays.Length; ++i)
 					{

@@ -18,6 +18,8 @@ public class RUISCharacterControllerEditor : Editor
 	int maxPSMoveControllers = 4;
     SerializedProperty characterPivotType;
 	SerializedProperty useOculusPositionalTracking;
+	SerializedProperty headRotatesBody;
+	SerializedProperty headPointsWalkingDirection;
     SerializedProperty moveControllerId;
     SerializedProperty ignorePitchAndRoll;
     SerializedProperty groundLayers;
@@ -33,6 +35,8 @@ public class RUISCharacterControllerEditor : Editor
     {
 		characterPivotType = serializedObject.FindProperty("characterPivotType");
 		useOculusPositionalTracking = serializedObject.FindProperty("useOculusPositionalTracking");
+		headRotatesBody = serializedObject.FindProperty("headRotatesBody");
+		headPointsWalkingDirection = serializedObject.FindProperty("headPointsWalkingDirection");
         moveControllerId = serializedObject.FindProperty("moveControllerId");
         ignorePitchAndRoll = serializedObject.FindProperty("ignorePitchAndRoll");
         groundLayers = serializedObject.FindProperty("groundLayers");
@@ -52,7 +56,7 @@ public class RUISCharacterControllerEditor : Editor
 		EditorGUILayout.PropertyField(characterPivotType, new GUIContent(  "Character Pivot Type", "Rotation pivot for the character, in other words, "
 		                                                                 + "what is the rotation center for the character when turning with the "
 		                                                                 + typeof(RUISCharacterLocomotion).Name + " script. Pivot orientation also defines "
-		                                                                 + "the Forward movement direction. Torso is the recommended pivot when using Kinect."));
+		                                                                 + "the Forward movement direction. Currently 'Kinect Head' is NOT recommended."));
 		RUISSkeletonController.bodyTrackingDeviceType bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 		int kinectPlayerId = 0;
 		if(characterController)
@@ -94,13 +98,20 @@ public class RUISCharacterControllerEditor : Editor
         }
 
 		
-		EditorGUILayout.PropertyField(useOculusPositionalTracking, new GUIContent(  "Use Oculus Positional Tracking", "Use Oculus Rift's tracked position (DK2 or newer) as "
+		EditorGUILayout.PropertyField(useOculusPositionalTracking, new GUIContent(  "Oculus Is Pivot", "Use Oculus Rift's tracked position (DK2 or newer) as "
 		                                                                          + "the primary character pivot position, and fall back to the above defined pivot only in "
-		                                                                          + "situations where Oculus Rift is not seen by its camera. NOTE: The above defined pivot device "
-		                                                                          + "(Kinect/PS Move) must have its coordinate system calibrated with Oculus Rift using the RUIS "
-		                                                                          + "device calibration (in runtime press ESC to enter RUIS Menu), otherwise the head position "
-		                                                                          + "will jump into a completely different location when Oculus Rift camera loses track of the "
-		                                                                          + "head position. 'Root Speed Scaling' must be (1,1,1) in " + typeof(RUISSkeletonController) + "."));
+		                                                                          + "situations where Oculus Rift is not seen by its camera. Leave this option disabled if you "
+		                                                                          + "do not know what you are doing! NOTE: The above defined pivot device (Kinect/PS Move) must "
+		                                                                          + "have its coordinate system calibrated with Oculus Rift DK2 using the RUIS device calibration."));
+
+		EditorGUILayout.PropertyField(headRotatesBody, new GUIContent(  "Head Rotates Body", "Set the model of the avatar to have the same rotation as the tracked head. "
+		                                                              + "This only has effect when both Kinects are disabled from " + typeof(RUISInputManager) + " or "
+		                                                              + "PS Move is set as the Character Pivot."));
+
+		EditorGUILayout.PropertyField(headPointsWalkingDirection, new GUIContent(  "Head Points Walking Direction", "Let the tracked head forward direction to determine "
+		                                                                         + "the walk forward direction for character locomotion controls. This only has effect "
+		                                                                         + "when both Kinects are disabled from " + typeof(RUISInputManager) + " or "
+		                                                                         + "PS Move is set as the Character Pivot."));
 
         EditorGUI.indentLevel -= 2;
 

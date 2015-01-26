@@ -62,6 +62,7 @@ public class RUISDisplay : MonoBehaviour
 
 	public bool enableOculusRift = false;
 	public bool oculusLowPersistence = true;
+	public bool oculusMirrorMode = true;
 
     public bool isStereo = false;
     public float eyeSeparation = 0.06f;
@@ -164,7 +165,8 @@ public class RUISDisplay : MonoBehaviour
 	
 	public void Start()
 	{
-		
+		if(enableOculusRift && OVRManager.display != null)
+			OVRManager.display.mirrorMode = oculusMirrorMode;
 	}
 	
 	public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)

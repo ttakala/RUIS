@@ -34,6 +34,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 	SerializedProperty filterRotations;
 	SerializedProperty rotationNoiseCovariance;
+	SerializedProperty thumbZRotationOffset;
 
     SerializedProperty rootBone;
     SerializedProperty headBone;
@@ -69,7 +70,7 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty fistCurlFingers;
 	SerializedProperty trackThumbs;
 	SerializedProperty trackAnkle;
-	SerializedProperty rotateWristFromElbow;
+//	SerializedProperty rotateWristFromElbow;
 	
 	SerializedProperty customRoot;
 	SerializedProperty customHead;
@@ -89,7 +90,8 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty customLeftFoot;
 	SerializedProperty customLeftThumb;
 	SerializedProperty customRightThumb;
-	
+
+	RUISSkeletonController skeletonController;
 
     public void OnEnable()
     {
@@ -112,6 +114,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		filterRotations = serializedObject.FindProperty("filterRotations");
 		rotationNoiseCovariance = serializedObject.FindProperty("rotationNoiseCovariance");
+		thumbZRotationOffset = serializedObject.FindProperty("thumbZRotationOffset");
 
         rootBone = serializedObject.FindProperty("root");
         headBone = serializedObject.FindProperty("head");
@@ -135,7 +138,7 @@ public class RUISSkeletonControllerEditor : Editor
 		leftThumb = serializedObject.FindProperty ("leftThumb");
 		rightThumb = serializedObject.FindProperty ("rightThumb");
 		trackAnkle = serializedObject.FindProperty ("trackAnkle");
-		rotateWristFromElbow = serializedObject.FindProperty ("rotateWristFromElbow");
+//		rotateWristFromElbow = serializedObject.FindProperty ("rotateWristFromElbow");
 		
 //		adjustVerticalTorsoPosition = serializedObject.FindProperty("adjustVerticalTorsoPosition");
 		adjustVerticalHipsPosition = serializedObject.FindProperty("adjustVerticalHipsPosition");
@@ -168,7 +171,7 @@ public class RUISSkeletonControllerEditor : Editor
 		customLeftThumb  = serializedObject.FindProperty("customLeftThumb");
 		customRightThumb  = serializedObject.FindProperty("customRightThumb");
 		
-		
+		skeletonController = target as RUISSkeletonController;
     }
 
     public override void OnInspectorGUI()
@@ -181,7 +184,7 @@ public class RUISSkeletonControllerEditor : Editor
 		
 		EditorGUILayout.Space();
 		EditorGUILayout.PropertyField(playerId, new GUIContent("Skeleton ID", "The player ID number"));
-		if (bodyTrackingDevice.enumValueIndex == 0 || bodyTrackingDevice.enumValueIndex == 1) 
+		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect1SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID) 
 		{
 			EditorGUILayout.PropertyField(switchToAvailableKinect, new GUIContent(  "Switch To Available Kinect", "Examine RUIS InputManager settings, and "
 			                                                                      + "switch Body Tracking Device from Kinect 1 to Kinect 2 in run-time if "
@@ -200,8 +203,8 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(rootSpeedScaling, new GUIContent(  "Root Speed Scaling", "Multiply Kinect root position, making the character move "
 		                                                               + "larger distances than Kinect tracking area allows. This is not propagated to "
-		                                                               + "Skeleton Wands or other devices that are calibrated with Kinect's coordinate system. "
-		                                                               + "Default and recommended value is (1,1,1)."));
+		                                                               + "Skeleton Wands or other devices (e.g. head trackers) even if they are calibrated "
+		                                                               + "with Kinect's coordinate system. Default and recommended value is (1,1,1)."));
 		EditorGUI.indentLevel--;
 		GUI.enabled = true;
 
@@ -215,7 +218,7 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.PropertyField(updateJointRotations, new GUIContent(  "Update Joint Rotations", "Enabling this is especially "
 		                                                                   + "important for hierarchical models."));
 
-		
+
 		EditorGUI.indentLevel++;
 		
 		EditorGUILayout.PropertyField(filterRotations, new GUIContent(  "Filter Rotations",   "Smoothen rotations with a basic Kalman filter. For now this is "
@@ -223,6 +226,14 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing. "
 		                                                                      +"Larger values make the rotation smoother, but makes it less "
 		                                                                      +"responsive. Default value is 500."));
+
+		if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
+		   && skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
+		{
+			skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId].filterRotations = filterRotations.boolValue;
+			skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId].rotationNoiseCovariance = 
+																																rotationNoiseCovariance.floatValue;
+		}
 		
 		EditorGUI.indentLevel--;
 
@@ -256,8 +267,8 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Space();
 		
 		
-		if (bodyTrackingDevice.enumValueIndex == 2) {
-			
+		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
+		{	
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.TextArea("Place your custom motion tracker transforms below.", GUILayout.Height(20));
@@ -340,10 +351,10 @@ public class RUISSkeletonControllerEditor : Editor
             EditorGUILayout.PropertyField(rightHandBone, new GUIContent("Right Hand", "The right wrist bone (hand)"));
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
-		
-		if (bodyTrackingDevice.enumValueIndex == 1) {
-			EditorGUILayout.PropertyField(rotateWristFromElbow, new GUIContent("Wrist Rotates Lower Arm", "Should wrist rotate whole lower arm or just the hand?"));
-		}		
+
+		// TODO: Restore this when implementation is fixed
+//		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
+//			EditorGUILayout.PropertyField(rotateWristFromElbow, new GUIContent("Wrist Rotates Lower Arm", "Should wrist rotate whole lower arm or just the hand?"));
 
 		EditorGUILayout.Space();
 	
@@ -361,13 +372,13 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
 
-		if (bodyTrackingDevice.enumValueIndex == 1) {
+		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
 			EditorGUILayout.PropertyField(trackAnkle, new GUIContent("Track Ankle", "Track the rotation of the ankle bone"));
-		}
 		
 		EditorGUILayout.Space();
 
-		if (bodyTrackingDevice.enumValueIndex == 1) {
+		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
+		{
 				EditorGUILayout.LabelField ("Finger Joints", EditorStyles.boldLabel);
 				EditorGUILayout.BeginHorizontal ();
 				EditorGUILayout.BeginVertical (GUILayout.Width (Screen.width / 2 - 20));
@@ -378,13 +389,23 @@ public class RUISSkeletonControllerEditor : Editor
 				EditorGUILayout.EndVertical ();
 				EditorGUILayout.EndHorizontal ();
 			
-			
 			EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent(  "Track Fist Clenching", "When user is making a fist, curl finger joints "
 			                                                              + "(child gameObjects under 'Left Hand' and 'Right Hand' whose name include "
 			                                                              + "the substring 'finger' or 'Finger'.). If you have assigned 'Left Thumb' " +
 			                                                              	"and 'Right Thumb', they will receive a slightly different finger curling."));
 			EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track Thumbs", "Track thumb movement."));
-			
+
+			if(trackThumbs.boolValue)
+			{
+				EditorGUI.indentLevel++;
+				EditorGUILayout.PropertyField(thumbZRotationOffset, new GUIContent("Z Rotation Offset",   "Offset Z rotation of the thumb. Default value is "
+				                                                              							+ "45, but it might depend on your avatar rig."));
+				EditorGUI.indentLevel--;
+				if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
+				   && skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
+					skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
+																																		thumbZRotationOffset.floatValue;
+			}
 		}
 		
 		RUISEditorUtility.HorizontalRuler();

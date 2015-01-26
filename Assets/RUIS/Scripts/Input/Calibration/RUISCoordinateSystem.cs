@@ -13,6 +13,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.IO;
 using Kinect = Windows.Kinect;
+using Ovr;
 
 public class RUISCoordinateSystem : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 	public float yawOffset = 0;
 	
     public bool applyToRootCoordinates = true;
+	public bool switchToAvailableDevice = true;
     public bool setKinectOriginToFloor = false;
 
     public Vector3 positionOffset = Vector3.zero;
@@ -39,7 +41,9 @@ public class RUISCoordinateSystem : MonoBehaviour
 	public Dictionary<RUISDevice, Quaternion> RUISCalibrationResultsFloorPitchRotation = new Dictionary<RUISDevice, Quaternion>();
 	public Dictionary<RUISDevice, float> RUISCalibrationResultsDistanceFromFloor = new Dictionary<RUISDevice, float>();
 	
-	public RUISDevice rootDevice; 
+	public RUISDevice rootDevice;
+
+	RUISInputManager inputManager;
 	
 	void Awake() 
 	{
@@ -64,8 +68,70 @@ public class RUISCoordinateSystem : MonoBehaviour
 				createExampleXML(coordinateXmlFile);
 			}
 		}
+
+		inputManager = FindObjectOfType<RUISInputManager>();
+		if(switchToAvailableDevice && inputManager)
+		{
+			bool needToSwitch = false;
+			RUISDevice previousDevice = rootDevice;
+
+			switch(rootDevice)
+			{
+				case RUISDevice.Kinect_1:
+					if(!inputManager.enableKinect)
+						needToSwitch = true;
+					break;
+				case RUISDevice.Kinect_2:
+					if(!inputManager.enableKinect2)
+						needToSwitch = true;
+					break;
+				case RUISDevice.PS_Move:
+					if(!inputManager.enablePSMove)
+						needToSwitch = true;
+					break;
+				case RUISDevice.Oculus_DK2:
+					if(!isPositionTrackableRiftPresent())
+						needToSwitch = true;
+				break;
+			}
+
+			if(needToSwitch)
+			{
+				if(inputManager.enableKinect2)
+					rootDevice = RUISDevice.Kinect_2;
+				else if(inputManager.enableKinect)
+					rootDevice = RUISDevice.Kinect_1;
+				else if(isPositionTrackableRiftPresent())
+					rootDevice = RUISDevice.Oculus_DK2;
+				else if(inputManager.enablePSMove)
+					rootDevice = RUISDevice.PS_Move;
+
+				if(rootDevice != previousDevice)
+				{
+					if(previousDevice == RUISDevice.Oculus_DK2)
+						Debug.LogWarning(  "Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
+						                 + "because Oculus Rift DK2+ was not detected!");
+					else
+						Debug.LogWarning(  "Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
+						                 + "because the former was not enabled in " + typeof(RUISInputManager) + " while the latter was!");
+				}
+			}
+		}
 	}
 
+	public bool isPositionTrackableRiftPresent()
+	{
+		if(OVRManager.capiHmd != null)
+		{
+			Ovr.HmdType ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
+			
+			if(    (OVRManager.capiHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) != 0 // !isplay.isPresent
+			   && (ovrHmdVersion == HmdType.DK2 || ovrHmdVersion == HmdType.Other)) // Rift is DK2+
+				return true;
+		}
+		return false;
+	}
+	
 	private void createExampleXML(string filename) {
 		
 		Vector3 exampleFloorNormal = new Vector3(0, 1, 0);
@@ -385,7 +451,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 				RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinectFloorRotator;
 			break;
 			default:
-				Debug.LogError("Currently floor detection with " + floorDetectingDevice.ToString() + " is not supported!");
+				Debug.LogWarning("Currently floor normal detection with " + floorDetectingDevice.ToString() + " is not supported!");
 			break;
 		}
     }
@@ -406,8 +472,8 @@ public class RUISCoordinateSystem : MonoBehaviour
 					RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = distance;
 				break;
 			default:
-				Debug.LogError("Currently floor detection with " + floorDetectingDevice.ToString() + " is not supported!");
-				break;
+				Debug.LogWarning("Currently floor distance detection with " + floorDetectingDevice.ToString() + " is not supported!");
+			break;
 		}
     }
 	
@@ -643,21 +709,29 @@ public class RUISCoordinateSystem : MonoBehaviour
 	public Vector3 ConvertLocation(Vector3 inputLocation, RUISDevice device)
 	{
 		Vector3 outputLocation = inputLocation;
-		string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 
 		// Transform location into master coordinate system
-		if (applyToRootCoordinates && rootDevice != device) 
+		if (applyToRootCoordinates && rootDevice != device)
 		{
+			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 			outputLocation = RUISCalibrationResultsIn4x4Matrix[devicePairString].MultiplyPoint3x4(outputLocation);
 		}
 
-		// Apply yaw offset
-		outputLocation = Quaternion.Euler(0, yawOffset, 0) * RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputLocation;
+		// Apply yaw offset and floor pitch rotation (which is identity to anything else than Kinect 1/2)
+		if (applyToRootCoordinates || device == rootDevice)
+			outputLocation = Quaternion.Euler(0, yawOffset, 0) * RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputLocation;
+		else
+		{
+			if(device == RUISDevice.Kinect_2)
+				outputLocation = RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] * outputLocation;
+			else if(device == RUISDevice.Kinect_1)
+				outputLocation = RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] * outputLocation;
+		}
 
 		// Set Kinect 1/2 origin to floor
 		if (setKinectOriginToFloor)
 		{
-			if (applyToRootCoordinates)
+			if (applyToRootCoordinates || device == rootDevice)
 				outputLocation.y += RUISCalibrationResultsDistanceFromFloor[rootDevice];
 			else
 			{
@@ -682,14 +756,14 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		Quaternion outputRotation = inputRotation;
 		
-		if (applyToRootCoordinates && rootDevice != device) {
+		if (applyToRootCoordinates && rootDevice != device)
+		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 			outputRotation = RUISCalibrationResultsInQuaternion[devicePairString] * outputRotation;
 		}
-		
-//		outputRotation = Quaternion.Euler(0, yawOffset, 0) * RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputRotation;
 
-		if (applyToRootCoordinates)
+		// Apply floor pitch rotation (which is identity to anything else than Kinect 1/2)
+		if (applyToRootCoordinates || device == rootDevice)
 			outputRotation = RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputRotation;
 		else
 		{

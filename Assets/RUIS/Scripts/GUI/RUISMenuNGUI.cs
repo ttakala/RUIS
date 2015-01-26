@@ -142,8 +142,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		handleSelectAndConfigureDevicesGUISpacing();
 		
 		// Menu is hidden upon init
-		this.transform.Find("NGUIControls/Panel").gameObject.SetActive(false);
-		this.transform.Find("NGUIControls/planeCollider").gameObject.SetActive(false);
+		Hide3DGUI();
 
 		this.transform.localPosition = new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
 		this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
@@ -157,7 +156,17 @@ public class RUISMenuNGUI : MonoBehaviour {
 		}
 	}
 	
-	
+	public void Show3DGUI()
+	{
+		this.transform.Find("NGUIControls/Panel").gameObject.SetActive(true);
+		this.transform.Find("NGUIControls/planeCollider").gameObject.SetActive(true);
+	}
+
+	public void Hide3DGUI()
+	{
+		this.transform.Find("NGUIControls/Panel").gameObject.SetActive(false);
+		this.transform.Find("NGUIControls/planeCollider").gameObject.SetActive(false);
+	}
 	
 	void textFieldChanged(GameObject textFieldObject, string text)  
 	{
@@ -185,6 +194,15 @@ public class RUISMenuNGUI : MonoBehaviour {
 		}
 		updateCalibratableDevices();
 	}
+
+	void enableOculusPositionalTracking()
+	{
+		OVRManager ovrManager = FindObjectOfType<OVRManager>();
+		if(ovrManager)
+			ovrManager.usePositionTracking = true;
+		if(OVRManager.tracker != null)
+			OVRManager.tracker.isEnabled = true;
+	}
 	
 	void buttonPressed(GameObject clickedGameObject) 
 	{ 
@@ -197,16 +215,21 @@ public class RUISMenuNGUI : MonoBehaviour {
 				{
 				
 					case "Button - Calibration": 
-					calibrationReady = false;
-					menuIsVisible = false;
+						calibrationReady = false;
+						menuIsVisible = false;
 						inputManager.Export(inputManager.filename);
 						calibrationDropDownSelection = this.transform.Find (
 													"NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
+						
+						if(calibrationDropDownSelection.Contains("Oculus")) // TODO: Not the best way to be sure that we will calibrate Oculus Rift
+				   			enableOculusPositionalTracking();
+				   		
 						SaveInputChanges();
 						DontDestroyOnLoad(this);
 						this.transform.parent = null;
 						currentMenuState = RUISMenuStates.calibration;
 						previousSceneId = Application.loadedLevel;
+						Hide3DGUI();
 						Application.LoadLevel("calibration");
 					break;
 					
@@ -273,14 +296,11 @@ public class RUISMenuNGUI : MonoBehaviour {
 			
 			if(!menuIsVisible) 
 			{
-				this.transform.Find("NGUIControls/Panel").gameObject.SetActive(false);
-				this.transform.Find("NGUIControls/planeCollider").gameObject.SetActive(false);
-				//this.transform.Find("guiCameraForRift").gameObject.SetActive(false);
+				Hide3DGUI();
 			}
 			else 
 			{
-				this.transform.Find("NGUIControls/Panel").gameObject.SetActive(true);
-				this.transform.Find("NGUIControls/planeCollider").gameObject.SetActive(true);
+				Show3DGUI();
 			}
 		}
 
@@ -293,9 +313,6 @@ public class RUISMenuNGUI : MonoBehaviour {
 												+ this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
 				this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
 			}
-			
-//			this.transform.Find("Panel").gameObject.SetActive(true);
-//			this.transform.Find("planeCollider").gameObject.SetActive(true);
 
 			switch(currentMenuState) 
 			{

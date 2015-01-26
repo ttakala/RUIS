@@ -48,6 +48,7 @@ public class RUISTrackerEditor : Editor
     SerializedProperty positionOffsetKinect;
     SerializedProperty positionOffsetPSMove;
     SerializedProperty positionOffsetHydra;
+	SerializedProperty positionOffsetOculus;
     SerializedProperty rotationOffsetKinect;
     SerializedProperty rotationOffsetPSMove;
     SerializedProperty rotationOffsetHydra;
@@ -137,6 +138,7 @@ public class RUISTrackerEditor : Editor
 	    positionOffsetKinect = serializedObject.FindProperty("positionOffsetKinect");
 	    positionOffsetPSMove = serializedObject.FindProperty("positionOffsetPSMove");
 	    positionOffsetHydra = serializedObject.FindProperty("positionOffsetHydra");
+		positionOffsetOculus = serializedObject.FindProperty("positionOffsetOculus");
 	    rotationOffsetKinect = serializedObject.FindProperty("rotationOffsetKinect");
 	    rotationOffsetPSMove = serializedObject.FindProperty("rotationOffsetPSMove");
 	    rotationOffsetHydra = serializedObject.FindProperty("rotationOffsetHydra");
@@ -230,6 +232,12 @@ public class RUISTrackerEditor : Editor
         EditorGUI.indentLevel += 2;
         switch (headPositionInput.enumValueIndex)
         {
+			case (int)RUISTracker.HeadPositionSource.OculusDK2:
+				EditorGUILayout.PropertyField(positionOffsetOculus, new GUIContent("Position Offset (meters)", "Adds an position offset to Oculus Rift's "
+				                                                                   + "tracked position. This should be zero when using Oculus Rift positional "
+				                                                                   + "tracking together with Kinect skeleton tracking."));
+
+				break;
             case (int)RUISTracker.HeadPositionSource.Kinect1:
 			case (int)RUISTracker.HeadPositionSource.Kinect2:
 				positionPlayerID.intValue = Mathf.Clamp(positionPlayerID.intValue, 0, maxKinectSkeletons - 1);

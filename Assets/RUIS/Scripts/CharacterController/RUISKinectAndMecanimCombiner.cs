@@ -81,14 +81,14 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     private bool childrenInstantiated = false;
 
-	//private RUISInputManager inputManager;
+	private RUISInputManager inputManager;
 	private RUISSkeletonManager skeletonManager;
 
     private bool torsoIsRoot = false;
 
     void Awake()
     {
-        //inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+        inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
     }
 
     void Start()
@@ -98,7 +98,10 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		skeletonController = GetComponent<RUISSkeletonController>();
 		//		if (	!inputManager.enableKinect && !inputManager.enableKinect2 
 		//		    &&  (skeletonController.bodyTrackingDevice != RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker))
-		if(skeletonController != null && skeletonController.followMoveController)
+		if(skeletonController != null && (   skeletonController.followOculusController || inputManager == null
+		                                  || (	   skeletonController.followMoveController 
+		    									&& (   (skeletonController.bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect )
+		    										|| (skeletonController.bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)))))
 		{
 			// Without the below if-clause the legs will twist with PS Move head tracker (when Move is enabled but Kinect is not)
 			//if(!inputManager.enablePSMove)
@@ -365,13 +368,39 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
     {
         //boneTriplet.blendedTransform.localRotation = Quaternion.Slerp(boneTriplet.kinectTransform.localRotation, boneTriplet.mecanimTransform.localRotation, blendWeight);
 
+		if(skeletonController == null)
+			return;
+
         float limbRootBlendWeight = GetBlendWeight(limbRootBone.bodypartClassification);
         
         //first set the global rotation so that it matches
         limbRootBone.blendedTransform.rotation = Quaternion.Slerp(limbRootBone.kinectTransform.rotation, limbRootBone.mecanimTransform.rotation, limbRootBlendWeight);
 
+		bool headRotates = false;
+		bool headRotatesBody = false;
+		bool headRotatesWalking = false;
+		bool headRotatesBodyAndWalking = false;
+
+		if(   skeletonController.characterController 
+		   && (skeletonController.followMoveController || skeletonController.followOculusController))
+		{
+			headRotatesBodyAndWalking =  skeletonController.characterController.headRotatesBody &&  skeletonController.characterController.headPointsWalkingDirection;
+			headRotatesWalking        = !skeletonController.characterController.headRotatesBody &&  skeletonController.characterController.headPointsWalkingDirection;
+			headRotatesBody           =  skeletonController.characterController.headRotatesBody && !skeletonController.characterController.headPointsWalkingDirection;
+			headRotates               = !skeletonController.characterController.headRotatesBody && !skeletonController.characterController.headPointsWalkingDirection;
+		}
+
         //then apply the yaw to turn the limb to the same general direction as the torso
-        Quaternion kinectToMecanimYaw = CalculateKinectToMecanimYaw();
+		Quaternion kinectToMecanimYaw = CalculateKinectToMecanimYaw(   skeletonController.characterController 
+		                                                            && (skeletonController.followMoveController || skeletonController.followOculusController)
+		                                                            && (    headRotatesBodyAndWalking
+		                                                                || (headRotatesWalking && limbRootBone.bodypartClassification != BodypartClassification.LeftArm 
+		    																				   && limbRootBone.bodypartClassification != BodypartClassification.RightArm)
+			                                                            || (headRotatesBody && limbRootBone.bodypartClassification != BodypartClassification.LeftLeg 
+			                        														&& limbRootBone.bodypartClassification != BodypartClassification.RightLeg)
+		    															|| (headRotates && limbRootBone.bodypartClassification == BodypartClassification.Head))
+		                                                            );
+
         kinectToMecanimYaw = Quaternion.Slerp(Quaternion.identity, kinectToMecanimYaw, limbRootBlendWeight);   
 		
 		Vector3 rotatedForward = kinectToMecanimYaw * Vector3.forward;
@@ -380,20 +409,34 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		// That doesn't work right, Vector3.Angle seems to return only values between [0, 180], and the leg animation came up wrong when facing left
 		
 		//print(angles); 
-		
-        limbRootBone.blendedTransform.rotation = limbRootBone.blendedTransform.rotation 
-			* Quaternion.AngleAxis(angles, limbRootBone.blendedTransform.InverseTransformDirection(transform.up));
-			//* newLocalRotation * Quaternion.Inverse(limbRootBone.blendedTransform.rotation) * limbRootBone.blendedTransform.rotation;
+	
+		// TODO fix arm twisting when skeletonController.followMoveController == true || skeletonController.followMoveController == true
+
+		if(   (!skeletonController.followOculusController && !skeletonController.followMoveController)
+		   || (    skeletonController.characterController 
+		    	|| (    headRotatesBodyAndWalking
+		    		&& (limbRootBone.bodypartClassification == BodypartClassification.LeftLeg || limbRootBone.bodypartClassification == BodypartClassification.RightLeg))
+		    	|| (    headRotatesWalking
+			    	&& (   limbRootBone.bodypartClassification == BodypartClassification.LeftLeg || limbRootBone.bodypartClassification == BodypartClassification.RightLeg))
+		    	||      headRotatesBody
+		    	||      headRotates ))
+			limbRootBone.blendedTransform.rotation = limbRootBone.blendedTransform.rotation * Quaternion.AngleAxis(angles, limbRootBone.blendedTransform.InverseTransformDirection(transform.up));
+
+
         
     }
 
-    private Quaternion CalculateKinectToMecanimYaw()
+    private Quaternion CalculateKinectToMecanimYaw(bool useTrackedDeviceYaw)
     {
 		Vector3 kinectTorsoForward = torsoRoot.kinectTransform.forward; // The old and occasionally buggy way (kinectTorsoForward is set again below)
 		Vector3 kinectTorsoUp = Vector3.up; //torsoRoot.kinectTransform.up;
 
-		if(skeletonController != null && skeletonController.followMoveController) // If Move controller is character pivot
-			kinectTorsoForward = skeletonController.moveYawRotation * Vector3.forward;
+		// If Move controller or Oculus Rift is character pivot
+		if(useTrackedDeviceYaw)
+		{
+//			if(skeletonController.characterController.headPointsWalkingDirection)
+			kinectTorsoForward = skeletonController.trackedDeviceYawRotation * Vector3.forward;
+		}
 		else // If Kinect torso/head is character pivot
 			if(skeletonManager != null && skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
 				kinectTorsoForward = skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId].torso.rotation*Vector3.forward;

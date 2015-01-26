@@ -669,6 +669,7 @@ MonoBehaviour:
   useDoubleTheSpace: 0
   enableOculusRift: 0
   oculusLowPersistence: 1
+  oculusMirrorMode: 1
   isStereo: 0
   eyeSeparation: .0599999987
   _linkedCamera: {fileID: 0}
@@ -697,6 +698,7 @@ MonoBehaviour:
   loadFromXML: 1
   yawOffset: 0
   applyToRootCoordinates: 1
+  switchToAvailableDevice: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
   rootDevice: 1
@@ -740,6 +742,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 3
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!114 &11400022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -754,6 +758,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 2
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!114 &11400024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -768,6 +774,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 1
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!114 &11400026
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -812,6 +820,8 @@ MonoBehaviour:
   selectionButton: 0
   controllerId: 0
   whereToCopyColor: {fileID: 0}
+  motionSmoothing: 0
+  refreshRate: 50
 --- !u!114 &11400030
 MonoBehaviour:
   m_ObjectHideFlags: 1
