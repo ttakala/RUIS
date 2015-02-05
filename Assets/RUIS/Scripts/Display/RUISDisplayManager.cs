@@ -387,5 +387,8 @@ public class RUISDisplayManager : MonoBehaviour {
 		
 		ruisMenu.transform.localRotation = Quaternion.identity;
 		ruisMenu.transform.localPosition = new Vector3(guiX,guiY,guiZ);
+
+		if(ruisMenu.GetComponent<RUISMenuNGUI>())
+			ruisMenu.GetComponent<RUISMenuNGUI>().Hide3DGUI();
 	}
 }
