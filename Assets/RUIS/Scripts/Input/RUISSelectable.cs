@@ -13,15 +13,16 @@ using System.Collections.Generic;
 [AddComponentMenu("RUIS/Input/RUISSelectable")]
 public class RUISSelectable : MonoBehaviour {
 
-    private bool rigidbodyWasKinematic;
-    private RUISWandSelector selector;
-    public bool isSelected { get { return selector != null; } }
+	protected bool rigidbodyWasKinematic;
+	protected RUISWandSelector selector;
+	public bool isSelected { get { return selector != null; } }
+	public bool physicalSelection = false;
 
-    private Vector3 positionAtSelection;
-    private Quaternion rotationAtSelection;
-    private Vector3 selectorPositionAtSelection;
-    private Quaternion selectorRotationAtSelection;
-    private float distanceFromSelectionRayOrigin;
+	protected Vector3 positionAtSelection;
+	protected Quaternion rotationAtSelection;
+	protected Vector3 selectorPositionAtSelection;
+	protected Quaternion selectorRotationAtSelection;
+	protected float distanceFromSelectionRayOrigin;
     public float DistanceFromSelectionRayOrigin
     {
         get
@@ -40,22 +41,22 @@ public class RUISSelectable : MonoBehaviour {
     public bool maintainMomentumAfterRelease = true;
 	
 	public bool continuousCollisionDetectionWhenSelected = true;
-	private CollisionDetectionMode oldCollisionMode;
-	private bool switchToOldCollisionMode = false;
-	private bool switchToContinuousCollisionMode = false;
+	protected CollisionDetectionMode oldCollisionMode;
+	protected bool switchToOldCollisionMode = false;
+	protected bool switchToContinuousCollisionMode = false;
 
-    private Vector3 latestVelocity = Vector3.zero;
-    private Vector3 lastPosition = Vector3.zero;
+	protected Vector3 latestVelocity = Vector3.zero;
+	protected Vector3 lastPosition = Vector3.zero;
 
 //    private List<Vector3> velocityBuffer;
 	
-	private KalmanFilter positionKalman;
-	private double[] measuredPos = {0, 0, 0};
-	private double[] pos = {0, 0, 0};
-	private float positionNoiseCovariance = 1000;
+	protected KalmanFilter positionKalman;
+	protected double[] measuredPos = {0, 0, 0};
+	protected double[] pos = {0, 0, 0};
+	protected float positionNoiseCovariance = 1000;
 	Vector3 filteredVelocity = Vector3.zero;
 
-    private bool transformHasBeenUpdated = false;
+    protected bool transformHasBeenUpdated = false;
 
     public void Awake()
     {
@@ -88,7 +89,7 @@ public class RUISSelectable : MonoBehaviour {
         }
     }
 
-	private void updateVelocity(float noiseCovariance, float deltaTime)
+	protected void updateVelocity(float noiseCovariance, float deltaTime)
 	{
 		measuredPos[0] = latestVelocity.x;
 		measuredPos[1] = latestVelocity.y;
@@ -198,68 +199,79 @@ public class RUISSelectable : MonoBehaviour {
     }
 
     protected virtual void UpdateTransform(bool safePhysics)
-    {
+    {	
         if (!isSelected) return;
 
-        Vector3 newPosition = transform.position;
-        Quaternion newRotation = transform.rotation;
-
-        switch (selector.positionSelectionGrabType)
-        {
-            case RUISWandSelector.SelectionGrabType.SnapToWand:
-                newPosition = selector.transform.position;
-                break;
-            case RUISWandSelector.SelectionGrabType.RelativeToWand:
-                Vector3 selectorPositionChange = selector.transform.position - selectorPositionAtSelection;
-                newPosition = positionAtSelection + selectorPositionChange;
-                break;
-            case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
-                float clampDistance = distanceFromSelectionRayOrigin;
-                if (clampToCertainDistance) clampDistance = distanceToClampTo;
-                newPosition = selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
-                break;
-            case RUISWandSelector.SelectionGrabType.DoNotGrab:
-                break;
-        }
-
-        switch (selector.rotationSelectionGrabType)
-        {
-            case RUISWandSelector.SelectionGrabType.SnapToWand:
-                newRotation = selector.transform.rotation;
-                break;
-            case RUISWandSelector.SelectionGrabType.RelativeToWand:
-                newRotation = rotationAtSelection;
-				// Tuukka: 
-				Quaternion selectorRotationChange = Quaternion.Inverse(selectorRotationAtSelection) * rotationAtSelection;
-				newRotation = selector.transform.rotation * selectorRotationChange;
-                break;
-            case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
-                newRotation = Quaternion.LookRotation(selector.selectionRay.direction);
-                break;
-            case RUISWandSelector.SelectionGrabType.DoNotGrab:
-                break;
-        }
+		Vector3 newManipulationPoint = getManipulationPoint();
+		Quaternion newManipulationRotation = getManipulationRotation();
 
         if (rigidbody && safePhysics)
         {
-            rigidbody.MovePosition(newPosition);
-            rigidbody.MoveRotation(newRotation);
+            rigidbody.MovePosition(newManipulationPoint);
+            rigidbody.MoveRotation(newManipulationRotation);
         }
         else
         {
-            transform.position = newPosition;
-            transform.rotation = newRotation;
+            transform.position = newManipulationPoint;
+            transform.rotation = newManipulationRotation;
         }
     }
 
 
-    private void LimitBufferSize(List<Vector3> buffer, int maxSize)
+	protected void LimitBufferSize(List<Vector3> buffer, int maxSize)
     {
         while (buffer.Count >= maxSize)
         {
             buffer.RemoveAt(0);
         }
     }
+    
+    public Vector3 getManipulationPoint()
+    {
+		switch (selector.positionSelectionGrabType)
+		{
+		case RUISWandSelector.SelectionGrabType.SnapToWand:
+			return selector.transform.position;
+			break;
+		case RUISWandSelector.SelectionGrabType.RelativeToWand:
+			Vector3 selectorPositionChange = selector.transform.position - selectorPositionAtSelection;
+			return positionAtSelection + selectorPositionChange;
+			break;
+		case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
+			float clampDistance = distanceFromSelectionRayOrigin;
+			if (clampToCertainDistance) clampDistance = distanceToClampTo;
+			return selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
+			break;
+		case RUISWandSelector.SelectionGrabType.DoNotGrab:
+			return transform.position;
+			break;
+		}
+		return transform.position;
+    }
+    
+	
+	public Quaternion getManipulationRotation()
+	{
+		switch (selector.rotationSelectionGrabType)
+		{
+		case RUISWandSelector.SelectionGrabType.SnapToWand:
+			return selector.transform.rotation;
+			break;
+		case RUISWandSelector.SelectionGrabType.RelativeToWand:
+			return rotationAtSelection;
+			// Tuukka: 
+			Quaternion selectorRotationChange = Quaternion.Inverse(selectorRotationAtSelection) * rotationAtSelection;
+			return selector.transform.rotation * selectorRotationChange;
+			break;
+		case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
+			return Quaternion.LookRotation(selector.selectionRay.direction);
+			break;
+		case RUISWandSelector.SelectionGrabType.DoNotGrab:
+			return transform.rotation;
+			break;
+		}
+		return transform.rotation;
+	}
 
 //    private Vector3 AverageBufferContent(List<Vector3> buffer)
 //    {
@@ -276,7 +288,7 @@ public class RUISSelectable : MonoBehaviour {
 //        return averagedContent;
 //    }
 
-    private void AddMaterial(Material m, Renderer r)
+	protected void AddMaterial(Material m, Renderer r)
     {
         if (	m == null || r == null || r.GetType() == typeof(ParticleRenderer) 
 			||  r.GetType() == typeof(ParticleSystemRenderer))
@@ -292,7 +304,7 @@ public class RUISSelectable : MonoBehaviour {
         r.materials = newMaterials;
     }
 
-    private void RemoveMaterial(Renderer r)
+	protected void RemoveMaterial(Renderer r)
     {
         if (	r == null || r.GetType() == typeof(ParticleRenderer) 
 			||  r.GetType() == typeof(ParticleSystemRenderer) || r.materials.Length == 0)
@@ -306,7 +318,7 @@ public class RUISSelectable : MonoBehaviour {
         r.materials = newMaterials;
     }
 
-    private void AddMaterialToEverything(Material m)
+	protected void AddMaterialToEverything(Material m)
     {
         AddMaterial(m, renderer);
 
@@ -316,7 +328,7 @@ public class RUISSelectable : MonoBehaviour {
         }
     }
 
-    private void RemoveMaterialFromEverything()
+	protected void RemoveMaterialFromEverything()
     {
         RemoveMaterial(renderer);
 
