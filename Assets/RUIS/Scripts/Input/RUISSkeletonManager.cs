@@ -164,9 +164,9 @@ public class RUISSkeletonManager : MonoBehaviour {
 	public float timeSinceLastKinect2Frame { get; private set; }
 
 	[Tooltip(  "How much is Kinect 2 skeletons' torso position interpolated towards base of the spine, in order to make the torso "
-	         + "position better correspond that of Kinect 1")]
+	         + "position better correspond that of Kinect 1 (so that both Kinects can be used to animate the same skeletons). Default is 0.25.")]
 	[Range(0f, 1f)]
-	public float torsoOffsetKinect2 = 0.3f;
+	public float torsoOffsetKinect2 = 0.25f;
 	private Vector3 tempVector = Vector3.zero;
 
     void Awake()

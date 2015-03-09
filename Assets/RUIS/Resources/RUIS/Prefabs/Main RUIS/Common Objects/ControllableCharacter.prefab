@@ -3641,7 +3641,7 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 513
-  groundedErrorTweaker: .0500000007
+  groundedErrorTweaker: .100000001
   dynamicFriction: 1
   dynamicMaterial: {fileID: 0}
   feetAlsoAffectGrounding: 1

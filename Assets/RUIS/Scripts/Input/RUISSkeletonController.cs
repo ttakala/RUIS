@@ -240,8 +240,11 @@ public class RUISSkeletonController : MonoBehaviour
             rightHip.rotation = FindFixingRotation(rightHip.position, rightFoot.position, -transform.up) * rightHip.rotation;
             leftHip.rotation = FindFixingRotation(leftHip.position, leftFoot.position, -transform.up) * leftHip.rotation;
 
-            Vector3 assumedRootPos = (rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4;
-            Vector3 realRootPos = torso.position;
+			Vector3 scaler = new Vector3(1/transform.lossyScale.x, 1/transform.lossyScale.y, 1/transform.lossyScale.z);
+			Vector3 assumedRootPos = Vector3.Scale((rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4, scaler); 
+															// (1/transform.lossyScale.x, 1/transform.lossyScale.y, 1/transform.lossyScale.z)
+			Vector3 realRootPos = Vector3.Scale(torso.position, scaler);
+
 			Vector3 torsoUp = head.position - torso.position;
 			torsoUp.Normalize();
 			torsoOffset = Vector3.Dot(realRootPos - assumedRootPos, torsoUp);
@@ -788,7 +791,9 @@ public class RUISSkeletonController : MonoBehaviour
 
     private void SaveInitialDistance(Transform rootTransform, Transform distanceTo)
     {
-        jointInitialDistances.Add(new KeyValuePair<Transform, Transform>(rootTransform, distanceTo), Vector3.Distance(rootTransform.position, distanceTo.position));
+		Vector3 scaler = new Vector3(1/transform.lossyScale.x, 1/transform.lossyScale.y, 1/transform.lossyScale.z);
+        jointInitialDistances.Add(new KeyValuePair<Transform, Transform>(rootTransform, distanceTo), 
+		                          Vector3.Distance(Vector3.Scale(rootTransform.position, scaler), Vector3.Scale(distanceTo.position, scaler)));
     }
 
     private Quaternion GetInitialRotation(Transform bodyPart)

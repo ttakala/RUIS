@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -1096,6 +1097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -1412,7 +1414,7 @@ MonoBehaviour:
   display: {fileID: 0}
   allowMultipleAssigners: 1
   changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: 0, z: 0}
+  onlyRazerOffset: {x: 0, y: .200000003, z: .5}
   razerWandParent: {fileID: 1800999072}
 --- !u!54 &86632546
 Rigidbody:
@@ -1490,6 +1492,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -1598,6 +1601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -1761,8 +1765,8 @@ Transform:
   m_PrefabParentObject: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
   m_PrefabInternal: {fileID: 906430021}
   m_GameObject: {fileID: 115874247}
-  m_LocalRotation: {x: .153633326, y: 0, z: 0, w: .988127947}
-  m_LocalPosition: {x: -.0780088603, y: 3.45358896, z: -19.8514748}
+  m_LocalRotation: {x: .1305262, y: 0, z: 0, w: .991444886}
+  m_LocalPosition: {x: 0, y: 3.45358896, z: -19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1697092111}
@@ -1929,6 +1933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -2348,6 +2353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -2790,6 +2796,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -3129,6 +3136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -3237,6 +3245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -3527,7 +3536,7 @@ MonoBehaviour:
   display: {fileID: 0}
   allowMultipleAssigners: 1
   changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: 0, z: 0}
+  onlyRazerOffset: {x: 0, y: .200000003, z: .5}
   razerWandParent: {fileID: 148978576}
 --- !u!54 &208648404
 Rigidbody:
@@ -3589,6 +3598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -3790,6 +3800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -3969,6 +3980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -4999,6 +5011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -5107,6 +5120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -5215,6 +5229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -5575,6 +5590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -5708,6 +5724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -5832,6 +5849,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -6641,6 +6659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -7445,6 +7464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -7617,6 +7637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -7725,6 +7746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -7817,6 +7839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -7994,6 +8017,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -8263,6 +8287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -8614,6 +8639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -9009,6 +9035,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -9117,6 +9144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -9833,6 +9861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -10082,6 +10111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -10174,6 +10204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -10282,6 +10313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -10406,6 +10438,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -10513,6 +10546,22 @@ Prefab:
       propertyPath: scriptEnabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 400118, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400118, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400118, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400092, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
+      propertyPath: groundedErrorTweaker
+      value: .100000001
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_RootGameObject: {fileID: 86632541}
@@ -10617,6 +10666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -11545,6 +11595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -12138,6 +12189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -12685,6 +12737,10 @@ Prefab:
       propertyPath: applyToRootCoordinates
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11400010, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
+      propertyPath: torsoOffsetKinect2
+      value: .25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_RootGameObject: {fileID: 2027111733}
@@ -12836,6 +12892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -13049,6 +13106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -13335,6 +13393,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -13427,6 +13486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -13551,6 +13611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -13789,6 +13850,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -14186,6 +14248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -14294,6 +14357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -14484,7 +14548,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -.0780088603
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalPosition.y
@@ -14492,11 +14556,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -19.8514748
+      value: -19
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalRotation.x
-      value: .153633326
+      value: .1305262
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalRotation.y
@@ -14508,7 +14572,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: m_LocalRotation.w
-      value: .988127947
+      value: .991444886
       objectReference: {fileID: 0}
     - target: {fileID: 11400020, guid: 6fad6e06135894d4da88e7273313f430, type: 2}
       propertyPath: CameraRootPosition.y
@@ -14632,6 +14696,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -15430,6 +15495,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -16200,6 +16266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -16486,6 +16553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -16638,6 +16706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -16887,6 +16956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -17189,6 +17259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -17506,6 +17577,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -17630,6 +17702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -17750,6 +17823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -17874,6 +17948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -18750,6 +18825,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -19158,6 +19234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -19675,6 +19752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -20101,6 +20179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -20861,6 +20940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -20969,6 +21049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21121,6 +21202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -21213,6 +21295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21410,6 +21493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21562,6 +21646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21670,6 +21755,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -21874,6 +21960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -22139,6 +22226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -22247,6 +22335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -22492,6 +22581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -22673,6 +22763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -23092,6 +23183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -23406,6 +23498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -23525,6 +23618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -23990,6 +24084,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -24524,6 +24619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -24616,6 +24712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -24765,6 +24862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -24889,6 +24987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25125,6 +25224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25296,6 +25396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -25883,6 +25984,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -26019,6 +26121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -26127,6 +26230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -26235,6 +26339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -26562,6 +26667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -26804,6 +26910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -27401,6 +27508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -27781,6 +27889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -28464,6 +28573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -28820,6 +28930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -29163,6 +29274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -29498,6 +29610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -30100,6 +30213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -30296,6 +30410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -30557,6 +30672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -30828,7 +30944,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  torsoOffsetKinect2: .300000012
+  torsoOffsetKinect2: .25
 --- !u!114 &1834727837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31026,6 +31142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -31134,6 +31251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -31898,6 +32016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -32104,6 +32223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -32228,6 +32348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -32361,6 +32482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -33003,6 +33125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -33188,6 +33311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -33539,6 +33663,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -34244,6 +34369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -34352,6 +34478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -34671,6 +34798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -34896,6 +35024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -35004,6 +35133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -35289,6 +35419,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
@@ -35450,6 +35581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -35558,6 +35690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
@@ -35682,6 +35815,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de644bc516d770d45a123932d8766a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
   highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}

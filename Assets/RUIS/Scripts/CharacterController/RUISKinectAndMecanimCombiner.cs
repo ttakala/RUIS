@@ -93,6 +93,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
     void Start()
 	{
+		Vector3 initialLocalScale = transform.localScale;
 		skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 		
 		skeletonController = GetComponent<RUISSkeletonController>();
@@ -121,7 +122,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
             kinectGameObject = Instantiate(gameObject, transform.position, transform.rotation) as GameObject;
             kinectGameObject.name = name + "Kinect";
-            kinectGameObject.transform.parent = transform.parent;
+			kinectGameObject.transform.parent = transform.parent;
+			kinectGameObject.transform.localScale = initialLocalScale;
             //kinectGameObject.GetComponent<RUISKinectAndMecanimCombiner>().childrenInstantiated = true;
             Destroy(kinectGameObject.GetComponent<RUISKinectAndMecanimCombiner>());
             Destroy(kinectGameObject.GetComponent<Animator>());
@@ -139,6 +141,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             mecanimGameObject = Instantiate(gameObject, transform.position, transform.rotation) as GameObject;
             mecanimGameObject.name = name + "Mecanim";
             mecanimGameObject.transform.parent = transform.parent;
+			mecanimGameObject.transform.localScale = initialLocalScale;
             Destroy(mecanimGameObject.GetComponent<RUISKinectAndMecanimCombiner>());
             Destroy(mecanimGameObject.GetComponent<RUISCharacterAnimationController>());
 

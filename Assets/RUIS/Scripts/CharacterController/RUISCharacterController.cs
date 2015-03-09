@@ -191,12 +191,12 @@ public class RUISCharacterController : MonoBehaviour
 			skeletonController = getSkeletonController();
 
 		// Check whether character collider (aka stabilizingCollider) is grounded
-        raycastPosition = stabilizingCollider ? stabilizingCollider.transform.position : transform.position;
+		raycastPosition = (stabilizingCollider? stabilizingCollider.transform.position : transform.position );
 
-        distanceToRaycast = stabilizingCollider ? stabilizingCollider.colliderHeight / 2 : 1.5f;
+        distanceToRaycast = (stabilizingCollider ? stabilizingCollider.colliderHeight / 2 : 1.5f);
         distanceToRaycast += groundedErrorTweaker;
-		distanceToRaycast = Mathf.Max(distanceToRaycast, float.Epsilon);
-		
+		distanceToRaycast = Mathf.Max(distanceToRaycast * transform.lossyScale.y, float.Epsilon);
+
         tempGrounded = Physics.Raycast(raycastPosition, -transform.up, distanceToRaycast, groundLayers.value);
 		
 		// Check if feet are grounded
@@ -207,7 +207,7 @@ public class RUISCharacterController : MonoBehaviour
 	            if(bodyPart && bodyPart.collider)
 	            {
 					raycastPosition = bodyPart.collider.bounds.center;
-					distanceToRaycast = bodyPart.collider.bounds.extents.y + groundedErrorTweaker;
+					distanceToRaycast = (bodyPart.collider.bounds.extents.y + groundedErrorTweaker) * transform.lossyScale.y;
 					rayIntersected = Physics.Raycast(raycastPosition, -transform.up, out hitInfo, 
 													 distanceToRaycast, groundLayers.value		  );
 					

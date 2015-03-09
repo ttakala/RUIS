@@ -24,11 +24,20 @@ public class RUISMouseWand : RUISWand {
 
 	[Tooltip("Mouse wand's Z-offset from the camera: in most cases this should be non-negative.")]
 	public float distanceFromCamera = 1;
+	private float distanceFromCameraLerped = 1;
+	
+	[Tooltip("When enabled, mouse wheel affects the above 'Distance From Camera'.")]
+	public bool mouseWheelControlsDistance = true;
+	
+	[Tooltip("How strongly mouse wheel affects the above 'Distance From Camera'. This should be non-zero.")]
+	public float mouseWheelMagnitude = 0.2f;
 
     public void Start()
     {
         displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
-		
+
+		distanceFromCameraLerped = distanceFromCamera;
+
 		if(disableIfOtherDevices)
 		{
 			RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
@@ -81,12 +90,21 @@ public class RUISMouseWand : RUISWand {
         mouseButtonPressed = Input.GetMouseButtonDown(0);
         mouseButtonReleased = Input.GetMouseButtonUp(0);
         mouseButtonDown = Input.GetMouseButton(0);
+
+		if(mouseWheelControlsDistance)
+		{
+			if(Input.mouseScrollDelta.y != 0)
+				distanceFromCamera = distanceFromCamera + mouseWheelMagnitude*Input.mouseScrollDelta.y;
+		}
+
+		if(Mathf.Abs (distanceFromCamera - distanceFromCameraLerped) > 0.005f)
+			distanceFromCameraLerped = Mathf.Lerp (distanceFromCameraLerped, distanceFromCamera, 10*Mathf.Sqrt(mouseWheelMagnitude)*Time.deltaTime);
     }
 	
 	void FixedUpdate()
 	{
 		Ray wandRay = displayManager.ScreenPointToRay(Input.mousePosition);
-		wandRay.origin =  wandRay.origin + (wandRay.direction * distanceFromCamera);
+		wandRay.origin =  wandRay.origin + (wandRay.direction * distanceFromCameraLerped);
         
         if (wandRay.direction != Vector3.zero)
         {
