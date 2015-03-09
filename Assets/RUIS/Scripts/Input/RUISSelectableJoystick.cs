@@ -10,24 +10,27 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 
-public class RUISSelectableHingeJoint : RUISSelectable {
+public class RUISSelectableJoystick : RUISSelectable {
 	
-	public float springForce = 10;
-	private float originalAngluarDrag;
 	private bool isSelected;
+	public float springForce = 10;
+	private ConfigurableJoint configurableJoint;
+	private Vector3 jointAxisInGlobalCoordinates;
+	private Quaternion initialRotation; 
+	private Quaternion rotationOnSelectionStart;
 	private Vector3 originalHingeForward;
 	
-	private float targetAngleOnSelection;
-	private float angleOnSelection;
-	private Vector3 jointAxisInGlobalCoordinates;
-	
-	private JointSpring originalJointSpring;
+	private JointDrive originalJointDriveX, originalJointDriveYZ;
 	
 	void Start() 
 	{
-		this.originalAngluarDrag = transform.rigidbody.angularDrag; 
-		this.jointAxisInGlobalCoordinates = transform.TransformDirection(transform.hingeJoint.axis);
-		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, hingeJoint.connectedAnchor, transform.position);
+		
+		this.configurableJoint = this.gameObject.GetComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
+		this.jointAxisInGlobalCoordinates = transform.TransformDirection(Vector3.Cross(this.configurableJoint.axis, this.configurableJoint.secondaryAxis));
+		this.initialRotation = this.configurableJoint.transform.localRotation;
+		
+		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, this.configurableJoint.connectedAnchor, transform.position);
+		
 		
 		this.originalHingeForward = hingeJoint.connectedAnchor - objectCenterProjectedOnPlane;
 		if(this.originalHingeForward == Vector3.zero) {
@@ -35,26 +38,38 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 				this.originalHingeForward = transform.right;
 			}
 			else {
-			 	this.originalHingeForward =  transform.forward;
+				this.originalHingeForward =  transform.forward;
 			}
 		}
 		
-		if(this.physicalSelection) hingeJoint.useSpring = true;
+		
 	}
 	
 	public override void OnSelection(RUISWandSelector selector)
 	{
 		this.selector = selector;
 		this.isSelected = true;
+		// Transform information
 		positionAtSelection = selector.selectionRayEnd;
 		rotationAtSelection = transform.rotation;
+		// Selector information
 		selectorPositionAtSelection = selector.transform.position;
 		selectorRotationAtSelection = selector.transform.rotation;
 		distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude; // Dont remove this, needed in the inherited class
-		this.angleOnSelection = transform.hingeJoint.angle;
-		this.targetAngleOnSelection = calculateAngleDifferenceFromOrig();
 		
-		this.originalJointSpring = transform.hingeJoint.spring;
+		
+		this.rotationOnSelectionStart = this.configurableJoint.transform.localRotation;
+		
+		this.originalJointDriveX = this.configurableJoint.angularXDrive;
+		this.originalJointDriveYZ = this.configurableJoint.angularYZDrive;
+		
+		JointDrive jd = new JointDrive();
+		jd.mode = JointDriveMode.Position;
+		jd.positionSpring = springForce;
+		jd.maximumForce = 999;
+		
+		this.configurableJoint.angularXDrive = jd;
+		this.configurableJoint.angularYZDrive = jd;
 	}
 	
 	public override void OnSelectionEnd()
@@ -74,7 +89,8 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		this.selector = null;
 		this.isSelected = false;
 		
-		transform.hingeJoint.spring = this.originalJointSpring;
+		this.configurableJoint.angularXDrive = this.originalJointDriveX;
+		this.configurableJoint.angularYZDrive = this.originalJointDriveYZ;
 	}
 	
 	public void FixedUpdate()
@@ -82,42 +98,20 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		this.UpdateTransform(true);
 	}
 	
-	private float calculateAngleDifferenceFromOrig() {
-		Vector3 jointAxisInGlobalCoordinates = transform.TransformDirection(transform.hingeJoint.axis);
-		Vector3 newManipulationPoint = getManipulationPoint();
-		Quaternion newManipulationRotation = getManipulationRotation();
-		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, hingeJoint.connectedAnchor, newManipulationPoint);
-		Vector3 fromHingeToProjectedPoint = hingeJoint.connectedAnchor - projectedPoint;
-		float angleDirection = Vector3.Dot(Vector3.Cross(this.originalHingeForward, fromHingeToProjectedPoint).normalized, jointAxisInGlobalCoordinates);
-		float angleDifferenceFromOrig = Vector3.Angle(this.originalHingeForward , fromHingeToProjectedPoint) * angleDirection;
-		
-		// For debug
-		Debug.DrawLine(hingeJoint.connectedAnchor, projectedPoint, Color.blue);
-		Debug.DrawLine(hingeJoint.connectedAnchor, newManipulationPoint, Color.red);
-		Debug.DrawLine(hingeJoint.connectedAnchor, Vector3.Cross(this.originalHingeForward, fromHingeToProjectedPoint).normalized + hingeJoint.connectedAnchor, Color.cyan);
-		DrawPlane(hingeJoint.connectedAnchor, jointAxisInGlobalCoordinates);	
-		
-		return angleDifferenceFromOrig;
-		
-	}
 	
 	protected override void UpdateTransform(bool safePhysics)
 	{
-		if (!isSelected) return;
+		Vector3 newManipulationPoint = getManipulationPoint();
+		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(this.jointAxisInGlobalCoordinates, this.configurableJoint.connectedAnchor, newManipulationPoint);
+		Vector3 fromHingeToProjectedPoint = this.configurableJoint.connectedAnchor - projectedPoint;
 		
-		float angleDifferenceFromOrig = calculateAngleDifferenceFromOrig();
+		// https://gist.github.com/mstevenson/4958837
+		Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, (newManipulationPoint - this.configurableJoint.connectedAnchor).normalized);
+		this.configurableJoint.SetTargetRotationLocal (targetRotation * Quaternion.LookRotation(Vector3.down), this.initialRotation);
 		
-		
-		if(this.physicalSelection) {
-			JointSpring spr = hingeJoint.spring;
-			spr.spring = springForce;
-			spr.targetPosition = angleDifferenceFromOrig - targetAngleOnSelection + this.angleOnSelection;
-			hingeJoint.spring = spr;
-		}
-		else {
-			transform.RotateAround(transform.hingeJoint.connectedAnchor, this.jointAxisInGlobalCoordinates, angleDifferenceFromOrig - transform.hingeJoint.angle  - targetAngleOnSelection + this.angleOnSelection);
-		}
-		
+		Debug.DrawLine(this.configurableJoint.connectedAnchor, projectedPoint, Color.blue);
+		Debug.DrawLine(this.configurableJoint.connectedAnchor, newManipulationPoint, Color.red);
+		DrawPlane(this.configurableJoint.connectedAnchor, jointAxisInGlobalCoordinates);
 	}
 	
 	// For debug : http://answers.unity3d.com/questions/467458/how-to-debug-drawing-plane.html

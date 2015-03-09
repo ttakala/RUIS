@@ -17,9 +17,13 @@ public class RUISMouseWand : RUISWand {
     bool mouseButtonReleased = false;
     bool mouseButtonDown = false;
 	
+	[Tooltip("Disable this gameObject if any of the following input devices is enabled in RUIS Input Manager: Kinect 1, Kinect 2, Razer Hydra, PS Move.")]
 	public bool disableIfOtherDevices = false;
 
     RUISDisplayManager displayManager;
+
+	[Tooltip("Mouse wand's Z-offset from the camera: in most cases this should be non-negative.")]
+	public float distanceFromCamera = 1;
 
     public void Start()
     {
@@ -34,7 +38,12 @@ public class RUISMouseWand : RUISWand {
 				string deviceNames = "";
 				if(inputManager.enableKinect)
 				{
-					deviceNames += "Kinect";
+					deviceNames += "Kinect 1";
+					otherDevices = true;
+				}
+				if(inputManager.enableKinect2)
+				{
+					deviceNames += "Kinect 2";
 					otherDevices = true;
 				}
 				if(inputManager.enableRazerHydra)
@@ -76,7 +85,9 @@ public class RUISMouseWand : RUISWand {
 	
 	void FixedUpdate()
 	{
-        Ray wandRay = displayManager.ScreenPointToRay(Input.mousePosition);
+		Ray wandRay = displayManager.ScreenPointToRay(Input.mousePosition);
+		wandRay.origin =  wandRay.origin + (wandRay.direction * distanceFromCamera);
+        
         if (wandRay.direction != Vector3.zero)
         {
 			// TUUKKA:
