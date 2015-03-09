@@ -23,7 +23,7 @@ public class RUISWandSelector : MonoBehaviour {
     public float selectionRayLength = 200;
     public float selectionRayStartDistance = 0.2f;
     private Vector3 selectionRayStart;
-    private Vector3 selectionRayEnd;
+	public Vector3 selectionRayEnd { get; private set; }
 	private Vector3 headToWandDirection;
     public Ray selectionRay { get; private set; }
 

@@ -12,30 +12,51 @@ using System.Collections;
 
 public class RUISSelectableJoint : RUISSelectable {
 	
-	public Transform grabPoint;
-	public Transform hingePoint;
+	public float springForce = 10;
 	private float originalAngluarDrag;
 	private Vector3 originalRotationVector;
+	private bool isSelected;
+	private Vector3 originalForward;
+	private Vector3 originalHingeForward;
+	
+	private float rootAngleShift;
 	
 	void Start() 
 	{
 		this.originalAngluarDrag = transform.rigidbody.angularDrag;
+		this.originalRotationVector =  transform.rotation * Vector3.down; 
+		Vector3 jointAxisInGlobalCoordinates = transform.TransformDirection(transform.hingeJoint.axis);
+		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, hingeJoint.connectedAnchor, transform.position);
 		
-		Vector3 grabPointPosition = grabPoint.position;
-		Vector3 hingePointPosition = hingePoint.position;
-		this.originalRotationVector =  hingePointPosition - grabPointPosition;
+		this.originalHingeForward = hingeJoint.connectedAnchor - objectCenterProjectedOnPlane;
+		if(this.originalHingeForward == Vector3.zero) {
+			if(jointAxisInGlobalCoordinates.normalized == transform.forward) {
+				this.originalHingeForward = transform.right;
+				print ("2");
+			}
+			else {
+			 	this.originalHingeForward =  transform.forward;
+				print ("3");
+			}
+		}
+		else print ("1");
+		
+		this.rootAngleShift = 0;
+		
+		if(this.physicalSelection) hingeJoint.useSpring = true;
 	}
 	
-//	public override void OnSelection(RUISWandSelector selector)
-//	{
-//		this.selector = selector;
-//		this.isSelected = true;
-//		positionAtSelection = transform.position;
-//		rotationAtSelection = transform.rotation;
-//		selectorPositionAtSelection = selector.transform.position;
-//		selectorRotationAtSelection = selector.transform.rotation;
-//		distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude;
-//	}
+	public override void OnSelection(RUISWandSelector selector)
+	{
+		this.selector = selector;
+		this.isSelected = true;
+		positionAtSelection = selector.selectionRayEnd;
+		rotationAtSelection = transform.rotation;
+		selectorPositionAtSelection = selector.transform.position;
+		selectorRotationAtSelection = selector.transform.rotation;
+		distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude;
+		this.originalForward = transform.forward;
+	}
 	
 	public override void OnSelectionEnd()
 	{
@@ -50,12 +71,15 @@ public class RUISSelectableJoint : RUISSelectable {
 		if(selectionMaterial != null)
 			RemoveMaterialFromEverything();
 		
+		
+		this.rootAngleShift = transform.hingeJoint.angle;
+		
 		this.selector = null;
+		this.isSelected = false;
 	}
 	
 	public void FixedUpdate()
 	{
-		print ("here1");
 		this.UpdateTransform(true);
 	}
 	
@@ -63,40 +87,42 @@ public class RUISSelectableJoint : RUISSelectable {
 	{
 		if (!isSelected) return;
 		
+		
+		Vector3 jointAxisInGlobalCoordinates = transform.TransformDirection(transform.hingeJoint.axis);
+	
+		
 		Vector3 newManipulationPoint = getManipulationPoint();
 		Quaternion newManipulationRotation = getManipulationRotation();
 		
-		Vector3 grabPointPosition = grabPoint.position;
-		Vector3 hingePointPosition = hingePoint.position;
-	
-		Vector3 fromHingeToManipulationPoint = hingePointPosition - newManipulationPoint; 
-		Vector3 fromHingeToSelectPoint = hingePointPosition - grabPointPosition;
-	
-		// Calculate projected point	
+		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, hingeJoint.connectedAnchor, newManipulationPoint);
+		Vector3 fromHingeToProjectedPoint = hingeJoint.connectedAnchor - projectedPoint;
 		
-		Vector3 jointAxisInGlobalCoordinates = transform.TransformVector(transform.hingeJoint.axis);
-		Vector3 axisCrossProduct = Vector3.Cross(jointAxisInGlobalCoordinates, fromHingeToSelectPoint);
+		float angleDirection = Vector3.Dot(Vector3.Cross(this.originalHingeForward, fromHingeToProjectedPoint).normalized, jointAxisInGlobalCoordinates);
+		float angleDifferenceFromOrig = Vector3.Angle(this.originalHingeForward , fromHingeToProjectedPoint) * angleDirection;
 		
-		Vector3 normalVector = Vector3.Cross(axisCrossProduct, fromHingeToSelectPoint).normalized;
-		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(normalVector, hingePointPosition, newManipulationPoint);
+		print (transform.hingeJoint.angle);
+		if(this.physicalSelection) {
+			JointSpring spr = hingeJoint.spring;
+			spr.spring = springForce;
+			spr.targetPosition = angleDifferenceFromOrig;
+			hingeJoint.spring = spr;
+		}
+		else {
+			transform.RotateAround(transform.hingeJoint.connectedAnchor, Vector3.up, angleDifferenceFromOrig - transform.hingeJoint.angle);
+		}
 		
-		Vector3 fromHingeToProjectedPoint = hingePointPosition - projectedPoint; 
+		// For debug
 		
-		Vector3 directionCrossProduct = Vector3.Cross (fromHingeToSelectPoint, fromHingeToProjectedPoint);
+		Vector3 fromHingeToSelectPoint = transform.rotation * Vector3.down; 
+		Debug.DrawLine(hingeJoint.connectedAnchor, projectedPoint, Color.blue);
+		Debug.DrawLine(hingeJoint.connectedAnchor, newManipulationPoint, Color.red);
+		Debug.DrawLine(hingeJoint.connectedAnchor, hingeJoint.connectedAnchor + fromHingeToSelectPoint, Color.green);
+		Debug.DrawLine(hingeJoint.connectedAnchor, Vector3.Cross(this.originalHingeForward, fromHingeToProjectedPoint).normalized + hingeJoint.connectedAnchor, Color.cyan);
+		DrawPlane(hingeJoint.connectedAnchor, jointAxisInGlobalCoordinates);	
 		
-		print (Vector3.Dot(jointAxisInGlobalCoordinates, directionCrossProduct));
-		
-		float angelDifference = Vector3.Angle(fromHingeToSelectPoint, fromHingeToProjectedPoint);
-		Debug.DrawLine(hingePointPosition, projectedPoint, Color.blue);
-		Debug.DrawLine(hingePointPosition, newManipulationPoint, Color.red);
-		Debug.DrawLine(hingePointPosition, grabPointPosition, Color.green);
-		
-		Debug.DrawLine(hingePointPosition, directionCrossProduct + hingePointPosition, Color.cyan);
-			
-		DrawPlane(hingePointPosition, normalVector);	
-			
 	}
 	
+	// For debug : http://answers.unity3d.com/questions/467458/how-to-debug-drawing-plane.html
 	public void DrawPlane(Vector3 position , Vector3 normal) {
 		Vector3 v3;
 		if (normal.normalized != Vector3.forward)
