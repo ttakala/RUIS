@@ -25,11 +25,11 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	
 	void Start() 
 	{
-		this.originalAngluarDrag = transform.rigidbody.angularDrag; 
-		this.jointAxisInGlobalCoordinates = transform.TransformDirection(transform.hingeJoint.axis);
-		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, hingeJoint.connectedAnchor, transform.position);
+		this.originalAngluarDrag = transform.GetComponent<Rigidbody>().angularDrag; 
+		this.jointAxisInGlobalCoordinates = transform.TransformDirection(transform.GetComponent<HingeJoint>().axis);
+		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, GetComponent<HingeJoint>().connectedAnchor, transform.position);
 		
-		this.originalHingeForward = hingeJoint.connectedAnchor - objectCenterProjectedOnPlane;
+		this.originalHingeForward = GetComponent<HingeJoint>().connectedAnchor - objectCenterProjectedOnPlane;
 		if(this.originalHingeForward == Vector3.zero) {
 			if(jointAxisInGlobalCoordinates.normalized == transform.forward) {
 				this.originalHingeForward = transform.right;
@@ -39,7 +39,7 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 			}
 		}
 		
-		if(this.physicalSelection) hingeJoint.useSpring = true;
+		if(this.physicalSelection) GetComponent<HingeJoint>().useSpring = true;
 	}
 	
 	public override void OnSelection(RUISWandSelector selector)
@@ -51,17 +51,17 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		selectorPositionAtSelection = selector.transform.position;
 		selectorRotationAtSelection = selector.transform.rotation;
 		distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude; // Dont remove this, needed in the inherited class
-		this.angleOnSelection = transform.hingeJoint.angle;
+		this.angleOnSelection = transform.GetComponent<HingeJoint>().angle;
 		this.targetAngleOnSelection = calculateAngleDifferenceFromOrig();
 		
-		this.originalJointSpring = transform.hingeJoint.spring;
+		this.originalJointSpring = transform.GetComponent<HingeJoint>().spring;
 	}
 	
 	public override void OnSelectionEnd()
 	{
-		if (rigidbody)
+		if (GetComponent<Rigidbody>())
 		{
-			rigidbody.isKinematic = rigidbodyWasKinematic;
+			GetComponent<Rigidbody>().isKinematic = rigidbodyWasKinematic;
 			if(continuousCollisionDetectionWhenSelected)
 			{
 				switchToOldCollisionMode = true;
@@ -74,7 +74,7 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		this.selector = null;
 		this.isSelected = false;
 		
-		transform.hingeJoint.spring = this.originalJointSpring;
+		transform.GetComponent<HingeJoint>().spring = this.originalJointSpring;
 	}
 	
 	public void FixedUpdate()
@@ -83,19 +83,19 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	}
 	
 	private float calculateAngleDifferenceFromOrig() {
-		Vector3 jointAxisInGlobalCoordinates = transform.TransformDirection(transform.hingeJoint.axis);
+		Vector3 jointAxisInGlobalCoordinates = transform.TransformDirection(transform.GetComponent<HingeJoint>().axis);
 		Vector3 newManipulationPoint = getManipulationPoint();
 		Quaternion newManipulationRotation = getManipulationRotation();
-		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, hingeJoint.connectedAnchor, newManipulationPoint);
-		Vector3 fromHingeToProjectedPoint = hingeJoint.connectedAnchor - projectedPoint;
+		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, GetComponent<HingeJoint>().connectedAnchor, newManipulationPoint);
+		Vector3 fromHingeToProjectedPoint = GetComponent<HingeJoint>().connectedAnchor - projectedPoint;
 		float angleDirection = Vector3.Dot(Vector3.Cross(this.originalHingeForward, fromHingeToProjectedPoint).normalized, jointAxisInGlobalCoordinates);
 		float angleDifferenceFromOrig = Vector3.Angle(this.originalHingeForward , fromHingeToProjectedPoint) * angleDirection;
 		
 		// For debug
-		Debug.DrawLine(hingeJoint.connectedAnchor, projectedPoint, Color.blue);
-		Debug.DrawLine(hingeJoint.connectedAnchor, newManipulationPoint, Color.red);
-		Debug.DrawLine(hingeJoint.connectedAnchor, Vector3.Cross(this.originalHingeForward, fromHingeToProjectedPoint).normalized + hingeJoint.connectedAnchor, Color.cyan);
-		DrawPlane(hingeJoint.connectedAnchor, jointAxisInGlobalCoordinates);	
+		Debug.DrawLine(GetComponent<HingeJoint>().connectedAnchor, projectedPoint, Color.blue);
+		Debug.DrawLine(GetComponent<HingeJoint>().connectedAnchor, newManipulationPoint, Color.red);
+		Debug.DrawLine(GetComponent<HingeJoint>().connectedAnchor, Vector3.Cross(this.originalHingeForward, fromHingeToProjectedPoint).normalized + GetComponent<HingeJoint>().connectedAnchor, Color.cyan);
+		DrawPlane(GetComponent<HingeJoint>().connectedAnchor, jointAxisInGlobalCoordinates);	
 		
 		return angleDifferenceFromOrig;
 		
@@ -109,13 +109,13 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		
 		
 		if(this.physicalSelection) {
-			JointSpring spr = hingeJoint.spring;
+			JointSpring spr = GetComponent<HingeJoint>().spring;
 			spr.spring = springForce;
 			spr.targetPosition = angleDifferenceFromOrig - targetAngleOnSelection + this.angleOnSelection;
-			hingeJoint.spring = spr;
+			GetComponent<HingeJoint>().spring = spr;
 		}
 		else {
-			transform.RotateAround(transform.hingeJoint.connectedAnchor, this.jointAxisInGlobalCoordinates, angleDifferenceFromOrig - transform.hingeJoint.angle  - targetAngleOnSelection + this.angleOnSelection);
+			transform.RotateAround(transform.GetComponent<HingeJoint>().connectedAnchor, this.jointAxisInGlobalCoordinates, angleDifferenceFromOrig - transform.GetComponent<HingeJoint>().angle  - targetAngleOnSelection + this.angleOnSelection);
 		}
 		
 	}

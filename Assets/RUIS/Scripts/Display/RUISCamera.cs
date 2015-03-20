@@ -66,7 +66,7 @@ public class RUISCamera : MonoBehaviour {
 			Debug.LogError( "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
 			               + "but is missing " + typeof(RUISKeystoningConfiguration) + " component!");
 		
-        centerCamera = camera;
+        centerCamera = GetComponent<Camera>();
 		try
 		{
 			

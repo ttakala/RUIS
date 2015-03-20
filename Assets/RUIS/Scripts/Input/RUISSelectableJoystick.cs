@@ -32,7 +32,7 @@ public class RUISSelectableJoystick : RUISSelectable {
 		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, this.configurableJoint.connectedAnchor, transform.position);
 		
 		
-		this.originalHingeForward = hingeJoint.connectedAnchor - objectCenterProjectedOnPlane;
+		this.originalHingeForward = GetComponent<HingeJoint>().connectedAnchor - objectCenterProjectedOnPlane;
 		if(this.originalHingeForward == Vector3.zero) {
 			if(jointAxisInGlobalCoordinates.normalized == transform.forward) {
 				this.originalHingeForward = transform.right;
@@ -74,9 +74,9 @@ public class RUISSelectableJoystick : RUISSelectable {
 	
 	public override void OnSelectionEnd()
 	{
-		if (rigidbody)
+		if (GetComponent<Rigidbody>())
 		{
-			rigidbody.isKinematic = rigidbodyWasKinematic;
+			GetComponent<Rigidbody>().isKinematic = rigidbodyWasKinematic;
 			if(continuousCollisionDetectionWhenSelected)
 			{
 				switchToOldCollisionMode = true;

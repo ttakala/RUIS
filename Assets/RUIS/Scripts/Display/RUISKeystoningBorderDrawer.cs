@@ -79,23 +79,23 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
                     Vector3 bottomLeftPos = leftEdgeBottom + (float)i / tileAmount * (rightEdgeBottom - leftEdgeBottom);
                     Vector3 bottomRightPos = leftEdgeBottom + (float)(i + 1) / tileAmount * (rightEdgeBottom - leftEdgeBottom);
 
-                    topLeftPos.z = camera.farClipPlane * 0.5f;
+                    topLeftPos.z = GetComponent<Camera>().farClipPlane * 0.5f;
                     topRightPos.z = topLeftPos.z;
                     bottomLeftPos.z = topLeftPos.z;
                     bottomRightPos.z = topLeftPos.z;
 
                     GL.Begin(GL.QUADS);
                         GL.TexCoord2(0, 0);
-                        Vector3 topLeftVertex = camera.ViewportToWorldPoint(topLeftPos);
+                        Vector3 topLeftVertex = GetComponent<Camera>().ViewportToWorldPoint(topLeftPos);
                         GL.Vertex3(topLeftVertex.x, topLeftVertex.y, topLeftVertex.z);
                         GL.TexCoord2(1, 0);
-                        Vector3 topRightVertex = camera.ViewportToWorldPoint(topRightPos);
+                        Vector3 topRightVertex = GetComponent<Camera>().ViewportToWorldPoint(topRightPos);
                         GL.Vertex3(topRightVertex.x, topRightVertex.y, topLeftVertex.z);
                         GL.TexCoord2(1, 1);
-                        Vector3 bottomRightVertex = camera.ViewportToWorldPoint(bottomRightPos);
+                        Vector3 bottomRightVertex = GetComponent<Camera>().ViewportToWorldPoint(bottomRightPos);
                         GL.Vertex3(bottomRightVertex.x, bottomRightVertex.y, bottomRightVertex.z);
                         GL.TexCoord2(0, 1);
-                        Vector3 bottomLeftVertex = camera.ViewportToWorldPoint(bottomLeftPos);
+                        Vector3 bottomLeftVertex = GetComponent<Camera>().ViewportToWorldPoint(bottomLeftPos);
                         GL.Vertex3(bottomLeftVertex.x, bottomLeftVertex.y, bottomLeftVertex.z);
                     GL.End();
                 }

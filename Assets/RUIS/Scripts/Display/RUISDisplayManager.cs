@@ -73,8 +73,8 @@ public class RUISDisplayManager : MonoBehaviour {
 		{
 			if(GetComponent<OVRManager>())
 				GetComponent<OVRManager>().enabled = false;
-			if(camera)
-				camera.enabled = false;
+			if(GetComponent<Camera>())
+				GetComponent<Camera>().enabled = false;
 		}
 		else 
 		{

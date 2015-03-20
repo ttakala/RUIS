@@ -107,23 +107,23 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	
 	void Start()
 	{
-		//inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+		RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		
-//		if(useRazerHydra && inputManager && !inputManager.enableRazerHydra)
-//		{
-//			useRazerHydra = false;
+		if(useRazerHydra && inputManager && !inputManager.enableRazerHydra)
+		{
+			useRazerHydra = false;
 //			Debug.LogWarning(	"Your settings indicate that you want to use Razer Hydra for "
 //							 +	"character locomotion controls, but you have disabled Razer "
-//							 +	"Hydra from RUIS InputManager.");
-//		}
-//		
-//		if(usePSNavigationController && inputManager && !inputManager.enablePSMove)
-//		{
-//			usePSNavigationController = false;
+//							 +	"Hydra from " + typeof(RUISInputManager));
+		}
+
+		if(usePSNavigationController && inputManager && !inputManager.enablePSMove)
+		{
+			usePSNavigationController = false;
 //			Debug.LogWarning(	"Your settings indicate that you want to use PS Navigation "
 //							 +	"controller for character locomotion controls, but you have "
 //							 +	"disabled PS Move from RUIS InputManager.");
-//		}
+		}
 		
 	}
 
@@ -191,7 +191,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		{
 			if(!airborne)
 			{
-				jumpTimeVelocity = rigidbody.velocity;
+				jumpTimeVelocity = GetComponent<Rigidbody>().velocity;
 				jumpTimeVelocity.y = 0;
 				jumpTimeVelocity = Vector3.ClampMagnitude(jumpTimeVelocity, aerialMobility*speed);
 				airborneAccumulatedVelocity = jumpTimeVelocity;
@@ -311,7 +311,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
         targetVelocity = characterController.TransformDirection(targetVelocity);
         targetVelocity *= speed;
 
-        velocity = rigidbody.velocity;
+        velocity = GetComponent<Rigidbody>().velocity;
         velocityChange = (targetVelocity - velocity);
 
         velocityChange.y = 0;
@@ -319,7 +319,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		
 		if(!airborne)
 		{
-        	rigidbody.AddForce(velocityChange, ForceMode.VelocityChange);
+        	GetComponent<Rigidbody>().AddForce(velocityChange, ForceMode.VelocityChange);
 		}
 		else
 		{
@@ -356,7 +356,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			// acceleration to the character and update the accumulatedAerialSpeed accordingly
 			if(proposedVelocity.magnitude < aerialMobility*speed)
 			{
-				rigidbody.AddForce(proposedAcceleration, ForceMode.Acceleration);
+				GetComponent<Rigidbody>().AddForce(proposedAcceleration, ForceMode.Acceleration);
 				airborneAccumulatedVelocity = proposedVelocity;
 			}
 		}
@@ -377,8 +377,8 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
         if (shouldJump)
 		{
-			rigidbody.AddForce(new Vector3(0, Mathf.Sqrt((1 + 0.5f*(controlDirection.magnitude + extraSpeed)*jumpSpeedEffect) * jumpStrength) 
-																			* rigidbody.mass, 0), ForceMode.Impulse);
+			GetComponent<Rigidbody>().AddForce(new Vector3(0, Mathf.Sqrt((1 + 0.5f*(controlDirection.magnitude + extraSpeed)*jumpSpeedEffect) * jumpStrength) 
+																			* GetComponent<Rigidbody>().mass, 0), ForceMode.Impulse);
 			if(characterController)
 				characterController.lastJumpTime = Time.fixedTime;
 			

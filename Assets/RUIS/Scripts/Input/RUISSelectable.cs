@@ -2,7 +2,7 @@
 
 Content    :   The functionality for selectable objects, just add this to an object along with a collider to make it selectable
 Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -16,12 +16,17 @@ public class RUISSelectable : MonoBehaviour {
 	protected bool rigidbodyWasKinematic;
 	protected RUISWandSelector selector;
 	public bool isSelected { get { return selector != null; } }
+	
+	[Tooltip(  "This object's motion will be affected by physical forces during selection, instead of merely overwriting the Transform values. "
+	         + "Results in more natural animation and interaction with other dynamic RigidBodies. Currently this option only has effect for "
+	         + "RUISSelectableHingeJoint and RUISSelectableBallJoint.")]
 	public bool physicalSelection = false;
 
 	protected Vector3 positionAtSelection;
 	protected Quaternion rotationAtSelection;
 	protected Vector3 selectorPositionAtSelection;
 	protected Quaternion selectorRotationAtSelection;
+	protected Vector3 rayEndToPositionAtSelection;
 	protected float distanceFromSelectionRayOrigin;
     public float DistanceFromSelectionRayOrigin
     {
@@ -30,17 +35,27 @@ public class RUISSelectable : MonoBehaviour {
             return distanceFromSelectionRayOrigin;
         }
     }
-
-    public bool clampToCertainDistance = false;
+	
+	[Tooltip(  "Force this object to a specific distance from the selecting Wand. "
+	         + "Only has effect when the selecting Wand's 'Position Grab' is set to 'Along Selection Ray'.")]
+	public bool clampToCertainDistance = false;
+	[Tooltip(  "The desired distance for the above 'Clamp To Certain Distance' option.")]
     public float distanceToClampTo = 1.0f;
     
-    //for highlights
-    public Material highlightMaterial;
+	//for highlights
+	[Tooltip(  "This material will be temporarily blended with this object's original material when the object is highlighted by a Wand.")]
+	public Material highlightMaterial;
+	[Tooltip(  "This material will be temporarily blended with this object's original material when the object is selected by a Wand.")]
     public Material selectionMaterial;
-
+	
+	[Tooltip(  "Inherit linear and angular momentum from the selecting Wand upon releasing selection. Enable if you want to be able to throw this gameObject.")]
     public bool maintainMomentumAfterRelease = true;
 	
+	[Tooltip(  "The CollisionDetectionMode of this object's RigidBody will be temporarily set to Continuous when the object is selected by a Wand. "
+	         + "Then you can properly use this gameObject as a racket to intercept fast moving dynamic RigidBodies, if all involved Colliders are of "
+	         + "primitive type")]
 	public bool continuousCollisionDetectionWhenSelected = true;
+
 	protected CollisionDetectionMode oldCollisionMode;
 	protected bool switchToOldCollisionMode = false;
 	protected bool switchToContinuousCollisionMode = false;
@@ -61,8 +76,8 @@ public class RUISSelectable : MonoBehaviour {
     public void Awake()
     {
 //        velocityBuffer = new List<Vector3>();
-		if(rigidbody)
-			oldCollisionMode = rigidbody.collisionDetectionMode;
+		if(GetComponent<Rigidbody>())
+			oldCollisionMode = GetComponent<Rigidbody>().collisionDetectionMode;
 			
 		positionKalman = new KalmanFilter();
 		positionKalman.initialize(3,3);
@@ -107,13 +122,13 @@ public class RUISSelectable : MonoBehaviour {
     {
 		if(switchToContinuousCollisionMode)
 		{
-			oldCollisionMode = rigidbody.collisionDetectionMode;
-			rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+			oldCollisionMode = GetComponent<Rigidbody>().collisionDetectionMode;
+			GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
 			switchToContinuousCollisionMode = false;
 		}
 		if(switchToOldCollisionMode)
 		{
-			rigidbody.collisionDetectionMode = oldCollisionMode;
+			GetComponent<Rigidbody>().collisionDetectionMode = oldCollisionMode;
 			switchToOldCollisionMode = false;
 		}
         UpdateTransform(true);
@@ -131,18 +146,19 @@ public class RUISSelectable : MonoBehaviour {
         rotationAtSelection = transform.rotation;
         selectorPositionAtSelection = selector.transform.position;
         selectorRotationAtSelection = selector.transform.rotation;
-        distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude;
+		rayEndToPositionAtSelection = transform.position - selector.selectionRayEnd;
+		distanceFromSelectionRayOrigin = (selector.selectionRayEnd - selector.selectionRay.origin).magnitude;
 
         lastPosition = transform.position;
 
-        if (rigidbody)
+        if (GetComponent<Rigidbody>())
         {
 			if(continuousCollisionDetectionWhenSelected)
 			{
 				switchToContinuousCollisionMode = true;
 			}
-            rigidbodyWasKinematic = rigidbody.isKinematic;
-            rigidbody.isKinematic = true;
+            rigidbodyWasKinematic = GetComponent<Rigidbody>().isKinematic;
+            GetComponent<Rigidbody>().isKinematic = true;
         }
 
         if (selectionMaterial != null)
@@ -154,29 +170,29 @@ public class RUISSelectable : MonoBehaviour {
 
     public virtual void OnSelectionEnd()
     {
-        if (rigidbody)
+        if (GetComponent<Rigidbody>())
         {
-            rigidbody.isKinematic = rigidbodyWasKinematic;
+            GetComponent<Rigidbody>().isKinematic = rigidbodyWasKinematic;
 			if(continuousCollisionDetectionWhenSelected)
 			{
 				switchToOldCollisionMode = true;
 			}
         }
 
-        if (maintainMomentumAfterRelease && rigidbody && !rigidbody.isKinematic)
+        if (maintainMomentumAfterRelease && GetComponent<Rigidbody>() && !GetComponent<Rigidbody>().isKinematic)
         {
 //            rigidbody.AddForce(AverageBufferContent(velocityBuffer), ForceMode.VelocityChange);
 
-			rigidbody.AddForce(filteredVelocity, ForceMode.VelocityChange);
+			GetComponent<Rigidbody>().AddForce(filteredVelocity, ForceMode.VelocityChange);
 			if(selector) // Put this if-clause here just in case because once received NullReferenceException
 			{
 				if(selector.transform.parent)
 				{
-					rigidbody.AddTorque(selector.transform.parent.TransformDirection(
+					GetComponent<Rigidbody>().AddTorque(selector.transform.parent.TransformDirection(
 										Mathf.Deg2Rad * selector.angularVelocity), ForceMode.VelocityChange);
 				}
 	            else
-					rigidbody.AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
+					GetComponent<Rigidbody>().AddTorque(Mathf.Deg2Rad * selector.angularVelocity, ForceMode.VelocityChange);
 			}
         }
 
@@ -205,15 +221,19 @@ public class RUISSelectable : MonoBehaviour {
 		Vector3 newManipulationPoint = getManipulationPoint();
 		Quaternion newManipulationRotation = getManipulationRotation();
 
-        if (rigidbody && safePhysics)
+        if (GetComponent<Rigidbody>() && safePhysics)
         {
-            rigidbody.MovePosition(newManipulationPoint);
-            rigidbody.MoveRotation(newManipulationRotation);
+			if(selector.positionSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
+				GetComponent<Rigidbody>().MovePosition(newManipulationPoint);
+			if(selector.rotationSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
+            	GetComponent<Rigidbody>().MoveRotation(newManipulationRotation);
         }
         else
-        {
-            transform.position = newManipulationPoint;
-            transform.rotation = newManipulationRotation;
+		{
+			if(selector.positionSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
+				transform.position = newManipulationPoint;
+			if(selector.rotationSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
+            	transform.rotation = newManipulationRotation;
         }
     }
 
@@ -232,19 +252,29 @@ public class RUISSelectable : MonoBehaviour {
 		{
 		case RUISWandSelector.SelectionGrabType.SnapToWand:
 			return selector.transform.position;
-			break;
 		case RUISWandSelector.SelectionGrabType.RelativeToWand:
 			Vector3 selectorPositionChange = selector.transform.position - selectorPositionAtSelection;
 			return positionAtSelection + selectorPositionChange;
-			break;
 		case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
 			float clampDistance = distanceFromSelectionRayOrigin;
-			if (clampToCertainDistance) clampDistance = distanceToClampTo;
-			return selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
-			break;
+			if (clampToCertainDistance) 
+				clampDistance = distanceToClampTo;
+			Vector3 rayEndPosition = selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
+			// Selected object is now attached to the end of a "pole" that is the selection ray. Lets add a small translation
+			// that affects the rotation pivot and depends on the rotationSelectionGrabType (this is the reason for the below if-clauses)
+			if(selector.rotationSelectionGrabType == RUISWandSelector.SelectionGrabType.SnapToWand)
+				return rayEndPosition; // Object center jumps to the end of the ray
+			else
+			{
+				if(selector.rotationSelectionGrabType == RUISWandSelector.SelectionGrabType.RelativeToWand)
+				{	// Below ensures that there is no "jump" in position upon selection, and that the rotation pivot is the ray hit point
+					return rayEndPosition + selector.transform.rotation * Quaternion.Inverse(selectorRotationAtSelection) * rayEndToPositionAtSelection;
+				}
+				else // rotationSelectionGrabType == AlongSelectionRay || rotationSelectionGrabType == DoNotGrab
+					return rayEndPosition + rayEndToPositionAtSelection; // The last term ensures that there is no "jump" in position upon selection
+			}	
 		case RUISWandSelector.SelectionGrabType.DoNotGrab:
 			return transform.position;
-			break;
 		}
 		return transform.position;
     }
@@ -256,19 +286,13 @@ public class RUISSelectable : MonoBehaviour {
 		{
 		case RUISWandSelector.SelectionGrabType.SnapToWand:
 			return selector.transform.rotation;
-			break;
 		case RUISWandSelector.SelectionGrabType.RelativeToWand:
-			return rotationAtSelection;
-			// Tuukka: 
 			Quaternion selectorRotationChange = Quaternion.Inverse(selectorRotationAtSelection) * rotationAtSelection;
 			return selector.transform.rotation * selectorRotationChange;
-			break;
 		case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
 			return Quaternion.LookRotation(selector.selectionRay.direction);
-			break;
 		case RUISWandSelector.SelectionGrabType.DoNotGrab:
 			return transform.rotation;
-			break;
 		}
 		return transform.rotation;
 	}
@@ -320,7 +344,7 @@ public class RUISSelectable : MonoBehaviour {
 
 	protected void AddMaterialToEverything(Material m)
     {
-        AddMaterial(m, renderer);
+        AddMaterial(m, GetComponent<Renderer>());
 
         foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
         {
@@ -330,7 +354,7 @@ public class RUISSelectable : MonoBehaviour {
 
 	protected void RemoveMaterialFromEverything()
     {
-        RemoveMaterial(renderer);
+        RemoveMaterial(GetComponent<Renderer>());
 
         foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
         {

@@ -102,15 +102,11 @@ Assets/OpenNI/Scripts/Main[!!-~]OpenNI/Basic[!!-~]objects/OpenNI[!!-~]engine/Wra
 Assets/OpenNI/Scripts/Trackers/Base[!!-~]tracker[!!-~]and[!!-~]manager[!!-~]classes/NIPointTracker.cs -text
 Assets/OpenNI/Scripts/Trackers/Base[!!-~]tracker[!!-~]and[!!-~]manager[!!-~]classes/NIPointTrackerManager.cs -text
 Assets/Plugins/Android/libOculusPlugin.so -text
-Assets/Plugins/KinectForUnity.dll -text
 Assets/Plugins/Metro/KinectUnityAddin.dll -text
 Assets/Plugins/OculusPlugin.bundle/Contents/MacOS/OculusPlugin -text
 Assets/Plugins/OculusPlugin.bundle/Contents/MacOS/OculusPlugin.signature -text
 Assets/Plugins/OculusPlugin.bundle/Contents/Resources/en.lproj/InfoPlist.strings -text
-Assets/Plugins/OculusPlugin.dll -text
-Assets/Plugins/libOculusPlugin.so -text
 Assets/Plugins/sixense.bundle/Contents/MacOS/sixense -text
-Assets/Plugins/sixense.dll -text
 Assets/Plugins/x86/KinectUnityAddin.dll -text
 Assets/Plugins/x86/OculusPlugin.dll -text
 Assets/Plugins/x86/sixense.dll -text

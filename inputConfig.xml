@@ -3,7 +3,7 @@
   <!--Boolean values always with a lower case, e.g. "true" or "false"-->
   <PSMoveSettings>
     <enabled value="true" />
-    <ip value="130.233.46.218" />
+    <ip value="10.100.2.253" />
     <port value="7899" />
     <autoConnect value="true" />
     <enableInGameCalibration value="false" />

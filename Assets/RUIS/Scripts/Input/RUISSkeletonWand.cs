@@ -196,19 +196,19 @@ public class RUISSkeletonWand : RUISWand
 //				filteredRotation = rotationFilter.Update(tempRotation, Time.deltaTime);
 //            }
             
-			if (rigidbody)
+			if (GetComponent<Rigidbody>())
 	        {
 				// TUUKKA:
 				if (transform.parent)
 				{
 					// If the wand has a parent, we need to apply its transformation first
-	            	rigidbody.MovePosition(transform.parent.TransformPoint(endData.position));
-					rigidbody.MoveRotation(transform.parent.rotation * filteredRotation);
+	            	GetComponent<Rigidbody>().MovePosition(transform.parent.TransformPoint(endData.position));
+					GetComponent<Rigidbody>().MoveRotation(transform.parent.rotation * filteredRotation);
 				}
 				else
 				{
-	            	rigidbody.MovePosition(endData.position);
-					rigidbody.MoveRotation(filteredRotation);
+	            	GetComponent<Rigidbody>().MovePosition(endData.position);
+					GetComponent<Rigidbody>().MoveRotation(filteredRotation);
 				}
 	        }
 			else

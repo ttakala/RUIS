@@ -32,7 +32,7 @@ public class MoveGun : MonoBehaviour {
         {
             timeSinceLastShot = 0;
             GameObject bullet = Instantiate(bulletPrefab, bulletSpawnSpot.position, bulletSpawnSpot.rotation) as GameObject;
-            bullet.rigidbody.AddForce(bulletSpawnSpot.forward * bulletSpeed, ForceMode.VelocityChange);
+            bullet.GetComponent<Rigidbody>().AddForce(bulletSpawnSpot.forward * bulletSpeed, ForceMode.VelocityChange);
 
             Destroy(bullet, 5);
         }

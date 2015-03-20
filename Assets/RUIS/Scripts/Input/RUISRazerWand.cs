@@ -66,7 +66,7 @@ public class RUISRazerWand : RUISWand {
 		razer = SixenseInput.GetController( controller );
 		
 		
-        if(!rigidbody)
+        if(!GetComponent<Rigidbody>())
 		{
 			// isRazerBaseMobile is false if Razer Hydra is not position, rotation, or compass source in headTracker
 			if(		headTracker 
@@ -97,21 +97,21 @@ public class RUISRazerWand : RUISWand {
 
     void FixedUpdate()
     {
-        if (rigidbody)
+        if (GetComponent<Rigidbody>())
         {
             // TUUKKA:
             if (transform.parent)
             {
                 // If the wand has a parent, we need to apply its transformation first
                 // *** FIXME: If parent is scaled, then compound objects (Watering Bottle) get weird
-                rigidbody.MovePosition(transform.parent.TransformPoint(movingBaseRotation * localPosition + movingBasePosition));
-                rigidbody.MoveRotation(transform.parent.rotation * movingBaseRotation * localRotation);
+                GetComponent<Rigidbody>().MovePosition(transform.parent.TransformPoint(movingBaseRotation * localPosition + movingBasePosition));
+                GetComponent<Rigidbody>().MoveRotation(transform.parent.rotation * movingBaseRotation * localRotation);
             }
             else
             {
                 // TUUKKA: This was the original code 
-                rigidbody.MovePosition(movingBaseRotation * localPosition + movingBasePosition);
-                rigidbody.MoveRotation(movingBaseRotation * localRotation);
+                GetComponent<Rigidbody>().MovePosition(movingBaseRotation * localPosition + movingBasePosition);
+                GetComponent<Rigidbody>().MoveRotation(movingBaseRotation * localRotation);
             }
         }
 		

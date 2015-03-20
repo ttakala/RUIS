@@ -80,7 +80,7 @@ public class KalmanFilteredTransform : MonoBehaviour
 			filterRot.rotationNoiseCovariance = rotationNoiseCovariance;
 			filterRot.Update(inputRot, Time.deltaTime);
 			
-			if(rigidbody == null)
+			if(GetComponent<Rigidbody>() == null)
 			{
 				if(inputInLocalCoordinates)
 				{
@@ -140,7 +140,7 @@ public class KalmanFilteredTransform : MonoBehaviour
 			filterRot.rotationNoiseCovariance = rotationNoiseCovariance;
 			filterRot.Update(inputRot, Time.fixedDeltaTime);
 
-			if(rigidbody == null)
+			if(GetComponent<Rigidbody>() == null)
 			{
 				if(inputInLocalCoordinates)
 				{
@@ -154,7 +154,7 @@ public class KalmanFilteredTransform : MonoBehaviour
 				}
 			}
 		}
-		if(rigidbody != null)
+		if(GetComponent<Rigidbody>() != null)
 		{
 			if(inputInLocalCoordinates)
 			{
@@ -183,13 +183,13 @@ public class KalmanFilteredTransform : MonoBehaviour
 				if(!(   outputTransform.position.x == (float) pos[0] 
 					 && outputTransform.position.y == (float) pos[1] 
 					 && outputTransform.position.z == (float) pos[2]))
-					rigidbody.MovePosition(new Vector3((float) pos[0], (float) pos[1], (float) pos[2]));
+					GetComponent<Rigidbody>().MovePosition(new Vector3((float) pos[0], (float) pos[1], (float) pos[2]));
 				
 				if(!(   outputTransform.rotation.x == filterRot.rotationState.x
 					 && outputTransform.rotation.y == filterRot.rotationState.y
 					 && outputTransform.rotation.z == filterRot.rotationState.z
 					 && outputTransform.rotation.w == filterRot.rotationState.w))
-					rigidbody.MoveRotation(filterRot.rotationState);
+					GetComponent<Rigidbody>().MoveRotation(filterRot.rotationState);
 			}
 		}
 	}

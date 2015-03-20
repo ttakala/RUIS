@@ -109,10 +109,10 @@ public class RUISMouseWand : RUISWand {
         if (wandRay.direction != Vector3.zero)
         {
 			// TUUKKA:
-			if (rigidbody)
+			if (GetComponent<Rigidbody>())
         	{
-            	rigidbody.MovePosition(wandRay.origin);
-            	rigidbody.MoveRotation(Quaternion.LookRotation(wandRay.direction));
+            	GetComponent<Rigidbody>().MovePosition(wandRay.origin);
+            	GetComponent<Rigidbody>().MoveRotation(Quaternion.LookRotation(wandRay.direction));
 			}
 			else
 			{

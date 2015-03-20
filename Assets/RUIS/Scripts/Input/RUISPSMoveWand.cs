@@ -63,7 +63,7 @@ public class RUISPSMoveWand : RUISWand {
 	
 	void Update ()
     {        
-        if(!rigidbody)
+        if(!GetComponent<Rigidbody>())
 		{
             transform.localPosition = localPosition;
             transform.localRotation = localRotation;
@@ -80,20 +80,20 @@ public class RUISPSMoveWand : RUISWand {
 
     void FixedUpdate()
     {
-        if (rigidbody)
+        if (GetComponent<Rigidbody>())
         {
             // TUUKKA:
             if (transform.parent)
             {
                 // If the wand has a parent, we need to apply its transformation first
-                rigidbody.MovePosition(transform.parent.TransformPoint(localPosition));
-                rigidbody.MoveRotation(transform.parent.rotation * localRotation);
+                GetComponent<Rigidbody>().MovePosition(transform.parent.TransformPoint(localPosition));
+                GetComponent<Rigidbody>().MoveRotation(transform.parent.rotation * localRotation);
             }
             else
             {
                 // TUUKKA: This was the original code 
-                rigidbody.MovePosition(localPosition);
-                rigidbody.MoveRotation(localRotation);
+                GetComponent<Rigidbody>().MovePosition(localPosition);
+                GetComponent<Rigidbody>().MoveRotation(localRotation);
             }
         }
     }

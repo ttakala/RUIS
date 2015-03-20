@@ -101,7 +101,7 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 	RUISMenuNGUI ruisNGUIMenu;
 	
 	void Awake () {
-		Screen.showCursor = true; // Incase cursor was hidden in previous scene
+		Cursor.visible = true; // Incase cursor was hidden in previous scene
 		
 		// Check if calibration settings were chosen on previous scene
 		ruisNGUIMenu = FindObjectOfType(typeof(RUISMenuNGUI)) as RUISMenuNGUI;

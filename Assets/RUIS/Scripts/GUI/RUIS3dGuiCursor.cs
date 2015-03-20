@@ -61,7 +61,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			return;
 		}
 		if(ruisDisplayManager.hideMouseOnPlay && menuScript.currentMenuState != RUISMenuNGUI.RUISMenuStates.calibration) 
-			Screen.showCursor = false;
+			Cursor.visible = false;
 		markerObject = ruisDisplayManager.menuCursorPrefab;
 	}
 	

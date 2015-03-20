@@ -48,9 +48,9 @@ public class RUISCameraEditor : Editor
         EditorGUILayout.EndHorizontal();
         EditorGUI.indentLevel--;
 
-        camera.camera.nearClipPlane = near.floatValue;
-        camera.camera.farClipPlane = far.floatValue;
-        camera.camera.fieldOfView = horizontalFOV.floatValue;
+        camera.GetComponent<Camera>().nearClipPlane = near.floatValue;
+        camera.GetComponent<Camera>().farClipPlane = far.floatValue;
+        camera.GetComponent<Camera>().fieldOfView = horizontalFOV.floatValue;
 
         serializedObject.ApplyModifiedProperties();
 	}

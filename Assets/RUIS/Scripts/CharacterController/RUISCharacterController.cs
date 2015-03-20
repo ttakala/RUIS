@@ -103,7 +103,7 @@ public class RUISCharacterController : MonoBehaviour
 
 		if(stabilizingCollider)
 		{	
-			colliderComponent = stabilizingCollider.gameObject.collider;
+			colliderComponent = stabilizingCollider.gameObject.GetComponent<Collider>();
 			if(colliderComponent)
 			{
 				if(    characterPivotType == CharacterPivotType.KinectHead
@@ -204,10 +204,10 @@ public class RUISCharacterController : MonoBehaviour
 		{
 			foreach(Transform bodyPart in bodyParts)
 			{
-	            if(bodyPart && bodyPart.collider)
+	            if(bodyPart && bodyPart.GetComponent<Collider>())
 	            {
-					raycastPosition = bodyPart.collider.bounds.center;
-					distanceToRaycast = (bodyPart.collider.bounds.extents.y + groundedErrorTweaker) * transform.lossyScale.y;
+					raycastPosition = bodyPart.GetComponent<Collider>().bounds.center;
+					distanceToRaycast = (bodyPart.GetComponent<Collider>().bounds.extents.y + groundedErrorTweaker) * transform.lossyScale.y;
 					rayIntersected = Physics.Raycast(raycastPosition, -transform.up, out hitInfo, 
 													 distanceToRaycast, groundLayers.value		  );
 					
@@ -238,7 +238,7 @@ public class RUISCharacterController : MonoBehaviour
 		{
 			if(dynamicFriction)
 			{
-				colliderComponent = stabilizingCollider.gameObject.collider;
+				colliderComponent = stabilizingCollider.gameObject.GetComponent<Collider>();
 				if(colliderComponent)
 				{
 					if(colliderComponent.material)
@@ -263,7 +263,7 @@ public class RUISCharacterController : MonoBehaviour
         Vector3 pivotPosition = GetPivotPositionInTrackerCoordinates();
         if (pivotPosition == Vector3.zero)
         {
-            rigidbody.MoveRotation(Quaternion.Euler(eulerRotation) * transform.rotation);
+            GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(eulerRotation) * transform.rotation);
             return;
         }
 
@@ -283,8 +283,8 @@ public class RUISCharacterController : MonoBehaviour
         //Debug.Log("new: " + positionDiff);
         Vector3 newPosition = pivotPosition - positionDiff;
         //Debug.DrawLine(transform.position, newPosition, Color.yellow);
-        rigidbody.MovePosition(newPosition);
-        rigidbody.MoveRotation(Quaternion.Euler(eulerRotation) * transform.rotation);
+        GetComponent<Rigidbody>().MovePosition(newPosition);
+        GetComponent<Rigidbody>().MoveRotation(Quaternion.Euler(eulerRotation) * transform.rotation);
     }
 
     public Vector3 TransformDirection(Vector3 directionInCharacterCoordinates)

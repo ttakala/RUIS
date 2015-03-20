@@ -22,8 +22,8 @@ public class ResetBall : MonoBehaviour {
         {
             transform.position = ballResetSpot.transform.position;
             transform.rotation = ballResetSpot.transform.rotation;
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.angularVelocity = Vector3.zero;
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
             shouldResetBall = false;
         }
