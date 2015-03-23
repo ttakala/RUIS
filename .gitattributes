@@ -106,7 +106,6 @@ Assets/Plugins/Metro/KinectUnityAddin.dll -text
 Assets/Plugins/OculusPlugin.bundle/Contents/MacOS/OculusPlugin -text
 Assets/Plugins/OculusPlugin.bundle/Contents/MacOS/OculusPlugin.signature -text
 Assets/Plugins/OculusPlugin.bundle/Contents/Resources/en.lproj/InfoPlist.strings -text
-Assets/Plugins/sixense.bundle/Contents/MacOS/sixense -text
 Assets/Plugins/x86/KinectUnityAddin.dll -text
 Assets/Plugins/x86/OculusPlugin.dll -text
 Assets/Plugins/x86/sixense.dll -text
