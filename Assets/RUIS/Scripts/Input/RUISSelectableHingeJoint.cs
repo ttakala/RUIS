@@ -13,6 +13,7 @@ using System.Collections;
 public class RUISSelectableHingeJoint : RUISSelectable {
 	
 	public float springForce = 10;
+	public bool resetTargetOnRelease;
 	private float originalAngluarDrag;
 	private bool isSelected;
 	private Vector3 originalHingeForward;
@@ -54,7 +55,15 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		this.angleOnSelection = transform.GetComponent<HingeJoint>().angle;
 		this.targetAngleOnSelection = calculateAngleDifferenceFromOrig();
 		
-		this.originalJointSpring = transform.GetComponent<HingeJoint>().spring;
+		this.originalJointSpring = transform.hingeJoint.spring;
+		
+		if(!physicalSelection) {
+			JointSpring spr = hingeJoint.spring;
+			spr.spring = 0;
+			spr.targetPosition = this.originalJointSpring.targetPosition;
+			spr.damper = this.originalJointSpring.damper;
+			hingeJoint.spring = spr;
+		}
 	}
 	
 	public override void OnSelectionEnd()
@@ -74,7 +83,24 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		this.selector = null;
 		this.isSelected = false;
 		
-		transform.GetComponent<HingeJoint>().spring = this.originalJointSpring;
+		if(!physicalSelection) {
+			transform.rigidbody.angularVelocity = Vector3.zero;
+			transform.rigidbody.velocity = Vector3.zero;
+			//transform.rigidbody.Sleep();
+		}
+		
+		if(resetTargetOnRelease) 
+		{
+			JointSpring spr = hingeJoint.spring;
+			spr.spring = this.originalJointSpring.spring;
+			spr.damper = this.originalJointSpring.damper;
+			spr.targetPosition = transform.hingeJoint.angle;
+			hingeJoint.spring = spr;
+		}
+		else 
+		{
+			transform.hingeJoint.spring = this.originalJointSpring;
+		}
 	}
 	
 	public void FixedUpdate()
@@ -109,7 +135,8 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		
 		
 		if(this.physicalSelection) {
-			JointSpring spr = GetComponent<HingeJoint>().spring;
+			// http://forum.unity3d.com/threads/assign-hingejoint-spring-targetposition-in-c.105427/
+			JointSpring spr = hingeJoint.spring;
 			spr.spring = springForce;
 			spr.targetPosition = angleDifferenceFromOrig - targetAngleOnSelection + this.angleOnSelection;
 			GetComponent<HingeJoint>().spring = spr;

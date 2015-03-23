@@ -10,38 +10,28 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 
-public class RUISSelectableJoystick : RUISSelectable {
+public class RUISSelectableBallJoint : RUISSelectable {
 	
 	private bool isSelected;
 	public float springForce = 10;
+	public bool resetTargetOnRelease;
 	private ConfigurableJoint configurableJoint;
 	private Vector3 jointAxisInGlobalCoordinates;
 	private Quaternion initialRotation; 
 	private Quaternion rotationOnSelectionStart;
-	private Vector3 originalHingeForward;
-	
+
 	private JointDrive originalJointDriveX, originalJointDriveYZ;
+	
+	
 	
 	void Start() 
 	{
 		
 		this.configurableJoint = this.gameObject.GetComponent(typeof(ConfigurableJoint)) as ConfigurableJoint;
-		this.jointAxisInGlobalCoordinates = transform.TransformDirection(Vector3.Cross(this.configurableJoint.axis, this.configurableJoint.secondaryAxis));
+		this.jointAxisInGlobalCoordinates = transform.TransformDirection(Vector3.Cross(this.configurableJoint.axis, this.configurableJoint.secondaryAxis)).normalized;
 		this.initialRotation = this.configurableJoint.transform.localRotation;
 		
 		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, this.configurableJoint.connectedAnchor, transform.position);
-		
-		
-		this.originalHingeForward = GetComponent<HingeJoint>().connectedAnchor - objectCenterProjectedOnPlane;
-		if(this.originalHingeForward == Vector3.zero) {
-			if(jointAxisInGlobalCoordinates.normalized == transform.forward) {
-				this.originalHingeForward = transform.right;
-			}
-			else {
-				this.originalHingeForward =  transform.forward;
-			}
-		}
-		
 		
 	}
 	
@@ -89,6 +79,16 @@ public class RUISSelectableJoystick : RUISSelectable {
 		this.selector = null;
 		this.isSelected = false;
 		
+		if(!physicalSelection) {
+			transform.rigidbody.angularVelocity = Vector3.zero;
+			transform.rigidbody.velocity = Vector3.zero;
+		}
+		
+		if(!resetTargetOnRelease) 
+		{
+			this.configurableJoint.SetTargetRotationLocal (Quaternion.LookRotation(Vector3.down), this.initialRotation);
+		}
+		
 		this.configurableJoint.angularXDrive = this.originalJointDriveX;
 		this.configurableJoint.angularYZDrive = this.originalJointDriveYZ;
 	}
@@ -105,8 +105,8 @@ public class RUISSelectableJoystick : RUISSelectable {
 		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(this.jointAxisInGlobalCoordinates, this.configurableJoint.connectedAnchor, newManipulationPoint);
 		Vector3 fromHingeToProjectedPoint = this.configurableJoint.connectedAnchor - projectedPoint;
 		
-		// https://gist.github.com/mstevenson/4958837
-		Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, (newManipulationPoint - this.configurableJoint.connectedAnchor).normalized);
+		// https://gist.github.com/mstevenson/4958837	
+		Quaternion targetRotation = Quaternion.FromToRotation(-this.jointAxisInGlobalCoordinates, (newManipulationPoint - this.configurableJoint.connectedAnchor).normalized);
 		this.configurableJoint.SetTargetRotationLocal (targetRotation * Quaternion.LookRotation(Vector3.down), this.initialRotation);
 		
 		Debug.DrawLine(this.configurableJoint.connectedAnchor, projectedPoint, Color.blue);
