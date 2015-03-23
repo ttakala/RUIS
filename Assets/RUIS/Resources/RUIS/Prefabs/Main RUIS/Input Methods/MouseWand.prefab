@@ -125,7 +125,7 @@ MonoBehaviour:
   ignoredLayers:
     serializedVersion: 2
     m_Bits: 3328
-  positionSelectionGrabType: 0
+  positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
   selectedGameObjectsLayer: 11
 --- !u!1001 &100100000

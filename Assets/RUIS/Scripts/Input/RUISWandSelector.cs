@@ -262,12 +262,23 @@ public class RUISWandSelector : MonoBehaviour {
 
 //        lineRenderer.enabled = selection == null && selectionRayType == SelectionRayType.WandDirection;
 
+		// TODO: even with PS Move there is no need to do this every frame
         lineRenderer.SetColors(wand.color, wand.color);
 
         lineRenderer.SetPosition(0, selectionRay.origin);// + selectionRayStartDistance * selectionRay.direction);
 
-		if(selection) // When selected, visible ray should stop at the selected object (which now belongs to selectedGameObjectsLayer)
-			lineRenderer.SetPosition(1, selectionRay.origin + selectionRay.direction.normalized * rayLengthAtSelection);
+		// When selected, visible ray should stop at the selected object (which now belongs to selectedGameObjectsLayer)
+		if(selection)
+		{
+			// Currently linerendered ray gets zero length upon selection if Position Grab is not AlongSelectionRay or
+			// if selected object is one of the RUISSelectableJoints 
+			if(   positionSelectionGrabType != SelectionGrabType.AlongSelectionRay
+			   || selection.GetType() == typeof(RUISSelectableHingeJoint)
+			   || selection.GetType() == typeof(RUISSelectableJoystick)				)
+				lineRenderer.SetPosition(1, selectionRay.origin);
+			else
+				lineRenderer.SetPosition(1, selectionRay.origin + selectionRay.direction.normalized * rayLengthAtSelection);
+		}
 		else
 	        lineRenderer.SetPosition(1, selectionRayEnd);
     }

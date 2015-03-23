@@ -113,6 +113,7 @@ Assets/Plugins/x86/sixense.dll -text
 Assets/Plugins/x86_64/KinectUnityAddin.dll -text
 Assets/Plugins/x86_64/OculusPlugin.dll -text
 Assets/Plugins/x86_64/libOculusPlugin.so -text
+Assets/Plugins/x86_64/sixense.dll -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Alley.physicMaterial -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Ball.physicMaterial -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Pin.physicMaterial -text

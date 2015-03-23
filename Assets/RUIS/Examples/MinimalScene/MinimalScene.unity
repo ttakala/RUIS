@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: .200000003, g: .200000003, b: .200000003, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -36,7 +36,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 961902270}
 --- !u!127 &3
 LevelGameManager:
   m_ObjectHideFlags: 0
@@ -150,7 +150,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: .5
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
       propertyPath: m_LocalPosition.z
@@ -174,6 +174,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
       propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400002, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
+      propertyPath: positionSelectionGrabType
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
