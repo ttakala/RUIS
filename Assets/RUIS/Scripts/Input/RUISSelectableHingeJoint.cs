@@ -17,6 +17,8 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	private float originalAngluarDrag;
 	private bool isSelected;
 	private Vector3 originalHingeForward;
+	private int hingeForwardType;
+	private bool useGravityOriginalValue;
 	
 	private float targetAngleOnSelection;
 	private float angleOnSelection;
@@ -28,19 +30,47 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	{
 		this.originalAngluarDrag = transform.GetComponent<Rigidbody>().angularDrag; 
 		this.jointAxisInGlobalCoordinates = transform.TransformDirection(transform.GetComponent<HingeJoint>().axis);
-		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, GetComponent<HingeJoint>().connectedAnchor, transform.position);
+		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, GetComponent<HingeJoint>().connectedAnchor, transform.position);;
 		
 		this.originalHingeForward = GetComponent<HingeJoint>().connectedAnchor - objectCenterProjectedOnPlane;
 		if(this.originalHingeForward == Vector3.zero) {
 			if(jointAxisInGlobalCoordinates.normalized == transform.forward) {
 				this.originalHingeForward = transform.right;
+				this.hingeForwardType = 1;
 			}
 			else {
 			 	this.originalHingeForward =  transform.forward;
+				this.hingeForwardType = 2;
 			}
+		}
+		else 
+		{
+			this.hingeForwardType = 0;
 		}
 		
 		if(this.physicalSelection) GetComponent<HingeJoint>().useSpring = true;
+	}
+	
+	private float getHingeJointAngle() {
+		
+		Vector3 currentHingeJointForwardVector = Vector3.forward;
+		
+		switch(this.hingeForwardType) {
+			case 0: 
+				Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(this.jointAxisInGlobalCoordinates, GetComponent<HingeJoint>().connectedAnchor, transform.position);
+				currentHingeJointForwardVector = GetComponent<HingeJoint>().connectedAnchor - objectCenterProjectedOnPlane;
+				break;
+			case 1:
+				currentHingeJointForwardVector = transform.right;
+				break;
+			case 2:
+				currentHingeJointForwardVector = transform.forward;
+				break;
+		}
+		
+		float hingeAngleDirection = Vector3.Dot(Vector3.Cross(this.originalHingeForward, currentHingeJointForwardVector).normalized, jointAxisInGlobalCoordinates);
+		float hingeJointAngle = Vector3.Angle(currentHingeJointForwardVector, this.originalHingeForward) * hingeAngleDirection;
+		return hingeJointAngle;
 	}
 	
 	public override void OnSelection(RUISWandSelector selector)
@@ -52,54 +82,50 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		selectorPositionAtSelection = selector.transform.position;
 		selectorRotationAtSelection = selector.transform.rotation;
 		distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude; // Dont remove this, needed in the inherited class
-		this.angleOnSelection = transform.GetComponent<HingeJoint>().angle;
+		this.angleOnSelection = getHingeJointAngle();
 		this.targetAngleOnSelection = calculateAngleDifferenceFromOrig();
 		
-		this.originalJointSpring = transform.hingeJoint.spring;
+		this.originalJointSpring = transform.GetComponent<HingeJoint>().spring;
 		
 		if(!physicalSelection) {
-			JointSpring spr = hingeJoint.spring;
+			JointSpring spr = GetComponent<HingeJoint>().spring;
 			spr.spring = 0;
 			spr.targetPosition = this.originalJointSpring.targetPosition;
 			spr.damper = this.originalJointSpring.damper;
-			hingeJoint.spring = spr;
+			GetComponent<HingeJoint>().spring = spr;
+			this.useGravityOriginalValue = transform.GetComponent<Rigidbody>().useGravity;
+			transform.GetComponent<Rigidbody>().useGravity = false;	
 		}
 	}
 	
 	public override void OnSelectionEnd()
 	{
-		if (GetComponent<Rigidbody>())
-		{
-			GetComponent<Rigidbody>().isKinematic = rigidbodyWasKinematic;
-			if(continuousCollisionDetectionWhenSelected)
-			{
-				switchToOldCollisionMode = true;
-			}
-		}
+		
+		transform.GetComponent<Rigidbody>().useGravity = this.useGravityOriginalValue;
+		
 		if(selectionMaterial != null)
 			RemoveMaterialFromEverything();
-		
 		
 		this.selector = null;
 		this.isSelected = false;
 		
 		if(!physicalSelection) {
-			transform.rigidbody.angularVelocity = Vector3.zero;
-			transform.rigidbody.velocity = Vector3.zero;
+			transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
 			//transform.rigidbody.Sleep();
 		}
 		
 		if(resetTargetOnRelease) 
 		{
-			JointSpring spr = hingeJoint.spring;
+			JointSpring spr = GetComponent<HingeJoint>().spring;
 			spr.spring = this.originalJointSpring.spring;
 			spr.damper = this.originalJointSpring.damper;
-			spr.targetPosition = transform.hingeJoint.angle;
-			hingeJoint.spring = spr;
+			spr.targetPosition = -getHingeJointAngle();
+			GetComponent<HingeJoint>().spring = spr;
 		}
 		else 
 		{
-			transform.hingeJoint.spring = this.originalJointSpring;
+			transform.GetComponent<HingeJoint>().spring = this.originalJointSpring;
 		}
 	}
 	
@@ -132,19 +158,47 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		if (!isSelected) return;
 		
 		float angleDifferenceFromOrig = calculateAngleDifferenceFromOrig();
-		
+		float hingeJointAngle = getHingeJointAngle();
 		
 		if(this.physicalSelection) {
 			// http://forum.unity3d.com/threads/assign-hingejoint-spring-targetposition-in-c.105427/
-			JointSpring spr = hingeJoint.spring;
+			JointSpring spr = GetComponent<HingeJoint>().spring;
 			spr.spring = springForce;
-			spr.targetPosition = angleDifferenceFromOrig - targetAngleOnSelection + this.angleOnSelection;
+			spr.targetPosition = angleDifferenceFromOrig - (targetAngleOnSelection + this.angleOnSelection);
 			GetComponent<HingeJoint>().spring = spr;
 		}
 		else {
-			transform.RotateAround(transform.GetComponent<HingeJoint>().connectedAnchor, this.jointAxisInGlobalCoordinates, angleDifferenceFromOrig - transform.GetComponent<HingeJoint>().angle  - targetAngleOnSelection + this.angleOnSelection);
+			       
+			transform.RotateAround(
+				transform.position, 
+				this.jointAxisInGlobalCoordinates, 
+				(angleDifferenceFromOrig - hingeJointAngle)
+				+ 
+				(this.angleOnSelection - targetAngleOnSelection) // Prevent "angle snap" on selection
+				);
+			
 		}
 		
+	}
+	
+	
+	public override Vector3 getManipulationPoint()
+	{
+		switch (selector.positionSelectionGrabType)
+		{
+			case RUISWandSelector.SelectionGrabType.SnapToWand:
+				return selector.transform.position;
+			case RUISWandSelector.SelectionGrabType.RelativeToWand:
+				Vector3 selectorPositionChange = selector.transform.position - selectorPositionAtSelection;
+				return positionAtSelection + selectorPositionChange;
+			case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
+				float clampDistance = distanceFromSelectionRayOrigin;
+				if (clampToCertainDistance) clampDistance = distanceToClampTo;
+				return selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
+			case RUISWandSelector.SelectionGrabType.DoNotGrab:
+				return transform.position;
+		}
+		return transform.position;
 	}
 	
 	// For debug : http://answers.unity3d.com/questions/467458/how-to-debug-drawing-plane.html

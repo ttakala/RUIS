@@ -80,8 +80,8 @@ public class RUISSelectableBallJoint : RUISSelectable {
 		this.isSelected = false;
 		
 		if(!physicalSelection) {
-			transform.rigidbody.angularVelocity = Vector3.zero;
-			transform.rigidbody.velocity = Vector3.zero;
+			transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+			transform.GetComponent<Rigidbody>().velocity = Vector3.zero;
 		}
 		
 		if(!resetTargetOnRelease) 
@@ -98,6 +98,24 @@ public class RUISSelectableBallJoint : RUISSelectable {
 		this.UpdateTransform(true);
 	}
 	
+	public override Vector3 getManipulationPoint()
+	{
+		switch (selector.positionSelectionGrabType)
+		{
+		case RUISWandSelector.SelectionGrabType.SnapToWand:
+			return selector.transform.position;
+		case RUISWandSelector.SelectionGrabType.RelativeToWand:
+			Vector3 selectorPositionChange = selector.transform.position - selectorPositionAtSelection;
+			return positionAtSelection + selectorPositionChange;
+		case RUISWandSelector.SelectionGrabType.AlongSelectionRay:
+			float clampDistance = distanceFromSelectionRayOrigin;
+			if (clampToCertainDistance) clampDistance = distanceToClampTo;
+			return selector.selectionRay.origin + clampDistance * selector.selectionRay.direction;
+		case RUISWandSelector.SelectionGrabType.DoNotGrab:
+			return transform.position;
+		}
+		return transform.position;
+	}
 	
 	protected override void UpdateTransform(bool safePhysics)
 	{

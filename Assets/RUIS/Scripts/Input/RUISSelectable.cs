@@ -246,7 +246,7 @@ public class RUISSelectable : MonoBehaviour {
         }
     }
     
-    public Vector3 getManipulationPoint()
+    public virtual Vector3 getManipulationPoint()
     {
 		switch (selector.positionSelectionGrabType)
 		{
@@ -280,7 +280,7 @@ public class RUISSelectable : MonoBehaviour {
     }
     
 	
-	public Quaternion getManipulationRotation()
+	public virtual Quaternion getManipulationRotation()
 	{
 		switch (selector.rotationSelectionGrabType)
 		{
