@@ -274,7 +274,7 @@ public class RUISWandSelector : MonoBehaviour {
 			// if selected object is one of the RUISSelectableJoints 
 			if(   positionSelectionGrabType != SelectionGrabType.AlongSelectionRay
 			   || selection.GetType() == typeof(RUISSelectableHingeJoint)
-			   || selection.GetType() == typeof(RUISSelectableJoystick)				)
+			   || selection.GetType() == typeof(RUISSelectableBallJoint))
 				lineRenderer.SetPosition(1, selectionRay.origin);
 			else
 				lineRenderer.SetPosition(1, selectionRay.origin + selectionRay.direction.normalized * rayLengthAtSelection);

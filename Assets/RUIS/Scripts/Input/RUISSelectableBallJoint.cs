@@ -12,13 +12,11 @@ using System.Collections;
 
 public class RUISSelectableBallJoint : RUISSelectable {
 	
-	private bool isSelected;
 	public float springForce = 10;
 	public bool resetTargetOnRelease;
 	private ConfigurableJoint configurableJoint;
 	private Vector3 jointAxisInGlobalCoordinates;
 	private Quaternion initialRotation; 
-	private Quaternion rotationOnSelectionStart;
 
 	private JointDrive originalJointDriveX, originalJointDriveYZ;
 	
@@ -31,14 +29,13 @@ public class RUISSelectableBallJoint : RUISSelectable {
 		this.jointAxisInGlobalCoordinates = transform.TransformDirection(Vector3.Cross(this.configurableJoint.axis, this.configurableJoint.secondaryAxis)).normalized;
 		this.initialRotation = this.configurableJoint.transform.localRotation;
 		
-		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, this.configurableJoint.connectedAnchor, transform.position);
+//		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, this.configurableJoint.connectedAnchor, transform.position);
 		
 	}
 	
 	public override void OnSelection(RUISWandSelector selector)
 	{
 		this.selector = selector;
-		this.isSelected = true;
 		// Transform information
 		positionAtSelection = selector.selectionRayEnd;
 		rotationAtSelection = transform.rotation;
@@ -47,8 +44,6 @@ public class RUISSelectableBallJoint : RUISSelectable {
 		selectorRotationAtSelection = selector.transform.rotation;
 		distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude; // Dont remove this, needed in the inherited class
 		
-		
-		this.rotationOnSelectionStart = this.configurableJoint.transform.localRotation;
 		
 		this.originalJointDriveX = this.configurableJoint.angularXDrive;
 		this.originalJointDriveYZ = this.configurableJoint.angularYZDrive;
@@ -77,7 +72,6 @@ public class RUISSelectableBallJoint : RUISSelectable {
 		
 		
 		this.selector = null;
-		this.isSelected = false;
 		
 		if(!physicalSelection) {
 			transform.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
@@ -93,7 +87,7 @@ public class RUISSelectableBallJoint : RUISSelectable {
 		this.configurableJoint.angularYZDrive = this.originalJointDriveYZ;
 	}
 	
-	public void FixedUpdate()
+	public new void FixedUpdate()
 	{
 		this.UpdateTransform(true);
 	}
@@ -121,7 +115,7 @@ public class RUISSelectableBallJoint : RUISSelectable {
 	{
 		Vector3 newManipulationPoint = getManipulationPoint();
 		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(this.jointAxisInGlobalCoordinates, this.configurableJoint.connectedAnchor, newManipulationPoint);
-		Vector3 fromHingeToProjectedPoint = this.configurableJoint.connectedAnchor - projectedPoint;
+//		Vector3 fromHingeToProjectedPoint = this.configurableJoint.connectedAnchor - projectedPoint;
 		
 		// https://gist.github.com/mstevenson/4958837	
 		Quaternion targetRotation = Quaternion.FromToRotation(-this.jointAxisInGlobalCoordinates, (newManipulationPoint - this.configurableJoint.connectedAnchor).normalized);
