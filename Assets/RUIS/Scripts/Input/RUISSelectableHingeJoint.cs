@@ -324,11 +324,10 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 			angleLimitMax = controlLimits.max;
 			angleLimitMin = controlLimits.min;
 		}
-		
-		float normalizedInput = 0;
+
 		float inputRange = angleLimitMax - angleLimitMin;
 		if(inputRange != 0) // Zero input is halfway between the limits
-			return normalizedInput = 2*(outputAngle - 0.5f*(angleLimitMax + angleLimitMin))/inputRange;
+			return 2*(outputAngle - 0.5f*(angleLimitMax + angleLimitMin))/inputRange;
 		return 0;
 	}
 
