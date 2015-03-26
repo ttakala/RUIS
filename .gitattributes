@@ -108,10 +108,12 @@ Assets/Plugins/OculusPlugin.bundle/Contents/MacOS/OculusPlugin.signature -text
 Assets/Plugins/OculusPlugin.bundle/Contents/Resources/en.lproj/InfoPlist.strings -text
 Assets/Plugins/x86/KinectUnityAddin.dll -text
 Assets/Plugins/x86/OculusPlugin.dll -text
+Assets/Plugins/x86/sixense.bundle/Contents/MacOS/sixense -text
 Assets/Plugins/x86/sixense.dll -text
 Assets/Plugins/x86_64/KinectUnityAddin.dll -text
 Assets/Plugins/x86_64/OculusPlugin.dll -text
 Assets/Plugins/x86_64/libOculusPlugin.so -text
+Assets/Plugins/x86_64/sixense.bundle -text
 Assets/Plugins/x86_64/sixense.dll -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Alley.physicMaterial -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Ball.physicMaterial -text
