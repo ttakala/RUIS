@@ -42,7 +42,7 @@ public class RUISSelectableBallJoint : RUISSelectable {
 		// Selector information
 		selectorPositionAtSelection = selector.transform.position;
 		selectorRotationAtSelection = selector.transform.rotation;
-		distanceFromSelectionRayOrigin = (positionAtSelection - selector.selectionRay.origin).magnitude; // Dont remove this, needed in the inherited class
+		distanceFromSelectionRayOrigin = (selector.selectionRayEnd - selector.selectionRay.origin).magnitude; // Dont remove this, needed in the inherited class
 		
 		
 		this.originalJointDriveX = this.configurableJoint.angularXDrive;
@@ -55,6 +55,9 @@ public class RUISSelectableBallJoint : RUISSelectable {
 		
 		this.configurableJoint.angularXDrive = jd;
 		this.configurableJoint.angularYZDrive = jd;
+
+		if (selectionMaterial != null)
+			AddMaterialToEverything(selectionMaterial);
 	}
 	
 	public override void OnSelectionEnd()

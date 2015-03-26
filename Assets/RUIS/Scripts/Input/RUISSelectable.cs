@@ -16,11 +16,12 @@ public class RUISSelectable : MonoBehaviour {
 	protected bool rigidbodyWasKinematic;
 	protected RUISWandSelector selector;
 	public bool isSelected { get { return selector != null; } }
-	
+
+	// TODO: return to public when implementation is done
 	[Tooltip(  "This object's motion will be affected by physical forces during selection, instead of merely overwriting the Transform values. "
 	         + "Results in more natural animation and interaction with other dynamic RigidBodies. Currently this option only has effect for "
 	         + "RUISSelectableHingeJoint and RUISSelectableBallJoint.")]
-	public bool physicalSelection = false;
+	protected bool physicalSelection = false;
 
 	protected Vector3 positionAtSelection;
 	protected Quaternion rotationAtSelection;

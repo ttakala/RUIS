@@ -272,9 +272,7 @@ public class RUISWandSelector : MonoBehaviour {
 		{
 			// Currently linerendered ray gets zero length upon selection if Position Grab is not AlongSelectionRay or
 			// if selected object is one of the RUISSelectableJoints 
-			if(   positionSelectionGrabType != SelectionGrabType.AlongSelectionRay
-			   || selection.GetType() == typeof(RUISSelectableHingeJoint)
-			   || selection.GetType() == typeof(RUISSelectableBallJoint))
+			if(   positionSelectionGrabType != SelectionGrabType.AlongSelectionRay)
 				lineRenderer.SetPosition(1, selectionRay.origin);
 			else
 				lineRenderer.SetPosition(1, selectionRay.origin + selectionRay.direction.normalized * rayLengthAtSelection);

@@ -28,7 +28,7 @@ GameObject:
   - 59: {fileID: 5943134}
   - 114: {fileID: 11460468}
   m_Layer: 0
-  m_Name: DoorLeft
+  m_Name: DoorLeftHinge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,7 +100,7 @@ GameObject:
   - 65: {fileID: 6570584}
   - 23: {fileID: 2364880}
   m_Layer: 0
-  m_Name: DoorMesh
+  m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -136,7 +136,7 @@ GameObject:
   - 65: {fileID: 6598834}
   - 23: {fileID: 2306490}
   m_Layer: 0
-  m_Name: DoorMesh
+  m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -190,7 +190,7 @@ GameObject:
   - 59: {fileID: 5989424}
   - 114: {fileID: 11418790}
   m_Layer: 0
-  m_Name: DoorRight
+  m_Name: DoorRightHinge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -860,7 +860,7 @@ HingeJoint:
   m_Axis: {x: 0, y: 1, z: 0}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: .829999924, y: 1.04999995, z: 0}
-  m_UseSpring: 0
+  m_UseSpring: 1
   m_Spring:
     spring: 10
     damper: 5
@@ -1024,14 +1024,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65ffaeeddbe983b44a5346715f062de0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
-  highlightMaterial: {fileID: 0}
-  selectionMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
+  selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
   continuousCollisionDetectionWhenSelected: 1
-  resetTargetOnRelease: 0
+  resetTargetOnRelease: 1
+  deadZone: .0500000007
   outputAngle: 0
 --- !u!114 &11460468
 MonoBehaviour:
@@ -1044,14 +1044,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65ffaeeddbe983b44a5346715f062de0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
-  highlightMaterial: {fileID: 0}
-  selectionMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 2100000, guid: 5b5e6f31fcccb8b43ae8dacf5892d6c9, type: 2}
+  selectionMaterial: {fileID: 2100000, guid: cadf278505852664f966af5b2b8a9680, type: 2}
   maintainMomentumAfterRelease: 1
   continuousCollisionDetectionWhenSelected: 1
-  resetTargetOnRelease: 0
+  resetTargetOnRelease: 1
+  deadZone: .0500000007
   outputAngle: 0
 --- !u!1001 &100100000
 Prefab:

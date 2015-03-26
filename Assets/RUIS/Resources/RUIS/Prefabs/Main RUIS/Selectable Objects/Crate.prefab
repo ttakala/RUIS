@@ -104,8 +104,8 @@ MonoBehaviour:
   physicalSelection: 0
   clampToCertainDistance: 0
   distanceToClampTo: 1
-  highlightMaterial: {fileID: 0}
-  selectionMaterial: {fileID: 0}
+  highlightMaterial: {fileID: 2100000, guid: eded88842debdf5428362c832441e003, type: 2}
+  selectionMaterial: {fileID: 2100000, guid: bab94b9bb475ce9458840f837cd1884a, type: 2}
   maintainMomentumAfterRelease: 1
   continuousCollisionDetectionWhenSelected: 1
 --- !u!1001 &100100000
