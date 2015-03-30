@@ -150,7 +150,7 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		}
 		else 
 		{
-			//transform.GetComponent<HingeJoint>().spring = this.originalJointSpring;
+			transform.GetComponent<HingeJoint>().spring = this.originalJointSpring;
 		}
 	}
 	
