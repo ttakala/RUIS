@@ -31,20 +31,17 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 
 	private Vector3 hingeForward;
 	private Vector3 hingeForwardOnStart;
-//	private Vector3 connectedBodyForwardOnStart;
 	
 	private float targetAngleOnSelection;
 	private float angleOnSelection;
 	private float hingeAngleOnStart;
-//	private Vector3 hingeForwardOnSelection;
 	
-		
-//	private int hingeForwardType;
 	private bool useGravityOriginalValue;
 	private Vector3 jointAxisInGlobalCoordinates;
 	private JointSpring originalJointSpring;
 	private Vector3 connectedAnchor;
-
+	
+	private Quaternion connectedBodyRotationOnStart;
 	
 	void Start() 
 	{
@@ -65,8 +62,9 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		updateHingeForward();
 		this.hingeForwardOnStart = this.hingeForward;
 		hingeAngleOnStart = GetComponent<HingeJoint>().angle;
-//		if(GetComponent<HingeJoint>().connectedBody) 
-//			this.connectedBodyForwardOnStart = GetComponent<HingeJoint>().connectedBody.transform.forward;
+		
+		if(GetComponent<HingeJoint>().connectedBody) 
+			connectedBodyRotationOnStart = GetComponent<HingeJoint>().connectedBody.transform.rotation; 
 		
 		if(this.physicalSelection) GetComponent<HingeJoint>().useSpring = true;
 	}
@@ -74,21 +72,14 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	private void updateHingeForward()
 	{
 		Vector3 objectCenterProjectedOnPlane = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, this.connectedAnchor, transform.position);
-		this.hingeForward = this.connectedAnchor - objectCenterProjectedOnPlane;
+		this.hingeForward = (objectCenterProjectedOnPlane - this.connectedAnchor).normalized;
 		if(this.hingeForward == Vector3.zero) {
 			if(jointAxisInGlobalCoordinates.normalized == transform.forward) {
 				this.hingeForward = transform.right;
-//				this.hingeForwardType = 1;
-
 			}
 			else {
 				this.hingeForward =  transform.forward;
-//				this.hingeForwardType = 2;
 			}
-		}
-		else 
-		{
-//			this.hingeForwardType = 0;
 		}
 	}
 	
@@ -105,8 +96,6 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		selectorPositionAtSelection = selector.transform.position;
 		selectorRotationAtSelection = selector.transform.rotation;
 		distanceFromSelectionRayOrigin = (selector.selectionRayEnd - selector.selectionRay.origin).magnitude; // Dont remove this, needed in the inherited class
-		
-//		this.hingeForwardOnSelection = this.hingeForward;
 		
 		this.angleOnSelection = getHingeJointAngle();
 		this.targetAngleOnSelection = getAngleDifferenceFromHingeForwardOnStart();
@@ -161,7 +150,7 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		}
 		else 
 		{
-			transform.GetComponent<HingeJoint>().spring = this.originalJointSpring;
+			//transform.GetComponent<HingeJoint>().spring = this.originalJointSpring;
 		}
 	}
 	
@@ -182,7 +171,7 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	
 	private float calculateAngleBetweenVectors(Vector3 vectorA, Vector3 vectorB, Vector3 planeNormal)
 	{
-		float angleDirection = Vector3.Dot(Vector3.Cross(vectorA, vectorB).normalized, jointAxisInGlobalCoordinates);
+		float angleDirection = Vector3.Dot(Vector3.Cross(vectorA, vectorB).normalized, planeNormal);
 		float angleDifference = Vector3.Angle(vectorA , vectorB) * angleDirection;
 		return angleDifference;
 	}
@@ -209,11 +198,10 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	
 	private float getHingeJointAngle() 
 	{
-		// TODO: This does not work when connectedBody has a non-identity rotation upon application start! 
 		updateHingeForward();
 		Quaternion connectedBodyRotationCorrection = Quaternion.identity;
 		if(GetComponent<HingeJoint>().connectedBody) 
-			connectedBodyRotationCorrection = GetComponent<HingeJoint>().connectedBody.transform.rotation; 
+			connectedBodyRotationCorrection = GetComponent<HingeJoint>().connectedBody.transform.rotation * Quaternion.Inverse(connectedBodyRotationOnStart); 
 		float hingeAngle = calculateAngleBetweenVectors(this.hingeForward, connectedBodyRotationCorrection * this.hingeForwardOnStart, jointAxisInGlobalCoordinates);
 		return hingeAngle;
 	}
@@ -267,25 +255,19 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 			{
 				hingeLimits = GetComponent<HingeJoint>().limits;
 
-				// Force the HingeJoint.angle to same angle system as getHingeJointAngle()
-				float internalHingeAngle = GetComponent<HingeJoint>().angle - hingeAngleOnStart;
-				// TODO: internalHingeAngle is always zero if hinge object starts with rotation (0, 0, 180)
-				if(internalHingeAngle > 180)
-					internalHingeAngle -= 360;
-				if(internalHingeAngle < -180)
-					internalHingeAngle += 360;
-				
-//				if(transform.parent.gameObject.name == "ThrustLever") // TODO remove
-//					print (internalHingeAngle + " " + hingeJointAngle + " " + rotateAngle);
+				float internalHingeAngle = getHingeJointAngle();
+				if(rotateAngle > 180)
+					rotateAngle -= 360;
+				if(rotateAngle < -180)
+					rotateAngle += 360;
 
 				// Modify rotateAngle so that the resulting transform.RotateAround() will not exceed the joint limits
 				if(internalHingeAngle - rotateAngle > hingeLimits.max && rotateAngle < 0)
 					rotateAngle += internalHingeAngle - rotateAngle - hingeLimits.max;
 				if(internalHingeAngle - rotateAngle < hingeLimits.min && rotateAngle > 0)
 					rotateAngle += internalHingeAngle - rotateAngle - hingeLimits.min;
-
+				
 			}
-
 			transform.RotateAround(transform.position, this.jointAxisInGlobalCoordinates, 
 			                       rotateAngle);
 		}
