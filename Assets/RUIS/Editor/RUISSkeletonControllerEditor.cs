@@ -32,6 +32,10 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty scaleBoneLengthOnly;
 	SerializedProperty boneLengthAxis;
 	SerializedProperty torsoThickness;
+	SerializedProperty rightArmThickness;
+	SerializedProperty leftArmThickness;
+	SerializedProperty rightLegThickness;
+	SerializedProperty leftLegThickness;
 
 	SerializedProperty filterRotations;
 	SerializedProperty rotationNoiseCovariance;
@@ -113,6 +117,10 @@ public class RUISSkeletonControllerEditor : Editor
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
 		boneLengthAxis = serializedObject.FindProperty("boneLengthAxis");
 		torsoThickness = serializedObject.FindProperty("torsoThickness");
+		rightArmThickness = serializedObject.FindProperty("rightArmThickness");
+		leftArmThickness = serializedObject.FindProperty("leftArmThickness");
+		rightLegThickness = serializedObject.FindProperty("rightLegThickness");
+		leftLegThickness = serializedObject.FindProperty("leftLegThickness");
 
 		filterRotations = serializedObject.FindProperty("filterRotations");
 		rotationNoiseCovariance = serializedObject.FindProperty("rotationNoiseCovariance");
@@ -246,11 +254,13 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 		EditorGUI.indentLevel++;
-		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent(  "Bone Length Axis", "Determines the localScale axis along which each bone is "
-		                                                             + "scaled, if only length is scaled. You can discover the correct axis by examining "
+		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent(  "Bone Length Axis", "Determines the axis that points the bone direction in each " 
+		                                                             + "joint transform of the animation rig. This value depends on your rig, and it is "
+		                                                             + "only used if you have 'Scale Length Only' enabled or you are using Kinect 2 to "
+		                                                             + "curl fingers (fist clenching). You can discover the correct axis by examining "
 		                                                             + "the animation rig hierarchy, by looking at the directional axis between parent "
 		                                                             + "joints and their child joints in local coordinate system. IMPORTANT: Disable the "
-		                                                             + "above 'Scale Length Only' option if the same localScale axis is not consistently "
+		                                                             + "below 'Scale Length Only' option if the same localScale axis is not consistently "
 		                                                             + "used in all the joints of the animation rig."));
 		EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Scale Length Only", "Scale the bone length (localScale.x/y/z) but not the "
 		                                                                  + "bone thickness (localScale.yz/xz/xy). WARNING: Enabling this option could "
@@ -260,6 +270,10 @@ public class RUISSkeletonControllerEditor : Editor
 		{
 			EditorGUI.indentLevel++;
 			EditorGUILayout.PropertyField(torsoThickness, new GUIContent(  "Torso Thickness", "Thickness scale for torso around its Length Axis."));
+			EditorGUILayout.PropertyField(rightArmThickness, new GUIContent(  "Right Arm Thickness", "Thickness scale for right arm around its Length Axis."));
+			EditorGUILayout.PropertyField(leftArmThickness,  new GUIContent(  "Left Arm Thickness", "Thickness scale for left arm around its Length Axis."));
+			EditorGUILayout.PropertyField(rightLegThickness, new GUIContent(  "Right Leg Thickness", "Thickness scale for right leg around its Length Axis."));
+			EditorGUILayout.PropertyField(leftLegThickness,  new GUIContent(  "Left Leg Thickness", "Thickness scale for left leg around its Length Axis."));
 			EditorGUI.indentLevel--;
 		}
 

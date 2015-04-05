@@ -98,7 +98,11 @@ public class RUISSkeletonController : MonoBehaviour
 	public RUISAxis boneLengthAxis = RUISAxis.X;
 	public float maxScaleFactor = 0.01f;
 
-	public float torsoThickness = 0.7f; // TODO
+	public float torsoThickness = 1;
+	public float rightArmThickness = 1; 
+	public float  leftArmThickness = 1; 
+	public float rightLegThickness = 1; 
+	public float  leftLegThickness = 1; 
 
     public float minimumConfidenceToUpdate = 0.5f;
 	public float rotationDamping = 15.0f;
@@ -304,6 +308,43 @@ public class RUISSkeletonController : MonoBehaviour
 
         SaveInitialDistance(rightShoulder, leftShoulder);
         SaveInitialDistance(rightHip, leftHip);
+
+		// Finger clench rotations: these depend on your animation rig
+		// Also see method handleFingersCurling() and its clenchedRotationThumbTM_corrected and clenchedRotationThumbIP_corrected
+		// variables, if you are not tracking thumbs with Kinect 2. They also depend on your animation rig.
+		switch(boneLengthAxis)
+		{
+		case RUISAxis.X:
+			// Thumb phalange rotations when hand is clenched to a fist
+			clenchedRotationThumbTM = Quaternion.Euler (45, 0, 0); 
+			clenchedRotationThumbMCP = Quaternion.Euler (0, 0, -25 );
+			clenchedRotationThumbIP = Quaternion.Euler (0, 0, -80);
+			// Phalange rotations of other fingers when hand is clenched to a fist
+			clenchedRotationMCP = Quaternion.Euler (0, 0, -45);
+			clenchedRotationPIP = Quaternion.Euler (0, 0, -100);
+			clenchedRotationDIP = Quaternion.Euler (0, 0, -70);
+			break;
+		case RUISAxis.Y:
+			// Thumb phalange rotations when hand is clenched to a fist
+			clenchedRotationThumbTM = Quaternion.Euler (0, 0, 0); 
+			clenchedRotationThumbMCP = Quaternion.Euler (0, 0, 0);
+			clenchedRotationThumbIP = Quaternion.Euler (0, 0, 80);
+			// Phalange rotations of other fingers when hand is clenched to a fist
+			clenchedRotationMCP = Quaternion.Euler (45, 0, 0);
+			clenchedRotationPIP = Quaternion.Euler (100, 0, 0);
+			clenchedRotationDIP = Quaternion.Euler (70, 0, 0);
+			break;
+		case RUISAxis.Z: // TODO: Not yet tested with a real rig
+			// Thumb phalange rotations when hand is clenched to a fist
+			clenchedRotationThumbTM = Quaternion.Euler (45, 0, 0); 
+			clenchedRotationThumbMCP = Quaternion.Euler (0, 0, -25 );
+			clenchedRotationThumbIP = Quaternion.Euler (0, 0, -80);
+			// Phalange rotations of other fingers when hand is clenched to a fist
+			clenchedRotationMCP = Quaternion.Euler (0, -45, 0);
+			clenchedRotationPIP = Quaternion.Euler (0, -100, 0);
+			clenchedRotationDIP = Quaternion.Euler (0, -70, 0);
+			break;
+		}
 
         if (rightElbow)
         {
@@ -821,15 +862,18 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					case RUISAxis.X:
 						rightElbow.transform.localScale = new Vector3(forearmLengthRatio * rightElbow.transform.localScale.x, rightElbow.transform.localScale.y, 
-					                                           		  rightElbow.transform.localScale.z);
+					                                              rightElbow.transform.localScale.z);
+						rightShoulder.transform.localScale = new Vector3(rightShoulder.transform.localScale.x, rightArmThickness, rightArmThickness);
 						break;
 					case RUISAxis.Y:
 						rightElbow.transform.localScale = new Vector3(rightElbow.transform.localScale.x, forearmLengthRatio * rightElbow.transform.localScale.y, 
 					                                              rightElbow.transform.localScale.z);
+						rightShoulder.transform.localScale = new Vector3(rightArmThickness, rightShoulder.transform.localScale.y, rightArmThickness);
 						break;
 					case RUISAxis.Z:
 						rightElbow.transform.localScale = new Vector3(rightElbow.transform.localScale.x, rightElbow.transform.localScale.y, forearmLengthRatio *
 					                                              rightElbow.transform.localScale.z);
+						rightShoulder.transform.localScale = new Vector3(rightArmThickness, rightArmThickness, rightShoulder.transform.localScale.z);
 						break;
 				}
 			}
@@ -948,8 +992,14 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		else
 			boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, newScale, newScale), maxScaleFactor * Time.deltaTime);
-
-        return boneToScale.localScale.x;
+		
+		switch(boneLengthAxis)
+		{
+			case RUISAxis.X: return boneToScale.localScale.x;
+			case RUISAxis.Y: return boneToScale.localScale.y;
+			case RUISAxis.Z: return boneToScale.localScale.z;
+		}
+		return boneToScale.localScale.x;
     }
 
     private float UpdateTorsoScale()
@@ -1023,7 +1073,8 @@ public class RUISSkeletonController : MonoBehaviour
 		bool closeHand;
 		int invert = 1;
 		float rotationSpeed = 10.0f; // Per second
-		Quaternion clenchedRotationThumbTM_corrected;
+		Quaternion clenchedRotationThumbTM_corrected = Quaternion.identity;
+		Quaternion clenchedRotationThumbIP_corrected = Quaternion.identity;
 		
 		leftHandStatus = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandStatus);
 		rightHandStatus = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandStatus);
@@ -1053,9 +1104,26 @@ public class RUISSkeletonController : MonoBehaviour
 				closeHand = (leftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
 				invert = 1;
 			}
-			// Thumb rotation correction
-			clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x 
-			                                                     * invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
+			// Thumb rotation correction: these depend on your animation rig
+			switch(boneLengthAxis)
+			{
+			case RUISAxis.X:
+				clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x 
+				                                                     * invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
+				clenchedRotationThumbIP_corrected = clenchedRotationThumbTM;
+				break;
+			case RUISAxis.Y:
+				clenchedRotationThumbTM_corrected = clenchedRotationThumbTM;
+				clenchedRotationThumbIP_corrected = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x, 
+				                                                     clenchedRotationThumbIP.eulerAngles.y, clenchedRotationThumbIP.eulerAngles.z * invert);
+				break;
+			case RUISAxis.Z:
+				clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x,
+				                                                     clenchedRotationThumbTM.eulerAngles.y * invert, clenchedRotationThumbTM.eulerAngles.z);
+				clenchedRotationThumbIP_corrected = clenchedRotationThumbTM;
+				break;
+			}
+
 			for(int a = 0; a < 5; a++) 
 			{ // Fingers
 				if(!closeHand && !(a == 4 && trackThumbs)) 
@@ -1085,7 +1153,7 @@ public class RUISSkeletonController : MonoBehaviour
 						if(fingerTransforms[i, a, 1])
 							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 2])
-							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP, Time.deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP_corrected, Time.deltaTime * rotationSpeed);
 					}	
 				}	
 			}
@@ -1110,7 +1178,7 @@ public class RUISSkeletonController : MonoBehaviour
 			foreach (Transform finger in fingers) 
 			{
 				if (finger.parent.transform.gameObject == handObject.transform.gameObject
-				    && (finger.gameObject.name.Contains("finger") || finger.gameObject.name.Contains("Finger"))) 
+				    && (finger.gameObject.name.Contains("finger") || finger.gameObject.name.Contains("Finger") || finger.gameObject.name.Contains("FINGER"))) 
 				{
 				
 					if(fingerIndex > 4) break; // No mutant fingers allowed!
@@ -1130,7 +1198,7 @@ public class RUISSkeletonController : MonoBehaviour
 					foreach (Transform part1 in nextFingerParts) 
 					{
 						if (part1.parent.transform.gameObject == finger.gameObject
-						    && (part1.gameObject.name.Contains("finger") || part1.gameObject.name.Contains("Finger"))) 
+						    && (part1.gameObject.name.Contains("finger") || part1.gameObject.name.Contains("Finger") || part1.gameObject.name.Contains("FINGER"))) 
 						{
 							// Second bone
 							initialFingerRotations[i, index, 1] = part1.localRotation;
@@ -1139,7 +1207,7 @@ public class RUISSkeletonController : MonoBehaviour
 							foreach (Transform part2 in nextFingerParts2) 
 							{
 								if (part2.parent.transform.gameObject == part1.gameObject
-								    && (part2.gameObject.name.Contains("finger") || part2.gameObject.name.Contains("Finger"))) 
+								    && (part2.gameObject.name.Contains("finger") || part2.gameObject.name.Contains("Finger") || part2.gameObject.name.Contains("FINGER"))) 
 								{
 									// Third bone
 									initialFingerRotations[i, index, 2] = part2.localRotation;
