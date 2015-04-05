@@ -98,6 +98,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public RUISAxis boneLengthAxis = RUISAxis.X;
 	public float maxScaleFactor = 0.01f;
 
+	public float torsoThickness = 0.7f; // TODO
+
     public float minimumConfidenceToUpdate = 0.5f;
 	public float rotationDamping = 15.0f;
 	
@@ -970,7 +972,17 @@ public class RUISSkeletonController : MonoBehaviour
 		// Here we halve the maxScaleFactor because the torso is bigger than the limbs
 		torsoScale = Mathf.Lerp(torsoScale, newScale, 0.5f*maxScaleFactor * Time.deltaTime);
 
-		torso.localScale = new Vector3(torsoScale, torsoScale, torsoScale);
+		if(scaleBoneLengthOnly)
+		{
+			switch(boneLengthAxis)
+			{
+			case RUISAxis.X: torso.localScale = new Vector3(torsoScale, torsoThickness*torsoScale, torsoThickness*torsoScale); break;
+			case RUISAxis.Y: torso.localScale = new Vector3(torsoThickness*torsoScale, torsoScale, torsoThickness*torsoScale); break;
+			case RUISAxis.Z: torso.localScale = new Vector3(torsoThickness*torsoScale, torsoThickness*torsoScale, torsoScale); break;
+			}
+		}
+		else
+			torso.localScale = new Vector3(torsoScale, torsoScale, torsoScale);
 		return torsoScale;
 	}
 	

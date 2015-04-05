@@ -31,6 +31,7 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty scaleHierarchicalModelBones;
 	SerializedProperty scaleBoneLengthOnly;
 	SerializedProperty boneLengthAxis;
+	SerializedProperty torsoThickness;
 
 	SerializedProperty filterRotations;
 	SerializedProperty rotationNoiseCovariance;
@@ -111,6 +112,7 @@ public class RUISSkeletonControllerEditor : Editor
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
 		boneLengthAxis = serializedObject.FindProperty("boneLengthAxis");
+		torsoThickness = serializedObject.FindProperty("torsoThickness");
 
 		filterRotations = serializedObject.FindProperty("filterRotations");
 		rotationNoiseCovariance = serializedObject.FindProperty("rotationNoiseCovariance");
@@ -244,15 +246,23 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 		EditorGUI.indentLevel++;
-		EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Scale Length Only", "Scale the bone length (localScale.x/y/z) but not the "
-		                                                                  + "bone thickness (localScale.yz/xz/xy). WARNING: Enabling this option could "
-		                                                                  + "lead to peculiar results, depending on the animation rig."));
-		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent(  "Length Axis for Scaling", "Determines the localScale axis along which each bone is "
+		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent(  "Bone Length Axis", "Determines the localScale axis along which each bone is "
 		                                                             + "scaled, if only length is scaled. You can discover the correct axis by examining "
 		                                                             + "the animation rig hierarchy, by looking at the directional axis between parent "
 		                                                             + "joints and their child joints in local coordinate system. IMPORTANT: Disable the "
 		                                                             + "above 'Scale Length Only' option if the same localScale axis is not consistently "
 		                                                             + "used in all the joints of the animation rig."));
+		EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Scale Length Only", "Scale the bone length (localScale.x/y/z) but not the "
+		                                                                  + "bone thickness (localScale.yz/xz/xy). WARNING: Enabling this option could "
+		                                                                  + "lead to peculiar results, depending on the animation rig."));
+
+		if(scaleBoneLengthOnly.boolValue)
+		{
+			EditorGUI.indentLevel++;
+			EditorGUILayout.PropertyField(torsoThickness, new GUIContent(  "Torso Thickness", "Thickness scale for torso around its Length Axis."));
+			EditorGUI.indentLevel--;
+		}
+
 		EditorGUI.indentLevel--;
 
         if (!useHierarchicalModel.boolValue)
