@@ -43,40 +43,46 @@ public class RUISSkeletonManager : MonoBehaviour {
         public float positionConfidence = 0.0f;
         public float rotationConfidence = 0.0f;
 		public Kinect.TrackingState TrackingState = Kinect.TrackingState.NotTracked;
+		public Joint jointID = Joint.None;
+
+		public JointData(Joint jointID)
+		{
+			this.jointID = jointID;
+		}
     }
 
     public class Skeleton
     {
         public bool isTracking = false;
-        public JointData root = new JointData();
-        public JointData head = new JointData();
-        public JointData torso = new JointData();
-        public JointData leftShoulder = new JointData();
-        public JointData leftElbow = new JointData();
-        public JointData leftHand = new JointData();
-        public JointData rightShoulder = new JointData();
-        public JointData rightElbow = new JointData();
-        public JointData rightHand = new JointData();
-        public JointData leftHip = new JointData();
-        public JointData leftKnee = new JointData();
-        public JointData leftFoot = new JointData();
-        public JointData rightHip = new JointData();
-        public JointData rightKnee = new JointData();
-        public JointData rightFoot = new JointData();
+		public JointData root = new JointData(Joint.Root);
+		public JointData head = new JointData(Joint.Head);
+		public JointData torso = new JointData(Joint.Torso);
+		public JointData leftShoulder = new JointData(Joint.LeftShoulder);
+		public JointData leftElbow = new JointData(Joint.LeftElbow);
+		public JointData leftHand = new JointData(Joint.LeftHand);
+		public JointData rightShoulder = new JointData(Joint.RightShoulder);
+		public JointData rightElbow = new JointData(Joint.RightElbow);
+		public JointData rightHand = new JointData(Joint.RightHand);
+		public JointData leftHip = new JointData(Joint.LeftHip);
+		public JointData leftKnee = new JointData(Joint.LeftKnee);
+		public JointData leftFoot = new JointData(Joint.LeftFoot);
+		public JointData rightHip = new JointData(Joint.RightHip);
+		public JointData rightKnee = new JointData(Joint.RightKnee);
+		public JointData rightFoot = new JointData(Joint.RightFoot);
 
-		// Kinect 2 joints
-		public JointData baseSpine = new JointData();
-		public JointData midSpine = new JointData();
-		public JointData shoulderSpine = new JointData();
-		public JointData leftWrist = new JointData();
-		public JointData rightWrist = new JointData();
-		public JointData leftAnkle = new JointData();
-		public JointData rightAnkle = new JointData();
-		public JointData leftHandTip = new JointData();
-		public JointData rightHandTip = new JointData();
-		public JointData leftThumb = new JointData();
-		public JointData rightThumb = new JointData();
-		public JointData neck = new JointData();
+		// Kinect 2 joints, TODO: add Kinect 2 joint enumerations to Joint
+		public JointData baseSpine = new JointData(Joint.None);
+		public JointData midSpine = new JointData(Joint.None);
+		public JointData shoulderSpine = new JointData(Joint.None);
+		public JointData leftWrist = new JointData(Joint.None);
+		public JointData rightWrist = new JointData(Joint.None);
+		public JointData leftAnkle = new JointData(Joint.None);
+		public JointData rightAnkle = new JointData(Joint.None);
+		public JointData leftHandTip = new JointData(Joint.None);
+		public JointData rightHandTip = new JointData(Joint.None);
+		public JointData leftThumb = new JointData(Joint.None);
+		public JointData rightThumb = new JointData(Joint.None);
+		public JointData neck = new JointData(Joint.None);
 
 		public handState rightHandStatus = handState.unknown;
 		public handState leftHandStatus = handState.unknown;
@@ -676,9 +682,10 @@ public class RUISSkeletonManager : MonoBehaviour {
         }
     }
 
+	// TODO: Add method that return joints by ID, assign proper jointID in the first line: ... = new JointData(Joint.None);
 	public JointData GetKinect2JointData(Kinect.Joint jointPosition, Kinect.JointOrientation jointRotation) 
 	{
-		JointData jointData = new JointData();
+		JointData jointData = new JointData(Joint.None); // Temporary variable used to pass values, jointID can be none
 		jointData.rotation = new Quaternion(jointRotation.Orientation.X,jointRotation.Orientation.Y,jointRotation.Orientation.Z,jointRotation.Orientation.W);
 		jointData.position = new Vector3(jointPosition.Position.X, jointPosition.Position.Y, jointPosition.Position.Z);
 
