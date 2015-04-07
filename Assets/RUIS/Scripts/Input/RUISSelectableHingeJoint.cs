@@ -122,7 +122,9 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		Quaternion connectedBodyRotationCorrection = Quaternion.identity;
 		if(GetComponent<HingeJoint>().connectedBody) 
 			connectedBodyRotationCorrection = GetComponent<HingeJoint>().connectedBody.transform.rotation; 
+
 		return -calculateAngleDifferenceFromFoward(connectedBodyRotationCorrection * this.hingeForwardOnStart);
+		
 	}
 	
 	public override void OnSelectionEnd()
@@ -180,10 +182,9 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	{
 		Vector3 newManipulationPoint = getManipulationPoint();
 		Vector3 projectedPoint = MathUtil.ProjectPointOnPlane(jointAxisInGlobalCoordinates, this.connectedAnchor, newManipulationPoint);
-		Vector3 fromHingeToProjectedPoint = this.connectedAnchor - projectedPoint;
-		
+		Vector3 fromHingeToProjectedPoint = projectedPoint - this.connectedAnchor;
 		float angleDifferenceFromForward = calculateAngleBetweenVectors(forwardVector, fromHingeToProjectedPoint, jointAxisInGlobalCoordinates);
-
+		
 		#if UNITY_EDITOR
 		// For debug
 		Debug.DrawLine(this.connectedAnchor, projectedPoint, Color.blue);
@@ -247,15 +248,18 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 			if((this.connectedAnchor - projectedPoint).magnitude < deadZone) // In dead zone
 				return;
 
+
+//			print (hingeJointAngle + " - " + angleDifferenceFromStart + " = " + (hingeJointAngle - angleDifferenceFromStart) + " \n\r" + this.angleOnSelection + " -  " + targetAngleOnSelection + " = " + (this.angleOnSelection - targetAngleOnSelection));
 			float rotateAngle = (hingeJointAngle - angleDifferenceFromStart);
 			if(selector && selector.positionSelectionGrabType != RUISWandSelector.SelectionGrabType.SnapToWand)
 				rotateAngle -= (this.angleOnSelection - targetAngleOnSelection); // Prevent "angle snap" on selection
-
+			
 			if(GetComponent<HingeJoint>().useLimits)
 			{
 				hingeLimits = GetComponent<HingeJoint>().limits;
-
 				float internalHingeAngle = getHingeJointAngle();
+				
+				
 				if(rotateAngle > 180)
 					rotateAngle -= 360;
 				if(rotateAngle < -180)
@@ -268,8 +272,8 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 					rotateAngle += internalHingeAngle - rotateAngle - hingeLimits.min;
 				
 			}
-			transform.RotateAround(transform.position, this.jointAxisInGlobalCoordinates, 
-			                       rotateAngle);
+			
+			transform.RotateAround(transform.position, this.jointAxisInGlobalCoordinates, rotateAngle);
 		}
 	}
 	
