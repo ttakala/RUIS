@@ -2353,6 +2353,10 @@ Prefab:
       propertyPath: useHierarchicalModel
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 26fb1af95c8dcf446ad45be1b7cf29b6, type: 2}
+      propertyPath: oculusRotatesHead
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 26fb1af95c8dcf446ad45be1b7cf29b6, type: 2}
   m_IsPrefabParent: 0

@@ -14,7 +14,7 @@ using System.Collections.Generic;
 public class RUISSelectable : MonoBehaviour {
 
 	protected bool rigidbodyWasKinematic;
-	protected RUISWandSelector selector;
+	public RUISWandSelector selector { get; protected set; }
 	public bool isSelected { get { return selector != null; } }
 
 	// TODO: return to public when implementation is done
@@ -41,7 +41,10 @@ public class RUISSelectable : MonoBehaviour {
 	         + "Only has effect when the selecting Wand's 'Position Grab' is set to 'Along Selection Ray'.")]
 	public bool clampToCertainDistance = false;
 	[Tooltip(  "The desired distance for the above 'Clamp To Certain Distance' option.")]
-    public float distanceToClampTo = 1.0f;
+	public float distanceToClampTo = 1.0f;
+	[Tooltip(  "Force this object to selection ray center upon selection, causing a jump in position. "
+	         + "Only has effect when the selecting Wand's 'Position Grab' is NOT set to 'Snap To Wand'.")]
+	public bool snapToRay = false;
     
 	//for highlights
 	[Tooltip(  "This material will be temporarily blended with this object's original material when the object is highlighted by a Wand.")]
@@ -147,7 +150,10 @@ public class RUISSelectable : MonoBehaviour {
         rotationAtSelection = transform.rotation;
         selectorPositionAtSelection = selector.transform.position;
         selectorRotationAtSelection = selector.transform.rotation;
-		rayEndToPositionAtSelection = transform.position - selector.selectionRayEnd;
+		if(snapToRay)
+			rayEndToPositionAtSelection = Vector3.zero;
+		else
+			rayEndToPositionAtSelection = transform.position - selector.selectionRayEnd;
 		distanceFromSelectionRayOrigin = (selector.selectionRayEnd - selector.selectionRay.origin).magnitude;
 
         lastPosition = transform.position;

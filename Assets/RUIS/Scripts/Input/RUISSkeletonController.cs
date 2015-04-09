@@ -110,6 +110,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public float handRollAngleMinimum = -180; // Constrained between [0, -180] in Unity Editor script
 	public float handRollAngleMaximum =  180; // Constrained between [0,  180] in Unity Editor script
 	
+	public bool oculusRotatesHead = true;
 	public bool followOculusController { get; private set; }
 	public Quaternion trackedDeviceYawRotation { get; private set; }
 
@@ -393,6 +394,9 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 
+		if(oculusRotatesHead && (OVRManager.display == null || !OVRManager.display.isPresent))
+		   oculusRotatesHead = false;
+
 		// HACK for filtering Kinect 2 arm rotations
 		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRotations = filterRotations;
 		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rotationNoiseCovariance = rotationNoiseCovariance;
@@ -533,8 +537,32 @@ public class RUISSkeletonController : MonoBehaviour
 			UpdateSkeletonPosition ();
 
 			UpdateTransform (ref torso,         skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso,           rotationDamping);
-
 			UpdateTransform (ref head,          skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head,            rotationDamping);
+				
+			if(oculusRotatesHead && OVRManager.display != null)
+			{
+				if(coordinateSystem)
+				{
+					Quaternion oculusRotation = Quaternion.identity;
+					if(coordinateSystem.applyToRootCoordinates)
+					{
+						if(characterController.ovrHmdVersion == Ovr.HmdType.DK1 || characterController.ovrHmdVersion == Ovr.HmdType.DKHD)
+							oculusRotation = coordinateSystem.GetOculusRiftOrientationRaw();
+						else
+							oculusRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) 
+								                                                  * coordinateSystem.GetOculusRiftOrientationRaw(), RUISDevice.Oculus_DK2);
+					}
+					else if(OVRManager.display != null)
+						oculusRotation = OVRManager.display.GetHeadPose().orientation;
+
+					if (useHierarchicalModel)
+						head.rotation = transform.rotation * oculusRotation /*skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotation*/ *
+							(jointInitialRotations.ContainsKey(head) ? jointInitialRotations[head] : Quaternion.identity);
+					else
+						head.localRotation = oculusRotation; //skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head;
+				}
+			}
+
 			UpdateTransform (ref leftShoulder,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder,    rotationDamping);
 			UpdateTransform (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder,   rotationDamping);
 			UpdateTransform (ref leftHand,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand,      2*rotationDamping);

@@ -27,6 +27,7 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty updateJointRotations;
 	
 	SerializedProperty rootSpeedScaling;
+	SerializedProperty oculusRotatesHead;
 
 	SerializedProperty scaleHierarchicalModelBones;
 	SerializedProperty scaleBoneLengthOnly;
@@ -112,6 +113,7 @@ public class RUISSkeletonControllerEditor : Editor
         updateJointRotations = serializedObject.FindProperty("updateJointRotations");
 		
 		rootSpeedScaling = serializedObject.FindProperty("rootSpeedScaling");
+		oculusRotatesHead = serializedObject.FindProperty("oculusRotatesHead");
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
@@ -244,6 +246,9 @@ public class RUISSkeletonControllerEditor : Editor
 			skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId].rotationNoiseCovariance = 
 																																rotationNoiseCovariance.floatValue;
 		}
+
+		EditorGUILayout.PropertyField(oculusRotatesHead, new GUIContent(  "Oculus Rotates Head",   "Rotate character head with Oculus Rift."));
+		
 		
 		EditorGUI.indentLevel--;
 

@@ -26,7 +26,7 @@ public class RUISWandSelector : MonoBehaviour {
 	public Vector3 selectionRayEnd { get; private set; }
 	private Vector3 headToWandDirection;
 	private float rayLengthAtSelection = 0;
-    public Ray selectionRay { get; private set; }
+    public Ray selectionRay { get; protected set; }
 
     public Transform headTransform;
 
@@ -53,7 +53,7 @@ public class RUISWandSelector : MonoBehaviour {
     public int selectedGameObjectsLayer = 0;
     private int originalSelectedGameObjectLayer = -1;
     
-    private RUISWand wand;
+	public RUISWand wand { get; protected set; }
     private RUISSelectable selection;
     public RUISSelectable Selection
     {
