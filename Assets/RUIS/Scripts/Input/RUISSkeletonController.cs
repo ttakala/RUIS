@@ -394,7 +394,7 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 
-		if(oculusRotatesHead && (OVRManager.display == null || !OVRManager.display.isPresent))
+		if(oculusRotatesHead && (OVRManager.display == null || !OVRManager.display.isPresent || !characterController))
 		   oculusRotatesHead = false;
 
 		// HACK for filtering Kinect 2 arm rotations
