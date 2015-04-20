@@ -37,7 +37,9 @@ public class RUISPSMoveWand : RUISWand {
 
     protected RUISCoordinateSystem coordinateSystem;
 
-    public Renderer whereToCopyColor;
+	public Renderer whereToCopyColor;
+	[Range(0f, 1f)]
+	public float rayColorAlpha = 1;
 	
 	public void Awake ()
     {
@@ -358,7 +360,13 @@ public class RUISPSMoveWand : RUISWand {
     public bool startButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.START); } }
     public bool selectButtonWasReleased { get { return psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.SELECT); } }
 
-    public override Color color { get { return psMoveWrapper.sphereColor[controllerId]; } set { SetColor(value); } }
+    public override Color color { 
+		get { 
+				return new Color(psMoveWrapper.sphereColor[controllerId].r, psMoveWrapper.sphereColor[controllerId].g, 
+			                 	 psMoveWrapper.sphereColor[controllerId].b, rayColorAlpha);
+//				return psMoveWrapper.sphereColor[controllerId]; 
+		} 
+		set { SetColor(value); } }
 
     public float triggerValue { get { return psMoveWrapper.valueT[controllerId] / 255.0f; } }
 	

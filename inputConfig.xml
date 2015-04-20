@@ -2,8 +2,8 @@
 <ns2:RUISInputManager xmlns:ns2="http://ruisystem.net/RUISInputManager">
   <!--Boolean values always with a lower case, e.g. "true" or "false"-->
   <PSMoveSettings>
-    <enabled value="false" />
-    <ip value="127.0.0.1" />
+    <enabled value="true" />
+    <ip value="130.233.46.216" />
     <port value="7899" />
     <autoConnect value="true" />
     <enableInGameCalibration value="false" />
@@ -11,9 +11,9 @@
   </PSMoveSettings>
   <KinectSettings>
     <enabled value="false" />
-    <maxPlayers value="1" />
+    <maxPlayers value="2" />
     <floorDetection value="true" />
-    <jumpGestureEnabled value="true" />
+    <jumpGestureEnabled value="false" />
   </KinectSettings>
   <Kinect2Settings>
     <enabled value="true" />
