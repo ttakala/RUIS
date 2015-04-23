@@ -68,7 +68,7 @@ public class RUISCharacterController : MonoBehaviour
 	private bool kinectAndMecanimCombinerExists = false;
 	private bool combinerChildrenInstantiated = false;
 
-	public Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
+	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
 	
     void Awake()
     {

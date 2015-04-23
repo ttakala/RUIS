@@ -75,6 +75,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 	SerializedProperty fistCurlFingers;
 	SerializedProperty trackThumbs;
+	SerializedProperty trackWrist;
 	SerializedProperty trackAnkle;
 //	SerializedProperty rotateWristFromElbow;
 	
@@ -149,6 +150,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		leftThumb = serializedObject.FindProperty ("leftThumb");
 		rightThumb = serializedObject.FindProperty ("rightThumb");
+		trackWrist = serializedObject.FindProperty ("trackWrist");
 		trackAnkle = serializedObject.FindProperty ("trackAnkle");
 //		rotateWristFromElbow = serializedObject.FindProperty ("rotateWristFromElbow");
 		
@@ -380,6 +382,9 @@ public class RUISSkeletonControllerEditor : Editor
             EditorGUILayout.PropertyField(rightHandBone, new GUIContent("Right Hand", "The right wrist bone (hand)"));
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
+
+		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
+			EditorGUILayout.PropertyField(trackWrist, new GUIContent("Track Wrist", "Track the rotation of the hand bone"));
 
 		// TODO: Restore this when implementation is fixed
 //		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
