@@ -67,6 +67,8 @@ public class RUISCharacterController : MonoBehaviour
 
 	private bool kinectAndMecanimCombinerExists = false;
 	private bool combinerChildrenInstantiated = false;
+	
+	Vector3 previousPosition;
 
 	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
 	
@@ -183,6 +185,8 @@ public class RUISCharacterController : MonoBehaviour
 		
 		if(GetComponentInChildren<RUISKinectAndMecanimCombiner>())
 			kinectAndMecanimCombinerExists = true;
+
+		previousPosition = transform.position;
 	}
 	
     void Update()
@@ -224,6 +228,14 @@ public class RUISCharacterController : MonoBehaviour
 		}
 		
         grounded = tempGrounded;
+
+		// *** HACK: for fixing weird drift that is probably related to RUISKinectAndMecanimCombiner's transform.position update and possibly stabilizing collider & others
+		//  TODO: Does such miniscular position update affect how physics collision is handled? N.B. MovePosition is not used in RUISKinectAndMecanimCombiner right now
+		if((transform.position - previousPosition).magnitude * Mathf.Max(Mathf.Abs(transform.lossyScale.x), 
+		                                                                 Mathf.Max( Mathf.Abs(transform.lossyScale.y), Mathf.Abs(transform.lossyScale.z))) < 0.0009f)
+			transform.position = previousPosition;
+		
+		previousPosition = transform.position;
     }
 	
 	void FixedUpdate()
