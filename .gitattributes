@@ -212,6 +212,8 @@ Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/PrototypeCharacte
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/CharacterMotor.js -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/FPSInputController.js -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/MouseLook.cs -text
+Assets/Vertigo/Vertigo[!!-~]terrain.asset -text
+Assets/Vertigo/logo2.png -text
 ProjectSettings/AudioManager.asset -text
 ProjectSettings/DynamicsManager.asset -text
 ProjectSettings/EditorBuildSettings.asset -text
