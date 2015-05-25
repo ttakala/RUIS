@@ -352,10 +352,12 @@ public class RUISSelectable : MonoBehaviour {
 	protected void AddMaterialToEverything(Material m)
     {
         AddMaterial(m, GetComponent<Renderer>());
-
-        foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
+		
+		foreach (Renderer childRenderer in GetComponentsInChildren<Renderer>())
         {
-            AddMaterial(m, childRenderer);
+		  	AddMaterial(m, childRenderer);
+			//childRenderer.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
+			//childRenderer.receiveShadows = false;
         }
     }
 

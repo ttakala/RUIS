@@ -1,5 +1,9 @@
 * text=auto !eol
 Assets/Demo/Resources/BoneWandScene/boneWandTestSceneTerrain.asset -text
+Assets/Demo/kyykky/LightmapSnapshot.asset -text
+Assets/Demo/kyykky/ReflectionProbe-0.exr -text
+Assets/Demo/kyykky/SkyboxProbe-0.exr -text
+Assets/Demo/terrain[!!-~]grass.asset -text
 Assets/Kinect/Materials/BoneMaterial.mat -text
 Assets/MuscleDude/Furniture[!!-~]Pack[!!-~]1[!!-~]Free/Graphics/Materials/ChairFabric.mat -text
 Assets/MuscleDude/Furniture[!!-~]Pack[!!-~]1[!!-~]Free/Graphics/Materials/Plane.mat -text

@@ -69,7 +69,7 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 //			handClosed = false;
 //			return;
 //		}
-		print (gestureWasTriggered);
+
 		rightFistStatusInSensor = ruisSkeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].rightHandStatus;
 		leftFistStatusInSensor  = ruisSkeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].leftHandStatus;
 		
