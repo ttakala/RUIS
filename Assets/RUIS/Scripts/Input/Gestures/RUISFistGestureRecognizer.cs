@@ -21,11 +21,16 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 	
 	RUISSkeletonWand skeletonWand;
 	RUISSkeletonManager.Skeleton.handState fistStatusInSensor;
-	bool gestureEnabled = true;
+	bool gestureEnabled = false;
 	
 	float fistClosedTime, fistOpenTime;
 	RUISSkeletonManager.Skeleton.handState leftFistStatusInSensor, rightFistStatusInSensor;
-	bool handClosed;
+	[HideInInspector]
+	public bool handClosed;
+	
+	private bool gestureWasTriggered;
+	
+	private bool currentHandStatus, newHandStatus;
 	
 	RUISSkeletonManager ruisSkeletonManager;
 	
@@ -43,6 +48,7 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 		ruisSkeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 		skeletonWand = GetComponent<RUISSkeletonWand>();
 		handClosed = false;
+		gestureWasTriggered = false;
 		
 		if(leftOrRightFist == fistSide.InferFromName) {
 			if(skeletonWand.wandStart.ToString().IndexOf("Right") != -1) leftOrRightFist = fistSide.RightFist;
@@ -58,12 +64,12 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 	void LateUpdate()
 	{
 		
-		if (!gestureEnabled) 
-		{
-			handClosed = false;
-			return;
-		}
-
+//		if (!gestureEnabled) 
+//		{
+//			handClosed = false;
+//			return;
+//		}
+		print (gestureWasTriggered);
 		rightFistStatusInSensor = ruisSkeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].rightHandStatus;
 		leftFistStatusInSensor  = ruisSkeletonManager.skeletons[skeletonWand.bodyTrackingDeviceID, skeletonWand.playerId].leftHandStatus;
 		
@@ -71,6 +77,8 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 		else fistStatusInSensor = rightFistStatusInSensor;
 		
 		if(!ruisSkeletonManager.isNewKinect2Frame) return; 
+		
+		currentHandStatus = handClosed;
 		
 		if(handClosed)
 		{
@@ -134,11 +142,22 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 			handClosed = false;		
 		}
 		
+		newHandStatus = handClosed;
+		
+		if(currentHandStatus == false && newHandStatus == true) 
+			gestureWasTriggered = !gestureWasTriggered;
+		
 	}
 	
-	public override bool GestureTriggered()
+	public override bool GestureIsTriggered()
 	{
-		return handClosed;
+		// return handClosed;
+		return handClosed && gestureEnabled;
+	}
+	
+	public override bool GestureWasTriggered()
+	{
+		return gestureWasTriggered;
 	}
 	
 	public override float GetGestureProgress()

@@ -391,6 +391,6 @@ public class RUISCharacterLocomotion : MonoBehaviour
     {
         if (jumpGesture == null) return false;
 
-        return jumpGesture.GestureTriggered();
+        return jumpGesture.GestureIsTriggered();
     }
 }

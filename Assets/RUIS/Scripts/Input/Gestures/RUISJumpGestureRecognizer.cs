@@ -89,11 +89,16 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
         }
     }
 
-    public override bool GestureTriggered()
+    public override bool GestureIsTriggered()
     {
         return gestureEnabled && currentState == State.Jumping;
     }
-
+    
+	public override bool GestureWasTriggered()
+	{
+		return false; // Not implemented
+	}
+	
     public override float GetGestureProgress()
     {
         return (gestureEnabled && currentState == State.Jumping) ? 1 : 0;

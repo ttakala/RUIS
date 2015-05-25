@@ -252,11 +252,14 @@ public class RUISSkeletonWand : RUISWand
         
 		if(gestureRecognizer.IsBinaryGesture())
 		{
-			return gestureRecognizer.GestureTriggered();
+			if(wandSelector && wandSelector.toggleSelection)
+				return gestureRecognizer.GestureWasTriggered();
+			else
+				return gestureRecognizer.GestureIsTriggered();
 		}
 		else 
 		{
-           if (gestureRecognizer.GestureTriggered() && wandSelector.HighlightedObject)
+           if (gestureRecognizer.GestureIsTriggered() && wandSelector.HighlightedObject)
 	        {
 	            gestureRecognizer.ResetProgress();
 	            return true;
@@ -282,11 +285,14 @@ public class RUISSkeletonWand : RUISWand
         
 		if(gestureRecognizer.IsBinaryGesture())
 		{
-			return !gestureRecognizer.GestureTriggered();
+			if(wandSelector && wandSelector.toggleSelection)
+				return !gestureRecognizer.GestureWasTriggered();
+			else
+				return !gestureRecognizer.GestureIsTriggered();
 		}
 		else
 		{
-	        if (gestureRecognizer.GestureTriggered())
+	        if (gestureRecognizer.GestureIsTriggered())
 	        {
 	            gestureRecognizer.ResetProgress();
 	            return true;
@@ -304,11 +310,11 @@ public class RUISSkeletonWand : RUISWand
 		
 		if(gestureRecognizer.IsBinaryGesture())
 		{
-			return gestureRecognizer.GestureTriggered();
+			return gestureRecognizer.GestureIsTriggered();
 		}
 		else 
 		{
-        	return gestureRecognizer.GestureTriggered();
+        	return gestureRecognizer.GestureIsTriggered();
         }
     }
 
