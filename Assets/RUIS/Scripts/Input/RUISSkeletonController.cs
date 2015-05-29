@@ -166,16 +166,17 @@ public class RUISSkeletonController : MonoBehaviour
 	
 	Quaternion[,,] initialFingerRotations = new Quaternion[2,5,3]; // 2 hands, 5 fingers, 3 finger bones
 	Transform[,,] fingerTransforms = new Transform[2,5,3]; // For quick access to finger gameobjects
-	
+
+	// NOTE: The below phalange rotations are set in Start() method !!! See clause that starts with switch(boneLengthAxis)
 	// Thumb phalange rotations when hand is clenched to a fist
-	public Quaternion clenchedRotationThumbTM = Quaternion.Euler (45, 0, 0); 
-	public Quaternion clenchedRotationThumbMCP = Quaternion.Euler (0, 0, -25 );
-	public Quaternion clenchedRotationThumbIP = Quaternion.Euler (0, 0, -80);
+	public Quaternion clenchedRotationThumbTM; 
+	public Quaternion clenchedRotationThumbMCP;
+	public Quaternion clenchedRotationThumbIP;
 	
 	// Phalange rotations of other fingers when hand is clenched to a fist
-	public Quaternion clenchedRotationMCP = Quaternion.Euler (0, 0, -45);
-	public Quaternion clenchedRotationPIP = Quaternion.Euler (0, 0, -100);
-	public Quaternion clenchedRotationDIP = Quaternion.Euler (0, 0, -70);
+	public Quaternion clenchedRotationMCP;
+	public Quaternion clenchedRotationPIP;
+	public Quaternion clenchedRotationDIP;
 	
     void Awake()
     {
