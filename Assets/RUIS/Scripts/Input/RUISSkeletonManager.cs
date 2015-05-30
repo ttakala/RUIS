@@ -304,8 +304,10 @@ public class RUISSkeletonManager : MonoBehaviour {
 					{
 						for(int y = 0; y < skeletons.GetLength(1); y++) 
 						{
-							if(skeletons [kinect2SensorID, y].trackingId == body.TrackingId) 
+							if(skeletons [kinect2SensorID, y].trackingId == body.TrackingId)
+							{
 								skeletons [kinect2SensorID, y].isTracking = true;
+							}
 						}
 					}
 				}
@@ -347,6 +349,12 @@ public class RUISSkeletonManager : MonoBehaviour {
 						// HACK TO make things faster, remove later
 //						if(playerID > 0)
 //							return;
+						
+						// HACK: Kinect 2 can't track closer than 0.5 meters!
+						if(body.Joints[Kinect.JointType.SpineMid].Position.Z < 0.5f)
+						{
+							skeletons [kinect2SensorID, playerID].isTracking = false;
+						}
 
 
 						UpdateKinect2RootData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID);
