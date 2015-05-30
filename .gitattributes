@@ -220,6 +220,8 @@ Assets/Vertigo/Materials/white.PNG -text
 Assets/Vertigo/Vertigo[!!-~]terrain.asset -text
 Assets/Vertigo/ballbounce_3.wav -text
 Assets/Vertigo/barrel_break.wav -text
+Assets/Vertigo/splat_and_crash_combine.wav -text
+Assets/Vertigo/wind_loop.wav -text
 Assets/Vertigo/wood_hit_1.wav -text
 Assets/Vertigo/wood_hit_2.wav -text
 Assets/Vertigo/wood_hit_3.wav -text
