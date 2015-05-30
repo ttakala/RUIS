@@ -382,8 +382,29 @@ public class RUISDisplayManager : MonoBehaviour {
 			camera.eventReceiverMask = LayerMask.GetMask(LayerMask.LayerToName(menuLayer));
 		}
 
-		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight"))
-			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform;
+		string primaryMenuParent   = "CenterEyeAnchor";
+		string secondaryMenuParent = "CameraRight";
+		string tertiaryMenuParent  = "CameraLeft";
+		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(primaryMenuParent))
+			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(primaryMenuParent).transform;
+		else 
+		{
+			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(secondaryMenuParent))
+				ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(secondaryMenuParent).transform;
+			else
+			{
+				if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(tertiaryMenuParent))
+					ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(tertiaryMenuParent).transform;
+				else
+				{
+					Debug.LogError(  "Could not find any of the following gameObjects under " 
+					               + displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject.name
+					               + ": " + primaryMenuParent + ", " + secondaryMenuParent + ", " + tertiaryMenuParent + ". RUIS Menu will be parented "
+					               + "directly under " + displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject.name + ".");
+					ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform;
+				}
+			}
+		}
 		
 		ruisMenu.transform.localRotation = Quaternion.identity;
 		ruisMenu.transform.localPosition = new Vector3(guiX,guiY,guiZ);
