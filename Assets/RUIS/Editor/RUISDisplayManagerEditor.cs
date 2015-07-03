@@ -16,7 +16,7 @@ public class RUISDisplayManagerEditor : Editor {
     SerializedProperty displays;
     private GameObject displayPrefab;
 
-    SerializedProperty allowResolutionDialog;
+//    SerializedProperty allowResolutionDialog;
 	SerializedProperty ruisMenuPrefab;
 	SerializedProperty guiX; 
 	SerializedProperty guiY; 
@@ -58,7 +58,7 @@ public class RUISDisplayManagerEditor : Editor {
 		displayManagerLink = new SerializedObject(displayManager);
 		guiDisplayChoiceLink = displayManagerLink.FindProperty("guiDisplayChoice");
 		
-        allowResolutionDialog = serializedObject.FindProperty("allowResolutionDialog");
+//        allowResolutionDialog = serializedObject.FindProperty("allowResolutionDialog");
         displayPrefab = Resources.Load("RUIS/Prefabs/Main RUIS/RUISDisplay") as GameObject;
 
         displayBoxStyle = new GUIStyle();
@@ -87,21 +87,21 @@ public class RUISDisplayManagerEditor : Editor {
         //if there is only one display we want to give the user the opportunity to set fullscreen
         if (displays.arraySize == 1)
         {
-			allowResolutionDialog.boolValue = EditorGUILayout.Toggle(new GUIContent(  "Allow Resolution Dialog", "Enables the Resolution Dialog when your "
-			                                                                        + "standalone build starts if you have only one RUISDisplay. NOTE: In "
-			                                                                        + "all other cases the 'Display Resolution Dialog' setting in Unity's "
-			                                                                        + "Player Settings will be overriden with false. In those cases RUIS "
-			                                                                        + "will attempt to force the standalone game window to have the total "
-			                                                                        + "resolution that is the sum of your RUISDisplays arranged side-by-side."), 
-			                                                         allowResolutionDialog.boolValue);
-            if (allowResolutionDialog.boolValue)
-            {
-                PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
-            }
-            else
-            {
-                PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
-            }
+//			allowResolutionDialog.boolValue = EditorGUILayout.Toggle(new GUIContent(  "Allow Resolution Dialog", "Enables the Resolution Dialog when your "
+//			                                                                        + "standalone build starts if you have only one RUISDisplay. NOTE: In "
+//			                                                                        + "all other cases the 'Display Resolution Dialog' setting in Unity's "
+//			                                                                        + "Player Settings will be overriden with false. In those cases RUIS "
+//			                                                                        + "will attempt to force the standalone game window to have the total "
+//			                                                                        + "resolution that is the sum of your RUISDisplays arranged side-by-side."), 
+//			                                                         allowResolutionDialog.boolValue);
+//            if (allowResolutionDialog.boolValue)
+//            {
+//                PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Enabled;
+//            }
+//            else
+//            {
+//                PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
+//            }
         }
         else
 		{
@@ -110,7 +110,7 @@ public class RUISDisplayManagerEditor : Editor {
 			                         + "in Unity's Player Settings.", GUILayout.Height(60));
 
             PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
-            allowResolutionDialog.boolValue = false;
+//            allowResolutionDialog.boolValue = false;
         }
 
         if (GUILayout.Button("Add Display"))

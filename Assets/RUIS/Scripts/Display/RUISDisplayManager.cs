@@ -21,7 +21,7 @@ public class RUISDisplayManager : MonoBehaviour {
     public int totalRawResolutionX = 0;
     public int totalRawResolutionY = 0;
 
-    public bool allowResolutionDialog;
+//    public bool allowResolutionDialog;
 
 	public GameObject ruisMenuPrefab;
 	public GameObject menuCursorPrefab;
@@ -166,7 +166,7 @@ public class RUISDisplayManager : MonoBehaviour {
             currentResolutionX += display.rawResolutionX;
         }
 
-        if (displays.Count > 1 || (displays.Count == 1 && !allowResolutionDialog))
+        if (displays.Count > 1 || (displays.Count == 1 /* && !allowResolutionDialog */))
         {
 			if(!hasOculusDisplay) // TODO: if external oculus mode, and we have multiple displays, then execute below clause anyway
 			{

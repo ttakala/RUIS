@@ -106,7 +106,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public float  leftLegThickness = 1; 
 
     public float minimumConfidenceToUpdate = 0.5f;
-	public float rotationDamping = 15.0f;
+	public float rotationDamping = 360.0f;
 	
 	public float handRollAngleMinimum = -180; // Constrained between [0, -180] in Unity Editor script
 	public float handRollAngleMaximum =  180; // Constrained between [0,  180] in Unity Editor script
@@ -548,14 +548,21 @@ public class RUISSkeletonController : MonoBehaviour
 						
 //			if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !skeletonManager.isNewKinect2Frame)
 //				return;
-			
+
+			float maxAngularVelocity;
+//			if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID)
+//				maxAngularVelocity = skeletonManager.kinect2FrameDeltaT * rotationDamping;
+//			else 
+				maxAngularVelocity = Time.deltaTime * rotationDamping;
+
+
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
-			if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
+//			if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
 			{
 				UpdateSkeletonPosition ();
 
-				UpdateTransform (ref torso,         skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso,           rotationDamping);
-				UpdateTransform (ref head,          skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head,            rotationDamping);
+				UpdateTransform (ref torso,         skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso,           maxAngularVelocity);
+				UpdateTransform (ref head,          skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head,            maxAngularVelocity);
 			}
 				
 			if(oculusRotatesHead && OVRManager.display != null)
@@ -583,29 +590,29 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 			
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
-			if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
+//			if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
 			{
-				UpdateTransform (ref leftShoulder,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder,    rotationDamping);
-				UpdateTransform (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder,   rotationDamping);
+				UpdateTransform (ref leftShoulder,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder,    maxAngularVelocity);
+				UpdateTransform (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder,   maxAngularVelocity);
 
 				if(trackWrist || !useHierarchicalModel)
 				{
-					UpdateTransform (ref leftHand,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand,      2*rotationDamping);
-					UpdateTransform (ref rightHand,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand,     2*rotationDamping);
+					UpdateTransform (ref leftHand,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand,      2*maxAngularVelocity);
+					UpdateTransform (ref rightHand,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand,     2*maxAngularVelocity);
 				}
 
-				UpdateTransform (ref leftHip,       skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip,         rotationDamping);
-				UpdateTransform (ref rightHip,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip,        rotationDamping);
-				UpdateTransform (ref leftKnee,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee,        rotationDamping);
-				UpdateTransform (ref rightKnee,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee,       rotationDamping);
+				UpdateTransform (ref leftHip,       skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip,         maxAngularVelocity);
+				UpdateTransform (ref rightHip,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip,        maxAngularVelocity);
+				UpdateTransform (ref leftKnee,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee,        maxAngularVelocity);
+				UpdateTransform (ref rightKnee,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee,       maxAngularVelocity);
 				
-				UpdateTransform (ref rightElbow,    skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow,      rotationDamping);
-				UpdateTransform (ref leftElbow,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow,       rotationDamping);
+				UpdateTransform (ref rightElbow,    skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow,      maxAngularVelocity);
+				UpdateTransform (ref leftElbow,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow,       maxAngularVelocity);
 
 				if(trackAnkle || !useHierarchicalModel)
 				{
-					UpdateTransform (ref leftFoot,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot,        rotationDamping);
-					UpdateTransform (ref rightFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot,       rotationDamping);
+					UpdateTransform (ref leftFoot,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot,        maxAngularVelocity);
+					UpdateTransform (ref rightFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot,       maxAngularVelocity);
 				}
 			
 //				// TODO: Restore this when implementation is fixed
@@ -637,9 +644,9 @@ public class RUISSkeletonController : MonoBehaviour
 					if(trackThumbs) 
 					{
 						if(rightThumb)
-							UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb, rotationDamping);
+							UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb, maxAngularVelocity);
 						if(leftThumb)
-							UpdateTransform (ref leftThumb,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb,  rotationDamping);
+							UpdateTransform (ref leftThumb,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb,  maxAngularVelocity);
 					}
 				}
 			}
@@ -677,12 +684,17 @@ public class RUISSkeletonController : MonoBehaviour
 					spineDirection.Normalize();
 
 					// Obtained new body tracking data. TODO test that Kinect 1 still works
-					if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
+//					if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
 					{
-						ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder, 0);
-						ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder, 1);
-						ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip, 2);
-						ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip, 3);
+						float deltaT;
+//						if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID)
+//							deltaT = skeletonManager.kinect2FrameDeltaT;
+//						else
+							deltaT = Time.deltaTime;
+						ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder, 0, deltaT);
+						ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder, 1, deltaT);
+						ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip, 2, deltaT);
+						ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip, 3, deltaT);
 					}
 
 				}
@@ -783,7 +795,7 @@ public class RUISSkeletonController : MonoBehaviour
 		TweakNeckHeight();
     }
 
-    private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, float rotationDampFactor)
+	private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, float maxAngularVelocity)
     {
         if (transformToUpdate == null)
 		{
@@ -801,11 +813,11 @@ public class RUISSkeletonController : MonoBehaviour
             {
                 Quaternion newRotation = transform.rotation * jointToGet.rotation *
                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-				transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDampFactor);
+				transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularVelocity);
             }
             else
             {
-				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDampFactor);
+				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation, jointToGet.rotation, maxAngularVelocity);
             }
         }
     }
@@ -836,7 +848,7 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
-    private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, int jointID)
+    private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, int jointID, float deltaT)
     {
         if (transformToUpdate == null)
 			return;
@@ -850,7 +862,7 @@ public class RUISSkeletonController : MonoBehaviour
 			measuredPos [1] = jointToGet.position.y;
 			measuredPos [2] = jointToGet.position.z;
 
-			fourJointsKalman[jointID].setR (Time.deltaTime * fourJointsNoiseCovariance);
+			fourJointsKalman[jointID].setR (deltaT * fourJointsNoiseCovariance);
 			fourJointsKalman[jointID].predict ();
 			fourJointsKalman[jointID].update (measuredPos);
 			pos = fourJointsKalman[jointID].getState ();
@@ -871,7 +883,7 @@ public class RUISSkeletonController : MonoBehaviour
 		measuredPos [0] = newRootPosition.x;
 		measuredPos [1] = newRootPosition.y;
 		measuredPos [2] = newRootPosition.z;
-		positionKalman.setR (Time.deltaTime * positionNoiseCovariance);
+		positionKalman.setR (Time.deltaTime * positionNoiseCovariance); // HACK doesn't take into account Kinect's own update deltaT
 		positionKalman.predict ();
 		positionKalman.update (measuredPos);
 		pos = positionKalman.getState ();

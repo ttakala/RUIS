@@ -168,6 +168,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 	
 	public bool isNewKinect2Frame { get; private set; }
 	public float timeSinceLastKinect2Frame { get; private set; }
+	public float kinect2FrameDeltaT { get; private set; }
 
 	[Tooltip(  "How much is Kinect 2 skeletons' torso position interpolated towards base of the spine, in order to make the torso "
 	         + "position better correspond that of Kinect 1 (so that both Kinects can be used to animate the same skeletons). Default is 0.25.")]
@@ -549,8 +550,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 							////							measuredRotation = skeletons[kinect2SensorID, playerID].torso.rotation;
 							////							skeletons[kinect2SensorID, playerID].torso.rotation = skeletons[kinect2SensorID, playerID].filterRot[5].Update(measuredRotation, kalmanDeltaTime);
 							//							
-							// TODO uncomment
-//							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].midSpine, 6, kalmanDeltaTime);
+
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].midSpine, 6, kalmanDeltaTime);
 							//
 							////							measuredRotation = skeletons[kinect2SensorID, playerID].midSpine.rotation;
 							////							skeletons[kinect2SensorID, playerID].midSpine.rotation = skeletons[kinect2SensorID, playerID].filterRot[6].Update(measuredRotation, kalmanDeltaTime);
@@ -560,28 +561,28 @@ public class RUISSkeletonManager : MonoBehaviour {
 							////							measuredRotation = skeletons[kinect2SensorID, playerID].shoulderSpine.rotation;
 							////							skeletons[kinect2SensorID, playerID].shoulderSpine.rotation = skeletons[kinect2SensorID, playerID].filterRot[7].Update(measuredRotation, kalmanDeltaTime);
 
-							// TODO uncomment
-//							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].leftHand, 8, kalmanDeltaTime);
+
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].leftHand, 8, kalmanDeltaTime);
 							
 							//							measuredRotation = skeletons[kinect2SensorID, playerID].leftHand.rotation;
 							//							skeletons[kinect2SensorID, playerID].leftHand.rotation = skeletons[kinect2SensorID, playerID].filterRot[8].Update(measuredRotation, kalmanDeltaTime);
 
-							// TODO uncomment
-//							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightHand, 9, kalmanDeltaTime);
+
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightHand, 9, kalmanDeltaTime);
 							
 							//							measuredRotation = skeletons[kinect2SensorID, playerID].rightHand.rotation;
 							//							skeletons[kinect2SensorID, playerID].rightHand.rotation = skeletons[kinect2SensorID, playerID].filterRot[9].Update(measuredRotation, kalmanDeltaTime);
 						
 							// Kalman filtering is a slightly heavy operation, just average two latest thumb rotations // TODO uncomment
-//							Quaternion thumbRotation = skeletons[kinect2SensorID, playerID].leftThumb.rotation;
-//							skeletons[kinect2SensorID, playerID].leftThumb.rotation = Quaternion.Slerp(thumbRotation, 
-//							                                                                           skeletons[kinect2SensorID, playerID].previousRotation[10], 0.5f);
-//							skeletons[kinect2SensorID, playerID].previousRotation[10] = thumbRotation;
-//
-//							thumbRotation = skeletons[kinect2SensorID, playerID].rightThumb.rotation;
-//							skeletons[kinect2SensorID, playerID].rightThumb.rotation = Quaternion.Slerp(thumbRotation, 
-//							                                                                           skeletons[kinect2SensorID, playerID].previousRotation[11], 0.5f);
-//							skeletons[kinect2SensorID, playerID].previousRotation[11] = thumbRotation;
+							Quaternion thumbRotation = skeletons[kinect2SensorID, playerID].leftThumb.rotation;
+							skeletons[kinect2SensorID, playerID].leftThumb.rotation = Quaternion.Slerp(thumbRotation, 
+							                                                                           skeletons[kinect2SensorID, playerID].previousRotation[10], 0.5f);
+							skeletons[kinect2SensorID, playerID].previousRotation[10] = thumbRotation;
+
+							thumbRotation = skeletons[kinect2SensorID, playerID].rightThumb.rotation;
+							skeletons[kinect2SensorID, playerID].rightThumb.rotation = Quaternion.Slerp(thumbRotation, 
+							                                                                           skeletons[kinect2SensorID, playerID].previousRotation[11], 0.5f);
+							skeletons[kinect2SensorID, playerID].previousRotation[11] = thumbRotation;
 						}
 						
 						i++;
@@ -590,7 +591,10 @@ public class RUISSkeletonManager : MonoBehaviour {
 			}
 			
 			if(isNewKinect2Frame)
+			{
+				kinect2FrameDeltaT = timeSinceLastKinect2Frame;
 				timeSinceLastKinect2Frame = 0;
+			}
 			else
 				timeSinceLastKinect2Frame += Time.deltaTime;
 		}
