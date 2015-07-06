@@ -598,7 +598,7 @@ public class RUISTracker : MonoBehaviour
 				{
 					// Second term offsets the localPosition of each eye camera, which is set by ovrCameraRig
 					this.transform.localPosition =    coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2)
-													- transform.localRotation * Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale)
+													- transform.localRotation * ovrCameraRig.centerEyeAnchor.localPosition
 													+ coordinateSystem.GetOculusRiftOrientation() * positionOffsetOculus;
 				}
 			}
@@ -967,7 +967,7 @@ public class RUISTracker : MonoBehaviour
 				// Negate completely Oculus position tracking, including rotation-based neck offset
 				if(headPositionInput != HeadPositionSource.None)
 					transform.localPosition =  transform.localPosition 
-											 - transform.localRotation * (Vector3.Scale(ovrCameraRig.centerEyeAnchor.localPosition, ovrCameraRig.transform.lossyScale) + positionOffsetOculus);
+											 - transform.localRotation * (ovrCameraRig.centerEyeAnchor.localPosition + positionOffsetOculus);
 			}
 			
 			// Get Oculus Rift rotation

@@ -82,10 +82,17 @@ public class RUISSkeletonWand : RUISWand
 
         if (!gestureRecognizer)
         {
-            Debug.LogWarning("Please set a gesture recognizer for wand: " + name + " if you want to use gestures.");
+			Debug.LogWarning(  typeof(RUISGestureRecognizer) + " component was not found for wand '" + name + "'."
+			                 + "Add it if you want to use gesture-based selection.");
         }
 
         wandSelector = GetComponent<RUISWandSelector>();
+		if(!wandSelector)
+		{
+			Debug.LogError(  typeof(RUISWandSelector) + " component was not found for wand '" + name + "'."
+			               + "Add it if you want to use gesture-based selection. Disabling wand.");
+			this.enabled = false;
+		}
 
         PlayerLost();
     }
@@ -93,6 +100,7 @@ public class RUISSkeletonWand : RUISWand
 	public void Start()
 	{
 		RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
+		RUISHoldGestureRecognizer holdGestureRecognizer = GetComponent<RUISHoldGestureRecognizer>();
 		if(inputManager)
 		{
 			if(switchToAvailableKinect)
@@ -107,9 +115,7 @@ public class RUISSkeletonWand : RUISWand
 				{
 					bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 
-					RUISHoldGestureRecognizer holdGestureRecognizer = GetComponent<RUISHoldGestureRecognizer>();
-
-					if(gestureRecognizer != holdGestureRecognizer)
+					if(gestureRecognizer != holdGestureRecognizer) // Switching to the only selection gesture that RUIS has for Kinect 1
 					{
 						gestureRecognizer.enabled = false;
 						holdGestureRecognizer.enabled = true;
@@ -127,6 +133,13 @@ public class RUISSkeletonWand : RUISWand
 				bodyTrackingDeviceID = (int)bodyTrackingDevice;
 			}
 		}
+		if(gestureRecognizer == holdGestureRecognizer)
+		{
+			wandSelector.toggleSelection     = true;
+			wandSelector.grabWhileButtonDown = false;
+		}
+		else
+			showVisualizer = false; // HACK: this is mainly for RUISFistGestureRecognizer. If other gestures are added, comment this line
 	}
 
     public void Update()
@@ -252,7 +265,7 @@ public class RUISSkeletonWand : RUISWand
         
 		if(gestureRecognizer.IsBinaryGesture())
 		{
-			if(wandSelector && wandSelector.toggleSelection)
+			if(wandSelector.toggleSelection)
 				return gestureRecognizer.GestureWasTriggered();
 			else
 				return gestureRecognizer.GestureIsTriggered();
@@ -285,7 +298,7 @@ public class RUISSkeletonWand : RUISWand
         
 		if(gestureRecognizer.IsBinaryGesture())
 		{
-			if(wandSelector && wandSelector.toggleSelection)
+			if(wandSelector.toggleSelection)
 				return !gestureRecognizer.GestureWasTriggered();
 			else
 				return !gestureRecognizer.GestureIsTriggered();
