@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-Content    :   Implements selection behavior for RUISWands
+Content    :   Implements hinged object selection behavior for RUISWands
 Authors    :   Heikki Heiskanen, Tuukka Takala
 Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
@@ -34,7 +34,6 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 	
 	private float targetAngleOnSelection;
 	private float angleOnSelection;
-	private float hingeAngleOnStart;
 	
 	private bool useGravityOriginalValue;
 	private Vector3 jointAxisInGlobalCoordinates;
@@ -61,7 +60,6 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 		updateHingePositionAndAxis();
 		updateHingeForward();
 		this.hingeForwardOnStart = this.hingeForward;
-		hingeAngleOnStart = GetComponent<HingeJoint>().angle;
 		
 		if(GetComponent<HingeJoint>().connectedBody) 
 			connectedBodyRotationOnStart = GetComponent<HingeJoint>().connectedBody.transform.rotation; 

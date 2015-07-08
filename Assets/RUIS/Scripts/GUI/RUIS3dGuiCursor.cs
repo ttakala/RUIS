@@ -27,6 +27,8 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 	private Vector4 translateColumn = Vector4.zero;
 	private Vector3 trackerPosition = Vector3.zero;
 
+	private Vector3 originalLocalScale = Vector3.one;
+
 	void Start() 
 	{
 		menuScript = this.GetComponent<RUISMenuNGUI>();
@@ -63,6 +65,9 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 		if(ruisDisplayManager.hideMouseOnPlay && menuScript.currentMenuState != RUISMenuNGUI.RUISMenuStates.calibration) 
 			Cursor.visible = false;
 		markerObject = ruisDisplayManager.menuCursorPrefab;
+
+		if(markerObject)
+			originalLocalScale = this.markerObject.transform.localScale;
 	}
 	
 	void LateUpdate() 
@@ -101,6 +106,10 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			mouseInputCoordinates = Input.mousePosition;
 			instancedCursor.transform.rotation = ruisCamera.transform.rotation;	
 		}
+
+		// HACK for MecanimBlendedCharacter: Keep cursor visible size even if character is scaled
+		if(menuScript.transform.parent)
+			instancedCursor.transform.localScale = originalLocalScale * Mathf.Max (menuScript.transform.parent.lossyScale.x, menuScript.transform.parent.lossyScale.y);
 
 		RaycastHit hit;	
 		

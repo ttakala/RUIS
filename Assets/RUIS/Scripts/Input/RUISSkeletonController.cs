@@ -853,7 +853,7 @@ public class RUISSkeletonController : MonoBehaviour
         if (transformToUpdate == null)
 			return;
 
-		if(jointID == 2 || jointID == 3)
+		if(jointID == 2 || jointID == 3) // HACK: for now saving performance by not filtering hips
 			transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
 		else
 		{
@@ -1090,11 +1090,12 @@ public class RUISSkeletonController : MonoBehaviour
 //		float playerLength = (Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position, 
 //		                                       skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position) +
 //		                      Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position, 
-		//		                 					   skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
-//		float playerLength = (Vector3.Distance( rightShoulder.position,  leftShoulder.position) +
+//		                 					   skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
+//		float playerLength = (Vector3.Distance( rightShoulder.position,  leftShoulder.position) + // *** THIS IS WRONG, SCALING APPLIES ON THESE TRANSFORMS
 //		                      Vector3.Distance(      rightHip.position,       leftHip.position)  ) / 2;
 		float playerLength = (Vector3.Distance( fourJointPositions[0], fourJointPositions[1]) +
-		                      Vector3.Distance(      rightHip.position,       leftHip.position)  ) / 2;
+		                      Vector3.Distance( skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.position,
+		                 						skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.position)  ) / 2;
 //		float playerLength = (Vector3.Distance( fourJointPositions[0], fourJointPositions[1]) +
 //		                      Vector3.Distance( fourJointPositions[2], fourJointPositions[3])  ) / 2;
 		

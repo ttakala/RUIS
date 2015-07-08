@@ -173,6 +173,8 @@ public class RUISCharacterLocomotion : MonoBehaviour
     void FixedUpdate()
     {
         //characterController.ApplyForceInCharacterDirection(translation);
+		
+		float locomotionScale = Mathf.Max(transform.lossyScale.x, transform.lossyScale.z);
 
         direction = 0;
 		turnMagnitude = 0;
@@ -193,7 +195,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			{
 				jumpTimeVelocity = GetComponent<Rigidbody>().velocity;
 				jumpTimeVelocity.y = 0;
-				jumpTimeVelocity = Vector3.ClampMagnitude(jumpTimeVelocity, aerialMobility*speed);
+				jumpTimeVelocity = Vector3.ClampMagnitude(jumpTimeVelocity, aerialMobility*speed*locomotionScale);
 				airborneAccumulatedVelocity = jumpTimeVelocity;
 			}
 			airborne = true;
@@ -309,13 +311,13 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
 		
         targetVelocity = characterController.TransformDirection(targetVelocity);
-        targetVelocity *= speed;
+		targetVelocity *= speed*locomotionScale;
 
         velocity = GetComponent<Rigidbody>().velocity;
         velocityChange = (targetVelocity - velocity);
 
         velocityChange.y = 0;
-		velocityChange = Vector3.ClampMagnitude(velocityChange, Time.fixedDeltaTime * maxVelocityChange);
+		velocityChange = Vector3.ClampMagnitude(velocityChange, Time.fixedDeltaTime * maxVelocityChange * locomotionScale);
 		
 		if(!airborne)
 		{
@@ -337,16 +339,16 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			}
 
 			// Calculate proposed acceleration as a sum of player controls and air drag
-			proposedAcceleration = aerialAcceleration*characterController.TransformDirection(desiredVelocity) + tempAcceleration;
+			proposedAcceleration = (aerialAcceleration*characterController.TransformDirection(desiredVelocity) + tempAcceleration) * locomotionScale;
 
 			// Integrate proposed total velocity = old velocity + proposed acceleration * deltaT
-			proposedVelocity = airborneAccumulatedVelocity + (proposedAcceleration)*Time.fixedDeltaTime;
+			proposedVelocity = (airborneAccumulatedVelocity + proposedAcceleration*Time.fixedDeltaTime);
 
 			// If the proposed total velocity is not inside "aerial velocity disc", then shorten the proposed velocity
 			// with length of [proposed acceleration * deltaT]. This allows aerial maneuvers along the edge of the disc (circle).
 			// In other words: If you have reach maximum aerial velocity to certain direction, you can still control the 
 			// velocity in the axis that is perpendicular to that direction
-			if(proposedVelocity.magnitude >= aerialMobility*speed)
+			if(proposedVelocity.magnitude >= aerialMobility*speed* locomotionScale)
 			{
 				proposedVelocity     -=  1.01f*airborneAccumulatedVelocity.normalized*proposedAcceleration.magnitude*Time.fixedDeltaTime;
 				proposedAcceleration -=  1.01f*airborneAccumulatedVelocity.normalized*proposedAcceleration.magnitude;
@@ -354,7 +356,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
 			// If the proposed total velocity is within allowed "aerial velocity disc", then add the proposed 
 			// acceleration to the character and update the accumulatedAerialSpeed accordingly
-			if(proposedVelocity.magnitude < aerialMobility*speed)
+			if(proposedVelocity.magnitude < aerialMobility*speed*locomotionScale)
 			{
 				GetComponent<Rigidbody>().AddForce(proposedAcceleration, ForceMode.Acceleration);
 				airborneAccumulatedVelocity = proposedVelocity;
@@ -377,8 +379,9 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
         if (shouldJump)
 		{
-			GetComponent<Rigidbody>().AddForce(new Vector3(0, Mathf.Sqrt((1 + 0.5f*(controlDirection.magnitude + extraSpeed)*jumpSpeedEffect) * jumpStrength) 
-																			* GetComponent<Rigidbody>().mass, 0), ForceMode.Impulse);
+			GetComponent<Rigidbody>().AddForce(
+				new Vector3(0, Mathf.Sqrt((1 + 0.5f*(controlDirection.magnitude + extraSpeed)*jumpSpeedEffect)*jumpStrength*locomotionScale)
+								* GetComponent<Rigidbody>().mass, 0), ForceMode.Impulse);
 			if(characterController)
 				characterController.lastJumpTime = Time.fixedTime;
 			
