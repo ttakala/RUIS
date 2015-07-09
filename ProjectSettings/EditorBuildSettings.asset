@@ -17,9 +17,9 @@ EditorBuildSettings:
     path: Assets/RUIS/Examples/MinimalScene/MinimalScene.unity
   - enabled: 0
     path: Assets/RUIS/Examples/OculusRiftExample/OculusRiftExample.unity
-  - enabled: 0
-    path: Assets/RUIS/Examples/MuscleDudeScene/MuscleDudeScene.unity
   - enabled: 1
+    path: Assets/RUIS/Examples/MuscleDudeScene/MuscleDudeScene.unity
+  - enabled: 0
     path: Assets/VertigoTuukka/vertigo.unity
   - enabled: 1
     path: Assets/RUIS/Scenes/calibration.unity

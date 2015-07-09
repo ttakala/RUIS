@@ -134,8 +134,8 @@ MonoBehaviour:
   selectionRayLength: 200
   selectionRayStartDistance: 0
   headTransform: {fileID: 0}
-  toggleSelection: 1
-  grabWhileButtonDown: 0
+  toggleSelection: 0
+  grabWhileButtonDown: 1
   ignoredLayers:
     serializedVersion: 2
     m_Bits: 3328
@@ -185,6 +185,7 @@ MonoBehaviour:
   fistClosedSignalLimit: 3
   fistOpenSignalLimit: 3
   lostFistReleaseDuration: 3
+  handClosed: 0
   leftOrRightFist: 0
 --- !u!120 &12000000
 LineRenderer:
@@ -227,7 +228,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: toggleSelection
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: grabWhileButtonDown
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}

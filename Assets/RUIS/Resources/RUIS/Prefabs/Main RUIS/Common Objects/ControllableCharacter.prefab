@@ -2850,6 +2850,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055462
 Camera:
   m_ObjectHideFlags: 1
@@ -2882,6 +2883,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055464
 Camera:
   m_ObjectHideFlags: 1
@@ -2914,6 +2916,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055466
 Camera:
   m_ObjectHideFlags: 1
@@ -2946,6 +2949,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055468
 Camera:
   m_ObjectHideFlags: 1
@@ -2978,6 +2982,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055470
 Camera:
   m_ObjectHideFlags: 1
@@ -3010,6 +3015,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055472
 Camera:
   m_ObjectHideFlags: 1
@@ -3042,6 +3048,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055474
 Camera:
   m_ObjectHideFlags: 1
@@ -3074,6 +3081,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055476
 Camera:
   m_ObjectHideFlags: 1
@@ -3106,6 +3114,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055478
 Camera:
   m_ObjectHideFlags: 1
@@ -3138,6 +3147,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055480
 Camera:
   m_ObjectHideFlags: 1
@@ -3170,6 +3180,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055482
 Camera:
   m_ObjectHideFlags: 1
@@ -3202,6 +3213,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055484
 Camera:
   m_ObjectHideFlags: 1
@@ -3234,6 +3246,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055486
 Camera:
   m_ObjectHideFlags: 1
@@ -3266,6 +3279,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055488
 Camera:
   m_ObjectHideFlags: 1
@@ -3298,6 +3312,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055490
 Camera:
   m_ObjectHideFlags: 1
@@ -3330,6 +3345,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055492
 Camera:
   m_ObjectHideFlags: 1
@@ -3362,6 +3378,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055494
 Camera:
   m_ObjectHideFlags: 1
@@ -3394,6 +3411,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055496
 Camera:
   m_ObjectHideFlags: 1
@@ -3426,6 +3444,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055498
 Camera:
   m_ObjectHideFlags: 1
@@ -3458,6 +3477,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!20 &2055500
 Camera:
   m_ObjectHideFlags: 1
@@ -3490,6 +3510,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
+  m_StereoMirrorMode: 0
 --- !u!23 &2355500
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -3649,7 +3670,6 @@ MonoBehaviour:
   dynamicFriction: 1
   dynamicMaterial: {fileID: 0}
   feetAlsoAffectGrounding: 1
-  ovrHmdVersion: 0
 --- !u!114 &11455388
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3752,6 +3772,7 @@ MonoBehaviour:
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
   trackThumbs: 1
+  trackWrist: 1
   trackAnkle: 1
   rotateWristFromElbow: 0
   skeletonManager: {fileID: 0}
@@ -3779,7 +3800,7 @@ MonoBehaviour:
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
   oculusRotatesHead: 1
-  filterRotations: 1
+  filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
   adjustVerticalTorsoLocation: 0
@@ -5420,7 +5441,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: filterRotations
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 155308}

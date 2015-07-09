@@ -1771,6 +1771,7 @@ MonoBehaviour:
   customRightThumb: {fileID: 0}
   fistCurlFingers: 1
   trackThumbs: 1
+  trackWrist: 1
   trackAnkle: 1
   rotateWristFromElbow: 1
   skeletonManager: {fileID: 0}
@@ -1798,7 +1799,7 @@ MonoBehaviour:
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
   oculusRotatesHead: 1
-  filterRotations: 1
+  filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
   adjustVerticalTorsoLocation: 0
@@ -2024,7 +2025,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: filterRotations
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100044}
