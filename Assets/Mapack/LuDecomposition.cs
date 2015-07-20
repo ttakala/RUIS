@@ -21,6 +21,8 @@ namespace Mapack
 
 		private Matrix eyes;
 
+		private double[] LUcolj;
+
 		/// <summary>Construct a LU decomposition.</summary>	
 		public LuDecomposition(Matrix value)
 		{
@@ -43,8 +45,6 @@ namespace Mapack
 			double[] LUrowi;
 			double[] LUcolj = new double[rows];
 
-			this.eyes = Matrix.Diagonal(rows, rows, 1.0);
-	
 			// Outer loop.
 			for (int j = 0; j < columns; j++)
 			{
@@ -106,6 +106,96 @@ namespace Mapack
 				}
 			}
 		}
+
+		/// <summary>Construct a LU decomposition.</summary>	
+		public LuDecomposition(int rows)
+		{
+			this.eyes = Matrix.Diagonal(rows, rows, 1.0);
+			pivotVector = new int[rows];
+			LUcolj = new double[rows];
+		}
+
+		private void Reinitialize(Matrix value)
+		{
+			if (value == null)
+			{
+				throw new ArgumentNullException("value");	
+			}
+			
+			Matrix.Clone(value, this.LU);
+			double[][] lu = LU.Array;
+			int rows = value.Rows;
+			int columns = value.Columns;
+//			pivotVector = new int[rows];
+			for (int i = 0; i < rows; i++)
+			{
+				pivotVector[i] = i;
+			}
+			
+			pivotSign = 1;
+			double[] LUrowi;
+//			double[] LUcolj = new double[rows];
+			
+			// Outer loop.
+			for (int j = 0; j < columns; j++)
+			{
+				// Make a copy of the j-th column to localize references.
+				for (int i = 0; i < rows; i++)
+				{
+					LUcolj[i] = lu[i][j];
+				}
+				
+				// Apply previous transformations.
+				for (int i = 0; i < rows; i++) 
+				{
+					LUrowi = lu[i];
+					
+					// Most of the time is spent in the following dot product.
+					int kmax = Math.Min(i,j);
+					double s = 0.0;
+					for (int k = 0; k < kmax; k++)
+					{
+						s += LUrowi[k]*LUcolj[k];
+					}
+					LUrowi[j] = LUcolj[i] -= s;
+				}
+				
+				// Find pivot and exchange if necessary.
+				int p = j;
+				for (int i = j+1; i < rows; i++)
+				{
+					if (Math.Abs(LUcolj[i]) > Math.Abs(LUcolj[p]))
+					{
+						p = i;
+					}
+				}
+				
+				if (p != j)
+				{
+					for (int k = 0; k < columns; k++) 
+					{
+						double t = lu[p][k]; 
+						lu[p][k] = lu[j][k]; 
+						lu[j][k] = t;
+					}
+					
+					int v = pivotVector[p]; 
+					pivotVector[p] = pivotVector[j]; 
+					pivotVector[j] = v;
+					
+					pivotSign = - pivotSign;
+				}
+				
+				// Compute multipliers.
+				
+				if (j < rows & lu[j][j] != 0.0) 
+				{
+					for (int i = j+1; i < rows; i++) 
+					{
+						lu[i][j] /= lu[j][j];
+					}
+				}
+			}		}
 
 		/// <summary>Returns if the matrix is non-singular.</summary>
 		public bool NonSingular

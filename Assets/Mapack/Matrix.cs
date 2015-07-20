@@ -4,6 +4,8 @@ namespace Mapack
 //	using System.IO;
 //	using System.Globalization;
 
+	// FIXME NOT THREAD SAFE, AT LEAST NOT WHEN ADDED PROCEDURAL FUNCTIONS SOURCE ARGUMENTS ARE SHARED
+
 	/// <summary>Matrix provides the fundamental operations of numerical linear algebra.</summary>
 	public class Matrix
 	{
@@ -11,7 +13,7 @@ namespace Mapack
 		private int rows;
 		private int columns;
 
-		private double[] workBuffer;
+		private double[] workBuffer; // FIXME NOT THREAD SAFE PART
 
 		private static Random random = new Random();
 	
@@ -330,9 +332,9 @@ namespace Mapack
 				throw new ArgumentException("Matrix dimension do not match.");
 			}
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < src.rows; i++)
 			{
-				for (int j = 0; j < columns; j++)
+				for (int j = 0; j < src.columns; j++)
 				{
 					x[i][j] = u[i][j];
 				}
@@ -371,9 +373,9 @@ namespace Mapack
 				throw new ArgumentException("Matrix dimension do not match.");
 			}
 
-			for (int i = 0; i < rows; i++)
+			for (int i = 0; i < src.rows; i++)
 			{
-				for (int j = 0; j < columns; j++)
+				for (int j = 0; j < src.columns; j++)
 				{
 					x[j][i] = u[i][j];
 				}
@@ -823,7 +825,7 @@ namespace Mapack
 			double[][] x = dst.Array;
 			
 			int size = left.columns;
-			double[] column = new double[size];
+			double[] column = left.workBuffer;
 			for (int j = 0; j < columns; j++)
 			{
 				for (int k = 0; k < size; k++)
