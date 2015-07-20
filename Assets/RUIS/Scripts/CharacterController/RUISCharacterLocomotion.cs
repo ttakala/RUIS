@@ -15,6 +15,7 @@ using System.Collections;
 public class RUISCharacterLocomotion : MonoBehaviour
 {
     RUISCharacterController characterController;
+	RUISBimanualSwingingRecognizer bimanualSwingingRecognizer;
 	//RUISInputManager inputManager;
 	
     public KeyCode turnRightKey = KeyCode.E;
@@ -76,7 +77,8 @@ public class RUISCharacterLocomotion : MonoBehaviour
         jumpGesture = GetComponentInChildren<RUISJumpGestureRecognizer>();
 
         moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
-
+		bimanualSwingingRecognizer = FindObjectOfType(typeof(RUISBimanualSwingingRecognizer)) as RUISBimanualSwingingRecognizer;
+        
         try
         {
             Input.GetAxis("Sprint");
@@ -209,7 +211,12 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 		}
 		catch (UnityException) { }
-
+		
+		if(bimanualSwingingRecognizer) 
+		{
+			targetVelocity.z += bimanualSwingingRecognizer.getTargetVelocity();
+		}
+		
         try
         {
 	        extraSpeed = Input.GetAxis("Sprint");
