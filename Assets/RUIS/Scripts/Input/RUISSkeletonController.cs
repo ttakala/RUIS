@@ -60,14 +60,21 @@ public class RUISSkeletonController : MonoBehaviour
 	public Transform customRightThumb;
 
 	public bool fistCurlFingers = true;
+	public bool externalCurlTrigger = false;
 	public bool trackThumbs = false;
 	public bool trackWrist = true;
 	public bool trackAnkle = true;
 	public bool rotateWristFromElbow = true;
 	
-	private RUISSkeletonManager.Skeleton.handState leftHandStatus, lastLeftHandStatus;
-	private RUISSkeletonManager.Skeleton.handState rightHandStatus, lastRightHandStatus;
-	
+	public RUISSkeletonManager.Skeleton.handState leftHandStatus  = RUISSkeletonManager.Skeleton.handState.open;
+	public RUISSkeletonManager.Skeleton.handState rightHandStatus = RUISSkeletonManager.Skeleton.handState.open;
+
+	public RUISSkeletonManager.Skeleton.handState externalLeftStatus  = RUISSkeletonManager.Skeleton.handState.open;
+	public RUISSkeletonManager.Skeleton.handState externalRightStatus = RUISSkeletonManager.Skeleton.handState.open;
+
+	private RUISSkeletonManager.Skeleton.handState lastLeftHandStatus, lastRightHandStatus;
+
+
 	private RUISInputManager inputManager;
     public RUISSkeletonManager skeletonManager;
 	private RUISCoordinateSystem coordinateSystem;
@@ -638,7 +645,10 @@ public class RUISSkeletonController : MonoBehaviour
 	
 				if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)
 				{
-					if(fistCurlFingers)
+					leftHandStatus  = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandStatus);
+					rightHandStatus = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandStatus);
+
+					if(fistCurlFingers && !externalCurlTrigger)
 						handleFingersCurling(trackThumbs);
 
 					if(trackThumbs) 
@@ -649,6 +659,10 @@ public class RUISSkeletonController : MonoBehaviour
 							UpdateTransform (ref leftThumb,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb,  maxAngularVelocity);
 					}
 				}
+				
+				// There is some other trigger that determines fist curling (e.g. RUISButtonGestureRecognizer)
+				if(externalCurlTrigger)
+					handleFingersCurling(trackThumbs);
 			}
 
 			if (!useHierarchicalModel) 
@@ -1151,39 +1165,46 @@ public class RUISSkeletonController : MonoBehaviour
 
 	private void handleFingersCurling(bool trackThumbs)
 	{
-
 		bool closeHand;
 		int invert = 1;
 		float rotationSpeed = 10.0f; // Per second
 		Quaternion clenchedRotationThumbTM_corrected = Quaternion.identity;
 		Quaternion clenchedRotationThumbIP_corrected = Quaternion.identity;
 		
-		leftHandStatus = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandStatus);
-		rightHandStatus = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandStatus);
-		
-		if(leftHandStatus == RUISSkeletonManager.Skeleton.handState.unknown || leftHandStatus ==  RUISSkeletonManager.Skeleton.handState.pointing) 
+		RUISSkeletonManager.Skeleton.handState currentLeftHandStatus  = leftHandStatus;
+		RUISSkeletonManager.Skeleton.handState currentRightHandStatus = rightHandStatus;
+
+		if(externalCurlTrigger)
 		{
-			leftHandStatus = lastLeftHandStatus;
+			currentLeftHandStatus  = externalLeftStatus;
+			currentRightHandStatus = externalRightStatus;
+		}
+
+		if(   currentLeftHandStatus == RUISSkeletonManager.Skeleton.handState.unknown 
+		   || currentLeftHandStatus ==  RUISSkeletonManager.Skeleton.handState.pointing) 
+		{
+			currentLeftHandStatus  = lastLeftHandStatus;
 		}
 		
-		if(rightHandStatus == RUISSkeletonManager.Skeleton.handState.unknown || rightHandStatus ==  RUISSkeletonManager.Skeleton.handState.pointing) 
+		if(   currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.unknown 
+		   || currentRightHandStatus ==  RUISSkeletonManager.Skeleton.handState.pointing) 
 		{
-			rightHandStatus = lastRightHandStatus;
+			currentRightHandStatus = lastRightHandStatus;
 		}
 		
-		lastLeftHandStatus = leftHandStatus ;
-		lastRightHandStatus = rightHandStatus;
+		lastLeftHandStatus  = currentLeftHandStatus;
+		lastRightHandStatus = currentRightHandStatus;
 		
 		for (int i = 0; i < 2; i++)  
 		{ // Hands
 			if (i == 0) 
 			{
-				closeHand = (rightHandStatus  == RUISSkeletonManager.Skeleton.handState.closed);
+				closeHand = (currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.closed);
 				invert = -1;
 			}
 			else 
 			{
-				closeHand = (leftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
+				closeHand = (currentLeftHandStatus  == RUISSkeletonManager.Skeleton.handState.closed);	
 				invert = 1;
 			}
 			// Thumb rotation correction: these depend on your animation rig

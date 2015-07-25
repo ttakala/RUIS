@@ -56,11 +56,6 @@ public class RUISFistGestureRecognizer : RUISGestureRecognizer {
 		}
 	}
 	
-	void Start()
-	{
-		// Not used
-	}
-	
 	void LateUpdate()
 	{
 		

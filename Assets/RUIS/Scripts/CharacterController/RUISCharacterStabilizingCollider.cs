@@ -93,6 +93,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 
 		if(transform.parent)
 		{
+			// FIXME: if skeletonControllers are nested below produces wrong results (e.g. case of pilot inside her mecha)
 			skeletonController = transform.parent.gameObject.GetComponentInChildren(typeof(RUISSkeletonController)) as RUISSkeletonController;
 			if(skeletonController)
 			{
