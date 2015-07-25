@@ -36,7 +36,11 @@ public class RUISCharacterLocomotionEditor : Editor {
 	SerializedProperty aerialAcceleration;
 	SerializedProperty aerialMobility;
 	SerializedProperty aerialDrag;
-
+	
+	SerializedProperty turningGestureType;
+	SerializedProperty rotationTriggerAngle;
+	SerializedProperty kinect2Heuristics;
+	
     public void OnEnable()
     {
         turnRightKey = serializedObject.FindProperty("turnRightKey");
@@ -55,6 +59,9 @@ public class RUISCharacterLocomotionEditor : Editor {
 		aerialAcceleration = serializedObject.FindProperty("aerialAcceleration");
 		aerialMobility = serializedObject.FindProperty("aerialMobility");
 		aerialDrag = serializedObject.FindProperty("aerialDrag");
+		turningGestureType = serializedObject.FindProperty("turningGestureType");
+		rotationTriggerAngle = serializedObject.FindProperty("rotationTriggerAngle");
+		kinect2Heuristics = serializedObject.FindProperty("kinect2Heuristics");
     }
 
     public override void OnInspectorGUI()
@@ -140,6 +147,9 @@ public class RUISCharacterLocomotionEditor : Editor {
 	        EditorGUI.indentLevel -= 2;
 		}
 		
+		EditorGUILayout.PropertyField(turningGestureType, new GUIContent(  "Turning Gesture Type", ""));
+		EditorGUILayout.PropertyField(rotationTriggerAngle, new GUIContent(  "Rotation Trigger Angle", ""));
+		EditorGUILayout.PropertyField(kinect2Heuristics, new GUIContent(  "Kinect 2 Heuristics", ""));
         serializedObject.ApplyModifiedProperties();
     }
 }

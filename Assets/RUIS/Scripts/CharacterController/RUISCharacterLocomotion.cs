@@ -16,6 +16,8 @@ public class RUISCharacterLocomotion : MonoBehaviour
 {
     RUISCharacterController characterController;
 	RUISBimanualSwingingRecognizer bimanualSwingingRecognizer;
+	RUISCoordinateSystem coordinateSystem;
+	private RUISSkeletonManager skeletonManager;
 	//RUISInputManager inputManager;
 	
     public KeyCode turnRightKey = KeyCode.E;
@@ -71,6 +73,16 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
     bool shouldJump = false;
 
+
+	// Head/Body turn gesture
+	public enum TurningGestureType {
+		TorsoAngleOnly, HeadAngleOnly, HeadToTorsoAngle
+	}
+	public TurningGestureType turningGestureType;
+	public float rotationTriggerAngle = 40;
+	public bool kinect2Heuristics = true;
+	// end // Head/Body turn gesture
+
     void Awake()
     {
         characterController = GetComponent<RUISCharacterController>();
@@ -78,6 +90,8 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
         moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
 		bimanualSwingingRecognizer = FindObjectOfType(typeof(RUISBimanualSwingingRecognizer)) as RUISBimanualSwingingRecognizer;
+		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
+		skeletonManager =  FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
         
         try
         {
@@ -369,7 +383,9 @@ public class RUISCharacterLocomotion : MonoBehaviour
 				airborneAccumulatedVelocity = proposedVelocity;
 			}
 		}
-
+	
+		turnMagnitude += rotationGestureTurnValue();
+		
         try
         {
 			turnMagnitude += Input.GetAxis("Turn");
@@ -402,5 +418,52 @@ public class RUISCharacterLocomotion : MonoBehaviour
         if (jumpGesture == null) return false;
 
         return jumpGesture.GestureIsTriggered();
+    }
+    
+    float rotationGestureTurnValue() {
+		float gestureTurnValue = 0;
+		float torsoRotation = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].torso.rotation.eulerAngles.y;
+		if(torsoRotation > 180) torsoRotation = (torsoRotation - 360);
+		
+		float oculusRotation = coordinateSystem.GetOculusRiftOrientation().eulerAngles.y;
+		if(oculusRotation > 180) oculusRotation = (oculusRotation - 360);
+		
+		bool kinect2HeuristicsCheckPass = true;
+		
+		float hand = 0.5f, wrist = 0.5f, elbow = 0.5f, shoulder = 0.5f;
+		if(kinect2Heuristics) {
+			
+			if(Mathf.Sign(torsoRotation) == -1) {
+				//				hand = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].leftHand.positionConfidence;
+				//				wrist = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].leftWrist.positionConfidence;
+				//				elbow = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].leftElbow.positionConfidence;
+				shoulder = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].leftShoulder.positionConfidence;
+			}
+			else {
+				//				hand = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].rightHand.positionConfidence;
+				//				wrist = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].rightWrist.positionConfidence;
+				//				elbow = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].rightElbow.positionConfidence;
+				shoulder = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].rightShoulder.positionConfidence;
+			}
+			if(shoulder <= 0.5f || torsoRotation < 30) 
+				kinect2HeuristicsCheckPass = false;		
+			
+		}
+		switch(turningGestureType) {
+		case TurningGestureType.HeadAngleOnly:
+			if(Mathf.Abs(oculusRotation) > rotationTriggerAngle) gestureTurnValue = 1 * Mathf.Sign(oculusRotation);
+			break;
+			
+		case TurningGestureType.TorsoAngleOnly:
+			if(Mathf.Abs(torsoRotation) > rotationTriggerAngle || (kinect2Heuristics && kinect2HeuristicsCheckPass)) gestureTurnValue = 1 * Mathf.Sign(torsoRotation);
+			break;
+			
+		case TurningGestureType.HeadToTorsoAngle: 
+			if(Mathf.Abs(oculusRotation - torsoRotation) > rotationTriggerAngle  || (kinect2Heuristics && kinect2HeuristicsCheckPass)) gestureTurnValue = 1  * Mathf.Sign(oculusRotation);
+			break;
+		}
+		
+		GameObject.Find ("angleTest").GetComponent<TextMesh>().text = Mathf.RoundToInt(torsoRotation) + " ( " +  rotationTriggerAngle + " )" + " \n " + gestureTurnValue + " \n " + hand + ":" + wrist + ":" + elbow + ":" + shoulder;
+		return gestureTurnValue;
     }
 }
