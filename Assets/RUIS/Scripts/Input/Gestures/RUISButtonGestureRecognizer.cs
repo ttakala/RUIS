@@ -31,7 +31,7 @@ public class RUISButtonGestureRecognizer : RUISGestureRecognizer {
 			if(skeletonWand.wandStart.ToString().IndexOf("Left") != -1) leftOrRightFist = RUISFistGestureRecognizer.fistSide.LeftFist;
 		}
 
-		if(animateFist && skeletonController)
+		if(animateFist && skeletonController && this.enabled)
 		{
 			skeletonController.externalCurlTrigger = true;
 		}

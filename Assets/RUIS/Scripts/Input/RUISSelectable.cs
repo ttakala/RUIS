@@ -233,14 +233,14 @@ public class RUISSelectable : MonoBehaviour {
 			if(selector.positionSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
 				GetComponent<Rigidbody>().MovePosition(newManipulationPoint);
 			if(selector.rotationSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
-            	GetComponent<Rigidbody>().MoveRotation(newManipulationRotation);
+				GetComponent<Rigidbody>().MoveRotation(newManipulationRotation * Quaternion.Euler(selector.rotationOffset));
         }
         else
 		{
 			if(selector.positionSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
 				transform.position = newManipulationPoint;
 			if(selector.rotationSelectionGrabType != RUISWandSelector.SelectionGrabType.DoNotGrab)
-            	transform.rotation = newManipulationRotation;
+				transform.rotation = newManipulationRotation * Quaternion.Euler(selector.rotationOffset);
         }
     }
 

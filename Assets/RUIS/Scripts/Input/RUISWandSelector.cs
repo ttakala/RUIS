@@ -27,6 +27,8 @@ public class RUISWandSelector : MonoBehaviour {
 	private Vector3 headToWandDirection;
 	private float rayLengthAtSelection = 0;
     public Ray selectionRay { get; protected set; }
+	
+	public Vector3 rotationOffset = Vector3.zero;
 
     public Transform headTransform;
 

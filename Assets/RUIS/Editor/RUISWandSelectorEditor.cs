@@ -28,7 +28,9 @@ public class RUISWandSelectorEditor : Editor
     SerializedProperty selectedGameObjectsLayer;
     
     SerializedProperty positionGrabType;
-    SerializedProperty rotationGrabType;
+	SerializedProperty rotationGrabType;
+
+	SerializedProperty rotationOffset;
 
     void OnEnable()
     {
@@ -45,7 +47,9 @@ public class RUISWandSelectorEditor : Editor
         selectedGameObjectsLayer = serializedObject.FindProperty("selectedGameObjectsLayer");
         
         positionGrabType = serializedObject.FindProperty("positionSelectionGrabType");
-        rotationGrabType = serializedObject.FindProperty("rotationSelectionGrabType");
+		rotationGrabType = serializedObject.FindProperty("rotationSelectionGrabType");
+
+		rotationOffset = serializedObject.FindProperty("rotationOffset");
     }
 
     public void OnGUI()
@@ -82,6 +86,11 @@ public class RUISWandSelectorEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(positionGrabType, new GUIContent("Position Grab", "The positional grab type:\nSnapToWand: Object will be positioned at the wand location.\nRelativeToWand: Object will start at its current position and be moved relative to the wand movements.\nAlongSelectionRay: Object will be moved along the selection ray at a certain distance, as if it was on the end of a long stick."));
         EditorGUILayout.PropertyField(rotationGrabType, new GUIContent("Rotation Grab", "The rotational grab type:\nSnapToWand: Object will be rotated exactly like the wand.\nRelativeToWand: Object will start at its current rotation and be rotated relative to the wand rotation.\nAlongSelectionRay: Object will face the selection ray."));
+
+		EditorGUILayout.PropertyField(rotationOffset, new GUIContent("Rotation Offset",   "Additional rotation that is added to the rotation from the tracker. "
+		                                                             + "This should usually kept to zero. Non-zero values make sense when "
+		                                                             + "Rotation Grab is set to 'Snap To Wand' and you want to offset the orientation of all "
+		                                                             + "the grabbed objects without modifying individual object pivot orientations."));
 
         serializedObject.ApplyModifiedProperties();
     }

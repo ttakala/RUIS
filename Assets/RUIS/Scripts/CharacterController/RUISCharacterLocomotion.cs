@@ -384,7 +384,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			}
 		}
 	
-		turnMagnitude += rotationGestureTurnValue();
+//		turnMagnitude += rotationGestureTurnValue();
 		
         try
         {
@@ -462,8 +462,9 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			if(Mathf.Abs(oculusRotation - torsoRotation) > rotationTriggerAngle  || (kinect2Heuristics && kinect2HeuristicsCheckPass)) gestureTurnValue = 1  * Mathf.Sign(oculusRotation);
 			break;
 		}
-		
-		GameObject.Find ("angleTest").GetComponent<TextMesh>().text = Mathf.RoundToInt(torsoRotation) + " ( " +  rotationTriggerAngle + " )" + " \n " + gestureTurnValue + " \n " + hand + ":" + wrist + ":" + elbow + ":" + shoulder;
+
+		if(GameObject.Find ("angleTest"))
+			GameObject.Find ("angleTest").GetComponent<TextMesh>().text = Mathf.RoundToInt(torsoRotation) + " ( " +  rotationTriggerAngle + " )" + " \n " + gestureTurnValue + " \n " + hand + ":" + wrist + ":" + elbow + ":" + shoulder;
 		return gestureTurnValue;
     }
 }

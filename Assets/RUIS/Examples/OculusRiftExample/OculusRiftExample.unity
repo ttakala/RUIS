@@ -266,7 +266,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: ddadf66419e384a4b84d9afaff2fe05c, type: 2}
       propertyPath: disableIfOtherDevices
@@ -317,7 +317,7 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
   m_IsPrefabParent: 0
---- !u!4 &1548449691
+--- !u!4 &1548449691 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400118, guid: 2657edab8bf15334fb4b3866031359c1, type: 2}
   m_PrefabInternal: {fileID: 117213394}
