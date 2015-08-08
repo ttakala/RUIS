@@ -37,6 +37,7 @@ public class RUISCharacterLocomotionEditor : Editor {
 	SerializedProperty aerialMobility;
 	SerializedProperty aerialDrag;
 	
+	SerializedProperty turnWithGestures;
 	SerializedProperty turningGestureType;
 	SerializedProperty rotationTriggerAngle;
 	SerializedProperty kinect2Heuristics;
@@ -59,6 +60,7 @@ public class RUISCharacterLocomotionEditor : Editor {
 		aerialAcceleration = serializedObject.FindProperty("aerialAcceleration");
 		aerialMobility = serializedObject.FindProperty("aerialMobility");
 		aerialDrag = serializedObject.FindProperty("aerialDrag");
+		turnWithGestures = serializedObject.FindProperty("turnWithGestures");
 		turningGestureType = serializedObject.FindProperty("turningGestureType");
 		rotationTriggerAngle = serializedObject.FindProperty("rotationTriggerAngle");
 		kinect2Heuristics = serializedObject.FindProperty("kinect2Heuristics");
@@ -147,9 +149,14 @@ public class RUISCharacterLocomotionEditor : Editor {
 	        EditorGUI.indentLevel -= 2;
 		}
 		
-		EditorGUILayout.PropertyField(turningGestureType, new GUIContent(  "Turning Gesture Type", ""));
-		EditorGUILayout.PropertyField(rotationTriggerAngle, new GUIContent(  "Rotation Trigger Angle", ""));
-		EditorGUILayout.PropertyField(kinect2Heuristics, new GUIContent(  "Kinect 2 Heuristics", ""));
+		EditorGUILayout.PropertyField(turnWithGestures, new GUIContent(  "Turn With Gestures", ""));
+		if(turnWithGestures.boolValue) {
+			EditorGUI.indentLevel += 2;
+			EditorGUILayout.PropertyField(turningGestureType, new GUIContent(  "Turning Gesture Type", ""));
+			EditorGUILayout.PropertyField(rotationTriggerAngle, new GUIContent(  "Rotation Trigger Angle", ""));
+			EditorGUILayout.PropertyField(kinect2Heuristics, new GUIContent(  "Kinect 2 Heuristics", ""));
+			EditorGUI.indentLevel -= 2;
+		}
         serializedObject.ApplyModifiedProperties();
     }
 }
