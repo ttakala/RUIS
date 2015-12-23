@@ -103,10 +103,10 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
         }
         GL.PushMatrix();
             keystoneBorder.SetPass(0);
-            GL.TexCoord2(0, 1);
             GL.LoadOrtho();
 
-            GL.Begin(GL.TRIANGLE_STRIP);
+			GL.Begin(GL.TRIANGLE_STRIP);
+				GL.TexCoord2(0, 1);
                 GL.Vertex3(-0.02f, -0.02f, 0);
                 DrawVertex(corners[3]);
                 GL.Vertex3(corners[3].x, -0.02f, 0);
@@ -115,7 +115,8 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
                 GL.Vertex3(1.02f, -0.02f, 0);
             GL.End();
         
-            GL.Begin(GL.TRIANGLE_STRIP);
+			GL.Begin(GL.TRIANGLE_STRIP);
+				GL.TexCoord2(0, 1);
                 GL.Vertex3(-0.02f, 1.02f, 0);
                 DrawVertex(corners[0]);
                 GL.Vertex3(-0.02f, corners[0].y, 0);
@@ -124,7 +125,8 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
                 GL.Vertex3(-0.02f, -0.02f, 0);
             GL.End();
 
-            GL.Begin(GL.TRIANGLE_STRIP);
+			GL.Begin(GL.TRIANGLE_STRIP);
+				GL.TexCoord2(0, 1);
                 GL.Vertex3(1.02f, 1.02f, 0);
                 DrawVertex(corners[1]);
                 GL.Vertex3(corners[1].x, 1.02f, 0);
@@ -133,7 +135,8 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
                 GL.Vertex3(-0.02f, 1.02f, 0);
             GL.End();
 
-            GL.Begin(GL.TRIANGLE_STRIP);
+			GL.Begin(GL.TRIANGLE_STRIP);
+				GL.TexCoord2(0, 1);
                 GL.Vertex3(1.02f, -0.02f, 0);
                 DrawVertex(corners[2]);
                 GL.Vertex3(1.02f, corners[2].y, 0);
@@ -156,9 +159,9 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
             GL.PushMatrix();
                 GL.LoadOrtho(); 
                 keystoneBorder.SetPass(0);
-                GL.TexCoord2(0, 0);
                     
-                GL.Begin(GL.TRIANGLES);
+				GL.Begin(GL.TRIANGLES);
+					GL.TexCoord2(0, 0);
                     //bottom
                     DrawVertex(corners[3]);
                     DrawVertex(squeezedCorners[3]);
@@ -196,9 +199,9 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
                     DrawVertex(squeezedCorners[1]);
                 GL.End();
 
-                GL.TexCoord2(0, 1);
 
-                GL.Begin(GL.LINES);
+				GL.Begin(GL.LINES);
+					GL.TexCoord2(0, 1);
                     for (int i = 0; i < squeezedCorners.Length; i++)
                     {
                         DrawVertex(corners[i]);
