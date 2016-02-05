@@ -87,13 +87,13 @@ NavMeshSettings:
     cellSize: .166666657
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &78531016
+--- !u!114 &78531016 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 11400016, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb,
     type: 2}
   m_PrefabInternal: {fileID: 580047969}
   m_Script: {fileID: 11500000, guid: 8ba5d0b33b29a08498d43e888b2eb0d8, type: 3}
---- !u!4 &78531017
+--- !u!4 &78531017 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400004, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
   m_PrefabInternal: {fileID: 580047969}
@@ -421,7 +421,7 @@ Prefab:
     m_RemovedComponents:
     - {fileID: 8100000, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
     - {fileID: 8100002, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
-    - {fileID: 11400008, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
+    - {fileID: 0}
     - {fileID: 11400026, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
     - {fileID: 11400024, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
     - {fileID: 9200002, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
@@ -492,7 +492,7 @@ MonoBehaviour:
   width: 2
   height: 1.5
   headTracker: {fileID: 0}
---- !u!4 &1067680523
+--- !u!4 &1067680523 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400024, guid: 7e2baee5779349340b6a78274c032bf7, type: 2}
   m_PrefabInternal: {fileID: 409639001}
@@ -538,11 +538,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab49d897824efa34c8707a5728a75ec4, type: 2}
   m_IsPrefabParent: 0
---- !u!4 &1795501599
+--- !u!4 &1795501599 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
   m_PrefabInternal: {fileID: 580047969}
---- !u!114 &2063474216
+--- !u!114 &2063474216 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 11400000, guid: 6fad6e06135894d4da88e7273313f430,
     type: 2}
