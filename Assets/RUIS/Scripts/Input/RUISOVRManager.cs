@@ -9,7 +9,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 using UnityEngine;
 using System.Collections;
-using Ovr;
+//using Ovr;
 
 using System;
 using System.Runtime.InteropServices;
@@ -19,23 +19,23 @@ using System.Text.RegularExpressions;
 public class RUISOVRManager : MonoBehaviour {
 
 	// Code from OVRManager.cs
-	private const string LibOVR = "OculusPlugin";
-	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]
-	private static extern void OVR_GetHMD(ref IntPtr hmdPtr);
-	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]
-	private static extern void OVR_Initialize();
-	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]
-	private static extern void OVR_Destroy();
-	public static Hmd ovrHmd;
+//	private const string LibOVR = "OculusPlugin";
+//	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]
+//	private static extern void OVR_GetHMD(ref IntPtr hmdPtr);
+//	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]
+//	private static extern void OVR_Initialize();
+//	[DllImport(LibOVR, CallingConvention = CallingConvention.Cdecl)]
+//	private static extern void OVR_Destroy();
+//	public static Hmd ovrHmd; //06to08
 	
 	void Awake () 
 	{
-		if(OVRManager.capiHmd == null) 
-		{
-		 OVR_Initialize();
-		}
-		IntPtr hmdPtr = IntPtr.Zero;
-		OVR_GetHMD(ref hmdPtr);
-		ovrHmd = (hmdPtr != IntPtr.Zero) ? new Hmd(hmdPtr) : null;
+//		if(OVRManager.capiHmd == null) //06to08   HACK TODO add OVRManager to calibration scene and see if that works. If not, uncomment this stuff and find a working solution
+//		{
+//		 OVR_Initialize();
+//		}
+//		IntPtr hmdPtr = IntPtr.Zero;
+//		OVR_GetHMD(ref hmdPtr);
+//		ovrHmd = (hmdPtr != IntPtr.Zero) ? new Hmd(hmdPtr) : null; //06to08
 	}
 }

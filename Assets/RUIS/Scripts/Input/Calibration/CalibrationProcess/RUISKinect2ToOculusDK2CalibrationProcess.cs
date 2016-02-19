@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CSML;
 using Kinect = Windows.Kinect;
-using Ovr;
+//using Ovr;
 
 public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
@@ -158,20 +158,22 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		timeSinceScriptStart += deltaTime;
 		
 		if(timeSinceScriptStart < 3) {
-			this.guiTextLowerLocal = "Calibration of Kinect 2 and Oculus DK2\n\n Starting up...";
+			this.guiTextLowerLocal = "Calibration of Kinect 2 and Oculus Camera\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
 		
 		if(timeSinceScriptStart < 4) {
-			this.guiTextLowerLocal = "Connecting to Oculus Rift DK2. \n\n Please wait...";
+			this.guiTextLowerLocal = "Connecting to Oculus Rift. \n\n Please wait...";
 			return RUISCalibrationPhase.Initial;
 		}
 		
 		if(!oculusChecked && timeSinceScriptStart > 4) {
 			oculusChecked = true;
 			
-			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0) { // Code from OVRManager.cs
-				this.guiTextLowerLocal = "Connecting to Oculus Rift DK2. \n\n Error: Could not connect to Oculus Rift DK2.";
+//			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0)  //06to08
+			if(!UnityEngine.VR.VRDevice.isPresent) // HACK TODO check that this is position tracked Oculus
+			{
+				this.guiTextLowerLocal = "Connecting to Oculus Rift. \n\n Error: Could not connect to Oculus Rift.";
 				return RUISCalibrationPhase.Invalid;
 			}
 		}	
@@ -368,16 +370,19 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		}
 		if(device == RUISDevice.Oculus_DK2)
 		{
-			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;
-			float px =  headpose.Position.x;
-			float py =  headpose.Position.y;
-			float pz = -headpose.Position.z; // This needs to be negated TODO: might change with future OVR version
-			
-			tempSample = new Vector3(px, py, pz);
-			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);
-			
-			if(   (Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
-			   && (RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)  // Code from OVRManager.cs
+//			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;  //06to08
+//			float px =  headpose.Position.x;
+//			float py =  headpose.Position.y;
+//			float pz = -headpose.Position.z; // This needs to be negated TODO: might change with future OVR version
+
+//			tempSample = new Vector3(px, py, pz);  //06to08
+//			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);  //06to08  notice that the conversion happens after negation
+
+			// HACK TODO tempSample components might need negation or other hackery
+			tempSample = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head);
+
+			if(    (Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
+				&& UnityEngine.VR.VRDevice.isPresent) //(RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)   //06to08
 			{
 				sample = tempSample;
 				lastOculusDK2Sample = sample;

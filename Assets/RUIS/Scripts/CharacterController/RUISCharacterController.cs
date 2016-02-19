@@ -10,7 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Ovr;
+//using Ovr;
 
 public class RUISCharacterController : MonoBehaviour
 {
@@ -70,7 +70,7 @@ public class RUISCharacterController : MonoBehaviour
 	
 	Vector3 previousPosition;
 
-	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None;
+	//	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None; //06to08
 	
     void Awake()
     {
@@ -136,9 +136,9 @@ public class RUISCharacterController : MonoBehaviour
 					{
 						dynamicMaterial.bounceCombine = originalMaterial.bounceCombine;
 						dynamicMaterial.bounciness = originalMaterial.bounciness;
-						dynamicMaterial.staticFriction2 = originalMaterial.staticFriction2;
-						dynamicMaterial.dynamicFriction2 = originalMaterial.dynamicFriction2;
-						dynamicMaterial.frictionDirection2 = originalMaterial.frictionDirection2;
+//						dynamicMaterial.staticFriction2 = originalMaterial.staticFriction2; // Deprecated since Unity 5.2ish
+//						dynamicMaterial.dynamicFriction2 = originalMaterial.dynamicFriction2;
+//						dynamicMaterial.frictionDirection2 = originalMaterial.frictionDirection2;
 					}
 				}
 			}
@@ -151,37 +151,37 @@ public class RUISCharacterController : MonoBehaviour
 			               + "object '" + skeletonController.gameObject.name + "). Make sure that these two values are "
 			               + "the same.");
 
-		//#if UNITY_EDITOR
-		//if(UnityEditorInternal.InternalEditorUtility.HasPro())
-		//#endif
+		if(useOculusPositionalTracking && !UnityEngine.VR.VRDevice.isPresent) // HACK TODO Check if HMD is capable of position tracking
 		{
-			try
-			{
-				bool isRiftConnected = false;
-				if(OVRManager.display != null)
-					isRiftConnected = OVRManager.display.isPresent;
-				if(OVRManager.capiHmd != null)
-					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
-
-				if(useOculusPositionalTracking && ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD || ovrHmdVersion == Ovr.HmdType.None)
-				{
-					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot with Oculus Rift " + ovrHmdVersion);
-					useOculusPositionalTracking = false;
-				}
-				
-				if(useOculusPositionalTracking && !isRiftConnected)
-				{
-					Debug.LogError("Can't use Oculus Rift's tracked position as a pivot because Oculus Rift is not connected.");
-					useOculusPositionalTracking = false;
-				}
-
-			}
-			catch(UnityException e)
-			{
-				useOculusPositionalTracking = false;
-				Debug.LogError(e);
-			}
+				Debug.LogError("HMD is not found, can't use it as a character pivot!");
 		}
+
+//		try
+//		{
+//			bool isRiftConnected = false;
+//			if(OVRManager.display != null)
+//				isRiftConnected = OVRManager.display.isPresent; //06to08
+//			if(OVRManager.capiHmd != null)
+//				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
+//
+//			if(useOculusPositionalTracking && ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD || ovrHmdVersion == Ovr.HmdType.None) //06to08
+//			{
+//				Debug.LogError("Can't use Oculus Rift's tracked position as a pivot with Oculus Rift " + ovrHmdVersion);
+//				useOculusPositionalTracking = false;
+//			}
+//			
+//			if(useOculusPositionalTracking && !isRiftConnected)
+//			{
+//				Debug.LogError("Can't use Oculus Rift's tracked position as a pivot because Oculus Rift is not connected.");
+//				useOculusPositionalTracking = false;
+//			}
+//
+//		}
+//		catch(UnityException e)
+//		{
+//			useOculusPositionalTracking = false;
+//			Debug.LogError(e);
+//		}
 		
 		if(GetComponentInChildren<RUISKinectAndMecanimCombiner>())
 			kinectAndMecanimCombinerExists = true;
@@ -353,16 +353,19 @@ public class RUISCharacterController : MonoBehaviour
 
     private Vector3 GetPivotPositionInTrackerCoordinates()
     {
-		if(   useOculusPositionalTracking 
-		   && OVRManager.tracker != null && OVRManager.tracker.isPositionTracked)
+//		if(   useOculusPositionalTracking 
+//			&& OVRManager.tracker != null && OVRManager.tracker.isPositionTracked) //06to08 references to OVRManager need to be changed to more general HMD wrapper
+
+		if(useOculusPositionalTracking && UnityEngine.VR.VRDevice.isPresent)
 		{
 			if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
 			{
 				return coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2);
 			}
-			else if(OVRManager.display != null)
+			else //if(OVRManager.display != null) //06to08
 			{
-				return OVRManager.display.GetHeadPose().position;
+				return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
+//				return OVRManager.display.GetHeadPose().position; //06to08
 			}
 		}
 		else

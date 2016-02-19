@@ -165,8 +165,11 @@ public class RUISDisplay : MonoBehaviour
 	
 	public void Start()
 	{
-		if(enableOculusRift && OVRManager.display != null)
-			OVRManager.display.mirrorMode = oculusMirrorMode;
+//		if(enableOculusRift && OVRManager.display != null)
+//			OVRManager.display.mirrorMode = oculusMirrorMode; //06to08
+
+		if(UnityEngine.VR.VRDevice.isPresent)
+			UnityEngine.VR.VRSettings.showDeviceView = oculusMirrorMode;
 	}
 	
 	public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)
@@ -294,8 +297,10 @@ public class RUISDisplay : MonoBehaviour
     
 	public Vector2 ConvertOculusScreenPoint(Vector2 screenPoint) {
 		Vector2 newScreenpoint = Vector2.zero;
-		newScreenpoint.x = 1.25f*(1920f/Mathf.Max((float)this.rawResolutionX, 1)) * (screenPoint.x );//% (0.5f*((float)this.rawResolutionX))));
-		newScreenpoint.y = 1.25f*(1080f/Mathf.Max((float)this.rawResolutionY, 1)) * screenPoint.y;
+//		newScreenpoint.x = 1.25f*(1920f/Mathf.Max((float)this.rawResolutionX, 1)) * (screenPoint.x );
+//		newScreenpoint.y = 1.25f*(1080f/Mathf.Max((float)this.rawResolutionY, 1)) * screenPoint.y;
+		newScreenpoint.x = (1920f/Mathf.Max((float)this.rawResolutionX, 1)) * (screenPoint.x );
+		newScreenpoint.y = (1080f/Mathf.Max((float)this.rawResolutionY, 1)) * screenPoint.y;
 		return newScreenpoint;
 	}
 	

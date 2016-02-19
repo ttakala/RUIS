@@ -9,7 +9,6 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 using UnityEngine;
 using System.Collections;
-using Ovr;
 
 // Assumes that Kinect ground is at Y = 0
 [RequireComponent(typeof(CapsuleCollider))]
@@ -49,8 +48,6 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 //	Vector3 headPosition = Vector3.zero;
 	Vector3 torsoPosition = Vector3.zero;
 	Vector3 newLocalPosition = Vector3.zero;
-	
-	Hmd oculusHmdObject;
 
     private float _colliderHeight;
     public float colliderHeight

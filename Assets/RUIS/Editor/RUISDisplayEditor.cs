@@ -25,7 +25,7 @@ public class RUISDisplayEditor : Editor {
 
     SerializedProperty isStereo;
 	SerializedProperty enableOculusRift;
-	SerializedProperty oculusLowPersistence;
+//	SerializedProperty oculusLowPersistence;
 	SerializedProperty oculusMirrorMode;
     SerializedProperty isObliqueFrustum;
     SerializedProperty isKeystoneCorrected;
@@ -43,7 +43,7 @@ public class RUISDisplayEditor : Editor {
     private Texture2D monoDisplayTexture;
     private Texture2D stereoDisplayTexture;
 
-	private bool previousOculusLowPersistenceValue;
+//	private bool previousOculusLowPersistenceValue;
 
     RUISDisplayManager displayManager;
 
@@ -60,7 +60,7 @@ public class RUISDisplayEditor : Editor {
 
         isStereo = serializedObject.FindProperty("isStereo");
         enableOculusRift = serializedObject.FindProperty("enableOculusRift");
-		oculusLowPersistence = serializedObject.FindProperty("oculusLowPersistence");
+//		oculusLowPersistence = serializedObject.FindProperty("oculusLowPersistence");
 		oculusMirrorMode = serializedObject.FindProperty("oculusMirrorMode");
         isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
         isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
@@ -85,7 +85,7 @@ public class RUISDisplayEditor : Editor {
 
         displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
 
-		previousOculusLowPersistenceValue = oculusLowPersistence.boolValue;
+//		previousOculusLowPersistenceValue = oculusLowPersistence.boolValue;
     }
 
     public void OnGUI()
@@ -124,20 +124,20 @@ public class RUISDisplayEditor : Editor {
 		// TODO: Depends on OVR version
 		EditorGUI.indentLevel++;
 		GUI.enabled = enableOculusRift.boolValue;
-		EditorGUILayout.PropertyField(oculusLowPersistence, new GUIContent(  "Low Persistence", "Low persistence reduces pixel blur. Try disabling this option if "
-		                                                                   + "the Oculus Rift view suffers from 'judder' when rotating your head. NOTE: Disabling "
-		                                                                   + "this option might cause issues with Oculus runtime 0.4.4 if you're using DX11!"));
+//		EditorGUILayout.PropertyField(oculusLowPersistence, new GUIContent(  "Low Persistence", "Low persistence reduces pixel blur. Try disabling this option if "
+//		                                                                   + "the Oculus Rift view suffers from 'judder' when rotating your head. NOTE: Disabling "
+//		                                                                   + "this option might cause issues with Oculus runtime 0.4.4 if you're using DX11!"));
 		EditorGUILayout.PropertyField(oculusMirrorMode, new GUIContent(  "Mirror Mode", "Draw the Oculus viewports also to the main display when Direct Display Mode "
 		                                                               + "(Direct HMD Access) is enabled from the Oculus Configuration Utility. This setting has no "
 		                                                               + "effect when your application is playing inside the Unity Editor."));
-		if(enableOculusRift.boolValue && EditorApplication.isPlaying)
-		{
-			if(previousOculusLowPersistenceValue != oculusLowPersistence.boolValue && displayManager)
-			{
-				// Low Persistence value changed, enforce it if application is running in Editor
-				displayManager.setOculusLowPersistence(oculusLowPersistence.boolValue);
-			}
-		}
+//		if(enableOculusRift.boolValue && EditorApplication.isPlaying)
+//		{
+//			if(previousOculusLowPersistenceValue != oculusLowPersistence.boolValue && displayManager)
+//			{
+//				// Low Persistence value changed, enforce it if application is running in Editor
+//				displayManager.setOculusLowPersistence(oculusLowPersistence.boolValue);
+//			}
+//		}
 
 		EditorGUI.indentLevel--;
 
@@ -172,7 +172,7 @@ public class RUISDisplayEditor : Editor {
             isKeystoneCorrected.boolValue = false;
         }
 
-		previousOculusLowPersistenceValue = oculusLowPersistence.boolValue;
+//		previousOculusLowPersistenceValue = oculusLowPersistence.boolValue;
 
         serializedObject.ApplyModifiedProperties();
 

@@ -10,7 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Ovr;
+//using Ovr;
 
 public class RUISMenuNGUI : MonoBehaviour {
 
@@ -58,7 +58,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	public bool calibrationReady;
 
-	Ovr.HmdType ovrHmdVersion;
+//	Ovr.HmdType ovrHmdVersion; //06to08
 	
 	void Awake() 
 	{
@@ -436,42 +436,57 @@ public class RUISMenuNGUI : MonoBehaviour {
 		GameObject 	infotext_Oculus_DK1_detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK1 detected").gameObject;
 		GameObject 	infotext_Oculus_DK2_detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK2 detected").gameObject;
 		
-		bool isRiftConnected = false;
-
-//		#if UNITY_EDITOR
-//		if(UnityEditorInternal.InternalEditorUtility.HasPro())
-//		#endif
+		if(UnityEngine.VR.VRDevice.isPresent)
 		{
-			try
+			if(infotext_Oculus_DK1_detected)
 			{
-				if(OVRManager.display != null)
-					isRiftConnected = OVRManager.display.isPresent;
-				if(OVRManager.capiHmd != null)
-					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
+				UILabel hmdDetectedLabel = infotext_Oculus_DK1_detected.GetComponent<UILabel>();
+				if(hmdDetectedLabel)
+					hmdDetectedLabel.text = UnityEngine.VR.VRDevice.model + " detected";
 			}
-			catch(UnityException e)
-			{
-				Debug.LogError(e);
-			}
-		}
-
-		if(isRiftConnected && ovrHmdVersion == Ovr.HmdType.DK1) 
-		{
 			infotext_Rift_not_Detected.SetActive(false);
 			infotext_Oculus_DK1_detected.SetActive(true); 
-			infotext_Oculus_DK2_detected.SetActive(false);
 		}
-		else if(isRiftConnected && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other))
-		{
-			infotext_Rift_not_Detected.SetActive(false);
-			infotext_Oculus_DK2_detected.SetActive(true);
-			infotext_Oculus_DK1_detected.SetActive(false);  
-		}
-		else {
-			infotext_Rift_not_Detected.SetActive(true);
-			infotext_Oculus_DK1_detected.SetActive(false);
-			infotext_Oculus_DK2_detected.SetActive(false); 
-		}
+		else
+			if(infotext_Rift_not_Detected)
+			{
+				infotext_Rift_not_Detected.SetActive(true); 
+				infotext_Oculus_DK1_detected.SetActive(false);  
+			}
+
+//		bool isRiftConnected = false;
+//		{
+//			try
+//			{
+//				if(OVRManager.display != null) //06to08
+//					isRiftConnected = OVRManager.display.isPresent; //06to08
+//				if(OVRManager.capiHmd != null)
+//					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
+//
+//
+//			}
+//			catch(UnityException e)
+//			{
+//				Debug.LogError(e);
+//			}
+//		}
+//		if(isRiftConnected && ovrHmdVersion == Ovr.HmdType.DK1) //06to08
+//		{
+//			infotext_Rift_not_Detected.SetActive(false);
+//			infotext_Oculus_DK1_detected.SetActive(true); 
+//			infotext_Oculus_DK2_detected.SetActive(false);
+//		}
+//		else if(isRiftConnected && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other)) //06to08
+//		{
+//			infotext_Rift_not_Detected.SetActive(false);
+//			infotext_Oculus_DK2_detected.SetActive(true);
+//			infotext_Oculus_DK1_detected.SetActive(false);  
+//		}
+//		else {
+//			infotext_Rift_not_Detected.SetActive(true);
+//			infotext_Oculus_DK1_detected.SetActive(false);
+//			infotext_Oculus_DK2_detected.SetActive(false); 
+//		}
 			
 		if(!XmlImportExport.XmlHandlingFunctionalityAvailable()) 
 		{
@@ -587,23 +602,23 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 floor data");
 		    
 		bool isPositionTrackedOculusPresent = false;
-//		#if UNITY_EDITOR
-//		if(UnityEditorInternal.InternalEditorUtility.HasPro())
-//		#endif
-		{
-			try
-			{
-				if(OVRManager.capiHmd != null)
-					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
-				if(OVRManager.display != null)
-					isPositionTrackedOculusPresent = 	OVRManager.display.isPresent 
-													 && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other);
-			}
-			catch(UnityException e)
-			{
-				Debug.LogError (e);
-			}
-		}
+
+//		try
+//		{
+//			if(OVRManager.capiHmd != null)
+//				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
+//			if(OVRManager.display != null)
+//				isPositionTrackedOculusPresent = 	OVRManager.display.isPresent 
+//												&& (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other); //06to08
+//		}
+//		catch(UnityException e)
+//		{
+//			Debug.LogError (e);
+//		}
+
+		if(UnityEngine.VR.VRDevice.isPresent) // HACK TODO check that HMD is position tracked
+				isPositionTrackedOculusPresent = true;
+						
 		if(inputManager.enableKinect && inputManager.enableKinect2) dropDownChoices.Add ("Kinect - Kinect2");
 		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
 		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");

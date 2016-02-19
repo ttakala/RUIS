@@ -10,7 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using Ovr;
+//using Ovr;
 
 public class RUISDisplayManager : MonoBehaviour {
     public List<RUISDisplay> displays;
@@ -73,8 +73,8 @@ public class RUISDisplayManager : MonoBehaviour {
 		{
 			if(GetComponent<OVRManager>())
 				GetComponent<OVRManager>().enabled = false;
-			if(GetComponent<Camera>())
-				GetComponent<Camera>().enabled = false;
+//			if(GetComponent<Camera>())
+//				GetComponent<Camera>().enabled = false;
 		}
 		else 
 		{
@@ -97,41 +97,39 @@ public class RUISDisplayManager : MonoBehaviour {
 
 		// Enforce Low Persistence settings
 		// TODO: In the distant future it might be possible to have multiple Rifts in the same computer with different LP settings?
-		RUISDisplay oculusDisplay = GetOculusRiftDisplay();
-		if(oculusDisplay)
-		{
-			// HACK: Counter hack to OVRDisplays hack which forces LP on in the first frame
-			for(int i=0; i<2; ++i)
-			{
-				if(oculusDisplay.oculusLowPersistence != getOculusLowPersistence())
-					setOculusLowPersistence(oculusDisplay.oculusLowPersistence);
-				yield return new WaitForSeconds(2);
-			}
-		}
+//		RUISDisplay oculusDisplay = GetOculusRiftDisplay();
+//		if(oculusDisplay)
+//		{
+//			// HACK: Counter hack to OVRDisplays hack which forces LP on in the first frame
+//			for(int i=0; i<2; ++i)
+//			{
+//				if(oculusDisplay.oculusLowPersistence != getOculusLowPersistence())
+//					setOculusLowPersistence(oculusDisplay.oculusLowPersistence);
+//				yield return new WaitForSeconds(2);
+//			}
+//		}
 	}
 
-	// TODO: Depends on OVR version
-	public bool getOculusLowPersistence()
-	{
-		uint caps = OVRManager.capiHmd.GetEnabledCaps();
-		return (caps & (uint)HmdCaps.LowPersistence) != 0;
-	}
+//	public bool getOculusLowPersistence()
+//	{
+//		uint caps = OVRManager.capiHmd.GetEnabledCaps();
+//		return (caps & (uint)HmdCaps.LowPersistence) != 0; //06to08
+//	}
 
-	// TODO: Depends on OVR version
-	public void setOculusLowPersistence(bool enabled)
-	{
-		if(OVRManager.capiHmd == null)
-			return;
-
-		uint caps = OVRManager.capiHmd.GetEnabledCaps();
-		
-		if(enabled)
-			OVRManager.capiHmd.SetEnabledCaps(caps | (uint)HmdCaps.LowPersistence);
-		else
-			OVRManager.capiHmd.SetEnabledCaps(caps & ~(uint)HmdCaps.LowPersistence);
-
-		return;
-	}
+//	public void setOculusLowPersistence(bool enabled)
+//	{
+//		if(OVRManager.capiHmd == null)
+//			return;
+//
+//		uint caps = OVRManager.capiHmd.GetEnabledCaps(); //06to08
+//		
+//		if(enabled)
+//			OVRManager.capiHmd.SetEnabledCaps(caps | (uint)HmdCaps.LowPersistence); //06to08
+//		else
+//			OVRManager.capiHmd.SetEnabledCaps(caps & ~(uint)HmdCaps.LowPersistence); //06to08
+//
+//		return;
+//	}
 	
     void Update()
     {
@@ -215,13 +213,14 @@ public class RUISDisplayManager : MonoBehaviour {
 			
             if (camera)
             {   
-				if(display.enableOculusRift)
-				{
-					screenPoint = display.ConvertOculusScreenPoint(screenPoint);
-					return camera.ScreenPointToRay(screenPoint);
-				}
-				else
-                	return camera.ScreenPointToRay(screenPoint);
+				return camera.ScreenPointToRay(screenPoint);
+//				if(display.enableOculusRift)
+//				{
+//					screenPoint = display.ConvertOculusScreenPoint(screenPoint);
+//					return camera.ScreenPointToRay(screenPoint);
+//				}
+//				else
+//                	return camera.ScreenPointToRay(screenPoint);
             }
         }
          
@@ -362,17 +361,26 @@ public class RUISDisplayManager : MonoBehaviour {
 			Debug.LogError(  "Could not find layer '" + LayerMask.LayerToName(menuLayer) + "', the RUIS menu cursor will not work without this layer! "
 			               + "The prefab '" + ruisMenuPrefab.name + "' and its children should be on this layer.");
 
-		if(!displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo
-		   && !displays[guiDisplayChoice].GetComponent<RUISDisplay>().enableOculusRift)
+		if(!displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo /* && !displays[guiDisplayChoice].GetComponent<RUISDisplay>().enableOculusRift */)
 		{
-			displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.gameObject.AddComponent<UICamera>();
+			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
+				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.AddComponent<UICamera>();
+			else
+				Debug.LogError(	  "The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
+								+ " whose centerCamera is null for some reason! Can't create UICamera.");
 		}
 		else 
 		{
-			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight"))
-				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraRight").transform.gameObject.AddComponent<UICamera>();
-			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraLeft"))
-				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find("CameraLeft").transform.gameObject.AddComponent<UICamera>();
+			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera)
+				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera.gameObject.AddComponent<UICamera>();
+			else
+				Debug.LogError(	  "The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
+								+ " whose rightCamera is null for some reason! Can't create UICamera.");
+			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCamera)
+				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCamera.gameObject.AddComponent<UICamera>();
+			else
+				Debug.LogError(	  "The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
+								+ " whose leftCamera is null for some reason! Can't create UICamera.");
 		}
 
 		UICamera[] NGUIcameras = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.GetComponentsInChildren<UICamera>();
@@ -382,26 +390,29 @@ public class RUISDisplayManager : MonoBehaviour {
 			camera.eventReceiverMask = LayerMask.GetMask(LayerMask.LayerToName(menuLayer));
 		}
 
-		string primaryMenuParent   = "CenterEyeAnchor";
-		string secondaryMenuParent = "CameraRight";
-		string tertiaryMenuParent  = "CameraLeft";
-		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(primaryMenuParent))
-			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(primaryMenuParent).transform;
+		string primaryMenuParent   = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCameraName;
+		string secondaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCameraName;
+		string tertiaryMenuParent  = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCameraName;
+		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
+			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.transform;
 		else 
 		{
-			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(secondaryMenuParent))
-				ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(secondaryMenuParent).transform;
+			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera)
+				ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera.transform;
 			else
 			{
-				if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(tertiaryMenuParent))
-					ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform.Find(tertiaryMenuParent).transform;
+				if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCamera)
+					ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCamera.transform;
 				else
 				{
-					Debug.LogError(  "Could not find any of the following gameObjects under " 
-					               + displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject.name
-					               + ": " + primaryMenuParent + ", " + secondaryMenuParent + ", " + tertiaryMenuParent + ". RUIS Menu will be parented "
-					               + "directly under " + displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject.name + ".");
-					ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform;
+//					Debug.LogError(  "Could not find any of the following gameObjects under " 
+//					               + displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject.name
+//					               + ": " + primaryMenuParent + ", " + secondaryMenuParent + ", " + tertiaryMenuParent + ". RUIS Menu will be parented "
+//						+ "directly under " + displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject.name + ".");
+//					ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform;
+					Debug.LogError(   "Can't parent RUIS Menu Prefab under the correct Transform because the " + typeof(RUISCamera) + " in gameObject "
+									+ displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject + " has null value for centerCamera, "
+									+ "leftCamera, and rightCamera.");
 				}
 			}
 		}

@@ -13,7 +13,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.IO;
 using Kinect = Windows.Kinect;
-using Ovr;
+//using Ovr;
 
 public class RUISCoordinateSystem : MonoBehaviour
 {
@@ -121,15 +121,17 @@ public class RUISCoordinateSystem : MonoBehaviour
 
 	public bool isPositionTrackableRiftPresent()
 	{
-		if(OVRManager.capiHmd != null)
-		{
-			Ovr.HmdType ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
-			
-			if(    (OVRManager.capiHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) != 0 // !isplay.isPresent
-			   && (ovrHmdVersion == HmdType.DK2 || ovrHmdVersion == HmdType.Other)) // Rift is DK2+
-				return true;
-		}
-		return false;
+//		if(OVRManager.capiHmd != null)
+//		{
+//			Ovr.HmdType ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
+//			
+//			if(    (OVRManager.capiHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) != 0 // !isplay.isPresent
+//				&& (ovrHmdVersion == HmdType.DK2 || ovrHmdVersion == HmdType.Other)) // Rift is DK2+     //06to08
+//				return true;
+//		}
+//		return false;
+		// HACK TODO need to check if position tracked HMD is really present
+		return UnityEngine.VR.VRDevice.isPresent;
 	}
 	
 	private void createExampleXML(string filename) {
@@ -615,28 +617,26 @@ public class RUISCoordinateSystem : MonoBehaviour
 	 */
 	public Vector3 ConvertRawOculusDK2Location(Vector3 position)
 	{
-		Vector3 currentcameraPosition = Vector3.zero;
-		if (OVRManager.capiHmd != null)
-			currentcameraPosition = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3();
-			
-//		Vector3 newPosition = Vector3.zero;
-//		newPosition.x = position.x - currentcameraPosition.x;
-//		newPosition.y = position.y - currentcameraPosition.y;
-//		newPosition.z = -(position.z + currentcameraPosition.z); // TODO: This probably depends on some DK2 setting, that can be affected with some kind of ResetCoordinateSystem() etc.
-//		return newPosition;
-		
-		return Quaternion.Inverse(GetOculusCameraOrientationRaw())*(position - currentcameraPosition);
+//		Vector3 currentcameraPosition = Vector3.zero;
+//		if (OVRManager.capiHmd != null)
+//			currentcameraPosition = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3(); //06to08
+//		return Quaternion.Inverse(GetOculusCameraOrientationRaw())*(position - currentcameraPosition); //06to08
+
+		return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
 	}
 	
 	// Get Oculus Rift rotation in Unity coordinate system
 	public Quaternion GetOculusRiftOrientationRaw()
 	{
-		if(OVRManager.display != null)
-		{
-			return OVRManager.display.GetHeadPose().orientation;
-		}
-		else 
-			return Quaternion.identity;
+//		if(OVRManager.display != null)
+//		{
+//			return OVRManager.display.GetHeadPose().orientation; //06to08
+//		}
+//		else 
+//			return Quaternion.identity;
+
+		// HACK TODO check that this works
+		return UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
 	}
 
 	// Get Oculus Rift rotation in master coordinate system (sort of, only Y-rotation of master)
@@ -648,25 +648,25 @@ public class RUISCoordinateSystem : MonoBehaviour
 	// Get Oculus Rift position in Unity coordinate system
 	public Vector3 GetOculusRiftLocation()
 	{
-		if(OVRManager.display != null)
-		{
-			return ConvertRawOculusDK2Location(OVRManager.display.GetHeadPose().position);
-		}
-		else
-			return Vector3.zero;
+//		if(OVRManager.display != null) //06to08
+//		{
+//			return ConvertRawOculusDK2Location(OVRManager.display.GetHeadPose().position); //06to08
+//		}
+//		else
+//			return Vector3.zero;
+		return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); //06to08
 	}
 	
 	// Oculus positional tracking camera's coordinate system origin in Unity coordinate system
 	public Vector3 GetOculusCameraOriginRaw()
 	{
-		if (OVRManager.capiHmd != null) 
-		{
-			Vector3 currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3 ();
-//			currentOvrCameraPose.z = -currentOvrCameraPose.z; // TODO: Tuukka commented this (was unclear), test if it was ok to comment
-			
-			return Quaternion.Inverse(GetOculusCameraOrientationRaw())*currentOvrCameraPose;
-		} else
-			return Vector3.zero;
+//		if (OVRManager.capiHmd != null) 
+//		{
+//			Vector3 currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3 (); //06to08
+//			
+//			return Quaternion.Inverse(GetOculusCameraOrientationRaw())*currentOvrCameraPose;
+//		} else //06to08
+			return Vector3.zero; // HACK remove this method
 	}
 
 	// Oculus positional tracking camera's coordinate system origin in master coordinate system
@@ -678,11 +678,11 @@ public class RUISCoordinateSystem : MonoBehaviour
 	// Oculus positional tracking camera's coordinate system orientation in Unity coordinates
 	public Quaternion GetOculusCameraOrientationRaw()
 	{
-		if (OVRManager.capiHmd != null) 
-		{
-			return OVRManager.capiHmd.GetTrackingState().CameraPose.Orientation.ToQuaternion();
-		} else
-			return Quaternion.identity;
+//		if (OVRManager.capiHmd != null) 
+//		{
+//			return OVRManager.capiHmd.GetTrackingState().CameraPose.Orientation.ToQuaternion(); //06to08
+//		} else
+		return Quaternion.identity; // HACK remove this method
 	}
 	
 	// Oculus positional tracking camera's orientation around master coordinate system's Y-axis

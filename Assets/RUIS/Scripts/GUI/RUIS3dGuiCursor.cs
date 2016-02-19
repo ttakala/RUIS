@@ -43,25 +43,31 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			Debug.LogError(  "The parent of GameObject '" + menuScript.name 
 			               + " is null and RUIS Menu will not function. Something is wrong with 'RUIS NGUI Menu' prefab or you "
 			               + "are misusing the " + typeof(RUIS3dGuiCursor) + " script.");
-		else if(menuScript.transform.parent.parent == null)
-			Debug.LogError(  "The grand-parent of GameObject '" + menuScript.name 
-			               + " is null and RUIS Menu will not function. Something is wrong with 'RUIS NGUI Menu' prefab or you "
-			               + "are misusing the " + typeof(RUIS3dGuiCursor) + " script.");
-		else
-			ruisCamera = menuScript.transform.parent.parent.GetComponent<RUISCamera>();
-
-		if(ruisCamera == null)
-			Debug.LogError(  typeof(RUIS3dGuiCursor) + " script did not find "  + typeof(RUISCamera) + " from the parent of "
-			               + menuScript.transform.name + "gameobject! RUIS Menu is unavailable.");
+//		else if(menuScript.transform.parent.parent == null)
+//			Debug.LogError(  "The grand-parent of GameObject '" + menuScript.name 
+//			               + " is null and RUIS Menu will not function. Something is wrong with 'RUIS NGUI Menu' prefab or you "
+//			               + "are misusing the " + typeof(RUIS3dGuiCursor) + " script.");
+//		else
+//			ruisCamera = menuScript.transform.parent.parent.GetComponent<RUISCamera>();
+//
+//		if(ruisCamera == null)
+//			Debug.LogError(  typeof(RUIS3dGuiCursor) + " script did not find "  + typeof(RUISCamera) + " from the parent of "
+//			               + menuScript.transform.name + "gameobject! RUIS Menu is unavailable.");
 			               
 		ruisDisplayManager =  FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
 
 		if(ruisDisplayManager == null) 
 		{ 
 			this.enabled = false;
-			Debug.LogError("Could not find " + typeof(RUISDisplayManager) + " script, RUIS menu will not work!");
+			Debug.LogError("Could not find " + typeof(RUISDisplayManager) + " script, RUIS Menu will not work!");
 			return;
 		}
+
+		if(ruisDisplayManager.displays[ruisDisplayManager.guiDisplayChoice] && ruisDisplayManager.displays[ruisDisplayManager.guiDisplayChoice].linkedCamera)
+			ruisCamera = ruisDisplayManager.displays[ruisDisplayManager.guiDisplayChoice].linkedCamera;
+		else
+			Debug.LogError("Could not find the " + typeof(RUISCamera) + " that is linked to the " + typeof(RUISDisplay) +  " with RUIS Menu!");
+
 		if(ruisDisplayManager.hideMouseOnPlay && menuScript.currentMenuState != RUISMenuNGUI.RUISMenuStates.calibration) 
 			Cursor.visible = false;
 		markerObject = ruisDisplayManager.menuCursorPrefab;
@@ -79,7 +85,8 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			return;
 		}
 
-		cameras = menuScript.transform.parent.parent.GetComponentsInChildren<UICamera>();
+		// TODO: instead of searching hierarchy on every frame, find the UICameras more efficiently
+		cameras = ruisCamera.transform.GetComponentsInChildren<UICamera>(); //menuScript.transform.parent.parent.GetComponentsInChildren<UICamera>();
 		
 		if(menuScript.menuIsVisible && !instancedCursor) 
 		{
@@ -95,7 +102,8 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 
 		if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift) 
 		{
-			mouseInputCoordinates = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(Input.mousePosition);
+			mouseInputCoordinates = Input.mousePosition;
+//			mouseInputCoordinates = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(Input.mousePosition);
 			if(instancedCursor && ruisCamera.rightCamera && ruisCamera.rightCamera.transform)
 			{
 				instancedCursor.transform.rotation = ruisCamera.rightCamera.transform.rotation;

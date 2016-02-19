@@ -16,10 +16,21 @@ public class RUISCamera : MonoBehaviour {
     [HideInInspector]
     public bool isKeystoneCorrected;
 
+	public Camera[] camerasInChildren;
+
     public Camera centerCamera; //the camera used for mono rendering
     public Camera leftCamera;
     public Camera rightCamera;
 	public Camera keystoningCamera;
+
+	[HideInInspector]
+	public string centerCameraName = "CenterEyeAnchor";
+	[HideInInspector]
+	public string leftCameraName   = "LeftEyeAnchor";
+	[HideInInspector]
+	public string rightCameraName  = "RightEyeAnchor";
+	[HideInInspector]
+	public string trackingSpaceName  = "TrackingSpace";
 
     [HideInInspector]
     public RUISDisplay associatedDisplay;
@@ -27,7 +38,7 @@ public class RUISCamera : MonoBehaviour {
     private Rect normalizedScreenRect;
     private float aspectRatio;
 
-    public float horizontalFOV = 60;
+    public float horizontalFOV = 60; // TODO setter that sets all cameras
     public float verticalFOV = 40;
 
     public LayerMask cullingMask = 0xFFFFFF;
@@ -39,7 +50,7 @@ public class RUISCamera : MonoBehaviour {
 
     RUISKeystoningConfiguration keystoningConfiguration;
 	
-    public float near = 0.3f;
+	public float near = 0.3f; // TODO setter that sets all cameras
     public float far = 1000;
 	
 	private float frustumWidth = 1;
@@ -66,6 +77,53 @@ public class RUISCamera : MonoBehaviour {
 			Debug.LogError( "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
 			               + "but is missing " + typeof(RUISKeystoningConfiguration) + " component!");
 		
+		camerasInChildren = GetComponentsInChildren<Camera>();
+
+		if(camerasInChildren != null)
+		{
+			foreach(Camera cam in camerasInChildren)
+			{
+				if(cam.gameObject.name == centerCameraName) // TODO: Cameras are searched by gameobject name, this is not good
+					centerCamera = cam;
+				if(cam.gameObject.name == leftCameraName)
+					leftCamera = cam;
+				if(cam.gameObject.name == rightCameraName)
+					rightCamera = cam;
+			}
+
+			if(leftCamera == null)
+			{
+				Debug.LogError(   "GameObject " + name + " has " + typeof(RUISCamera) + " script, it did "
+					+ "not contain a camera Component in a child with the name " + leftCameraName + ". Disabling " 
+					+ name + ". See the original RUISCamera prefab for a correct RUISCamera setup.");
+				gameObject.SetActive(false);
+				return;
+			}
+			if(rightCamera == null)
+			{
+				Debug.LogError(   "GameObject " + name + " has " + typeof(RUISCamera) + " script, it did "
+					+ "not contain a camera Component in a child with the name " + rightCameraName + ". Disabling " 
+					+ name + ". See the original RUISCamera prefab for a correct RUISCamera setup.");
+				gameObject.SetActive(false);
+				return;
+			}
+			if(centerCamera == null)
+			{
+				Debug.LogError(   "GameObject " + name + " has " + typeof(RUISCamera) + " script, it did "
+					+ "not contain a camera Component in a child with the name " + centerCameraName + ". Disabling " 
+					+ name + ". See the original RUISCamera prefab for a correct RUISCamera setup.");
+				gameObject.SetActive(false);
+				return;
+			}
+
+		}
+		else
+		{
+			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
+				+ "but no Camera components were found in its children!");
+		}
+
+		/*
         centerCamera = GetComponent<Camera>();
 		try
 		{
@@ -88,6 +146,7 @@ public class RUISCamera : MonoBehaviour {
 			gameObject.SetActive(false);
 			return;
 		}
+		*/
 
 		bool isDifferentCenterMask = false;
 		bool isDifferentLeftMask = false;
@@ -116,41 +175,29 @@ public class RUISCamera : MonoBehaviour {
 		}
 		
 
+		cullingMask = centerCamera.cullingMask;
+//		if(cullingMask != centerCamera.cullingMask)
+//			isDifferentCenterMask = true;
 
-		if(cullingMask != centerCamera.cullingMask)
-			isDifferentCenterMask = true;
-
-		try
-		{
-			
-			if(cullingMask != leftCamera.cullingMask)
-				isDifferentLeftMask = true;
-			if(cullingMask != rightCamera.cullingMask)
-				isDifferentRightMask = true;
-		}
-		catch (System.NullReferenceException e)
-		{
-			Debug.LogError(e.ToString(), this);
-			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
-			               + "but it is missing either CameraLeft or CameraRight child object or their Camera components.");
-			gameObject.SetActive(false);
-			return;
-		}
+		if(leftCamera  && cullingMask != leftCamera.cullingMask)
+			isDifferentLeftMask = true;
+		if(rightCamera && cullingMask != rightCamera.cullingMask)
+			isDifferentRightMask = true;
 
 		if(isDifferentCenterMask || isDifferentLeftMask || isDifferentRightMask)
 		{
-			string differingMasksList = isDifferentCenterMask?"Camera":"";
+			string differingMasksList = isDifferentCenterMask?centerCameraName:"";
 			if(differingMasksList.Length == 0)
-				differingMasksList += isDifferentLeftMask?"CameraLeft":"";
+				differingMasksList += isDifferentLeftMask?leftCameraName:"";
 			else
-				differingMasksList += isDifferentLeftMask?", CameraLeft":"";
+				differingMasksList += isDifferentLeftMask?(", "+leftCameraName):"";
 			if(differingMasksList.Length == 0)
-				differingMasksList += isDifferentRightMask?"CameraRight":"";
+				differingMasksList += isDifferentRightMask?rightCameraName:"";
 			else
-				differingMasksList += isDifferentRightMask?", CameraRight":"";
+				differingMasksList += isDifferentRightMask?", "+rightCameraName:"";
 
-			Debug.LogWarning(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, whose "
-			                 + "Culling Mask property has overwritten Culling Masks of its [" + differingMasksList + "]." );
+			Debug.LogWarning(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, whose child " + centerCameraName 
+							 + "'s Camera Culling Mask has been used to overwrite Culling Masks in [" + differingMasksList + "]." );
 
 		}
 		
@@ -191,19 +238,19 @@ public class RUISCamera : MonoBehaviour {
 		{
             if (associatedDisplay.enableOculusRift)
             {
-                if (!associatedDisplay.isStereo)
-                {
-                    Debug.LogWarning("Oculus Rift enabled in RUISCamera, forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
-                    associatedDisplay.isStereo = true;
-					associatedDisplay.stereoType = RUISDisplay.StereoType.SideBySide;
-                }
+//                if (!associatedDisplay.isStereo)
+//                {
+//                    Debug.LogWarning("Oculus Rift enabled in RUISCamera, forcing stereo to display: " + associatedDisplay.name, associatedDisplay);
+//                    associatedDisplay.isStereo = true;
+//					associatedDisplay.stereoType = RUISDisplay.StereoType.SideBySide;
+//                }
                 
-				if (associatedDisplay.stereoType != RUISDisplay.StereoType.SideBySide)
-				{
-					Debug.LogWarning(  "Oculus Rift enabled in RUISCamera, switching to side-by-side stereo mode to display: " 
-									 + associatedDisplay.name, associatedDisplay);
-					associatedDisplay.stereoType = RUISDisplay.StereoType.SideBySide;
-				}
+//				if (associatedDisplay.stereoType != RUISDisplay.StereoType.SideBySide)
+//				{
+//					Debug.LogWarning(  "Oculus Rift enabled in RUISCamera, switching to side-by-side stereo mode to display: " 
+//									 + associatedDisplay.name, associatedDisplay);
+//					associatedDisplay.stereoType = RUISDisplay.StereoType.SideBySide;
+//				}
 
                 associatedDisplay.isObliqueFrustum = false;
                 associatedDisplay.isKeystoneCorrected = false;
@@ -504,17 +551,17 @@ public class RUISCamera : MonoBehaviour {
 
     private void UpdateStereo()
     {
-        if (associatedDisplay.isStereo)
+		if (associatedDisplay.isStereo && !associatedDisplay.enableOculusRift)
         {
-			/*if(!associatedDisplay.enableOculusRift)*/ centerCamera.enabled = false;
-            leftCamera.enabled = true;
-            rightCamera.enabled = true;
+			centerCamera.enabled = false;
+            leftCamera.enabled   = true;
+            rightCamera.enabled  = true;
         }
         else
         {
 			centerCamera.enabled = true;
-            leftCamera.enabled = false;
-            rightCamera.enabled = false;
+            leftCamera.enabled   = false;
+            rightCamera.enabled  = false;
         }
 
         oldStereoValue = associatedDisplay.isStereo;

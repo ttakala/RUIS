@@ -10,7 +10,7 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
-using Ovr;
+//using Ovr;
 
 [CustomEditor(typeof(RUISTracker))]
 [CanEditMultipleObjects]

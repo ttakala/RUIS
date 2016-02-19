@@ -39,6 +39,11 @@ public class RUISKeystoningConfiguration : MonoBehaviour {
 
 	void Awake () {
         ruisCamera = GetComponent<RUISCamera>();
+		if(!ruisCamera)
+		{
+			Debug.LogWarning("GameObject " + name + " has " + typeof(RUISKeystoningConfiguration) + " script, but it is missing " 
+							 + typeof(RUISCamera) + "script. These two should always be together in the same gameObject.");
+		}
 
         centerCameraCorners = new RUISKeystoning.KeystoningCorners();
         leftCameraCorners = new RUISKeystoning.KeystoningCorners();

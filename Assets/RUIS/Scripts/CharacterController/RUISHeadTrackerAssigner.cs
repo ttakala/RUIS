@@ -10,7 +10,7 @@ Licensing  :	RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Ovr;
+//using Ovr;
 
 public class RUISHeadTrackerAssigner : MonoBehaviour {
 	
@@ -45,7 +45,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	         + "if the 'Only Razer Offset' is non-zero.")]
 	public Transform razerWandParent;
 	
-	Ovr.HmdType ovrHmdVersion;
+//	Ovr.HmdType ovrHmdVersion; //06to08
 	
     void Awake()
     {
@@ -60,32 +60,31 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 		bool razer = false;
 		bool oculusDK2 = false;
 
-		bool isRiftConnected = false;
-		
-		//#if UNITY_EDITOR
-		//if(UnityEditorInternal.InternalEditorUtility.HasPro())
-		//#endif
-		{
-			try
-			{
-				// Find out if an Oculus HMD is connected
-				if(OVRManager.display != null)
-					isRiftConnected = OVRManager.display.isPresent;
-
-				// Find out the Oculus HMD version
-				if(OVRManager.capiHmd != null)
-					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type;
-			}
-			catch(UnityException e)
-			{
-				Debug.LogError(e);
-			}
-		}
-
+//		bool isRiftConnected = false;
+//		{
+//			try
+//			{
+//				// Find out if an Oculus HMD is connected
+//				if(OVRManager.display != null)
+//					isRiftConnected = OVRManager.display.isPresent; //06to08
+//
+//				// Find out the Oculus HMD version
+//				if(OVRManager.capiHmd != null)
+//					ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
+//			}
+//			catch(UnityException e)
+//			{
+//				Debug.LogError(e);
+//			}
+//		}
+//
 		if(inputManager)
 		{
-			if(isRiftConnected && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other)) 
-				oculusDK2 = true;
+//			if(isRiftConnected && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other)) //06to08
+//				oculusDK2 = true;
+
+			if(UnityEngine.VR.VRDevice.isPresent) //06to08
+				oculusDK2 = true; // HACK TODO set to true only if we have a position tracked HMD 
 			
 			kinect2 = inputManager.enableKinect2;
 			kinect  = inputManager.enableKinect;

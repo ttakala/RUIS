@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   A class to draw black borders around the keystoned area to cover up extra scenery
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -28,10 +28,17 @@ public class RUISKeystoningBorderDrawer : MonoBehaviour {
 
 	void Start () {
         keystoningConfigurator = GetComponent<RUISKeystoningConfiguration>();
-        if (!keystoningConfigurator)
+		if (!keystoningConfigurator && transform.parent)
         {
-            keystoningConfigurator = transform.parent.GetComponent<RUISKeystoningConfiguration>();
+			keystoningConfigurator = transform.parent.GetComponent<RUISKeystoningConfiguration>();
+			if (!keystoningConfigurator && transform.parent.parent)
+			{
+				keystoningConfigurator = transform.parent.parent.GetComponent<RUISKeystoningConfiguration>();
+			}
         }
+		if(!keystoningConfigurator)
+			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISKeystoningBorderDrawer) + " script, but a "
+							+ typeof(RUISKeystoningConfiguration) + " can't be found when searching up to grandparent gameObject!");
 	}
 
 	void Update () {
