@@ -90,7 +90,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
         jumpGesture = GetComponentInChildren<RUISJumpGestureRecognizer>();
 
         moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
-		bimanualSwingingRecognizer = FindObjectOfType(typeof(RUISBimanualSwingingRecognizer)) as RUISBimanualSwingingRecognizer;
+		bimanualSwingingRecognizer = FindObjectOfType(typeof(RUISBimanualSwingingRecognizer)) as RUISBimanualSwingingRecognizer; // TODO: Shouldn't probably check whole scene
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		skeletonManager =  FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
         

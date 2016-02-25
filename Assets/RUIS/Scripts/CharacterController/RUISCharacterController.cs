@@ -356,7 +356,7 @@ public class RUISCharacterController : MonoBehaviour
 //		if(   useOculusPositionalTracking 
 //			&& OVRManager.tracker != null && OVRManager.tracker.isPositionTracked) //06to08 references to OVRManager need to be changed to more general HMD wrapper
 
-		if(useOculusPositionalTracking && UnityEngine.VR.VRDevice.isPresent)
+		if(useOculusPositionalTracking && UnityEngine.VR.VRDevice.isPresent) // FIX: Check if HMD position is tracked (seen) currently
 		{
 			if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
 			{
@@ -364,7 +364,7 @@ public class RUISCharacterController : MonoBehaviour
 			}
 			else //if(OVRManager.display != null) //06to08
 			{
-				return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
+				return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper. Then modify tooltip text
 //				return OVRManager.display.GetHeadPose().position; //06to08
 			}
 		}

@@ -154,7 +154,7 @@ public class RUISCamera : MonoBehaviour {
 		
 		if (associatedDisplay != null && !associatedDisplay.enableOculusRift)
 		{
-			// TODO: Recreate RUISCamera for SDK 0.4.4
+			// TODO: Need to change the check for associatedDisplay.enableOculusRift if RUISDisplayManager will be retired
 			try 
 			{
 				GetComponent<OVRCameraRig>().enabled = false;

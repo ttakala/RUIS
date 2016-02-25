@@ -225,8 +225,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 				   			enableOculusPositionalTracking();
 				   		
 						SaveInputChanges();
-						DontDestroyOnLoad(this);
 						this.transform.parent = null;
+						DontDestroyOnLoad(this);
 						currentMenuState = RUISMenuStates.calibration;
 						previousSceneId = Application.loadedLevel;
 						Hide3DGUI();
@@ -293,7 +293,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if ((!ruisMenuButtonDefined && Input.GetKeyDown(KeyCode.Escape)) || (ruisMenuButtonDefined && Input.GetButtonDown("RUISMenu"))) 
 		{
 			menuIsVisible = !menuIsVisible;
-			
+
 			if(!menuIsVisible) 
 			{
 				Hide3DGUI();

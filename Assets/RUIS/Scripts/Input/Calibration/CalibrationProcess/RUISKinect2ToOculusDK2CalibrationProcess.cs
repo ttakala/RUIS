@@ -52,7 +52,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	Quaternion kinect2PitchRotation = Quaternion.identity;
 	float kinect2DistanceFromFloor = 0;
 	Vector3 kinect2FloorNormal = Vector3.up;
-	RUISOVRManager ruisOvrManager;
+//	RUISOVRManager ruisOvrManager;
 
 	bool device1Error, device2Error;
 	
