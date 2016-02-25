@@ -98,9 +98,9 @@ public class RUISCharacterControllerEditor : Editor
         }
 
 		
-		EditorGUILayout.PropertyField(useOculusPositionalTracking, new GUIContent(  "Oculus Is Pivot", "Use Oculus Rift's tracked position (DK2 or newer) as "
-		                                                                          + "the primary character pivot position, and fall back to the above defined pivot only in "
-		                                                                          + "situations where Oculus Rift is not seen by its camera. Leave this option disabled if you "
+		EditorGUILayout.PropertyField(useOculusPositionalTracking, new GUIContent(  "Oculus Is Pivot", "Use Oculus Rift's tracked position (DK2 or newer) as the primary "
+		                                                                          + "character pivot position, [not implemented yet: and fall back to the above defined pivot only "
+																				  + "in situations where Oculus Rift is not seen by its camera]. Leave this option disabled if you "
 		                                                                          + "do not know what you are doing! NOTE: The above defined pivot device (Kinect/PS Move) must "
 		                                                                          + "have its coordinate system calibrated with Oculus Rift DK2 using the RUIS device calibration."));
 

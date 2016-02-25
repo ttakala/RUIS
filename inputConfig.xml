@@ -3,7 +3,7 @@
   <!--Boolean values always with a lower case, e.g. "true" or "false"-->
   <PSMoveSettings>
     <enabled value="false" />
-    <ip value="130.233.46.216" />
+    <ip value="127.0.0.1" />
     <port value="7899" />
     <autoConnect value="true" />
     <enableInGameCalibration value="false" />
@@ -11,9 +11,9 @@
   </PSMoveSettings>
   <KinectSettings>
     <enabled value="false" />
-    <maxPlayers value="2" />
+    <maxPlayers value="1" />
     <floorDetection value="true" />
-    <jumpGestureEnabled value="false" />
+    <jumpGestureEnabled value="true" />
   </KinectSettings>
   <Kinect2Settings>
     <enabled value="true" />
