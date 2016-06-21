@@ -1,9 +1,12 @@
 /*****************************************************************************
 
 Content    :   Class for managing input devices of RUIS
-Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Authors    :   Tuukka Takala, Mikael Matveinen, Heikki Heiskanen
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen.
+               All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -65,39 +68,37 @@ public class RUISInputManager : MonoBehaviour
 
     public bool jumpGestureEnabled = false;
 
-	RUISMenuNGUI ruisNGUIMenu;
-
     public void Awake()
     {
-    	// Check if we are in calibration scene
-		ruisNGUIMenu = FindObjectOfType(typeof(RUISMenuNGUI)) as RUISMenuNGUI;
-    	
-		if(ruisNGUIMenu != null) 
+		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
+
+		if (!Application.isEditor || loadFromTextFileInEditor)
 		{
-			if(ruisNGUIMenu.currentMenuState == RUISMenuNGUI.RUISMenuStates.calibration) 
+			if (!Import(filename))
 			{
-				this.enablePSMove = ruisNGUIMenu.originalEnablePSMove;
-				this.enableKinect = ruisNGUIMenu.originalEnableKinect;
-				this.enableKinect2 = ruisNGUIMenu.originalEnableKinect2;
-				this.jumpGestureEnabled = ruisNGUIMenu.originalEnableJumpGesture;
-				this.enableRazerHydra = ruisNGUIMenu.originalEnableHydra;
-				this.kinectDriftCorrectionPreferred = ruisNGUIMenu.originalKinectDriftCorrection;
-				this.PSMoveIP = ruisNGUIMenu.originalPSMoveIP;
-				this.PSMovePort = ruisNGUIMenu.originalPSMovePort;
+				Debug.LogError("Could not load input configuration file. Creating file based on current settings.");
+				Export(filename);
 			}
+		}
+
+    	// Check if we are in calibration scene
+		if(RUISCalibrationProcessSettings.isCalibrating) 
+		{		
+			this.enablePSMove = RUISCalibrationProcessSettings.enablePSMove;
+			this.enableKinect = RUISCalibrationProcessSettings.enableKinect;
+			this.enableKinect2 = RUISCalibrationProcessSettings.enableKinect2;
+			this.jumpGestureEnabled = RUISCalibrationProcessSettings.jumpGestureEnabled;
+			this.enableRazerHydra = RUISCalibrationProcessSettings.enableRazerHydra;
+			this.PSMoveIP = RUISCalibrationProcessSettings.PSMoveIP;
+			this.PSMovePort = RUISCalibrationProcessSettings.PSMovePort;
+//			this.kinectDriftCorrectionPreferred = ruisNGUIMenu.originalKinectDriftCorrection;
+
+			RUISCalibrationProcessSettings.isCalibrating = false;
 		}
     	
 		wandDelayed = new bool[4] {moveWand0, moveWand1, moveWand2, moveWand3};
 		disabledWands = new List<GameObject>();
-		
-        if (!Application.isEditor || loadFromTextFileInEditor)
-        {
-            if (!Import(filename))
-            {
-                Debug.LogError("Could not load input configuration file. Creating file based on current settings.");
-                Export(filename);
-            }
-        }
+
 
         if (!enableKinect)
         {
@@ -190,7 +191,6 @@ public class RUISInputManager : MonoBehaviour
 
     void Start()
     {
-		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		Quaternion dictionaryFloorNormal = coordinateSystem.RUISCalibrationResultsFloorPitchRotation[coordinateSystem.rootDevice];
 		float dictionaryDistanceFromFloor = coordinateSystem.RUISCalibrationResultsDistanceFromFloor[coordinateSystem.rootDevice];
 		Vector3 normalVector = dictionaryFloorNormal * Vector3.up;
@@ -282,7 +282,7 @@ public class RUISInputManager : MonoBehaviour
 
     public bool Import(string filename)
     {
-        return XmlImportExport.ImportInputManager(this, filename, xmlSchema);
+		return XmlImportExport.ImportInputManager(this, coordinateSystem, filename, xmlSchema);
     }
 
     public bool Export(string filename)
@@ -417,7 +417,8 @@ public class RUISInputManager : MonoBehaviour
 	{
 		Kinect2SourceManager kinect2SourceManager = FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
 
-		if(coordinateSystem != null && kinect2SourceManager != null)
+		if(    coordinateSystem != null && kinect2SourceManager != null
+			&& kinect2SourceManager.GetSensor().IsOpen && kinect2SourceManager.GetSensor().IsAvailable)
 		{
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
 			{

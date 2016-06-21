@@ -1,9 +1,12 @@
 /*****************************************************************************
 
 Content    :   Functionality to control a skeleton using Kinect
-Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Authors    :   Mikael Matveinen, Tuukka Takala, Heikki Heiskanen
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen.
+               All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -15,7 +18,6 @@ public enum RUISAxis
 	X, Y, Z
 }
 
-[AddComponentMenu("RUIS/Input/RUISSkeletonController")]
 public class RUISSkeletonController : MonoBehaviour
 {
 
@@ -118,7 +120,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public float handRollAngleMinimum = -180; // Constrained between [0, -180] in Unity Editor script
 	public float handRollAngleMaximum =  180; // Constrained between [0,  180] in Unity Editor script
 	
-	public bool oculusRotatesHead = true;
+	public bool HMDRotatesHead = true;
 	public bool followOculusController { get; private set; }
 	public Quaternion trackedDeviceYawRotation { get; private set; }
 
@@ -128,6 +130,8 @@ public class RUISSkeletonController : MonoBehaviour
 
 	private Vector3 torsoDirection = Vector3.down;
 	private Quaternion torsoRotation = Quaternion.identity;
+
+	private float deltaTime = 0.03f;
 
 	private KalmanFilter positionKalman;
 	private double[] measuredPos = {0, 0, 0};
@@ -260,7 +264,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 			Vector3 scaler = new Vector3(1/transform.lossyScale.x, 1/transform.lossyScale.y, 1/transform.lossyScale.z);
 			Vector3 assumedRootPos = Vector3.Scale((rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4, scaler); 
-															// (1/transform.lossyScale.x, 1/transform.lossyScale.y, 1/transform.lossyScale.z)
+															
 			Vector3 realRootPos = Vector3.Scale(torso.position, scaler);
 
 			Vector3 torsoUp = head.position - torso.position;
@@ -417,8 +421,8 @@ public class RUISSkeletonController : MonoBehaviour
 //			Debug.LogError(e);
 //		}
 
-		if(oculusRotatesHead && !UnityEngine.VR.VRDevice.isPresent) // (OVRManager.display == null || !OVRManager.display.isPresent))  //06to08
-		   oculusRotatesHead = false;
+		if(HMDRotatesHead && !UnityEngine.VR.VRDevice.isPresent) // (OVRManager.display == null || !OVRManager.display.isPresent))  //06to08
+		   HMDRotatesHead = false;
 
 		// HACK for filtering Kinect 2 arm rotations
 		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRotations = filterRotations;
@@ -433,6 +437,8 @@ public class RUISSkeletonController : MonoBehaviour
 
     void LateUpdate()
     {
+		deltaTime = Time.deltaTime; //1.0f / vr.hmd_DisplayFrequency;
+
 		// If a custom skeleton tracking source is used, save its data into skeletonManager (which is a little 
 		// topsy turvy) so we can utilize same code as we did with Kinect 1 and 2
 		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker) 
@@ -561,7 +567,7 @@ public class RUISSkeletonController : MonoBehaviour
 //			if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID)
 //				maxAngularVelocity = skeletonManager.kinect2FrameDeltaT * rotationDamping;
 //			else 
-				maxAngularVelocity = Time.deltaTime * rotationDamping;
+				maxAngularVelocity = deltaTime * rotationDamping;
 
 
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
@@ -573,7 +579,7 @@ public class RUISSkeletonController : MonoBehaviour
 				UpdateTransform (ref head,          skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head,            maxAngularVelocity);
 			}
 				
-			if(oculusRotatesHead && OVRManager.display != null)
+			if(HMDRotatesHead && UnityEngine.VR.VRDevice.isPresent)
 			{
 				if(coordinateSystem)
 				{
@@ -686,19 +692,23 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					UpdateBoneScalings ();
 
-					torsoRotation = Quaternion.Slerp(torsoRotation, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotation, Time.deltaTime*rotationDamping);
+					torsoRotation = Quaternion.Slerp(torsoRotation, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotation, deltaTime*rotationDamping);
 					torsoDirection = torsoRotation * Vector3.down;
 
 					if(torso == root)
 						torso.position = transform.TransformPoint (- torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
-					else
+					else 
 						torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
 						                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
 
-					spineDirection = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
-					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
-					
-					spineDirection = torso.position - spineDirection;
+					// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
+					spineDirection = transform.TransformPoint (- torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
+//					spineDirection = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
+//					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
+					                                           
+					// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
+					spineDirection = skeletonPosition - spineDirection;
+//					spineDirection = torso.position - spineDirection;
 					spineDirection.Normalize();
 
 					// Obtained new body tracking data. TODO test that Kinect 1 still works
@@ -708,7 +718,7 @@ public class RUISSkeletonController : MonoBehaviour
 //						if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID)
 //							deltaT = skeletonManager.kinect2FrameDeltaT;
 //						else
-							deltaT = Time.deltaTime;
+							deltaT = deltaTime;
 						ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder, 0, deltaT);
 						ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder, 1, deltaT);
 						ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip, 2, deltaT);
@@ -724,7 +734,7 @@ public class RUISSkeletonController : MonoBehaviour
 //				measuredPos [0] = newRootPosition.x;
 //				measuredPos [1] = newRootPosition.y;
 //				measuredPos [2] = newRootPosition.z;
-//				positionKalman.setR (Time.deltaTime * positionNoiseCovariance);
+//				positionKalman.setR (deltaTime * positionNoiseCovariance);
 //				positionKalman.predict ();
 //				positionKalman.update (measuredPos);
 //				pos = positionKalman.getState ();
@@ -825,7 +835,11 @@ public class RUISSkeletonController : MonoBehaviour
 
         if (updateJointPositions && jointToGet.positionConfidence >= minimumConfidenceToUpdate)
         {
-            transformToUpdate.localPosition = jointToGet.position - skeletonPosition;
+        	// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
+        	if(jointToGet.jointID == RUISSkeletonManager.Joint.Torso)
+        		transformToUpdate.localPosition = Vector3.zero;
+       		else 
+	            transformToUpdate.localPosition = jointToGet.position - skeletonPosition;
         }
 
         if (updateJointRotations && jointToGet.rotationConfidence >= minimumConfidenceToUpdate)
@@ -856,7 +870,7 @@ public class RUISSkeletonController : MonoBehaviour
             {
 //                Quaternion newRotation = transform.rotation * jointToGet.rotation *
 //                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-//                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, Time.deltaTime * rotationDamping);
+//                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, deltaTime * rotationDamping);
 				Quaternion newRotation = transform.rotation * Quaternion.Euler(new Vector3(0, controllerYaw, 0)) *
                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
                 transformToUpdate.rotation = newRotation;
@@ -864,7 +878,7 @@ public class RUISSkeletonController : MonoBehaviour
             else
             {
 				transformToUpdate.localRotation = Quaternion.Euler(new Vector3(0, controllerYaw, 0));
-//                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, Time.deltaTime * rotationDamping);
+//                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, deltaTime * rotationDamping);
             }
 		}
 	}
@@ -874,9 +888,9 @@ public class RUISSkeletonController : MonoBehaviour
         if (transformToUpdate == null)
 			return;
 
-		if(jointID == 2 || jointID == 3) // HACK: for now saving performance by not filtering hips
-			transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
-		else
+//		if(jointID == 2 || jointID == 3) // HACK: for now saving performance by not filtering hips
+//			transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
+//		else
 		{
 
 			measuredPos [0] = jointToGet.position.x;
@@ -904,7 +918,7 @@ public class RUISSkeletonController : MonoBehaviour
 		measuredPos [0] = newRootPosition.x;
 		measuredPos [1] = newRootPosition.y;
 		measuredPos [2] = newRootPosition.z;
-		positionKalman.setR (Time.deltaTime * positionNoiseCovariance); // HACK doesn't take into account Kinect's own update deltaT
+		positionKalman.setR (deltaTime * positionNoiseCovariance); // HACK doesn't take into account Kinect's own update deltaT
 		positionKalman.predict ();
 		positionKalman.update (measuredPos);
 		pos = positionKalman.getState ();
@@ -1043,15 +1057,15 @@ public class RUISSkeletonController : MonoBehaviour
 			switch(boneLengthAxis)
 			{
 				case RUISAxis.X:
-					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, thickness, thickness), maxScaleFactor * Time.deltaTime);
+					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, thickness, thickness), maxScaleFactor * deltaTime);
 					boneToScale.localScale = new Vector3(boneToScale.localScale.x, thickness, thickness);
 					break;
 				case RUISAxis.Y:
-					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, newScale, thickness), maxScaleFactor * Time.deltaTime);
+					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, newScale, thickness), maxScaleFactor * deltaTime);
 					boneToScale.localScale = new Vector3(thickness, boneToScale.localScale.y, thickness);
 					break;
 				case RUISAxis.Z:
-					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, thickness, newScale), maxScaleFactor * Time.deltaTime);
+					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, thickness, newScale), maxScaleFactor * deltaTime);
 					boneToScale.localScale = new Vector3(thickness, thickness, boneToScale.localScale.z);
 					break;
 			}
@@ -1091,7 +1105,7 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 		else
-			boneToScale.localScale = extremityTweaker * Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, newScale, newScale), maxScaleFactor * Time.deltaTime);
+			boneToScale.localScale = extremityTweaker * Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, newScale, newScale), maxScaleFactor * deltaTime);
 
 		switch(boneLengthAxis)
 		{
@@ -1123,7 +1137,7 @@ public class RUISSkeletonController : MonoBehaviour
 		float newScale = Mathf.Abs(playerLength / modelLength);
 
 		// Here we halve the maxScaleFactor because the torso is bigger than the limbs
-		torsoScale = Mathf.Lerp(torsoScale, newScale, 0.5f*maxScaleFactor * Time.deltaTime);
+		torsoScale = Mathf.Lerp(torsoScale, newScale, 0.5f*maxScaleFactor * deltaTime);
 
 		if(scaleBoneLengthOnly)
 		{
@@ -1239,31 +1253,31 @@ public class RUISSkeletonController : MonoBehaviour
 				if(!closeHand && !(a == 4 && trackThumbs)) 
 				{
 					if(fingerTransforms[i, a, 0])
-						fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], deltaTime * rotationSpeed);
 					if(fingerTransforms[i, a, 1])
-						fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], deltaTime * rotationSpeed);
 					if(fingerTransforms[i, a, 2])
-						fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], Time.deltaTime * rotationSpeed);
+						fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], deltaTime * rotationSpeed);
 					}
 				else 
 				{
 					if(a != 4) 
 					{
 						if(fingerTransforms[i, a, 0])
-							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, Time.deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 1])
-							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationPIP, Time.deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationPIP, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 2])
-							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, Time.deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, deltaTime * rotationSpeed);
 					}
 					else if(!trackThumbs) 
 					{ // Thumbs (if separate thumb  tracking is not enabled)
 						if(fingerTransforms[i, a, 0])
-							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, Time.deltaTime*rotationSpeed);
+							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, deltaTime*rotationSpeed);
 						if(fingerTransforms[i, a, 1])
-							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, Time.deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 2])
-							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP_corrected, Time.deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP_corrected, deltaTime * rotationSpeed);
 					}	
 				}	
 			}

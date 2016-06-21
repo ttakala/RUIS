@@ -269,7 +269,13 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		}
 		return RUISCalibrationPhase.ShowResults;
 	}
-	
+
+	public override void PlaceSensorModels()
+	{
+		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.PS_Move);
+		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.PS_Move);
+	}
+
 	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
 		// Source: http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
 		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
@@ -415,17 +421,6 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		                   translate, rotationQuaternion, transformMatrix,
 		                   RUISDevice.PS_Move, RUISDevice.Oculus_DK2);
 		
-		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.PS_Move);
-		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.PS_Move);
-		
-		/*
-		string devicePairName = RUISDevice.PS_Move.ToString() + "-" + RUISDevice.Oculus_DK2.ToString();
-		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
-		
-		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
-		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
-	
-		*/
 	}
 	
 	

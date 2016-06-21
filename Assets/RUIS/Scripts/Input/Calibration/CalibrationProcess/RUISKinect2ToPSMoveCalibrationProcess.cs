@@ -301,7 +301,19 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		}
 		return RUISCalibrationPhase.ShowResults;
 	}
-	
+
+	public override void PlaceSensorModels()
+	{
+		kinect2ModelObject.transform.rotation = kinect2PitchRotation;
+		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
+
+		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.PS_Move);
+		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.PS_Move);
+
+		if(this.floorPlane)
+			this.floorPlane.transform.position = new Vector3(0, 0, 0);
+	}
+
 	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
 		// Source: http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
 		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
@@ -475,24 +487,7 @@ public class RUISKinect2ToPSMoveCalibrationProcess : RUISCalibrationProcess {
 		
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2PitchRotation;  
-		
-		kinect2ModelObject.transform.rotation = kinect2PitchRotation;
-		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
-		
-		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.PS_Move);
-		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.PS_Move);
-		
-		/*
-		string devicePairName = RUISDevice.PS_Move.ToString() + "-" + RUISDevice.Kinect_2.ToString();
-		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
-		
-		
-		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
-		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
-		*/
-		
-		if(this.floorPlane)
-			this.floorPlane.transform.position = new Vector3(0, 0, 0);
+
 	}
 	
 	

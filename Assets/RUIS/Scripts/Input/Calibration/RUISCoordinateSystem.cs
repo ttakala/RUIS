@@ -524,38 +524,6 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		return newRotation;
 	}
-
-	public Vector3 ConvertMoveVelocity(Vector3 velocity)
-    {
-        //flip the z coordinate to get into unity's coordinate system
-        Vector3 newVelocity = new Vector3(velocity.x, velocity.y, -velocity.z);
-		
-		string devicePairString = RUISDevice.PS_Move.ToString() + "-" + rootDevice.ToString();
-		if (applyToRootCoordinates && rootDevice != RUISDevice.PS_Move) {
-			newVelocity = RUISCalibrationResultsIn4x4Matrix[devicePairString].MultiplyPoint3x4(newVelocity);
-		}
-
-        newVelocity *= moveToUnityScale;
-		newVelocity = Quaternion.Euler(0, yawOffset, 0) * newVelocity;
-
-        return newVelocity;
-    }
-
-	public Vector3 ConvertMoveAngularVelocity(Vector3 angularVelocity)
-    {
-        Vector3 newVelocity = angularVelocity;
-        newVelocity.x = -newVelocity.x;
-        newVelocity.y = -newVelocity.y;
-        
-		string devicePairString = RUISDevice.PS_Move.ToString() + "-" + rootDevice.ToString();
-		
-		if (applyToRootCoordinates && rootDevice != RUISDevice.PS_Move) {
-			newVelocity = RUISCalibrationResultsIn4x4Matrix[devicePairString].MultiplyPoint3x4(newVelocity);
-        }
-        newVelocity = Quaternion.Euler(0, yawOffset, 0) * newVelocity;
-        return newVelocity;
-    }
-
 	
 	/*
 	*	Kinect 1
@@ -702,10 +670,52 @@ public class RUISCoordinateSystem : MonoBehaviour
 			return Quaternion.identity;
 	}
 
-	
-	/*
-	 * 	Convert locations obtained with a certain device to master coordinate system, apply position offset, and set Kinect origin to floor if applicable
-	 */
+	public Quaternion GetHMDCoordinateSystemYaw(RUISDevice device)
+	{
+		Quaternion convertedRotation = ConvertRotation(Quaternion.identity, device);
+
+		Vector3 projected = convertedRotation * Vector3.forward;
+		projected.Set(projected.x, 0, projected.z);
+
+		// Make sure that the projection is not pointing too much up
+		if(projected.sqrMagnitude > 0.001)
+			return Quaternion.LookRotation(projected);
+		else // The HMD coordinate system view axis is parallel with the master coordinate system's Y-axis!
+			return Quaternion.identity;
+	}
+
+	/// <summary>
+	/// Convert velocity or angular velocity obtained with a certain device to master coordinate system, apply yaw offset, and apply Kinect pitch correction
+	/// </summary>
+	public Vector3 ConvertVelocity(Vector3 velocity, RUISDevice device)
+	{
+		Vector3 newVelocity = velocity;
+
+		if (applyToRootCoordinates && rootDevice != device)
+		{
+			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
+			newVelocity = RUISCalibrationResultsInQuaternion[devicePairString] * newVelocity;
+		}
+
+		// Apply floor pitch rotation (which is identity to anything else than Kinect 1/2)
+		if (applyToRootCoordinates || device == rootDevice)
+			newVelocity = RUISCalibrationResultsFloorPitchRotation[rootDevice] * newVelocity;
+		else
+		{
+			if(device == RUISDevice.Kinect_2)
+				newVelocity = RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] * newVelocity;
+			else if(device == RUISDevice.Kinect_1)
+				newVelocity = RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] * newVelocity;
+		}
+
+		newVelocity = Quaternion.Euler(0, yawOffset, 0) * newVelocity;
+
+		return newVelocity;
+	}
+		
+	/// <summary>
+	/// Convert location obtained with a certain device to master coordinate system, apply position offset, and set Kinect origin to floor if applicable
+	/// </summary>
 	public Vector3 ConvertLocation(Vector3 inputLocation, RUISDevice device)
 	{
 		Vector3 outputLocation = inputLocation;
@@ -715,6 +725,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 			outputLocation = RUISCalibrationResultsIn4x4Matrix[devicePairString].MultiplyPoint3x4(outputLocation);
+//			outputLocation = RUISCalibrationResultsInQuaternion[devicePairString] * outputLocation;
 		}
 
 		// Apply yaw offset and floor pitch rotation (which is identity to anything else than Kinect 1/2)
@@ -748,10 +759,10 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		return outputLocation;
 	}
-	
-	/*
-	 * 	Convert rotations obtained with a certain device to master coordinate system, apply yaw offset, and apply Kinect pitch correction
-	 */
+
+	/// <summary>
+	/// Convert rotation obtained with a certain device to master coordinate system, apply yaw offset, and apply Kinect pitch correction
+	/// </summary>
 	public Quaternion ConvertRotation(Quaternion inputRotation, RUISDevice device)
 	{
 		Quaternion outputRotation = inputRotation;
@@ -778,6 +789,20 @@ public class RUISCoordinateSystem : MonoBehaviour
 			outputRotation = Quaternion.Euler(0, yawOffset, 0) * outputRotation;
 
 		return outputRotation;
+	}
+
+	public Vector3 ExtractLocalScale(RUISDevice device)
+	{
+		if(applyToRootCoordinates && rootDevice != device)
+		{
+			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
+			Matrix4x4 matrix = RUISCalibrationResultsIn4x4Matrix[devicePairString];
+
+			// Extract new local scale
+			return new Vector3(matrix.GetColumn(0).magnitude, matrix.GetColumn(1).magnitude, matrix.GetColumn(2).magnitude);
+		}
+		else
+			return Vector3.one;
 	}
 	
 }

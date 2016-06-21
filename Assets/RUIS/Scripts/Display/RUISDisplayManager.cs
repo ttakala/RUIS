@@ -36,7 +36,7 @@ public class RUISDisplayManager : MonoBehaviour {
 	public float guiScaleY = 1;
 	public bool hideMouseOnPlay = false;
 
-	private bool hasOculusDisplay = false;
+	private bool hasHeadMountedDisplay = false;
 	
     public class ScreenPoint
     {
@@ -54,7 +54,7 @@ public class RUISDisplayManager : MonoBehaviour {
             UpdateResolutionsOnTheFly();
         }
 		
-		hasOculusDisplay = HasOculusDisplay();
+		hasHeadMountedDisplay = HasHeadMountedDisplay();
 
 
         UpdateDisplays();
@@ -65,23 +65,21 @@ public class RUISDisplayManager : MonoBehaviour {
         LoadDisplaysFromXML();
 
 		// Second substitution because displays might have been updated via XML etc.
-		hasOculusDisplay = HasOculusDisplay();
+		hasHeadMountedDisplay = HasHeadMountedDisplay();
 
-		// Disable OVRManager script if there are no Oculus Rift displays
-
-		if(!hasOculusDisplay)
-		{
-			if(GetComponent<OVRManager>())
-				GetComponent<OVRManager>().enabled = false;
-//			if(GetComponent<Camera>())
-//				GetComponent<Camera>().enabled = false;
-		}
-		else 
+		// *** TODO HACK Better way to detect Oculus display
+		if(UnityEngine.VR.VRDevice.isPresent && UnityEngine.VR.VRDevice.model != null && UnityEngine.VR.VRDevice.model.Contains("Oculus"))
 		{
 			if(GetComponent<OVRManager>()) 
 			{
 				StartCoroutine(ForceOculusSettings(1.0f));
 			}
+		}
+		else 
+		{
+			// Disable OVRManager script if there are no Oculus Rift displays
+			if(GetComponent<OVRManager>())
+				GetComponent<OVRManager>().enabled = false;
 		}
 
 		InitRUISMenu(ruisMenuPrefab, guiDisplayChoice);
@@ -166,14 +164,14 @@ public class RUISDisplayManager : MonoBehaviour {
 
         if (displays.Count > 1 || (displays.Count == 1 /* && !allowResolutionDialog */))
         {
-			if(!hasOculusDisplay) // TODO: if external oculus mode, and we have multiple displays, then execute below clause anyway
+			if(!hasHeadMountedDisplay) // TODO: if external oculus mode, and we have multiple displays, then execute below clause anyway
 			{
 				Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, false);
 			}
         }
     }
 
-	public bool HasOculusDisplay()
+	public bool HasHeadMountedDisplay()
 	{
 		foreach (RUISDisplay display in displays)
 		{
@@ -364,7 +362,15 @@ public class RUISDisplayManager : MonoBehaviour {
 		if(!displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo /* && !displays[guiDisplayChoice].GetComponent<RUISDisplay>().enableOculusRift */)
 		{
 			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
-				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.AddComponent<UICamera>();
+			{
+				// *** TODO HACK Ugly, find a better way to access the view rendering camera on Vive and other HMDs that use render to texture. Or wait for 5.4? 
+				if(Valve.VR.OpenVR.IsHmdPresent() && displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.GetComponentInChildren<SteamVR_Camera>())
+				{
+					displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.GetComponentInChildren<SteamVR_Camera>().gameObject.AddComponent<UICamera>();
+				}
+				else
+					displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.AddComponent<UICamera>();
+			}
 			else
 				Debug.LogError(	  "The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
 								+ " whose centerCamera is null for some reason! Can't create UICamera.");
@@ -394,7 +400,15 @@ public class RUISDisplayManager : MonoBehaviour {
 		string secondaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCameraName;
 		string tertiaryMenuParent  = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCameraName;
 		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
-			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.transform;
+		{
+			// *** TODO HACK Ugly, find a better way to access the view rendering camera on Vive and other HMDs that use render to texture. Or wait for 5.4? 
+			if(Valve.VR.OpenVR.IsHmdPresent() && displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.GetComponentInChildren<SteamVR_Camera>())
+			{
+				ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.GetComponentInChildren<SteamVR_Camera>().transform;
+			}
+			else
+				ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.transform;
+		}
 		else 
 		{
 			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera)

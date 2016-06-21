@@ -2,8 +2,11 @@
 
 Content    :   A class to manage Kinect/OpenNI skeleton data
 Authors    :   Mikael Matveinen, Heikki Heiskanen, Tuukka Takala
-Copyright  :   Copyright 2014 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. 
+               All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -100,8 +103,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 		// HACK for filtering Kinect 2 arm rotations
 		public bool filterRotations = false;
 		public float rotationNoiseCovariance = 200;
-		public KalmanFilteredRotation[] filterRot = new KalmanFilteredRotation[12];
-		public Quaternion[] previousRotation = new Quaternion[12];
+		public KalmanFilteredRotation[] filterRot = new KalmanFilteredRotation[14];
+		public Quaternion[] previousRotation = new Quaternion[14];
 		
 		public ulong trackingId = 0;
     }
@@ -232,7 +235,10 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 		if (jointID == 8 || jointID == 9) // Heuristic for leftHand, rightHand
 			covarianceMultiplier = 2;
-
+		
+		if (jointID > 9 && jointID < 14) // Heuristic for leftHip, rightHip, leftKnee, rightKnee
+			covarianceMultiplier = 3;
+		
 		updateAngle = Mathf.Abs(Quaternion.Angle(joint.rotation, skeleton.previousRotation[jointID])); // New measurement vs previous rotation
 		if (updateAngle < angleThreshold)
 		{
@@ -539,7 +545,7 @@ public class RUISSkeletonManager : MonoBehaviour {
 							{
 								filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightElbow, 3, kalmanDeltaTime);
 							}
-							
+
 							//							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].root, 4, kalmanDeltaTime);
 							//
 							////							measuredRotation = skeletons[kinect2SensorID, playerID].root.rotation;
@@ -569,9 +575,17 @@ public class RUISSkeletonManager : MonoBehaviour {
 							//							measuredRotation = skeletons[kinect2SensorID, playerID].leftHand.rotation;
 							//							skeletons[kinect2SensorID, playerID].leftHand.rotation = skeletons[kinect2SensorID, playerID].filterRot[8].Update(measuredRotation, kalmanDeltaTime);
 
-
 							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightHand, 9, kalmanDeltaTime);
-							
+
+
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightHip, 10, kalmanDeltaTime);
+
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].leftHip, 11, kalmanDeltaTime);
+
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].rightKnee, 12, kalmanDeltaTime);
+
+							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].leftKnee, 13, kalmanDeltaTime);
+
 							//							measuredRotation = skeletons[kinect2SensorID, playerID].rightHand.rotation;
 							//							skeletons[kinect2SensorID, playerID].rightHand.rotation = skeletons[kinect2SensorID, playerID].filterRot[9].Update(measuredRotation, kalmanDeltaTime);
 						

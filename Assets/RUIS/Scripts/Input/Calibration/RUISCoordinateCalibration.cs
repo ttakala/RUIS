@@ -19,6 +19,7 @@ public enum RUISDevice
 	Kinect_2,
 	PS_Move,
 	Oculus_DK2,
+	Vive,
 	Null
 }
 public enum RUISCalibrationPhase {
@@ -34,7 +35,7 @@ public enum RUISCalibrationPhase {
 public abstract class RUISCalibrationProcess {
 	
 	RUISDevice inputDevice1, inputDevice2;
-	
+
 	public abstract string guiTextUpper { get; }
 	public abstract string guiTextLower  { get; }
 	
@@ -43,7 +44,9 @@ public abstract class RUISCalibrationProcess {
 	abstract public RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime);
 	abstract public RUISCalibrationPhase CalibrationPhase(float deltaTime);
 	abstract public RUISCalibrationPhase ShowResultsPhase(float deltaTime);
-	
+
+	abstract public void PlaceSensorModels();
+
 	public void updateDictionaries(Dictionary<string, Vector3> RUISCalibrationResultsInVector3, 
 	                        Dictionary<string, Quaternion> RUISCalibrationResultsInQuaternion,
 	                        Dictionary<string, Matrix4x4> RUISCalibrationResultsIn4x4Matrix,
@@ -61,7 +64,22 @@ public abstract class RUISCalibrationProcess {
 	}
 }
 
-public class RUISCalibrationProcessSettings {
+public class RUISCalibrationProcessSettings 
+{
+	static public bool isCalibrating = false;
+	static public string devicePair;
+	static public int previousSceneId;
+	static public bool enablePSMove;
+	static public bool enableKinect;
+	static public bool enableKinect2;
+	static public bool jumpGestureEnabled;
+	static public bool enableRazerHydra;
+	static public string PSMoveIP;
+	static public int PSMovePort;
+	static public float yawOffset;
+	static public Vector3 positionOffset;
+	static public RUISDevice originalMasterCoordinateSystem;
+
 	public int numberOfSamplesToTake;
 	public int numberOfSamplesPerSecond;
 	public GameObject calibrationSpherePrefab;
@@ -91,66 +109,72 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 	public string xmlFilename = "calibration.xml";
 	
 	private Vector3 floorNormal;
-	RUISCalibrationProcess calibrationProcess;
+	public RUISCalibrationProcess calibrationProcess;
 	RUISCalibrationPhase currentPhase, nextPhase, lastPhase;
 	
 	RUISCalibrationProcessSettings calibrationProcessSettings;
 	
 	RUISSkeletonController skeletonController;
 	RUISCoordinateSystem coordinateSystem;
-	RUISMenuNGUI ruisNGUIMenu;
+
+
+	bool menuIsVisible = false;
 	
-	void Awake () {
+	void Awake ()
+	{
 		Cursor.visible = true; // Incase cursor was hidden in previous scene
 		
 		// Check if calibration settings were chosen on previous scene
-		ruisNGUIMenu = FindObjectOfType(typeof(RUISMenuNGUI)) as RUISMenuNGUI;
-		
-		if(ruisNGUIMenu != null) 
+		if(RUISCalibrationProcessSettings.devicePair != null) 
 		{
-			if(ruisNGUIMenu.currentMenuState == RUISMenuNGUI.RUISMenuStates.calibration) 
+			numberOfSamplesToTake = 50;
+			samplesPerSecond = 5;
+			switch(RUISCalibrationProcessSettings.devicePair)
 			{
-				numberOfSamplesToTake = 50;
-				samplesPerSecond = 5;
-				switch(ruisNGUIMenu.calibrationDropDownSelection)  
-				{
-					case "Kinect - Kinect2":
-						firstDevice = RUISDevice.Kinect_1;
-						secondDevice = RUISDevice.Kinect_2;
-					break;
-					case "Kinect - PSMove":
-						firstDevice = RUISDevice.Kinect_1;
-						secondDevice = RUISDevice.PS_Move;
-					break;
-					case "Kinect 2 - PSMove":
-						firstDevice = RUISDevice.Kinect_2;
-						secondDevice = RUISDevice.PS_Move;
-					break;
-					case "Kinect 2 - Oculus DK2":
-						firstDevice = RUISDevice.Kinect_2;
-						secondDevice = RUISDevice.Oculus_DK2;
-					break;
-					case "Kinect - Oculus DK2":
-						firstDevice = RUISDevice.Kinect_1;
-						secondDevice = RUISDevice.Oculus_DK2;
-					break;
-					case "PSMove - Oculus DK2":
-						firstDevice = RUISDevice.PS_Move;
-						secondDevice = RUISDevice.Oculus_DK2;
-					break;
-					case "Kinect floor data":
-						firstDevice = RUISDevice.Kinect_1;
-						secondDevice = RUISDevice.Kinect_1;
-					break;
-					case "Kinect 2 floor data":
-						firstDevice = RUISDevice.Kinect_2;
-						secondDevice = RUISDevice.Kinect_2;
-					break;
-					default:
-						firstDevice = RUISDevice.Null;
-						secondDevice = RUISDevice.Null;
-					break;
-				}
+				case "Kinect - Kinect2":
+					firstDevice = RUISDevice.Kinect_1;
+					secondDevice = RUISDevice.Kinect_2;
+				break;
+				case "Kinect - PSMove":
+					firstDevice = RUISDevice.Kinect_1;
+					secondDevice = RUISDevice.PS_Move;
+				break;
+				case "Kinect 2 - PSMove":
+					firstDevice = RUISDevice.Kinect_2;
+					secondDevice = RUISDevice.PS_Move;
+				break;
+				case "Kinect 2 - Oculus DK2":
+					firstDevice = RUISDevice.Kinect_2;
+					secondDevice = RUISDevice.Oculus_DK2;
+				break;
+				case "Kinect - Oculus DK2":
+					firstDevice = RUISDevice.Kinect_1;
+					secondDevice = RUISDevice.Oculus_DK2;
+				break;
+				case "Kinect 2 - Vive":
+					firstDevice = RUISDevice.Kinect_2;
+					secondDevice = RUISDevice.Vive;
+				break;
+				case "Vive - Kinect 2":
+					firstDevice = RUISDevice.Vive;
+					secondDevice = RUISDevice.Kinect_2;
+				break;
+				case "PSMove - Oculus DK2":
+					firstDevice = RUISDevice.PS_Move;
+					secondDevice = RUISDevice.Oculus_DK2;
+				break;
+				case "Kinect floor data":
+					firstDevice = RUISDevice.Kinect_1;
+					secondDevice = RUISDevice.Kinect_1;
+				break;
+				case "Kinect 2 floor data":
+					firstDevice = RUISDevice.Kinect_2;
+					secondDevice = RUISDevice.Kinect_2;
+				break;
+				default:
+					firstDevice = RUISDevice.Null;
+					secondDevice = RUISDevice.Null;
+				break;
 			}
 		}
 	
@@ -167,7 +191,7 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		
 		skeletonController = FindObjectOfType(typeof(RUISSkeletonController)) as RUISSkeletonController;
 		coordinateSystem  = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-		
+
 		// Pass variables and objects to calibrationProcess
 		calibrationProcessSettings = new RUISCalibrationProcessSettings();
 		calibrationProcessSettings.xmlFilename = xmlFilename;
@@ -238,6 +262,13 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
 		}
+		else if((firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.Vive)
+			||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.Vive )) 
+		{
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
+			calibrationProcess = new RUISKinect2ToViveCalibrationProcess(calibrationProcessSettings);
+		}
 		
 		else {
 			calibrationProcess = null;
@@ -284,6 +315,9 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 
 	void Update ()
 	{
+		if(Input.GetKeyDown(KeyCode.Escape))
+			menuIsVisible = !menuIsVisible;
+
 		if(calibrationProcess != null) {
 			upperText.text = calibrationProcess.guiTextUpper;
 			lowerText.text = calibrationProcess.guiTextLower;	
@@ -311,12 +345,58 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 				
 				case RUISCalibrationPhase.ShowResults: 
 					currentPhase = calibrationProcess.ShowResultsPhase(Time.deltaTime);	
-					if(ruisNGUIMenu != null) {
-						ruisNGUIMenu.calibrationReady = true;	
-						ruisNGUIMenu.menuIsVisible = true;
+
+					if(coordinateSystem)
+					{
+						if(!coordinateSystem.applyToRootCoordinates) // Set values only once if applyToRootCoordinates == false
+						{
+							coordinateSystem.yawOffset      = RUISCalibrationProcessSettings.yawOffset;
+							coordinateSystem.positionOffset = RUISCalibrationProcessSettings.positionOffset;
+						}
+						coordinateSystem.applyToRootCoordinates = true;
 					}
+
+					calibrationProcess.PlaceSensorModels();
+
+//					if(ruisNGUIMenu != null) {
+//						ruisNGUIMenu.calibrationReady = true;	
+//						ruisNGUIMenu.menuIsVisible = true;
+//					}
 				break;
 			}	
+		}
+	}
+
+	void OnGUI()
+	{
+		if(currentPhase == RUISCalibrationPhase.ShowResults || menuIsVisible) 
+		{
+			GUILayout.Window(0, new Rect(50, 50, 150, 200), DrawWindow, "RUIS");
+		}
+	}
+
+
+	void DrawWindow(int windowId)
+	{	
+		if(currentPhase == RUISCalibrationPhase.ShowResults) 
+		{
+			GUILayout.Label("Calibration finished.");
+			GUILayout.Space(20);
+			if(GUILayout.Button("Exit calibration"))
+			{
+				Destroy(this.gameObject);
+				Application.LoadLevel(RUISCalibrationProcessSettings.previousSceneId);
+			}
+		}
+		else 
+		{
+			GUILayout.Label("Calibration not finished yet.");
+			GUILayout.Space(20);
+			if(GUILayout.Button("Abort calibration"))
+			{
+				Destroy(this.gameObject);
+				Application.LoadLevel(RUISCalibrationProcessSettings.previousSceneId);
+			}
 		}
 	}
 }

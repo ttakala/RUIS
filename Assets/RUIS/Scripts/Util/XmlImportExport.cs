@@ -3,7 +3,7 @@ using System.Collections;
 using System.Xml;
 
 public class XmlImportExport {
-	public static bool ImportInputManager(RUISInputManager inputManager, string filename, TextAsset xmlSchema)
+	public static bool ImportInputManager(RUISInputManager inputManager, RUISCoordinateSystem coordinateSystem, string filename, TextAsset xmlSchema)
 	{
 		XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(filename, xmlSchema);
 		if (xmlDoc == null)
@@ -31,11 +31,38 @@ public class XmlImportExport {
 		XmlNode razerNode = xmlDoc.GetElementsByTagName("RazerSettings").Item(0);
 		inputManager.enableRazerHydra = bool.Parse(razerNode.SelectSingleNode("enabled").Attributes["value"].Value);
 		
-		XmlNode riftDriftNode = xmlDoc.GetElementsByTagName("OculusDriftSettings").Item(0);
+//		XmlNode riftDriftNode = xmlDoc.GetElementsByTagName("OculusDriftSettings").Item(0);
 //		string magnetometerMode = riftDriftNode.SelectSingleNode("magnetometerDriftCorrection").Attributes["value"].Value;
-		//inputManager.riftMagnetometerMode = (RUISInputManager.RiftMagnetometer)System.Enum.Parse(typeof(RUISInputManager.RiftMagnetometer), magnetometerMode);
-		inputManager.kinectDriftCorrectionPreferred = bool.Parse(riftDriftNode.SelectSingleNode("kinectDriftCorrectionIfAvailable").Attributes["value"].Value);
-		
+//		inputManager.riftMagnetometerMode = (RUISInputManager.RiftMagnetometer)System.Enum.Parse(typeof(RUISInputManager.RiftMagnetometer), magnetometerMode);
+//		inputManager.kinectDriftCorrectionPreferred = bool.Parse(riftDriftNode.SelectSingleNode("kinectDriftCorrectionIfAvailable").Attributes["value"].Value);
+
+		XmlNode coordinateSystemNode = xmlDoc.GetElementsByTagName("CoordinateSystemSettings").Item(0);
+		if(coordinateSystemNode != null)
+		{
+			if(coordinateSystemNode.SelectSingleNode("useMasterCoordinateSystem") != null)
+				coordinateSystem.applyToRootCoordinates = bool.Parse(coordinateSystemNode.SelectSingleNode("useMasterCoordinateSystem").Attributes["value"].Value);
+			if(coordinateSystemNode.SelectSingleNode("masterCoordinateSystemSensor") != null)
+			{
+				string masterDevice = coordinateSystemNode.SelectSingleNode("masterCoordinateSystemSensor").Attributes["value"].Value;
+				coordinateSystem.rootDevice = (RUISDevice)System.Enum.Parse(typeof(RUISDevice), masterDevice);
+			}
+			if(coordinateSystemNode.SelectSingleNode("switchMasterToAvailableSensor") != null)
+				coordinateSystem.switchToAvailableDevice = bool.Parse(coordinateSystemNode.SelectSingleNode("switchMasterToAvailableSensor").Attributes["value"].Value);
+			if(coordinateSystemNode.SelectSingleNode("setKinectOriginToFloor") != null)
+				coordinateSystem.setKinectOriginToFloor  = bool.Parse(coordinateSystemNode.SelectSingleNode("setKinectOriginToFloor").Attributes["value"].Value);
+			if(coordinateSystemNode.SelectSingleNode("coordinateSystemYRotationOffset") != null)
+				coordinateSystem.yawOffset = float.Parse(coordinateSystemNode.SelectSingleNode("coordinateSystemYRotationOffset").Attributes["value"].Value);
+
+			if(coordinateSystemNode.SelectSingleNode("coordinateSystemLocationOffset") != null)
+			{
+				XmlNode translationElement = coordinateSystemNode.SelectSingleNode("coordinateSystemLocationOffset");
+				float x = float.Parse(translationElement.Attributes["x"].Value);
+				float y = float.Parse(translationElement.Attributes["y"].Value);
+				float z = float.Parse(translationElement.Attributes["z"].Value);
+				coordinateSystem.positionOffset = new Vector3(x, y, z);
+			}
+		}
+
 		return true;
 	}
 	
@@ -118,16 +145,40 @@ public class XmlImportExport {
 		
 		
 		
-		XmlElement riftDriftSettingsElement = xmlDoc.CreateElement("OculusDriftSettings");
-		inputManagerRootElement.AppendChild(riftDriftSettingsElement);
-		
+//		XmlElement riftDriftSettingsElement = xmlDoc.CreateElement("OculusDriftSettings");
+//		inputManagerRootElement.AppendChild(riftDriftSettingsElement);
+
+//		XmlElement kinectDriftCorrectionElement = xmlDoc.CreateElement("kinectDriftCorrectionIfAvailable");
+//		kinectDriftCorrectionElement.SetAttribute("value", inputManager.kinectDriftCorrectionPreferred.ToString().ToLowerInvariant());
+//		riftDriftSettingsElement.AppendChild(kinectDriftCorrectionElement);
+
 		//XmlElement magnetometerDriftCorrectionElement = xmlDoc.CreateElement("magnetometerDriftCorrection");
 		//magnetometerDriftCorrectionElement.SetAttribute("value", System.Enum.GetName(typeof(RUISInputManager.RiftMagnetometer), inputManager.riftMagnetometerMode));
 		//riftDriftSettingsElement.AppendChild(magnetometerDriftCorrectionElement);
-		
-		XmlElement kinectDriftCorrectionElement = xmlDoc.CreateElement("kinectDriftCorrectionIfAvailable");
-		kinectDriftCorrectionElement.SetAttribute("value", inputManager.kinectDriftCorrectionPreferred.ToString().ToLowerInvariant());
-		riftDriftSettingsElement.AppendChild(kinectDriftCorrectionElement);
+
+		XmlElement coordinateSystemSettingsElement = xmlDoc.CreateElement("CoordinateSystemSettings");
+		inputManagerRootElement.AppendChild(coordinateSystemSettingsElement);
+
+		XmlComment coordinateComment0 = xmlDoc.CreateComment(  "Below values will override the settings made in Unity Editor if you uncomment them.");
+		coordinateSystemSettingsElement.AppendChild(coordinateComment0);
+
+		// HACK TODO: Add all coordinate system settings when they can be altered in the menu
+		//		XmlElement useMasterCoordinateSystemElement = xmlDoc.CreateElement("useMasterCoordinateSystem");
+		//		useMasterCoordinateSystemElement.SetAttribute("value", inputManager.useMasterCoordinateSystem.ToString().ToLowerInvariant());
+		//		coordinateSystemSettingsElement.AppendChild(useMasterCoordinateSystemElement);
+		// ...
+		XmlComment coordinateComment1 = xmlDoc.CreateComment(  "\n    <useMasterCoordinateSystem value=\"true\" /> \n"
+															 + "    <masterCoordinateSystemSensor value=\"Kinect_2\" />\n");
+		coordinateSystemSettingsElement.AppendChild(coordinateComment1);
+
+		XmlComment coordinateComment2 = xmlDoc.CreateComment(  " Kinect_2, Kinect_1, Vive, PS_Move, HMD ");
+		coordinateSystemSettingsElement.AppendChild(coordinateComment2);
+
+		XmlComment coordinateComment3 = xmlDoc.CreateComment(  "\n    <switchMasterToAvailableSensor value=\"true\" />\n"
+															 + "    <coordinateSystemLocationOffset x=\"0\" y=\"0\" z=\"0\" />\n"
+															 + "    <coordinateSystemYRotationOffset value=\"0\" />\n"
+															 + "    <setKinectOriginToFloor value=\"true\" />\n");
+		coordinateSystemSettingsElement.AppendChild(coordinateComment3);
 		
 		XMLUtil.SaveXmlToFile(filename, xmlDoc);
 		

@@ -111,7 +111,7 @@ public class RUISCharacterController : MonoBehaviour
 				if(    characterPivotType == CharacterPivotType.KinectHead
 				    || characterPivotType == CharacterPivotType.KinectTorso)
 				{
-					if(coordinateSystem && inputManager.enableKinect && !coordinateSystem.setKinectOriginToFloor)
+					if(coordinateSystem && (inputManager.enableKinect || inputManager.enableKinect2) && !coordinateSystem.setKinectOriginToFloor)
 						Debug.LogWarning("It is best to enable 'setKinectOriginToFloor' from RUISCoordinateSystem " +
 						                 "when using Kinect and RUISCharacterController script.");
 				}

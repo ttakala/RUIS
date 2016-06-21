@@ -2,8 +2,10 @@
 
 Content    :   Comprehensive 6DOF tracker class with yaw drift correction
 Authors    :   Tuukka Takala, Heikki Heiskanen
-Copyright  :   Copyright 2015 Tuukka Takala, Heikki Heiskanen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala, Heikki Heiskanen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -44,9 +46,10 @@ public class RUISTracker : MonoBehaviour
 	    Kinect2 = 1,
 	    OculusDK2 = 2,
 	    PSMove = 3,
-	    RazerHydra = 4,
-		InputTransform = 5,
-		None = 6
+		RazerHydra = 4,
+		ViveHMD = 5,    // *** TODO HACK not really tracker, only sets the tracker space from RUISCoordinateSystem
+		InputTransform = 6,
+		None = 7
 	};
 	
 	public enum HeadRotationSource
@@ -55,9 +58,10 @@ public class RUISTracker : MonoBehaviour
 	    Kinect2 = 1,
 	    OculusDK2 = 2,
 	    PSMove = 3,
-	    RazerHydra = 4,
-		InputTransform = 5,
-		None = 6
+		RazerHydra = 4,
+		ViveHMD = 5,
+		InputTransform = 6,
+		None = 7
 	};
 
     public enum CompassSource
@@ -66,7 +70,7 @@ public class RUISTracker : MonoBehaviour
         Kinect2 = 1,
         OculusDK2 = 2,
         PSMove = 3,
-        RazerHydra = 4,
+		RazerHydra = 4,
         InputTransform = 5,
         None = 6
     };
@@ -377,6 +381,29 @@ public class RUISTracker : MonoBehaviour
 //			Debug.LogError(e);
 //		}
 
+
+		if(Valve.VR.OpenVR.IsHmdPresent())
+		{
+			// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
+			if(headPositionInput == HeadPositionSource.ViveHMD || headRotationInput == HeadRotationSource.ViveHMD)
+			{
+				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+				{
+					transform.localRotation = coordinateSystem.GetHMDCoordinateSystemYaw(RUISDevice.Vive);
+					transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.Vive);
+					transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
+
+					//					Vector3 scaledPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
+					//
+					//					scaledPosition.x /= transform.localScale.x;
+					//					scaledPosition.y /= transform.localScale.y;
+					//					scaledPosition.z /= transform.localScale.z;
+
+				}
+			}
+		}
+
+
 		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
 			if(!UnityEngine.VR.VRDevice.isPresent) //06to08
@@ -649,6 +676,10 @@ public class RUISTracker : MonoBehaviour
 		{
 			isRazerBaseMobile = false; // If Razer Hydra is not used as a source then this can be false
 		}
+
+		// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
+		if(headPositionInput == HeadPositionSource.ViveHMD || headRotationInput == HeadRotationSource.ViveHMD)
+			return;
 		
 		// Reset view if necessary
 		bool checkRazer = false;

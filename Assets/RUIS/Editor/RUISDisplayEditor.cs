@@ -203,8 +203,11 @@ public class RUISDisplayEditor : Editor {
         EditorGUILayout.EndHorizontal();
 
         displayManager.CalculateTotalResolution();
-        PlayerSettings.defaultScreenWidth = displayManager.totalRawResolutionX;
-        PlayerSettings.defaultScreenHeight = displayManager.totalRawResolutionY;
+		if(!Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK An HMD might be connected, but developer is creating a non-HMD build
+		{
+			PlayerSettings.defaultScreenWidth = displayManager.totalRawResolutionX;
+			PlayerSettings.defaultScreenHeight = displayManager.totalRawResolutionY;
+		}
     }
 
 }

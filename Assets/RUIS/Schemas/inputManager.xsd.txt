@@ -11,7 +11,7 @@
 			<element name="KinectSettings" type="tns:KinectSettingsType" maxOccurs="1"/>
 			<element name="Kinect2Settings" type="tns:Kinect2SettingsType" maxOccurs="1"/>
 			<element name="RazerSettings" type="tns:RazerSettingsType" maxOccurs="1"/>
-			<element name="OculusDriftSettings" type="tns:OculusDriftSettingsType" maxOccurs="1"/>
+			<element name="CoordinateSystemSettings" type="tns:CoordinateSystemSettingsType" maxOccurs="1"/>
 		</sequence>
 	</complexType>
 
@@ -26,6 +26,16 @@
 	
 	<complexType name="IntType">
 		<attribute name="value" type="int" use="required" />
+	</complexType>
+	
+	<complexType name="FloatType">
+		<attribute name="value" type="float" use="required" />
+	</complexType>
+	
+	<complexType name="TranslateType">
+		<attribute name="x" type="float" use="required" />
+		<attribute name="y" type="float" use="required" />
+		<attribute name="z" type="float" use="required" />
 	</complexType>
 	
 	<complexType name="PSMoveSettingsType" >
@@ -61,11 +71,16 @@
 		</sequence>
 	</complexType>
 
-	<complexType name="OculusDriftSettingsType">
-		<sequence>
-			<!-- <element name="magnetometerDriftCorrection" type="tns:StringType"/> -->
-			<element name="kinectDriftCorrectionIfAvailable" type="tns:BooleanType"/>
-		</sequence>
+	<complexType name="CoordinateSystemSettingsType">
+		<all minOccurs="0">
+			<element name="useMasterCoordinateSystem" type="tns:BooleanType" maxOccurs="1"/>
+			<element name="masterCoordinateSystemSensor" type="tns:StringType" maxOccurs="1"/>
+			<element name="switchMasterToAvailableSensor" type="tns:BooleanType" maxOccurs="1"/>
+			<element name="coordinateSystemLocationOffset" type="tns:TranslateType" maxOccurs="1"/>
+			<element name="coordinateSystemYRotationOffset" type="tns:FloatType" maxOccurs="1"/>
+			<element name="setKinectOriginToFloor" type="tns:BooleanType" maxOccurs="1"/>
+		</all>
 	</complexType>
-
+	
+	
 </schema>

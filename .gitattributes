@@ -128,9 +128,13 @@ Assets/OpenNI/Scripts/Trackers/Base[!!-~]tracker[!!-~]and[!!-~]manager[!!-~]clas
 Assets/OpenNI/Scripts/Trackers/Base[!!-~]tracker[!!-~]and[!!-~]manager[!!-~]classes/NIPointTrackerManager.cs -text
 Assets/Plugins/Metro/KinectUnityAddin.dll -text
 Assets/Plugins/x86/KinectUnityAddin.dll -text
+Assets/Plugins/x86/OVRGamepad.dll -text
+Assets/Plugins/x86/openvr_api.dll -text
 Assets/Plugins/x86/sixense.bundle/Contents/MacOS/sixense -text
 Assets/Plugins/x86/sixense.dll -text
 Assets/Plugins/x86_64/KinectUnityAddin.dll -text
+Assets/Plugins/x86_64/OVRGamepad.dll -text
+Assets/Plugins/x86_64/openvr_api.dll -text
 Assets/Plugins/x86_64/sixense.bundle -text
 Assets/Plugins/x86_64/sixense.dll -text
 Assets/RUIS/Examples/BowlingAlley/Materials/Bowling[!!-~]Alley.physicMaterial -text
@@ -195,6 +199,7 @@ Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/PrototypeCharacte
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/CharacterMotor.js -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/FPSInputController.js -text
 Assets/Standard[!!-~]Assets/Character[!!-~]Controllers/Sources/Scripts/MouseLook.cs -text
+Assets/SteamVR/quickstart.pdf -text
 Assets/Vertigo/Materials/Fun[!!-~]7D[!!-~]logo[!!-~]v1.1.png -text
 Assets/Vertigo/Materials/black.PNG -text
 Assets/Vertigo/Materials/logo2.png -text

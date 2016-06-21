@@ -151,7 +151,12 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 		}	
 		return RUISCalibrationPhase.ShowResults;
 	}
-	
+
+	public override void PlaceSensorModels()
+	{
+
+	}
+
 	private void UpdateFloorNormalAndDistance()
 	{
 		coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_1);

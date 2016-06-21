@@ -104,9 +104,9 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 		{
 			mouseInputCoordinates = Input.mousePosition;
 //			mouseInputCoordinates = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(Input.mousePosition);
-			if(instancedCursor && ruisCamera.rightCamera && ruisCamera.rightCamera.transform)
+			if(instancedCursor && ruisCamera.centerCamera && ruisCamera.centerCamera.transform)
 			{
-				instancedCursor.transform.rotation = ruisCamera.rightCamera.transform.rotation;
+				instancedCursor.transform.rotation = ruisCamera.centerCamera.transform.rotation;
 			}
 		}
 		else 

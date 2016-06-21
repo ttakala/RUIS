@@ -170,6 +170,12 @@ public class RUISDisplay : MonoBehaviour
 
 		if(UnityEngine.VR.VRDevice.isPresent)
 			UnityEngine.VR.VRSettings.showDeviceView = oculusMirrorMode;
+
+		if (!linkedCamera)
+		{
+			Debug.LogError(	  "Please set up a RUISCamera for display: " + name + ". Each RUISDisplay defined in "
+							+ "RUISDisplayManager should link to a RUISCamera at field 'Attached Camera'."			);
+		}
 	}
 	
 	public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)
@@ -186,10 +192,6 @@ public class RUISDisplay : MonoBehaviour
 //            if(enableOculusRift)
 //				return;
 			linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight, aspectRatio);
-        }
-        else
-        {
-            Debug.LogWarning("Please set up a RUISCamera for display: " + name);
         }
     }
 

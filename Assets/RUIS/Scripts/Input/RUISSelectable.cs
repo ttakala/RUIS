@@ -2,8 +2,10 @@
 
 Content    :   The functionality for selectable objects, just add this to an object along with a collider to make it selectable
 Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 

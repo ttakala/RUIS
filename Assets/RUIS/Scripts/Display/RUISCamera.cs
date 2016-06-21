@@ -155,14 +155,8 @@ public class RUISCamera : MonoBehaviour {
 		if (associatedDisplay != null && !associatedDisplay.enableOculusRift)
 		{
 			// TODO: Need to change the check for associatedDisplay.enableOculusRift if RUISDisplayManager will be retired
-			try 
-			{
+			if(GetComponent<OVRCameraRig>())
 				GetComponent<OVRCameraRig>().enabled = false;
-			}
-			catch (System.Exception e)
-			{
-				Debug.LogError(e.TargetSite + ": GameObject '" + name + "': " + typeof(OVRCameraRig) + " was not found.", this);
-			}
 		}
 		else
 		{
@@ -171,6 +165,37 @@ public class RUISCamera : MonoBehaviour {
 			foreach (RUISKeystoningBorderDrawer drawer in GetComponentsInChildren<RUISKeystoningBorderDrawer>())
 			{
 				drawer.enabled = false;
+			}
+
+			// *** TODO HACK
+			if(UnityEngine.VR.VRDevice.model == null || !UnityEngine.VR.VRDevice.model.Contains("Oculus"))
+			{
+				if(GetComponent<OVRCameraRig>())
+					GetComponent<OVRCameraRig>().enabled = false;
+			}
+
+			// *** TODO HACK Create an abstract HMD class and implementations for each HMD model
+			if(    Valve.VR.OpenVR.IsHmdPresent() 
+				&& centerCamera.GetComponentInChildren<SteamVR_Camera>() 
+				&& centerCamera.GetComponentInChildren<SteamVR_Camera>().gameObject.GetComponent<Camera>() ) 
+			{
+				centerCamera.clearFlags = CameraClearFlags.Nothing;
+				centerCamera.cullingMask = 0;
+				centerCamera.orthographic = true;
+				centerCamera.orthographicSize = 1;
+				centerCamera.nearClipPlane = 0;
+				centerCamera.farClipPlane = 1;
+				centerCamera.rect = new Rect(0, 0, 1, 1);
+				centerCamera.depth = 0;
+				centerCamera.renderingPath = RenderingPath.UsePlayerSettings;
+				centerCamera.useOcclusionCulling = false;
+				centerCamera.hdr = false;
+
+				return;
+			} 
+			else
+			{
+				// Disable unnecessary OpenVR components	
 			}
 		}
 		

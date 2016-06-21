@@ -1,9 +1,11 @@
 /*****************************************************************************
 
 Content    :   A basic wand used with the mouse to simulate other types of wands
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -11,7 +13,6 @@ using UnityEngine;
 using System.Collections;
 
 
-[AddComponentMenu("RUIS/Input/RUISMouseWand")]
 public class RUISMouseWand : RUISWand {
     bool mouseButtonPressed = false;
     bool mouseButtonReleased = false;

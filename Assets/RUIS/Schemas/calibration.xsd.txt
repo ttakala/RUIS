@@ -6,10 +6,10 @@
 	<element name="RUISPairwiseCalibration" type="tns:RUISPairwiseCalibrationType"/>
  
 	<complexType name="RUISPairwiseCalibrationType">
-		<sequence>
+		<all minOccurs="0">
 			<element name="Transforms" type="tns:TransformsType" maxOccurs="1"/>
 			<element name="FloorData" type="tns:FloorDataType" maxOccurs="1"/>
-		</sequence>
+		</all>
 	</complexType>
 	
 	<complexType name="TransformsType">
@@ -20,13 +20,14 @@
 			<element name="Oculus_DK2-Kinect_1" type="tns:TransformsFieldsType"/>
 			<element name="Oculus_DK2-Kinect_2" type="tns:TransformsFieldsType"/>
 			<element name="Kinect_2-Kinect_1" type="tns:TransformsFieldsType"/>
+			<element name="Vive-Kinect_2" type="tns:TransformsFieldsType"/>
 		</all>
 	</complexType>
 	
 	<complexType name="FloorDataType">
 		<all minOccurs="0">
-			<element name="Kinect_2" type="tns:FloorDataFieldsType"/>
-			<element name="Kinect_1" type="tns:FloorDataFieldsType"/>
+			<element name="Kinect_2" type="tns:FloorDataFieldsType" maxOccurs="1"/>
+			<element name="Kinect_1" type="tns:FloorDataFieldsType" maxOccurs="1"/>
 		</all>
 	</complexType>	
 	

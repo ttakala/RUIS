@@ -134,6 +134,11 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 		}
 		return RUISCalibrationPhase.ShowResults;
 	}
+		
+	public override void PlaceSensorModels()
+	{
+
+	}
 	
 	private void UpdateFloorNormalAndDistance()
 	{

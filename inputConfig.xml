@@ -22,7 +22,18 @@
   <RazerSettings>
     <enabled value="false" />
   </RazerSettings>
-  <OculusDriftSettings>
-    <kinectDriftCorrectionIfAvailable value="false" />
-  </OculusDriftSettings>
+  <CoordinateSystemSettings>
+    <!--Below values will override the settings made in Unity Editor if you uncomment them.-->
+    <!--
+    <useMasterCoordinateSystem value="true" /> 
+    <masterCoordinateSystemSensor value="Kinect_2" />
+-->
+    <!-- Kinect_2, Kinect_1, Vive, PS_Move, HMD -->
+    <!--
+    <switchMasterToAvailableSensor value="true" />
+    <coordinateSystemLocationOffset x="0" y="0" z="0" />
+    <coordinateSystemYRotationOffset value="0" />
+    <setKinectOriginToFloor value="true" />
+-->
+  </CoordinateSystemSettings>
 </ns2:RUISInputManager>

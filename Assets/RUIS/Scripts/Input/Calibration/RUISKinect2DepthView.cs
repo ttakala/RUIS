@@ -187,8 +187,9 @@ public class RUISKinect2DepthView : MonoBehaviour
 				}
 			}
 		}
-		
-		texture.Apply();
+
+		if(texture)
+			texture.Apply();
 	}
 	
 	void drawLineBetweenJoints(ref Color[] mapPixels, Windows.Kinect.Body body, Windows.Kinect.JointType jointA, Windows.Kinect.JointType jointB) {

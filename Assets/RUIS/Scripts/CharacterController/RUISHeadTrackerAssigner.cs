@@ -118,10 +118,13 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					int foundTrackerScore = 0;
 					
 					// Give score to found head trackers
-					if(oculusDK2 && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OculusDK2)
+					if(Valve.VR.OpenVR.IsHmdPresent() && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.ViveHMD) // *** TODO HACK Valve API
+					{
+						foundTrackerScore = 8;
+					}
+					else if(oculusDK2 && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OculusDK2)
 					{
 						foundTrackerScore = 7;
-						print (trackerScript);
 					}
 					else if(psmove && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.PSMove)
 					{

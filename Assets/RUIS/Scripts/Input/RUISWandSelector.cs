@@ -2,8 +2,10 @@
 
 Content    :   Implements selection behavior for RUISWands
 Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -11,7 +13,6 @@ using UnityEngine;
 using System.Collections;
 
 [System.Serializable]
-[AddComponentMenu("RUIS/Input/RUISWandSelector")]
 public class RUISWandSelector : MonoBehaviour {
     public enum SelectionRayType {
         HeadToWand,
@@ -105,6 +106,8 @@ public class RUISWandSelector : MonoBehaviour {
     public void Update()
     {
         GameObject selectionGameObject = CheckForSelection();
+		if(!wand)
+			return;
         if (!selection)
         {
             if (selectionGameObject)
@@ -260,7 +263,8 @@ public class RUISWandSelector : MonoBehaviour {
 
     private void UpdateLineRenderer()
     {
-        if(!lineRenderer) return;
+		if(!lineRenderer || !wand)
+			return;
 
 //        lineRenderer.enabled = selection == null && selectionRayType == SelectionRayType.WandDirection;
 

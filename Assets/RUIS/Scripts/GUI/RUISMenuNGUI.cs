@@ -29,17 +29,18 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	private RUISInputManager inputManager;
 	private RUISDisplayManager displayManager;
+	private RUISCoordinateSystem coordinateSystem;
 	
 	public bool 	originalEnablePSMove,
 					originalEnableKinect, 
 					originalEnableKinect2, 
 					originalEnableJumpGesture,
-					originalEnableHydra, 
-					originalKinectDriftCorrection; 
+					originalEnableHydra;
+//					originalKinectDriftCorrection; 
 	
 	public string 	originalPSMoveIP;
 	public int		originalPSMovePort;
-	
+
 	private bool ruisMenuButtonDefined = true;
 	
 	public RUISJumpGestureRecognizer jumpGesture;
@@ -89,6 +90,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
+		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 
 		kinectOrigGUIPos = this.transform.Find ( "NGUIControls/Panel/selectAndConfigureDevices/Kinect").transform.localPosition;
 		kinect2OrigGUIPos = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2").transform.localPosition;
@@ -188,7 +190,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		{
 			case "Checkbox - Use Kinect": inputManager.enableKinect = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
 			case "Checkbox - Use Kinect 2":inputManager.enableKinect2 = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
-			case "Checkbox - Use Kinect Drift Correction": inputManager.kinectDriftCorrectionPreferred = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
+//			case "Checkbox - Use Kinect Drift Correction": inputManager.kinectDriftCorrectionPreferred = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
 			case "Checkbox - Use PSMove": inputManager.enablePSMove = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
 			case "Checkbox - Use Hydra":inputManager.enableRazerHydra = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
 		}
@@ -213,23 +215,41 @@ public class RUISMenuNGUI : MonoBehaviour {
 			case RUISMenuStates.selectAndConfigureDevices:
 				switch(clickedGameObject.name) 
 				{
-				
 					case "Button - Calibration": 
 						calibrationReady = false;
 						menuIsVisible = false;
 						inputManager.Export(inputManager.filename);
-						calibrationDropDownSelection = this.transform.Find (
-													"NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
-						
-						if(calibrationDropDownSelection.Contains("Oculus")) // TODO: Not the best way to be sure that we will calibrate Oculus Rift
-				   			enableOculusPositionalTracking();
-				   		
+						calibrationDropDownSelection = this.transform.Find(
+							"NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
+												
+						if(calibrationDropDownSelection.Contains("Oculus")) // *** HACK TODO: Not the best way to be sure that we will calibrate Oculus Rift
+									enableOculusPositionalTracking();
+
 						SaveInputChanges();
 						this.transform.parent = null;
-						DontDestroyOnLoad(this);
+		//						DontDestroyOnLoad(this);
 						currentMenuState = RUISMenuStates.calibration;
 						previousSceneId = Application.loadedLevel;
 						Hide3DGUI();
+
+								// Hacky way to pass information between loading scenes
+						RUISCalibrationProcessSettings.isCalibrating = true;
+						RUISCalibrationProcessSettings.devicePair = this.calibrationDropDownSelection;
+						RUISCalibrationProcessSettings.previousSceneId = Application.loadedLevel;
+						RUISCalibrationProcessSettings.enablePSMove = inputManager.enablePSMove;
+						RUISCalibrationProcessSettings.enableKinect = inputManager.enableKinect;
+						RUISCalibrationProcessSettings.enableKinect2 = inputManager.enableKinect2;
+						RUISCalibrationProcessSettings.jumpGestureEnabled = inputManager.jumpGestureEnabled;
+						RUISCalibrationProcessSettings.enableRazerHydra = inputManager.enableRazerHydra;
+						RUISCalibrationProcessSettings.PSMoveIP = inputManager.PSMoveIP;
+						RUISCalibrationProcessSettings.PSMovePort = inputManager.PSMovePort;
+						if(coordinateSystem)
+						{
+							RUISCalibrationProcessSettings.yawOffset = coordinateSystem.yawOffset;
+							RUISCalibrationProcessSettings.positionOffset = coordinateSystem.positionOffset;
+							RUISCalibrationProcessSettings.originalMasterCoordinateSystem = coordinateSystem.rootDevice;
+						}
+
 						Application.LoadLevel("calibration");
 					break;
 					
@@ -252,8 +272,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 						if (!Application.isEditor) System.Diagnostics.Process.GetCurrentProcess().Kill(); 
 						else Application.Quit();
 					break;
-				
-				}
+			
+			}
 			break;
 			
 			case RUISMenuStates.keyStoneConfiguration:
@@ -503,8 +523,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 			   originalEnableKinect == inputManager.enableKinect && 
 			   originalEnableKinect2 == inputManager.enableKinect2 && 
 			   originalEnableJumpGesture == inputManager.jumpGestureEnabled && 
-			   originalEnableHydra == inputManager.enableRazerHydra && 
-			   originalKinectDriftCorrection == inputManager.kinectDriftCorrectionPreferred) 
+			   originalEnableHydra == inputManager.enableRazerHydra)
+//			   && originalKinectDriftCorrection == inputManager.kinectDriftCorrectionPreferred) 
 			   {
 		   			infotext_Changes_saved.SetActive(true);
 					infotext_Changes_not_saved_yet.SetActive(false);
@@ -543,7 +563,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		originalEnableKinect2 = inputManager.enableKinect2;
 		originalEnableJumpGesture = inputManager.jumpGestureEnabled;
 		originalEnableHydra = inputManager.enableRazerHydra;
-		originalKinectDriftCorrection = inputManager.kinectDriftCorrectionPreferred;
+//		originalKinectDriftCorrection = inputManager.kinectDriftCorrectionPreferred;
 	}
 	
 	private void DiscardInputChanges()
@@ -564,7 +584,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		}
 		inputManager.jumpGestureEnabled = originalEnableJumpGesture;
 		inputManager.enableRazerHydra = originalEnableHydra;
-		inputManager.kinectDriftCorrectionPreferred = originalKinectDriftCorrection;
+//		inputManager.kinectDriftCorrectionPreferred = originalKinectDriftCorrection;
 		inputManager.PSMoveIP = originalPSMoveIP;
 		inputManager.PSMovePort = originalPSMovePort;
 	}
@@ -582,11 +602,11 @@ public class RUISMenuNGUI : MonoBehaviour {
 			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect2;
 			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked = inputManager.enablePSMove;
 			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked = inputManager.enableRazerHydra;
-			if(inputManager.enableKinect) 
-			{
-				this.transform.Find(
-					"NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").GetComponent<UICheckbox>().isChecked = inputManager.kinectDriftCorrectionPreferred;
-			}
+//			if(inputManager.enableKinect) 
+//			{
+//				this.transform.Find(
+//					"NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").GetComponent<UICheckbox>().isChecked = inputManager.kinectDriftCorrectionPreferred;
+//			}
 		}
 	}
 	
@@ -625,6 +645,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(isPositionTrackedOculusPresent && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - Oculus DK2");
 		if(isPositionTrackedOculusPresent && inputManager.enableKinect) dropDownChoices.Add ("Kinect - Oculus DK2");
 		if(isPositionTrackedOculusPresent && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - Oculus DK2");
+		if(Valve.VR.OpenVR.IsHmdPresent() && inputManager.enableKinect2) dropDownChoices.Add ("Vive - Kinect 2");
 		
 		if(dropDownChoices.Count == 0) 
 		{
@@ -639,36 +660,47 @@ public class RUISMenuNGUI : MonoBehaviour {
 		
 	}
 	
-	void OnGUI()
-	{
-		if(currentMenuState == RUISMenuStates.calibration && menuIsVisible) 
-		{
-			GUILayout.Window(0, new Rect(50, 50, 150, 200), DrawWindow, "RUIS");
-		}
-	}
-	
-	
-	void DrawWindow(int windowId)
-	{	
-		if(calibrationReady) 
-		{
-			GUILayout.Label("Calibration finished.");
-			GUILayout.Space(20);
-			if(GUILayout.Button("Exit calibration"))
-			{
-				Destroy(this.gameObject);
-				Application.LoadLevel(previousSceneId);
-			}
-		}
-		else 
-		{
-			GUILayout.Label("Calibration not finished yet.");
-			GUILayout.Space(20);
-			if(GUILayout.Button("Abort calibration"))
-			{
-				Destroy(this.gameObject);
-				Application.LoadLevel(previousSceneId);
-			}
-		}
-	}
+//	void OnGUI()
+//	{
+//		if(currentMenuState == RUISMenuStates.calibration && menuIsVisible) 
+//		{
+//			GUILayout.Window(0, new Rect(50, 50, 150, 200), DrawWindow, "RUIS");
+//		}
+//	}
+//
+//	void DrawWindow(int windowId)
+//	{	
+//		if(calibrationReady) 
+//		{
+//			GUILayout.Label("Calibration finished.");
+//			GUILayout.Space(20);
+//			if(GUILayout.Button("Exit calibration"))
+//			{
+//				RetrieveOriginalCoordinateSystemSettings();
+//				Destroy(this.gameObject);
+//				Application.LoadLevel(previousSceneId);
+//			}
+//		}
+//		else 
+//		{
+//			GUILayout.Label("Calibration not finished yet.");
+//			GUILayout.Space(20);
+//			if(GUILayout.Button("Abort calibration"))
+//			{
+//				RetrieveOriginalCoordinateSystemSettings();
+//				Destroy(this.gameObject);
+//				Application.LoadLevel(previousSceneId);
+//			}
+//		}
+//	}
+//
+//	void RetrieveOriginalCoordinateSystemSettings()
+//	{
+//		// Retrieve original coordinateSystem settings
+//		if(coordinateSystem)
+//		{
+//			coordinateSystem.rootDevice = orignalMasterDevice;
+//			coordinateSystem.applyToRootCoordinates = originalUseMasterCoordinateSystem;
+//		}
+//	}
 }

@@ -276,7 +276,19 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		}
 		return RUISCalibrationPhase.ShowResults;
 	}
-	
+
+	public override void PlaceSensorModels()
+	{
+		kinect1ModelObject.transform.rotation = kinect1PitchRotation;
+		kinect1ModelObject.transform.localPosition = new Vector3(0, kinect1DistanceFromFloor, 0);
+
+		oculusDK2CameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
+		oculusDK2CameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+
+		if(this.floorPlane)
+			this.floorPlane.transform.position = new Vector3(0, 0, 0);
+	}
+
 	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
 		// Source: http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
 		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
@@ -429,24 +441,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = kinect1DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;     
-		
-		kinect1ModelObject.transform.rotation = kinect1PitchRotation;
-		kinect1ModelObject.transform.localPosition = new Vector3(0, kinect1DistanceFromFloor, 0);
-		
-		oculusDK2CameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
-		oculusDK2CameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
-		
-		
-		/*
-		string devicePairName = RUISDevice.Kinect_1.ToString() + "-" + RUISDevice.Oculus_DK2.ToString();
-		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName] = transformMatrix;
-		
-		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
-		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
-		*/
-		
-		if(this.floorPlane)
-			this.floorPlane.transform.position = new Vector3(0, 0, 0);
+
 	}
 	
 	

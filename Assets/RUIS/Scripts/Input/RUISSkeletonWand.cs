@@ -2,15 +2,17 @@
 
 Content    :   A basic wand to use with a Kinect-tracked skeleton
 Authors    :   Mikael Matveinen, Heikki Heiskanen, Tuukka Takala
-Copyright  :   Copyright 2014 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen.
+               All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
 using UnityEngine;
 using System.Collections.Generic;
 
-[AddComponentMenu("RUIS/Input/RUISSkeletonWand")]
 public class RUISSkeletonWand : RUISWand
 {
 

@@ -2469,7 +2469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 0.75, z: 0}
   headPositionInput: 2
-  headRotationInput: 5
+  headRotationInput: 2
   mobileRazerBase: 0
   pickRotationSource: 1
   oculusID: 0

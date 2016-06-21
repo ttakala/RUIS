@@ -283,7 +283,19 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		}
 		return RUISCalibrationPhase.ShowResults;
 	}
-	
+
+	public override void PlaceSensorModels()
+	{
+		kinect2ModelObject.transform.rotation = kinect2PitchRotation;
+		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
+
+		oculusDK2CameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
+		oculusDK2CameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+
+		if(this.floorPlane)
+			this.floorPlane.transform.position = new Vector3(0, 0, 0);
+	}
+
 	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
 		// Source: http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
 		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
@@ -306,19 +318,19 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		timeSinceLastSample = 0;
 		
 		
-		Vector3 kinect2_sample = getSample (this.inputDevice1);
-		Vector3 oculusDK2_sample = getSample (this.inputDevice2);
+		Vector3 oculusDK2_sample = getSample (this.inputDevice1);
+		Vector3 kinect2_sample = getSample (this.inputDevice2);
 		
 		if (kinect2_sample == Vector3.zero || oculusDK2_sample == Vector3.zero) //Data not valid
 		{
 			return;
 		}
 		
-		samples_Kinect2.Add(oculusDK2_sample);
-		samples_OculusDK2.Add(kinect2_sample);
-		calibrationSpheres.Add(MonoBehaviour.Instantiate(calibrationSphere, oculusDK2_sample, Quaternion.identity) as GameObject);
+		samples_Kinect2.Add(kinect2_sample);
+		samples_OculusDK2.Add(oculusDK2_sample);
+		calibrationSpheres.Add(MonoBehaviour.Instantiate(calibrationSphere, kinect2_sample, Quaternion.identity) as GameObject);
 		numberOfSamplesTaken++;
-	} 
+	}
 	
 	
 	private Vector3 getSample(RUISDevice device) 
@@ -471,20 +483,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		                   
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2PitchRotation;     
-		
-		kinect2ModelObject.transform.rotation = kinect2PitchRotation;
-		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
-		
-		oculusDK2CameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
-		oculusDK2CameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
-		
-		/*
-		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
-		coordinateSystem.RUISCalibrationResultsInQuaternion[devicePairName] = rotationQuaternion;
-		*/
-		
-		if(this.floorPlane)
-			this.floorPlane.transform.position = new Vector3(0, 0, 0);
+
 	}
 	
 	

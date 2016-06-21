@@ -2,8 +2,10 @@
 
 Content    :   A class to manage the information from a PS Move controller
 Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -11,7 +13,6 @@ using UnityEngine;
 using System.Collections;
 
 
-[AddComponentMenu("RUIS/Input/RUISPSMoveController")]
 public class RUISPSMoveWand : RUISWand {
     public enum SelectionButton
     {
@@ -37,7 +38,7 @@ public class RUISPSMoveWand : RUISWand {
 
     protected RUISCoordinateSystem coordinateSystem;
 
-	public Renderer whereToCopyColor;
+//	public Renderer whereToCopyColor;
 	[Range(0f, 1f)]
 	public float rayColorAlpha = 1;
 	
@@ -57,8 +58,8 @@ public class RUISPSMoveWand : RUISWand {
         {
             coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
             if (!coordinateSystem)
-            {
-                Debug.LogError("Could not find RUISCoordinateSystem script! It should be located in RUIS->InputManager.");
+			{
+				Debug.LogError("Could not find " + typeof(RUISCoordinateSystem) + " script! It should be located in RUIS->InputManager.");
             }
         }
 	}
@@ -71,13 +72,13 @@ public class RUISPSMoveWand : RUISWand {
             transform.localRotation = localRotation;
         }
 
-        if (whereToCopyColor != null)
-        {
-            foreach (Material mat in whereToCopyColor.materials)
-            {
-                mat.color = color;
-            }
-        }
+//        if (whereToCopyColor != null)
+//        {
+//            foreach (Material mat in whereToCopyColor.materials)
+//            {
+//                mat.color = color;
+//            }
+//        }
     }
 
     void FixedUpdate()
@@ -238,8 +239,10 @@ public class RUISPSMoveWand : RUISWand {
 			}
         }
     }
-	
-	// Returns velocity in wand's local coordinate system, unaffected my parent's scale
+
+	/// <summary>
+	/// Returns velocity in wand's local coordinate system, unaffected my parent's scale
+	/// </summary>
     public Vector3 velocity
     {
         get
@@ -254,8 +257,10 @@ public class RUISPSMoveWand : RUISWand {
             //return TransformPosition(psMoveWrapper.velocity[controllerId]);
         }
     }
-	
-	// Returns acceleration in wand's local coordinate system, unaffected my parent's scale
+
+	/// <summary>
+	/// Returns acceleration in wand's local coordinate system, unaffected my parent's scale
+	/// </summary>
     public Vector3 acceleration
     {
         get
@@ -279,21 +284,24 @@ public class RUISPSMoveWand : RUISWand {
         }
     }
 
-	// Returns angularVelocity in wand's local coordinate system, unaffected by parent's scale
+	/// <summary>
+	/// Returns angularVelocity in wand's local coordinate system, unaffected my parent's scale
+	/// </summary>
     public Vector3 angularVelocity
     {
         get
         {	
-			// If the wand has a parent, we need to apply its transformation first
-			/* if (transform.parent)
-				return transform.parent.TransformDirection(
-					coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]));
-			else */
-			return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularVelocity[controllerId]);
+			// *** HACK TODO test that this still works
+			Vector3 newVelocity = psMoveWrapper.angularVelocity[controllerId];
+			newVelocity.x = -newVelocity.x;
+			newVelocity.y = -newVelocity.y;
+			return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.PS_Move);
         }
 	}
 
-	// Returns angularAcceleration in wand's local coordinate system, unaffected my parent's scale
+	/// <summary>
+	/// Returns angularAcceleration in wand's local coordinate system, unaffected my parent's scale
+	/// </summary>
     public Vector3 angularAcceleration
     {
         get
@@ -303,11 +311,16 @@ public class RUISPSMoveWand : RUISWand {
 				return transform.parent.TransformDirection(
 					coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularAcceleration[controllerId]));
 			else */
-			return coordinateSystem.ConvertMoveAngularVelocity(psMoveWrapper.angularAcceleration[controllerId]);
+			Vector3 newVelocity = psMoveWrapper.angularAcceleration[controllerId];
+			newVelocity.x = -newVelocity.x;
+			newVelocity.y = -newVelocity.y;
+			return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.PS_Move);
         }
     }
-	
-	// Returns handlePosition in wand's local coordinate system, unaffected my parent's scale
+
+	/// <summary>
+	/// Returns handlePosition in wand's local coordinate system, unaffected my parent's scale
+	/// </summary>
     public Vector3 handlePosition
     {
         get
@@ -315,8 +328,10 @@ public class RUISPSMoveWand : RUISWand {
             return TransformPosition(psMoveWrapper.handlePosition[controllerId]);
         }
     }
-	
-	// Returns handleVelocity in wand's local coordinate system, unaffected my parent's scale
+
+	/// <summary>
+	/// Returns handleVelocity in wand's local coordinate system, unaffected my parent's scale
+	/// </summary>
     public Vector3 handleVelocity
     {
         get
@@ -325,7 +340,9 @@ public class RUISPSMoveWand : RUISWand {
         }
 	}
 
-	// Returns handleAcceleration in wand's local coordinate system, unaffected my parent's scale
+	/// <summary>
+	/// Returns handleAcceleration in wand's local coordinate system, unaffected my parent's scale
+	/// </summary>
     public Vector3 handleAcceleration
     {
         get
@@ -369,19 +386,22 @@ public class RUISPSMoveWand : RUISWand {
 		set { SetColor(value); } }
 
     public float triggerValue { get { return psMoveWrapper.valueT[controllerId] / 255.0f; } }
-	
-	// TUUKKA:
+
     private Vector3 TransformVelocity(Vector3 value)
     {
-		return coordinateSystem.ConvertMoveVelocity(value);
+		Vector3 newVelocity = new Vector3(value.x, value.y, -value.z);
+		newVelocity = newVelocity * RUISCoordinateSystem.moveToUnityScale;
+		return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.PS_Move);
     }
 	
     private Vector3 TransformPosition(Vector3 value)
     {
 		return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawPSMoveLocation(value), RUISDevice.PS_Move);
     }
-	
-	// Returns angularVelocity in wand's local coordinate system
+
+	/// <summary>
+	/// Returns angularVelocity in wand's local coordinate system, unaffected my parent's scale
+	/// </summary>
     public override Vector3 GetAngularVelocity()
     {
         return angularVelocity;

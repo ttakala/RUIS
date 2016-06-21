@@ -2,8 +2,10 @@
 
 Content    :   A class to manage the information from a Razer Hydra controller
 Authors    :   Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -31,8 +33,6 @@ public class RUISRazerWand : RUISWand {
 	
     public Color wandColor = Color.white;
     public override Color color { get { return wandColor; } }
-
-    public Renderer whereToCopyColor;
 
 	public void Awake ()
     {
@@ -83,15 +83,6 @@ public class RUISRazerWand : RUISWand {
 			
             transform.localPosition = movingBaseRotation * localPosition + movingBasePosition;
             transform.localRotation = movingBaseRotation * localRotation;
-        }
-
-
-        if (whereToCopyColor != null)
-        {
-            foreach (Material mat in whereToCopyColor.materials)
-            {
-                mat.color = color;
-            }
         }
     }
 
