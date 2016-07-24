@@ -16,21 +16,24 @@ public class RUISCamera : MonoBehaviour {
     [HideInInspector]
     public bool isKeystoneCorrected;
 
+	[HideInInspector]
 	public Camera[] camerasInChildren;
 
+	[HideInInspector]
     public Camera centerCamera; //the camera used for mono rendering
+	[HideInInspector]
     public Camera leftCamera;
+	[HideInInspector]
     public Camera rightCamera;
+	[HideInInspector]
 	public Camera keystoningCamera;
 
 	[HideInInspector]
-	public string centerCameraName = "CenterEyeAnchor";
+	public string centerCameraName = "CenterCamera";
 	[HideInInspector]
-	public string leftCameraName   = "LeftEyeAnchor";
+	public string leftCameraName   = "LeftCamera";
 	[HideInInspector]
-	public string rightCameraName  = "RightEyeAnchor";
-	[HideInInspector]
-	public string trackingSpaceName  = "TrackingSpace";
+	public string rightCameraName  = "RightCamera";
 
     [HideInInspector]
     public RUISDisplay associatedDisplay;
@@ -38,7 +41,11 @@ public class RUISCamera : MonoBehaviour {
     private Rect normalizedScreenRect;
     private float aspectRatio;
 
-    public float horizontalFOV = 60; // TODO setter that sets all cameras
+	[Range(0, 179)]
+	[Tooltip("Horizontal field of view for center, left, and right cameras. Only applies if the camera is not rendering to a head-mounted display.")]
+	public float horizontalFOV = 60; // TODO setter that sets all cameras
+	[Range(0, 179)]
+	[Tooltip("Vertical field of view for center, left, and right cameras. Only applies if the camera is not rendering to a head-mounted display.")]
     public float verticalFOV = 40;
 
     public LayerMask cullingMask = 0xFFFFFF;
@@ -49,9 +56,11 @@ public class RUISCamera : MonoBehaviour {
     private RUISDisplay.StereoType oldStereoTypeValue;
 
     RUISKeystoningConfiguration keystoningConfiguration;
-	
+
+	[HideInInspector]
 	public float near = 0.3f; // TODO setter that sets all cameras
-    public float far = 1000;
+	[HideInInspector]
+	public float far = 1000;
 	
 	private float frustumWidth = 1;
 	private float frustumHeight = 1;
@@ -175,28 +184,12 @@ public class RUISCamera : MonoBehaviour {
 			}
 
 			// *** TODO HACK Create an abstract HMD class and implementations for each HMD model
-			if(    Valve.VR.OpenVR.IsHmdPresent() 
-				&& centerCamera.GetComponentInChildren<SteamVR_Camera>() 
-				&& centerCamera.GetComponentInChildren<SteamVR_Camera>().gameObject.GetComponent<Camera>() ) 
-			{
-				centerCamera.clearFlags = CameraClearFlags.Nothing;
-				centerCamera.cullingMask = 0;
-				centerCamera.orthographic = true;
-				centerCamera.orthographicSize = 1;
-				centerCamera.nearClipPlane = 0;
-				centerCamera.farClipPlane = 1;
-				centerCamera.rect = new Rect(0, 0, 1, 1);
-				centerCamera.depth = 0;
-				centerCamera.renderingPath = RenderingPath.UsePlayerSettings;
-				centerCamera.useOcclusionCulling = false;
-				centerCamera.hdr = false;
-
-				return;
-			} 
-			else
-			{
-				// Disable unnecessary OpenVR components	
-			}
+//			if(    Valve.VR.OpenVR.IsHmdPresent() 
+//				&& centerCamera.GetComponentInChildren<SteamVR_Camera>() ) 
+//			{
+//				SteamVR_Camera steamCamera = centerCamera.GetComponentInChildren<SteamVR_Camera>();
+//				return;
+//			} 
 		}
 		
 
@@ -536,24 +529,22 @@ public class RUISCamera : MonoBehaviour {
 		        }
 		
 			
-		        if (associatedDisplay.stereoType == RUISDisplay.StereoType.SideBySide)
-		        {
-		            leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth / 2, relativeHeight);
-		            rightCamera.rect = new Rect(relativeLeft + relativeWidth / 2, relativeBottom, relativeWidth / 2, relativeHeight);
-		        }
-		        else if (associatedDisplay.stereoType == RUISDisplay.StereoType.TopAndBottom)
-		        {
-		            leftCamera.rect = new Rect(relativeLeft, relativeBottom + relativeHeight / 2, relativeWidth, relativeHeight / 2);
-		            rightCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight / 2);
-		        }
-		        else
-		        {
-		            leftCamera.rect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
-		            rightCamera.rect = new Rect(leftCamera.rect);
-				}
+				if (associatedDisplay.isStereo)
+				{
+					if (associatedDisplay.stereoType == RUISDisplay.StereoType.SideBySide) {
+						leftCamera.rect = new Rect (relativeLeft, relativeBottom, relativeWidth / 2, relativeHeight);
+						rightCamera.rect = new Rect (relativeLeft + relativeWidth / 2, relativeBottom, relativeWidth / 2, relativeHeight);
+					} else if (associatedDisplay.stereoType == RUISDisplay.StereoType.TopAndBottom) {
+						leftCamera.rect = new Rect (relativeLeft, relativeBottom + relativeHeight / 2, relativeWidth, relativeHeight / 2);
+						rightCamera.rect = new Rect (relativeLeft, relativeBottom, relativeWidth, relativeHeight / 2);
+					} else {
+						leftCamera.rect = new Rect (relativeLeft, relativeBottom, relativeWidth, relativeHeight);
+						rightCamera.rect = new Rect (leftCamera.rect);
+					}
 
-				leftCamera.aspect = aspectRatio;
-				rightCamera.aspect = aspectRatio;
+					leftCamera.aspect = aspectRatio;
+					rightCamera.aspect = aspectRatio;
+				}
 			}
 		}
 		
@@ -600,7 +591,8 @@ public class RUISCamera : MonoBehaviour {
 
     public void LoadKeystoningFromXML(XmlDocument xmlDoc)
     {
-        keystoningConfiguration.LoadFromXML(xmlDoc);
+		if(keystoningConfiguration)
+	        keystoningConfiguration.LoadFromXML(xmlDoc);
     }
 
     public void SaveKeystoningToXML(XmlElement displayXmlElement)
