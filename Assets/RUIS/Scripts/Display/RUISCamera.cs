@@ -48,6 +48,7 @@ public class RUISCamera : MonoBehaviour {
 	[Tooltip("Vertical field of view for center, left, and right cameras. Only applies if the camera is not rendering to a head-mounted display.")]
     public float verticalFOV = 40;
 
+	[HideInInspector]
     public LayerMask cullingMask = 0xFFFFFF;
 
     public bool isStereo { get { return associatedDisplay.isStereo; } }
@@ -182,6 +183,12 @@ public class RUISCamera : MonoBehaviour {
 				if(GetComponent<OVRCameraRig>())
 					GetComponent<OVRCameraRig>().enabled = false;
 			}
+
+//			if(Valve.VR.OpenVR.IsHmdPresent() && SteamVR.instance != null)
+//				print (SteamVR.instance.hmd_ModelNumber);
+//
+//			if(UnityEngine.VR.VRDevice.isPresent)
+//				print (UnityEngine.VR.VRDevice.model);
 
 			// *** TODO HACK Create an abstract HMD class and implementations for each HMD model
 //			if(    Valve.VR.OpenVR.IsHmdPresent() 

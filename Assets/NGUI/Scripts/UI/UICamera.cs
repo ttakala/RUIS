@@ -30,7 +30,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Camera))]
 public class UICamera : MonoBehaviour
 {
-	// CORE HACK by heikki.j.heiskanen@aalto.fi
+	// CORE HACK by Tuukka Takala
 	public static RUISCamera ruisCamera;
 	// END CORE HACK
 	
@@ -498,19 +498,24 @@ public class UICamera : MonoBehaviour
 			// If it's outside the camera's viewport, do nothing
 			if (pos.x < 0f || pos.x > 1f || pos.y < 0f || pos.y > 1f) continue;
 
-			// CORE HACK by heikki.j.heiskanen@aalto.fi
-//			if(ruisCamera != null && ruisCamera.associatedDisplay != null) 
-//			{
-//				if(ruisCamera.associatedDisplay.enableOculusRift) 
-//				{
-//					inPos = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(inPos);
-//					//inPos *= 2.5f;	
-//				}
-//			}
+			// CORE HACK by Tuukka Takala
+			Ray ray;
+			if(ruisCamera != null && ruisCamera.associatedDisplay != null) 
+			{
+				if(ruisCamera.associatedDisplay.enableOculusRift) 
+				{
+					inPos = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(inPos);
+					ray = currentCamera.ViewportPointToRay(new Vector3(inPos.x, inPos.y, 0));
+				}
+				else
+					ray = currentCamera.ScreenPointToRay(inPos);
+			}
+			else
+				ray = currentCamera.ScreenPointToRay(inPos);
 			// END CORE HACK
 
 			// Cast a ray into the screen
-			Ray ray = currentCamera.ScreenPointToRay(inPos);
+//			Ray ray = currentCamera.ScreenPointToRay(inPos);
 
 			// Raycast into the screen
 			int mask = currentCamera.cullingMask & (int)cam.eventReceiverMask;
@@ -807,9 +812,11 @@ public class UICamera : MonoBehaviour
 	// CORE HACK by heikki.j.heiskanen@aalto.fi
 	void Start() 
 	{
-		if(this.transform.parent) {
+		if(this.transform.parent) 
+		{
 			ruisCamera = this.transform.parent.GetComponent<RUISCamera>();
-			if(!ruisCamera) ruisCamera = this.transform.GetComponent<RUISCamera>(); // Non stereo camera
+			if(!ruisCamera)
+				ruisCamera = this.transform.GetComponent<RUISCamera>(); // Non stereo camera
 		}
 	}
 	// END CORE HACK

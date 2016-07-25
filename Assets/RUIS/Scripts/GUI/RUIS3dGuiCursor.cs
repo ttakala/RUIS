@@ -112,7 +112,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 		else 
 		{
 			mouseInputCoordinates = Input.mousePosition;
-			instancedCursor.transform.rotation = ruisCamera.transform.rotation;	
+			instancedCursor.transform.rotation = ruisCamera.transform.rotation;
 		}
 
 		// HACK for MecanimBlendedCharacter: Keep cursor visible size even if character is scaled
@@ -150,8 +150,14 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 					continue;
 				} 
 			*/
-			
-			Ray ray = camera.GetComponent<Camera>().ScreenPointToRay(mouseInputCoordinates);
+
+			Ray ray;
+			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift)
+			{
+				ray = camera.GetComponent<Camera>().ViewportPointToRay(new Vector3(mouseInputCoordinates.x/Screen.width, mouseInputCoordinates.y/Screen.height, 0));
+			}
+			else
+				ray = camera.GetComponent<Camera>().ScreenPointToRay(mouseInputCoordinates);
 
 			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isObliqueFrustum)
 			{

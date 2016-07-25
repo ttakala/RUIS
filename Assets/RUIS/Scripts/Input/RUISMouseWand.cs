@@ -107,21 +107,21 @@ public class RUISMouseWand : RUISWand {
 		Ray wandRay = displayManager.ScreenPointToRay(Input.mousePosition);
 		wandRay.origin =  wandRay.origin + (wandRay.direction * distanceFromCameraLerped);
         
-        if (wandRay.direction != Vector3.zero)
-        {
+	        if (wandRay.direction != Vector3.zero)
+	        {
 			// TUUKKA:
 			if (GetComponent<Rigidbody>())
-        	{
-            	GetComponent<Rigidbody>().MovePosition(wandRay.origin);
-            	GetComponent<Rigidbody>().MoveRotation(Quaternion.LookRotation(wandRay.direction));
+	        	{
+		            	GetComponent<Rigidbody>().MovePosition(wandRay.origin);
+		            	GetComponent<Rigidbody>().MoveRotation(Quaternion.LookRotation(wandRay.direction));
 			}
 			else
 			{
-				// TUUKKA: This was the original code 
-	            transform.position = wandRay.origin;
-	            transform.rotation = Quaternion.LookRotation(wandRay.direction);
+			// TUUKKA: This was the original code 
+		            transform.position = wandRay.origin;
+		            transform.rotation = Quaternion.LookRotation(wandRay.direction);
 			}
-        }
+	        }
 	}
 
     public override bool SelectionButtonWasPressed()

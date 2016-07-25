@@ -200,10 +200,9 @@ public class RUISDisplayManager : MonoBehaviour {
         }
     }
 
-	public Ray ScreenPointToRay(Vector2 screenPoint)
+    public Ray ScreenPointToRay(Vector2 screenPoint)
     {
         RUISDisplay display = GetDisplayForScreenPoint(screenPoint);
-
 
         if (display)
         {
@@ -211,14 +210,13 @@ public class RUISDisplayManager : MonoBehaviour {
 			
             if (camera)
             {   
-				return camera.ScreenPointToRay(screenPoint);
-//				if(display.enableOculusRift)
-//				{
-//					screenPoint = display.ConvertOculusScreenPoint(screenPoint);
-//					return camera.ScreenPointToRay(screenPoint);
-//				}
-//				else
-//                	return camera.ScreenPointToRay(screenPoint);
+		if(display.enableOculusRift)
+		{
+			screenPoint = display.ConvertOculusScreenPoint(screenPoint);
+			return camera.ViewportPointToRay(new Vector3(screenPoint.x, screenPoint.y, 0));
+		}
+		else
+			return camera.ScreenPointToRay(screenPoint);
             }
         }
          
@@ -239,22 +237,25 @@ public class RUISDisplayManager : MonoBehaviour {
 
     public RUISDisplay GetDisplayForScreenPoint(Vector2 screenPoint/*, ref Vector2 relativeScreenPoint*/)
     {
-        //relativeScreenPoint = Vector2.zero;
+	//relativeScreenPoint = Vector2.zero;
 
-         int currentResolutionX = 0;
-         foreach (RUISDisplay display in displays)
-         {
+	 int currentResolutionX = 0;
+	 foreach (RUISDisplay display in displays)
+	 {
 
-             if (currentResolutionX + display.rawResolutionX >= screenPoint.x)
-             {
-                 //relativeScreenPoint = new Vector2(screenPoint.x - currentResolutionX, totalRawResolutionY - screenPoint.y);
-                 return display;
-             }
+	     if (currentResolutionX + display.rawResolutionX >= screenPoint.x)
+	     {
+	         //relativeScreenPoint = new Vector2(screenPoint.x - currentResolutionX, totalRawResolutionY - screenPoint.y);
+	         return display;
+	     }
 
-             currentResolutionX += display.rawResolutionX;
-         }
+	     currentResolutionX += display.rawResolutionX;
+	 }
 
-         return null;
+	if(displays != null && displays[0])
+		return displays[0];
+	else
+		return null;
     }
     /*
     public Camera GetCameraForScreenPoint(Vector2 screenPoint)
@@ -363,13 +364,8 @@ public class RUISDisplayManager : MonoBehaviour {
 		{
 			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
 			{
-				// *** TODO HACK Ugly, find a better way to access the view rendering camera on Vive and other HMDs that use render to texture. Or wait for 5.4? 
-				if(Valve.VR.OpenVR.IsHmdPresent() && displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.GetComponentInChildren<SteamVR_Camera>())
-				{
-					displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.GetComponentInChildren<SteamVR_Camera>().gameObject.AddComponent<UICamera>();
-				}
-				else
-					displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.AddComponent<UICamera>();
+
+				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.AddComponent<UICamera>();
 			}
 			else
 				Debug.LogError(	  "The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
@@ -401,13 +397,8 @@ public class RUISDisplayManager : MonoBehaviour {
 		string tertiaryMenuParent  = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCameraName;
 		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
 		{
-			// *** TODO HACK Ugly, find a better way to access the view rendering camera on Vive and other HMDs that use render to texture. Or wait for 5.4? 
-			if(Valve.VR.OpenVR.IsHmdPresent() && displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.GetComponentInChildren<SteamVR_Camera>())
-			{
-				ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.GetComponentInChildren<SteamVR_Camera>().transform;
-			}
-			else
-				ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.transform;
+
+			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.transform;
 		}
 		else 
 		{
