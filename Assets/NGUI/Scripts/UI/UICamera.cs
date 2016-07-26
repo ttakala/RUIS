@@ -30,7 +30,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Camera))]
 public class UICamera : MonoBehaviour
 {
-	// CORE HACK by Tuukka Takala
+	// CORE HACK by heikki.j.heiskanen@aalto.fi
 	public static RUISCamera ruisCamera;
 	// END CORE HACK
 	
@@ -504,8 +504,8 @@ public class UICamera : MonoBehaviour
 			{
 				if(ruisCamera.associatedDisplay.enableOculusRift) 
 				{
-					inPos = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(inPos);
-					ray = currentCamera.ViewportPointToRay(new Vector3(inPos.x, inPos.y, 0));
+					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
+					ray = RUISDisplayManager.HMDScreenPointToRay(inPos, currentCamera);
 				}
 				else
 					ray = currentCamera.ScreenPointToRay(inPos);

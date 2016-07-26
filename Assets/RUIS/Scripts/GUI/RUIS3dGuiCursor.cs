@@ -152,12 +152,16 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			*/
 
 			Ray ray;
-			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift)
+			if(camera.GetComponent<Camera>())
 			{
-				ray = camera.GetComponent<Camera>().ViewportPointToRay(new Vector3(mouseInputCoordinates.x/Screen.width, mouseInputCoordinates.y/Screen.height, 0));
-			}
-			else
-				ray = camera.GetComponent<Camera>().ScreenPointToRay(mouseInputCoordinates);
+				if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift)
+				{
+					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
+					ray = RUISDisplayManager.HMDScreenPointToRay(mouseInputCoordinates, camera.GetComponent<Camera>());
+				} else
+					ray = camera.GetComponent<Camera>().ScreenPointToRay(mouseInputCoordinates);
+			} else
+				ray = new Ray();
 
 			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isObliqueFrustum)
 			{

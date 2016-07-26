@@ -69,7 +69,8 @@ public class RUISCamera : MonoBehaviour {
 //	private float frustumBottom = 0;
 //	private float topPlusBottom = 1;
 	
-	public Vector3 KeystoningHeadTrackerPosition {
+	public Vector3 KeystoningHeadTrackerPosition 
+	{
 		get
 		{
 			if(associatedDisplay && associatedDisplay.headTracker){
@@ -231,7 +232,8 @@ public class RUISCamera : MonoBehaviour {
 		rightCamera.cullingMask = cullingMask;
 	}
 	
-	public void Start () {
+	public void Start () 
+	{
 		if (!associatedDisplay)
 		{
 			Debug.LogError(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, "
@@ -307,7 +309,8 @@ public class RUISCamera : MonoBehaviour {
 		}
 	}
 	
-	public void Update () {
+	public void Update () 
+	{
 		
 		if (oldStereoValue != associatedDisplay.isStereo)
 		{
@@ -322,7 +325,8 @@ public class RUISCamera : MonoBehaviour {
 	
 	public void LateUpdate()
 	{
-		if(associatedDisplay.enableOculusRift){
+		if(associatedDisplay.enableOculusRift)
+		{
 			return;
 		}
 		

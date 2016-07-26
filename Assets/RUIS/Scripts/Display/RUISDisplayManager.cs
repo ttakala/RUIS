@@ -10,26 +10,28 @@ Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+
 //using Ovr;
 
-public class RUISDisplayManager : MonoBehaviour {
-    public List<RUISDisplay> displays;
-    public GameObject stereoCamera;
-    public Camera monoCamera;
-    public int totalResolutionX = 0;
-    public int totalResolutionY = 0;
-    public int totalRawResolutionX = 0;
-    public int totalRawResolutionY = 0;
+public class RUISDisplayManager : MonoBehaviour
+{
+	public List<RUISDisplay> displays;
+	public GameObject stereoCamera;
+	public Camera monoCamera;
+	public int totalResolutionX = 0;
+	public int totalResolutionY = 0;
+	public int totalRawResolutionX = 0;
+	public int totalRawResolutionY = 0;
 
-//    public bool allowResolutionDialog;
+	//    public bool allowResolutionDialog;
 
 	public GameObject ruisMenuPrefab;
 	public GameObject menuCursorPrefab;
 	public int menuLayer = 0;
 	public int guiDisplayChoice = 0;
 	
-	public float guiX;  
-	public float guiY; 
+	public float guiX;
+	public float guiY;
 	public float guiZ;
 	
 	public float guiScaleX = 1;
@@ -37,32 +39,32 @@ public class RUISDisplayManager : MonoBehaviour {
 	public bool hideMouseOnPlay = false;
 
 	private bool hasHeadMountedDisplay = false;
-	
-    public class ScreenPoint
-    {
-        public Vector2 coordinates;
-        public Camera camera;
-    }
 
-	void Start () 
+	public class ScreenPoint
+	{
+		public Vector2 coordinates;
+		public Camera camera;
+	}
+
+	void Start()
 	{
 
-        CalculateTotalResolution();
+		CalculateTotalResolution();
 
-        if (Application.isEditor)
-        {
-            UpdateResolutionsOnTheFly();
-        }
+		if(Application.isEditor)
+		{
+			UpdateResolutionsOnTheFly();
+		}
 		
 		hasHeadMountedDisplay = HasHeadMountedDisplay();
 
 
-        UpdateDisplays();
+		UpdateDisplays();
 
-        DisableUnlinkedCameras();
+		DisableUnlinkedCameras();
 
 
-        LoadDisplaysFromXML();
+		LoadDisplaysFromXML();
 
 		// Second substitution because displays might have been updated via XML etc.
 		hasHeadMountedDisplay = HasHeadMountedDisplay();
@@ -70,12 +72,11 @@ public class RUISDisplayManager : MonoBehaviour {
 		// *** TODO HACK Better way to detect Oculus display
 		if(UnityEngine.VR.VRDevice.isPresent && UnityEngine.VR.VRDevice.model != null && UnityEngine.VR.VRDevice.model.Contains("Oculus"))
 		{
-			if(GetComponent<OVRManager>()) 
+			if(GetComponent<OVRManager>())
 			{
 				StartCoroutine(ForceOculusSettings(1.0f));
 			}
-		}
-		else 
+		} else
 		{
 			// Disable OVRManager script if there are no Oculus Rift displays
 			if(GetComponent<OVRManager>())
@@ -88,7 +89,7 @@ public class RUISDisplayManager : MonoBehaviour {
 	}
 
 	// TODO: Depends on OVR version
-	IEnumerator ForceOculusSettings(float waitTime) 
+	IEnumerator ForceOculusSettings(float waitTime)
 	{
 		yield return new WaitForSeconds(waitTime);
 		OVRManager.DismissHSWDisplay();
@@ -108,29 +109,29 @@ public class RUISDisplayManager : MonoBehaviour {
 //		}
 	}
 
-//	public bool getOculusLowPersistence()
-//	{
-//		uint caps = OVRManager.capiHmd.GetEnabledCaps();
-//		return (caps & (uint)HmdCaps.LowPersistence) != 0; //06to08
-//	}
+	//	public bool getOculusLowPersistence()
+	//	{
+	//		uint caps = OVRManager.capiHmd.GetEnabledCaps();
+	//		return (caps & (uint)HmdCaps.LowPersistence) != 0; //06to08
+	//	}
 
-//	public void setOculusLowPersistence(bool enabled)
-//	{
-//		if(OVRManager.capiHmd == null)
-//			return;
-//
-//		uint caps = OVRManager.capiHmd.GetEnabledCaps(); //06to08
-//		
-//		if(enabled)
-//			OVRManager.capiHmd.SetEnabledCaps(caps | (uint)HmdCaps.LowPersistence); //06to08
-//		else
-//			OVRManager.capiHmd.SetEnabledCaps(caps & ~(uint)HmdCaps.LowPersistence); //06to08
-//
-//		return;
-//	}
+	//	public void setOculusLowPersistence(bool enabled)
+	//	{
+	//		if(OVRManager.capiHmd == null)
+	//			return;
+	//
+	//		uint caps = OVRManager.capiHmd.GetEnabledCaps(); //06to08
+	//
+	//		if(enabled)
+	//			OVRManager.capiHmd.SetEnabledCaps(caps | (uint)HmdCaps.LowPersistence); //06to08
+	//		else
+	//			OVRManager.capiHmd.SetEnabledCaps(caps & ~(uint)HmdCaps.LowPersistence); //06to08
+	//
+	//		return;
+	//	}
 	
-    void Update()
-    {
+	void Update()
+	{
 		// Toggle Oculus LowPersistence mode
 //		if(Input.GetKeyDown(KeyCode.Backspace))
 //		{
@@ -144,36 +145,36 @@ public class RUISDisplayManager : MonoBehaviour {
 //			}
 //		}
 
-        if (Application.isEditor && (Screen.width != totalRawResolutionX || Screen.height != totalRawResolutionY))
-        {
-            UpdateResolutionsOnTheFly();
-            UpdateDisplays();
-        }
-    }	
+		if(Application.isEditor && (Screen.width != totalRawResolutionX || Screen.height != totalRawResolutionY))
+		{
+			UpdateResolutionsOnTheFly();
+			UpdateDisplays();
+		}
+	}
 
-    public void UpdateDisplays()
-    {
-        CalculateTotalResolution();
+	public void UpdateDisplays()
+	{
+		CalculateTotalResolution();
 
-        int currentResolutionX = 0;
-        foreach (RUISDisplay display in displays)
-        {
-            display.SetupViewports(currentResolutionX, new Vector2(totalRawResolutionX, totalRawResolutionY));
-            currentResolutionX += display.rawResolutionX;
-        }
+		int currentResolutionX = 0;
+		foreach(RUISDisplay display in displays)
+		{
+			display.SetupViewports(currentResolutionX, new Vector2(totalRawResolutionX, totalRawResolutionY));
+			currentResolutionX += display.rawResolutionX;
+		}
 
-        if (displays.Count > 1 || (displays.Count == 1 /* && !allowResolutionDialog */))
-        {
+		if(displays.Count > 1 || (displays.Count == 1 /* && !allowResolutionDialog */))
+		{
 			if(!hasHeadMountedDisplay) // TODO: if external oculus mode, and we have multiple displays, then execute below clause anyway
 			{
 				Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, false);
 			}
-        }
-    }
+		}
+	}
 
 	public bool HasHeadMountedDisplay()
 	{
-		foreach (RUISDisplay display in displays)
+		foreach(RUISDisplay display in displays)
 		{
 			if(display.linkedCamera && display.enableOculusRift)
 			{
@@ -183,81 +184,117 @@ public class RUISDisplayManager : MonoBehaviour {
 		return false;
 	}
 
-    public void CalculateTotalResolution()
-    {
-        totalResolutionX = 0;
-        totalResolutionY = 0;
-        totalRawResolutionX = 0;
-        totalRawResolutionY = 0;
+	public void CalculateTotalResolution()
+	{
+		totalResolutionX = 0;
+		totalResolutionY = 0;
+		totalRawResolutionX = 0;
+		totalRawResolutionY = 0;
 
-        foreach (RUISDisplay display in displays)
-        {
-            totalResolutionX += display.resolutionX;
-            totalResolutionY = Mathf.Max(totalResolutionY, display.resolutionY);
-
-            totalRawResolutionX += display.rawResolutionX;
-            totalRawResolutionY = Mathf.Max(totalRawResolutionY, display.rawResolutionY);
-        }
-    }
-
-    public Ray ScreenPointToRay(Vector2 screenPoint)
-    {
-        RUISDisplay display = GetDisplayForScreenPoint(screenPoint);
-
-        if (display)
-        {
-            Camera camera = display.GetCameraForScreenPoint(screenPoint);
-			
-            if (camera)
-            {   
-		if(display.enableOculusRift)
+		foreach(RUISDisplay display in displays)
 		{
-			screenPoint = display.ConvertOculusScreenPoint(screenPoint);
-			return camera.ViewportPointToRay(new Vector3(screenPoint.x, screenPoint.y, 0));
+			totalResolutionX += display.resolutionX;
+			totalResolutionY = Mathf.Max(totalResolutionY, display.resolutionY);
+
+			totalRawResolutionX += display.rawResolutionX;
+			totalRawResolutionY = Mathf.Max(totalRawResolutionY, display.rawResolutionY);
 		}
-		else
-			return camera.ScreenPointToRay(screenPoint);
-            }
-        }
+	}
+
+	// *** TODO remove this hack when Camera.ScreenPointToRay() works again
+	static public Ray HMDScreenPointToRay(Vector2 screenPoint, Camera cam)
+	{
+		Ray ray;
+
+		if(!cam)
+			return new Ray();
+
+		float widthFactor = 1;
+		float heightFactor = 1;
+		float xOffset = 0;
+		float yOffset = 0;
+		float windowAspect = (float) Screen.width/Screen.height;
+		float eyeTextureAspect = (float) UnityEngine.VR.VRSettings.eyeTextureWidth / UnityEngine.VR.VRSettings.eyeTextureHeight;
+		if(windowAspect < eyeTextureAspect)
+		{
+			widthFactor = windowAspect / eyeTextureAspect;
+			xOffset = 0.5f*(eyeTextureAspect - windowAspect)/eyeTextureAspect;
+		} else
+		{
+			heightFactor = eyeTextureAspect / windowAspect;
+			yOffset = 0.5f*(windowAspect - eyeTextureAspect)/windowAspect;
+		}
+		ray = new Ray(	cam.transform.TransformPoint(Vector3.right * (-cam.stereoSeparation)), 
+				cam.cameraToWorldMatrix.MultiplyPoint(new Vector3(	2*( widthFactor*screenPoint.x/Screen.width  - 0.5f + xOffset), 
+											2*(heightFactor*screenPoint.y/Screen.height - 0.5f + yOffset), -1)) - cam.transform.position);
+
+//		Vector3 rayDirection = cam.projectionMatrix.inverse.MultiplyPoint( 
+//			new Vector3(	2 * (widthFactor * screenPoint.x / Screen.width - 0.5f + xOffset), 
+//				2 * (heightFactor * screenPoint.y / Screen.height - 0.5f + yOffset), 1));
+//		rayDirection = new Vector3(rayDirection.x, rayDirection.y, -rayDirection.z).normalized;
+//		ray = new Ray(cam.transform.TransformPoint(Vector3.right * (-cam.stereoSeparation)), cam.transform.TransformDirection(rayDirection));
+
+		return ray;
+	}
+
+	public Ray ScreenPointToRay(Vector2 screenPoint)
+	{
+		RUISDisplay display = GetDisplayForScreenPoint(screenPoint);
+
+		if(display)
+		{
+			Camera camera = display.GetCameraForScreenPoint(screenPoint);
+			
+			if(camera)
+			{   
+				if(display.enableOculusRift)
+				{
+					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
+					return HMDScreenPointToRay(screenPoint, camera);
+				} 
+				else
+					return camera.ScreenPointToRay(screenPoint);
+			}
+		}
          
-        return new Ray(Vector3.zero, Vector3.zero);
-    }
+		return new Ray(Vector3.zero, Vector3.zero);
+	}
 
-    public List<ScreenPoint> WorldPointToScreenPoints(Vector3 worldPoint)
-    {
-        List<ScreenPoint> screenPoints = new List<ScreenPoint>();
+	public List<ScreenPoint> WorldPointToScreenPoints(Vector3 worldPoint)
+	{
+		List<ScreenPoint> screenPoints = new List<ScreenPoint>();
 
-        foreach (RUISDisplay display in displays)
-        {
-            display.WorldPointToScreenPoints(worldPoint, ref screenPoints);
-        }
+		foreach(RUISDisplay display in displays)
+		{
+			display.WorldPointToScreenPoints(worldPoint, ref screenPoints);
+		}
 
-        return screenPoints;
-    }
+		return screenPoints;
+	}
 
-    public RUISDisplay GetDisplayForScreenPoint(Vector2 screenPoint/*, ref Vector2 relativeScreenPoint*/)
-    {
-	//relativeScreenPoint = Vector2.zero;
+	public RUISDisplay GetDisplayForScreenPoint(Vector2 screenPoint/*, ref Vector2 relativeScreenPoint*/)
+	{
+		//relativeScreenPoint = Vector2.zero;
 
-	 int currentResolutionX = 0;
-	 foreach (RUISDisplay display in displays)
-	 {
+		int currentResolutionX = 0;
+		foreach(RUISDisplay display in displays)
+		{
 
-	     if (currentResolutionX + display.rawResolutionX >= screenPoint.x)
-	     {
-	         //relativeScreenPoint = new Vector2(screenPoint.x - currentResolutionX, totalRawResolutionY - screenPoint.y);
-	         return display;
-	     }
+			if(currentResolutionX + display.rawResolutionX >= screenPoint.x)
+			{
+				//relativeScreenPoint = new Vector2(screenPoint.x - currentResolutionX, totalRawResolutionY - screenPoint.y);
+				return display;
+			}
 
-	     currentResolutionX += display.rawResolutionX;
-	 }
+			currentResolutionX += display.rawResolutionX;
+		}
 
-	if(displays != null && displays[0])
-		return displays[0];
-	else
-		return null;
-    }
-    /*
+		if(displays != null && displays[0])
+			return displays[0];
+		else
+			return null;
+	}
+	/*
     public Camera GetCameraForScreenPoint(Vector2 screenPoint)
     {
         Vector2 relativeScreenPoint = Vector2.zero;
@@ -269,69 +306,69 @@ public class RUISDisplayManager : MonoBehaviour {
             return null;
     }*/
 
-    private void UpdateResolutionsOnTheFly()
-    {
-        int trueWidth = Screen.width;
-        int trueHeight = Screen.height;
+	private void UpdateResolutionsOnTheFly()
+	{
+		int trueWidth = Screen.width;
+		int trueHeight = Screen.height;
 
-        float widthScaler = (float)trueWidth / totalRawResolutionX;
-        float heightScaler = (float)trueHeight / totalRawResolutionY;
+		float widthScaler = (float)trueWidth / totalRawResolutionX;
+		float heightScaler = (float)trueHeight / totalRawResolutionY;
 
-        foreach (RUISDisplay display in displays)
-        {
-            display.resolutionX = (int)(display.resolutionX * widthScaler);
-            display.resolutionY = (int)(display.resolutionY * heightScaler);
-        }
-    }
+		foreach(RUISDisplay display in displays)
+		{
+			display.resolutionX = (int)(display.resolutionX * widthScaler);
+			display.resolutionY = (int)(display.resolutionY * heightScaler);
+		}
+	}
 
-    private void DisableUnlinkedCameras()
-    {
-        RUISCamera[] allCameras = FindObjectsOfType(typeof(RUISCamera)) as RUISCamera[];
+	private void DisableUnlinkedCameras()
+	{
+		RUISCamera[] allCameras = FindObjectsOfType(typeof(RUISCamera)) as RUISCamera[];
 
-        foreach (RUISCamera ruisCamera in allCameras)
-        {
-            if (ruisCamera.associatedDisplay == null)
-            {
-                Debug.LogWarning("Disabling RUISCamera '" + ruisCamera.name + "' because it isn't linked into a RUISDisplay.");
-                ruisCamera.gameObject.SetActive(false);
-            }
-        }
-    }
+		foreach(RUISCamera ruisCamera in allCameras)
+		{
+			if(ruisCamera.associatedDisplay == null)
+			{
+				Debug.LogWarning("Disabling RUISCamera '" + ruisCamera.name + "' because it isn't linked into a RUISDisplay.");
+				ruisCamera.gameObject.SetActive(false);
+			}
+		}
+	}
 
-    public void LoadDisplaysFromXML(bool refresh = false)
-    {
-        foreach (RUISDisplay display in displays)
-        {
-            display.LoadFromXML();
-        }
+	public void LoadDisplaysFromXML(bool refresh = false)
+	{
+		foreach(RUISDisplay display in displays)
+		{
+			display.LoadFromXML();
+		}
 
-        if (refresh)
-        {
-            UpdateDisplays();
-        }
-    }
+		if(refresh)
+		{
+			UpdateDisplays();
+		}
+	}
 
-    public void SaveDisplaysToXML()
-    {
-        foreach (RUISDisplay display in displays)
-        {
-            display.SaveToXML();
-        }
-    }
+	public void SaveDisplaysToXML()
+	{
+		foreach(RUISDisplay display in displays)
+		{
+			display.SaveToXML();
+		}
+	}
 
-    public RUISDisplay GetOculusRiftDisplay()
-    {
-        foreach (RUISDisplay display in displays)
-        {
-            if (display.linkedCamera && display.enableOculusRift)
-            {
-                return display;
-            }
-        }
+	public RUISDisplay GetOculusRiftDisplay()
+	{
+		foreach(RUISDisplay display in displays)
+		{
+			if(display.linkedCamera && display.enableOculusRift)
+			{
+				return display;
+			}
+		}
 
-        return null;
-    }
-    
+		return null;
+	}
+
 	private void InitRUISMenu(GameObject ruisMenuPrefab, int guiDisplayChoice)
 	{
 		if(ruisMenuPrefab == null)
@@ -340,14 +377,14 @@ public class RUISDisplayManager : MonoBehaviour {
 		// HACK: displays is a list and accessing components by index might break if we modify the list in run-time
 		if(displays.Count <= guiDisplayChoice)
 		{
-			Debug.LogError(  "displays.Count is too small: " + displays.Count + ", because guiDisplayChoice == " + guiDisplayChoice 
-			               + ". Fix the guiDisplayChoice implementation so that it conforms to the displays variable (dynamic List<>).");
+			Debug.LogError("displays.Count is too small: " + displays.Count + ", because guiDisplayChoice == " + guiDisplayChoice
+			+ ". Fix the guiDisplayChoice implementation so that it conforms to the displays variable (dynamic List<>).");
 			return;
 		}
 
-		if(	   displays[guiDisplayChoice] == null
-		    || displays[guiDisplayChoice].GetComponent<RUISDisplay>() == null
-		   	|| displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera == null )
+		if(displays[guiDisplayChoice] == null
+		   || displays[guiDisplayChoice].GetComponent<RUISDisplay>() == null
+		   || displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera == null)
 		{
 			return;
 		}
@@ -357,8 +394,8 @@ public class RUISDisplayManager : MonoBehaviour {
 			return;
 	
 		if(menuLayer == -1)
-			Debug.LogError(  "Could not find layer '" + LayerMask.LayerToName(menuLayer) + "', the RUIS menu cursor will not work without this layer! "
-			               + "The prefab '" + ruisMenuPrefab.name + "' and its children should be on this layer.");
+			Debug.LogError("Could not find layer '" + LayerMask.LayerToName(menuLayer) + "', the RUIS menu cursor will not work without this layer! "
+			+ "The prefab '" + ruisMenuPrefab.name + "' and its children should be on this layer.");
 
 		if(!displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo /* && !displays[guiDisplayChoice].GetComponent<RUISDisplay>().enableOculusRift */)
 		{
@@ -366,23 +403,21 @@ public class RUISDisplayManager : MonoBehaviour {
 			{
 
 				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.AddComponent<UICamera>();
-			}
-			else
-				Debug.LogError(	  "The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
-								+ " whose centerCamera is null for some reason! Can't create UICamera.");
-		}
-		else 
+			} else
+				Debug.LogError("The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
+				+ " whose centerCamera is null for some reason! Can't create UICamera.");
+		} else
 		{
 			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera)
 				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera.gameObject.AddComponent<UICamera>();
 			else
-				Debug.LogError(	  "The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
-								+ " whose rightCamera is null for some reason! Can't create UICamera.");
+				Debug.LogError("The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
+				+ " whose rightCamera is null for some reason! Can't create UICamera.");
 			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCamera)
 				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCamera.gameObject.AddComponent<UICamera>();
 			else
-				Debug.LogError(	  "The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
-								+ " whose leftCamera is null for some reason! Can't create UICamera.");
+				Debug.LogError("The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
+				+ " whose leftCamera is null for some reason! Can't create UICamera.");
 		}
 
 		UICamera[] NGUIcameras = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.GetComponentsInChildren<UICamera>();
@@ -392,15 +427,14 @@ public class RUISDisplayManager : MonoBehaviour {
 			camera.eventReceiverMask = LayerMask.GetMask(LayerMask.LayerToName(menuLayer));
 		}
 
-		string primaryMenuParent   = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCameraName;
+		string primaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCameraName;
 		string secondaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCameraName;
-		string tertiaryMenuParent  = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCameraName;
+		string tertiaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCameraName;
 		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
 		{
 
 			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.transform;
-		}
-		else 
+		} else
 		{
 			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera)
 				ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCamera.transform;
@@ -415,15 +449,15 @@ public class RUISDisplayManager : MonoBehaviour {
 //					               + ": " + primaryMenuParent + ", " + secondaryMenuParent + ", " + tertiaryMenuParent + ". RUIS Menu will be parented "
 //						+ "directly under " + displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject.name + ".");
 //					ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.transform;
-					Debug.LogError(   "Can't parent RUIS Menu Prefab under the correct Transform because the " + typeof(RUISCamera) + " in gameObject "
-									+ displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject + " has null value for centerCamera, "
-									+ "leftCamera, and rightCamera.");
+					Debug.LogError("Can't parent RUIS Menu Prefab under the correct Transform because the " + typeof(RUISCamera) + " in gameObject "
+					+ displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.gameObject + " has null value for centerCamera, "
+					+ "leftCamera, and rightCamera.");
 				}
 			}
 		}
 		
 		ruisMenu.transform.localRotation = Quaternion.identity;
-		ruisMenu.transform.localPosition = new Vector3(guiX,guiY,guiZ);
+		ruisMenu.transform.localPosition = new Vector3(guiX, guiY, guiZ);
 
 		if(ruisMenu.GetComponent<RUISMenuNGUI>())
 			ruisMenu.GetComponent<RUISMenuNGUI>().Hide3DGUI();
