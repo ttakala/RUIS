@@ -95,16 +95,15 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 			if(vivePrefabContainer.viveCameraRigPrefab)
 			{
 				vivePrefabContainer.instantiatedViveCameraRig = GameObject.Instantiate(vivePrefabContainer.viveCameraRigPrefab);
-				// *** TODO HACK Ugly fix, because the ViveCameraRig is so coupled (disabling the head or its components will break controller tracking) and its camera can't be turned off  
-				if(    vivePrefabContainer.instantiatedViveCameraRig.GetComponentInChildren<SteamVR_GameView>()
-				    && vivePrefabContainer.instantiatedViveCameraRig.GetComponentInChildren<SteamVR_GameView>().gameObject.GetComponent<Camera>())
+				Camera[] rigCams = vivePrefabContainer.instantiatedViveCameraRig.GetComponentsInChildren<Camera>();
+				if(rigCams != null)
 				{
-					GameObject orthoCameraGameObject = vivePrefabContainer.instantiatedViveCameraRig.GetComponentInChildren<SteamVR_GameView>().gameObject;
-					orthoCameraGameObject.GetComponent<Camera>().depth = -1;
-					// *** HACK TODO for Unity 5.4
-					if(   orthoCameraGameObject.GetComponentInChildren<SteamVR_Camera>()
-					   && orthoCameraGameObject.gameObject.GetComponentInChildren<SteamVR_Camera>().gameObject.GetComponent<Camera>())
-						orthoCameraGameObject.gameObject.GetComponentInChildren<SteamVR_Camera>().gameObject.GetComponent<Camera>().nearClipPlane = 0.1f;
+					foreach(Camera cam in rigCams)
+					{
+						// *** TODO HACK Ugly fix, not 100% sure if in the future all the perspective cameras in the ViveCameraRig work well with below code
+						if(!cam.orthographic)
+							cam.nearClipPlane = 0.15f;
+					}
 				}
 			}
 			else
