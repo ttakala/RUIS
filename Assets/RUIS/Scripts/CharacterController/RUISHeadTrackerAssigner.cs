@@ -116,9 +116,18 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				{
 					++trackerCount;
 					int foundTrackerScore = 0;
-					
+
+					bool viveFound = false;
+					try
+					{
+						if(Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
+						{
+							viveFound = true;
+						}
+					} catch{}
+
 					// Give score to found head trackers
-					if(Valve.VR.OpenVR.IsHmdPresent() && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.ViveHMD) // *** TODO HACK Valve API
+					if(viveFound && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.ViveHMD)
 					{
 						foundTrackerScore = 8;
 					}

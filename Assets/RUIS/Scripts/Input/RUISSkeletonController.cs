@@ -402,8 +402,8 @@ public class RUISSkeletonController : MonoBehaviour
 						if(UnityEngine.VR.VRDevice.isPresent)
 						{
 							followOculusController = true;
-							Debug.LogWarning(	"Using Oculus Rift HMD as a Character Pivot for " + gameObject.name
-							                 +	", because Kinects are disabled and an Oculus Rift was detected.");
+							Debug.LogWarning(	"Using " + UnityEngine.VR.VRDevice.model + " as a Character Pivot for " + gameObject.name
+								+	", because Kinects are disabled and " + UnityEngine.VR.VRDevice.model + " was detected.");
 						}
 					}
 				}

@@ -71,12 +71,35 @@ public class RUISMouseWand : RUISWand {
 					deviceNames += "PS Move";
 					otherDevices = true;
 				}
+
+				try
+				{
+					var system = Valve.VR.OpenVR.System;
+					if(system != null)
+					{
+						for(int i=0; i<Valve.VR.OpenVR.k_unMaxTrackedDeviceCount; ++i)
+						{
+							SteamVR_Controller.Device device = SteamVR_Controller.Input(i);
+							if(device != null && device.connected && device.valid && system.GetTrackedDeviceClass(device.index) == Valve.VR.ETrackedDeviceClass.Controller)
+							{
+
+								if(deviceNames.Length > 0)
+									deviceNames += ", ";
+								deviceNames += "Vive controller";
+								otherDevices = true;
+								break;
+							}
+						}
+					}
+				} catch{}
+
 				if(otherDevices)
 				{
 					Debug.Log(	"Disabling MouseWand GameObject '" + gameObject.name + "' because the "
 							  + "following input devices were found: " + deviceNames					);
 					gameObject.SetActive(false);	
 				}
+
 			}
 		}
 		

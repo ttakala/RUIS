@@ -23,14 +23,10 @@ public class RUISViveWand : RUISWand {
 		None
 	}
 
+	[Header("Controller ID can forced in runtime from below 'Steam VR_Tracked Object'")]
 	public SelectionButton selectionButton;
 
-	private static PSMoveWrapper psMoveWrapper;
-
 	private SteamVR_TrackedObject steamVRTrackedObject;
-
-	[Range(0, 3)]
-	public int controllerId;
 
 	private Vector3 positionUpdate;
 	private Vector3 rotationUpdate;
@@ -110,16 +106,16 @@ public class RUISViveWand : RUISWand {
 	{
 		switch (selectionButton)
 		{
-		case SelectionButton.Trigger:
-			return triggerButtonDown;
-		case SelectionButton.Menu:
-			return menuButtonDown;
-		case SelectionButton.Pad:
-			return padButtonDown;
-		case SelectionButton.Grip:
-			return gripButtonDown;
-		default:
-			return false;
+			case SelectionButton.Trigger:
+				return triggerButtonDown;
+			case SelectionButton.Menu:
+				return menuButtonDown;
+			case SelectionButton.Pad:
+				return padButtonDown;
+			case SelectionButton.Grip:
+				return gripButtonDown;
+			default:
+				return false;
 		}
 	}
 
@@ -135,7 +131,7 @@ public class RUISViveWand : RUISWand {
 	{
 		get
 		{
-			return TransformVelocity(psMoveWrapper.velocity[controllerId]);
+			return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).velocity, RUISDevice.Vive);
 		}
 	}
 
@@ -204,24 +200,9 @@ public class RUISViveWand : RUISWand {
 		}
 	}
 
-	// TUUKKA:
-	private Vector3 TransformVelocity(Vector3 value)
-	{
-		return coordinateSystem.ConvertVelocity(value, RUISDevice.Vive);
-	}
-
-	private Vector3 TransformPosition(Vector3 value)
-	{
-		return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawPSMoveLocation(value), RUISDevice.PS_Move);
-	}
-
 	// Returns angularVelocity in wand's local coordinate system
 	public override Vector3 GetAngularVelocity()
 	{
-		if(   steamVRTrackedObject.isValid
-		   && SteamVR_Controller.Input((int)steamVRTrackedObject.index).valid
-		   && SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected)
-			return SteamVR_Controller.Input((int)steamVRTrackedObject.index).angularVelocity;
-		return Vector3.zero;
+		return angularVelocity;
 	}
 }

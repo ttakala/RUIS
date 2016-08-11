@@ -382,26 +382,30 @@ public class RUISTracker : MonoBehaviour
 //		}
 
 
-		if(Valve.VR.OpenVR.IsHmdPresent())
+		try
 		{
-			// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
-			if(headPositionInput == HeadPositionSource.ViveHMD || headRotationInput == HeadRotationSource.ViveHMD)
+			if(Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
 			{
-				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+				// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
+				if(headPositionInput == HeadPositionSource.ViveHMD || headRotationInput == HeadRotationSource.ViveHMD)
 				{
-					transform.localRotation = coordinateSystem.GetHMDCoordinateSystemYaw(RUISDevice.Vive);
-					transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.Vive);
-					transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
+					if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+					{
+						transform.localRotation = coordinateSystem.GetHMDCoordinateSystemYaw(RUISDevice.Vive);
+						transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.Vive);
+						transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
 
-					//					Vector3 scaledPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
-					//
-					//					scaledPosition.x /= transform.localScale.x;
-					//					scaledPosition.y /= transform.localScale.y;
-					//					scaledPosition.z /= transform.localScale.z;
+						//					Vector3 scaledPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
+						//
+						//					scaledPosition.x /= transform.localScale.x;
+						//					scaledPosition.y /= transform.localScale.y;
+						//					scaledPosition.z /= transform.localScale.z;
 
+					}
 				}
 			}
-		}
+		} catch{}
+
 
 
 		if(headPositionInput == HeadPositionSource.OculusDK2)

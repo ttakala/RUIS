@@ -205,15 +205,18 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 			return RUISCalibrationPhase.Initial;
 		}
 		
-		if(!viveChecked && timeSinceScriptStart > 4) {
+		if(!viveChecked && timeSinceScriptStart > 4)
+		{
 			viveChecked = true;
-			
-//			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0)  //06to08
-			if(!Valve.VR.OpenVR.IsHmdPresent())
+
+			try
 			{
-				this.guiTextLowerLocal = "Connecting to Vive. \n\n Error: Could not connect to Vive.";
-				return RUISCalibrationPhase.Invalid;
-			}
+				if(!Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
+				{
+					this.guiTextLowerLocal = "Connecting to Vive. \n\n Error: Could not connect to Vive.";
+					return RUISCalibrationPhase.Invalid;
+				}
+			} catch{}
 		}	
 		
 		if(timeSinceScriptStart < 5) {

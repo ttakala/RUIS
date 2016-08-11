@@ -522,9 +522,12 @@ public class RUISTrackerEditor : Editor
 				EditorGUILayout.LabelField("PS Move doesn't need drift correction");
 			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.RazerHydra)
 				EditorGUILayout.LabelField("Razer Hydra doesn't need drift correction");
+			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.ViveHMD)
+				EditorGUILayout.LabelField("Vive doesn't need drift correction");
 			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.None)
 				EditorGUILayout.LabelField("No Rotation Tracker: Drift correction disabled");
 			EditorGUI.EndDisabledGroup();
+			externalDriftCorrection.boolValue = false;
 		}
 		else
 		{
