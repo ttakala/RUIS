@@ -106,7 +106,8 @@ public class RUISTracker : MonoBehaviour
 	public bool useOculusRiftRotation = false;
 	public KeyCode resetKey;
 
-	public int kinectVersion = 0; // *** Add support for Kinect2 for Kinec+RazerHydra combination head tracker..?
+	// *** Add support for Kinect2 for Kinec+RazerHydra combination head tracker..?
+	public int kinectVersion = 0;
 	private static int kinectSensorID;
 	
     public int positionPlayerID = 0;
@@ -302,10 +303,10 @@ public class RUISTracker : MonoBehaviour
 //		{
 //			useOculusRiftRotation = false;
 //		}
-		if(UnityEngine.VR.VRDevice.isPresent)
-				useOculusRiftRotation = true;
+		if(RUISDisplayManager.IsHmdPresent())
+			useOculusRiftRotation = true;
 		else
-				useOculusRiftRotation = false;
+			useOculusRiftRotation = false;
 
 		// Enforce rotation settings if rotation source is set to be same as position source
 		if (!pickRotationSource) 
@@ -410,7 +411,7 @@ public class RUISTracker : MonoBehaviour
 
 		if(headPositionInput == HeadPositionSource.OculusDK2)
 		{
-			if(!UnityEngine.VR.VRDevice.isPresent) //06to08
+			if(!RUISDisplayManager.IsHmdPresent()) //06to08
 			{
 				headPositionInput = HeadPositionSource.None;
 				this.transform.localPosition = defaultPosition;
@@ -789,7 +790,7 @@ public class RUISTracker : MonoBehaviour
 				        {
 					jointData = skeletonManager.GetJointData(hydraBaseJoint, hydraBaseKinectPlayerID, kinectVersion);
 					if(		skeletonManager.skeletons[kinectVersion, hydraBaseKinectPlayerID].isTracking
-								&&  jointData != null)
+						&&  jointData != null)
 							{
 								filterHydraBasePose = filterHydraBasePoseKinect;
 								hydraBasePositionCovariance = hydraBasePositionCovarianceKinect 
@@ -1157,7 +1158,7 @@ public class RUISTracker : MonoBehaviour
 			case HeadRotationSource.Kinect2:
 		        if (skeletonManager)
 		        {
-				jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID, kinectSensorID);
+					jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID, kinectSensorID);
 					if(jointData != null)
 					{
 						rotationOffsetKinect = jointData.rotation.eulerAngles;
@@ -1278,7 +1279,7 @@ public class RUISTracker : MonoBehaviour
 		        }
 				else 
 				{
-				compassData = skeletonManager.GetJointData(compassJoint, compassPlayerID, kinectSensorID);
+					compassData = skeletonManager.GetJointData(compassJoint, compassPlayerID, kinectSensorID);
 				
 					// First check for high confidence value
 		            if (compassData != null && compassData.rotationConfidence >= 1.0f) 

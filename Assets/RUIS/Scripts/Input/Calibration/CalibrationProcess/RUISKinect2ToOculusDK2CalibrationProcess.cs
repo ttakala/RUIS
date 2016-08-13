@@ -171,7 +171,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			oculusChecked = true;
 			
 //			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0)  //06to08
-			if(!UnityEngine.VR.VRDevice.isPresent) // HACK TODO check that this is position tracked Oculus
+			if(!RUISDisplayManager.IsHmdPresent()) // HACK TODO check that this is position tracked Oculus
 			{
 				this.guiTextLowerLocal = "Connecting to Oculus Rift. \n\n Error: Could not connect to Oculus Rift.";
 				return RUISCalibrationPhase.Invalid;
@@ -394,7 +394,7 @@ public class RUISKinect2ToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			tempSample = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head);
 
 			if(    (Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
-				&& UnityEngine.VR.VRDevice.isPresent) //(RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)   //06to08
+				&& RUISDisplayManager.IsHmdPresent()) //(RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)   //06to08
 			{
 				sample = tempSample;
 				lastOculusDK2Sample = sample;

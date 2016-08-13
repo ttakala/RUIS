@@ -100,7 +100,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 		if(!menuScript.menuIsVisible)
 			return;
 
-		if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift) 
+		if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isHmdDisplay) 
 		{
 			mouseInputCoordinates = Input.mousePosition;
 //			mouseInputCoordinates = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(Input.mousePosition);
@@ -154,7 +154,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			Ray ray;
 			if(camera.GetComponent<Camera>())
 			{
-				if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.enableOculusRift)
+				if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isHmdDisplay)
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
 					ray = RUISDisplayManager.HMDScreenPointToRay(mouseInputCoordinates, camera.GetComponent<Camera>());

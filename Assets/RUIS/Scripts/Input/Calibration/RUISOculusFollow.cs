@@ -14,7 +14,7 @@ public class RUISOculusFollow : MonoBehaviour
 	{
 //				if(RUISOVRManager.ovrHmd != null) //06to08
 
-		if(UnityEngine.VR.VRDevice.isPresent)
+		if(RUISDisplayManager.IsHmdPresent())
 		{
 			Vector3 tempSample = Vector3.zero;
 			

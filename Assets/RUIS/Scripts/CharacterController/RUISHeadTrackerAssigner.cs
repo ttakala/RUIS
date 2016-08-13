@@ -83,7 +83,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 //			if(isRiftConnected && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other)) //06to08
 //				oculusDK2 = true;
 
-			if(UnityEngine.VR.VRDevice.isPresent) //06to08
+			if(RUISDisplayManager.IsHmdPresent()) //06to08
 				oculusDK2 = true; // HACK TODO set to true only if we have a position tracked HMD 
 			
 			kinect2 = inputManager.enableKinect2;
@@ -245,25 +245,25 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					}
 				}
 				logString =   "Found the best head tracker with regard to enabled devices in "
-							+ "RUISInputManager! Using " + positionTracker + " for tracking head position";
+					    + "RUISInputManager! Using " + positionTracker + " for tracking head position";
 				if(names.Length > 0)
 					logString = logString + ", and disabling the following: " + names;
 				Debug.Log(logString + ". This choice was made using a pre-selected list of head trackers.");
 				
 				ruisCamera = closestMatch.gameObject.GetComponentInChildren<RUISCamera>();
 				
-				if(		changePivotIfNoKinect && psmove && !kinect && !kinect2
-					&&  closestMatch.headPositionInput == RUISTracker.HeadPositionSource.PSMove )
+				if(	changePivotIfNoKinect && psmove && !kinect && !kinect2
+				    &&  closestMatch.headPositionInput == RUISTracker.HeadPositionSource.PSMove )
 				{
 					RUISCharacterController characterController = gameObject.GetComponentInChildren<RUISCharacterController>();
-					if(		characterController != null 
-						&&  characterController.characterPivotType != RUISCharacterController.CharacterPivotType.MoveController )
+					if(    characterController != null 
+					    && characterController.characterPivotType != RUISCharacterController.CharacterPivotType.MoveController )
 					{
 						characterController.characterPivotType = RUISCharacterController.CharacterPivotType.MoveController;
 						characterController.moveControllerId = closestMatch.positionPSMoveID;
-						Debug.Log(	  "PS Move enabled and Kinect disabled. Setting " + characterController.name 
-									+ "'s Character Pivot as PS Move controller #" + closestMatch.positionPSMoveID
-									+ ". PS Move position offset for this pivot is " + characterController.psmoveOffset);
+						Debug.Log(  "PS Move enabled and Kinect disabled. Setting " + characterController.name 
+								  + "'s Character Pivot as PS Move controller #" + closestMatch.positionPSMoveID
+								  + ". PS Move position offset for this pivot is " + characterController.psmoveOffset);
 					}
 				}
 			}

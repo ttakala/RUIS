@@ -13,26 +13,27 @@ using System.Xml;
 using System.Xml.Schema;
 using System.IO;
 using Kinect = Windows.Kinect;
+
 //using Ovr;
 
 public class RUISCoordinateSystem : MonoBehaviour
 {
-    public string coordinateXmlFile = "calibration.xml";
-    public TextAsset coordinateSchema;
-    public bool loadFromXML = true;
+	public string coordinateXmlFile = "calibration.xml";
+	public TextAsset coordinateSchema;
+	public bool loadFromXML = true;
 
-    public const float kinectToUnityScale = 0.001f;
-    public const float moveToUnityScale = 0.1f;
+	public const float kinectToUnityScale = 0.001f;
+	public const float moveToUnityScale = 0.1f;
     
 	private Matrix4x4 deviceToRootTransform = Matrix4x4.identity;
     
 	public float yawOffset = 0;
 	
-    public bool applyToRootCoordinates = true;
+	public bool applyToRootCoordinates = true;
 	public bool switchToAvailableDevice = true;
-    public bool setKinectOriginToFloor = false;
+	public bool setKinectOriginToFloor = false;
 
-    public Vector3 positionOffset = Vector3.zero;
+	public Vector3 positionOffset = Vector3.zero;
     
 	public Dictionary<string, Vector3> RUISCalibrationResultsInVector3 = new Dictionary<string, Vector3>();
 	public Dictionary<string, Quaternion> RUISCalibrationResultsInQuaternion = new Dictionary<string, Quaternion>();
@@ -44,27 +45,31 @@ public class RUISCoordinateSystem : MonoBehaviour
 	public RUISDevice rootDevice;
 
 	RUISInputManager inputManager;
-	
-	void Awake() 
+
+	void Awake()
 	{
-		string[] names = System.Enum.GetNames( typeof( RUISDevice ) );
-		foreach(string device in names) {
-			RUISDevice device1Enum = (RUISDevice) System.Enum.Parse( typeof(RUISDevice), device, true );
+		string[] names = System.Enum.GetNames(typeof(RUISDevice));
+		foreach(string device in names)
+		{
+			RUISDevice device1Enum = (RUISDevice)System.Enum.Parse(typeof(RUISDevice), device, true);
 			RUISCalibrationResultsFloorPitchRotation[device1Enum] = Quaternion.identity;
 			RUISCalibrationResultsDistanceFromFloor[device1Enum] = 0.0f;
-			foreach(string device2 in names) {
-				if(device != device2) {
+			foreach(string device2 in names)
+			{
+				if(device != device2)
+				{
 					string devicePairString = device + "-" + device2;
-					RUISCalibrationResultsInVector3[devicePairString] = new Vector3(0,0,0);
+					RUISCalibrationResultsInVector3[devicePairString] = new Vector3(0, 0, 0);
 					RUISCalibrationResultsInQuaternion[devicePairString] = Quaternion.identity;
 					RUISCalibrationResultsIn4x4Matrix[devicePairString] = Matrix4x4.identity;
 				}
 			}
 		}
 		
-		if (loadFromXML)
+		if(loadFromXML)
 		{
-			if(!LoadMultiXML(coordinateXmlFile)) {
+			if(!LoadMultiXML(coordinateXmlFile))
+			{
 				createExampleXML(coordinateXmlFile);
 			}
 		}
@@ -77,21 +82,21 @@ public class RUISCoordinateSystem : MonoBehaviour
 
 			switch(rootDevice)
 			{
-				case RUISDevice.Kinect_1:
-					if(!inputManager.enableKinect)
-						needToSwitch = true;
-					break;
-				case RUISDevice.Kinect_2:
-					if(!inputManager.enableKinect2)
-						needToSwitch = true;
-					break;
-				case RUISDevice.PS_Move:
-					if(!inputManager.enablePSMove)
-						needToSwitch = true;
-					break;
-				case RUISDevice.Oculus_DK2:
-					if(!isPositionTrackableRiftPresent())
-						needToSwitch = true;
+			case RUISDevice.Kinect_1:
+				if(!inputManager.enableKinect)
+					needToSwitch = true;
+				break;
+			case RUISDevice.Kinect_2:
+				if(!inputManager.enableKinect2)
+					needToSwitch = true;
+				break;
+			case RUISDevice.PS_Move:
+				if(!inputManager.enablePSMove)
+					needToSwitch = true;
+				break;
+			case RUISDevice.Oculus_DK2:
+				if(!RUISDisplayManager.IsHmdPositionTrackable())
+					needToSwitch = true;
 				break;
 			}
 
@@ -101,7 +106,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 					rootDevice = RUISDevice.Kinect_2;
 				else if(inputManager.enableKinect)
 					rootDevice = RUISDevice.Kinect_1;
-				else if(isPositionTrackableRiftPresent())
+				else if(RUISDisplayManager.IsHmdPositionTrackable())
 					rootDevice = RUISDevice.Oculus_DK2;
 				else if(inputManager.enablePSMove)
 					rootDevice = RUISDevice.PS_Move;
@@ -109,33 +114,18 @@ public class RUISCoordinateSystem : MonoBehaviour
 				if(rootDevice != previousDevice)
 				{
 					if(previousDevice == RUISDevice.Oculus_DK2)
-						Debug.LogWarning(  "Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
-						                 + "because Oculus Rift DK2+ was not detected!");
+						Debug.LogWarning("Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
+						+ "because Oculus Rift DK2+ was not detected!");
 					else
-						Debug.LogWarning(  "Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
-						                 + "because the former was not enabled in " + typeof(RUISInputManager) + " while the latter was!");
+						Debug.LogWarning("Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
+						+ "because the former was not enabled in " + typeof(RUISInputManager) + " while the latter was!");
 				}
 			}
 		}
 	}
 
-	public bool isPositionTrackableRiftPresent()
+	private void createExampleXML(string filename)
 	{
-//		if(OVRManager.capiHmd != null)
-//		{
-//			Ovr.HmdType ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
-//			
-//			if(    (OVRManager.capiHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) != 0 // !isplay.isPresent
-//				&& (ovrHmdVersion == HmdType.DK2 || ovrHmdVersion == HmdType.Other)) // Rift is DK2+     //06to08
-//				return true;
-//		}
-//		return false;
-		// HACK TODO need to check if position tracked HMD is really present
-		return UnityEngine.VR.VRDevice.isPresent;
-	}
-	
-	private void createExampleXML(string filename) {
-		
 		Vector3 exampleFloorNormal = new Vector3(0, 1, 0);
 		float exampleDistanceFromFloor = 0.0f;
 		
@@ -200,20 +190,21 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 	}
 
-	public bool LoadMultiXML(string filename) {
+	public bool LoadMultiXML(string filename)
+	{
 		
 		XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(filename, coordinateSchema);
-		if(xmlDoc != null) 
+		if(xmlDoc != null)
 		{
-			foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
+			foreach(XmlNode node in xmlDoc.DocumentElement.ChildNodes)
 			{	
 				Vector3 vector3 = new Vector3(0, 0, 0);
 				Matrix4x4 device1ToDevice2Transform = new Matrix4x4();
 				Quaternion quaternion = new Quaternion();
 				
-				if(node.Name == "Transforms") 
+				if(node.Name == "Transforms")
 				{
-					foreach (XmlNode groupElement in node.ChildNodes)	
+					foreach(XmlNode groupElement in node.ChildNodes)
 					{
 						XmlNode translationElement = groupElement.SelectSingleNode("translate");
 						float x = float.Parse(translationElement.Attributes["x"].Value);
@@ -255,38 +246,39 @@ public class RUISCoordinateSystem : MonoBehaviour
 					}
 				}
 				
-				if(node.Name == "FloorData") 
+				if(node.Name == "FloorData")
 				{
-					foreach (XmlNode groupElement in node.ChildNodes)	
+					foreach(XmlNode groupElement in node.ChildNodes)
 					{
 						Quaternion floorPitchRotation = Quaternion.identity;
 						float distanceFromFloor = 0;
-						foreach (XmlNode element in groupElement.ChildNodes)	
+						foreach(XmlNode element in groupElement.ChildNodes)
 						{
-							switch(element.Name) 
+							switch(element.Name)
 							{
 							case "floorNormal":
 								float xValue = float.Parse(element.Attributes["x"].Value);
 								float yValue = float.Parse(element.Attributes["y"].Value);
 								float zValue = float.Parse(element.Attributes["z"].Value);
 								floorPitchRotation = Quaternion.Inverse(Quaternion.FromToRotation(new Vector3(xValue, yValue, zValue), Vector3.up));
-							break;
+								break;
 								
 							case "distanceFromFloor":
 								distanceFromFloor = float.Parse(element.Attributes["value"].Value);
-							break;		
+								break;		
 							}
 						}	
 						
-						RUISCalibrationResultsFloorPitchRotation[(RUISDevice) System.Enum.Parse( typeof(RUISDevice), groupElement.Name, true )] = floorPitchRotation;
-						RUISCalibrationResultsDistanceFromFloor[(RUISDevice) System.Enum.Parse( typeof(RUISDevice), groupElement.Name, true )] = distanceFromFloor;		
+						RUISCalibrationResultsFloorPitchRotation[(RUISDevice)System.Enum.Parse(typeof(RUISDevice), groupElement.Name, true)] = floorPitchRotation;
+						RUISCalibrationResultsDistanceFromFloor[(RUISDevice)System.Enum.Parse(typeof(RUISDevice), groupElement.Name, true)] = distanceFromFloor;		
 					}
 				}
 				
 			}
 			
 		}
-		else return false;	
+		else
+			return false;	
 		/*
 		// For debug
 		foreach (string key in RUISCalibrationResultsInVector3.Keys)
@@ -313,7 +305,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return true;
 	}
 
-    public void SaveTransformDataToXML(string filename, RUISDevice device1, RUISDevice device2)
+	public void SaveTransformDataToXML(string filename, RUISDevice device1, RUISDevice device2)
 	{	
 		string wrapperElementName = device1.ToString() + "-" + device2.ToString();
 	
@@ -322,12 +314,15 @@ public class RUISCoordinateSystem : MonoBehaviour
 		XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(filename, coordinateSchema);
 		XmlNode groupElement;
 		
-		if(xmlDoc != null) {
-			calibrationMatrixElement = 	xmlDoc.DocumentElement;
+		if(xmlDoc != null)
+		{
+			calibrationMatrixElement = xmlDoc.DocumentElement;
 			groupElement = calibrationMatrixElement.SelectSingleNode("Transforms");
-			if(groupElement == null) groupElement = xmlDoc.CreateElement("Transforms");
-			}
-		else {
+			if(groupElement == null)
+				groupElement = xmlDoc.CreateElement("Transforms");
+		}
+		else
+		{
 			xmlDoc = new XmlDocument();
 			xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
 			calibrationMatrixElement = xmlDoc.CreateElement("ns2", "RUISClibrationMatrix", "http://ruisystem.net/m2k");
@@ -362,10 +357,13 @@ public class RUISCoordinateSystem : MonoBehaviour
 		XmlNode groupNode = xmlDoc.DocumentElement.SelectSingleNode("Transforms");
 		XmlNode testNode = groupNode.SelectSingleNode(wrapperElementName);
 		// Element not found
-		if(testNode == null) { 	
+		if(testNode == null)
+		{ 	
 			groupNode.AppendChild(wrapperElement);
 		}
-		else {// Element already exists
+		else
+		{
+			// Element already exists
 			var oldElem = testNode;
 			groupNode.ReplaceChild(wrapperElement, oldElem);
 		
@@ -388,12 +386,15 @@ public class RUISCoordinateSystem : MonoBehaviour
 		XmlDocument xmlDoc = XMLUtil.LoadAndValidateXml(filename, coordinateSchema);
 		XmlNode groupElement;
 		
-		if(xmlDoc != null) {
-			calibrationMatrixElement = 	xmlDoc.DocumentElement;
+		if(xmlDoc != null)
+		{
+			calibrationMatrixElement = xmlDoc.DocumentElement;
 			groupElement = calibrationMatrixElement.SelectSingleNode("FloorData");
-			if(groupElement == null) groupElement = xmlDoc.CreateElement("FloorData");
+			if(groupElement == null)
+				groupElement = xmlDoc.CreateElement("FloorData");
 		}
-		else {
+		else
+		{
 			xmlDoc = new XmlDocument();
 			xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", "yes");
 			calibrationMatrixElement = xmlDoc.CreateElement("ns2", "RUISClibrationMatrix", "http://ruisystem.net/m2k");
@@ -420,10 +421,13 @@ public class RUISCoordinateSystem : MonoBehaviour
 		XmlNode groupNode = xmlDoc.DocumentElement.SelectSingleNode("FloorData");
 		XmlNode testNode = groupNode.SelectSingleNode(wrapperElementName);
 		// Element not found
-		if(testNode == null) { 	
+		if(testNode == null)
+		{ 	
 			groupNode.AppendChild(wrapperElement);
 		}
-		else {// Element already exists
+		else
+		{
+			// Element already exists
 			var oldElem = testNode;
 			groupNode.ReplaceChild(wrapperElement, oldElem);
 			
@@ -436,9 +440,9 @@ public class RUISCoordinateSystem : MonoBehaviour
 		streamWriter.Close();
 		xmlFileStream.Close();
 	}
-   
+
 	public void SetFloorNormal(Vector3 newFloorNormal, RUISDevice floorDetectingDevice)
-    {
+	{
     	
 		Quaternion kinectFloorRotator = Quaternion.identity;
 		kinectFloorRotator.SetFromToRotation(newFloorNormal, Vector3.up);
@@ -446,52 +450,52 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		switch(floorDetectingDevice)
 		{
-			case RUISDevice.Kinect_1:
-				RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinectFloorRotator;
+		case RUISDevice.Kinect_1:
+			RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinectFloorRotator;
 			break;
-			case RUISDevice.Kinect_2:
-				RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinectFloorRotator;
+		case RUISDevice.Kinect_2:
+			RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinectFloorRotator;
 			break;
-			default:
-				Debug.LogWarning("Currently floor normal detection with " + floorDetectingDevice.ToString() + " is not supported!");
+		default:
+			Debug.LogWarning("Currently floor normal detection with " + floorDetectingDevice.ToString() + " is not supported!");
 			break;
 		}
-    }
+	}
 
 	public void ResetFloorNormal(RUISDevice floorDetectingDevice)
-    {
-    	RUISCalibrationResultsFloorPitchRotation[floorDetectingDevice] = Quaternion.identity;
-    }
+	{
+		RUISCalibrationResultsFloorPitchRotation[floorDetectingDevice] = Quaternion.identity;
+	}
 
 	public void SetDistanceFromFloor(float distance, RUISDevice floorDetectingDevice)
-    {
-     	switch(floorDetectingDevice)
+	{
+		switch(floorDetectingDevice)
 		{
-			case RUISDevice.Kinect_1:
-					RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = distance;
-				break;
-			case RUISDevice.Kinect_2:
-					RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = distance;
-				break;
-			default:
-				Debug.LogWarning("Currently floor distance detection with " + floorDetectingDevice.ToString() + " is not supported!");
+		case RUISDevice.Kinect_1:
+			RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = distance;
+			break;
+		case RUISDevice.Kinect_2:
+			RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = distance;
+			break;
+		default:
+			Debug.LogWarning("Currently floor distance detection with " + floorDetectingDevice.ToString() + " is not supported!");
 			break;
 		}
-    }
-	
+	}
+
 	public void ResetDistanceFromFloor(RUISDevice floorDetectingDevice)
 	{
 		RUISCalibrationResultsDistanceFromFloor[floorDetectingDevice] = 0;
 	}
 	
 	// TODO: Implement below for all devices
-//	public float GetDistanceFromFloor(RUISDevice device)
-//	{
-//		return distanceFromFloor;
-//	}
+	//	public float GetDistanceFromFloor(RUISDevice device)
+	//	{
+	//		return distanceFromFloor;
+	//	}
 
 	// TODO: Pass the transform matrix as an argument to SaveTransformDataToXML(), delete deviceToRootTransform parameter
-	public void SetDeviceToRootTransforms(Matrix4x4 transformMatrix) 
+	public void SetDeviceToRootTransforms(Matrix4x4 transformMatrix)
 	{
 		deviceToRootTransform = transformMatrix;
 	}
@@ -505,14 +509,14 @@ public class RUISCoordinateSystem : MonoBehaviour
 	*	PSMove
 	*/
 	public Vector3 ConvertRawPSMoveLocation(Vector3 position)
-    {
-        //flip the z coordinate to get into unity's coordinate system
-        Vector3 newPosition = new Vector3(position.x, position.y, -position.z);
+	{
+		//flip the z coordinate to get into unity's coordinate system
+		Vector3 newPosition = new Vector3(position.x, position.y, -position.z);
 
-        newPosition *= moveToUnityScale;
+		newPosition *= moveToUnityScale;
 
-        return newPosition;
-    }
+		return newPosition;
+	}
 
 	public Quaternion ConvertRawPSMoveRotation(Quaternion rotation)
 	{
@@ -541,20 +545,21 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return newPosition;
 	}
 
- 	public Quaternion ConvertRawKinectRotation(OpenNI.SkeletonJointOrientation rotation)
-    {
-        Vector3 up = new Vector3(rotation.Y1, rotation.Y2, rotation.Y3);
-        Vector3 forward = new Vector3(rotation.Z1, rotation.Z2, rotation.Z3);
+	public Quaternion ConvertRawKinectRotation(OpenNI.SkeletonJointOrientation rotation)
+	{
+		Vector3 up = new Vector3(rotation.Y1, rotation.Y2, rotation.Y3);
+		Vector3 forward = new Vector3(rotation.Z1, rotation.Z2, rotation.Z3);
 
-        if (up == Vector3.zero || forward == Vector3.zero) return Quaternion.identity;
+		if(up == Vector3.zero || forward == Vector3.zero)
+			return Quaternion.identity;
 
-        Quaternion newRotation = Quaternion.LookRotation(forward, up);
+		Quaternion newRotation = Quaternion.LookRotation(forward, up);
 
-        newRotation.x = -newRotation.x;
-        newRotation.y = -newRotation.y;
+		newRotation.x = -newRotation.x;
+		newRotation.y = -newRotation.y;
 
-        return newRotation;
-    }
+		return newRotation;
+	}
     
 	/*
 	 * 	Kinect 2
@@ -568,10 +573,10 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		return newPosition;
 	}
-	
+
 	public Quaternion ConvertRawKinect2Rotation(Quaternion rotation)
 	{
-		Quaternion newRotation  = rotation;
+		Quaternion newRotation = rotation;
 		newRotation.x = -rotation.x;
 		newRotation.y = -rotation.y;
 		newRotation.z = rotation.z;
@@ -634,7 +639,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 //			
 //			return Quaternion.Inverse(GetOculusCameraOrientationRaw())*currentOvrCameraPose;
 //		} else //06to08
-			return Vector3.zero; // HACK remove this method
+		return Vector3.zero; // HACK remove this method
 	}
 
 	// Oculus positional tracking camera's coordinate system origin in master coordinate system
@@ -691,14 +696,14 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		Vector3 newVelocity = velocity;
 
-		if (applyToRootCoordinates && rootDevice != device)
+		if(applyToRootCoordinates && rootDevice != device)
 		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 			newVelocity = RUISCalibrationResultsInQuaternion[devicePairString] * newVelocity;
 		}
 
 		// Apply floor pitch rotation (which is identity to anything else than Kinect 1/2)
-		if (applyToRootCoordinates || device == rootDevice)
+		if(applyToRootCoordinates || device == rootDevice)
 			newVelocity = RUISCalibrationResultsFloorPitchRotation[rootDevice] * newVelocity;
 		else
 		{
@@ -712,7 +717,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 
 		return newVelocity;
 	}
-		
+
 	/// <summary>
 	/// Convert location obtained with a certain device to master coordinate system, apply position offset, and set Kinect origin to floor if applicable
 	/// </summary>
@@ -721,7 +726,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		Vector3 outputLocation = inputLocation;
 
 		// Transform location into master coordinate system
-		if (applyToRootCoordinates && rootDevice != device)
+		if(applyToRootCoordinates && rootDevice != device)
 		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 			outputLocation = RUISCalibrationResultsIn4x4Matrix[devicePairString].MultiplyPoint3x4(outputLocation);
@@ -729,7 +734,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		}
 
 		// Apply yaw offset and floor pitch rotation (which is identity to anything else than Kinect 1/2)
-		if (applyToRootCoordinates || device == rootDevice)
+		if(applyToRootCoordinates || device == rootDevice)
 			outputLocation = Quaternion.Euler(0, yawOffset, 0) * RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputLocation;
 		else
 		{
@@ -740,9 +745,9 @@ public class RUISCoordinateSystem : MonoBehaviour
 		}
 
 		// Set Kinect 1/2 origin to floor
-		if (setKinectOriginToFloor)
+		if(setKinectOriginToFloor)
 		{
-			if (applyToRootCoordinates || device == rootDevice)
+			if(applyToRootCoordinates || device == rootDevice)
 				outputLocation.y += RUISCalibrationResultsDistanceFromFloor[rootDevice];
 			else
 			{
@@ -754,7 +759,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		}
 
 		// Position offset
-		if (applyToRootCoordinates || device == rootDevice)
+		if(applyToRootCoordinates || device == rootDevice)
 			outputLocation += positionOffset;
 		
 		return outputLocation;
@@ -767,14 +772,14 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		Quaternion outputRotation = inputRotation;
 		
-		if (applyToRootCoordinates && rootDevice != device)
+		if(applyToRootCoordinates && rootDevice != device)
 		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 			outputRotation = RUISCalibrationResultsInQuaternion[devicePairString] * outputRotation;
 		}
 
 		// Apply floor pitch rotation (which is identity to anything else than Kinect 1/2)
-		if (applyToRootCoordinates || device == rootDevice)
+		if(applyToRootCoordinates || device == rootDevice)
 			outputRotation = RUISCalibrationResultsFloorPitchRotation[rootDevice] * outputRotation;
 		else
 		{
@@ -785,7 +790,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		}
 		
 		// Apply yaw offset
-		if (applyToRootCoordinates || device == rootDevice)
+		if(applyToRootCoordinates || device == rootDevice)
 			outputRotation = Quaternion.Euler(0, yawOffset, 0) * outputRotation;
 
 		return outputRotation;

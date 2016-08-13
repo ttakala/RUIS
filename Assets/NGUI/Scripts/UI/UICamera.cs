@@ -502,7 +502,7 @@ public class UICamera : MonoBehaviour
 			Ray ray;
 			if(ruisCamera != null && ruisCamera.associatedDisplay != null) 
 			{
-				if(ruisCamera.associatedDisplay.enableOculusRift) 
+				if(ruisCamera.associatedDisplay.isHmdDisplay) 
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
 					ray = RUISDisplayManager.HMDScreenPointToRay(inPos, currentCamera);

@@ -2,8 +2,10 @@
 
 Content    :   A manager for display configurations
 Authors    :   Mikael Matveinen, Heikki Heiskanen, Tuukka Takala
-Copyright  :   Copyright 2015 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -69,45 +71,11 @@ public class RUISDisplayManager : MonoBehaviour
 		// Second substitution because displays might have been updated via XML etc.
 		hasHeadMountedDisplay = HasHeadMountedDisplay();
 
-		// *** TODO HACK Better way to detect Oculus display
-		if(UnityEngine.VR.VRDevice.isPresent && UnityEngine.VR.VRDevice.model != null && UnityEngine.VR.VRDevice.model.Contains("Oculus"))
-		{
-			if(GetComponent<OVRManager>())
-			{
-				StartCoroutine(ForceOculusSettings(1.0f));
-			}
-		} else
-		{
-			// Disable OVRManager script if there are no Oculus Rift displays
-			if(GetComponent<OVRManager>())
-				GetComponent<OVRManager>().enabled = false;
-		}
-
 		InitRUISMenu(ruisMenuPrefab, guiDisplayChoice);
 		
 		
 	}
 
-	// TODO: Depends on OVR version
-	IEnumerator ForceOculusSettings(float waitTime)
-	{
-		yield return new WaitForSeconds(waitTime);
-		OVRManager.DismissHSWDisplay();
-
-		// Enforce Low Persistence settings
-		// TODO: In the distant future it might be possible to have multiple Rifts in the same computer with different LP settings?
-//		RUISDisplay oculusDisplay = GetOculusRiftDisplay();
-//		if(oculusDisplay)
-//		{
-//			// HACK: Counter hack to OVRDisplays hack which forces LP on in the first frame
-//			for(int i=0; i<2; ++i)
-//			{
-//				if(oculusDisplay.oculusLowPersistence != getOculusLowPersistence())
-//					setOculusLowPersistence(oculusDisplay.oculusLowPersistence);
-//				yield return new WaitForSeconds(2);
-//			}
-//		}
-	}
 
 	//	public bool getOculusLowPersistence()
 	//	{
@@ -176,7 +144,7 @@ public class RUISDisplayManager : MonoBehaviour
 	{
 		foreach(RUISDisplay display in displays)
 		{
-			if(display.linkedCamera && display.enableOculusRift)
+			if(display.linkedCamera && display.isHmdDisplay)
 			{
 				return true;
 			}
@@ -247,7 +215,7 @@ public class RUISDisplayManager : MonoBehaviour
 			
 			if(camera)
 			{   
-				if(display.enableOculusRift)
+				if(display.isHmdDisplay)
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
 					return HMDScreenPointToRay(screenPoint, camera);
@@ -360,7 +328,7 @@ public class RUISDisplayManager : MonoBehaviour
 	{
 		foreach(RUISDisplay display in displays)
 		{
-			if(display.linkedCamera && display.enableOculusRift)
+			if(display.linkedCamera && display.isHmdDisplay)
 			{
 				return display;
 			}
@@ -461,5 +429,110 @@ public class RUISDisplayManager : MonoBehaviour
 
 		if(ruisMenu.GetComponent<RUISMenuNGUI>())
 			ruisMenu.GetComponent<RUISMenuNGUI>().Hide3DGUI();
+	}
+
+	#if !UNITY_EDITOR
+	private static bool isOpenVrAccessible = false;
+	private static bool failedToAccessOpenVr = false;
+	#endif
+
+	public static bool IsHmdPresent()
+	{
+		// If Unity thinks yes, then we will go with that
+		if(UnityEngine.VR.VRDevice.isPresent) 
+			return true;
+
+		// Otherwise lets ask a second opinion from OpenVR
+		#if UNITY_EDITOR
+		return Valve.VR.OpenVR.IsHmdPresent();
+		#else
+		if(isOpenVrAccessible) 
+			return Valve.VR.OpenVR.IsHmdPresent();
+		else
+		{
+			bool isOpenVrHmdPresent = false;
+			if(!failedToAccessOpenVr)
+			{
+				try
+				{
+					isOpenVrHmdPresent = Valve.VR.OpenVR.IsHmdPresent();
+					isOpenVrAccessible = true;
+				}
+				catch
+				{
+					failedToAccessOpenVr = true;
+				}
+			}
+
+			return isOpenVrHmdPresent;
+		}
+		#endif
+	}
+
+	#if !UNITY_EDITOR
+	private static bool isSteamVrAccessible = false;
+	private static bool failedToAccessSteamVr = false;
+	#endif
+
+	public static string GetHmdModel()
+	{
+		if(!RUISDisplayManager.IsHmdPresent())
+			return "no_HMD";
+		
+		string hmdModel = UnityEngine.VR.VRDevice.model;
+
+		// Lets ask OpenVR if Unity does not recognice the HMD name
+		if(hmdModel == null || hmdModel == "")
+		{
+			#if UNITY_EDITOR
+			return SteamVR.instance.hmd_ModelNumber;
+			#else
+			if(isSteamVrAccessible)
+			{
+				if(SteamVR.instance != null)
+					return SteamVR.instance.hmd_ModelNumber;
+			}
+			else
+			{
+				if(!failedToAccessSteamVr)
+				{
+					try
+					{
+						if(SteamVR.instance != null)
+							hmdModel = SteamVR.instance.hmd_ModelNumber;
+						isSteamVrAccessible = true;
+					} 
+					catch
+					{
+						failedToAccessSteamVr = true;
+					}
+				}
+			}
+			#endif
+
+		}
+		else
+			return hmdModel;
+
+		if(hmdModel == null || hmdModel == "")
+			return "unknown HMD";
+		
+		return hmdModel;
+	}
+
+	// *** HACK TODO need to check if the found HMD is really position tracked
+	public static bool IsHmdPositionTrackable()
+	{
+		//		if(OVRManager.capiHmd != null)
+		//		{
+		//			Ovr.HmdType ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
+		//			
+		//			if(    (OVRManager.capiHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) != 0 // !isplay.isPresent
+		//				&& (ovrHmdVersion == HmdType.DK2 || ovrHmdVersion == HmdType.Other)) // Rift is DK2+     //06to08
+		//				return true;
+		//		}
+		//		return false;
+
+		return RUISDisplayManager.IsHmdPresent();
 	}
 }

@@ -47,7 +47,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	public bool menuIsVisible = false;
 	
-	private int previousSceneId;
+//	private int previousSceneId;
 	
 //	private bool calibrationInfoMessageShown = false;
 	
@@ -149,7 +149,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		this.transform.localPosition = new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
 		this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
 		
-		if(displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum && !displayManager.displays[displayManager.guiDisplayChoice].enableOculusRift)
+		if(displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum && !displayManager.displays[displayManager.guiDisplayChoice].isHmdDisplay)
 		{
 			this.transform.localRotation = Quaternion.LookRotation(-displayManager.displays[displayManager.guiDisplayChoice].DisplayNormal, 
 			                                                        displayManager.displays[displayManager.guiDisplayChoice].DisplayUp     );
@@ -229,7 +229,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 						this.transform.parent = null;
 		//						DontDestroyOnLoad(this);
 						currentMenuState = RUISMenuStates.calibration;
-						previousSceneId = Application.loadedLevel;
+//						previousSceneId = Application.loadedLevel;
 						Hide3DGUI();
 
 								// Hacky way to pass information between loading scenes
@@ -450,19 +450,19 @@ public class RUISMenuNGUI : MonoBehaviour {
 	{
 		GameObject 	infotext_Changes_saved = this.transform.Find(        "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes saved").gameObject;
 		GameObject 	infotext_Changes_are_not_saved_in_free_version = this.transform.Find(
-														 "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes are not saved in free version").gameObject;
+																		 "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes are not saved in free version").gameObject;
 		GameObject  infotext_Changes_not_saved_yet = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes not saved yet").gameObject;
 		GameObject 	infotext_Rift_not_Detected = this.transform.Find(    "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Rift not detected").gameObject;
 		GameObject 	infotext_Oculus_DK1_detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK1 detected").gameObject;
 		GameObject 	infotext_Oculus_DK2_detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK2 detected").gameObject;
 		
-		if(UnityEngine.VR.VRDevice.isPresent)
+		if(RUISDisplayManager.IsHmdPresent())
 		{
 			if(infotext_Oculus_DK1_detected)
 			{
 				UILabel hmdDetectedLabel = infotext_Oculus_DK1_detected.GetComponent<UILabel>();
 				if(hmdDetectedLabel)
-					hmdDetectedLabel.text = UnityEngine.VR.VRDevice.model + " detected";
+					hmdDetectedLabel.text = RUISDisplayManager.GetHmdModel() + " detected";
 			}
 			infotext_Rift_not_Detected.SetActive(false);
 			infotext_Oculus_DK1_detected.SetActive(true); 
@@ -623,21 +623,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 		    
 		bool isPositionTrackedOculusPresent = false;
 
-//		try
-//		{
-//			if(OVRManager.capiHmd != null)
-//				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
-//			if(OVRManager.display != null)
-//				isPositionTrackedOculusPresent = 	OVRManager.display.isPresent 
-//												&& (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other); //06to08
-//		}
-//		catch(UnityException e)
-//		{
-//			Debug.LogError (e);
-//		}
-
-		if(UnityEngine.VR.VRDevice.isPresent) // HACK TODO check that HMD is position tracked
-				isPositionTrackedOculusPresent = true;
+		if(RUISDisplayManager.IsHmdPresent())
+			isPositionTrackedOculusPresent = true;
 						
 		if(inputManager.enableKinect && inputManager.enableKinect2) dropDownChoices.Add ("Kinect - Kinect2");
 		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");

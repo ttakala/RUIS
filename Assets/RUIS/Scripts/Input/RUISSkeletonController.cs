@@ -15,29 +15,31 @@ using System.Collections.Generic;
 
 public enum RUISAxis
 {
-	X, Y, Z
+	X,
+	Y,
+	Z
 }
 
 public class RUISSkeletonController : MonoBehaviour
 {
 
 
-    public Transform root;
-    public Transform head;
-    public Transform neck;
-    public Transform torso;
-    public Transform rightShoulder;
-    public Transform rightElbow;
-    public Transform rightHand;
-    public Transform rightHip;
-    public Transform rightKnee;
-    public Transform rightFoot;
-    public Transform leftShoulder;
-    public Transform leftElbow;
-    public Transform leftHand;
-    public Transform leftHip;
-    public Transform leftKnee;
-    public Transform leftFoot;
+	public Transform root;
+	public Transform head;
+	public Transform neck;
+	public Transform torso;
+	public Transform rightShoulder;
+	public Transform rightElbow;
+	public Transform rightHand;
+	public Transform rightHip;
+	public Transform rightKnee;
+	public Transform rightFoot;
+	public Transform leftShoulder;
+	public Transform leftElbow;
+	public Transform leftHand;
+	public Transform leftHip;
+	public Transform leftKnee;
+	public Transform leftFoot;
 	public Transform leftThumb;
 	public Transform rightThumb;
 
@@ -68,17 +70,17 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool trackAnkle = true;
 	public bool rotateWristFromElbow = true;
 	
-	public RUISSkeletonManager.Skeleton.handState leftHandStatus  = RUISSkeletonManager.Skeleton.handState.open;
+	public RUISSkeletonManager.Skeleton.handState leftHandStatus = RUISSkeletonManager.Skeleton.handState.open;
 	public RUISSkeletonManager.Skeleton.handState rightHandStatus = RUISSkeletonManager.Skeleton.handState.open;
 
-	public RUISSkeletonManager.Skeleton.handState externalLeftStatus  = RUISSkeletonManager.Skeleton.handState.open;
+	public RUISSkeletonManager.Skeleton.handState externalLeftStatus = RUISSkeletonManager.Skeleton.handState.open;
 	public RUISSkeletonManager.Skeleton.handState externalRightStatus = RUISSkeletonManager.Skeleton.handState.open;
 
 	private RUISSkeletonManager.Skeleton.handState lastLeftHandStatus, lastRightHandStatus;
 
 
 	private RUISInputManager inputManager;
-    public RUISSkeletonManager skeletonManager;
+	public RUISSkeletonManager skeletonManager;
 	private RUISCoordinateSystem coordinateSystem;
 	public RUISCharacterController characterController;
 
@@ -88,43 +90,50 @@ public class RUISSkeletonController : MonoBehaviour
 		Kinect2,
 		GenericMotionTracker
 	}
+
 	public bodyTrackingDeviceType bodyTrackingDevice = bodyTrackingDeviceType.Kinect1;
 
 	public int bodyTrackingDeviceID = 0;
-    public int playerId = 0;
+	public int playerId = 0;
 	public bool switchToAvailableKinect = false;
 
-    private Vector3 skeletonPosition = Vector3.zero;
+	private Vector3 skeletonPosition = Vector3.zero;
 
 	public bool updateRootPosition = true;
 	public Vector3 rootSpeedScaling = Vector3.one;
 
-    public bool updateJointPositions = true;
-    public bool updateJointRotations = true;
+	public bool updateJointPositions = true;
+	public bool updateJointRotations = true;
 
-    public bool useHierarchicalModel = false;
+	public bool useHierarchicalModel = false;
 	public bool scaleHierarchicalModelBones = true;
 	public bool scaleBoneLengthOnly = false;
 	public RUISAxis boneLengthAxis = RUISAxis.X;
 	public float maxScaleFactor = 0.01f;
 
 	public float torsoThickness = 1;
-	public float rightArmThickness = 1; 
-	public float  leftArmThickness = 1; 
-	public float rightLegThickness = 1; 
-	public float  leftLegThickness = 1; 
+	public float rightArmThickness = 1;
+	public float leftArmThickness = 1;
+	public float rightLegThickness = 1;
+	public float leftLegThickness = 1;
 
-    public float minimumConfidenceToUpdate = 0.5f;
+	public float minimumConfidenceToUpdate = 0.5f;
 	public float rotationDamping = 360.0f;
-	
-	public float handRollAngleMinimum = -180; // Constrained between [0, -180] in Unity Editor script
-	public float handRollAngleMaximum =  180; // Constrained between [0,  180] in Unity Editor script
-	
+
+	// Constrained between [0, -180] in Unity Editor script
+	public float handRollAngleMinimum = -180; 
+
+	// Constrained between [0,  180] in Unity Editor script
+	public float handRollAngleMaximum = 180; 
+
 	public bool HMDRotatesHead = true;
+
 	public bool followOculusController { get; private set; }
+
 	public Quaternion trackedDeviceYawRotation { get; private set; }
 
 	public bool followMoveController { get; private set; }
+
 	private int followMoveID = 0;
 	private RUISPSMoveWand psmove;
 
@@ -134,12 +143,12 @@ public class RUISSkeletonController : MonoBehaviour
 	private float deltaTime = 0.03f;
 
 	private KalmanFilter positionKalman;
-	private double[] measuredPos = {0, 0, 0};
-	private double[] pos = {0, 0, 0};
-	private float positionNoiseCovariance = 100; // HACK was 500
+	private double[] measuredPos = { 0, 0, 0 };
+	private double[] pos = { 0, 0, 0 };
+	private float positionNoiseCovariance = 100;
 
 	private KalmanFilter[] fourJointsKalman = new KalmanFilter[4];
-	private float fourJointsNoiseCovariance = 50; // HACK was 300
+	private float fourJointsNoiseCovariance = 50;
 	private Vector3[] fourJointPositions = new Vector3[4];
 	
 	public bool filterRotations = false;
@@ -148,24 +157,24 @@ public class RUISSkeletonController : MonoBehaviour
 	public float thumbZRotationOffset = 45;
 
 	private Dictionary<Transform, Quaternion> jointInitialRotations;
-    private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
+	private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
 
 	
 	public float adjustVerticalTorsoLocation = 0;
-	public float adjustVerticalHipsPosition  = 0;
+	public float adjustVerticalHipsPosition = 0;
 	private Vector3 spineDirection = Vector3.zero;
 	//private RUISSkeletonManager.JointData adjustedHipJoint = new RUISSkeletonManager.JointData();
 
-    private float torsoOffset = 0.0f;
+	private float torsoOffset = 0.0f;
 
 	private float torsoScale = 1.0f;
 
-    public float neckHeightTweaker = 0.0f;
+	public float neckHeightTweaker = 0.0f;
 	private Vector3 neckOriginalLocalPosition;
 	private Transform chest;
 	private Vector3 chestOriginalLocalPosition;
 
-    public float forearmLengthRatio = 1.0f;
+	public float forearmLengthRatio = 1.0f;
 	public float shinLengthRatio = 1.0f;
 
 	private Vector3 unalteredRightForearmScale;
@@ -173,14 +182,16 @@ public class RUISSkeletonController : MonoBehaviour
 	private Vector3 unalteredRightShinScale;
 	private Vector3 unalteredLeftShinScale;
 	
-//	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None; //06to08
-	
-	Quaternion[,,] initialFingerRotations = new Quaternion[2,5,3]; // 2 hands, 5 fingers, 3 finger bones
-	Transform[,,] fingerTransforms = new Transform[2,5,3]; // For quick access to finger gameobjects
+	//	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None; //06to08
+
+	// 2 hands, 5 fingers, 3 finger bones
+	Quaternion[,,] initialFingerRotations = new Quaternion[2, 5, 3];
+	// For quick access to finger gameobjects
+	Transform[,,] fingerTransforms = new Transform[2, 5, 3];
 
 	// NOTE: The below phalange rotations are set in Start() method !!! See clause that starts with switch(boneLengthAxis)
 	// Thumb phalange rotations when hand is clenched to a fist
-	public Quaternion clenchedRotationThumbTM; 
+	public Quaternion clenchedRotationThumbTM;
 	public Quaternion clenchedRotationThumbMCP;
 	public Quaternion clenchedRotationThumbIP;
 	
@@ -188,22 +199,22 @@ public class RUISSkeletonController : MonoBehaviour
 	public Quaternion clenchedRotationMCP;
 	public Quaternion clenchedRotationPIP;
 	public Quaternion clenchedRotationDIP;
-	
-    void Awake()
-    {
+
+	void Awake()
+	{
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 
 		if(inputManager)
 		{
 			if(switchToAvailableKinect)
 			{
-				if(   bodyTrackingDevice == bodyTrackingDeviceType.Kinect1
+				if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1
 				   && !inputManager.enableKinect && inputManager.enableKinect2)
 				{
 					bodyTrackingDevice = bodyTrackingDeviceType.Kinect2;
 				}
-				else if(   bodyTrackingDevice == bodyTrackingDeviceType.Kinect2
-				   && !inputManager.enableKinect2 && inputManager.enableKinect)
+				else if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2
+				        && !inputManager.enableKinect2 && inputManager.enableKinect)
 				{
 					bodyTrackingDevice = bodyTrackingDeviceType.Kinect1;
 				}
@@ -212,57 +223,60 @@ public class RUISSkeletonController : MonoBehaviour
 
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		
-		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1) bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
-		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2) bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
-		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker) bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1)
+			bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2)
+			bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)
+			bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 
 		followOculusController = false;
 		followMoveController = false;
 		trackedDeviceYawRotation = Quaternion.identity;
 		
-        jointInitialRotations = new Dictionary<Transform, Quaternion>();
-        jointInitialDistances = new Dictionary<KeyValuePair<Transform, Transform>, float>();
+		jointInitialRotations = new Dictionary<Transform, Quaternion>();
+		jointInitialDistances = new Dictionary<KeyValuePair<Transform, Transform>, float>();
 		
 		positionKalman = new KalmanFilter();
-		positionKalman.initialize(3,3);
+		positionKalman.initialize(3, 3);
 
-		for(int i=0; i<fourJointsKalman.Length; ++i)
+		for(int i = 0; i < fourJointsKalman.Length; ++i)
 		{
 			fourJointsKalman[i] = new KalmanFilter();
-			fourJointsKalman[i].initialize(3,3);
+			fourJointsKalman[i].initialize(3, 3);
 			fourJointPositions[i] = Vector3.zero;
 		}
-    }
+	}
 
-    void Start()
-    {
+	void Start()
+	{
 		
-		if (skeletonManager == null)
+		if(skeletonManager == null)
 		{
 			skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
-			if (!skeletonManager)
+			if(!skeletonManager)
 				Debug.LogError("The scene is missing " + typeof(RUISSkeletonManager) + " script!");
 		}
 
 		// Disable features that are only available for Kinect2 or custom motion tracker
-		if (bodyTrackingDevice == bodyTrackingDeviceType.Kinect1) 
+		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1)
 		{
 			fistCurlFingers = false;
 			trackThumbs = false;
-			trackWrist  = false;
-			trackAnkle  = false;
+			trackWrist = false;
+			trackAnkle = false;
 			rotateWristFromElbow = false;
 		}
 
-        if (useHierarchicalModel)
-        {
-            //fix all shoulder and hip rotations to match the default kinect rotations
-            rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, transform.right) * rightShoulder.rotation;
-            leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, -transform.right) * leftShoulder.rotation;
-            rightHip.rotation = FindFixingRotation(rightHip.position, rightFoot.position, -transform.up) * rightHip.rotation;
-            leftHip.rotation = FindFixingRotation(leftHip.position, leftFoot.position, -transform.up) * leftHip.rotation;
+		if(useHierarchicalModel)
+		{
+			//fix all shoulder and hip rotations to match the default kinect rotations
+			rightShoulder.rotation = FindFixingRotation(rightShoulder.position, rightElbow.position, transform.right) * rightShoulder.rotation;
+			leftShoulder.rotation = FindFixingRotation(leftShoulder.position, leftElbow.position, -transform.right) * leftShoulder.rotation;
+			rightHip.rotation = FindFixingRotation(rightHip.position, rightFoot.position, -transform.up) * rightHip.rotation;
+			leftHip.rotation = FindFixingRotation(leftHip.position, leftFoot.position, -transform.up) * leftHip.rotation;
 
-			Vector3 scaler = new Vector3(1/transform.lossyScale.x, 1/transform.lossyScale.y, 1/transform.lossyScale.z);
+			Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
 			Vector3 assumedRootPos = Vector3.Scale((rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4, scaler); 
 															
 			Vector3 realRootPos = Vector3.Scale(torso.position, scaler);
@@ -272,64 +286,64 @@ public class RUISSkeletonController : MonoBehaviour
 			torsoOffset = Vector3.Dot(realRootPos - assumedRootPos, torsoUp);
 			//torsoOffset = (realRootPos - assumedRootPos).y;
 
-            if (neck)
-            {
-                neckOriginalLocalPosition = neck.localPosition;
+			if(neck)
+			{
+				neckOriginalLocalPosition = neck.localPosition;
 				if(neck.parent)
 				{
 					chest = neck.parent;
 					if(chest == torso)
 					{
-						Debug.Log(	typeof(RUISSkeletonController) + ": Hierarchical model stored in GameObject " + this.name 
-						          + " does not have enough joints between neck and torso for Hips Vertical Tweaker to work.");
+						Debug.Log(typeof(RUISSkeletonController) + ": Hierarchical model stored in GameObject " + this.name
+						+ " does not have enough joints between neck and torso for Hips Vertical Tweaker to work.");
 						chest = null;
 					}
 					chestOriginalLocalPosition = chest.localPosition;
 				}
-            }
-        }
+			}
+		}
 
-        SaveInitialRotation(root);
-        SaveInitialRotation(head);
-        SaveInitialRotation(torso);
-        SaveInitialRotation(rightShoulder);
-        SaveInitialRotation(rightElbow);
-        SaveInitialRotation(rightHand);
-        SaveInitialRotation(leftShoulder);
-        SaveInitialRotation(leftElbow);
-        SaveInitialRotation(leftHand);
-        SaveInitialRotation(rightHip);
-        SaveInitialRotation(rightKnee);
-        SaveInitialRotation(rightFoot);
-        SaveInitialRotation(leftHip);
-        SaveInitialRotation(leftKnee);
-        SaveInitialRotation(leftFoot);
+		SaveInitialRotation(root);
+		SaveInitialRotation(head);
+		SaveInitialRotation(torso);
+		SaveInitialRotation(rightShoulder);
+		SaveInitialRotation(rightElbow);
+		SaveInitialRotation(rightHand);
+		SaveInitialRotation(leftShoulder);
+		SaveInitialRotation(leftElbow);
+		SaveInitialRotation(leftHand);
+		SaveInitialRotation(rightHip);
+		SaveInitialRotation(rightKnee);
+		SaveInitialRotation(rightFoot);
+		SaveInitialRotation(leftHip);
+		SaveInitialRotation(leftKnee);
+		SaveInitialRotation(leftFoot);
 
 		SaveInitialRotation(leftThumb);
 		SaveInitialRotation(rightThumb);
 
 		saveInitialFingerRotations();
 		
-        SaveInitialDistance(rightShoulder, rightElbow);
-        SaveInitialDistance(rightElbow, rightHand);
-        SaveInitialDistance(leftShoulder, leftElbow);
-        SaveInitialDistance(leftElbow, leftHand);
+		SaveInitialDistance(rightShoulder, rightElbow);
+		SaveInitialDistance(rightElbow, rightHand);
+		SaveInitialDistance(leftShoulder, leftElbow);
+		SaveInitialDistance(leftElbow, leftHand);
 
-        SaveInitialDistance(rightHip, rightKnee);
-        SaveInitialDistance(rightKnee, rightFoot);
-        SaveInitialDistance(leftHip, leftKnee);
-        SaveInitialDistance(leftKnee, leftFoot);
+		SaveInitialDistance(rightHip, rightKnee);
+		SaveInitialDistance(rightKnee, rightFoot);
+		SaveInitialDistance(leftHip, leftKnee);
+		SaveInitialDistance(leftKnee, leftFoot);
 
-        SaveInitialDistance(torso, head);
+		SaveInitialDistance(torso, head);
 
-        SaveInitialDistance(rightShoulder, leftShoulder);
-        SaveInitialDistance(rightHip, leftHip);
+		SaveInitialDistance(rightShoulder, leftShoulder);
+		SaveInitialDistance(rightHip, leftHip);
 
 		
-		if (rightElbow)
+		if(rightElbow)
 			unalteredRightForearmScale = rightElbow.localScale;
 		
-		if (leftElbow)
+		if(leftElbow)
 			unalteredLeftForearmScale = leftElbow.localScale;
 		
 		if(rightKnee)
@@ -345,33 +359,33 @@ public class RUISSkeletonController : MonoBehaviour
 		{
 		case RUISAxis.X:
 			// Thumb phalange rotations when hand is clenched to a fist
-			clenchedRotationThumbTM = Quaternion.Euler (45, 0, 0); 
-			clenchedRotationThumbMCP = Quaternion.Euler (0, 0, -25 );
-			clenchedRotationThumbIP = Quaternion.Euler (0, 0, -80);
+			clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
+			clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
+			clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
 			// Phalange rotations of other fingers when hand is clenched to a fist
-			clenchedRotationMCP = Quaternion.Euler (0, 0, -45);
-			clenchedRotationPIP = Quaternion.Euler (0, 0, -100);
-			clenchedRotationDIP = Quaternion.Euler (0, 0, -70);
+			clenchedRotationMCP = Quaternion.Euler(0, 0, -45);
+			clenchedRotationPIP = Quaternion.Euler(0, 0, -100);
+			clenchedRotationDIP = Quaternion.Euler(0, 0, -70);
 			break;
 		case RUISAxis.Y:
 			// Thumb phalange rotations when hand is clenched to a fist
-			clenchedRotationThumbTM = Quaternion.Euler (0, 0, 0); 
-			clenchedRotationThumbMCP = Quaternion.Euler (0, 0, 0);
-			clenchedRotationThumbIP = Quaternion.Euler (0, 0, 80);
+			clenchedRotationThumbTM = Quaternion.Euler(0, 0, 0); 
+			clenchedRotationThumbMCP = Quaternion.Euler(0, 0, 0);
+			clenchedRotationThumbIP = Quaternion.Euler(0, 0, 80);
 			// Phalange rotations of other fingers when hand is clenched to a fist
-			clenchedRotationMCP = Quaternion.Euler (45, 0, 0);
-			clenchedRotationPIP = Quaternion.Euler (100, 0, 0);
-			clenchedRotationDIP = Quaternion.Euler (70, 0, 0);
+			clenchedRotationMCP = Quaternion.Euler(45, 0, 0);
+			clenchedRotationPIP = Quaternion.Euler(100, 0, 0);
+			clenchedRotationDIP = Quaternion.Euler(70, 0, 0);
 			break;
 		case RUISAxis.Z: // TODO: Not yet tested with a real rig
 			// Thumb phalange rotations when hand is clenched to a fist
-			clenchedRotationThumbTM = Quaternion.Euler (45, 0, 0); 
-			clenchedRotationThumbMCP = Quaternion.Euler (0, 0, -25 );
-			clenchedRotationThumbIP = Quaternion.Euler (0, 0, -80);
+			clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
+			clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
+			clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
 			// Phalange rotations of other fingers when hand is clenched to a fist
-			clenchedRotationMCP = Quaternion.Euler (0, -45, 0);
-			clenchedRotationPIP = Quaternion.Euler (0, -100, 0);
-			clenchedRotationDIP = Quaternion.Euler (0, -70, 0);
+			clenchedRotationMCP = Quaternion.Euler(0, -45, 0);
+			clenchedRotationPIP = Quaternion.Euler(0, -100, 0);
+			clenchedRotationDIP = Quaternion.Euler(0, -70, 0);
 			break;
 		}
 
@@ -382,182 +396,188 @@ public class RUISSkeletonController : MonoBehaviour
 				characterController = gameObject.transform.parent.GetComponent<RUISCharacterController>();
 				if(characterController != null)
 				{
-					if(		characterController.characterPivotType == RUISCharacterController.CharacterPivotType.MoveController
-						&&	inputManager.enablePSMove																			)
+					if(characterController.characterPivotType == RUISCharacterController.CharacterPivotType.MoveController
+					   &&	inputManager.enablePSMove)
 					{
 						followMoveController = true;
 						followMoveID = characterController.moveControllerId;
 //						if(		 gameObject.GetComponent<RUISKinectAndMecanimCombiner>() == null 
 //							||	!gameObject.GetComponent<RUISKinectAndMecanimCombiner>().enabled )
-							Debug.LogWarning(	"Using PS Move controller #" + characterController.moveControllerId + " as a source "
-						                 	 +	"for avatar root position of " + gameObject.name + ", because PS Move is enabled"
-											 +	"and the PS Move controller has been assigned as a "
-											 +	"Character Pivot in " + gameObject.name + "'s parent GameObject");
+						Debug.LogWarning("Using PS Move controller #" + characterController.moveControllerId + " as a source "
+						+	"for avatar root position of " + gameObject.name + ", because PS Move is enabled"
+						+	"and the PS Move controller has been assigned as a "
+						+	"Character Pivot in " + gameObject.name + "'s parent GameObject");
 					}
 
 					if(!inputManager.enableKinect && !inputManager.enableKinect2 && !followMoveController)
 					{
-						
-//						if(OVRManager.display != null && OVRManager.display.isPresent) //06to08
-						if(UnityEngine.VR.VRDevice.isPresent)
+						if(RUISDisplayManager.IsHmdPresent())
 						{
 							followOculusController = true;
-							Debug.LogWarning(	"Using " + UnityEngine.VR.VRDevice.model + " as a Character Pivot for " + gameObject.name
-								+	", because Kinects are disabled and " + UnityEngine.VR.VRDevice.model + " was detected.");
+							Debug.LogWarning("Using " + RUISDisplayManager.GetHmdModel() + " as a Character Pivot for " + gameObject.name
+							+ ", because Kinects are disabled and " + RUISDisplayManager.GetHmdModel() + " was detected.");
 						}
 					}
 				}
 			}
 		}
+			
 
-		
-//		try
-//		{
-//			if(OVRManager.capiHmd != null)
-//				ovrHmdVersion = OVRManager.capiHmd.GetDesc().Type; //06to08
-//		}
-//		catch(UnityException e)
-//		{
-//			Debug.LogError(e);
-//		}
-
-		if(HMDRotatesHead && !UnityEngine.VR.VRDevice.isPresent) // (OVRManager.display == null || !OVRManager.display.isPresent))  //06to08
-		   HMDRotatesHead = false;
+		if(HMDRotatesHead && !RUISDisplayManager.IsHmdPresent())
+			HMDRotatesHead = false;
 
 		// HACK for filtering Kinect 2 arm rotations
-		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRotations = filterRotations;
-		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rotationNoiseCovariance = rotationNoiseCovariance;
-		for(int i=0; i < skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot.Length; ++i)
+		skeletonManager.skeletons[bodyTrackingDeviceID, playerId].filterRotations = filterRotations;
+		skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rotationNoiseCovariance = rotationNoiseCovariance;
+		for(int i = 0; i < skeletonManager.skeletons[bodyTrackingDeviceID, playerId].filterRot.Length; ++i)
 		{
-			if(skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot[i] != null)
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].filterRot[i].rotationNoiseCovariance = rotationNoiseCovariance;
+			if(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].filterRot[i] != null)
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].filterRot[i].rotationNoiseCovariance = rotationNoiseCovariance;
 		}
-		skeletonManager.skeletons [bodyTrackingDeviceID, playerId].thumbZRotationOffset = thumbZRotationOffset;
-    }
+		skeletonManager.skeletons[bodyTrackingDeviceID, playerId].thumbZRotationOffset = thumbZRotationOffset;
+	}
 
-    void LateUpdate()
-    {
+	void LateUpdate()
+	{
 		deltaTime = Time.deltaTime; //1.0f / vr.hmd_DisplayFrequency;
 
 		// If a custom skeleton tracking source is used, save its data into skeletonManager (which is a little 
 		// topsy turvy) so we can utilize same code as we did with Kinect 1 and 2
-		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker) 
+		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)
 		{
-			skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking = true;
+			skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking = true;
 
-			if(customRoot) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.rotation = customRoot.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position = customRoot.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.rotationConfidence = 1;
+			if(customRoot)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.rotation = customRoot.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.position = customRoot.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.rotationConfidence = 1;
 			}
-			if(customHead) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotation = customHead.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.position = customHead.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotationConfidence = 1;
+			if(customHead)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.rotation = customHead.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.position = customHead.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.rotationConfidence = 1;
 			}
-			if(customNeck) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].neck.rotation = customNeck.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].neck.position = customNeck.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].neck.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].neck.rotationConfidence = 1;
+			if(customNeck)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.rotation = customNeck.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.position = customNeck.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.rotationConfidence = 1;
 			}
-			if(customTorso) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotation = customTorso.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position = customTorso.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.rotationConfidence = 1;
+			if(customTorso)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotation = customTorso.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.position = customTorso.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotationConfidence = 1;
 			}
-			if(customRightShoulder) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder.rotation = customRightShoulder.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder.position = customRightShoulder.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder.rotationConfidence = 1;
+			if(customRightShoulder)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.rotation = customRightShoulder.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position = customRightShoulder.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.rotationConfidence = 1;
 			}
-			if(customLeftShoulder) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder.rotation = customLeftShoulder.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder.position = customLeftShoulder.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder.rotationConfidence = 1;
+			if(customLeftShoulder)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.rotation = customLeftShoulder.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position = customLeftShoulder.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.rotationConfidence = 1;
 			}
-			if(customRightElbow) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow.rotation = customRightElbow.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow.position = customRightElbow.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow.rotationConfidence = 1;
+			if(customRightElbow)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.rotation = customRightElbow.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.position = customRightElbow.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.rotationConfidence = 1;
 			}
-			if(customLeftElbow) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotation = customLeftElbow.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.position = customLeftElbow.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow.rotationConfidence = 1;
+			if(customLeftElbow)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.rotation = customLeftElbow.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.position = customLeftElbow.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.rotationConfidence = 1;
 			}
-			if(customRightHand) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand.rotation = customRightHand.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand.position = customRightHand.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand.rotationConfidence = 1;
+			if(customRightHand)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.rotation = customRightHand.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.position = customRightHand.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.rotationConfidence = 1;
 			}
-			if(customLeftHand) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand.rotation = customLeftHand.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand.position = customLeftHand.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand.rotationConfidence = 1;
+			if(customLeftHand)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.rotation = customLeftHand.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.position = customLeftHand.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.rotationConfidence = 1;
 			}
-			if(customRightHip) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.rotation = customRightHip.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.position = customRightHip.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.rotationConfidence = 1;
+			if(customRightHip)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.rotation = customRightHip.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position = customRightHip.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.rotationConfidence = 1;
 			}
-			if(customLeftHip) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.rotation = customLeftHip.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.position = customLeftHip.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.rotationConfidence = 1;
+			if(customLeftHip)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.rotation = customLeftHip.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position = customLeftHip.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.rotationConfidence = 1;
 			}
-			if(customRightKnee) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee.rotation = customRightKnee.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee.position = customRightKnee.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee.rotationConfidence = 1;
+			if(customRightKnee)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.rotation = customRightKnee.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.position = customRightKnee.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.rotationConfidence = 1;
 			}
-			if(customLeftKnee) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee.rotation = customLeftKnee.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee.position = customLeftKnee.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee.rotationConfidence = 1;
+			if(customLeftKnee)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.rotation = customLeftKnee.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.position = customLeftKnee.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.rotationConfidence = 1;
 			}
-			if(customRightFoot) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot.rotation = customRightFoot.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot.position = customRightFoot.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot.rotationConfidence = 1;
+			if(customRightFoot)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.rotation = customRightFoot.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.position = customRightFoot.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.rotationConfidence = 1;
 			}
-			if(customLeftFoot) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot.rotation = customLeftFoot.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot.position = customLeftFoot.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot.rotationConfidence = 1;
+			if(customLeftFoot)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.rotation = customLeftFoot.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.position = customLeftFoot.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.rotationConfidence = 1;
 			}
-			if(customRightThumb) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb.rotation = customRightThumb.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb.position = customRightThumb.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb.rotationConfidence = 1;
+			if(customRightThumb)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.rotation = customRightThumb.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.position = customRightThumb.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.rotationConfidence = 1;
 			}
-			if(customLeftThumb) {
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb.rotation = customLeftThumb.rotation;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb.position = customLeftThumb.position;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb.positionConfidence = 1;
-				skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb.rotationConfidence = 1;
+			if(customLeftThumb)
+			{
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.rotation = customLeftThumb.rotation;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.position = customLeftThumb.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.positionConfidence = 1;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.rotationConfidence = 1;
 			}
 		}
 
 		// Update skeleton based on data fetched from skeletonManager
-		if (	skeletonManager != null && skeletonManager.skeletons [bodyTrackingDeviceID, playerId] != null 
-		    &&  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking) 
+		if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, playerId] != null
+		    && skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking)
 		{
 						
 //			if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !skeletonManager.isNewKinect2Frame)
@@ -567,19 +587,19 @@ public class RUISSkeletonController : MonoBehaviour
 //			if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID)
 //				maxAngularVelocity = skeletonManager.kinect2FrameDeltaT * rotationDamping;
 //			else 
-				maxAngularVelocity = deltaTime * rotationDamping;
+			maxAngularVelocity = deltaTime * rotationDamping;
 
 
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
 //			if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
 			{
-				UpdateSkeletonPosition ();
+				UpdateSkeletonPosition();
 
-				UpdateTransform (ref torso,         skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso,           maxAngularVelocity);
-				UpdateTransform (ref head,          skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head,            maxAngularVelocity);
+				UpdateTransform(ref torso, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso, maxAngularVelocity);
+				UpdateTransform(ref head, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head, maxAngularVelocity);
 			}
 				
-			if(HMDRotatesHead && UnityEngine.VR.VRDevice.isPresent)
+			if(HMDRotatesHead && RUISDisplayManager.IsHmdPresent())
 			{
 				if(coordinateSystem)
 				{
@@ -591,16 +611,16 @@ public class RUISSkeletonController : MonoBehaviour
 //						else //06to08
 //							oculusRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) 
 //								                                                  * coordinateSystem.GetOculusRiftOrientationRaw(), RUISDevice.Oculus_DK2);
-							oculusRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.Oculus_DK2);
+						oculusRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.Oculus_DK2);
 					}
 					else
 						oculusRotation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head);
 //					else if(OVRManager.display != null) //06to08
 //						oculusRotation = OVRManager.display.GetHeadPose().orientation; 
 
-					if (useHierarchicalModel)
+					if(useHierarchicalModel)
 						head.rotation = transform.rotation * oculusRotation /*skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotation*/ *
-							(jointInitialRotations.ContainsKey(head) ? jointInitialRotations[head] : Quaternion.identity);
+						(jointInitialRotations.ContainsKey(head) ? jointInitialRotations[head] : Quaternion.identity);
 					else
 						head.localRotation = oculusRotation; //skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head;
 				}
@@ -609,27 +629,27 @@ public class RUISSkeletonController : MonoBehaviour
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
 //			if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
 			{
-				UpdateTransform (ref leftShoulder,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder,    maxAngularVelocity);
-				UpdateTransform (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder,   maxAngularVelocity);
+				UpdateTransform(ref leftShoulder, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder, maxAngularVelocity);
+				UpdateTransform(ref rightShoulder, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder, maxAngularVelocity);
 
 				if(trackWrist || !useHierarchicalModel)
 				{
-					UpdateTransform (ref leftHand,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHand,      2*maxAngularVelocity);
-					UpdateTransform (ref rightHand,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHand,     2*maxAngularVelocity);
+					UpdateTransform(ref leftHand, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand, 2 * maxAngularVelocity);
+					UpdateTransform(ref rightHand, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand, 2 * maxAngularVelocity);
 				}
 
-				UpdateTransform (ref leftHip,       skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip,         maxAngularVelocity);
-				UpdateTransform (ref rightHip,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip,        maxAngularVelocity);
-				UpdateTransform (ref leftKnee,      skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftKnee,        maxAngularVelocity);
-				UpdateTransform (ref rightKnee,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightKnee,       maxAngularVelocity);
+				UpdateTransform(ref leftHip, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip, maxAngularVelocity);
+				UpdateTransform(ref rightHip, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip, maxAngularVelocity);
+				UpdateTransform(ref leftKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee, maxAngularVelocity);
+				UpdateTransform(ref rightKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee, maxAngularVelocity);
 				
-				UpdateTransform (ref rightElbow,    skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightElbow,      maxAngularVelocity);
-				UpdateTransform (ref leftElbow,     skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftElbow,       maxAngularVelocity);
+				UpdateTransform(ref rightElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow, maxAngularVelocity);
+				UpdateTransform(ref leftElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow, maxAngularVelocity);
 
 				if(trackAnkle || !useHierarchicalModel)
 				{
-					UpdateTransform (ref leftFoot,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftFoot,        maxAngularVelocity);
-					UpdateTransform (ref rightFoot, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightFoot,       maxAngularVelocity);
+					UpdateTransform(ref leftFoot, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot, maxAngularVelocity);
+					UpdateTransform(ref rightFoot, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot, maxAngularVelocity);
 				}
 			
 //				// TODO: Restore this when implementation is fixed
@@ -655,18 +675,18 @@ public class RUISSkeletonController : MonoBehaviour
 	
 				if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)
 				{
-					leftHandStatus  = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHandStatus);
-					rightHandStatus = (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHandStatus);
+					leftHandStatus = (skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHandStatus);
+					rightHandStatus = (skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHandStatus);
 
 					if(fistCurlFingers && !externalCurlTrigger)
 						handleFingersCurling(trackThumbs);
 
-					if(trackThumbs) 
+					if(trackThumbs)
 					{
 						if(rightThumb)
-							UpdateTransform (ref rightThumb, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightThumb, maxAngularVelocity);
+							UpdateTransform(ref rightThumb, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb, maxAngularVelocity);
 						if(leftThumb)
-							UpdateTransform (ref leftThumb,  skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftThumb,  maxAngularVelocity);
+							UpdateTransform(ref leftThumb, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb, maxAngularVelocity);
 					}
 				}
 				
@@ -675,34 +695,35 @@ public class RUISSkeletonController : MonoBehaviour
 					handleFingersCurling(trackThumbs);
 			}
 
-			if (!useHierarchicalModel) 
+			if(!useHierarchicalModel)
 			{
-				if (leftHand != null) 
+				if(leftHand != null)
 				{
 					leftHand.localRotation = leftElbow.localRotation;
 				}
 
-				if (rightHand != null) 
+				if(rightHand != null)
 				{
 					rightHand.localRotation = rightElbow.localRotation;
 				}
-			} else 
+			}
+			else
 			{
-				if (scaleHierarchicalModelBones) 
+				if(scaleHierarchicalModelBones)
 				{
-					UpdateBoneScalings ();
+					UpdateBoneScalings();
 
-					torsoRotation = Quaternion.Slerp(torsoRotation, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotation, deltaTime*rotationDamping);
+					torsoRotation = Quaternion.Slerp(torsoRotation, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotation, deltaTime * rotationDamping);
 					torsoDirection = torsoRotation * Vector3.down;
 
 					if(torso == root)
-						torso.position = transform.TransformPoint (- torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
-					else 
-						torso.position = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
-						                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
+						torso.position = transform.TransformPoint(-torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
+					else
+						torso.position = transform.TransformPoint(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.position - skeletonPosition
+						- torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition));
 
 					// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
-					spineDirection = transform.TransformPoint (- torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
+					spineDirection = transform.TransformPoint(-torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
 //					spineDirection = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
 //					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
 					                                           
@@ -718,17 +739,17 @@ public class RUISSkeletonController : MonoBehaviour
 //						if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID)
 //							deltaT = skeletonManager.kinect2FrameDeltaT;
 //						else
-							deltaT = deltaTime;
-						ForceUpdatePosition (ref rightShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightShoulder, 0, deltaT);
-						ForceUpdatePosition (ref leftShoulder, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftShoulder, 1, deltaT);
-						ForceUpdatePosition (ref rightHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip, 2, deltaT);
-						ForceUpdatePosition (ref leftHip, skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip, 3, deltaT);
+						deltaT = deltaTime;
+						ForceUpdatePosition(ref rightShoulder, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder, 0, deltaT);
+						ForceUpdatePosition(ref leftShoulder, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder, 1, deltaT);
+						ForceUpdatePosition(ref rightHip, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip, 2, deltaT);
+						ForceUpdatePosition(ref leftHip, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip, 3, deltaT);
 					}
 
 				}
 			}
 
-			if (updateRootPosition) 
+			if(updateRootPosition)
 			{
 //				Vector3 newRootPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position;
 //				measuredPos [0] = newRootPosition.x;
@@ -748,24 +769,24 @@ public class RUISSkeletonController : MonoBehaviour
 		if(characterController)
 		{
 			// If character controller pivot is PS Move
-			if (followMoveController && inputManager)
+			if(followMoveController && inputManager)
 			{
-				psmove = inputManager.GetMoveWand (followMoveID);
-				if (psmove) 
+				psmove = inputManager.GetMoveWand(followMoveID);
+				if(psmove)
 				{
 					float moveYaw = psmove.localRotation.eulerAngles.y;
-					trackedDeviceYawRotation = Quaternion.Euler (0, moveYaw, 0);
+					trackedDeviceYawRotation = Quaternion.Euler(0, moveYaw, 0);
 
-					if(!skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking)
+					if(!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking)
 					{
 						skeletonPosition = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
 						skeletonPosition.y = 0;
 
-						if (updateRootPosition)
+						if(updateRootPosition)
 							transform.localPosition = skeletonPosition;
 
 						if(characterController.headRotatesBody)
-							UpdateTransformWithTrackedDevice (ref root, moveYaw);
+							UpdateTransformWithTrackedDevice(ref root, moveYaw);
 //							UpdateTransformWithPSMove (ref torso,  moveYaw);
 //							UpdateTransformWithPSMove (ref head, moveYawRotation);
 //							UpdateTransformWithPSMove (ref leftShoulder, moveYawRotation);
@@ -799,7 +820,7 @@ public class RUISSkeletonController : MonoBehaviour
 							skeletonPosition.y = 0;
 //							oculusYaw = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) * coordinateSystem.GetOculusRiftOrientationRaw(),
 //						                                          	     RUISDevice.Oculus_DK2).eulerAngles.y; //06to08
-						    oculusYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.Oculus_DK2).eulerAngles.y;
+							oculusYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.Oculus_DK2).eulerAngles.y;
 						}
 					}
 					else //if(OVRManager.display != null)  //06to08
@@ -812,80 +833,81 @@ public class RUISSkeletonController : MonoBehaviour
 					}
 				}
 
-				trackedDeviceYawRotation = Quaternion.Euler (0, oculusYaw, 0);
+				trackedDeviceYawRotation = Quaternion.Euler(0, oculusYaw, 0);
 
 				if(updateRootPosition)
 					transform.localPosition = skeletonPosition;
 				
 				if(characterController.headRotatesBody)
-					UpdateTransformWithTrackedDevice (ref root, oculusYaw);
+					UpdateTransformWithTrackedDevice(ref root, oculusYaw);
 			}
 		}
 
 		TweakHipPosition();
 		TweakNeckHeight();
-    }
+	}
 
 	private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, float maxAngularVelocity)
-    {
-        if (transformToUpdate == null)
+	{
+		if(transformToUpdate == null)
 		{
 			return;
 		}
 
-        if (updateJointPositions && jointToGet.positionConfidence >= minimumConfidenceToUpdate)
-        {
-        	// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
-        	if(jointToGet.jointID == RUISSkeletonManager.Joint.Torso)
-        		transformToUpdate.localPosition = Vector3.zero;
-       		else 
-	            transformToUpdate.localPosition = jointToGet.position - skeletonPosition;
-        }
+		if(updateJointPositions && jointToGet.positionConfidence >= minimumConfidenceToUpdate)
+		{
+			// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
+			if(jointToGet.jointID == RUISSkeletonManager.Joint.Torso)
+				transformToUpdate.localPosition = Vector3.zero;
+			else
+				transformToUpdate.localPosition = jointToGet.position - skeletonPosition;
+		}
 
-        if (updateJointRotations && jointToGet.rotationConfidence >= minimumConfidenceToUpdate)
-        {
-            if (useHierarchicalModel)
-            {
-                Quaternion newRotation = transform.rotation * jointToGet.rotation *
-                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
+		if(updateJointRotations && jointToGet.rotationConfidence >= minimumConfidenceToUpdate)
+		{
+			if(useHierarchicalModel)
+			{
+				Quaternion newRotation = transform.rotation * jointToGet.rotation *
+				                                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 				transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularVelocity);
-            }
-            else
-            {
+			}
+			else
+			{
 				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation, jointToGet.rotation, maxAngularVelocity);
-            }
-        }
-    }
+			}
+		}
+	}
 
 	// Here tracked device can mean PS Move or Oculus Rift DK2+
 	private void UpdateTransformWithTrackedDevice(ref Transform transformToUpdate, float controllerYaw)
-    {
-		if (transformToUpdate == null) return;
+	{
+		if(transformToUpdate == null)
+			return;
 		
 		//if (updateJointPositions) ;
 		
-		if (updateJointRotations)
+		if(updateJointRotations)
 		{
-			if (useHierarchicalModel)
-            {
+			if(useHierarchicalModel)
+			{
 //                Quaternion newRotation = transform.rotation * jointToGet.rotation *
 //                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 //                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, deltaTime * rotationDamping);
 				Quaternion newRotation = transform.rotation * Quaternion.Euler(new Vector3(0, controllerYaw, 0)) *
-                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-                transformToUpdate.rotation = newRotation;
-            }
-            else
-            {
+				                         (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
+				transformToUpdate.rotation = newRotation;
+			}
+			else
+			{
 				transformToUpdate.localRotation = Quaternion.Euler(new Vector3(0, controllerYaw, 0));
 //                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, deltaTime * rotationDamping);
-            }
+			}
 		}
 	}
 
-    private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, int jointID, float deltaT)
-    {
-        if (transformToUpdate == null)
+	private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, int jointID, float deltaT)
+	{
+		if(transformToUpdate == null)
 			return;
 
 //		if(jointID == 2 || jointID == 3) // HACK: for now saving performance by not filtering hips
@@ -893,97 +915,98 @@ public class RUISSkeletonController : MonoBehaviour
 //		else
 		{
 
-			measuredPos [0] = jointToGet.position.x;
-			measuredPos [1] = jointToGet.position.y;
-			measuredPos [2] = jointToGet.position.z;
+			measuredPos[0] = jointToGet.position.x;
+			measuredPos[1] = jointToGet.position.y;
+			measuredPos[2] = jointToGet.position.z;
 
-			fourJointsKalman[jointID].setR (deltaT * fourJointsNoiseCovariance);
-			fourJointsKalman[jointID].predict ();
-			fourJointsKalman[jointID].update (measuredPos);
-			pos = fourJointsKalman[jointID].getState ();
+			fourJointsKalman[jointID].setR(deltaT * fourJointsNoiseCovariance);
+			fourJointsKalman[jointID].predict();
+			fourJointsKalman[jointID].update(measuredPos);
+			pos = fourJointsKalman[jointID].getState();
 
-			fourJointPositions[jointID].Set((float)pos [0], (float)pos [1], (float)pos [2]);
+			fourJointPositions[jointID].Set((float)pos[0], (float)pos[1], (float)pos[2]);
 
 			transformToUpdate.position = transform.TransformPoint(fourJointPositions[jointID] - skeletonPosition);
 		}
 //		transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
-    }
+	}
 
-    //gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
-    private void UpdateSkeletonPosition()
-    {
+	//gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
+	private void UpdateSkeletonPosition()
+	{
 		
-		Vector3 newRootPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].root.position;
+		Vector3 newRootPosition = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.position;
 		
-		measuredPos [0] = newRootPosition.x;
-		measuredPos [1] = newRootPosition.y;
-		measuredPos [2] = newRootPosition.z;
-		positionKalman.setR (deltaTime * positionNoiseCovariance); // HACK doesn't take into account Kinect's own update deltaT
-		positionKalman.predict ();
-		positionKalman.update (measuredPos);
-		pos = positionKalman.getState ();
+		measuredPos[0] = newRootPosition.x;
+		measuredPos[1] = newRootPosition.y;
+		measuredPos[2] = newRootPosition.z;
+		positionKalman.setR(deltaTime * positionNoiseCovariance); // HACK doesn't take into account Kinect's own update deltaT
+		positionKalman.predict();
+		positionKalman.update(measuredPos);
+		pos = positionKalman.getState();
 
-		skeletonPosition = new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]);
+		skeletonPosition = new Vector3((float)pos[0], (float)pos[1], (float)pos[2]);
 
 //		if (skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.positionConfidence >= minimumConfidenceToUpdate)
 //        {
 //			skeletonPosition = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.position;
 //        }
-    }
+	}
 
-    private void SaveInitialRotation(Transform bodyPart)
-    {
-        if (bodyPart)
-            jointInitialRotations[bodyPart] = GetInitialRotation(bodyPart);
-    }
+	private void SaveInitialRotation(Transform bodyPart)
+	{
+		if(bodyPart)
+			jointInitialRotations[bodyPart] = GetInitialRotation(bodyPart);
+	}
 
-    private void SaveInitialDistance(Transform rootTransform, Transform distanceTo)
-    {
-		Vector3 scaler = new Vector3(1/transform.lossyScale.x, 1/transform.lossyScale.y, 1/transform.lossyScale.z);
-        jointInitialDistances.Add(new KeyValuePair<Transform, Transform>(rootTransform, distanceTo), 
-		                          Vector3.Distance(Vector3.Scale(rootTransform.position, scaler), Vector3.Scale(distanceTo.position, scaler)));
-    }
+	private void SaveInitialDistance(Transform rootTransform, Transform distanceTo)
+	{
+		Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
+		jointInitialDistances.Add(new KeyValuePair<Transform, Transform>(rootTransform, distanceTo), 
+			Vector3.Distance(Vector3.Scale(rootTransform.position, scaler), Vector3.Scale(distanceTo.position, scaler)));
+	}
 
-    private Quaternion GetInitialRotation(Transform bodyPart)
-    {
-        return Quaternion.Inverse(transform.rotation) * bodyPart.rotation;
-    }
+	private Quaternion GetInitialRotation(Transform bodyPart)
+	{
+		return Quaternion.Inverse(transform.rotation) * bodyPart.rotation;
+	}
 
-    private void UpdateBoneScalings()
-    {
-        if (!ConfidenceGoodEnoughForScaling()) return;
+	private void UpdateBoneScalings()
+	{
+		if(!ConfidenceGoodEnoughForScaling())
+			return;
 
-        torsoScale = UpdateTorsoScale();
+		torsoScale = UpdateTorsoScale();
 
 		// Revert to previous localScale values becore tweaking
 		if(rightElbow)
 			rightElbow.localScale = unalteredRightForearmScale;
 		if(leftElbow)
-			leftElbow.localScale  = unalteredLeftForearmScale;
+			leftElbow.localScale = unalteredLeftForearmScale;
 		if(rightKnee)
-			rightKnee.localScale  = unalteredRightShinScale;
+			rightKnee.localScale = unalteredRightShinScale;
 		if(leftKnee)
-			leftKnee.localScale   = unalteredLeftShinScale;
+			leftKnee.localScale = unalteredLeftShinScale;
 
 		float rightArmCumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder, 
-		                                                  skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow, torsoScale);
+			                                skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow, torsoScale);
 		UpdateBoneScaling(rightElbow, rightHand, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand, 
-		                  rightArmCumulativeScale);
+			rightArmCumulativeScale);
 
 		float leftArmCumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder, 
-		                                                 skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow, torsoScale);
+			                               skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow, torsoScale);
 		UpdateBoneScaling(leftElbow, leftHand, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand, 
-		                  leftArmCumulativeScale);
+			leftArmCumulativeScale);
 
 		float rightLegCumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip, 
-		                                                  skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee, torsoScale);
+			                                skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee, torsoScale);
 		UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot, 
-		                  rightLegCumulativeScale);
+			rightLegCumulativeScale);
 
 		float leftLegCumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip, 
-		                                                 skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee, torsoScale);
+			                               skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee, torsoScale);
 		UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot, 
-		                  leftLegCumulativeScale);
+			leftLegCumulativeScale);
 
 //		switch(boneLengthAxis)
 //		{
@@ -999,11 +1022,11 @@ public class RUISSkeletonController : MonoBehaviour
 //		case RUISAxis.Y: return boneToScale.localScale.y;
 //		case RUISAxis.Z: return boneToScale.localScale.z;
 //		}
-    }
+	}
 
-    private float UpdateBoneScaling(Transform boneToScale, Transform comparisonBone, RUISSkeletonManager.JointData boneToScaleTracker, RUISSkeletonManager.JointData comparisonBoneTracker, float cumulativeScale)
-    {
-        float modelBoneLength = 1;
+	private float UpdateBoneScaling(Transform boneToScale, Transform comparisonBone, RUISSkeletonManager.JointData boneToScaleTracker, RUISSkeletonManager.JointData comparisonBoneTracker, float cumulativeScale)
+	{
+		float modelBoneLength = 1;
 		float playerBoneLength = Vector3.Distance(boneToScaleTracker.position, comparisonBoneTracker.position);
 		float newScale = 1;
 		float thickness = 1;
@@ -1022,20 +1045,40 @@ public class RUISSkeletonController : MonoBehaviour
 		
 		switch(boneToScaleTracker.jointID)
 		{
-			case RUISSkeletonManager.Joint.LeftHip:       thickness = leftLegThickness;  break;
-			case RUISSkeletonManager.Joint.RightHip:      thickness = rightLegThickness; break;
-			case RUISSkeletonManager.Joint.LeftShoulder:  thickness = leftArmThickness;  break;
-			case RUISSkeletonManager.Joint.RightShoulder: thickness = rightArmThickness; break;
-			case RUISSkeletonManager.Joint.LeftKnee:      thickness = leftLegThickness;  extremityTweaker = shinLengthRatio; break;
-			case RUISSkeletonManager.Joint.RightKnee:     thickness = rightLegThickness; extremityTweaker = shinLengthRatio; break;
-			case RUISSkeletonManager.Joint.LeftElbow:     thickness = leftArmThickness;  extremityTweaker = forearmLengthRatio; break;
-			case RUISSkeletonManager.Joint.RightElbow:    thickness = rightArmThickness; extremityTweaker = forearmLengthRatio; break;
+		case RUISSkeletonManager.Joint.LeftHip:
+			thickness = leftLegThickness;
+			break;
+		case RUISSkeletonManager.Joint.RightHip:
+			thickness = rightLegThickness;
+			break;
+		case RUISSkeletonManager.Joint.LeftShoulder:
+			thickness = leftArmThickness;
+			break;
+		case RUISSkeletonManager.Joint.RightShoulder:
+			thickness = rightArmThickness;
+			break;
+		case RUISSkeletonManager.Joint.LeftKnee:
+			thickness = leftLegThickness;
+			extremityTweaker = shinLengthRatio;
+			break;
+		case RUISSkeletonManager.Joint.RightKnee:
+			thickness = rightLegThickness;
+			extremityTweaker = shinLengthRatio;
+			break;
+		case RUISSkeletonManager.Joint.LeftElbow:
+			thickness = leftArmThickness;
+			extremityTweaker = forearmLengthRatio;
+			break;
+		case RUISSkeletonManager.Joint.RightElbow:
+			thickness = rightArmThickness;
+			extremityTweaker = forearmLengthRatio;
+			break;
 		}
 
 		if(scaleBoneLengthOnly)
 		{
-			bool isExtremityJoint =  (    boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftElbow || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightElbow
-									   || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftKnee  || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightKnee );
+			bool isExtremityJoint = (boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftElbow || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightElbow
+			                        || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftKnee || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightKnee);
 
 			if(isExtremityJoint && boneToScale.parent && comparisonBone)
 			{
@@ -1044,30 +1087,36 @@ public class RUISSkeletonController : MonoBehaviour
 				float sinAngle = Mathf.Sin(Mathf.Deg2Rad * jointAngle);
 				switch(boneLengthAxis)
 				{
-					case RUISAxis.X: parentBoneThickness = boneToScale.parent.localScale.y; break;
-					case RUISAxis.Y: parentBoneThickness = boneToScale.parent.localScale.z; break;
-					case RUISAxis.Z: parentBoneThickness = boneToScale.parent.localScale.x; break;
+				case RUISAxis.X:
+					parentBoneThickness = boneToScale.parent.localScale.y;
+					break;
+				case RUISAxis.Y:
+					parentBoneThickness = boneToScale.parent.localScale.z;
+					break;
+				case RUISAxis.Z:
+					parentBoneThickness = boneToScale.parent.localScale.x;
+					break;
 				}
 
-				newScale = ( playerBoneLength / modelBoneLength ); // / ( cumulativeScale * cosAngle * cosAngle + parentBoneThickness * sinAngle * sinAngle );
-				thickness = Mathf.Pow (thickness, sinAngle * sinAngle); //cosAngle * cosAngle + sinAngle * sinAngle * thickness;
-				skewedScaleTweak = 1 / ( cumulativeScale * cosAngle * cosAngle + parentBoneThickness * sinAngle * sinAngle );
+				newScale = (playerBoneLength / modelBoneLength); // / ( cumulativeScale * cosAngle * cosAngle + parentBoneThickness * sinAngle * sinAngle );
+				thickness = Mathf.Pow(thickness, sinAngle * sinAngle); //cosAngle * cosAngle + sinAngle * sinAngle * thickness;
+				skewedScaleTweak = 1 / (cumulativeScale * cosAngle * cosAngle + parentBoneThickness * sinAngle * sinAngle);
 			}
 
 			switch(boneLengthAxis)
 			{
-				case RUISAxis.X:
-					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, thickness, thickness), maxScaleFactor * deltaTime);
-					boneToScale.localScale = new Vector3(boneToScale.localScale.x, thickness, thickness);
-					break;
-				case RUISAxis.Y:
-					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, newScale, thickness), maxScaleFactor * deltaTime);
-					boneToScale.localScale = new Vector3(thickness, boneToScale.localScale.y, thickness);
-					break;
-				case RUISAxis.Z:
-					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, thickness, newScale), maxScaleFactor * deltaTime);
-					boneToScale.localScale = new Vector3(thickness, thickness, boneToScale.localScale.z);
-					break;
+			case RUISAxis.X:
+				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, thickness, thickness), maxScaleFactor * deltaTime);
+				boneToScale.localScale = new Vector3(boneToScale.localScale.x, thickness, thickness);
+				break;
+			case RUISAxis.Y:
+				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, newScale, thickness), maxScaleFactor * deltaTime);
+				boneToScale.localScale = new Vector3(thickness, boneToScale.localScale.y, thickness);
+				break;
+			case RUISAxis.Z:
+				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, thickness, newScale), maxScaleFactor * deltaTime);
+				boneToScale.localScale = new Vector3(thickness, thickness, boneToScale.localScale.z);
+				break;
 			}
 
 			if(isExtremityJoint)
@@ -1075,32 +1124,32 @@ public class RUISSkeletonController : MonoBehaviour
 				// Save untweaked scales
 				switch(boneToScaleTracker.jointID)
 				{
-					case RUISSkeletonManager.Joint.LeftKnee:  
-						unalteredLeftShinScale     = boneToScale.localScale;
-						break;
-					case RUISSkeletonManager.Joint.RightKnee:   
-						unalteredRightShinScale    = boneToScale.localScale;
-						break;
-					case RUISSkeletonManager.Joint.LeftElbow:   
-						unalteredLeftForearmScale  = boneToScale.localScale;
-						break;
-					case RUISSkeletonManager.Joint.RightElbow: 
-						unalteredRightForearmScale = boneToScale.localScale;
-						break;
+				case RUISSkeletonManager.Joint.LeftKnee:  
+					unalteredLeftShinScale = boneToScale.localScale;
+					break;
+				case RUISSkeletonManager.Joint.RightKnee:   
+					unalteredRightShinScale = boneToScale.localScale;
+					break;
+				case RUISSkeletonManager.Joint.LeftElbow:   
+					unalteredLeftForearmScale = boneToScale.localScale;
+					break;
+				case RUISSkeletonManager.Joint.RightElbow: 
+					unalteredRightForearmScale = boneToScale.localScale;
+					break;
 				}
 
 				// Apply bone length tweaks
 				switch(boneLengthAxis)
 				{
-					case RUISAxis.X:
-						boneToScale.localScale = new Vector3(extremityTweaker * skewedScaleTweak * boneToScale.localScale.x, thickness, thickness);
-						break;
-					case RUISAxis.Y:
-						boneToScale.localScale = new Vector3(thickness, extremityTweaker * skewedScaleTweak * boneToScale.localScale.y, thickness);
-						break;
-					case RUISAxis.Z:
-						boneToScale.localScale = new Vector3(thickness, thickness, extremityTweaker * skewedScaleTweak * boneToScale.localScale.z);
-						break;
+				case RUISAxis.X:
+					boneToScale.localScale = new Vector3(extremityTweaker * skewedScaleTweak * boneToScale.localScale.x, thickness, thickness);
+					break;
+				case RUISAxis.Y:
+					boneToScale.localScale = new Vector3(thickness, extremityTweaker * skewedScaleTweak * boneToScale.localScale.y, thickness);
+					break;
+				case RUISAxis.Z:
+					boneToScale.localScale = new Vector3(thickness, thickness, extremityTweaker * skewedScaleTweak * boneToScale.localScale.z);
+					break;
 				}
 			}
 		}
@@ -1109,80 +1158,89 @@ public class RUISSkeletonController : MonoBehaviour
 
 		switch(boneLengthAxis)
 		{
-			case RUISAxis.X: return boneToScale.localScale.x;
-			case RUISAxis.Y: return boneToScale.localScale.y;
-			case RUISAxis.Z: return boneToScale.localScale.z;
+		case RUISAxis.X:
+			return boneToScale.localScale.x;
+		case RUISAxis.Y:
+			return boneToScale.localScale.y;
+		case RUISAxis.Z:
+			return boneToScale.localScale.z;
 		}
 		return boneToScale.localScale.x;
-    }
+	}
 
-    private float UpdateTorsoScale()
-    {
-        //average hip to shoulder length and compare it to the one found in the model - scale accordingly
-        //we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
-        float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
-                            jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
+	private float UpdateTorsoScale()
+	{
+		//average hip to shoulder length and compare it to the one found in the model - scale accordingly
+		//we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
+		float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
+		                          jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
 //		float playerLength = (Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position, 
 //		                                       skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position) +
 //		                      Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position, 
 //		                 					   skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
 //		float playerLength = (Vector3.Distance( rightShoulder.position,  leftShoulder.position) + // *** THIS IS WRONG, SCALING APPLIES ON THESE TRANSFORMS
 //		                      Vector3.Distance(      rightHip.position,       leftHip.position)  ) / 2;
-		float playerLength = (Vector3.Distance( fourJointPositions[0], fourJointPositions[1]) +
-		                      Vector3.Distance( skeletonManager.skeletons [bodyTrackingDeviceID, playerId].rightHip.position,
-		                 						skeletonManager.skeletons [bodyTrackingDeviceID, playerId].leftHip.position)  ) / 2;
+		float playerLength = (Vector3.Distance(fourJointPositions[0], fourJointPositions[1]) +
+		                     Vector3.Distance(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position,
+			                     skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position)) / 2;
 //		float playerLength = (Vector3.Distance( fourJointPositions[0], fourJointPositions[1]) +
 //		                      Vector3.Distance( fourJointPositions[2], fourJointPositions[3])  ) / 2;
 		
 		float newScale = Mathf.Abs(playerLength / modelLength);
 
 		// Here we halve the maxScaleFactor because the torso is bigger than the limbs
-		torsoScale = Mathf.Lerp(torsoScale, newScale, 0.5f*maxScaleFactor * deltaTime);
+		torsoScale = Mathf.Lerp(torsoScale, newScale, 0.5f * maxScaleFactor * deltaTime);
 
 		if(scaleBoneLengthOnly)
 		{
 			switch(boneLengthAxis)
 			{
-			case RUISAxis.X: torso.localScale = new Vector3(torsoScale, torsoThickness*torsoScale, torsoThickness*torsoScale); break;
-			case RUISAxis.Y: torso.localScale = new Vector3(torsoThickness*torsoScale, torsoScale, torsoThickness*torsoScale); break;
-			case RUISAxis.Z: torso.localScale = new Vector3(torsoThickness*torsoScale, torsoThickness*torsoScale, torsoScale); break;
+			case RUISAxis.X:
+				torso.localScale = new Vector3(torsoScale, torsoThickness * torsoScale, torsoThickness * torsoScale);
+				break;
+			case RUISAxis.Y:
+				torso.localScale = new Vector3(torsoThickness * torsoScale, torsoScale, torsoThickness * torsoScale);
+				break;
+			case RUISAxis.Z:
+				torso.localScale = new Vector3(torsoThickness * torsoScale, torsoThickness * torsoScale, torsoScale);
+				break;
 			}
 		}
 		else
 			torso.localScale = new Vector3(torsoScale, torsoScale, torsoScale);
 		return torsoScale;
 	}
-	
-    private Quaternion FindFixingRotation(Vector3 fromJoint, Vector3 toJoint, Vector3 wantedDirection)
-    {
-        Vector3 boneVector = toJoint - fromJoint;
-        return Quaternion.FromToRotation(boneVector, wantedDirection);
-    }
 
-    private void TweakNeckHeight()
-    {
-        if (!neck)
+	private Quaternion FindFixingRotation(Vector3 fromJoint, Vector3 toJoint, Vector3 wantedDirection)
+	{
+		Vector3 boneVector = toJoint - fromJoint;
+		return Quaternion.FromToRotation(boneVector, wantedDirection);
+	}
+
+	private void TweakNeckHeight()
+	{
+		if(!neck)
 			return;
-		neck.localPosition = neckOriginalLocalPosition + neck.InverseTransformDirection(spineDirection) * neckHeightTweaker/torsoScale;
-    }
+		neck.localPosition = neckOriginalLocalPosition + neck.InverseTransformDirection(spineDirection) * neckHeightTweaker / torsoScale;
+	}
 
 	private void TweakHipPosition()
 	{
-		if (!chest)
+		if(!chest)
 			return;
 		// TODO: Below needs to be modified
 		//chest.position -= hipOffset;
-		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(spineDirection.normalized) * adjustVerticalHipsPosition/torsoScale;
+		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(spineDirection.normalized) * adjustVerticalHipsPosition / torsoScale;
 
 	}
 
-    public bool ConfidenceGoodEnoughForScaling()
-    {
+	public bool ConfidenceGoodEnoughForScaling()
+	{
 		return !(skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.positionConfidence < minimumConfidenceToUpdate ||
-		         skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
-		         skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
-		         skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
-    }
+		skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.positionConfidence < minimumConfidenceToUpdate ||
+		skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.positionConfidence < minimumConfidenceToUpdate ||
+		skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.positionConfidence < minimumConfidenceToUpdate);
+	}
 
 	private void handleFingersCurling(bool trackThumbs)
 	{
@@ -1192,65 +1250,65 @@ public class RUISSkeletonController : MonoBehaviour
 		Quaternion clenchedRotationThumbTM_corrected = Quaternion.identity;
 		Quaternion clenchedRotationThumbIP_corrected = Quaternion.identity;
 		
-		RUISSkeletonManager.Skeleton.handState currentLeftHandStatus  = leftHandStatus;
+		RUISSkeletonManager.Skeleton.handState currentLeftHandStatus = leftHandStatus;
 		RUISSkeletonManager.Skeleton.handState currentRightHandStatus = rightHandStatus;
 
 		if(externalCurlTrigger)
 		{
-			currentLeftHandStatus  = externalLeftStatus;
+			currentLeftHandStatus = externalLeftStatus;
 			currentRightHandStatus = externalRightStatus;
 		}
 
-		if(   currentLeftHandStatus == RUISSkeletonManager.Skeleton.handState.unknown 
-		   || currentLeftHandStatus ==  RUISSkeletonManager.Skeleton.handState.pointing) 
+		if(currentLeftHandStatus == RUISSkeletonManager.Skeleton.handState.unknown
+		   || currentLeftHandStatus == RUISSkeletonManager.Skeleton.handState.pointing)
 		{
-			currentLeftHandStatus  = lastLeftHandStatus;
+			currentLeftHandStatus = lastLeftHandStatus;
 		}
 		
-		if(   currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.unknown 
-		   || currentRightHandStatus ==  RUISSkeletonManager.Skeleton.handState.pointing) 
+		if(currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.unknown
+		   || currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.pointing)
 		{
 			currentRightHandStatus = lastRightHandStatus;
 		}
 		
-		lastLeftHandStatus  = currentLeftHandStatus;
+		lastLeftHandStatus = currentLeftHandStatus;
 		lastRightHandStatus = currentRightHandStatus;
 		
-		for (int i = 0; i < 2; i++)  
+		for(int i = 0; i < 2; i++)
 		{ // Hands
-			if (i == 0) 
+			if(i == 0)
 			{
 				closeHand = (currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.closed);
 				invert = -1;
 			}
-			else 
+			else
 			{
-				closeHand = (currentLeftHandStatus  == RUISSkeletonManager.Skeleton.handState.closed);	
+				closeHand = (currentLeftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
 				invert = 1;
 			}
 			// Thumb rotation correction: these depend on your animation rig
 			switch(boneLengthAxis)
 			{
 			case RUISAxis.X:
-				clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x 
-				                                                     * invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
+				clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x
+				* invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
 				clenchedRotationThumbIP_corrected = clenchedRotationThumbTM;
 				break;
 			case RUISAxis.Y:
 				clenchedRotationThumbTM_corrected = clenchedRotationThumbTM;
 				clenchedRotationThumbIP_corrected = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x, 
-				                                                     clenchedRotationThumbIP.eulerAngles.y, clenchedRotationThumbIP.eulerAngles.z * invert);
+					clenchedRotationThumbIP.eulerAngles.y, clenchedRotationThumbIP.eulerAngles.z * invert);
 				break;
 			case RUISAxis.Z:
 				clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x,
-				                                                     clenchedRotationThumbTM.eulerAngles.y * invert, clenchedRotationThumbTM.eulerAngles.z);
+					clenchedRotationThumbTM.eulerAngles.y * invert, clenchedRotationThumbTM.eulerAngles.z);
 				clenchedRotationThumbIP_corrected = clenchedRotationThumbTM;
 				break;
 			}
 
-			for(int a = 0; a < 5; a++) 
+			for(int a = 0; a < 5; a++)
 			{ // Fingers
-				if(!closeHand && !(a == 4 && trackThumbs)) 
+				if(!closeHand && !(a == 4 && trackThumbs))
 				{
 					if(fingerTransforms[i, a, 0])
 						fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], deltaTime * rotationSpeed);
@@ -1258,10 +1316,10 @@ public class RUISSkeletonController : MonoBehaviour
 						fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], deltaTime * rotationSpeed);
 					if(fingerTransforms[i, a, 2])
 						fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], deltaTime * rotationSpeed);
-					}
-				else 
+				}
+				else
 				{
-					if(a != 4) 
+					if(a != 4)
 					{
 						if(fingerTransforms[i, a, 0])
 							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, deltaTime * rotationSpeed);
@@ -1270,10 +1328,10 @@ public class RUISSkeletonController : MonoBehaviour
 						if(fingerTransforms[i, a, 2])
 							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, deltaTime * rotationSpeed);
 					}
-					else if(!trackThumbs) 
+					else if(!trackThumbs)
 					{ // Thumbs (if separate thumb  tracking is not enabled)
 						if(fingerTransforms[i, a, 0])
-							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, deltaTime*rotationSpeed);
+							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 1])
 							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 2])
@@ -1284,32 +1342,36 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
-	private void saveInitialFingerRotations() 
+	private void saveInitialFingerRotations()
 	{	
 		Transform handObject;
 		
-		for (int i = 0; i < 2; i++) { 
-			if (i == 0) handObject = rightHand;
-			else handObject = leftHand;
+		for(int i = 0; i < 2; i++)
+		{ 
+			if(i == 0)
+				handObject = rightHand;
+			else
+				handObject = leftHand;
 
 			if(handObject == null)
 				continue;
 
-			Transform[] fingers = handObject.GetComponentsInChildren<Transform> ();
+			Transform[] fingers = handObject.GetComponentsInChildren<Transform>();
 			
 			int fingerIndex = 0;
 			int index = 0;
-			foreach (Transform finger in fingers) 
+			foreach(Transform finger in fingers)
 			{
-				if (finger.parent.transform.gameObject == handObject.transform.gameObject
-				    && (finger.gameObject.name.Contains("finger") || finger.gameObject.name.Contains("Finger") || finger.gameObject.name.Contains("FINGER"))) 
+				if(finger.parent.transform.gameObject == handObject.transform.gameObject
+				    && (finger.gameObject.name.Contains("finger") || finger.gameObject.name.Contains("Finger") || finger.gameObject.name.Contains("FINGER")))
 				{
 				
-					if(fingerIndex > 4) break; // No mutant fingers allowed!
+					if(fingerIndex > 4)
+						break; // No mutant fingers allowed!
 					
 					if(finger == rightThumb || finger == leftThumb)
 						index = 4; // Force thumb to have index == 4
-					else 
+					else
 					{
 						index = fingerIndex;
 						fingerIndex++;
@@ -1318,20 +1380,20 @@ public class RUISSkeletonController : MonoBehaviour
 					// First bone
 					initialFingerRotations[i, index, 0] = finger.localRotation;
 					fingerTransforms[i, index, 0] = finger;
-					Transform[] nextFingerParts = finger.gameObject.GetComponentsInChildren<Transform> ();
-					foreach (Transform part1 in nextFingerParts) 
+					Transform[] nextFingerParts = finger.gameObject.GetComponentsInChildren<Transform>();
+					foreach(Transform part1 in nextFingerParts)
 					{
-						if (part1.parent.transform.gameObject == finger.gameObject
-						    && (part1.gameObject.name.Contains("finger") || part1.gameObject.name.Contains("Finger") || part1.gameObject.name.Contains("FINGER"))) 
+						if(part1.parent.transform.gameObject == finger.gameObject
+						    && (part1.gameObject.name.Contains("finger") || part1.gameObject.name.Contains("Finger") || part1.gameObject.name.Contains("FINGER")))
 						{
 							// Second bone
 							initialFingerRotations[i, index, 1] = part1.localRotation;
 							fingerTransforms[i, index, 1] = part1;
-							Transform[] nextFingerParts2 = finger.gameObject.GetComponentsInChildren<Transform> ();
-							foreach (Transform part2 in nextFingerParts2) 
+							Transform[] nextFingerParts2 = finger.gameObject.GetComponentsInChildren<Transform>();
+							foreach(Transform part2 in nextFingerParts2)
 							{
-								if (part2.parent.transform.gameObject == part1.gameObject
-								    && (part2.gameObject.name.Contains("finger") || part2.gameObject.name.Contains("Finger") || part2.gameObject.name.Contains("FINGER"))) 
+								if(part2.parent.transform.gameObject == part1.gameObject
+								    && (part2.gameObject.name.Contains("finger") || part2.gameObject.name.Contains("Finger") || part2.gameObject.name.Contains("FINGER")))
 								{
 									// Third bone
 									initialFingerRotations[i, index, 2] = part2.localRotation;
@@ -1344,7 +1406,7 @@ public class RUISSkeletonController : MonoBehaviour
 			}	
 		}
 	}
-	
+
 	
 	private Quaternion limitZRotation(Quaternion inputRotation, float rollMinimum, float rollMaximum)
 	{
@@ -1359,17 +1421,17 @@ public class RUISSkeletonController : MonoBehaviour
 		
 		// Calculate the rotation of inputRotation where roll (rotation around Z axis) is omitted
 		Quaternion rotationWithoutRoll = Quaternion.LookRotation(inputRotation * Vector3.forward, 
-		                                                         Vector3.Cross( inputRotation * Vector3.forward, Vector3.right)); 
+			                                 Vector3.Cross(inputRotation * Vector3.forward, Vector3.right)); 
 		rollAngle = Quaternion.Angle(inputRotation, rotationWithoutRoll);
 		
 		// Is the roll to the left or to the right? Quaternion.Angle returns only positive values and omits rotation "direction"
-		if((inputRotation*Vector3.up).x > 0)
+		if((inputRotation * Vector3.up).x > 0)
 			rollAngle *= -1;
 		
 		if(rollAngle > rollMaximum) // Rolling towards or over maximum angle
 		{
 			// Clamp to nearest limit
-			if(rollAngle - rollMaximum < 0.5f*(360 - rollMaximum + rollMinimum))
+			if(rollAngle - rollMaximum < 0.5f * (360 - rollMaximum + rollMinimum))
 				limitedRoll.z = rollMaximum;
 			else
 				limitedRoll.z = rollMinimum;
@@ -1378,14 +1440,14 @@ public class RUISSkeletonController : MonoBehaviour
 		if(rollAngle < rollMinimum) // Rolling towards or below minimum angle
 		{
 			// Clamp to nearest limit
-			if(rollMinimum - rollAngle < 0.5f*(360 - rollMaximum + rollMinimum))
+			if(rollMinimum - rollAngle < 0.5f * (360 - rollMaximum + rollMinimum))
 				limitedRoll.z = rollMinimum;
 			else
 				limitedRoll.z = rollMaximum;
 			outputRotation = rotationWithoutRoll * Quaternion.Euler(limitedRoll);
 		}
 		
-		print (rollAngle + " " + rotationWithoutRoll.eulerAngles);
+		print(rollAngle + " " + rotationWithoutRoll.eulerAngles);
 		
 		return outputRotation;
 	}
