@@ -75,44 +75,9 @@ public class RUISDisplayManager : MonoBehaviour
 		
 		
 	}
-
-
-	//	public bool getOculusLowPersistence()
-	//	{
-	//		uint caps = OVRManager.capiHmd.GetEnabledCaps();
-	//		return (caps & (uint)HmdCaps.LowPersistence) != 0; //06to08
-	//	}
-
-	//	public void setOculusLowPersistence(bool enabled)
-	//	{
-	//		if(OVRManager.capiHmd == null)
-	//			return;
-	//
-	//		uint caps = OVRManager.capiHmd.GetEnabledCaps(); //06to08
-	//
-	//		if(enabled)
-	//			OVRManager.capiHmd.SetEnabledCaps(caps | (uint)HmdCaps.LowPersistence); //06to08
-	//		else
-	//			OVRManager.capiHmd.SetEnabledCaps(caps & ~(uint)HmdCaps.LowPersistence); //06to08
-	//
-	//		return;
-	//	}
 	
 	void Update()
 	{
-		// Toggle Oculus LowPersistence mode
-//		if(Input.GetKeyDown(KeyCode.Backspace))
-//		{
-//			uint caps = OVRManager.capiHmd.GetEnabledCaps();
-//			uint bitmask = caps & (uint)HmdCaps.LowPersistence;
-//			if(bitmask == 0) // LowPersistence is now disabled
-//				setOculusLowPersistence(true);
-//			else
-//			{
-//				setOculusLowPersistence(false);
-//			}
-//		}
-
 		if(Application.isEditor && (Screen.width != totalRawResolutionX || Screen.height != totalRawResolutionY))
 		{
 			UpdateResolutionsOnTheFly();
@@ -133,7 +98,7 @@ public class RUISDisplayManager : MonoBehaviour
 
 		if(displays.Count > 1 || (displays.Count == 1 /* && !allowResolutionDialog */))
 		{
-			if(!hasHeadMountedDisplay) // TODO: if external oculus mode, and we have multiple displays, then execute below clause anyway
+			if(!hasHeadMountedDisplay)
 			{
 				Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, false);
 			}
@@ -324,7 +289,7 @@ public class RUISDisplayManager : MonoBehaviour
 		}
 	}
 
-	public RUISDisplay GetOculusRiftDisplay()
+	public RUISDisplay GetHmdDisplay()
 	{
 		foreach(RUISDisplay display in displays)
 		{

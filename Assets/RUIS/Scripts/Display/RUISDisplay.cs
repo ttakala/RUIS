@@ -150,9 +150,6 @@ public class RUISDisplay : MonoBehaviour
 
 	public void Start()
 	{
-//		if(enableOculusRift && OVRManager.display != null)
-//			OVRManager.display.mirrorMode = oculusMirrorMode; //06to08
-
 		if(RUISDisplayManager.IsHmdPresent())
 			UnityEngine.VR.VRSettings.showDeviceView = hmdMirrorMode;
 
@@ -174,8 +171,6 @@ public class RUISDisplay : MonoBehaviour
 		if(linkedCamera)
 		{
 			linkedCamera.associatedDisplay = this;
-//            if(enableOculusRift)
-//				return;
 			linkedCamera.SetupCameraViewports(relativeLeft, relativeBottom, relativeWidth, relativeHeight, aspectRatio);
 		}
 	}
