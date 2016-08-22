@@ -147,7 +147,7 @@ public class RUISSelectableHingeJoint : RUISSelectable {
 			JointSpring spr = GetComponent<HingeJoint>().spring;
 			spr.spring = this.originalJointSpring.spring;
 			spr.damper = this.originalJointSpring.damper;
-			spr.targetPosition = getHingeJointAngle();
+			spr.targetPosition = -getHingeJointAngle(); // *** Added minus here because since Unity 5.3 something changed
 			GetComponent<HingeJoint>().spring = spr;
 		}
 		else 
