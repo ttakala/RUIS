@@ -44,10 +44,10 @@ public class RUISTracker : MonoBehaviour
 	{
 	    Kinect1 = 0,
 	    Kinect2 = 1,
-	    OculusDK2 = 2,
+		OpenVR = 2, // *** TODO HACK not really tracker, only sets the tracker space from RUISCoordinateSystem
 	    PSMove = 3,
 		RazerHydra = 4,
-		ViveHMD = 5,    // *** TODO HACK not really tracker, only sets the tracker space from RUISCoordinateSystem
+		ViveHMD = 5,    
 		InputTransform = 6,
 		None = 7
 	};
@@ -56,7 +56,7 @@ public class RUISTracker : MonoBehaviour
 	{
 	    Kinect1 = 0,
 	    Kinect2 = 1,
-	    OculusDK2 = 2,
+	    OpenVR = 2,
 	    PSMove = 3,
 		RazerHydra = 4,
 		ViveHMD = 5,
@@ -68,7 +68,7 @@ public class RUISTracker : MonoBehaviour
     {
         Kinect1 = 0,
         Kinect2 = 1,
-        OculusDK2 = 2,
+        OpenVR = 2,
         PSMove = 3,
 		RazerHydra = 4,
         InputTransform = 5,
@@ -101,9 +101,8 @@ public class RUISTracker : MonoBehaviour
 	/// (Filtered) position of tracker
 	/// </summary>
 	public Vector3 localPosition {get; private set;}
-	
-	public int oculusID = 0;
-	public bool useOculusRiftRotation = false;
+
+	public bool useHmdRotation = false;
 	public KeyCode resetKey;
 
 	// *** Add support for Kinect2 for Kinec+RazerHydra combination head tracker..?
@@ -158,7 +157,7 @@ public class RUISTracker : MonoBehaviour
 	public Vector3 positionOffsetKinect = new Vector3(0, 0, 0);
 	public Vector3 positionOffsetPSMove = new Vector3(0, 0.12f, 0);
 	public Vector3 positionOffsetHydra  = new Vector3(-0.1f, -0.05f, 0);
-	public Vector3 positionOffsetOculus = new Vector3(0, 0, 0);
+	public Vector3 positionOffsetOpenVR = new Vector3(0, 0, 0);
 	
 	// Rift has its own methods for rotation offsetting
 	public Vector3 rotationOffsetKinect = new Vector3(0, 0, 0);
@@ -304,9 +303,9 @@ public class RUISTracker : MonoBehaviour
 //			useOculusRiftRotation = false;
 //		}
 		if(RUISDisplayManager.IsHmdPresent())
-			useOculusRiftRotation = true;
+			useHmdRotation = true;
 		else
-			useOculusRiftRotation = false;
+			useHmdRotation = false;
 
 		// Enforce rotation settings if rotation source is set to be same as position source
 		if (!pickRotationSource) 
@@ -383,17 +382,17 @@ public class RUISTracker : MonoBehaviour
 //		}
 
 
-		try
+		if(headPositionInput == HeadPositionSource.OpenVR)
 		{
-			if(Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
+			try
 			{
-				// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
-				if(headPositionInput == HeadPositionSource.ViveHMD || headRotationInput == HeadRotationSource.ViveHMD)
+				if(Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
 				{
+					// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
 					if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
 					{
 						transform.localRotation = coordinateSystem.GetHMDCoordinateSystemYaw(RUISDevice.Vive);
-						transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.Vive);
+						transform.localScale = coordinateSystem.ExtractLocalScale(RUISDevice.Vive);
 						transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
 
 						//					Vector3 scaledPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
@@ -405,24 +404,30 @@ public class RUISTracker : MonoBehaviour
 					}
 				}
 			}
-		} catch{}
-
-
-
-		if(headPositionInput == HeadPositionSource.OculusDK2)
-		{
-			if(!RUISDisplayManager.IsHmdPresent()) //06to08
+			catch
 			{
+				Debug.LogError(	  "Unable to use OpenVR library. Is SteamVR installed? " + typeof(RUISTracker) 
+								+ " set Position Tracker from " + HeadPositionSource.OpenVR.ToString() + " to " + HeadPositionSource.None);
 				headPositionInput = HeadPositionSource.None;
-				this.transform.localPosition = defaultPosition;
-			}
-			else 
-			{
-				OculusCounterPoseOffset();
-				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
-					this.localRotation = coordinateSystem.GetOculusCameraYRotation();
 			}
 		}
+
+
+// *** HACK to get raw and unchanged (i.e. not affected by ResetPose) Oculus pose data
+//		if(headPositionInput == HeadPositionSource.OpenVR)
+//		{
+//			if(!RUISDisplayManager.IsHmdPresent()) //06to08
+//			{
+//				headPositionInput = HeadPositionSource.None;
+//				this.transform.localPosition = defaultPosition;
+//			}
+//			else 
+//			{
+//				OculusCounterPoseOffset();
+//				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+//					this.localRotation = coordinateSystem.GetOculusCameraYRotation();
+//			}
+//		}
     
 		if(headPositionInput == HeadPositionSource.Kinect1) {
 			kinectSensorID = RUISSkeletonManager.kinect1SensorID;
@@ -456,7 +461,7 @@ public class RUISTracker : MonoBehaviour
 		if(		!skeletonManager
 			&&  (	headPositionInput == HeadPositionSource.Kinect1
 		     	 || headPositionInput == HeadPositionSource.Kinect2
-		     	 || (!useOculusRiftRotation && (headRotationInput == HeadRotationSource.Kinect1 || headRotationInput == HeadRotationSource.Kinect2))
+		     	 || (!useHmdRotation && (headRotationInput == HeadRotationSource.Kinect1 || headRotationInput == HeadRotationSource.Kinect2))
 		     	 || (externalDriftCorrection && (compass == CompassSource.Kinect1 || compass == CompassSource.Kinect2))))
 		{
 			Debug.LogError("RUISSkeletonManager script is missing from this scene!");
@@ -481,7 +486,7 @@ public class RUISTracker : MonoBehaviour
 		if(headPositionInput == HeadPositionSource.InputTransform && !positionInput)
 			Debug.LogError("Position tracker's Input Transform is none, you need to set it in Unity inspector!");
 		
-		if(headRotationInput == HeadRotationSource.InputTransform && !rotationInput && !useOculusRiftRotation)
+		if(headRotationInput == HeadRotationSource.InputTransform && !rotationInput && !useHmdRotation)
 			Debug.LogError("Rotation tracker's Input Transform is none, you need to set it in Unity inspector!");
 		
 		if(headPositionInput == HeadPositionSource.Kinect1 && positionJoint == RUISSkeletonManager.Joint.None)
@@ -489,12 +494,12 @@ public class RUISTracker : MonoBehaviour
 						   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		
 		if(		headRotationInput == HeadRotationSource.Kinect1 && rotationJoint == RUISSkeletonManager.Joint.None
-			&&	!useOculusRiftRotation																			 )
+			&&	!useHmdRotation																			 )
 			Debug.LogError(	 "Your " + typeof(RUISTracker) + " settings indicate that you want to track rotation with a "
 						   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		
 		if(		externalDriftCorrection && compass == CompassSource.Kinect1 && compassJoint == RUISSkeletonManager.Joint.None
-			&&  !compassIsPositionTracker && (useOculusRiftRotation || headRotationInput == HeadRotationSource.InputTransform))
+			&&  !compassIsPositionTracker && (useHmdRotation || headRotationInput == HeadRotationSource.InputTransform))
 			Debug.LogError(	 "Your " + typeof(RUISTracker) + " settings indicate that you want to do yaw drift correction with a "
 						   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		
@@ -503,17 +508,17 @@ public class RUISTracker : MonoBehaviour
 			               + "Kinect2 joint, but you have left its value to None in Unity inspector!");
 		
 		if(		headRotationInput == HeadRotationSource.Kinect2 && rotationJoint == RUISSkeletonManager.Joint.None
-		   &&	!useOculusRiftRotation																			 )
+		   &&	!useHmdRotation																			 )
 			Debug.LogError(	 "Your " + typeof(RUISTracker) + " settings indicate that you want to track rotation with a "
 			               + "Kinect2 joint, but you have left its value to None in Unity inspector!");
 		
 		if(		externalDriftCorrection && compass == CompassSource.Kinect2 && compassJoint == RUISSkeletonManager.Joint.None
-		   &&  !compassIsPositionTracker && (useOculusRiftRotation || headRotationInput == HeadRotationSource.InputTransform))
+		   &&  !compassIsPositionTracker && (useHmdRotation || headRotationInput == HeadRotationSource.InputTransform))
 			Debug.LogError(	 "Your " + typeof(RUISTracker) + " settings indicate that you want to do yaw drift correction with a "
 			               + "Kinect2 joint, but you have left its value to None in Unity inspector!");
 
 		if(		externalDriftCorrection && compass == CompassSource.InputTransform && !compassTransform 
-			&&  !compassIsPositionTracker && (useOculusRiftRotation || headRotationInput == HeadRotationSource.InputTransform))
+			&&  !compassIsPositionTracker && (useHmdRotation || headRotationInput == HeadRotationSource.InputTransform))
 			Debug.LogError("Yaw drift corrector's Input Transform is none, you need to set it in Unity inspector!");
 		
 		if(externalDriftCorrection && compassIsPositionTracker && headPositionInput == HeadPositionSource.None)
@@ -532,18 +537,19 @@ public class RUISTracker : MonoBehaviour
 							   + "Kinect joint, but you have left its value to None in Unity inspector!");
 		}
 
-		if(useOculusRiftRotation && headPositionInput != HeadPositionSource.OculusDK2 && ovrCameraRig != null)
-		{
-			DisableOculusPositionalTracking();
-
-			// OVR manager is not necessarily initialized, so lets do the above disabling later as well
-			StartCoroutine(DelayedDisableOculusPositionalTracking());
-
-			Debug.Log(  typeof(RUISTracker) + ": Position Tracker is " + headPositionInput + " and " + typeof(OVRCameraRig)
-			          + " found in a child gameObject, turning off Oculus Rift position tracking altogether. If you do not "
-			          + "want this, then remove the " + typeof(OVRCameraRig) + " component from the child object(s).");
-		}
-
+// *** HACK to get raw and unchanged (i.e. not affected by ResetPose) Oculus pose data
+//		if(useHmdRotation && headPositionInput != HeadPositionSource.OpenVR && ovrCameraRig != null)
+//		{
+//			DisableOculusPositionalTracking();
+//
+//			// OVR manager is not necessarily initialized, so lets do the above disabling later as well
+//			StartCoroutine(DelayedDisableOculusPositionalTracking());
+//
+//			Debug.Log(  typeof(RUISTracker) + ": Position Tracker is " + headPositionInput + " and " + typeof(OVRCameraRig)
+//			          + " found in a child gameObject, turning off Oculus Rift position tracking altogether. If you do not "
+//			          + "want this, then remove the " + typeof(OVRCameraRig) + " component from the child object(s).");
+//		}
+//
 		if(ovrCameraRig && Application.isEditor)
 			Debug.Log(typeof(OVRCameraRig) + " script detected in a child object of this " + gameObject.name
 					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
@@ -580,7 +586,7 @@ public class RUISTracker : MonoBehaviour
 			if (coordinateSystem) 
 			{
 				// Apply master coordinate system rotation to Oculus DK2+'s coordinate system if applicable
-				if(		useOculusRiftRotation )  //06to08
+				if(		useHmdRotation )  //06to08
 //				   	 && ovrHmdVersion != Ovr.HmdType.DK1 
 //					 && ovrHmdVersion != Ovr.HmdType.DKHD 
 //					 && ovrHmdVersion != Ovr.HmdType.None )  //06to08
@@ -631,12 +637,12 @@ public class RUISTracker : MonoBehaviour
 					// Second term offsets the localPosition of each eye camera, which is set by ovrCameraRig
 					this.transform.localPosition =    coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2)
 													- transform.localRotation * ovrCameraRig.centerEyeAnchor.localPosition
-													+ coordinateSystem.GetOculusRiftOrientation() * positionOffsetOculus;
+													+ coordinateSystem.GetOculusRiftOrientation() * positionOffsetOpenVR;
 				}
 			}
 			else
 			{
-				this.transform.localPosition = coordinateSystem.GetOculusRiftOrientation() * positionOffsetOculus + coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
+				this.transform.localPosition = coordinateSystem.GetOculusRiftOrientation() * positionOffsetOpenVR + coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
 			}
 		}
 	}
@@ -667,7 +673,7 @@ public class RUISTracker : MonoBehaviour
 		// Lets reduce the amount of required if clauses by setting the following:
 		if(!externalDriftCorrection)
 			compass = CompassSource.None;
-		if(useOculusRiftRotation)
+		if(useHmdRotation)
 			headRotationInput = HeadRotationSource.None;
 		else if(	headRotationInput == HeadRotationSource.Kinect1
 		        ||	headRotationInput == HeadRotationSource.Kinect2
@@ -683,7 +689,7 @@ public class RUISTracker : MonoBehaviour
 		}
 
 		// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
-		if(headPositionInput == HeadPositionSource.ViveHMD || headRotationInput == HeadRotationSource.ViveHMD)
+		if(headPositionInput == HeadPositionSource.OpenVR)
 			return;
 		
 		// Reset view if necessary
@@ -741,12 +747,13 @@ public class RUISTracker : MonoBehaviour
 		}
 		if(Input.GetKeyDown(resetKey))
 			RecenterPose();
-		
-		if(headPositionInput == HeadPositionSource.OculusDK2)
-		{
-			OculusCounterPoseOffset();
-			return;
-		}
+
+// *** HACK to get raw and unchanged (i.e. not affected by ResetPose) Oculus pose data
+//		if(headPositionInput == HeadPositionSource.OpenVR)
+//		{
+//			OculusCounterPoseOffset();
+//			return;
+//		}
 		
 		/* If we are using Razer Hydra and it's attached to a moving object (i.e. the user), 
 		   lets calculate the position and rotation of the base station */
@@ -995,7 +1002,7 @@ public class RUISTracker : MonoBehaviour
 		}
 		
 		// Determine whether rotation source is Oculus Rift or some other device
-		if(useOculusRiftRotation) // TODO: *** Depending on OVR version, the below section might change
+		if(useHmdRotation) // TODO: *** Depending on OVR version, the below section might change
 		{
 			// If we are using Oculus for rotation tracking but NOT positional tracking, then add a counter translation
 			if(ovrCameraRig)
@@ -1003,7 +1010,7 @@ public class RUISTracker : MonoBehaviour
 				// Negate completely Oculus position tracking, including rotation-based neck offset
 				if(headPositionInput != HeadPositionSource.None)
 					transform.localPosition =  transform.localPosition 
-											 - transform.localRotation * (ovrCameraRig.centerEyeAnchor.localPosition + positionOffsetOculus);
+											 - transform.localRotation * (ovrCameraRig.centerEyeAnchor.localPosition + positionOffsetOpenVR);
 			}
 			
 			// Get Oculus Rift rotation
@@ -1100,7 +1107,7 @@ public class RUISTracker : MonoBehaviour
 		if(	   !externalDriftCorrection
 			|| compass == CompassSource.None )
 		{
-			if(!useOculusRiftRotation)
+			if(!useHmdRotation)
 			{
 				localRotation = rawRotation;
 				transform.localRotation = rawRotation;
@@ -1108,7 +1115,7 @@ public class RUISTracker : MonoBehaviour
 		}
 		else
 		{
-			if(		!useOculusRiftRotation
+			if(		!useHmdRotation
 				|| 	(ovrManager != null && ovrManager.usePositionTracking == false)  ) //06to08
 //			   || (		ovrHmdVersion == Ovr.HmdType.DK1 
 //			    	||  ovrHmdVersion == Ovr.HmdType.DKHD 
@@ -1129,7 +1136,7 @@ public class RUISTracker : MonoBehaviour
 			filterDrift.reset(); // Reset yaw filter correction to zero
 		// PS Move always gives correct orientation (if its coord. system calibration matches with other devices)
 
-		if(useOculusRiftRotation)
+		if(useHmdRotation)
 		{
 			if(OVRManager.display != null)
 				OVRManager.display.RecenterPose();
@@ -1216,7 +1223,7 @@ public class RUISTracker : MonoBehaviour
 		doYawFiltering(driftedRotation, deltaT);
 		// driftingEuler and finalYawDifference are private members set in doYawFiltering()
 
-		if (useOculusRiftRotation  ) //06to08
+		if (useHmdRotation  ) //06to08
 //									&& ovrHmdVersion != Ovr.HmdType.DK1 
 //						          	&& ovrHmdVersion != Ovr.HmdType.DKHD 
 //								  	&& ovrHmdVersion != Ovr.HmdType.None ) //06to08
@@ -1226,7 +1233,7 @@ public class RUISTracker : MonoBehaviour
 		}
 		else
 		{
-			if(useOculusRiftRotation) // We are using DK1 or DKHD     //06to08
+			if(useHmdRotation) // We are using DK1 or DKHD     //06to08
 				return Quaternion.Euler(new Vector3( 0, (360 - finalYawDifference.eulerAngles.y)%360, 0));
 			else // The drifting rotation source is not Oculus Rift at all
 				return Quaternion.Euler(new Vector3( 0, (360 + driftingEuler.y - finalYawDifference.eulerAngles.y)%360, 0));

@@ -50,10 +50,10 @@ public class RUISRazerWand : RUISWand {
 			// Below complicated clauses make sure that this is a properly configured Razer Hydra tracker
 			if(		trackers[i].headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
 				||	(	trackers[i].headRotationInput == RUISTracker.HeadRotationSource.RazerHydra
-					 &&	!trackers[i].useOculusRiftRotation)
+					 &&	!trackers[i].useHmdRotation)
 				||	(	trackers[i].compass == RUISTracker.CompassSource.RazerHydra
 					 && trackers[i].externalDriftCorrection
-					 && (	trackers[i].useOculusRiftRotation 
+					 && (	trackers[i].useHmdRotation 
 						 || trackers[i].headRotationInput == RUISTracker.HeadRotationSource.InputTransform )))
 				if(trackers[i].isRazerBaseMobile) // Found a Razer Hydra tracker that claims to have mobile base
 					headTracker = trackers[i];

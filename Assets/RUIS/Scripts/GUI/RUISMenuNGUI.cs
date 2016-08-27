@@ -627,11 +627,11 @@ public class RUISMenuNGUI : MonoBehaviour {
 			isPositionTrackedOculusPresent = true;
 						
 		if(inputManager.enableKinect && inputManager.enableKinect2) dropDownChoices.Add ("Kinect - Kinect2");
-		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
-		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");
+//		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
+//		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");
 		if(isPositionTrackedOculusPresent && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - Oculus DK2");
 		if(isPositionTrackedOculusPresent && inputManager.enableKinect) dropDownChoices.Add ("Kinect - Oculus DK2");
-		if(isPositionTrackedOculusPresent && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - Oculus DK2");
+//		if(isPositionTrackedOculusPresent && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - Oculus DK2");
 		try
 		{
 			if(Valve.VR.OpenVR.IsHmdPresent() && inputManager.enableKinect2) dropDownChoices.Add ("Vive - Kinect 2");

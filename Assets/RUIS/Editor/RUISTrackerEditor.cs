@@ -16,11 +16,6 @@ using System.Collections;
 [CanEditMultipleObjects]
 public class RUISTrackerEditor : Editor
 {
-	RUISTracker trackerScript;
-	OVRCameraRig ovrCameraRig;
-	bool riftFound = false;
-	string movingBaseAnnouncement = "";
-	
 	GameObject skeletonManagerGameObject;
 	int maxKinectSkeletons = 4;
 	int maxPSMoveControllers = 4;
@@ -33,7 +28,6 @@ public class RUISTrackerEditor : Editor
     SerializedProperty headPositionInput;
     SerializedProperty headRotationInput;
 	SerializedProperty pickRotationSource;
-    SerializedProperty oculusID;
 	SerializedProperty resetKey;
     SerializedProperty positionPlayerID;
     SerializedProperty rotationPlayerID;
@@ -48,7 +42,7 @@ public class RUISTrackerEditor : Editor
     SerializedProperty positionOffsetKinect;
     SerializedProperty positionOffsetPSMove;
     SerializedProperty positionOffsetHydra;
-	SerializedProperty positionOffsetOculus;
+	SerializedProperty positionOffsetOpenVR;
     SerializedProperty rotationOffsetKinect;
     SerializedProperty rotationOffsetPSMove;
     SerializedProperty rotationOffsetHydra;
@@ -68,7 +62,6 @@ public class RUISTrackerEditor : Editor
 	SerializedProperty rotationNoiseCovariancePSMove;
 	SerializedProperty rotationNoiseCovarianceHydra;
 	SerializedProperty rotationNoiseCovarianceTransform;
-	SerializedProperty isRazerBaseMobile;
 	SerializedProperty mobileRazerBase;
 	SerializedProperty hydraBaseInput;
 	SerializedProperty hydraBaseJoint;
@@ -123,7 +116,6 @@ public class RUISTrackerEditor : Editor
 	    headPositionInput = serializedObject.FindProperty("headPositionInput");
 	    headRotationInput = serializedObject.FindProperty("headRotationInput");
         pickRotationSource = serializedObject.FindProperty("pickRotationSource");
-	    oculusID = serializedObject.FindProperty("oculusID"); //
 		resetKey = serializedObject.FindProperty("resetKey");
 	    positionPlayerID = serializedObject.FindProperty("positionPlayerID");
 	    rotationPlayerID = serializedObject.FindProperty("rotationPlayerID");
@@ -138,7 +130,7 @@ public class RUISTrackerEditor : Editor
 	    positionOffsetKinect = serializedObject.FindProperty("positionOffsetKinect");
 	    positionOffsetPSMove = serializedObject.FindProperty("positionOffsetPSMove");
 	    positionOffsetHydra = serializedObject.FindProperty("positionOffsetHydra");
-		positionOffsetOculus = serializedObject.FindProperty("positionOffsetOculus");
+		positionOffsetOpenVR = serializedObject.FindProperty("positionOffsetOpenVR");
 	    rotationOffsetKinect = serializedObject.FindProperty("rotationOffsetKinect");
 	    rotationOffsetPSMove = serializedObject.FindProperty("rotationOffsetPSMove");
 	    rotationOffsetHydra = serializedObject.FindProperty("rotationOffsetHydra");
@@ -158,7 +150,6 @@ public class RUISTrackerEditor : Editor
 		rotationNoiseCovariancePSMove = serializedObject.FindProperty("rotationNoiseCovariancePSMove");
 		rotationNoiseCovarianceHydra = serializedObject.FindProperty("rotationNoiseCovarianceHydra");
 		rotationNoiseCovarianceTransform = serializedObject.FindProperty("rotationNoiseCovarianceTransform");
-		isRazerBaseMobile = serializedObject.FindProperty("isRazerBaseMobile");
 		mobileRazerBase = serializedObject.FindProperty("mobileRazerBase");
 		hydraBaseJoint = serializedObject.FindProperty("hydraBaseJoint");
 		hydraBaseKinectPlayerID = serializedObject.FindProperty("hydraBaseKinectPlayerID");
@@ -205,26 +196,10 @@ public class RUISTrackerEditor : Editor
         EditorGUILayout.PropertyField(defaultPosition, new GUIContent("Default Position (meters)", "Head position before tracking starts"));
         //EditorGUILayout.PropertyField(skeletonManager, new GUIContent("skeletonManager", "Can be None"));
 
-		if(serializedObject.targetObject is RUISTracker)
-		{
-			trackerScript = (RUISTracker) serializedObject.targetObject;
-			if(trackerScript)
-				ovrCameraRig = trackerScript.gameObject.GetComponentInChildren<OVRCameraRig>();
-			if(ovrCameraRig)
-			{
-				riftFound = true;
-			}
-			else
-			{
-				riftFound = false;
-			}
-		}
-		
-		if(!riftFound)
-		{
-			EditorGUILayout.PropertyField(pickRotationSource, new GUIContent( "Pick Rotation Source", "If disabled, then the Rotation "
-																			+ "Tracker is same as Position Tracker"));
-		}
+		EditorGUI.BeginDisabledGroup(headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.OpenVR);
+		EditorGUILayout.PropertyField(pickRotationSource, new GUIContent( "Pick Rotation Source", "If disabled, then the Rotation "
+			+ "Tracker is same as Position Tracker"));
+		EditorGUI.EndDisabledGroup();
 		
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(headPositionInput, new GUIContent("Position Tracker", "Device that tracks the head position"));
@@ -232,10 +207,19 @@ public class RUISTrackerEditor : Editor
         EditorGUI.indentLevel += 2;
         switch (headPositionInput.enumValueIndex)
         {
-			case (int)RUISTracker.HeadPositionSource.OculusDK2:
-				EditorGUILayout.PropertyField(positionOffsetOculus, new GUIContent("Position Offset (meters)", "Adds an position offset to Oculus Rift's "
-				                                                                   + "tracked position. This should be zero when using Oculus Rift positional "
-				                                                                   + "tracking together with Kinect skeleton tracking."));
+			case (int)RUISTracker.HeadPositionSource.OpenVR:
+
+				if(headRotationInput.enumValueIndex != (int)RUISTracker.HeadRotationSource.OpenVR)
+					headRotationInput.enumValueIndex = (int)RUISTracker.HeadRotationSource.OpenVR;
+				if(pickRotationSource.boolValue)
+					pickRotationSource.boolValue = false;
+
+				EditorStyles.textField.wordWrap = true;
+				EditorGUILayout.TextArea(  "The transform of this GameObject will be set to a constant value where any child GameObjects with "
+										 + typeof(SteamVR_TrackedObject) + " component will conform to RUIS Coordinate System if \"Use Master "
+										 + "Coordinate System\" is enabled." , GUILayout.Height(120));
+//				EditorGUILayout.PropertyField(positionOffsetOpenVR, new GUIContent("Position Offset (meters)", "Adds an position offset to OpenVR device's "
+//				                                                                   + "tracked position."));
 
 				break;
             case (int)RUISTracker.HeadPositionSource.Kinect1:
@@ -277,9 +261,6 @@ public class RUISTrackerEditor : Editor
             case (int)RUISTracker.HeadPositionSource.RazerHydra:
 				if(positionNoiseCovarianceHydra.floatValue < minNoiseCovariance)
 					positionNoiseCovarianceHydra.floatValue = minNoiseCovariance;
-			
-		        EditorGUILayout.PropertyField(isRazerBaseMobile, new GUIContent("Moving Base Station", "Enable this if the Razer Hydra base station is "
-																			+ "attached to something that is moving (e.g. Kinect tracked player's belt)"));
 				
 			    EditorGUILayout.PropertyField(positionRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
                 EditorGUILayout.PropertyField(positionOffsetHydra, new GUIContent("Position Offset (meters)", "Razer Hydra controller's position in "
@@ -321,48 +302,7 @@ public class RUISTrackerEditor : Editor
 
 		
         EditorGUILayout.Space();
-		
-		if(riftFound)
-		{
-			
-			EditorGUILayout.LabelField("Rotation Tracker:    Oculus Rift", EditorStyles.boldLabel);
-        	EditorGUI.indentLevel += 2;
-			
-        	EditorGUILayout.PropertyField(oculusID, new GUIContent("Oculus Rift ID", "Choose which Rift is the source of the head tracking. "
-																	+ "Leave this to 0 (multiple Rifts are not supported yet)."));
-			
-			
-			EditorStyles.textField.wordWrap = true;
-			EditorGUILayout.TextArea(typeof(OVRCameraRig) + " script detected in a child object of this " + trackerScript.gameObject.name
-										+ ". Assuming that you want to use rotation from Oculus Rift. Disabling other Rotation Tracker "
-										+ "options. You can access other rotation trackers when you remove or disable the child object "
-			                         + "that has the " + typeof(OVRCameraRig) + " component.", GUILayout.Height(120));
-			
-			EditorGUILayout.LabelField( new GUIContent("Reset Orientation Button(s):", "The button(s) that reset Oculus Rift's yaw "
-										+ "rotation to zero."), 
-										EditorStyles.boldLabel);
-        	EditorGUI.indentLevel += 1;
-			EditorGUILayout.PropertyField(resetKey, new GUIContent("KeyCode", "The button that resets Oculus Rift's yaw rotation to zero."));
-			
-			if(externalDriftCorrection.boolValue && compass.enumValueIndex == (int)RUISTracker.CompassSource.RazerHydra)
-				EditorGUILayout.LabelField(new GUIContent(("BUMPER+START Razer Hydra " + compassRazerID.enumNames[compassRazerID.enumValueIndex]),
-										   "BUMPER and START of the Razer Hydra controller that you use for Yaw Drift Correction."),
-										   EditorStyles.label);
-			else if(headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.RazerHydra)
-				EditorGUILayout.LabelField(new GUIContent(("BUMPER+START Razer Hydra " + positionRazerID.enumNames[positionRazerID.enumValueIndex]),
-										   "BUMPER and START of the Razer Hydra controller that you use for position tracking."),
-										   EditorStyles.label);
-			if(externalDriftCorrection.boolValue && compass.enumValueIndex == (int)RUISTracker.CompassSource.PSMove)
-				EditorGUILayout.LabelField(new GUIContent(("MOVE button on PS Move #" + compassPSMoveID.intValue),
-										   "MOVE button of the PS Move controller that you use for Yaw Drift Correction."),
-										   EditorStyles.label);
-			else if(headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.PSMove)
-				EditorGUILayout.LabelField(new GUIContent(("MOVE button on PS Move #" + positionPSMoveID.intValue),
-										   "MOVE button of the PS Move controller that you use for position tracking."),
-										   EditorStyles.label);
-        	EditorGUI.indentLevel -= 1;
-		}
-		else
+
 		{
 			if(!pickRotationSource.boolValue)
 			{
@@ -408,7 +348,7 @@ public class RUISTrackerEditor : Editor
 				}
 			}
 			
-			EditorGUI.BeginDisabledGroup(!pickRotationSource.boolValue);
+			EditorGUI.BeginDisabledGroup(!pickRotationSource.boolValue || headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.OpenVR);
         	EditorGUILayout.PropertyField(headRotationInput, new GUIContent("Rotation Tracker", "Device that tracks the head rotation"));
 			EditorGUI.EndDisabledGroup();
 			
@@ -462,9 +402,6 @@ public class RUISTrackerEditor : Editor
 						rotationNoiseCovarianceHydra.floatValue = minNoiseCovariance;
 					
 					EditorGUI.BeginDisabledGroup(!pickRotationSource.boolValue);
-			        EditorGUILayout.PropertyField(isRazerBaseMobile, new GUIContent("Moving Base Station", "Enable this if the Razer Hydra base station is "
-																				+ "attached to something that is moving (e.g. Kinect tracked player's "
-																				+ "belt)"));
 	                EditorGUILayout.PropertyField(rotationRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
 					EditorGUI.EndDisabledGroup();
 	                EditorGUILayout.PropertyField(rotationOffsetHydra, new GUIContent("Rotation Offset", "Tracked Razer Hydra controller's "
@@ -510,11 +447,11 @@ public class RUISTrackerEditor : Editor
         EditorGUILayout.Space();
 
 		
-		if(!riftFound && headRotationInput.enumValueIndex != (int)RUISTracker.HeadRotationSource.InputTransform)
+		if(headRotationInput.enumValueIndex != (int)RUISTracker.HeadRotationSource.InputTransform)
 		{
 			EditorGUI.BeginDisabledGroup(true);
-	        EditorGUILayout.PropertyField(externalDriftCorrection, new GUIContent("Yaw Drift Correction", "Enables external yaw drift correction "
-																		+ "using Kinect, PS Move, or some other device"));
+	        EditorGUILayout.PropertyField(externalDriftCorrection, new GUIContent(    "Yaw Drift Correction", "Enables external yaw drift correction "
+																					+ "using Kinect, PS Move, or some other device"));
 			if(	  headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.Kinect1
 			   || headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.Kinect2)
 				EditorGUILayout.LabelField("Kinect joints don't need drift correction");
@@ -522,8 +459,8 @@ public class RUISTrackerEditor : Editor
 				EditorGUILayout.LabelField("PS Move doesn't need drift correction");
 			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.RazerHydra)
 				EditorGUILayout.LabelField("Razer Hydra doesn't need drift correction");
-			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.ViveHMD)
-				EditorGUILayout.LabelField("Vive doesn't need drift correction");
+			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.OpenVR)
+				EditorGUILayout.LabelField("OpenVR devices don't need drift correction");
 			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.None)
 				EditorGUILayout.LabelField("No Rotation Tracker: Drift correction disabled");
 			EditorGUI.EndDisabledGroup();
@@ -650,9 +587,6 @@ public class RUISTrackerEditor : Editor
 																													maxDriftCorrectionRate );
 
 							EditorGUI.BeginDisabledGroup(compassIsPositionTracker.boolValue);
-					        EditorGUILayout.PropertyField(isRazerBaseMobile, new GUIContent("Moving Base Station", "Enable this if the Razer Hydra "
-																				+ "base station is attached to something that is "
-																				+ "moving (e.g. Kinect tracked player's belt)"));
 			
 			                EditorGUILayout.PropertyField(compassRazerID, new GUIContent("Razer Hydra ID", "Either LEFT or RIGHT"));
 							EditorGUI.EndDisabledGroup();
@@ -706,128 +640,7 @@ public class RUISTrackerEditor : Editor
 			}
 		
 		}
-		
-		if(isRazerBaseMobile.boolValue)
-		{
-			if(headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.RazerHydra)
-				movingBaseAnnouncement = "Razer Hydra base station set as moving in Position Tracker";
-			else if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.RazerHydra && !riftFound)
-				movingBaseAnnouncement = "Razer Hydra base station set as moving in Rotation Tracker";
-			else if(	compass.enumValueIndex == (int)RUISTracker.CompassSource.RazerHydra && externalDriftCorrection.boolValue
-					&&	(riftFound || headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.InputTransform)	)
-				movingBaseAnnouncement = "Razer Hydra base station set as moving in Yaw Drift Correction";
-			else
-			{
-				movingBaseAnnouncement = "";
-				isRazerBaseMobile.boolValue = false; // When all the ifs fail, we can set isRazerBaseMobile to false
-			}
-		}
-		
-		if(isRazerBaseMobile.boolValue)
-		{
-			
-    		EditorGUILayout.PropertyField(mobileRazerBase, new GUIContent("Razer Base Tracker", "The tracker onto which the Razer Hydra "
-																		+ "base station is attached to"));
-			EditorGUI.indentLevel += 2;
-			
-			if(movingBaseAnnouncement.Length > 0)
-			{
-				EditorStyles.textField.wordWrap = true;
-				EditorGUILayout.TextArea(movingBaseAnnouncement, GUILayout.Height(30));
-			}
-			switch(mobileRazerBase.enumValueIndex)
-			{
-				case (int) RUISTracker.RazerHydraBase.Kinect1:
-					hydraBaseKinectPlayerID.intValue = Mathf.Clamp(hydraBaseKinectPlayerID.intValue, 0, maxKinectSkeletons - 1);
-					if(hydraBasePositionCovarianceKinect.floatValue < minNoiseCovariance)
-						hydraBasePositionCovarianceKinect.floatValue = minNoiseCovariance;
-					if(hydraBaseRotationCovarianceKinect.floatValue < minNoiseCovariance)
-						hydraBaseRotationCovarianceKinect.floatValue = minNoiseCovariance;
-					EditorGUILayout.PropertyField(hydraBaseKinectPlayerID, new GUIContent("Kinect Player Id", "Between 0 and 3"));
-					EditorGUILayout.PropertyField(hydraBaseJoint, new GUIContent("Joint", "Kinect joint onto which Razer Hydra base station "
-																		+ "is attached to"));
-			        EditorGUILayout.PropertyField(hydraBasePositionOffsetKinect, new GUIContent("Base Position Offset (meters)", "Razer Hydra "
-            															+ "base station's position in the tracked joint's local coordinate "
-																		+ "system. Set these values according to the base station's position "
-																		+ "offset from the tracked joint's origin."));
-			        EditorGUILayout.PropertyField(hydraBaseRotationOffsetKinect, new GUIContent("Base Rotation Offset", "Razer Hydra "
-																		+ "base station's rotation in the tracked joint's local coordinate "
-																		+ "system. Set these euler angles according to the orientation in which "
-																		+ "Razer Hydra base station is attached to the tracked joint. "
-																		+ "IT IS IMPORTANT THAT THIS PARAMETER IS CORRECT."));
-					EditorGUILayout.PropertyField(inferBaseRotationFromRotationTrackerKinect, new GUIContent("Use Rotation Tracker", "If the "
-																		+ "above Position Tracker or Compass Razer Hydra is attached to the "
-																		+ "Rotation Tracker (e.g. Oculus Rift), then use them together to "
-																		+ "calculate the base station's rotation. Recommended for "
-																		+ "Kinect."));
-					if(inferBaseRotationFromRotationTrackerKinect.boolValue)
-					{
-						EditorGUI.indentLevel += 1;
-						EditorGUILayout.PropertyField(hydraAtRotationTrackerOffset, new GUIContent("Razer Hydra Rotation Offset", "Tracked "
-																		+ "Razer Hydra controller's rotation in tracked object's local coordinate "
-																		+ "system. Set these euler angles according to the orientation in which "
-																		+ "the Razer Hydra is attached to the tracked object (head etc.). "
-																		+ "IT IS IMPORTANT THAT THIS PARAMETER IS CORRECT."));
-						EditorGUI.indentLevel -= 1;
-					
-					}
-					EditorGUILayout.PropertyField(filterHydraBasePoseKinect, new GUIContent("Filter Tracking", "Enables simple "
-																		+ "Kalman filtering for position and rotation tracking of the Razer "
-																		+ "Hydra base station. Recommended for Kinect."));
-					if(filterHydraBasePoseKinect.boolValue)
-					{
-						EditorGUILayout.PropertyField(hydraBasePositionCovarianceKinect, new GUIContent("Filter Position Strength", "Position " 
-																		+ "noise covariance of Kalman filtering: a bigger value means "
-																		+ "smoother results but a slower response to changes."));
-						EditorGUILayout.PropertyField(hydraBaseRotationCovarianceKinect, new GUIContent("Filter Rotation Strength", "Rotation " 
-																		+ "noise covariance of Kalman filtering: a bigger value means "
-																		+ "smoother results but a slower response to changes."));
-					}
-				break;
-			
-				case (int) RUISTracker.RazerHydraBase.InputTransform:
-					if(hydraBasePositionCovarianceTransform.floatValue < minNoiseCovariance)
-						hydraBasePositionCovarianceTransform.floatValue = minNoiseCovariance;
-					if(hydraBaseRotationCovarianceTransform.floatValue < minNoiseCovariance)
-						hydraBaseRotationCovarianceTransform.floatValue = minNoiseCovariance;
-					EditorGUILayout.PropertyField(hydraBaseInput, new GUIContent("Input Transform", "All other trackers are supported "
-																		+ "through this transform. Drag and drop here a transform "
-																		+ "whose position and rotation is controlled by a tracking device."));
-				
-					EditorGUILayout.PropertyField(inferBaseRotationFromRotationTrackerTransform, new GUIContent("Use Rotation Tracker", "If the "
-																		+ "above Position Tracker or Compass Razer Hydra is attached to the "
-																		+ "Rotation Tracker (e.g. Oculus Rift), then use them together to "
-																		+ "calculate the base station's rotation."));
-					if(inferBaseRotationFromRotationTrackerTransform.boolValue)
-					{
-						EditorGUI.indentLevel += 1;
-						EditorGUILayout.PropertyField(hydraAtRotationTrackerOffset, new GUIContent("Razer Hydra Rotation Offset", "Tracked "
-																		+ "Razer Hydra controller's rotation in tracked object's local coordinate "
-																		+ "system. Set these euler angles according to the orientation in which "
-																		+ "the Razer Hydra is attached to the tracked object (head etc.). "
-																		+ "IT IS IMPORTANT THAT THIS PARAMETER IS CORRECT."));
-						EditorGUI.indentLevel -= 1;
-					
-					}
-					EditorGUILayout.PropertyField(filterHydraBasePoseTransform, new GUIContent("Filter Tracking", "Enables simple "
-																		+ "Kalman filtering for position and rotation tracking of the Razer "
-																		+ "Hydra base station."));
-					if(filterHydraBasePoseTransform.boolValue)
-					{
-						EditorGUILayout.PropertyField(hydraBasePositionCovarianceTransform, new GUIContent("Filter Position Strength", "Position " 
-																		+ "noise covariance of Kalman filtering: a bigger value means "
-																		+ "smoother results but a slower response to changes."));
-						EditorGUILayout.PropertyField(hydraBaseRotationCovarianceTransform, new GUIContent("Filter Rotation Strength", "Rotation " 
-																		+ "noise covariance of Kalman filtering: a bigger value means "
-																		+ "smoother results but a slower response to changes."));
-					}
-				break;
-			}
-			EditorGUI.indentLevel -= 2;
-			
-		}
-		
-		
+
         serializedObject.ApplyModifiedProperties();
     }
 }

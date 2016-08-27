@@ -23,6 +23,8 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 	public override string guiTextUpper { get{return getUpperText();} }
 	public override string guiTextLower { get{return getLowerText();} }
 
+	private string openVRDeviceName = "OpenVR";
+
 	bool showMovementAlert = false;
 	float lastMovementAlertTime = 0;
 
@@ -190,57 +192,79 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 	}
 	
 	
-	public override RUISCalibrationPhase InitialPhase(float deltaTime) {
-		
+	public override RUISCalibrationPhase InitialPhase(float deltaTime) 
+	{
 		timeSinceScriptStart += deltaTime;
 		
-		if(timeSinceScriptStart < 3) {
+		if(timeSinceScriptStart < 2)
+		{
 			this.guiTextLowerLocal = "Calibration of Kinect 2 and Vive Sensors\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
-		
-		if(timeSinceScriptStart < 4) {
-			this.guiTextLowerLocal = "Connecting to Vive. \n\n Please wait...";
-			return RUISCalibrationPhase.Initial;
-		}
-		
-		if(!viveChecked && timeSinceScriptStart > 4)
+
+		// Execute once only
+		if(!viveChecked)
 		{
 			viveChecked = true;
 
 			try
 			{
+				if(SteamVR.instance != null)
+					openVRDeviceName = SteamVR.instance.hmd_ModelNumber;
+				if(openVRDeviceName.Contains("Vive"))
+					openVRDeviceName = "Vive";
+				else if(openVRDeviceName.Contains("Oculus"))
+					openVRDeviceName = "Oculus Touch";
+				else
+					openVRDeviceName = "OpenVR";
+				
 				if(!Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
 				{
-					this.guiTextLowerLocal = "Connecting to Vive. \n\n Error: Could not connect to Vive.";
-					return RUISCalibrationPhase.Invalid;
+					this.guiTextLowerLocal = "Head-mounted display is not present!\nYou might not be able to access the " + openVRDeviceName + " controllers.";
+					Debug.LogError(  "Head-mounted display is not present! This could be an indication of a bigger problem and you might not be able to access the "
+								   + openVRDeviceName + " controllers.");
 				}
-			} catch{}
-		}	
-		
-		if(timeSinceScriptStart < 5) {
-			this.guiTextLowerLocal = "Connecting to Kinect 2. \n\n Please wait...";
+			} catch
+			{
+				this.guiTextLowerLocal = "Failed to access " + openVRDeviceName + ". \n\n Error: OpenVR not found! Is SteamVR installed?";
+				return RUISCalibrationPhase.Invalid;
+			}
+		}
+
+		if(timeSinceScriptStart < 4)
+		{
+			this.guiTextLowerLocal = "Detected " + openVRDeviceName + ".";
 			return RUISCalibrationPhase.Initial;
 		}
 		
-		if(!kinect2Checked && timeSinceScriptStart > 5) {
+		if(timeSinceScriptStart < 5)
+		{
+			this.guiTextLowerLocal = "Connecting to Kinect 2. \n\n Please wait...";
+			return RUISCalibrationPhase.Initial;
+		}
+
+		// Execute once only
+		if(!kinect2Checked)
+		{
 			kinect2Checked = true;	
-			if (!kinect2SourceManager.GetSensor().IsOpen || !kinect2SourceManager.GetSensor().IsAvailable) {
+			if (!kinect2SourceManager.GetSensor().IsOpen || !kinect2SourceManager.GetSensor().IsAvailable)
+			{
 				this.guiTextLowerLocal = "Connecting to Kinect 2. \n\n Error: Could not connect to Kinect 2.";
 				return RUISCalibrationPhase.Invalid;
 			}
-			else {
+			else
+			{
 				return RUISCalibrationPhase.Preparation;
 			}
-			
 		}	
 		
 		return RUISCalibrationPhase.Invalid; // Loop should not get this far
 	}
 	
 	
-	public override RUISCalibrationPhase PreparationPhase(float deltaTime) {
-		this.guiTextLowerLocal = "Step in front of Kinect. \nTake a Vive controller into your right hand.";
+	public override RUISCalibrationPhase PreparationPhase(float deltaTime)
+	{
+		this.guiTextLowerLocal = "Step in front of Kinect. \nTake a " + openVRDeviceName + " controller into your right hand.";
 		updateBodyData();
 		kinectTrackingID = 0;
 		
@@ -261,12 +285,12 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 			{
 
 				if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
-					this.guiTextUpperLocal = "Vive controller not detected.";
+					this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
 			}
 		}
 		else
 		{
-			this.guiTextUpperLocal = "Vive controller not detected.";
+			this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
 		}
 
 		if(kinectTrackingID != 0)
@@ -280,7 +304,7 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) 
 	{
-		this.guiTextLowerLocal = "Hold Vive controller in your right hand. \nPress the trigger button to start calibrating.";
+		this.guiTextLowerLocal = "Hold " + openVRDeviceName + " controller in your right hand. \nPress the trigger button to start calibrating.";
 
 		updateBodyData();
 
@@ -307,12 +331,12 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 				}
 
 				if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
-					this.guiTextUpperLocal = "Vive controller not detected.";
+					this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
 			}
 		}
 		else
 		{
-			this.guiTextUpperLocal = "Vive controller not detected.";
+			this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
 		}
 
 		return RUISCalibrationPhase.ReadyToCalibrate;
@@ -322,8 +346,8 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
 		
 		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken.\n\n"
-		                                       + "Keep the Vive in your right hand\n"
-		                                       + "and make wide, calm motions with it.\n"
+											   + "Keep the " + openVRDeviceName + " controller in your right\n"
+											   + "hand and make wide, calm motions with it.\n"
 		                                       + "Have both sensors see it.", numberOfSamplesTaken, numberOfSamplesToTake);
 		TakeSample(deltaTime);
 		
@@ -378,7 +402,8 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 			if(followTransform && viveControllerTransform)
 				followTransform.transformToFollow = viveControllerTransform;
 
-			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n\nHold down Vive touchpad button\nto drag and finetune the results.\n",
+			this.guiTextUpperLocal = string.Format(	   "Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n\nHold down " 
+													+  openVRDeviceName + " touchpad button\nto drag and finetune the results.\n",
 			                                       totalErrorDistance, averageError);
 
 			calibrationFinnished = true;                                  
@@ -578,7 +603,7 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 			else
 			{
 				device2Error = true;
-				this.guiTextUpperLocal = "Vive controller not detected.";
+				this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
 			}
 		}
 		
@@ -623,29 +648,27 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 		Debug.Log(transformMatrixSolution);
 		Debug.Log(error);
 		
-		List<Vector3> orthogonalVectors = MathUtil.Orthonormalize(
-			MathUtil.ExtractRotationVectors(
-			MathUtil.MatrixToMatrix4x4(transformMatrixSolution)
-			)
-			);
+		List<Vector3> orthogonalVectors = MathUtil.Orthonormalize(MathUtil.ExtractRotationVectors(MathUtil.MatrixToMatrix4x4(transformMatrixSolution)));
 		rotationMatrix = CreateRotationMatrix(orthogonalVectors);
 		Debug.Log(rotationMatrix);
 		
 		transformMatrix = MathUtil.MatrixToMatrix4x4(transformMatrixSolution);//CreateTransformMatrix(transformMatrixSolution);
 		Debug.Log(transformMatrix);
-		
+
 		UpdateFloorNormalAndDistance(); 
-		
+
+		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+
 		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
 		coordinateSystem.SaveTransformDataToXML(xmlFilename, RUISDevice.Vive,  RUISDevice.Kinect_2); 
 		coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Kinect_2, kinect2FloorNormal, kinect2DistanceFromFloor);
 
-		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+
 		Vector3 translate = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
 		updateDictionaries(coordinateSystem.RUISCalibrationResultsInVector3, 
 		                   coordinateSystem.RUISCalibrationResultsInQuaternion,
 		                   coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
-		                   translate, rotationQuaternion, transformMatrix,
+			translate, rotationQuaternion, transformMatrix,
 						   RUISDevice.Vive, RUISDevice.Kinect_2);
 		                   
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;

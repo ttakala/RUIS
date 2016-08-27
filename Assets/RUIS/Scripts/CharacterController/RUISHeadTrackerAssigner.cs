@@ -58,7 +58,6 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 		bool kinect = false;
 		bool psmove = false;
 		bool razer = false;
-		bool oculusDK2 = false;
 
 //		bool isRiftConnected = false;
 //		{
@@ -80,11 +79,6 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 //
 		if(inputManager)
 		{
-//			if(isRiftConnected && (ovrHmdVersion == Ovr.HmdType.DK2 || ovrHmdVersion == Ovr.HmdType.Other)) //06to08
-//				oculusDK2 = true;
-
-			if(RUISDisplayManager.IsHmdPresent()) //06to08
-				oculusDK2 = true; // HACK TODO set to true only if we have a position tracked HMD 
 			
 			kinect2 = inputManager.enableKinect2;
 			kinect  = inputManager.enableKinect;
@@ -117,21 +111,17 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					++trackerCount;
 					int foundTrackerScore = 0;
 
-					bool viveFound = false;
+					bool openVRHmdFound = false;
 					try
 					{
 						if(Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
 						{
-							viveFound = true;
+							openVRHmdFound = true;
 						}
 					} catch{}
 
 					// Give score to found head trackers
-					if(viveFound && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.ViveHMD)
-					{
-						foundTrackerScore = 8;
-					}
-					else if(oculusDK2 && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OculusDK2)
+					if(openVRHmdFound && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OpenVR)
 					{
 						foundTrackerScore = 7;
 					}
@@ -352,10 +342,10 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 //				}
 //			}
 				
-			// *** TODO: Below is slightly hacky
+			// *** HACK TODO: Below is slightly hacky and only for HMDs with drift (i.e. Rift DK1)
 			// Read inputConfig.xml to see if Kinect yaw drift correction for Oculus Rift should be enabled
 			if(	   closestMatch != null
-				&& closestMatch.useOculusRiftRotation && applyKinectDriftCorrectionPreference)
+				&& closestMatch.useHmdRotation && applyKinectDriftCorrectionPreference)
 			{
 				if(inputManager.kinectDriftCorrectionPreferred)
 				{
