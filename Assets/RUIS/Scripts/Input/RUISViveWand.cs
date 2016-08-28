@@ -131,7 +131,7 @@ public class RUISViveWand : RUISWand {
 	{
 		get
 		{
-			return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).velocity, RUISDevice.Vive);
+			return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).velocity, RUISDevice.OpenVR);
 		}
 	}
 
@@ -145,7 +145,7 @@ public class RUISViveWand : RUISWand {
 			if(   steamVRTrackedObject.isValid
 				&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).valid
 				&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected)
-				return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).angularVelocity, RUISDevice.Vive);
+				return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).angularVelocity, RUISDevice.OpenVR);
 			return Vector3.zero;
 		}
 	}

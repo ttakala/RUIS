@@ -54,7 +54,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	public RUISKinectToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 				
-		this.inputDevice1 = RUISDevice.Oculus_DK2;
+		this.inputDevice1 = RUISDevice.OpenVR;
 		this.inputDevice2 = RUISDevice.Kinect_1;
 		
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
@@ -282,8 +282,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		kinect1ModelObject.transform.rotation = kinect1PitchRotation;
 		kinect1ModelObject.transform.localPosition = new Vector3(0, kinect1DistanceFromFloor, 0);
 
-		oculusDK2CameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
-		oculusDK2CameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
+		oculusDK2CameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.OpenVR);
+		oculusDK2CameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.OpenVR);
 
 		if(this.floorPlane)
 			this.floorPlane.transform.position = new Vector3(0, 0, 0);
@@ -346,7 +346,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 				}
 			}
 		}
-		if(device == RUISDevice.Oculus_DK2) 
+		if(device == RUISDevice.OpenVR) 
 		{
 //			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;  //06to08
 //			float px =  headpose.Position.x;
@@ -428,7 +428,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		UpdateFloorNormalAndDistance(); 
 		
 		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
-		coordinateSystem.SaveTransformDataToXML(xmlFilename, RUISDevice.Oculus_DK2, RUISDevice.Kinect_1); 
+		coordinateSystem.SaveTransformDataToXML(xmlFilename, RUISDevice.OpenVR, RUISDevice.Kinect_1); 
 		coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Kinect_1, kinect1FloorNormal, kinect1DistanceFromFloor);
 		
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
@@ -437,7 +437,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		                   coordinateSystem.RUISCalibrationResultsInQuaternion,
 		                   coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
 		                   translate, rotationQuaternion, transformMatrix,
-		                   RUISDevice.Oculus_DK2, RUISDevice.Kinect_1);
+		                   RUISDevice.OpenVR, RUISDevice.Kinect_1);
 		
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = kinect1DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;     

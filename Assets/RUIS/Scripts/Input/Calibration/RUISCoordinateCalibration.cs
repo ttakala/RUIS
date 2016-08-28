@@ -2,8 +2,10 @@
 
 Content    :   Handles the calibration procedure between PS Move and Kinect
 Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -18,8 +20,7 @@ public enum RUISDevice
 	Kinect_1,
 	Kinect_2,
 	PS_Move,
-	Oculus_DK2,
-	Vive,
+	OpenVR,
 	Null
 }
 public enum RUISCalibrationPhase {
@@ -143,25 +144,13 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 					firstDevice = RUISDevice.Kinect_2;
 					secondDevice = RUISDevice.PS_Move;
 				break;
-				case "Kinect 2 - Oculus DK2":
+				case "Kinect 2 - OpenVR":
 					firstDevice = RUISDevice.Kinect_2;
-					secondDevice = RUISDevice.Oculus_DK2;
+					secondDevice = RUISDevice.OpenVR;
 				break;
-				case "Kinect - Oculus DK2":
-					firstDevice = RUISDevice.Kinect_1;
-					secondDevice = RUISDevice.Oculus_DK2;
-				break;
-				case "Kinect 2 - Vive":
-					firstDevice = RUISDevice.Kinect_2;
-					secondDevice = RUISDevice.Vive;
-				break;
-				case "Vive - Kinect 2":
-					firstDevice = RUISDevice.Vive;
-					secondDevice = RUISDevice.Kinect_2;
-				break;
-				case "PSMove - Oculus DK2":
+				case "PSMove - OpenVR":
 					firstDevice = RUISDevice.PS_Move;
-					secondDevice = RUISDevice.Oculus_DK2;
+					secondDevice = RUISDevice.OpenVR;
 				break;
 				case "Kinect floor data":
 					firstDevice = RUISDevice.Kinect_1;
@@ -208,12 +197,11 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 
     void Start()
     {
-		if(			(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.Oculus_DK2)
-		  		 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.Oculus_DK2 )) 
+		if(			(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.OpenVR)
+		  		 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.OpenVR )) 
 		{
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
-			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
-			calibrationProcess = new RUISKinect2ToOculusDK2CalibrationProcess(calibrationProcessSettings);
+			calibrationProcess = new RUISKinect2ToOpenVrCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_2)
 		   		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Kinect_2 )) 
@@ -236,15 +224,15 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 			calibrationProcess = new RUISKinect2ToPSMoveCalibrationProcess(calibrationProcessSettings);
 		}
-		else if(	(firstDevice == RUISDevice.PS_Move  && secondDevice == RUISDevice.Oculus_DK2)
-		        ||	(secondDevice == RUISDevice.PS_Move && firstDevice == RUISDevice.Oculus_DK2 )) 
+		else if(	(firstDevice == RUISDevice.PS_Move  && secondDevice == RUISDevice.OpenVR)
+		        ||	(secondDevice == RUISDevice.PS_Move && firstDevice == RUISDevice.OpenVR )) 
 		{
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
-			coordinateSystem.rootDevice = RUISDevice.Oculus_DK2;
+			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 			calibrationProcess = new RUISPSMoveToOculusDK2CalibrationProcess(calibrationProcessSettings);
 		}
-		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Oculus_DK2)
-		   		||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Oculus_DK2 )) 
+		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.OpenVR)
+		   		||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.OpenVR )) 
 		{
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
@@ -262,19 +250,13 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
 		}
-		else if((firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.Vive)
-			||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.Vive )) 
+		else 
 		{
-			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
-			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
-			calibrationProcess = new RUISKinect2ToViveCalibrationProcess(calibrationProcessSettings);
-		}
-		
-		else {
 			calibrationProcess = null;
 		}	
     
-    	if(calibrationProcess == null) {
+    	if(calibrationProcess == null)
+		{
 			upperText.text = "";
 			lowerText.text = "Selected calibration device combination\n not yet supported.";
 			
@@ -296,7 +278,8 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 			this.calibrationResultPhaseObjects.SetActive(false);
 			currentPhase = RUISCalibrationPhase.Invalid;
 		}
-		else {
+		else 
+		{
 			currentPhase = RUISCalibrationPhase.Initial;
 		}
 		string devicePairName = firstDevice.ToString() + "-" + secondDevice.ToString();

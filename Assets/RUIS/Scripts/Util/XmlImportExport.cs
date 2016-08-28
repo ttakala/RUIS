@@ -171,7 +171,7 @@ public class XmlImportExport {
 															 + "    <masterCoordinateSystemSensor value=\"Kinect_2\" />\n");
 		coordinateSystemSettingsElement.AppendChild(coordinateComment1);
 
-		XmlComment coordinateComment2 = xmlDoc.CreateComment(  " Kinect_2, Kinect_1, Vive, PS_Move, HMD ");
+		XmlComment coordinateComment2 = xmlDoc.CreateComment(  " Kinect_2, Kinect_1, OpenVR, PS_Move ");
 		coordinateSystemSettingsElement.AppendChild(coordinateComment2);
 
 		XmlComment coordinateComment3 = xmlDoc.CreateComment(  "\n    <switchMasterToAvailableSensor value=\"true\" />\n"

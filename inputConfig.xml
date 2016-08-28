@@ -28,7 +28,7 @@
     <useMasterCoordinateSystem value="true" /> 
     <masterCoordinateSystemSensor value="Kinect_2" />
 -->
-    <!-- Kinect_2, Kinect_1, Vive, PS_Move, HMD -->
+    <!-- Kinect_2, Kinect_1, OpenVR, PS_Move -->
     <!--
     <switchMasterToAvailableSensor value="true" />
     <coordinateSystemLocationOffset x="0" y="0" z="0" />

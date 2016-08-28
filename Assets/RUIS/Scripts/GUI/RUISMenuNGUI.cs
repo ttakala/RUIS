@@ -197,14 +197,14 @@ public class RUISMenuNGUI : MonoBehaviour {
 		updateCalibratableDevices();
 	}
 
-	void enableOculusPositionalTracking()
-	{
-		OVRManager ovrManager = FindObjectOfType<OVRManager>();
-		if(ovrManager)
-			ovrManager.usePositionTracking = true;
-		if(OVRManager.tracker != null)
-			OVRManager.tracker.isEnabled = true;
-	}
+//	void enableOculusPositionalTracking()
+//	{
+//		OVRManager ovrManager = FindObjectOfType<OVRManager>();
+//		if(ovrManager)
+//			ovrManager.usePositionTracking = true;
+//		if(OVRManager.tracker != null)
+//			OVRManager.tracker.isEnabled = true;
+//	}
 	
 	void buttonPressed(GameObject clickedGameObject) 
 	{ 
@@ -222,17 +222,17 @@ public class RUISMenuNGUI : MonoBehaviour {
 						calibrationDropDownSelection = this.transform.Find(
 							"NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
 												
-						if(calibrationDropDownSelection.Contains("Oculus")) // *** HACK TODO: Not the best way to be sure that we will calibrate Oculus Rift
-									enableOculusPositionalTracking();
+//						if(calibrationDropDownSelection.Contains("Oculus")) // *** HACK TODO: Not the best way to be sure that we will calibrate Oculus Rift
+//									enableOculusPositionalTracking();
 
 						SaveInputChanges();
 						this.transform.parent = null;
-		//						DontDestroyOnLoad(this);
+//						DontDestroyOnLoad(this);
 						currentMenuState = RUISMenuStates.calibration;
 //						previousSceneId = Application.loadedLevel;
 						Hide3DGUI();
 
-								// Hacky way to pass information between loading scenes
+						// Hacky way to pass information between loading scenes
 						RUISCalibrationProcessSettings.isCalibrating = true;
 						RUISCalibrationProcessSettings.devicePair = this.calibrationDropDownSelection;
 						RUISCalibrationProcessSettings.previousSceneId = Application.loadedLevel;
@@ -627,15 +627,13 @@ public class RUISMenuNGUI : MonoBehaviour {
 			isPositionTrackedOculusPresent = true;
 						
 		if(inputManager.enableKinect && inputManager.enableKinect2) dropDownChoices.Add ("Kinect - Kinect2");
-//		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
-//		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");
-		if(isPositionTrackedOculusPresent && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - Oculus DK2");
-		if(isPositionTrackedOculusPresent && inputManager.enableKinect) dropDownChoices.Add ("Kinect - Oculus DK2");
-//		if(isPositionTrackedOculusPresent && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - Oculus DK2");
-		try
-		{
-			if(Valve.VR.OpenVR.IsHmdPresent() && inputManager.enableKinect2) dropDownChoices.Add ("Vive - Kinect 2");
-		} catch{}
+		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
+		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");
+		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - OpenVR");
+//		if(isPositionTrackedOculusPresent && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - Oculus DK2");
+//		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - OpenVR");
+//		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect) dropDownChoices.Add ("Kinect - OpenVR");
+
 		
 		if(dropDownChoices.Count == 0) 
 		{

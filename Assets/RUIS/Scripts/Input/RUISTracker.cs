@@ -389,9 +389,9 @@ public class RUISTracker : MonoBehaviour
 				// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
 				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
 				{
-					transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.Vive);
-					transform.localScale = coordinateSystem.ExtractLocalScale(RUISDevice.Vive);
-					transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
+					transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.OpenVR);
+					transform.localScale = coordinateSystem.ExtractLocalScale(RUISDevice.OpenVR);
+					transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.OpenVR);
 				}
 			}
 			else
@@ -415,7 +415,7 @@ public class RUISTracker : MonoBehaviour
 //			{
 //				OculusCounterPoseOffset();
 //				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
-//					this.localRotation = coordinateSystem.GetOculusCameraYRotation();
+//					this.localRotation = coordinateSystem.GetOculusCameraYRotation(); // GetHmdCoordinateSystemYaw(RUISDevice.OculusDK2)
 //			}
 //		}
     
@@ -582,7 +582,7 @@ public class RUISTracker : MonoBehaviour
 ////					 && ovrHmdVersion != Ovr.HmdType.DKHD 
 ////					 && ovrHmdVersion != Ovr.HmdType.None )  //06to08
 //				{
-//					transform.localRotation = coordinateSystem.GetOculusCameraYRotation();
+//					transform.localRotation = coordinateSystem.GetOculusCameraYRotation();  // GetHmdCoordinateSystemYaw(RUISDevice.OculusDK2)
 //				}
 ////				else // We are using DK1 or something without position tracking (and a reference heading)
 ////				{
@@ -629,10 +629,11 @@ public class RUISTracker : MonoBehaviour
 //				// Second term offsets the localPosition of each eye camera, which is set by ovrCameraRig
 //				this.transform.localPosition =    coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2)
 //												- transform.localRotation * ovrCameraRig.centerEyeAnchor.localPosition
-//												+ coordinateSystem.GetOculusRiftOrientation() * positionOffsetOpenVR;
+//												+ coordinateSystem.GetOculusRiftOrientation() * positionOffsetOpenVR; // GetHmdOrientationInMasterFrame()
 //			}
 //			else
 //			{
+//																GetHmdOrientationInMasterFrame()
 //				this.transform.localPosition = coordinateSystem.GetOculusRiftOrientation() * positionOffsetOpenVR + coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Oculus_DK2);
 //			}
 //		}
@@ -722,21 +723,22 @@ public class RUISTracker : MonoBehaviour
 			poseRazer = SixenseInput.GetController(rotationRazerID);
 			checkRazer = true;
 		}
-		
+
+		// *** HACK TODO: RecenterPose() is not meaningful anymore without Oculus DK1/DK2
 		// Reset view: Check if reset view button was pressed
-		if(checkPSMove && posePSMove != null)
-		{
-			if(posePSMove.moveButtonWasPressed)
-				RecenterPose();
-		}
-		if(checkRazer && poseRazer != null && poseRazer.Enabled)
-		{
-			if(		poseRazer.GetButton(SixenseButtons.BUMPER)
-				&&  poseRazer.GetButtonDown(SixenseButtons.START) )
-				RecenterPose();
-		}
-		if(Input.GetKeyDown(resetKey))
-			RecenterPose();
+//		if(checkPSMove && posePSMove != null)
+//		{
+//			if(posePSMove.moveButtonWasPressed)
+//				RecenterPose();
+//		}
+//		if(checkRazer && poseRazer != null && poseRazer.Enabled)
+//		{
+//			if(		poseRazer.GetButton(SixenseButtons.BUMPER)
+//				&&  poseRazer.GetButtonDown(SixenseButtons.START) )
+//				RecenterPose();
+//		}
+//		if(Input.GetKeyDown(resetKey))
+//			RecenterPose();
 
 // *** HACK to get raw and unchanged (i.e. not affected by ResetPose) Oculus pose data
 //		if(headPositionInput == HeadPositionSource.OpenVR)
@@ -1007,7 +1009,7 @@ public class RUISTracker : MonoBehaviour
 //			// Get Oculus Rift rotation
 //			if(coordinateSystem)
 //			{
-//					tempLocalRotation = coordinateSystem.GetOculusRiftOrientation();
+//					tempLocalRotation = coordinateSystem.GetOculusRiftOrientation(); // GetHmdOrientationInMasterFrame()
 //			}
 		}
 		else // useHmdRotation == false 
@@ -1128,7 +1130,7 @@ public class RUISTracker : MonoBehaviour
 //				OVRManager.display.RecenterPose(); // UNITY54
 
 			if(coordinateSystem && !coordinateSystem.applyToRootCoordinates)
-				this.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.Oculus_DK2);
+				this.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.OpenVR);
 
 			if(!externalDriftCorrection)
 				transform.localRotation = Quaternion.identity;
@@ -1215,7 +1217,7 @@ public class RUISTracker : MonoBehaviour
 //								  	&& ovrHmdVersion != Ovr.HmdType.None ) //06to08
 		{
 			// *** HACK TODO Here we have a case of OpenVR HMD where yaw drift is corrected, but currently choosing OpenVR as rotation source disables compass 
-			return Quaternion.Euler (new Vector3 (0, (360 + (coordinateSystem?coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.Oculus_DK2).eulerAngles.y:0)
+			return Quaternion.Euler (new Vector3 (0, (360 + (coordinateSystem?coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.OpenVR).eulerAngles.y:0)
 			                                          - finalYawDifference.eulerAngles.y) % 360, 0));
 		}
 		else

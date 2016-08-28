@@ -94,7 +94,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 				if(!inputManager.enablePSMove)
 					needToSwitch = true;
 				break;
-			case RUISDevice.Oculus_DK2:
+			case RUISDevice.OpenVR:
 				if(!RUISDisplayManager.IsOpenVrAccessible())
 					needToSwitch = true;
 				break;
@@ -107,13 +107,13 @@ public class RUISCoordinateSystem : MonoBehaviour
 				else if(inputManager.enableKinect)
 					rootDevice = RUISDevice.Kinect_1;
 				else if(RUISDisplayManager.IsHmdPositionTrackable())
-					rootDevice = RUISDevice.Oculus_DK2;
+					rootDevice = RUISDevice.OpenVR;
 				else if(inputManager.enablePSMove)
 					rootDevice = RUISDevice.PS_Move;
 
 				if(rootDevice != previousDevice)
 				{
-					if(previousDevice == RUISDevice.Oculus_DK2)
+					if(previousDevice == RUISDevice.OpenVR)
 						Debug.LogWarning("Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
 						+ "because OpenVR could not be accessed! Is SteamVR installed?");
 					else
@@ -644,7 +644,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 	public Quaternion GetHmdOrientationInMasterFrame()
 	{
 		// *** HACK TODO this is the only HMD wrapper method that is currently hard-coded to use OpenVR
-		return GetHmdCoordinateSystemYaw(RUISDevice.Oculus_DK2) * GetHmdRawRotation();
+		return GetHmdCoordinateSystemYaw(RUISDevice.OpenVR) * GetHmdRawRotation();
 	}
 
 	/*

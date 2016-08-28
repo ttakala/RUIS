@@ -31,7 +31,7 @@ public class RUISOculusFollow : MonoBehaviour
 			// HACK TODO tempSample components might need negation or other hackery
 			tempSample = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); //06to08
 
-			Vector3 convertedLocation = coordinateSystem.ConvertLocation(tempSample, RUISDevice.Oculus_DK2); 
+			Vector3 convertedLocation = coordinateSystem.ConvertLocation(tempSample, RUISDevice.OpenVR); 
 			this.transform.localPosition = convertedLocation;
 			this.transform.localRotation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head); // HACK TODO check that this works
 

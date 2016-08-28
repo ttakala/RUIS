@@ -47,7 +47,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	public RUISPSMoveToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
 		
-		this.inputDevice1 = RUISDevice.Oculus_DK2;
+		this.inputDevice1 = RUISDevice.OpenVR;
 		this.inputDevice2 = RUISDevice.PS_Move;
 		
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
@@ -317,7 +317,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		Vector3 sample = new Vector3(0,0,0);
 		Vector3 tempSample;
 		
-		if(device == RUISDevice.Oculus_DK2) 
+		if(device == RUISDevice.OpenVR) 
 		{
 			
 //			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;  //06to08
@@ -411,7 +411,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		Debug.Log(transformMatrix);
 		
 		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
-		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.PS_Move, RUISDevice.Oculus_DK2);
+		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.PS_Move, RUISDevice.OpenVR);
 		
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
 		Vector3 translate = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
@@ -419,7 +419,7 @@ public class RUISPSMoveToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		                   coordinateSystem.RUISCalibrationResultsInQuaternion,
 		                   coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
 		                   translate, rotationQuaternion, transformMatrix,
-		                   RUISDevice.PS_Move, RUISDevice.Oculus_DK2);
+		                   RUISDevice.PS_Move, RUISDevice.OpenVR);
 		
 	}
 	

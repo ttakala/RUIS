@@ -357,7 +357,7 @@ public class RUISCharacterController : MonoBehaviour
 		{
 			if(coordinateSystem.applyToRootCoordinates)
 			{
-				return coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.Oculus_DK2);
+				return coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
 			}
 			else
 			{

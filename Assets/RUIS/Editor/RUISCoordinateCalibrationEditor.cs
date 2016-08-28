@@ -38,8 +38,8 @@ public class RUISCoordinateCalibrationEditor : Editor
 	{
 		serializedObject.Update();
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(firstDevice, new GUIContent("First Calibration Device (Mannequin)", ""));
-		EditorGUILayout.PropertyField(secondDevice, new GUIContent("Second Calibration Device (Wand)", ""));
+		EditorGUILayout.PropertyField(firstDevice, new GUIContent("First Calibration Device", ""));
+		EditorGUILayout.PropertyField(secondDevice, new GUIContent("Second Calibration Device", ""));
 		EditorGUILayout.PropertyField(numberOfSamplesToTake, new GUIContent("Number Of Samples To Take", ""));
 		EditorGUILayout.PropertyField(samplesPerSecond, new GUIContent("Samples Per Second", ""));
 		
