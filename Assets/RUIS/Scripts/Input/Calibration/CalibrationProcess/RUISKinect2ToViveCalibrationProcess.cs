@@ -468,7 +468,7 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 			if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
 			{
 				// *** TODO HACK will RUISDevice.Vive be replaced..?
-				vivePrefabContainer.instantiatedViveCameraRig.transform.localRotation = coordinateSystem.GetHMDCoordinateSystemYaw(RUISDevice.Vive);
+				vivePrefabContainer.instantiatedViveCameraRig.transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.Vive);
 				vivePrefabContainer.instantiatedViveCameraRig.transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.Vive);
 				vivePrefabContainer.instantiatedViveCameraRig.transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
 			}

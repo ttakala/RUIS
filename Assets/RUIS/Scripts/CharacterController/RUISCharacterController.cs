@@ -353,15 +353,15 @@ public class RUISCharacterController : MonoBehaviour
 
 	private Vector3 GetPivotPositionInTrackerCoordinates()
 	{
-		if(useHmdPositionalTracking && RUISDisplayManager.IsHmdPositionTrackable())
+		if(useHmdPositionalTracking && RUISDisplayManager.IsHmdPositionTrackable() && coordinateSystem)
 		{
-			if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
+			if(coordinateSystem.applyToRootCoordinates)
 			{
-				return coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2);
+				return coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.Oculus_DK2);
 			}
 			else
 			{
-				return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); 
+				return coordinateSystem.GetHmdRawPosition(); 
 			}
 		}
 		else

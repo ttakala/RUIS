@@ -428,7 +428,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		
 		float oculusRotation = 0;
 		if(turningGestureType != TurningGestureType.KinectTorsoYaw) {
-			oculusRotation = coordinateSystem.GetOculusRiftOrientation().eulerAngles.y;
+			oculusRotation = coordinateSystem.GetHmdOrientationInMasterFrame().eulerAngles.y;
 			if(oculusRotation > 180) oculusRotation = (oculusRotation - 360);
 		}
 		

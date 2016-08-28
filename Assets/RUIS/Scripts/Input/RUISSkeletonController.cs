@@ -816,7 +816,7 @@ public class RUISSkeletonController : MonoBehaviour
 //							oculusYaw = coordinateSystem.GetOculusRiftOrientationRaw().eulerAngles.y;
 //						else //06to08
 						{
-							skeletonPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetOculusRiftLocation(), RUISDevice.Oculus_DK2);
+							skeletonPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.Oculus_DK2);
 							skeletonPosition.y = 0;
 //							oculusYaw = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) * coordinateSystem.GetOculusRiftOrientationRaw(),
 //						                                          	     RUISDevice.Oculus_DK2).eulerAngles.y; //06to08

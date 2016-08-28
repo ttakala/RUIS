@@ -396,23 +396,32 @@ public class RUISDisplayManager : MonoBehaviour
 			ruisMenu.GetComponent<RUISMenuNGUI>().Hide3DGUI();
 	}
 
-	#if !UNITY_EDITOR
+	private static bool wasHmdPresent = false;
+	private static int hmdCheckCount = 0;
 	private static bool isOpenVrAccessible = false;
 	private static bool failedToAccessOpenVr = false;
-	#endif
 
 	public static bool IsHmdPresent()
 	{
+		// When the the status has been polled sufficiently, then assume that it will remain constant
+		if(hmdCheckCount > 4)
+			return wasHmdPresent;
+
 		// If Unity thinks yes, then we will go with that
-		if(UnityEngine.VR.VRDevice.isPresent) 
+		if(UnityEngine.VR.VRDevice.isPresent)
+		{
+			++hmdCheckCount;
+			wasHmdPresent = true;
 			return true;
+		}
 
 		// Otherwise lets ask a second opinion from OpenVR
-		#if UNITY_EDITOR
-		return Valve.VR.OpenVR.IsHmdPresent();
-		#else
-		if(isOpenVrAccessible) 
-			return Valve.VR.OpenVR.IsHmdPresent();
+		if(isOpenVrAccessible)
+		{
+			++hmdCheckCount;
+			wasHmdPresent = Valve.VR.OpenVR.IsHmdPresent();
+			return wasHmdPresent;
+		}
 		else
 		{
 			bool isOpenVrHmdPresent = false;
@@ -429,9 +438,33 @@ public class RUISDisplayManager : MonoBehaviour
 				}
 			}
 
+			++hmdCheckCount;
+			wasHmdPresent = isOpenVrHmdPresent;
 			return isOpenVrHmdPresent;
 		}
-		#endif
+	}
+
+	public static bool IsOpenVrAccessible()
+	{
+		if(isOpenVrAccessible)
+			return true;
+		else if(failedToAccessOpenVr)
+			return false;
+
+		try
+		{
+			bool isOpenVrHmdPresent = Valve.VR.OpenVR.IsHmdPresent();
+			isOpenVrAccessible = true;
+		}
+		catch
+		{
+			failedToAccessOpenVr = true;
+		}
+
+		if(isOpenVrAccessible)
+			return true;
+
+		return false;
 	}
 
 	#if !UNITY_EDITOR

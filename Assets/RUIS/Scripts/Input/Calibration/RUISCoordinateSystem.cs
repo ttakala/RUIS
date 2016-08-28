@@ -95,7 +95,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 					needToSwitch = true;
 				break;
 			case RUISDevice.Oculus_DK2:
-				if(!RUISDisplayManager.IsHmdPositionTrackable())
+				if(!RUISDisplayManager.IsOpenVrAccessible())
 					needToSwitch = true;
 				break;
 			}
@@ -115,7 +115,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 				{
 					if(previousDevice == RUISDevice.Oculus_DK2)
 						Debug.LogWarning("Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
-						+ "because Oculus Rift DK2+ was not detected!");
+						+ "because OpenVR could not be accessed! Is SteamVR installed?");
 					else
 						Debug.LogWarning("Switched 'Master Coordinate System Sensor' from " + previousDevice + " to " + rootDevice + " "
 						+ "because the former was not enabled in " + typeof(RUISInputManager) + " while the latter was!");
@@ -586,20 +586,26 @@ public class RUISCoordinateSystem : MonoBehaviour
 	}
 	
 	/*
-	 * 	Oculus Rift
+	 * 	Head-mounted display wrapper methods
 	 */
-	public Vector3 ConvertRawOculusDK2Location(Vector3 position)
+	/// <summary>
+	/// Get head-mounted display position in Unity coordinate system
+	/// </summary>
+	public Vector3 GetHmdRawPosition()
 	{
-//		Vector3 currentcameraPosition = Vector3.zero;
-//		if (OVRManager.capiHmd != null)
-//			currentcameraPosition = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3(); //06to08
-//		return Quaternion.Inverse(GetOculusCameraOrientationRaw())*(position - currentcameraPosition); //06to08
-
-		return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
+		//		if(OVRManager.display != null) //06to08
+		//		{
+		//			return ConvertRawOculusDK2Location(OVRManager.display.GetHeadPose().position); //06to08
+		//		}
+		//		else
+		//			return Vector3.zero;
+		return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); //06to08
 	}
-	
-	// Get Oculus Rift rotation in Unity coordinate system
-	public Quaternion GetOculusRiftOrientationRaw()
+
+	/// <summary>
+	/// Get head-mounted display rotation in Unity coordinate system
+	/// </summary>
+	public Quaternion GetHmdRawRotation()
 	{
 //		if(OVRManager.display != null)
 //		{
@@ -612,70 +618,10 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
 	}
 
-	// Get Oculus Rift rotation in master coordinate system (sort of, only Y-rotation of master)
-	public Quaternion GetOculusRiftOrientation()
-	{
-		return GetOculusCameraYRotation() * GetOculusRiftOrientationRaw();
-	}
-	
-	// Get Oculus Rift position in Unity coordinate system
-	public Vector3 GetOculusRiftLocation()
-	{
-//		if(OVRManager.display != null) //06to08
-//		{
-//			return ConvertRawOculusDK2Location(OVRManager.display.GetHeadPose().position); //06to08
-//		}
-//		else
-//			return Vector3.zero;
-		return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); //06to08
-	}
-	
-	// Oculus positional tracking camera's coordinate system origin in Unity coordinate system
-	public Vector3 GetOculusCameraOriginRaw()
-	{
-//		if (OVRManager.capiHmd != null) 
-//		{
-//			Vector3 currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3 (); //06to08
-//			
-//			return Quaternion.Inverse(GetOculusCameraOrientationRaw())*currentOvrCameraPose;
-//		} else //06to08
-		return Vector3.zero; // HACK remove this method
-	}
-
-	// Oculus positional tracking camera's coordinate system origin in master coordinate system
-	public Vector3 GetOculusCameraOrigin()
-	{
-		return ConvertLocation(GetOculusCameraOriginRaw(), RUISDevice.Oculus_DK2);
-	}
-	
-	// Oculus positional tracking camera's coordinate system orientation in Unity coordinates
-	public Quaternion GetOculusCameraOrientationRaw()
-	{
-//		if (OVRManager.capiHmd != null) 
-//		{
-//			return OVRManager.capiHmd.GetTrackingState().CameraPose.Orientation.ToQuaternion(); //06to08
-//		} else
-		return Quaternion.identity; // HACK remove this method
-	}
-	
-	// Oculus positional tracking camera's orientation around master coordinate system's Y-axis
-	public Quaternion GetOculusCameraYRotation()
-	{
-		// ovrManager.SetYRotation(convertedRotation.eulerAngles.y);
-		Quaternion convertedRotation = ConvertRotation(Quaternion.identity, RUISDevice.Oculus_DK2);
-
-//		return Quaternion.Euler(new Vector3 (0, convertedRotation.eulerAngles.y, 0));
-
-		Vector3 projected = convertedRotation * Vector3.forward;
-		
-		// Make sure that the projection is not pointing too much up
-		if(projected.sqrMagnitude > 0.001)
-			return Quaternion.LookRotation(projected);
-		else // The Oculus Camera's view axis is parallel with the master coordinate system's Y-axis!
-			return Quaternion.identity;
-	}
-
-	public Quaternion GetHMDCoordinateSystemYaw(RUISDevice device)
+	/// <summary>
+	/// Head-mounted display coordinate system's orientation around master coordinate system's Y-axis
+	/// </summary>
+	public Quaternion GetHmdCoordinateSystemYaw(RUISDevice device)
 	{
 		Quaternion convertedRotation = ConvertRotation(Quaternion.identity, device);
 
@@ -685,9 +631,62 @@ public class RUISCoordinateSystem : MonoBehaviour
 		// Make sure that the projection is not pointing too much up
 		if(projected.sqrMagnitude > 0.001)
 			return Quaternion.LookRotation(projected);
-		else // The HMD coordinate system view axis is parallel with the master coordinate system's Y-axis!
+		else // *** HACK TODO The HMD coordinate system view axis is parallel with the master coordinate system's Y-axis!
 			return Quaternion.identity;
 	}
+
+	/// <summary>
+	/// Get head-mounted display rotation in master coordinate system.
+	/// This is different from ConvertRotation(GetHmdRawRotation(), RUISDevice.OpenVR), because it does not
+	/// include pitch and roll difference between OpenVR frame and the master coordinate system frame,
+	/// which would in several cases tilt the world when viewed from the head-mounted display.
+	/// </summary>
+	public Quaternion GetHmdOrientationInMasterFrame()
+	{
+		// *** HACK TODO this is the only HMD wrapper method that is currently hard-coded to use OpenVR
+		return GetHmdCoordinateSystemYaw(RUISDevice.Oculus_DK2) * GetHmdRawRotation();
+	}
+
+	/*
+	 * 	Oculus Rift - Lots of obsolete functions, bits of which might be needed in the future if Oculus Unity Utilities support will be added
+	 */
+	// Oculus positional tracking camera's coordinate system origin in Unity coordinate system
+//	public Vector3 GetOculusCameraOriginRaw()
+//	{
+////		if (OVRManager.capiHmd != null) 
+////		{
+////			Vector3 currentOvrCameraPose = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3 (); //06to08
+////			
+////			return Quaternion.Inverse(GetOculusCameraOrientationRaw())*currentOvrCameraPose;
+////		} else //06to08
+//		return Vector3.zero; // HACK remove this method
+//	}
+
+	// Oculus positional tracking camera's coordinate system origin in master coordinate system
+//	public Vector3 GetOculusCameraOrigin()
+//	{
+//		return ConvertLocation(GetOculusCameraOriginRaw(), RUISDevice.Oculus_DK2);
+//	}
+	
+	// Oculus positional tracking camera's coordinate system orientation in Unity coordinates
+//	public Quaternion GetOculusCameraOrientationRaw()
+//	{
+////		if (OVRManager.capiHmd != null) 
+////		{
+////			return OVRManager.capiHmd.GetTrackingState().CameraPose.Orientation.ToQuaternion(); //06to08
+////		} else
+//		return Quaternion.identity; // HACK remove this method
+//	}
+
+//	public Vector3 ConvertRawOculusDK2Location(Vector3 position)
+//	{
+////		Vector3 currentcameraPosition = Vector3.zero;
+////		if (OVRManager.capiHmd != null)
+////			currentcameraPosition = OVRManager.capiHmd.GetTrackingState().CameraPose.Position.ToVector3(); //06to08
+////		return Quaternion.Inverse(GetOculusCameraOrientationRaw())*(position - currentcameraPosition); //06to08
+//
+//		return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
+//	}
 
 	/// <summary>
 	/// Convert velocity or angular velocity obtained with a certain device to master coordinate system, apply yaw offset, and apply Kinect pitch correction
@@ -796,6 +795,10 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return outputRotation;
 	}
 
+	/// <summary>
+	/// Returns an approximation of Vector3 localScale (calculated from RUISCalibrationResultsIn4x4Matrix[devicePairString]),
+	/// which can be used to compensate the scale difference between the master coordinate system frame and the argument device frame.
+	/// </summary>
 	public Vector3 ExtractLocalScale(RUISDevice device)
 	{
 		if(applyToRootCoordinates && rootDevice != device)
