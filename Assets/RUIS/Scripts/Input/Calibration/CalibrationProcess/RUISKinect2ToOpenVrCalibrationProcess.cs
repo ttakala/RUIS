@@ -1,3 +1,14 @@
+/*****************************************************************************
+
+Content    :   Handles the calibration procedure between Kinect 2 and OpenVR
+Authors    :   Tuukka Takala
+Copyright  :   Copyright 2016 Tuukka Takala. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
+
+******************************************************************************/
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,7 +16,7 @@ using CSML;
 using Kinect = Windows.Kinect;
 using Valve.VR;
 
-public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
+public class RUISKinect2ToOpenVrCalibrationProcess : RUISCalibrationProcess {
 	
 	public string getUpperText() {
 		return this.guiTextUpperLocal;
@@ -67,9 +78,9 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 	Vector3 translateAtTuneStart = Vector3.zero;
 	Vector3 controllerPositionAtTuneStart = Vector3.zero;
 
-	public RUISKinect2ToViveCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
+	public RUISKinect2ToOpenVrCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
-		this.inputDevice1 = RUISDevice.Vive;
+		this.inputDevice1 = RUISDevice.OpenVR;
 		this.inputDevice2 = RUISDevice.Kinect_2;
 		
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
@@ -89,7 +100,7 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == RUISDevice.Kinect_2)
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 		else
-			coordinateSystem.rootDevice = RUISDevice.Vive;
+			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 
 		vivePrefabContainer = Component.FindObjectOfType<RUISVivePrefabContainer>();
 		if(vivePrefabContainer)
@@ -468,9 +479,9 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 			if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
 			{
 				// *** TODO HACK will RUISDevice.Vive be replaced..?
-				vivePrefabContainer.instantiatedViveCameraRig.transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.Vive);
-				vivePrefabContainer.instantiatedViveCameraRig.transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.Vive);
-				vivePrefabContainer.instantiatedViveCameraRig.transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
+				vivePrefabContainer.instantiatedViveCameraRig.transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.OpenVR);
+				vivePrefabContainer.instantiatedViveCameraRig.transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.OpenVR);
+				vivePrefabContainer.instantiatedViveCameraRig.transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.OpenVR);
 			}
 		}
 
@@ -581,7 +592,7 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 				this.guiTextUpperLocal = "Step out of the Kinect's\nview and come back.";
 			}
 		}
-		if(device == RUISDevice.Vive)
+		if(device == RUISDevice.OpenVR)
 		{
 //			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;  //06to08
 //			float px =  headpose.Position.x;
@@ -660,16 +671,16 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
 
 		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
-		coordinateSystem.SaveTransformDataToXML(xmlFilename, RUISDevice.Vive,  RUISDevice.Kinect_2); 
+		coordinateSystem.SaveTransformDataToXML(xmlFilename, RUISDevice.OpenVR,  RUISDevice.Kinect_2); 
 		coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Kinect_2, kinect2FloorNormal, kinect2DistanceFromFloor);
 
 
 		Vector3 translate = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
-		updateDictionaries(coordinateSystem.RUISCalibrationResultsInVector3, 
-		                   coordinateSystem.RUISCalibrationResultsInQuaternion,
-		                   coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
-			translate, rotationQuaternion, transformMatrix,
-						   RUISDevice.Vive, RUISDevice.Kinect_2);
+		updateDictionaries(	coordinateSystem.RUISCalibrationResultsInVector3, 
+		                   	coordinateSystem.RUISCalibrationResultsInQuaternion,
+		                   	coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
+							translate, rotationQuaternion, transformMatrix,
+							RUISDevice.OpenVR, RUISDevice.Kinect_2);
 		                   
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_2] = kinect2DistanceFromFloor;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_2] = kinect2PitchRotation; 
@@ -826,7 +837,7 @@ public class RUISKinect2ToViveCalibrationProcess : RUISCalibrationProcess {
 
 	}
 
-	~RUISKinect2ToViveCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
+	~RUISKinect2ToOpenVrCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
 	{
 		SteamVR_Utils.Event.Remove("device_connected", OnDeviceConnected);
 	}
