@@ -114,7 +114,7 @@ public class RUISSkeletonControllerEditor : Editor
         updateJointRotations = serializedObject.FindProperty("updateJointRotations");
 		
 		rootSpeedScaling = serializedObject.FindProperty("rootSpeedScaling");
-		HMDRotatesHead = serializedObject.FindProperty("HMDRotatesHead");
+		HMDRotatesHead = serializedObject.FindProperty("HmdRotatesHead");
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");

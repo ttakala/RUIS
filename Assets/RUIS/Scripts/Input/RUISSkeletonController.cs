@@ -126,7 +126,7 @@ public class RUISSkeletonController : MonoBehaviour
 	// Constrained between [0,  180] in Unity Editor script
 	public float handRollAngleMaximum = 180; 
 
-	public bool HMDRotatesHead = true;
+	public bool HmdRotatesHead = true;
 
 	public bool followOculusController { get; private set; }
 
@@ -423,8 +423,8 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 			
 
-		if(HMDRotatesHead && !RUISDisplayManager.IsHmdPresent())
-			HMDRotatesHead = false;
+		if(HmdRotatesHead && !RUISDisplayManager.IsHmdPresent())
+			HmdRotatesHead = false;
 
 		// HACK for filtering Kinect 2 arm rotations
 		skeletonManager.skeletons[bodyTrackingDeviceID, playerId].filterRotations = filterRotations;
@@ -599,7 +599,7 @@ public class RUISSkeletonController : MonoBehaviour
 				UpdateTransform(ref head, skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head, maxAngularVelocity);
 			}
 				
-			if(HMDRotatesHead && RUISDisplayManager.IsHmdPresent())
+			if(HmdRotatesHead && RUISDisplayManager.IsHmdPresent())
 			{
 				if(coordinateSystem)
 				{
