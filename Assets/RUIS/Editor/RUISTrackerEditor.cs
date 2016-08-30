@@ -193,7 +193,8 @@ public class RUISTrackerEditor : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(defaultPosition, new GUIContent("Default Position (meters)", "Head position before tracking starts"));
+		if(headPositionInput.enumValueIndex != (int)RUISTracker.HeadPositionSource.OpenVR)
+        	EditorGUILayout.PropertyField(defaultPosition, new GUIContent("Default Position (meters)", "Head position before tracking starts"));
         //EditorGUILayout.PropertyField(skeletonManager, new GUIContent("skeletonManager", "Can be None"));
 
 		EditorGUI.BeginDisabledGroup(headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.OpenVR);

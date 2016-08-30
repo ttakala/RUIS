@@ -285,8 +285,10 @@ public class RUISTracker : MonoBehaviour
 		// Yaw Drift Corrector invocations in Awake()
 		filterDrift = new KalmanFilter();
 		filterDrift.initialize(2,2);
-		
-		transform.localPosition = defaultPosition;
+
+		// OpenVR already feeds some meaningful head-pose when Unity is starting
+		if(headPositionInput != HeadPositionSource.OpenVR)
+			transform.localPosition = defaultPosition;
 		eyeCenterPosition = defaultPosition;
 		measuredHeadPosition = defaultPosition;
 		
