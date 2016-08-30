@@ -47,9 +47,8 @@ public class RUISTracker : MonoBehaviour
 		OpenVR = 2, // *** TODO HACK not really tracker, only sets the tracker space from RUISCoordinateSystem
 	    PSMove = 3,
 		RazerHydra = 4,
-		ViveHMD = 5,    
-		InputTransform = 6,
-		None = 7
+		InputTransform = 5,
+		None = 6
 	};
 	
 	public enum HeadRotationSource
@@ -59,9 +58,8 @@ public class RUISTracker : MonoBehaviour
 	    OpenVR = 2,
 	    PSMove = 3,
 		RazerHydra = 4,
-		ViveHMD = 5,
-		InputTransform = 6,
-		None = 7
+		InputTransform = 5,
+		None = 6
 	};
 
     public enum CompassSource
