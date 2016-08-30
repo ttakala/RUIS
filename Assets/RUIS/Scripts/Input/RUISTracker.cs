@@ -137,7 +137,6 @@ public class RUISTracker : MonoBehaviour
 	public bool inferBaseRotationFromRotationTrackerKinect = true;
 	public bool inferBaseRotationFromRotationTrackerTransform = false;
 	private KalmanFilter hydraBaseFilterPos;
-	//private KalmanFilter hydraBaseFilterRot;
 	private KalmanFilteredRotation hydraBaseKalmanRot = new KalmanFilteredRotation();
 	public bool filterHydraBasePose = true;
 	public bool filterHydraBasePoseKinect = true;

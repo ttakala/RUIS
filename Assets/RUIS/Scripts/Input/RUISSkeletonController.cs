@@ -98,9 +98,13 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool switchToAvailableKinect = false;
 
 	private Vector3 skeletonPosition = Vector3.zero;
+	private Vector3 tempPosition = Vector3.zero;
+	private Quaternion tempRotation = Quaternion.identity;
+
 
 	public bool updateRootPosition = true;
 	public Vector3 rootSpeedScaling = Vector3.one;
+	public Vector3 rootOffset = Vector3.zero;
 
 	public bool updateJointPositions = true;
 	public bool updateJointRotations = true;
@@ -421,7 +425,8 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 			}
 		}
-			
+
+		skeletonPosition = transform.localPosition;
 
 		if(HmdRotatesHead && !RUISDisplayManager.IsHmdPresent())
 			HmdRotatesHead = false;
@@ -779,14 +784,14 @@ public class RUISSkeletonController : MonoBehaviour
 
 					if(!skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking)
 					{
-						skeletonPosition = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
-						skeletonPosition.y = 0;
-
-						if(updateRootPosition)
-							transform.localPosition = skeletonPosition;
+//						skeletonPosition = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
+//						skeletonPosition.y = 0;
+						tempPosition = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
+						skeletonPosition.x = tempPosition.x;
+						skeletonPosition.z = tempPosition.z;
 
 						if(characterController.headRotatesBody)
-							UpdateTransformWithTrackedDevice(ref root, moveYaw);
+							tempRotation = UpdateTransformWithTrackedDevice(ref root, moveYaw);
 //							UpdateTransformWithPSMove (ref torso,  moveYaw);
 //							UpdateTransformWithPSMove (ref head, moveYawRotation);
 //							UpdateTransformWithPSMove (ref leftShoulder, moveYawRotation);
@@ -801,6 +806,9 @@ public class RUISSkeletonController : MonoBehaviour
 //							UpdateTransformWithPSMove (ref rightHip, moveYawRotation);
 //							UpdateTransformWithPSMove (ref rightKnee, moveYawRotation);
 //							UpdateTransformWithPSMove (ref rightFoot, moveYawRotation);
+
+						if(updateRootPosition)
+							transform.localPosition = skeletonPosition + tempRotation*rootOffset;
 					}
 				}
 			}
@@ -816,30 +824,35 @@ public class RUISSkeletonController : MonoBehaviour
 //							oculusYaw = coordinateSystem.GetOculusRiftOrientationRaw().eulerAngles.y;
 //						else //06to08
 						{
-							skeletonPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
-							skeletonPosition.y = 0;
+//							skeletonPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
+//							skeletonPosition.y = 0;
+							tempPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
+							skeletonPosition.x = tempPosition.x;
+							skeletonPosition.z = tempPosition.z;
 //							oculusYaw = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) * coordinateSystem.GetOculusRiftOrientationRaw(),
 //						                                          	     RUISDevice.Oculus_DK2).eulerAngles.y; //06to08
 							oculusYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR).eulerAngles.y;
 						}
 					}
-					else //if(OVRManager.display != null)  //06to08
+					else
 					{
-//						skeletonPosition = OVRManager.display.GetHeadPose().position; //06to08
-						skeletonPosition = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); //06to08
-						skeletonPosition.y = 0;
-//						oculusYaw = OVRManager.display.GetHeadPose().orientation.eulerAngles.y; //06to08
+//						skeletonPosition = coordinateSystem.GetHmdRawPosition();
+//						skeletonPosition.y = 0;
+						tempPosition = coordinateSystem.GetHmdRawPosition();
+						skeletonPosition.x = tempPosition.x;
+						skeletonPosition.z = tempPosition.z;
 						oculusYaw = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head).eulerAngles.y;
 					}
 				}
 
 				trackedDeviceYawRotation = Quaternion.Euler(0, oculusYaw, 0);
 
-				if(updateRootPosition)
-					transform.localPosition = skeletonPosition;
-				
 				if(characterController.headRotatesBody)
-					UpdateTransformWithTrackedDevice(ref root, oculusYaw);
+					tempRotation = UpdateTransformWithTrackedDevice(ref root, oculusYaw);
+					
+				if(updateRootPosition) 
+					transform.localPosition = skeletonPosition + tempRotation*rootOffset;
+				
 			}
 		}
 
@@ -879,10 +892,12 @@ public class RUISSkeletonController : MonoBehaviour
 	}
 
 	// Here tracked device can mean PS Move or Oculus Rift DK2+
-	private void UpdateTransformWithTrackedDevice(ref Transform transformToUpdate, float controllerYaw)
+	private Quaternion UpdateTransformWithTrackedDevice(ref Transform transformToUpdate, float controllerYaw)
 	{
+		Quaternion yaw = Quaternion.identity;
+
 		if(transformToUpdate == null)
-			return;
+			return yaw;
 		
 		//if (updateJointPositions) ;
 		
@@ -893,16 +908,20 @@ public class RUISSkeletonController : MonoBehaviour
 //                Quaternion newRotation = transform.rotation * jointToGet.rotation *
 //                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 //                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, deltaTime * rotationDamping);
-				Quaternion newRotation = transform.rotation * Quaternion.Euler(new Vector3(0, controllerYaw, 0)) *
+				yaw = Quaternion.Euler(new Vector3(0, controllerYaw, 0));
+				Quaternion newRotation = transform.rotation * yaw *
 				                         (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 				transformToUpdate.rotation = newRotation;
+				return yaw;
 			}
 			else
 			{
 				transformToUpdate.localRotation = Quaternion.Euler(new Vector3(0, controllerYaw, 0));
-//                transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, deltaTime * rotationDamping);
+				return transformToUpdate.localRotation;
+//              transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, deltaTime * rotationDamping);
 			}
 		}
+		return yaw;
 	}
 
 	private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, int jointID, float deltaT)

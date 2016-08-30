@@ -27,6 +27,7 @@ public class RUISSkeletonControllerEditor : Editor
     SerializedProperty updateJointRotations;
 	
 	SerializedProperty rootSpeedScaling;
+	SerializedProperty rootOffset;
 	SerializedProperty HMDRotatesHead;
 
 	SerializedProperty scaleHierarchicalModelBones;
@@ -114,6 +115,7 @@ public class RUISSkeletonControllerEditor : Editor
         updateJointRotations = serializedObject.FindProperty("updateJointRotations");
 		
 		rootSpeedScaling = serializedObject.FindProperty("rootSpeedScaling");
+		rootOffset = serializedObject.FindProperty("rootOffset");
 		HMDRotatesHead = serializedObject.FindProperty("HmdRotatesHead");
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
@@ -219,6 +221,11 @@ public class RUISSkeletonControllerEditor : Editor
 		                                                               + "larger distances than Kinect tracking area allows. This is not propagated to "
 		                                                               + "Skeleton Wands or other devices (e.g. head trackers) even if they are calibrated "
 		                                                               + "with Kinect's coordinate system. Default and recommended value is (1,1,1)."));
+
+		EditorGUILayout.PropertyField(rootOffset, new GUIContent(  "HMD Root Offset", "This offset is applied only when the Body Tracking Device is not available, "
+																 + "and the avatar follows the head-mounted display position. The offset is useful if your "
+																 + "view in those situations appears to be in a wrong place inside the avatar 3D model "));
+		
 		EditorGUI.indentLevel--;
 		GUI.enabled = true;
 
