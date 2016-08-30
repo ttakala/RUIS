@@ -173,8 +173,8 @@ public class RUISCamera : MonoBehaviour
 		if(associatedDisplay != null && !associatedDisplay.isHmdDisplay)
 		{
 			// TODO: Need to change the check for associatedDisplay.enableOculusRift if RUISDisplayManager will be retired
-			if(GetComponent<OVRCameraRig>())
-				GetComponent<OVRCameraRig>().enabled = false;
+//			if(GetComponent<OVRCameraRig>())
+//				GetComponent<OVRCameraRig>().enabled = false;
 		}
 		else
 		{

@@ -132,7 +132,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public bool HmdRotatesHead = true;
 
-	public bool followOculusController { get; private set; }
+	public bool followHmdPosition { get; private set; }
 
 	public Quaternion trackedDeviceYawRotation { get; private set; }
 
@@ -234,7 +234,7 @@ public class RUISSkeletonController : MonoBehaviour
 		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)
 			bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 
-		followOculusController = false;
+		followHmdPosition = false;
 		followMoveController = false;
 		trackedDeviceYawRotation = Quaternion.identity;
 		
@@ -417,7 +417,7 @@ public class RUISSkeletonController : MonoBehaviour
 					{
 						if(RUISDisplayManager.IsHmdPresent())
 						{
-							followOculusController = true;
+							followHmdPosition = true;
 							Debug.LogWarning("Using " + RUISDisplayManager.GetHmdModel() + " as a Character Pivot for " + gameObject.name
 							+ ", because Kinects are disabled and " + RUISDisplayManager.GetHmdModel() + " was detected.");
 						}
@@ -608,7 +608,7 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 				if(coordinateSystem)
 				{
-					Quaternion oculusRotation = Quaternion.identity;
+					Quaternion hmdRotation = Quaternion.identity;
 					if(coordinateSystem.applyToRootCoordinates)
 					{
 //						if(ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD) //06to08
@@ -616,18 +616,18 @@ public class RUISSkeletonController : MonoBehaviour
 //						else //06to08
 //							oculusRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) 
 //								                                                  * coordinateSystem.GetOculusRiftOrientationRaw(), RUISDevice.Oculus_DK2);
-						oculusRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR);
+						hmdRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR);
 					}
 					else
-						oculusRotation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head);
+						hmdRotation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head);
 //					else if(OVRManager.display != null) //06to08
 //						oculusRotation = OVRManager.display.GetHeadPose().orientation; 
 
 					if(useHierarchicalModel)
-						head.rotation = transform.rotation * oculusRotation /*skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotation*/ *
+						head.rotation = transform.rotation * hmdRotation /*skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotation*/ *
 						(jointInitialRotations.ContainsKey(head) ? jointInitialRotations[head] : Quaternion.identity);
 					else
-						head.localRotation = oculusRotation; //skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head;
+						head.localRotation = hmdRotation; //skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head;
 				}
 			}
 			
@@ -813,9 +813,9 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 			}
 
-			if(followOculusController)
+			if(followHmdPosition)
 			{
-				float oculusYaw = 0;
+				float hmdYaw = 0;
 				if(coordinateSystem)
 				{
 					if(coordinateSystem.applyToRootCoordinates)
@@ -831,7 +831,7 @@ public class RUISSkeletonController : MonoBehaviour
 							skeletonPosition.z = tempPosition.z;
 //							oculusYaw = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) * coordinateSystem.GetOculusRiftOrientationRaw(),
 //						                                          	     RUISDevice.Oculus_DK2).eulerAngles.y; //06to08
-							oculusYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR).eulerAngles.y;
+							hmdYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR).eulerAngles.y;
 						}
 					}
 					else
@@ -841,14 +841,14 @@ public class RUISSkeletonController : MonoBehaviour
 						tempPosition = coordinateSystem.GetHmdRawPosition();
 						skeletonPosition.x = tempPosition.x;
 						skeletonPosition.z = tempPosition.z;
-						oculusYaw = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head).eulerAngles.y;
+						hmdYaw = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head).eulerAngles.y;
 					}
 				}
 
-				trackedDeviceYawRotation = Quaternion.Euler(0, oculusYaw, 0);
+				trackedDeviceYawRotation = Quaternion.Euler(0, hmdYaw, 0);
 
 				if(characterController.headRotatesBody)
-					tempRotation = UpdateTransformWithTrackedDevice(ref root, oculusYaw);
+					tempRotation = UpdateTransformWithTrackedDevice(ref root, hmdYaw);
 					
 				if(updateRootPosition) 
 					transform.localPosition = skeletonPosition + tempRotation*rootOffset;

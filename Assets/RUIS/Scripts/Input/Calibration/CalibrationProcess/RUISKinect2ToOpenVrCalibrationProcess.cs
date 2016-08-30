@@ -151,18 +151,18 @@ public class RUISKinect2ToOpenVrCalibrationProcess : RUISCalibrationProcess {
 		
 		if(GameObject.Find ("PSMoveWand") != null)
 			GameObject.Find ("PSMoveWand").SetActive(false);
-		if(GameObject.Find ("OculusRift"))
-			GameObject.Find ("OculusRift").SetActive(false);
+		if(GameObject.Find ("HmdModel")) // "Was OculusRift"
+			GameObject.Find ("HmdModel").SetActive(false);
 		
 		// Models
-		this.viveCameraObject = GameObject.Find ("OculusDK2Camera");
+		this.viveCameraObject = GameObject.Find ("HmdCamera"); // Was "OculusDK2Camera"
 		this.kinect2ModelObject = GameObject.Find ("Kinect2Camera");
 
 		// Depth view
 		this.depthView = GameObject.Find ("Kinect2DepthView");
 		
 		// Icons
-		this.viveIcon = GameObject.Find ("OculusDK2 Icon");
+		this.viveIcon = GameObject.Find ("Hmd Icon"); // Was "OculusDK2 Icon"
 		this.kinect2Icon = GameObject.Find ("Kinect2 Icon");
 		
 		this.floorPlane = GameObject.Find ("Floor");

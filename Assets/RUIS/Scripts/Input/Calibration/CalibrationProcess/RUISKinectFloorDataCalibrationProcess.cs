@@ -21,8 +21,8 @@ public class RUISKinectFloorDataCalibrationProcess : RUISCalibrationProcess {
 	public override string guiTextLower { get{return getLowerText();} }
 	
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
-	oculusDK2Object, floorPlane, depthView,
-	KinectIcon, deviceModelObjects, depthViewObjects, iconObjects;
+						hmdObject, floorPlane, depthView,
+						KinectIcon, deviceModelObjects, depthViewObjects, iconObjects;
 	
 	private string xmlFilename;
 	

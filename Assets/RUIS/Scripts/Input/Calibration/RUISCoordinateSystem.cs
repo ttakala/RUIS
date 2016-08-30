@@ -102,12 +102,12 @@ public class RUISCoordinateSystem : MonoBehaviour
 
 			if(needToSwitch)
 			{
-				if(inputManager.enableKinect2)
+				if(RUISDisplayManager.IsHmdPositionTrackable())
+					rootDevice = RUISDevice.OpenVR;
+				else if(inputManager.enableKinect2)
 					rootDevice = RUISDevice.Kinect_2;
 				else if(inputManager.enableKinect)
 					rootDevice = RUISDevice.Kinect_1;
-				else if(RUISDisplayManager.IsHmdPositionTrackable())
-					rootDevice = RUISDevice.OpenVR;
 				else if(inputManager.enablePSMove)
 					rootDevice = RUISDevice.PS_Move;
 

@@ -76,8 +76,8 @@ public class RUISCoordinateSystemEditor : Editor
 
 		EditorGUILayout.PropertyField(switchToAvailableDevice, new GUIContent(  "Switch To Available Sensor", "If the above defined 'Master Coordinate System Sensor' "
 			                                                         		  + "is not available upon start, switch to a sensor that is. If there are multiple "
-		                                                                      + "available sensors, then the following preference order will be used: Kinect 2, Kinect 1, "
-		                                                                      + "Oculus Rift DK2, PS Move."));
+																			  + "available sensors, then the following preference order will be used: OpenVR, Kinect 2, "
+																			  + "Kinect 1, PS Move."));
 		EditorGUILayout.PropertyField(positionOffset, new GUIContent(  "Location Offset", "This value offsets the Master Coordinate System (and other sensor "
 		                                                             + "coordinate systems as well, if 'Use Master Coordinate System' is enabled)."));
 		EditorGUILayout.PropertyField(yawOffset, new GUIContent(  "Y Rotation Offset", "This value rotates the Master Coordinate System around Y axis (and "

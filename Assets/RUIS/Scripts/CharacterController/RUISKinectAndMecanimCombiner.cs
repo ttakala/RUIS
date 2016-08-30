@@ -99,7 +99,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		skeletonController = GetComponent<RUISSkeletonController>();
 		//		if (	!inputManager.enableKinect && !inputManager.enableKinect2 
 		//		    &&  (skeletonController.bodyTrackingDevice != RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker))
-		if(skeletonController != null && (   skeletonController.followOculusController || inputManager == null
+		if(skeletonController != null && (   skeletonController.followHmdPosition || inputManager == null
 		                                  || (	   skeletonController.followMoveController 
 		    									&& (   (skeletonController.bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect )
 		    										|| (skeletonController.bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)))))
@@ -385,7 +385,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		bool headRotatesBodyAndWalking = false;
 
 		if(   skeletonController.characterController 
-		   && (skeletonController.followMoveController || skeletonController.followOculusController))
+		   && (skeletonController.followMoveController || skeletonController.followHmdPosition))
 		{
 			headRotatesBodyAndWalking =  skeletonController.characterController.headRotatesBody &&  skeletonController.characterController.headPointsWalkingDirection;
 			headRotatesWalking        = !skeletonController.characterController.headRotatesBody &&  skeletonController.characterController.headPointsWalkingDirection;
@@ -395,7 +395,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
         //then apply the yaw to turn the limb to the same general direction as the torso
 		Quaternion kinectToMecanimYaw = CalculateKinectToMecanimYaw(   skeletonController.characterController 
-		                                                            && (skeletonController.followMoveController || skeletonController.followOculusController)
+		                                                            && (skeletonController.followMoveController || skeletonController.followHmdPosition)
 		                                                            && (    headRotatesBodyAndWalking
 		                                                                || (headRotatesWalking && limbRootBone.bodypartClassification != BodypartClassification.LeftArm 
 		    																				   && limbRootBone.bodypartClassification != BodypartClassification.RightArm)
@@ -415,7 +415,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 	
 		// TODO fix arm twisting when skeletonController.followMoveController == true || skeletonController.followMoveController == true
 
-		if(   (!skeletonController.followOculusController && !skeletonController.followMoveController)
+		if(   (!skeletonController.followHmdPosition && !skeletonController.followMoveController)
 		   || (    skeletonController.characterController 
 		    	|| (    headRotatesBodyAndWalking
 		    		&& (limbRootBone.bodypartClassification == BodypartClassification.LeftLeg || limbRootBone.bodypartClassification == BodypartClassification.RightLeg))

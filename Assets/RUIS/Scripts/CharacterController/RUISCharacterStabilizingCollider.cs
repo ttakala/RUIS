@@ -162,7 +162,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 
             if (combinerChildrenInstantiated)
             {
-				if ( skeletonController.followOculusController || skeletonController.followMoveController )
+				if ( skeletonController.followHmdPosition || skeletonController.followMoveController )
                 {
 					// TODO *** Check that this works with other models. Before with grandma model torsoPos value was:
                     //torsoPos = skeletonController.transform.localPosition + defaultColliderHeight * Vector3.up;

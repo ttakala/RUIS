@@ -336,7 +336,7 @@ public class RUISCharacterController : MonoBehaviour
 			break;
 		}
 
-		if(skeletonManager != null && (skeletonController.followOculusController || skeletonController.followMoveController) && headPointsWalkingDirection)
+		if(skeletonManager != null && (skeletonController.followHmdPosition || skeletonController.followMoveController) && headPointsWalkingDirection)
 			characterForward = skeletonController.trackedDeviceYawRotation * Vector3.forward;
 
 		if(ignorePitchAndRoll)

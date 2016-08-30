@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RUISOculusFollow : MonoBehaviour 
+public class RUISHmdFollow : MonoBehaviour 
 {
 	RUISCoordinateSystem coordinateSystem;
 	

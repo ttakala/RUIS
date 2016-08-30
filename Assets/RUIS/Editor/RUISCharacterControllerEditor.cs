@@ -98,10 +98,10 @@ public class RUISCharacterControllerEditor : Editor
 
 		
 		EditorGUILayout.PropertyField(useHmdPositionalTracking, new GUIContent(  "HMD Is Pivot", "Use head-mounted display's tracked position as the "
-		                                                                          + "character pivot position, [not implemented yet: and fall back to the above defined pivot only "
-											  + "in situations where HMD is not seen by its camera]. Leave this option disabled if you "
-		                                                                          + "do not know what you are doing! NOTE: The above defined pivot device (Kinect/PS Move) must "
-		                                                                          + "have its coordinate system calibrated with Oculus Rift DK2 using the RUIS device calibration."));
+	                                                                           + "character pivot position, [not implemented yet: and fall back to the above defined pivot only "
+																			   + "in situations where HMD is not seen by its camera]. Leave this option disabled if you "
+	                                                                           + "do not know what you are doing! NOTE: The above defined pivot device (Kinect/PS Move) must "
+																			   + "have its coordinate system calibrated with OpenVR (e.g. Vive) using the RUIS device calibration."));
 
 		EditorGUILayout.PropertyField(headRotatesBody, new GUIContent(  "Head Rotates Body", "Set the model of the avatar to have the same rotation as the tracked head. "
 		                                                              + "This only has effect when both Kinects are disabled from " + typeof(RUISInputManager) + " or "

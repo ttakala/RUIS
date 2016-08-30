@@ -452,26 +452,25 @@ public class RUISMenuNGUI : MonoBehaviour {
 		GameObject 	infotext_Changes_are_not_saved_in_free_version = this.transform.Find(
 																		 "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes are not saved in free version").gameObject;
 		GameObject  infotext_Changes_not_saved_yet = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Saving/Label - Changes not saved yet").gameObject;
-		GameObject 	infotext_Rift_not_Detected = this.transform.Find(    "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Rift not detected").gameObject;
-		GameObject 	infotext_Oculus_DK1_detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK1 detected").gameObject;
-		GameObject 	infotext_Oculus_DK2_detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/Rift/Label - Oculus DK2 detected").gameObject;
+		GameObject 	infotext_Hmd_Not_Detected = this.transform.Find(    "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/HMD/Label - HMD not detected").gameObject; // Was "Rift not detected"
+		GameObject 	infotext_Hmd_Detected = this.transform.Find(  "NGUIControls/Panel/selectAndConfigureDevices/Infotexts/HMD/Label - HMD detected").gameObject; // Was "Oculus DK1 detected"
 		
 		if(RUISDisplayManager.IsHmdPresent())
 		{
-			if(infotext_Oculus_DK1_detected)
+			if(infotext_Hmd_Detected)
 			{
-				UILabel hmdDetectedLabel = infotext_Oculus_DK1_detected.GetComponent<UILabel>();
+				UILabel hmdDetectedLabel = infotext_Hmd_Detected.GetComponent<UILabel>();
 				if(hmdDetectedLabel)
 					hmdDetectedLabel.text = RUISDisplayManager.GetHmdModel() + " detected";
 			}
-			infotext_Rift_not_Detected.SetActive(false);
-			infotext_Oculus_DK1_detected.SetActive(true); 
+			infotext_Hmd_Not_Detected.SetActive(false);
+			infotext_Hmd_Detected.SetActive(true); 
 		}
 		else
-			if(infotext_Rift_not_Detected)
+			if(infotext_Hmd_Not_Detected)
 			{
-				infotext_Rift_not_Detected.SetActive(true); 
-				infotext_Oculus_DK1_detected.SetActive(false);  
+				infotext_Hmd_Not_Detected.SetActive(true); 
+				infotext_Hmd_Detected.SetActive(false);  
 			}
 
 //		bool isRiftConnected = false;
@@ -621,11 +620,6 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(inputManager.enableKinect) dropDownChoices.Add ("Kinect floor data");
 		if(inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 floor data");
 		    
-		bool isPositionTrackedOculusPresent = false;
-
-		if(RUISDisplayManager.IsHmdPresent())
-			isPositionTrackedOculusPresent = true;
-						
 		if(inputManager.enableKinect && inputManager.enableKinect2) dropDownChoices.Add ("Kinect - Kinect2");
 		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
 		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");

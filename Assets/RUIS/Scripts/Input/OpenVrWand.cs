@@ -1,6 +1,6 @@
 ﻿/*****************************************************************************
 
-Content    :   A class to manage the information from a Vive controller
+Content    :   A class to manage the information from a OpenVR controller
 Authors    :   Tuukka Takala
 Copyright  :   Copyright 2016 Tuukka Takala. All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
@@ -13,7 +13,7 @@ using UnityEngine;
 using System.Collections;
 
 
-public class RUISViveWand : RUISWand {
+public class OpenVrWand : RUISWand {
 	public enum SelectionButton
 	{
 		Trigger,

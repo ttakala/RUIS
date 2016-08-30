@@ -249,12 +249,12 @@ public class RUISTracker : MonoBehaviour
 	public Transform driftVisualizerPosition;
 	// End of Yaw Drift Corrector members
 
-	OVRManager ovrManager;  //06to08
-	OVRCameraRig ovrCameraRig;
+//	OVRManager ovrManager;  //06to08
+//	OVRCameraRig ovrCameraRig;
 //	Ovr.HmdType ovrHmdVersion;
 	
 	RUISCoordinateSystem coordinateSystem;
-	Vector3 currentOvrCameraPose;
+	Vector3 currentHmdCameraPose;
 	Vector3 convertedLocation; 
 	
     void Awake()
@@ -292,7 +292,7 @@ public class RUISTracker : MonoBehaviour
 		hydraBasePosition = new Vector3(0, 0, 0);
 		hydraBaseRotation = Quaternion.identity;
 		
-		ovrCameraRig = GetComponentInChildren<OVRCameraRig>(); // HACK TODO checking for ovrCameraRig
+//		ovrCameraRig = GetComponentInChildren<OVRCameraRig>(); // HACK TODO checking for ovrCameraRig
 //		if(ovrCameraRig != null && OVRManager.display != null && OVRManager.display.isPresent) //06to08
 //		{
 //			useOculusRiftRotation = true;
@@ -357,7 +357,7 @@ public class RUISTracker : MonoBehaviour
 	void Start()
 	{
 
-		ovrManager = FindObjectOfType<OVRManager>();
+//		ovrManager = FindObjectOfType<OVRManager>();
 
 //		// Get information about Oculus Rift version and if it is connected
 //		bool isRiftConnected = UnityEngine.VR.VRDevice.isPresent;
@@ -539,10 +539,10 @@ public class RUISTracker : MonoBehaviour
 //			          + "want this, then remove the " + typeof(OVRCameraRig) + " component from the child object(s).");
 //		}
 //
-		if(ovrCameraRig && Application.isEditor)
-			Debug.Log(typeof(OVRCameraRig) + " script detected in a child object of this " + gameObject.name
-					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
-			          + "trackers when you remove the " + typeof(OVRCameraRig) + " component from the child object(s).");
+//		if(ovrCameraRig && Application.isEditor)
+//			Debug.Log(typeof(OVRCameraRig) + " script detected in a child object of this " + gameObject.name
+//					+ " object. Using Oculus Rift as a Rotation Tracker. You can access other rotation "
+//			          + "trackers when you remove the " + typeof(OVRCameraRig) + " component from the child object(s).");
 		
 //		if(useOculusRiftRotation && inputManager)
 //		{

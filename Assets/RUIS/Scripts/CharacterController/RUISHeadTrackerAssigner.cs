@@ -22,7 +22,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	[Tooltip(  "The script will iterate through the below list of RUISTrackers, and leave the best candidate enabled, "
 	         + "based on your RUISInputManager settings. If no suitable tracking devices are enabled in "
 	         + "RUISInputManager, then the first item on the list is chosen. If multiple tracking devices are enabled, "
-	         + "then the following preference order is used: Oculus DK2, PS Move, Kinect 2, Kinect 1, Razer Hydra.")]
+	         + "then the following preference order is used: OpenVR, PS Move, Kinect 2, Kinect 1, Razer Hydra.")]
 	public List<RUISTracker> headTrackers = new List<RUISTracker>(6);
 	[Tooltip(  "The chosen RUISTracker's child RUISCamera will draw to this display (if it doesn't have an attached "
 	         + "RUISCamera already). NOTE: If this member is None, then the first RUISDisplay without an attached "
