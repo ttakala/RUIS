@@ -426,10 +426,10 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		float torsoRotation = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].torso.rotation.eulerAngles.y;
 		if(torsoRotation > 180) torsoRotation = (torsoRotation - 360);
 		
-		float oculusRotation = 0;
+		float hmdRotation = 0;
 		if(turningGestureType != TurningGestureType.KinectTorsoYaw) {
-			oculusRotation = coordinateSystem.GetHmdOrientationInMasterFrame().eulerAngles.y;
-			if(oculusRotation > 180) oculusRotation = (oculusRotation - 360);
+			hmdRotation = coordinateSystem.GetHmdOrientationInMasterFrame().eulerAngles.y;
+			if(hmdRotation > 180) hmdRotation = (hmdRotation - 360);
 		}
 		
 		bool kinect2HeuristicsCheckPass = true;
@@ -447,7 +447,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		
 		switch(turningGestureType) {
 			case TurningGestureType.HMDYaw:
-				if(Mathf.Abs(oculusRotation) > rotationTriggerAngle) gestureTurnValue = 1 * Mathf.Sign(oculusRotation);
+				if(Mathf.Abs(hmdRotation) > rotationTriggerAngle) gestureTurnValue = 1 * Mathf.Sign(hmdRotation);
 				break;
 				
 			case TurningGestureType.KinectTorsoYaw:
@@ -455,7 +455,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 				break;
 				
 			case TurningGestureType.HMDToKinectTorsoYaw: 
-				if(Mathf.Abs(oculusRotation - torsoRotation) > rotationTriggerAngle  || (kinect2Heuristics && kinect2HeuristicsCheckPass)) gestureTurnValue = 1  * Mathf.Sign(oculusRotation);
+				if(Mathf.Abs(hmdRotation - torsoRotation) > rotationTriggerAngle  || (kinect2Heuristics && kinect2HeuristicsCheckPass)) gestureTurnValue = 1  * Mathf.Sign(hmdRotation);
 			break;
 		}
 
