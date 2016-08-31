@@ -186,7 +186,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 400024}
   - 114: {fileID: 11400026}
-  - 114: {fileID: 11400034}
   m_Layer: 0
   m_Name: DisplayManager
   m_TagString: Untagged
@@ -267,6 +266,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400026}
   m_RootOrder: 2
@@ -279,6 +279,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400026}
   - {fileID: 400024}
@@ -293,6 +294,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400016}
   - {fileID: 400006}
@@ -308,6 +310,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400004}
   m_RootOrder: 1
@@ -320,6 +323,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400004}
   m_RootOrder: 2
@@ -332,6 +336,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400026}
   m_RootOrder: 3
@@ -344,6 +349,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400026}
   m_RootOrder: 4
@@ -356,6 +362,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400036}
   m_RootOrder: 3
@@ -368,6 +375,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400004}
   m_RootOrder: 0
@@ -380,6 +388,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400024}
   m_RootOrder: 0
@@ -392,6 +401,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400036}
   m_RootOrder: 2
@@ -404,6 +414,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400018}
   m_Father: {fileID: 400002}
@@ -417,6 +428,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400004}
   - {fileID: 400036}
@@ -434,6 +446,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400036}
   m_RootOrder: 1
@@ -446,6 +459,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 400036}
   m_RootOrder: 0
@@ -458,6 +472,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 400032}
   - {fileID: 400030}
@@ -582,7 +597,7 @@ MonoBehaviour:
   m_useSkeleton: 1
   m_initMirroring: 1
   m_recordingFilename: 
-  m_smoothingFactor: .699999988
+  m_smoothingFactor: 0.7
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -649,7 +664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  torsoOffsetKinect2: .25
+  torsoOffsetKinect2: 0.25
 --- !u!114 &11400012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -667,11 +682,10 @@ MonoBehaviour:
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
-  enableOculusRift: 0
-  oculusLowPersistence: 1
-  oculusMirrorMode: 1
+  isHmdDisplay: 0
+  hmdMirrorMode: 1
   isStereo: 0
-  eyeSeparation: .0599999987
+  eyeSeparation: 0.06
   _linkedCamera: {fileID: 0}
   stereoType: 0
   isObliqueFrustum: 0
@@ -741,7 +755,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 3
-  whereToCopyColor: {fileID: 0}
+  rayColorAlpha: 1
   motionSmoothing: 0
   refreshRate: 50
 --- !u!114 &11400022
@@ -757,7 +771,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 2
-  whereToCopyColor: {fileID: 0}
+  rayColorAlpha: 1
   motionSmoothing: 0
   refreshRate: 50
 --- !u!114 &11400024
@@ -773,7 +787,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 1
-  whereToCopyColor: {fileID: 0}
+  rayColorAlpha: 1
   motionSmoothing: 0
   refreshRate: 50
 --- !u!114 &11400026
@@ -795,16 +809,15 @@ MonoBehaviour:
   totalResolutionY: 1080
   totalRawResolutionX: 1920
   totalRawResolutionY: 1080
-  allowResolutionDialog: 0
   ruisMenuPrefab: {fileID: 193440, guid: 6f9ad228b6c89ed4892b92c98d9515fa, type: 2}
   menuCursorPrefab: {fileID: 100002, guid: b83e945ede48c6c448966892267a0d55, type: 2}
   menuLayer: 12
   guiDisplayChoice: 0
   guiX: 0
   guiY: 0
-  guiZ: .400000006
-  guiScaleX: .300000012
-  guiScaleY: .300000012
+  guiZ: 0.4
+  guiScaleX: 0.3
+  guiScaleY: 0.3
   hideMouseOnPlay: 0
 --- !u!114 &11400028
 MonoBehaviour:
@@ -819,7 +832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionButton: 0
   controllerId: 0
-  whereToCopyColor: {fileID: 0}
+  rayColorAlpha: 1
   motionSmoothing: 0
   refreshRate: 50
 --- !u!114 &11400030
@@ -844,26 +857,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 526a02a3548a87e439fb873def0646c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11400034
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nativeTextureScale: 1
-  virtualTextureScale: 1
-  usePositionTracking: 1
-  eyeTextureFormat: 7
-  eyeTextureDepth: 24
-  timeWarp: 1
-  freezeTimeWarp: 0
-  resetTrackerOnLoad: 0
-  monoscopic: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -875,4 +868,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100002}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

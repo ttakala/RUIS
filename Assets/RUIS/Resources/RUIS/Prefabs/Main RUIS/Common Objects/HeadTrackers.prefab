@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 486566}
   - 114: {fileID: 11451756}
-  - 114: {fileID: 11464962}
   - 114: {fileID: 11480392}
   m_Layer: 0
   m_Name: RUISCamera
@@ -254,7 +253,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 470318}
   - 114: {fileID: 11480116}
-  - 114: {fileID: 11423096}
   - 114: {fileID: 11483334}
   m_Layer: 0
   m_Name: RUISCamera
@@ -479,7 +477,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 403124}
   - 114: {fileID: 11448260}
-  - 114: {fileID: 11488214}
   - 114: {fileID: 11471762}
   m_Layer: 0
   m_Name: RUISCamera
@@ -497,7 +494,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 473036}
   - 114: {fileID: 11495042}
-  - 114: {fileID: 11482870}
   - 114: {fileID: 11451748}
   m_Layer: 0
   m_Name: RUISCamera
@@ -560,7 +556,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 499660}
   - 114: {fileID: 11491604}
-  - 114: {fileID: 11443400}
   - 114: {fileID: 11440146}
   m_Layer: 0
   m_Name: RUISCamera
@@ -593,7 +588,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 498686}
   - 114: {fileID: 11496690}
-  - 114: {fileID: 11435220}
   - 114: {fileID: 11475830}
   m_Layer: 0
   m_Name: RUISCamera
@@ -2777,7 +2771,7 @@ MonoBehaviour:
   rotationNoiseCovariancePSMove: 1
   rotationNoiseCovarianceHydra: 1
   rotationNoiseCovarianceTransform: 500
-  externalDriftCorrection: 1
+  externalDriftCorrection: 0
   compass: 3
   compassIsPositionTracker: 1
   compassPlayerID: 0
@@ -2813,7 +2807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultPosition: {x: 0, y: 0.75, z: 0}
   headPositionInput: 4
-  headRotationInput: 0
+  headRotationInput: 4
   mobileRazerBase: 0
   pickRotationSource: 0
   useHmdRotation: 0
@@ -2949,17 +2943,6 @@ MonoBehaviour:
   whichCamera: 0
   keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
   keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
---- !u!114 &11423096
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 113834}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11424368
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2988,17 +2971,6 @@ MonoBehaviour:
   whichCamera: 0
   keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
   keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
---- !u!114 &11435220
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 159930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11437242
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3040,17 +3012,6 @@ MonoBehaviour:
   whichCamera: 0
   keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
   keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
---- !u!114 &11443400
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 157338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11444244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3190,17 +3151,6 @@ MonoBehaviour:
   whichCamera: 0
   keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
   keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
---- !u!114 &11464962
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11471652
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3282,17 +3232,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawKeystoningGrid: 0
   isEditing: 0
---- !u!114 &11482870
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 145890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11483334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3334,17 +3273,6 @@ MonoBehaviour:
   whichCamera: 1
   keystoneGrid: {fileID: 2100000, guid: 7ec967765294e4d49bf343e0472ccc87, type: 2}
   keystoneBorder: {fileID: 2100000, guid: 4bb14c2c10b89994288db34d10f08293, type: 2}
---- !u!114 &11488214
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 144144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9f338034892c44ebb62d97894772f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11489300
 MonoBehaviour:
   m_ObjectHideFlags: 1

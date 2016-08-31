@@ -110,7 +110,7 @@ public class RUISDisplayManagerEditor : Editor
 			EditorGUILayout.TextArea(  "Below configuration has multiple RUISDisplays. 'Display Resolution Dialog' setting is automatically disabled "
 						 + "in Unity's Player Settings.", GUILayout.Height(60));
 
-			PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.Disabled;
+			PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
 //            allowResolutionDialog.boolValue = false;
 		}
 

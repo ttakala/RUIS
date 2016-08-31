@@ -349,9 +349,8 @@ MonoBehaviour:
   resolutionX: 1920
   resolutionY: 1080
   useDoubleTheSpace: 0
-  enableOculusRift: 0
-  oculusLowPersistence: 1
-  oculusMirrorMode: 1
+  isHmdDisplay: 0
+  hmdMirrorMode: 1
   isStereo: 1
   eyeSeparation: 0.06
   _linkedCamera: {fileID: 1845131109}
@@ -423,7 +422,8 @@ Prefab:
       propertyPath: m_LocalPosition.x
       value: -0.03
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11440184, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 9619ddec8dc2e7f4cb2c6ef9e4b087eb, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &1769763812
