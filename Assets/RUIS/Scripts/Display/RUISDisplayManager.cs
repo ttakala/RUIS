@@ -180,7 +180,7 @@ public class RUISDisplayManager : MonoBehaviour
 			
 			if(camera)
 			{   
-				if(display.isHmdDisplay)
+				if(UnityEngine.VR.VRSettings.enabled && camera.stereoTargetEye != StereoTargetEyeMask.None) // if(display.isHmdDisplay)
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
 					return HMDScreenPointToRay(screenPoint, camera);
@@ -483,7 +483,8 @@ public class RUISDisplayManager : MonoBehaviour
 		if(hmdModel == null || hmdModel == "")
 		{
 			#if UNITY_EDITOR
-			return SteamVR.instance.hmd_ModelNumber;
+			if(SteamVR.instance != null)
+				return SteamVR.instance.hmd_ModelNumber;
 			#else
 			if(isSteamVrAccessible)
 			{

@@ -715,7 +715,7 @@ MonoBehaviour:
   switchToAvailableDevice: 1
   setKinectOriginToFloor: 1
   positionOffset: {x: 0, y: 0, z: 0}
-  rootDevice: 1
+  rootDevice: 3
 --- !u!114 &11400016
 MonoBehaviour:
   m_ObjectHideFlags: 1

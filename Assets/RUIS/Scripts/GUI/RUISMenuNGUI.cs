@@ -326,13 +326,13 @@ public class RUISMenuNGUI : MonoBehaviour {
 
 		if(menuIsVisible) 
 		{
+			#if UNITY_EDITOR
 			// For interactively adjusting the menu position and scale in Unity Editor
-			if(Application.isEditor)
-			{
-				this.transform.localPosition = displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition
-												+ this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
-				this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
-			}
+			this.transform.localPosition = this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
+			if(displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum)
+				this.transform.localPosition += displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition;
+			this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
+			#endif
 
 			switch(currentMenuState) 
 			{

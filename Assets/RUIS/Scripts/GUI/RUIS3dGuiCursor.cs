@@ -14,8 +14,8 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 	
 	private Collider guiPlane;
 	private GameObject markerObject;
-	//private Camera guiCamera;
-	private UICamera[] cameras;
+	private UICamera uiCamera;
+//	private UICamera[] cameras;
 	private RUISCamera ruisCamera;
 	private RUISMenuNGUI menuScript;
 	private RUISDisplayManager ruisDisplayManager;
@@ -24,7 +24,6 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 	private Vector3 mouseInputCoordinates;
 	private bool wasVisible = false;
 	Quaternion wallOrientation = Quaternion.identity;
-	private Vector4 translateColumn = Vector4.zero;
 	private Vector3 trackerPosition = Vector3.zero;
 
 	private Vector3 originalLocalScale = Vector3.one;
@@ -86,7 +85,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 		}
 
 		// TODO: instead of searching hierarchy on every frame, find the UICameras more efficiently
-		cameras = ruisCamera.transform.GetComponentsInChildren<UICamera>(); //menuScript.transform.parent.parent.GetComponentsInChildren<UICamera>();
+		uiCamera = ruisCamera.transform.GetComponentInChildren<UICamera>(); //menuScript.transform.parent.parent.GetComponentsInChildren<UICamera>();
 		
 		if(menuScript.menuIsVisible && !instancedCursor) 
 		{
@@ -100,19 +99,16 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 		if(!menuScript.menuIsVisible)
 			return;
 
-		if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isHmdDisplay) 
+		mouseInputCoordinates = Input.mousePosition;
+		if(ruisCamera.centerCamera) 
 		{
-			mouseInputCoordinates = Input.mousePosition;
-//			mouseInputCoordinates = ruisCamera.associatedDisplay.ConvertOculusScreenPoint(Input.mousePosition);
-			if(instancedCursor && ruisCamera.centerCamera && ruisCamera.centerCamera.transform)
-			{
+			if(instancedCursor)
 				instancedCursor.transform.rotation = ruisCamera.centerCamera.transform.rotation;
-			}
 		}
 		else 
 		{
-			mouseInputCoordinates = Input.mousePosition;
-			instancedCursor.transform.rotation = ruisCamera.transform.rotation;
+			if(instancedCursor)
+				instancedCursor.transform.rotation = ruisCamera.transform.rotation;
 		}
 
 		// HACK for MecanimBlendedCharacter: Keep cursor visible size even if character is scaled
@@ -120,8 +116,8 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			instancedCursor.transform.localScale = originalLocalScale * Mathf.Max (menuScript.transform.parent.lossyScale.x, menuScript.transform.parent.lossyScale.y);
 
 		RaycastHit hit;	
-		
-		foreach(UICamera camera in cameras) 
+
+		if(uiCamera) 
 		{
 			/*
 			if(!ruisCamera.associatedDisplay.isStereo
@@ -152,14 +148,16 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 			*/
 
 			Ray ray;
-			if(camera.GetComponent<Camera>())
+			Camera rayCamera = uiCamera.GetComponent<Camera>();
+
+			if(rayCamera)
 			{
-				if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isHmdDisplay)
+				if(UnityEngine.VR.VRSettings.enabled && rayCamera.stereoTargetEye != StereoTargetEyeMask.None) // if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isHmdDisplay)
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
-					ray = RUISDisplayManager.HMDScreenPointToRay(mouseInputCoordinates, camera.GetComponent<Camera>());
+					ray = RUISDisplayManager.HMDScreenPointToRay(mouseInputCoordinates, rayCamera);
 				} else
-					ray = camera.GetComponent<Camera>().ScreenPointToRay(mouseInputCoordinates);
+					ray = rayCamera.ScreenPointToRay(mouseInputCoordinates);
 			} else
 				ray = new Ray();
 
@@ -171,11 +169,10 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 
 				//ray.origin = ruisCamera.associatedDisplay.displayCenterPosition;
 				//translateColumn = ruisCamera.centerCamera.projectionMatrix.GetColumn(3);
-				trackerPosition.Set(translateColumn.x, translateColumn.y, translateColumn.z);
+//				trackerPosition.Set(translateColumn.x, translateColumn.y, translateColumn.z);
 				trackerPosition = ruisCamera.transform.position + ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
 				ray.origin += trackerPosition;
 				ray.direction = wallOrientation * ray.direction;
-
 			}
 
 			if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask(LayerMask.LayerToName(ruisDisplayManager.menuLayer))))
@@ -188,8 +185,9 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 						instancedCursor.SetActive(true);
 					wasVisible = true;
 				}
+				#if UNITY_EDITOR
 				Debug.DrawLine(ray.origin, hit.point);
-				break;
+				#endif
 			}
 			else
 			{

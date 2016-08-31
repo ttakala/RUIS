@@ -495,23 +495,31 @@ public class UICamera : MonoBehaviour
 			Vector3 pos = currentCamera.ScreenToViewportPoint(inPos);
 			if (float.IsNaN(pos.x) || float.IsNaN(pos.y)) continue;
 
-			// If it's outside the camera's viewport, do nothing
-			if (pos.x < 0f || pos.x > 1f || pos.y < 0f || pos.y > 1f) continue;
-
 			// CORE HACK by Tuukka Takala
+			// If it's outside the camera's viewport, do nothing
+//			if (pos.x < 0f || pos.x > 1f || pos.y < 0f || pos.y > 1f) continue;
+
 			Ray ray;
-			if(ruisCamera != null && ruisCamera.associatedDisplay != null) 
+//			if(ruisCamera != null && ruisCamera.associatedDisplay != null) 
 			{
-				if(ruisCamera.associatedDisplay.isHmdDisplay) 
+				if(UnityEngine.VR.VRSettings.enabled && currentCamera.stereoTargetEye != StereoTargetEyeMask.None) // if(ruisCamera.associatedDisplay.isHmdDisplay)
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
 					ray = RUISDisplayManager.HMDScreenPointToRay(inPos, currentCamera);
 				}
 				else
+				{
 					ray = currentCamera.ScreenPointToRay(inPos);
+					if(ruisCamera && ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isObliqueFrustum)
+					{
+						Quaternion wallOrientation = Quaternion.LookRotation(-ruisCamera.associatedDisplay.DisplayNormal, ruisCamera.associatedDisplay.DisplayUp);
+						ray.origin += ruisCamera.transform.position + ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
+						ray.direction = wallOrientation * ray.direction;
+					}
+				}
 			}
-			else
-				ray = currentCamera.ScreenPointToRay(inPos);
+//			else
+//				ray = currentCamera.ScreenPointToRay(inPos);
 			// END CORE HACK
 
 			// Cast a ray into the screen
