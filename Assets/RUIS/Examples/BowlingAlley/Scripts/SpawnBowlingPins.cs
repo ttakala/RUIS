@@ -1,8 +1,8 @@
 /*****************************************************************************
 
 Content    :   Functionality to spawn bowling pins in the correct position
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -12,12 +12,13 @@ using System.Collections;
 
 public class SpawnBowlingPins : MonoBehaviour {
     public GameObject bowlingPinsPrefab;
-    public RUISPSMoveWand moveController;
+//	public RUISPSMoveWand controller;
+	public RUISOpenVrWand controller;
 
     GameObject oldBowlingPins;
 	
 	void Update () {
-        if (moveController.triangleButtonWasPressed)
+		if(controller.padButtonWasPressed) // if(controller.triangleButtonWasPressed)
         {
             if (oldBowlingPins)
             {
