@@ -454,7 +454,7 @@ public class RUISDisplayManager : MonoBehaviour
 		try
 		{
 			bool isOpenVrHmdPresent = Valve.VR.OpenVR.IsHmdPresent();
-			isOpenVrAccessible = true;
+			isOpenVrAccessible = UnityEngine.VR.VRSettings.enabled;
 		}
 		catch
 		{

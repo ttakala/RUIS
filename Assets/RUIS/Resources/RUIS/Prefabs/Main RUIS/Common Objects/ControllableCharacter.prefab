@@ -2522,7 +2522,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010454087234}
-  - 114: {fileID: 114000011588258100}
   m_Layer: 0
   m_Name: HeadTrackers
   m_TagString: Untagged
@@ -4744,30 +4743,6 @@ MonoBehaviour:
   _head: {fileID: 4000013701123304}
   _ears: {fileID: 0}
   wireframe: 0
---- !u!114 &114000011588258100
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000011462725210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e6d48bae5094dc4589d36200a4054fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scriptEnabled: 1
-  headTrackers:
-  - {fileID: 114000012423193052}
-  - {fileID: 114000012644938562}
-  - {fileID: 114000013495499700}
-  - {fileID: 114000012155477198}
-  - {fileID: 114000013078006750}
-  - {fileID: 114000014214972238}
-  display: {fileID: 0}
-  allowMultipleAssigners: 1
-  changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: 0.2, z: 0.5}
-  razerWandParent: {fileID: 0}
 --- !u!114 &114000011652363450
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -89,6 +89,27 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			RUISTracker closestMatch = null;
 			int currentMatchScore = 0;
 
+			bool kinect2FoundBySystem = false;
+			if(kinect2)
+			{
+				try
+				{
+					Kinect2SourceManager kinect2SourceManager = FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
+
+					if(kinect2SourceManager != null && kinect2SourceManager.GetSensor().IsOpen)
+					{
+						// IsOpen seems to return false mostly if Kinect 2 drivers are not installed?
+						kinect2FoundBySystem = true;
+					}
+				}
+				catch
+				{
+				}
+
+				if(!kinect2FoundBySystem)
+					kinect2 = false;
+			}
+
 			RUISHeadTrackerAssigner[] assigners = FindObjectsOfType(typeof(RUISHeadTrackerAssigner)) as RUISHeadTrackerAssigner[];
 			if(!allowMultipleAssigners && assigners.Length > 1)
 			{
@@ -114,7 +135,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					bool openVRHmdFound = false;
 					try
 					{
-						if(Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
+						if(RUISDisplayManager.IsOpenVrAccessible() && Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
 						{
 							openVRHmdFound = true;
 						}

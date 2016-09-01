@@ -208,12 +208,38 @@ public class RUISInputManager : MonoBehaviour
             }
         }
 
-		if (!enableKinect2)
+		if(!enableKinect2)
 		{
 			Debug.Log("Kinect 2 is disabled from RUISInputManager.");
 			BodySourceManager kinect2Manager = GetComponentInChildren<BodySourceManager>();
 			if(kinect2Manager)
 				kinect2Manager.gameObject.SetActive(false);
+		}
+		else
+		{
+			bool kinect2FoundBySystem = false;
+			try
+			{
+				Kinect2SourceManager kinect2SourceManager = FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
+
+				if(kinect2SourceManager != null && kinect2SourceManager.GetSensor().IsOpen)
+				{
+					// IsOpen seems to return false mostly if Kinect 2 drivers are not installed?
+//					Debug.Log("Kinect 2 was detected by the system.");
+					kinect2FoundBySystem = true;
+				}
+				else
+				{
+					Debug.LogError("Kinect 2 was NOT detected by the system. Disabling Kinect 2 in RUISInputManager.");
+				}
+			}
+			catch(System.Exception e)
+			{
+				Debug.LogError("Kinect 2 was NOT detected by the system. Disabling Kinect 2 in RUISInputManager.\n" + e.Message);
+			}
+
+			if(!kinect2FoundBySystem)
+				enableKinect2 = false;
 		}
 
 		if((enableKinect && kinectFloorDetection) || (enableKinect2 && kinect2FloorDetection))

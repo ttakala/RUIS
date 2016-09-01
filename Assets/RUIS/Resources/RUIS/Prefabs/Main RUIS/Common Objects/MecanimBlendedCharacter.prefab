@@ -3502,7 +3502,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 4000010596905446}
-  - 114: {fileID: 114000013970245664}
   m_Layer: 0
   m_Name: HeadTrackers
   m_TagString: Untagged
@@ -6553,30 +6552,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawKeystoningGrid: 0
   isEditing: 0
---- !u!114 &114000013970245664
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013904020306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e6d48bae5094dc4589d36200a4054fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scriptEnabled: 1
-  headTrackers:
-  - {fileID: 114000010913128896}
-  - {fileID: 114000010789015220}
-  - {fileID: 114000011928918850}
-  - {fileID: 114000013098795778}
-  - {fileID: 114000014201776450}
-  - {fileID: 114000012869453070}
-  display: {fileID: 0}
-  allowMultipleAssigners: 1
-  changePivotIfNoKinect: 1
-  onlyRazerOffset: {x: 0, y: 0.2, z: 0.5}
-  razerWandParent: {fileID: 0}
 --- !u!114 &114000014013633442
 MonoBehaviour:
   m_ObjectHideFlags: 1
