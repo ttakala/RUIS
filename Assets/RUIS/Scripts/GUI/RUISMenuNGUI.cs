@@ -232,9 +232,23 @@ public class RUISMenuNGUI : MonoBehaviour {
 //						previousSceneId = Application.loadedLevel;
 						Hide3DGUI();
 
+						// NOTE: The calibrationDropDownSelection determines the device pair to be calibrated, and it must follow the format "Device A - Device B"
+						//       The string must correspond the options in the Awake() method of RUISCoordinateCalibration script
+
+						// Trim out the " (HMD)" and " (controller)" from the OpenVR option string
+//						string dropDownSelectionSubstring = this.calibrationDropDownSelection;
+//						if(dropDownSelectionSubstring != null)
+//						{
+//							int stringIndex = dropDownSelectionSubstring.IndexOf("OpenVR (");
+//							if(stringIndex >= 0 && stringIndex + 6 < dropDownSelectionSubstring.Length)
+//							{
+//									dropDownSelectionSubstring = dropDownSelectionSubstring.Substring(0, stringIndex + 6);
+//							}
+//						}
+
 						// Hacky way to pass information between loading scenes
 						RUISCalibrationProcessSettings.isCalibrating = true;
-						RUISCalibrationProcessSettings.devicePair = this.calibrationDropDownSelection;
+						RUISCalibrationProcessSettings.devicePair = this.calibrationDropDownSelection; // dropDownSelectionSubstring
 						RUISCalibrationProcessSettings.previousSceneId = Application.loadedLevel;
 						RUISCalibrationProcessSettings.enablePSMove = inputManager.enablePSMove;
 						RUISCalibrationProcessSettings.enableKinect = inputManager.enableKinect;
@@ -620,13 +634,15 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(inputManager.enableKinect) dropDownChoices.Add ("Kinect floor data");
 		if(inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 floor data");
 		    
-		if(inputManager.enableKinect && inputManager.enableKinect2) dropDownChoices.Add ("Kinect - Kinect2");
-		if(inputManager.enableKinect && inputManager.enablePSMove) dropDownChoices.Add ("Kinect - PSMove");
-		if(inputManager.enableKinect2 && inputManager.enablePSMove) dropDownChoices.Add ("Kinect 2 - PSMove");
-		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - OpenVR");
-//		if(isPositionTrackedOculusPresent && inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 - Oculus DK2");
-//		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enablePSMove) dropDownChoices.Add ("PSMove - OpenVR");
-//		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect) dropDownChoices.Add ("Kinect - OpenVR");
+		// NOTE: The dropDownChoices determine the device pair to be calibrated, and they must follow the format "Device A - Device B". 
+		//       The string must correspond the options in the Awake() method of RUISCoordinateCalibration script
+		if(inputManager.enableKinect 			   && inputManager.enableKinect2) dropDownChoices.Add("Kinect - Kinect2");
+		if(inputManager.enableKinect 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect - PSMove");
+		if(inputManager.enableKinect2 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect 2 - PSMove");
+		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (controller)");
+		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enablePSMove)  dropDownChoices.Add("PSMove - OpenVR (HMD)");
+		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enableKinect)  dropDownChoices.Add("Kinect - OpenVR (HMD)");
 
 		
 		if(dropDownChoices.Count == 0) 

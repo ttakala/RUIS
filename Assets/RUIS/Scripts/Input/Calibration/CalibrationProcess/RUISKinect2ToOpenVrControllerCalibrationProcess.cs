@@ -16,7 +16,7 @@ using CSML;
 using Kinect = Windows.Kinect;
 using Valve.VR;
 
-public class RUISKinect2ToOpenVrCalibrationProcess : RUISCalibrationProcess {
+public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationProcess {
 	
 	public string getUpperText() {
 		return this.guiTextUpperLocal;
@@ -78,7 +78,7 @@ public class RUISKinect2ToOpenVrCalibrationProcess : RUISCalibrationProcess {
 	Vector3 translateAtTuneStart = Vector3.zero;
 	Vector3 controllerPositionAtTuneStart = Vector3.zero;
 
-	public RUISKinect2ToOpenVrCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
+	public RUISKinect2ToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
 		this.inputDevice1 = RUISDevice.OpenVR;
 		this.inputDevice2 = RUISDevice.Kinect_2;
@@ -231,8 +231,8 @@ public class RUISKinect2ToOpenVrCalibrationProcess : RUISCalibrationProcess {
 				
 				if(!Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
 				{
-					this.guiTextLowerLocal = "Head-mounted display is not present!\nYou might not be able to access the " + openVRDeviceName + " controllers.";
-					Debug.LogError(  "Head-mounted display is not present! This could be an indication of a bigger problem and you might not be able to access the "
+					this.guiTextLowerLocal = "Head-mounted display is not detected!\nYou might not be able to access the " + openVRDeviceName + " controllers.";
+					Debug.LogError(  "Head-mounted display is not detected! This could be an indication of a bigger problem and you might not be able to access the "
 								   + openVRDeviceName + " controllers.");
 				}
 			} catch
@@ -837,7 +837,7 @@ public class RUISKinect2ToOpenVrCalibrationProcess : RUISCalibrationProcess {
 
 	}
 
-	~RUISKinect2ToOpenVrCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
+	~RUISKinect2ToOpenVrControllerCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
 	{
 		SteamVR_Utils.Event.Remove("device_connected", OnDeviceConnected);
 	}

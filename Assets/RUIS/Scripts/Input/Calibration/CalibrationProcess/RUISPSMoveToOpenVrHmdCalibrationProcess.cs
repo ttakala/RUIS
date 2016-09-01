@@ -5,8 +5,8 @@ using CSML;
 using Kinect = Windows.Kinect;
 //using Ovr;
 
-public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
-	
+public class RUISPSMoveToOpenVrHmdCalibrationProcess : RUISCalibrationProcess {
+	 
 	public string getUpperText() {
 		return this.guiTextUpperLocal;
 	}
@@ -24,51 +24,39 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	public override string guiTextLower { get{return getLowerText();} }
 	
 	// Custom variables
-	private NIPlayerManagerCOMSelection kinectSelection;
-	private OpenNISettingsManager settingsManager;
-	private OpenNI.SceneAnalyzer sceneAnalyzer;
-	private List<Vector3> samples_Kinect1, samples_OculusDK2;
-	private int numberOfSamplesTaken, numberOfSamplesToTake, numberOfSamplesPerSecond;
+	private PSMoveWrapper psMoveWrapper;
+	private List<Vector3> samples_PSMove, samples_OculusDK2;
+	private int numberOfSamplesTaken, numberOfSamplesToTake, calibratingPSMoveControllerId, numberOfSamplesPerSecond;
 	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart = 0;
 	public RUISCoordinateSystem coordinateSystem;
 	public RUISInputManager inputManager;
-	private bool oculusChecked = false, kinectChecked = false, calibrationFinnished = false;
+	private bool oculusChecked = false, PSMoveChecked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
-	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, oculusDK2CameraObject, 
-	kinect1ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
-	oculusDK2Icon, kinectIcon, deviceModelObjects, depthViewObjects, iconObjects, oculusRiftModel;
+	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
+	oculusDK2CameraObject, calibrationSphere, calibrationCube, depthView,
+	psMoveIcon, oculusDK2Icon, deviceModelObjects, depthViewObjects, iconObjects, PSMoveWandObject,
+	mannequin, oculusRiftModel;
 	
-	private Vector3 lastPSMoveSample, lastKinectSample, lastOculusDK2Sample;
+	private Vector3 lastPSMoveSample, lastOculusDK2Sample;
 	private string xmlFilename;
 	
 	private Matrix4x4 rotationMatrix, transformMatrix;
 	
-	private trackedBody[] trackingIDs = null; // Defined in RUISKinect2DepthView
-//	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
-	private int kinectTrackingIndex;
-	private ulong kinectTrackingID;
+//	Quaternion kinect1PitchRotation = Quaternion.identity;
 	
-	Quaternion kinect1PitchRotation = Quaternion.identity;
-	float kinect1DistanceFromFloor = 0;
-	Vector3 kinect1FloorNormal = Vector3.up;
-	
-	public RUISKinectToOculusDK2CalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
-				
+	public RUISPSMoveToOpenVrHmdCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
+		
+		
 		this.inputDevice1 = RUISDevice.OpenVR;
-		this.inputDevice2 = RUISDevice.Kinect_1;
+		this.inputDevice2 = RUISDevice.PS_Move;
 		
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
 		this.numberOfSamplesPerSecond = calibrationSettings.numberOfSamplesPerSecond;
 		
-		trackingIDs = new trackedBody[6]; 
-		for(int y = 0; y < trackingIDs.Length; y++) {
-			trackingIDs[y] = new trackedBody(-1, false, 1);
-		}
-		
+		psMoveWrapper = MonoBehaviour.FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
 		inputManager = MonoBehaviour.FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-		kinectSelection = MonoBehaviour.FindObjectOfType(typeof(NIPlayerManagerCOMSelection)) as NIPlayerManagerCOMSelection;
-		settingsManager = MonoBehaviour.FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
+		
 		
 		this.timeSinceScriptStart = 0;
 		this.timeBetweenSamples = 1 / (float)numberOfSamplesPerSecond;
@@ -80,7 +68,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		
 		calibrationSpheres = new List<GameObject>();
 		
-		samples_Kinect1 = new List<Vector3>();
+		samples_PSMove = new List<Vector3>();
 		samples_OculusDK2 = new List<Vector3>();
 		
 		this.calibrationCube = calibrationSettings.calibrationCubePrefab;
@@ -92,29 +80,19 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		this.depthViewObjects = calibrationSettings.depthViewObjects;
 		this.iconObjects = calibrationSettings.iconObjects;
 		
-		
-		if(GameObject.Find ("PSMoveWand") != null) GameObject.Find ("PSMoveWand").SetActive(false);
+		this.PSMoveWandObject = GameObject.Find ("PSMoveWand");
+		this.mannequin = GameObject.Find ("Mannequin");		
 		
 		// Models
-		this.oculusDK2CameraObject = GameObject.Find ("OculusDK2Camera");
-		this.kinect1ModelObject = GameObject.Find ("KinectCamera");
-		this.oculusRiftModel = GameObject.Find ("OculusRift");
-		
-		FixedFollowTransform followTransform = Component.FindObjectOfType<FixedFollowTransform>();
-		if(followTransform && this.oculusRiftModel)
-			followTransform.transformToFollow = this.oculusRiftModel.transform;
-		
-		// Depth view
-		this.depthView = GameObject.Find ("KinectDepthView");
+		this.psEyeModelObject = GameObject.Find ("PS Eye");
+		this.oculusDK2CameraObject = GameObject.Find ("HmdCamera");
+		this.oculusRiftModel = GameObject.Find ("HmdModel");
 		
 		// Icons
-		this.oculusDK2Icon = GameObject.Find ("OculusDK2 Icon");
-		this.kinectIcon = GameObject.Find ("Kinect Icon");
+		this.psMoveIcon = GameObject.Find ("PS Move Icon");
+		this.oculusDK2Icon = GameObject.Find ("Hmd Icon");
 		
-		this.floorPlane = GameObject.Find ("Floor");
-		
-		if(this.oculusDK2Icon && this.oculusDK2Icon.GetComponent<GUITexture>())
-			this.oculusDK2Icon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
+//		this.floorPlane = GameObject.Find ("Floor");
 		
 		foreach (Transform child in this.deviceModelObjects.transform)
 		{
@@ -131,22 +109,24 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			child.gameObject.SetActive(false);
 		}
 		
-		if(this.oculusDK2CameraObject)
-			this.oculusDK2CameraObject.SetActive(true);
-		if(this.kinect1ModelObject)
-			this.kinect1ModelObject.SetActive(true);
+		if(this.mannequin)
+			this.mannequin.SetActive(false);
+		if(this.psEyeModelObject)
+			this.psEyeModelObject.SetActive(true);
+		if(this.PSMoveWandObject)
+			this.PSMoveWandObject.SetActive(true);
 		if(this.oculusRiftModel)
 			this.oculusRiftModel.SetActive(true);
+		if(this.oculusDK2CameraObject)
+			this.oculusDK2CameraObject.SetActive(true);
+		if(this.psMoveIcon)
+			this.psMoveIcon.SetActive(true);
 		if(this.oculusDK2Icon)
 			this.oculusDK2Icon.SetActive(true);
-		if(this.kinectIcon)
-			this.kinectIcon.SetActive(true);
 		if(this.calibrationPhaseObjects)
 			this.calibrationPhaseObjects.SetActive(true);
 		if(this.calibrationResultPhaseObjects)
 			this.calibrationResultPhaseObjects.SetActive(false);
-		if(this.depthView)
-			this.depthView.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 	}
 	
@@ -156,12 +136,12 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		timeSinceScriptStart += deltaTime;
 		
 		if(timeSinceScriptStart < 3) {
-			this.guiTextLowerLocal = "Calibration of Kinect 1 and Oculus Camera\n\n Starting up...";
+			this.guiTextLowerLocal = "Calibration of PS Eye and OpenVR\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
 		
 		if(timeSinceScriptStart < 4) {
-			this.guiTextLowerLocal = "Connecting to Oculus Rift. \n\n Please wait...";
+			this.guiTextLowerLocal = "Connecting to OpenVR. \n\n Please wait...";
 			return RUISCalibrationPhase.Initial;
 		}
 		
@@ -171,56 +151,68 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 //			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0)  //06to08
 			if(!RUISDisplayManager.IsHmdPresent()) // HACK TODO check that this is position tracked Oculus
 			{
-				this.guiTextLowerLocal = "Connecting to Oculus Rift. \n\n Error: Could not connect to Oculus Rift.";
+				this.guiTextLowerLocal = "Connecting to OpenVR. \n\n Error: Head-mounted display is not detected!";
 				return RUISCalibrationPhase.Invalid;
 			}
 		}	
 		
-		if(!kinectChecked && timeSinceScriptStart < 5) {
-			if (settingsManager == null) {
-				this.guiTextLowerLocal = "Connecting to Kinect. \n\n Error: Could not start OpenNI";
-				return RUISCalibrationPhase.Invalid;
-			}
-			else if(settingsManager.UserGenrator == null) {
-				this.guiTextLowerLocal = "Connecting to Kinect. \n\n Error: Could not start OpenNI";
-				return RUISCalibrationPhase.Invalid;
-			}
-			else if(!settingsManager.UserGenrator.Valid) {
-				this.guiTextLowerLocal = "Connecting to Kinect. \n\n Error: Could not start OpenNI";
+		if(timeSinceScriptStart < 5) {
+			this.guiTextLowerLocal = "Connecting to PSMove. \n\n Please wait...";
+			return RUISCalibrationPhase.Initial;
+		}
+		
+		if(!PSMoveChecked && timeSinceScriptStart > 5) {  
+			if(!psMoveWrapper.isConnected) {
+				this.guiTextLowerLocal = "Connecting to PSMove. \n\n Error: Could not start PSMove";
 				return RUISCalibrationPhase.Invalid;
 			}
 			else {
-				sceneAnalyzer = new OpenNI.SceneAnalyzer((MonoBehaviour.FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager).CurrentContext.BasicContext);
-				sceneAnalyzer.StartGenerating();
 				return RUISCalibrationPhase.Preparation;
 			}
-		}	
+		}
 		
 		return RUISCalibrationPhase.Invalid; // Loop should not get this far
 	}
 	
 	
 	public override RUISCalibrationPhase PreparationPhase(float deltaTime) {
-		this.guiTextLowerLocal = "Step in front of the camera. \nHold Oculus Rift in your right hand.";
-		
-		if (kinectSelection.GetNumberOfSelectedPlayers() < 1) {
-			return RUISCalibrationPhase.Preparation;
-		}
-		else return RUISCalibrationPhase.ReadyToCalibrate;
-		
+		return RUISCalibrationPhase.ReadyToCalibrate;
 	}
 	
+	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) {
-		return RUISCalibrationPhase.Calibration;
+		this.guiTextLowerLocal =  "Take a Move controller into your hand. \nWave the controller around until the pitch \n"
+								+ "angle seems to converge. When ready, \nput the head-mounted display and Move \n"
+								+ "controller together and press X to start\n";
+		this.guiTextLowerLocal += string.Format("\nPSMove camera pitch angle: {0}", Mathf.Rad2Deg * psMoveWrapper.state.gemStates[0].camera_pitch_angle);
+		
+		bool xButtonPressed = false;
+		for (int i = 0; i < 4; i++) {
+			if (psMoveWrapper.sphereVisible[i] && psMoveWrapper.isButtonCross[i]) {
+				calibratingPSMoveControllerId = i;
+				xButtonPressed = true;
+			}
+		}
+		
+		if(xButtonPressed) 
+		{
+			lastPSMoveSample = new Vector3(0,0,0);
+			lastOculusDK2Sample = new Vector3(0,0,0);
+			return RUISCalibrationPhase.Calibration;
+		}
+		else 
+		{
+			return RUISCalibrationPhase.ReadyToCalibrate;
+		}
 	}
 	
 	
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
 		
-		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken.\n\n"
-		                                       + "Keep the Oculus Rift in your right hand\n"
-		                                       + "and make wide, calm motions with it.\n"
-		                                       + "Have both sensors see it.", numberOfSamplesTaken, numberOfSamplesToTake);
+		this.guiTextLowerLocal = string.Format(   "Calibrating... {0}/{1} samples taken.\n\n"
+												+ "Keep the head-mounted display and the Move \n"
+												+ "controller together and make wide, calm \n"
+												+ "motions with them. Have both sensors see them.", numberOfSamplesTaken, numberOfSamplesToTake);
 		TakeSample(deltaTime);
 		
 		if(numberOfSamplesTaken >= numberOfSamplesToTake) 
@@ -228,7 +220,6 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			timeSinceScriptStart = 0;
 			this.calibrationPhaseObjects.SetActive(false);
 			this.calibrationResultPhaseObjects.SetActive(true);
-			this.depthView.SetActive(false);
 			return RUISCalibrationPhase.ShowResults;
 		}
 		else 
@@ -251,7 +242,7 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			for (int i = 0; i < calibrationSpheres.Count; i++)
 			{
 				GameObject sphere = calibrationSpheres[i];
-				Vector3 cubePosition =  transformMatrix.MultiplyPoint3x4(samples_OculusDK2[i]);
+				Vector3 cubePosition =  transformMatrix.MultiplyPoint3x4(samples_PSMove[i]);
 				GameObject cube = MonoBehaviour.Instantiate(calibrationCube, cubePosition, Quaternion.identity) as GameObject;
 				cube.GetComponent<RUISSampleDifferenceVisualizer>().kinectCalibrationSphere = sphere;
 				
@@ -268,6 +259,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 			averageError = distance / calibrationSpheres.Count;
 			
 			calibrationResultPhaseObjects.SetActive(true);
+			this.PSMoveWandObject.GetComponent<RUISPSMoveWand>().controllerId = calibratingPSMoveControllerId;
+			
 			
 			this.guiTextUpperLocal = string.Format("Calibration finished!\n\nTotal Error: {0:0.####}\nMean: {1:0.####}\n",
 			                                       totalErrorDistance, averageError);
@@ -279,14 +272,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 
 	public override void PlaceSensorModels()
 	{
-		kinect1ModelObject.transform.rotation = kinect1PitchRotation;
-		kinect1ModelObject.transform.localPosition = new Vector3(0, kinect1DistanceFromFloor, 0);
-
-		oculusDK2CameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.OpenVR);
-		oculusDK2CameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.OpenVR);
-
-		if(this.floorPlane)
-			this.floorPlane.transform.position = new Vector3(0, 0, 0);
+		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.PS_Move);
+		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.PS_Move);
 	}
 
 	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
@@ -311,43 +298,28 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		timeSinceLastSample = 0;
 		
 		
-		Vector3 kinect2_sample = getSample (this.inputDevice1);
-		Vector3 oculusDK2_sample = getSample (this.inputDevice2);
-		
-		if (kinect2_sample == Vector3.zero || oculusDK2_sample == Vector3.zero) //Data not valid
+		Vector3 Kinect_sample = getSample (this.inputDevice1);
+		Vector3 PSMove_sample = getSample (this.inputDevice2);
+
+		if (PSMove_sample == Vector3.zero || Kinect_sample == Vector3.zero) //Data not valid
 		{
 			return;
 		}
 		
-		samples_Kinect1.Add(oculusDK2_sample);
-		samples_OculusDK2.Add(kinect2_sample);
-		calibrationSpheres.Add(MonoBehaviour.Instantiate(calibrationSphere, oculusDK2_sample, Quaternion.identity) as GameObject);
+		samples_PSMove.Add(PSMove_sample);
+		samples_OculusDK2.Add(Kinect_sample);
+		calibrationSpheres.Add(MonoBehaviour.Instantiate(calibrationSphere, Kinect_sample, Quaternion.identity) as GameObject);
 		numberOfSamplesTaken++;
 	} 
 	
 	
-	private Vector3 getSample(RUISDevice device) 
-	{
+	private Vector3 getSample(RUISDevice device) {
 		Vector3 sample = new Vector3(0,0,0);
 		Vector3 tempSample;
 		
-		if(device == RUISDevice.Kinect_1) {
-			OpenNI.SkeletonJointPosition jointPosition;
-			bool success = kinectSelection.GetPlayer(0).GetSkeletonJointPosition(OpenNI.SkeletonJoint.RightHand, out jointPosition);
-			if(success && jointPosition.Confidence >= 0.5) { 
-				tempSample = coordinateSystem.ConvertRawKinectLocation(jointPosition.Position);
-				if(Vector3.Distance(tempSample, lastKinectSample) > 0.1) {
-					sample = tempSample;
-					lastKinectSample = sample;
-					this.guiTextUpperLocal = "";
-				}
-				else {
-					this.guiTextUpperLocal = "Not enough hand movement.";
-				}
-			}
-		}
 		if(device == RUISDevice.OpenVR) 
 		{
+			
 //			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;  //06to08
 //			float px =  headpose.Position.x;
 //			float py =  headpose.Position.y;
@@ -367,11 +339,25 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 				this.guiTextUpperLocal = "";
 			}
 			else {
-				this.guiTextUpperLocal = "Not enough hand movement.";
+//				this.guiTextUpperLocal = "Not enough hand movement.";
 			}
-
+			
 		}
-		
+		if(device == RUISDevice.PS_Move) {
+			if(psMoveWrapper.sphereVisible[calibratingPSMoveControllerId] && 
+			   psMoveWrapper.handleVelocity[calibratingPSMoveControllerId].magnitude <= 10.0f) {
+				tempSample = coordinateSystem.ConvertRawPSMoveLocation(psMoveWrapper.handlePosition[calibratingPSMoveControllerId]);
+				
+				if(Vector3.Distance(tempSample, lastPSMoveSample) > 0.1) {
+					sample = tempSample;
+					lastPSMoveSample = sample;
+					this.guiTextUpperLocal = "";
+				}
+				else {
+//					this.guiTextUpperLocal = "Not enough hand movement.";
+				}
+			}
+		}
 		return sample;
 		
 		
@@ -379,35 +365,34 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 	
 	private void CalculateTransformation()
 	{
-		if (samples_Kinect1.Count != numberOfSamplesTaken || samples_OculusDK2.Count != numberOfSamplesTaken)
+		if (samples_PSMove.Count != numberOfSamplesTaken || samples_OculusDK2.Count != numberOfSamplesTaken)
 		{
 			Debug.LogError("Mismatch in sample list lengths!");
 		}
 		
-		Matrix oculusMatrix;
+		Matrix moveMatrix;
 		Matrix kinectMatrix;
 		
-		oculusMatrix = Matrix.Zeros (samples_OculusDK2.Count, 4);
-		kinectMatrix = Matrix.Zeros (samples_Kinect1.Count, 3);
+		moveMatrix = Matrix.Zeros (samples_PSMove.Count, 4);
+		kinectMatrix = Matrix.Zeros (samples_OculusDK2.Count, 3);
 		
-		
-		for (int i = 1; i <= samples_OculusDK2.Count; i++) {
-			oculusMatrix [i, 1] = new Complex (samples_OculusDK2 [i - 1].x);
-			oculusMatrix [i, 2] = new Complex (samples_OculusDK2 [i - 1].y);
-			oculusMatrix [i, 3] = new Complex (samples_OculusDK2 [i - 1].z);
-			oculusMatrix [i, 4] = new Complex (1.0f);
+		for (int i = 1; i <= samples_PSMove.Count; i++) {
+			moveMatrix [i, 1] = new Complex (samples_PSMove [i - 1].x);
+			moveMatrix [i, 2] = new Complex (samples_PSMove [i - 1].y);
+			moveMatrix [i, 3] = new Complex (samples_PSMove [i - 1].z);
+			moveMatrix [i, 4] = new Complex (1.0f);
 		}
-		for (int i = 1; i <= samples_Kinect1.Count; i++) {
-			kinectMatrix [i, 1] = new Complex (samples_Kinect1 [i - 1].x);
-			kinectMatrix [i, 2] = new Complex (samples_Kinect1 [i - 1].y);
-			kinectMatrix [i, 3] = new Complex (samples_Kinect1 [i - 1].z);
+		for (int i = 1; i <= samples_OculusDK2.Count; i++) {
+			kinectMatrix [i, 1] = new Complex (samples_OculusDK2 [i - 1].x);
+			kinectMatrix [i, 2] = new Complex (samples_OculusDK2 [i - 1].y);
+			kinectMatrix [i, 3] = new Complex (samples_OculusDK2 [i - 1].z);
 		}
 		
 		//perform a matrix solve Ax = B. We have to get transposes and inverses because moveMatrix isn't square
 		//the solution is the same with (A^T)Ax = (A^T)B -> x = ((A^T)A)'(A^T)B
-		Matrix transformMatrixSolution = (oculusMatrix.Transpose() * oculusMatrix).Inverse() * oculusMatrix.Transpose() * kinectMatrix;
+		Matrix transformMatrixSolution = (moveMatrix.Transpose() * moveMatrix).Inverse() * moveMatrix.Transpose() * kinectMatrix;
 		
-		Matrix error = oculusMatrix * transformMatrixSolution - kinectMatrix;
+		Matrix error = moveMatrix * transformMatrixSolution - kinectMatrix;
 		
 		transformMatrixSolution = transformMatrixSolution.Transpose();
 		
@@ -425,11 +410,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		transformMatrix = MathUtil.MatrixToMatrix4x4(transformMatrixSolution);//CreateTransformMatrix(transformMatrixSolution);
 		Debug.Log(transformMatrix);
 		
-		UpdateFloorNormalAndDistance(); 
-		
 		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
-		coordinateSystem.SaveTransformDataToXML(xmlFilename, RUISDevice.OpenVR, RUISDevice.Kinect_1); 
-		coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Kinect_1, kinect1FloorNormal, kinect1DistanceFromFloor);
+		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.PS_Move, RUISDevice.OpenVR);
 		
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
 		Vector3 translate = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
@@ -437,11 +419,8 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		                   coordinateSystem.RUISCalibrationResultsInQuaternion,
 		                   coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
 		                   translate, rotationQuaternion, transformMatrix,
-		                   RUISDevice.OpenVR, RUISDevice.Kinect_1);
+		                   RUISDevice.PS_Move, RUISDevice.OpenVR);
 		
-		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Kinect_1] = kinect1DistanceFromFloor;
-		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Kinect_1] = kinect1PitchRotation;     
-
 	}
 	
 	
@@ -470,54 +449,15 @@ public class RUISKinectToOculusDK2CalibrationProcess : RUISCalibrationProcess {
 		return result;
 	}
 	
-	private void UpdateFloorNormalAndDistance()
-	{
-		coordinateSystem.ResetFloorNormal(RUISDevice.Kinect_1);
-		
-		OpenNI.Plane3D floor;
-		
-		try{
-			floor = sceneAnalyzer.Floor;
-		}
-		catch(System.Exception e)
-		{
-			Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
-			return;
-		}
-		
-		Quaternion kinectFloorRotator = Quaternion.identity;
-		kinect1FloorNormal= new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
-		
-		if(kinect1FloorNormal.sqrMagnitude < 0.1f)
-			kinect1FloorNormal = Vector3.up;
-
-		Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
-		kinectFloorRotator = Quaternion.FromToRotation(kinect1FloorNormal, Vector3.up); 
-		kinect1DistanceFromFloor = closestDistanceFromFloor(kinect1FloorNormal, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
-
-		if(float.IsNaN(kinect1DistanceFromFloor))
-			kinect1DistanceFromFloor = 0;
-
-		kinect1PitchRotation = Quaternion.Inverse (kinectFloorRotator);
-	}
-	
-	public float closestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 
-	{
-		
-		float closestDistanceFromFloor = 0;
-		
-		floorNormal = floorNormal.normalized;
-		Vector3 newFloorPosition = (new Vector3(floorPoint.x, floorPoint.y, floorPoint.z)) * scaling; 
-		//Project the position of the kinect camera onto the floor
-		//http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
-		//http://en.wikipedia.org/wiki/Plane_(geometry)
-		float d = floorNormal.x * newFloorPosition.x + floorNormal.y * newFloorPosition.y + floorNormal.z * newFloorPosition.z;
-		Vector3 closestFloorPoint = new Vector3(floorNormal.x, floorNormal.y, floorNormal.z);
-		closestFloorPoint = (closestFloorPoint * d) / closestFloorPoint.sqrMagnitude;
-		//transform the point from Kinect's coordinate system rotation to Unity's rotation
-		closestDistanceFromFloor = closestFloorPoint.magnitude;
-		
-		return closestDistanceFromFloor;
-	}
-		
 }
+
+
+
+
+
+
+
+
+
+
+

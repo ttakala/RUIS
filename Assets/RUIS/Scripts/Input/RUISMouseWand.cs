@@ -18,7 +18,8 @@ public class RUISMouseWand : RUISWand {
     bool mouseButtonReleased = false;
     bool mouseButtonDown = false;
 	
-	[Tooltip("Disable this gameObject if any of the following input devices is enabled in RUIS Input Manager: Kinect 1, Kinect 2, Razer Hydra, PS Move.")]
+	[Tooltip(  "Disable this gameObject if OpenVR controllers are detected or if any of the following input "
+			 + "devices are enabled in RUIS Input Manager: Kinect 1, Kinect 2, Razer Hydra, PS Move.")]
 	public bool disableIfOtherDevices = false;
 
     RUISDisplayManager displayManager;
@@ -77,15 +78,14 @@ public class RUISMouseWand : RUISWand {
 					var system = Valve.VR.OpenVR.System;
 					if(system != null)
 					{
-						for(int i=0; i<Valve.VR.OpenVR.k_unMaxTrackedDeviceCount; ++i)
+						for(int i=0; i < Valve.VR.OpenVR.k_unMaxTrackedDeviceCount; ++i)
 						{
 							SteamVR_Controller.Device device = SteamVR_Controller.Input(i);
 							if(device != null && device.connected && device.valid && system.GetTrackedDeviceClass(device.index) == Valve.VR.ETrackedDeviceClass.Controller)
 							{
-
 								if(deviceNames.Length > 0)
 									deviceNames += ", ";
-								deviceNames += "Vive controller";
+								deviceNames += "OpenVR controller";
 								otherDevices = true;
 								break;
 							}
