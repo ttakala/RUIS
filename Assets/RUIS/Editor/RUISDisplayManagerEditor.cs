@@ -178,8 +178,7 @@ public class RUISDisplayManagerEditor : Editor
 		RUISDisplayManager displayManager = target as RUISDisplayManager;
 		displayManager.CalculateTotalResolution();
 
-		// *** TODO HACK An HMD might be connected, but developer is creating a non-HMD build. NOTE: This code fights against SteamVR's obsession to force these settings
-		if(!RUISDisplayManager.IsHmdPresent())
+		if(!PlayerSettings.virtualRealitySupported)
 		{
 			PlayerSettings.defaultScreenWidth = displayManager.totalRawResolutionX;
 			PlayerSettings.defaultScreenHeight = displayManager.totalRawResolutionY;

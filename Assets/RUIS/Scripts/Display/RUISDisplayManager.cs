@@ -107,11 +107,16 @@ public class RUISDisplayManager : MonoBehaviour
 
 	public bool HasHeadMountedDisplay()
 	{
-		foreach(RUISDisplay display in displays)
+		if(RUISDisplayManager.IsOpenVrAccessible() && UnityEngine.VR.VRSettings.enabled && RUISDisplayManager.IsHmdPresent())
 		{
-			if(display.linkedCamera && display.isHmdDisplay)
+			foreach(RUISDisplay display in displays)
 			{
-				return true;
+				if(display.linkedCamera /*&&  display.isHmdDisplay*/ )
+				{
+					if(	   !display.linkedCamera.isStereo && display.linkedCamera.centerCamera 
+						&& display.linkedCamera.centerCamera.stereoTargetEye != StereoTargetEyeMask.None)
+						return true;
+				}
 			}
 		}
 		return false;
@@ -289,18 +294,18 @@ public class RUISDisplayManager : MonoBehaviour
 		}
 	}
 
-	public RUISDisplay GetHmdDisplay()
-	{
-		foreach(RUISDisplay display in displays)
-		{
-			if(display.linkedCamera && display.isHmdDisplay)
-			{
-				return display;
-			}
-		}
-
-		return null;
-	}
+//	public RUISDisplay GetHmdDisplay()
+//	{
+//		foreach(RUISDisplay display in displays)
+//		{
+//			if(display.linkedCamera && display.isHmdDisplay)
+//			{
+//				return display;
+//			}
+//		}
+//
+//		return null;
+//	}
 
 	private void InitRUISMenu(GameObject ruisMenuPrefab, int guiDisplayChoice)
 	{

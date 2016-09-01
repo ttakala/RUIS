@@ -804,7 +804,7 @@ MonoBehaviour:
   guiDisplayChoice: 1
   guiX: 0
   guiY: 0
-  guiZ: -1.35
+  guiZ: 0.12
   guiScaleX: 0.2
   guiScaleY: 0.2
   hideMouseOnPlay: 0

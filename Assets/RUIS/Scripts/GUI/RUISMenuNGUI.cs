@@ -149,7 +149,9 @@ public class RUISMenuNGUI : MonoBehaviour {
 		this.transform.localPosition = new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
 		this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
 		
-		if(displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum && !displayManager.displays[displayManager.guiDisplayChoice].isHmdDisplay)
+		if(	   displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum 
+			&& displayManager.displays[displayManager.guiDisplayChoice].linkedCamera 
+			&& !displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.isVRCamera)
 		{
 			this.transform.localRotation = Quaternion.LookRotation(-displayManager.displays[displayManager.guiDisplayChoice].DisplayNormal, 
 			                                                        displayManager.displays[displayManager.guiDisplayChoice].DisplayUp     );
@@ -343,10 +345,36 @@ public class RUISMenuNGUI : MonoBehaviour {
 			#if UNITY_EDITOR
 			// For interactively adjusting the menu position and scale in Unity Editor
 			this.transform.localPosition = this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
-			if(displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum)
-				this.transform.localPosition += displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition;
+//			if(displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum)
+//			{
+//				this.transform.localPosition += displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition;
+//			}
 			this.transform.localScale = new Vector3(displayManager.guiScaleX, displayManager.guiScaleY, 1);
 			#endif
+
+			if(	   displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum 
+				&& displayManager.displays[displayManager.guiDisplayChoice].linkedCamera 
+				&& !displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.isVRCamera)
+			{
+
+//				wallOrientation = Quaternion.LookRotation(-ruisCamera.associatedDisplay.DisplayNormal, ruisCamera.associatedDisplay.DisplayUp);
+//
+//				instancedCursor.transform.rotation = instancedCursor.transform.rotation * wallOrientation;
+//				trackerPosition = ruisCamera.transform.position + ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
+//				ray.origin += trackerPosition;
+//				ray.direction = wallOrientation * ray.direction;
+
+				Vector3 eulerAngles = this.transform.rotation.eulerAngles;
+				eulerAngles.z = -eulerAngles.z; // *** HACK TODO
+				this.transform.position = displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.transform.position
+					+ Quaternion.Euler(eulerAngles) * (	  displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.KeystoningHeadTrackerPosition
+													+ new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ));
+
+//				this.transform.localRotation = Quaternion.LookRotation(-displayManager.displays[displayManager.guiDisplayChoice].DisplayNormal, 
+//					displayManager.displays[displayManager.guiDisplayChoice].DisplayUp     );
+//				this.transform.localPosition = displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition
+//					+ this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
+			}
 
 			switch(currentMenuState) 
 			{

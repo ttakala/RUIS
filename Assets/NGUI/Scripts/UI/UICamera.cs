@@ -513,7 +513,7 @@ public class UICamera : MonoBehaviour
 					if(ruisCamera && ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isObliqueFrustum)
 					{
 						Quaternion wallOrientation = Quaternion.LookRotation(-ruisCamera.associatedDisplay.DisplayNormal, ruisCamera.associatedDisplay.DisplayUp);
-						ray.origin += ruisCamera.transform.position + ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
+						ray.origin += ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
 						ray.direction = wallOrientation * ray.direction;
 					}
 				}

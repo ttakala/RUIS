@@ -25,8 +25,8 @@ public class RUISDisplayEditor : Editor
 	SerializedProperty displayHeight;
 
 	SerializedProperty isStereo;
-	SerializedProperty isHmdDisplay;
-	SerializedProperty HmdMirrorMode;
+//	SerializedProperty isHmdDisplay;
+//	SerializedProperty HmdMirrorMode;
 	SerializedProperty isObliqueFrustum;
 	SerializedProperty isKeystoneCorrected;
 	SerializedProperty camera;
@@ -57,8 +57,8 @@ public class RUISDisplayEditor : Editor
 		displayHeight = serializedObject.FindProperty("height");
 
 		isStereo = serializedObject.FindProperty("isStereo");
-		isHmdDisplay = serializedObject.FindProperty("isHmdDisplay");
-		HmdMirrorMode = serializedObject.FindProperty("hmdMirrorMode");
+//		isHmdDisplay = serializedObject.FindProperty("isHmdDisplay");
+//		HmdMirrorMode = serializedObject.FindProperty("hmdMirrorMode");
 		isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
 		isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
 		camera = serializedObject.FindProperty("_linkedCamera");
@@ -119,17 +119,15 @@ public class RUISDisplayEditor : Editor
 
         
 
-		EditorGUILayout.PropertyField(isHmdDisplay, new GUIContent("Head-mounted Display", "Designate this display as a Head-mounted Display."));
+//		EditorGUILayout.PropertyField(isHmdDisplay, new GUIContent("Head-mounted Display", "Designate this display as a Head-mounted Display."));
 
-		// TODO: Depends on OVR version
-		EditorGUI.indentLevel++;
-		GUI.enabled = isHmdDisplay.boolValue;
+//		EditorGUI.indentLevel++;
+//		GUI.enabled = isHmdDisplay.boolValue;
 
-		EditorGUILayout.PropertyField(HmdMirrorMode, new GUIContent("HMD Mirror Mode", "Draw the head-mounted display view also to the main display."));
+//		EditorGUILayout.PropertyField(HmdMirrorMode, new GUIContent("HMD Mirror Mode", "Draw the head-mounted display view also to the main display."));
 
-		EditorGUI.indentLevel--;
-
-		GUI.enabled = !isHmdDisplay.boolValue;
+//		EditorGUI.indentLevel--;
+//		GUI.enabled = !isHmdDisplay.boolValue;
 		
 		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.PropertyField(isObliqueFrustum, new GUIContent("Head Tracked CAVE Display",  "Should the projection matrix be skewed to use this display "
@@ -137,7 +135,7 @@ public class RUISDisplayEditor : Editor
 
 		GUI.enabled = true;
 
-		if(!isHmdDisplay.boolValue)
+//		if(!isHmdDisplay.boolValue)
 		{
 			//disabled for now EditorGUILayout.PropertyField(isKeystoneCorrected, new GUIContent("Keystone Correction", "Should this display be keystone corrected?"));
 			if(isObliqueFrustum.boolValue)
@@ -154,11 +152,11 @@ public class RUISDisplayEditor : Editor
 				EditorGUI.indentLevel--;
 			}
 		}
-		else
-		{
-			isObliqueFrustum.boolValue = false;
-			isKeystoneCorrected.boolValue = false;
-		}
+//		else
+//		{
+//			isObliqueFrustum.boolValue = false;
+//			isKeystoneCorrected.boolValue = false;
+//		}
 
 		serializedObject.ApplyModifiedProperties();
 
@@ -190,8 +188,7 @@ public class RUISDisplayEditor : Editor
 
 		displayManager.CalculateTotalResolution();
 
-		// *** TODO HACK An HMD might be connected, but developer is creating a non-HMD build. NOTE: This code fights against SteamVR's obsession to force these settings
-		if(!RUISDisplayManager.IsHmdPresent()) 
+		if(!PlayerSettings.virtualRealitySupported) 
 		{
 			PlayerSettings.defaultScreenWidth = displayManager.totalRawResolutionX;
 			PlayerSettings.defaultScreenHeight = displayManager.totalRawResolutionY;

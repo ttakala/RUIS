@@ -150,8 +150,8 @@ public class RUISDisplay : MonoBehaviour
 
 	public void Start()
 	{
-		if(RUISDisplayManager.IsHmdPresent())
-			UnityEngine.VR.VRSettings.showDeviceView = hmdMirrorMode;
+//		if(RUISDisplayManager.IsHmdPresent())
+//			UnityEngine.VR.VRSettings.showDeviceView = hmdMirrorMode;
 
 		if(!linkedCamera)
 		{

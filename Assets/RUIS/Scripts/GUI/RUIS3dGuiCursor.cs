@@ -170,7 +170,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 				//ray.origin = ruisCamera.associatedDisplay.displayCenterPosition;
 				//translateColumn = ruisCamera.centerCamera.projectionMatrix.GetColumn(3);
 //				trackerPosition.Set(translateColumn.x, translateColumn.y, translateColumn.z);
-				trackerPosition = ruisCamera.transform.position + ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
+				trackerPosition = ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
 				ray.origin += trackerPosition;
 				ray.direction = wallOrientation * ray.direction;
 			}

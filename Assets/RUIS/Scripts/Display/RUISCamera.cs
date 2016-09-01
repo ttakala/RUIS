@@ -42,6 +42,9 @@ public class RUISCamera : MonoBehaviour
 	[HideInInspector]
 	public RUISDisplay associatedDisplay;
 
+	[HideInInspector]
+	public bool isVRCamera = true;
+
 	private Rect normalizedScreenRect;
 	private float aspectRatio;
 
@@ -81,7 +84,8 @@ public class RUISCamera : MonoBehaviour
 		get {
 			if(associatedDisplay && associatedDisplay.headTracker)
 			{
-				return associatedDisplay.headTracker.defaultPosition;
+				return associatedDisplay.headTracker.transform.position;
+//				return associatedDisplay.headTracker.defaultPosition;
 			}
 			
 			return associatedDisplay.displayCenterPosition + associatedDisplay.DisplayNormal;
@@ -169,14 +173,12 @@ public class RUISCamera : MonoBehaviour
 		bool isDifferentCenterMask = false;
 		bool isDifferentLeftMask = false;
 		bool isDifferentRightMask = false;
-		
-		if(associatedDisplay != null && !associatedDisplay.isHmdDisplay)
-		{
-			// TODO: Need to change the check for associatedDisplay.enableOculusRift if RUISDisplayManager will be retired
-//			if(GetComponent<OVRCameraRig>())
-//				GetComponent<OVRCameraRig>().enabled = false;
-		}
-		else
+
+		isVRCamera = 	UnityEngine.VR.VRSettings.enabled && !this.isStereo && this.centerCamera
+					 && this.centerCamera.stereoTargetEye != StereoTargetEyeMask.None;
+
+		// Is this a VR RUISCamera?
+		if(isVRCamera)
 		{
 			//				Debug.LogWarning(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, but no " + typeof(RUISDisplay) 
 			//				                 + " was associated with it upon Awake(). Leaving OVR scripts on.");
@@ -263,7 +265,8 @@ public class RUISCamera : MonoBehaviour
 		
 		if(associatedDisplay)
 		{
-			if(associatedDisplay.isHmdDisplay)
+			// Is this a VR RUISCamera?
+			if(isVRCamera)
 			{
 				//                if (!associatedDisplay.isStereo)
 				//                {
@@ -325,7 +328,7 @@ public class RUISCamera : MonoBehaviour
 
 	public void LateUpdate()
 	{
-		if(associatedDisplay.isHmdDisplay)
+		if(isVRCamera)
 		{
 			return;
 		}
@@ -530,11 +533,7 @@ public class RUISCamera : MonoBehaviour
 		}
 		else
 		{
-			if(associatedDisplay.isHmdDisplay)
-			{
-				
-			}
-			else
+			if(!isVRCamera)
 			{
 				normalizedScreenRect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
 				this.aspectRatio = aspectRatio;
@@ -589,7 +588,7 @@ public class RUISCamera : MonoBehaviour
 
 	private void UpdateStereo()
 	{
-		if(associatedDisplay.isStereo && !associatedDisplay.isHmdDisplay)
+		if(associatedDisplay.isStereo && !isVRCamera)
 		{
 			centerCamera.enabled = false;
 			leftCamera.enabled = true;
