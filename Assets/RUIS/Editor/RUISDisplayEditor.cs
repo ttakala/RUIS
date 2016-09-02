@@ -28,7 +28,7 @@ public class RUISDisplayEditor : Editor
 //	SerializedProperty isHmdDisplay;
 //	SerializedProperty HmdMirrorMode;
 	SerializedProperty isObliqueFrustum;
-	SerializedProperty isKeystoneCorrected;
+//	SerializedProperty isKeystoneCorrected;
 	SerializedProperty camera;
 	SerializedProperty eyeSeparation;
 	SerializedProperty stereoType;
@@ -60,7 +60,7 @@ public class RUISDisplayEditor : Editor
 //		isHmdDisplay = serializedObject.FindProperty("isHmdDisplay");
 //		HmdMirrorMode = serializedObject.FindProperty("hmdMirrorMode");
 		isObliqueFrustum = serializedObject.FindProperty("isObliqueFrustum");
-		isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
+//		isKeystoneCorrected = serializedObject.FindProperty("isKeystoneCorrected");
 		camera = serializedObject.FindProperty("_linkedCamera");
 		eyeSeparation = serializedObject.FindProperty("eyeSeparation");
 		stereoType = serializedObject.FindProperty("stereoType");

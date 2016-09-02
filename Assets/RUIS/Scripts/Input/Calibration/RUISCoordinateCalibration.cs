@@ -135,11 +135,11 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 
 			switch(RUISCalibrationProcessSettings.devicePair)
 			{
-				case "Kinect - Kinect2":
+				case "Kinect 1 - Kinect2":
 					firstDevice = RUISDevice.Kinect_1;
 					secondDevice = RUISDevice.Kinect_2;
 				break;
-				case "Kinect - PSMove":
+				case "Kinect 1 - PSMove":
 					firstDevice = RUISDevice.Kinect_1;
 					secondDevice = RUISDevice.PS_Move;
 				break;
@@ -166,7 +166,7 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 					secondDevice = RUISDevice.OpenVR;
 					hmdCalibration = true;
 				break;
-				case "Kinect floor data":
+				case "Kinect 1 floor data":
 					firstDevice = RUISDevice.Kinect_1;
 					secondDevice = RUISDevice.Kinect_1;
 				break;
@@ -275,7 +275,7 @@ public class RUISCoordinateCalibration : MonoBehaviour {
     	if(calibrationProcess == null)
 		{
 			upperText.text = "";
-			lowerText.text = "Selected calibration device combination\n not yet supported.";
+			lowerText.text = "Selected calibration device combination\n(" + RUISCalibrationProcessSettings.devicePair + ") not yet supported.";
 			
 			foreach (Transform child in this.deviceModels.transform)
 			{

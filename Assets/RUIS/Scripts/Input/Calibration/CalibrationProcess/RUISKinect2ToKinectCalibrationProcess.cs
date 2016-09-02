@@ -377,7 +377,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 							                         body.Joints[Kinect.JointType.HandRight].Position.Y,
 							                         body.Joints[Kinect.JointType.HandRight].Position.Z);
 							tempSample = coordinateSystem.ConvertRawKinect2Location(tempSample);
-							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.1) 
+							if(Vector3.Distance(tempSample, lastKinect2Sample) > 0.2) 
 							{
 								sample = tempSample;
 								lastKinect2Sample = sample;
@@ -408,7 +408,7 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 			if(success && jointPosition.Confidence >= 0.5) 
 			{ 
 				tempSample = coordinateSystem.ConvertRawKinectLocation(jointPosition.Position);
-				if(Vector3.Distance(tempSample, lastKinectSample) > 0.1) 
+				if(Vector3.Distance(tempSample, lastKinectSample) > 0.2) 
 				{
 					sample = tempSample;
 					lastKinectSample = sample;
@@ -417,13 +417,13 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 				}
 				else {
 					device2Error = true;
-					this.guiTextUpperLocal = "Not enough hand movement.";
+//					this.guiTextUpperLocal = "Not enough hand movement.";
 				}
 			}
 			else 
 			{
 				device2Error = true;
-				this.guiTextUpperLocal = "Not enough hand movement.";
+//				this.guiTextUpperLocal = "Not enough hand movement.";
 			}
 		}
 		return sample;

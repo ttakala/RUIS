@@ -664,18 +664,18 @@ public class RUISMenuNGUI : MonoBehaviour {
 		string currentSelection = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
 		
 		//dropDownChoices.Add ("Select device(s)");
-		if(inputManager.enableKinect) dropDownChoices.Add ("Kinect floor data");
+		if(inputManager.enableKinect) dropDownChoices.Add ("Kinect 1 floor data");
 		if(inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 floor data");
 		    
 		// NOTE: The dropDownChoices determine the device pair to be calibrated, and they must follow the format "Device A - Device B". 
 		//       The string must correspond the options in the Awake() method of RUISCoordinateCalibration script
-		if(inputManager.enableKinect 			   && inputManager.enableKinect2) dropDownChoices.Add("Kinect - Kinect2");
-		if(inputManager.enableKinect 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect - PSMove");
+		if(inputManager.enableKinect 			   && inputManager.enableKinect2) dropDownChoices.Add("Kinect 1 - Kinect2");
+		if(inputManager.enableKinect 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect 1 - PSMove");
 		if(inputManager.enableKinect2 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect 2 - PSMove");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (controller)");
 		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
 		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enablePSMove)  dropDownChoices.Add("PSMove - OpenVR (HMD)");
-		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enableKinect)  dropDownChoices.Add("Kinect - OpenVR (HMD)");
+		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enableKinect)  dropDownChoices.Add("Kinect 1 - OpenVR (HMD)");
 
 		
 		if(dropDownChoices.Count == 0) 
