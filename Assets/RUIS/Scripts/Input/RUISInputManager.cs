@@ -222,7 +222,7 @@ public class RUISInputManager : MonoBehaviour
 			{
 				Kinect2SourceManager kinect2SourceManager = FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
 
-				if(kinect2SourceManager != null && kinect2SourceManager.GetSensor().IsOpen)
+				if(kinect2SourceManager != null && kinect2SourceManager.GetSensor() != null && kinect2SourceManager.GetSensor().IsOpen)
 				{
 					// IsOpen seems to return false mostly if Kinect 2 drivers are not installed?
 //					Debug.Log("Kinect 2 was detected by the system.");
@@ -443,8 +443,17 @@ public class RUISInputManager : MonoBehaviour
 	{
 		Kinect2SourceManager kinect2SourceManager = FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
 
-		if(    coordinateSystem != null && kinect2SourceManager != null
-			&& kinect2SourceManager.GetSensor().IsOpen && kinect2SourceManager.GetSensor().IsAvailable)
+		bool canAccessKinect2 = false;
+
+		try
+		{
+			if(    coordinateSystem != null && kinect2SourceManager != null
+				&& kinect2SourceManager.GetSensor() != null && kinect2SourceManager.GetSensor().IsOpen && kinect2SourceManager.GetSensor().IsAvailable)
+				canAccessKinect2 = true;
+		}
+		catch{}
+
+		if(canAccessKinect2)
 		{
 			if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
 			{
