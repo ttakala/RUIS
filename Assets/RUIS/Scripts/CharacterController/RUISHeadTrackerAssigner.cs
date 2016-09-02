@@ -132,17 +132,15 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					++trackerCount;
 					int foundTrackerScore = 0;
 
-					bool openVRHmdFound = false;
-					try
-					{
-						if(RUISDisplayManager.IsOpenVrAccessible() && Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
-						{
-							openVRHmdFound = true;
-						}
-					} catch{}
+//					bool openVRHmdFound = false;
+//					try
+//					{
+//						if(RUISDisplayManager.IsOpenVrAccessible() && Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
+//							openVRHmdFound = true;
+//					} catch{}
 
 					// Give score to found head trackers
-					if(openVRHmdFound && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OpenVR)
+					if(RUISDisplayManager.IsHmdPresent() && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OpenVR)
 					{
 						foundTrackerScore = 7;
 					}

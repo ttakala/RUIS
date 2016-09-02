@@ -94,17 +94,35 @@ public class RUISCoordinateSystem : MonoBehaviour
 				if(!inputManager.enablePSMove)
 					needToSwitch = true;
 				break;
-			case RUISDevice.OpenVR:
-				if(!RUISDisplayManager.IsOpenVrAccessible())
+			case RUISDevice.OpenVR: // If OpenVR can't accessed AND a HMD can't be detected
+				if(!RUISDisplayManager.IsOpenVrAccessible() && !RUISDisplayManager.IsHmdPresent())
 					needToSwitch = true;
 				break;
 			}
 
 			if(needToSwitch)
 			{
+				// Try to determine if Kinect2 can be used (because this method is run before RUISInputManager can disable enableKinect2)
+				bool kinect2FoundBySystem = false;
+				if(inputManager.enableKinect2)
+				{
+					try
+					{
+						Kinect2SourceManager kinect2SourceManager = FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
+						if(kinect2SourceManager != null && kinect2SourceManager.GetSensor() != null && kinect2SourceManager.GetSensor().IsOpen)
+						{
+							// IsOpen seems to return false mostly if Kinect 2 drivers are not installed?
+							//					Debug.Log("Kinect 2 was detected by the system.");
+							kinect2FoundBySystem = true;
+						}
+					}
+					catch
+					{}
+				}
+
 				if(RUISDisplayManager.IsHmdPositionTrackable())
 					rootDevice = RUISDevice.OpenVR;
-				else if(inputManager.enableKinect2)
+				else if(inputManager.enableKinect2 && kinect2FoundBySystem)
 					rootDevice = RUISDevice.Kinect_2;
 				else if(inputManager.enableKinect)
 					rootDevice = RUISDevice.Kinect_1;

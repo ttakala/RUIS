@@ -25,6 +25,7 @@ public class RUISDisplayManagerEditor : Editor
 	SerializedProperty guiScaleX;
 	SerializedProperty guiScaleY;
 	SerializedProperty hideMouseOnPlay;
+	SerializedProperty hmdMirrorMode;
 	
 	GUIStyle displayBoxStyle;
 
@@ -55,6 +56,7 @@ public class RUISDisplayManagerEditor : Editor
 		guiScaleX = serializedObject.FindProperty("guiScaleX");
 		guiScaleY = serializedObject.FindProperty("guiScaleY");
 		hideMouseOnPlay = serializedObject.FindProperty("hideMouseOnPlay");
+		hmdMirrorMode = serializedObject.FindProperty("hmdMirrorMode");
 		
 		displayManagerLink = new SerializedObject(displayManager);
 		guiDisplayChoiceLink = displayManagerLink.FindProperty("guiDisplayChoice");
@@ -107,8 +109,11 @@ public class RUISDisplayManagerEditor : Editor
 		else
 		{
 			EditorStyles.textField.wordWrap = true;
-			EditorGUILayout.TextArea(  "Below configuration has multiple RUISDisplays. 'Display Resolution Dialog' setting is automatically disabled "
-						 + "in Unity's Player Settings.", GUILayout.Height(60));
+			if(displays.arraySize > 1)
+				EditorGUILayout.TextArea(  "Below configuration has multiple RUISDisplays. 'Display Resolution Dialog' setting is automatically disabled "
+							 + "in Unity's Player Settings.", GUILayout.Height(60));
+			else
+				EditorGUILayout.LabelField(  "Please press 'Add Display' to add " + typeof(RUISDisplay) + "s.");
 
 			PlayerSettings.displayResolutionDialog = ResolutionDialogSetting.HiddenByDefault;
 //            allowResolutionDialog.boolValue = false;
@@ -206,6 +211,13 @@ public class RUISDisplayManagerEditor : Editor
 
 		EditorGUILayout.EndHorizontal();
 
+		GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
+
+		EditorGUILayout.PropertyField(hmdMirrorMode, new GUIContent("Show HMD View", "Head-mounted display view will also be rendered in the game window"));
+		EditorGUILayout.PropertyField(hideMouseOnPlay, new GUIContent("Hide Mouse On Play", "Operating system mouse cursor will be hidden"));
+
+		GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
+
 		EditorGUILayout.BeginHorizontal();
 		EditorGUILayout.LabelField("Display With RUIS Menu:");
 		guiDisplayChoices = new List<string>();
@@ -234,12 +246,9 @@ public class RUISDisplayManagerEditor : Editor
 		EditorGUILayout.PropertyField(guiScaleX, new GUIContent("X-scale", "Scales menu horizontally"));
 		EditorGUILayout.PropertyField(guiScaleY, new GUIContent("Y-scale", "Scales menu vertically"));
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(hideMouseOnPlay, new GUIContent("Hide Mouse On Play", "Operating system mouse cursor will be hidden"));
-		EditorGUILayout.Space();
 		EditorGUILayout.PropertyField(menuCursorPrefab, new GUIContent(	  "Menu Cursor Prefab", "The prefab that will be instantiated when RUIS Menu is "
 										+ "invoked (ESC key)"));
 		menuLayer.intValue = EditorGUILayout.LayerField(new GUIContent("Menu Layer", "RUIS Menu mouse cursor ray is cast against objects on this layer only"), menuLayer.intValue);
-		
 
 		serializedObject.ApplyModifiedProperties();
 		displayManagerLink.ApplyModifiedProperties();

@@ -18,6 +18,7 @@ using System.Collections;
 public class RUISDisplayManager : MonoBehaviour
 {
 	public List<RUISDisplay> displays;
+	public RUISCamera[] allCameras;
 	public GameObject stereoCamera;
 	public Camera monoCamera;
 	public int totalResolutionX = 0;
@@ -39,8 +40,9 @@ public class RUISDisplayManager : MonoBehaviour
 	public float guiScaleX = 1;
 	public float guiScaleY = 1;
 	public bool hideMouseOnPlay = false;
+	public bool hmdMirrorMode = true;
 
-	private bool hasHeadMountedDisplay = false;
+	private bool enforceGameWindowSize = false;
 
 	public class ScreenPoint
 	{
@@ -57,9 +59,23 @@ public class RUISDisplayManager : MonoBehaviour
 		{
 			UpdateResolutionsOnTheFly();
 		}
-		
-		hasHeadMountedDisplay = HasHeadMountedDisplay();
 
+		allCameras = FindObjectsOfType(typeof(RUISCamera)) as RUISCamera[];
+		if(allCameras != null)
+		{
+			if(allCameras.Length == 1 && displays.Count == 1)
+			{
+				if(allCameras[0] && allCameras[0].associatedDisplay == null && displays[0] && displays[0].linkedCamera == null)
+				{
+					Debug.LogError(   "Found a single " + typeof(RUISDisplay) + " without an 'Attached Camera' and a single enabled " + typeof(RUISCamera)
+									+ "; pairing the two automatically. To avoid this message, each RUISDisplay parented under RUIS->DisplayManager gameobject "
+									+ "should link to a " + typeof(RUISCamera) + " at field 'Attached Camera'.", displays[0]);
+					displays[0].LinkToCamera(allCameras[0]);
+				}
+			}
+		}
+
+		enforceGameWindowSize = HasNonHmdDisplay();
 
 		UpdateDisplays();
 
@@ -69,11 +85,20 @@ public class RUISDisplayManager : MonoBehaviour
 		LoadDisplaysFromXML();
 
 		// Second substitution because displays might have been updated via XML etc.
-		hasHeadMountedDisplay = HasHeadMountedDisplay();
+		enforceGameWindowSize = HasNonHmdDisplay();
 
 		InitRUISMenu(ruisMenuPrefab, guiDisplayChoice);
-		
-		
+
+		foreach(RUISDisplay display in displays)
+		{
+			if(display != null && display.linkedCamera == null)
+			{
+				Debug.LogError(   "No " + typeof(RUISCamera) + " attached to " + display.name + ". To avoid this message, each RUISDisplay parented "
+								+ "under RUIS->DisplayManager gameobject should link to a " + typeof(RUISCamera) + " at field 'Attached Camera'.", display);
+			}
+		}
+
+		UnityEngine.VR.VRSettings.showDeviceView = hmdMirrorMode;
 	}
 	
 	void Update()
@@ -98,27 +123,27 @@ public class RUISDisplayManager : MonoBehaviour
 
 		if(displays.Count > 1 || (displays.Count == 1 /* && !allowResolutionDialog */))
 		{
-			if(!hasHeadMountedDisplay)
+			if(enforceGameWindowSize)
 			{
 				Screen.SetResolution(totalRawResolutionX, totalRawResolutionY, false);
 			}
 		}
 	}
 
-	public bool HasHeadMountedDisplay()
+	public bool HasNonHmdDisplay()
 	{
-		if(RUISDisplayManager.IsOpenVrAccessible() && UnityEngine.VR.VRSettings.enabled && RUISDisplayManager.IsHmdPresent())
+		if(!UnityEngine.VR.VRSettings.enabled || !RUISDisplayManager.IsHmdPresent())
+			return true;
+		
+		foreach(RUISDisplay display in displays)
 		{
-			foreach(RUISDisplay display in displays)
+			if(display.linkedCamera)
 			{
-				if(display.linkedCamera /*&&  display.isHmdDisplay*/ )
-				{
-					if(	   !display.linkedCamera.isStereo && display.linkedCamera.centerCamera 
-						&& display.linkedCamera.centerCamera.stereoTargetEye != StereoTargetEyeMask.None)
-						return true;
-				}
+				if(display.linkedCamera.isStereo || (display.linkedCamera.centerCamera && display.linkedCamera.centerCamera.stereoTargetEye == StereoTargetEyeMask.None))
+					return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -227,7 +252,7 @@ public class RUISDisplayManager : MonoBehaviour
 			currentResolutionX += display.rawResolutionX;
 		}
 
-		if(displays != null && displays[0])
+		if(displays != null && displays.Count > 0)
 			return displays[0];
 		else
 			return null;
@@ -261,14 +286,16 @@ public class RUISDisplayManager : MonoBehaviour
 
 	private void DisableUnlinkedCameras()
 	{
-		RUISCamera[] allCameras = FindObjectsOfType(typeof(RUISCamera)) as RUISCamera[];
-
-		foreach(RUISCamera ruisCamera in allCameras)
+		if(allCameras != null)
 		{
-			if(ruisCamera.associatedDisplay == null)
+			foreach(RUISCamera ruisCamera in allCameras)
 			{
-				Debug.LogWarning("Disabling RUISCamera '" + ruisCamera.name + "' because it isn't linked into a RUISDisplay.");
-				ruisCamera.gameObject.SetActive(false);
+				if(ruisCamera && ruisCamera.associatedDisplay == null && !ruisCamera.isHmdCamera)
+				{
+					Debug.LogWarning(  "Disabling '" + ruisCamera.name + "' gameobject because its " + typeof(RUISCamera) + " component is not linked into a " 
+									 + typeof(RUISDisplay) + " and it does not appear to be a camera for a head-mounted display.");
+					ruisCamera.gameObject.SetActive(false);
+				}
 			}
 		}
 	}
@@ -316,7 +343,7 @@ public class RUISDisplayManager : MonoBehaviour
 		if(displays.Count <= guiDisplayChoice)
 		{
 			Debug.LogError("displays.Count is too small: " + displays.Count + ", because guiDisplayChoice == " + guiDisplayChoice
-			+ ". Fix the guiDisplayChoice implementation so that it conforms to the displays variable (dynamic List<>).");
+				+ ". Add more RUISDisplays or change the 'Display With RUIS Menu' field in " + typeof(RUISDisplayManager), this);
 			return;
 		}
 
@@ -339,7 +366,6 @@ public class RUISDisplayManager : MonoBehaviour
 		{
 			if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
 			{
-
 				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.gameObject.AddComponent<UICamera>();
 			} else
 				Debug.LogError("The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
@@ -355,7 +381,7 @@ public class RUISDisplayManager : MonoBehaviour
 				displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCamera.gameObject.AddComponent<UICamera>();
 			else
 				Debug.LogError("The " + typeof(RUISDisplay) + " that was assigned with 'RUIS Menu Prefab' in " + typeof(RUISDisplayManager) + " has an 'Attached Camera' "
-				+ " whose leftCamera is null for some reason! Can't create UICamera.");
+					+ " whose leftCamera is null for some reason! Can't create UICamera.");
 		}
 
 		UICamera[] NGUIcameras = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.GetComponentsInChildren<UICamera>();
@@ -368,7 +394,9 @@ public class RUISDisplayManager : MonoBehaviour
 		string primaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCameraName;
 		string secondaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCameraName;
 		string tertiaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCameraName;
-		if(displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera)
+		if(		displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera
+			&& !(   displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo && RUISDisplayManager.IsHmdPresent() 
+				 && displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.stereoTargetEye != StereoTargetEyeMask.None))
 		{
 
 			ruisMenu.transform.parent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.transform;

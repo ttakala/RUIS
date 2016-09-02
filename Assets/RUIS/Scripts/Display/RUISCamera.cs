@@ -43,7 +43,7 @@ public class RUISCamera : MonoBehaviour
 	public RUISDisplay associatedDisplay;
 
 	[HideInInspector]
-	public bool isVRCamera = true;
+	public bool isHmdCamera = true;
 
 	private Rect normalizedScreenRect;
 	private float aspectRatio;
@@ -60,7 +60,13 @@ public class RUISCamera : MonoBehaviour
 	[HideInInspector]
 	public LayerMask cullingMask = 0xFFFFFF;
 
-	public bool isStereo { get { return associatedDisplay.isStereo; } }
+	public bool isStereo { get 
+		{ 
+			if(associatedDisplay)
+				return associatedDisplay.isStereo;
+			return false;
+		} 
+	}
 
 	private bool oldStereoValue;
 	private RUISDisplay.StereoType oldStereoTypeValue;
@@ -174,11 +180,11 @@ public class RUISCamera : MonoBehaviour
 		bool isDifferentLeftMask = false;
 		bool isDifferentRightMask = false;
 
-		isVRCamera = 	UnityEngine.VR.VRSettings.enabled && !this.isStereo && this.centerCamera
+		isHmdCamera = 	UnityEngine.VR.VRSettings.enabled && !this.isStereo && this.centerCamera
 					 && this.centerCamera.stereoTargetEye != StereoTargetEyeMask.None;
 
 		// Is this a VR RUISCamera?
-		if(isVRCamera)
+		if(isHmdCamera)
 		{
 			//				Debug.LogWarning(  "GameObject " + name + " has " + typeof(RUISCamera) + " script, but no " + typeof(RUISDisplay) 
 			//				                 + " was associated with it upon Awake(). Leaving OVR scripts on.");
@@ -238,9 +244,9 @@ public class RUISCamera : MonoBehaviour
 	{
 		if(!associatedDisplay)
 		{
-			Debug.LogError("GameObject " + name + " has " + typeof(RUISCamera) + " script, "
-			+ "but it is not associated to any display in DisplayManager, disabling " + name, this);
-			gameObject.SetActive(false);
+//			Debug.LogError("GameObject " + name + " has " + typeof(RUISCamera) + " script, "
+//			+ "but it is not associated to any display in DisplayManager, disabling " + name, this);
+//			gameObject.SetActive(false);
 			return;
 		}
 		else
@@ -266,7 +272,7 @@ public class RUISCamera : MonoBehaviour
 		if(associatedDisplay)
 		{
 			// Is this a VR RUISCamera?
-			if(isVRCamera)
+			if(isHmdCamera)
 			{
 				//                if (!associatedDisplay.isStereo)
 				//                {
@@ -314,21 +320,23 @@ public class RUISCamera : MonoBehaviour
 
 	public void Update()
 	{
+		if(associatedDisplay)
+		{	
+			if(oldStereoValue != associatedDisplay.isStereo)
+			{
+				UpdateStereo();
+			}
 		
-		if(oldStereoValue != associatedDisplay.isStereo)
-		{
-			UpdateStereo();
-		}
-		
-		if(oldStereoTypeValue != associatedDisplay.stereoType)
-		{
-			UpdateStereoType();
+			if(oldStereoTypeValue != associatedDisplay.stereoType)
+			{
+				UpdateStereoType();
+			}
 		}
 	}
 
 	public void LateUpdate()
 	{
-		if(isVRCamera)
+		if(isHmdCamera)
 		{
 			return;
 		}
@@ -533,7 +541,7 @@ public class RUISCamera : MonoBehaviour
 		}
 		else
 		{
-			if(!isVRCamera)
+			if(!isHmdCamera)
 			{
 				normalizedScreenRect = new Rect(relativeLeft, relativeBottom, relativeWidth, relativeHeight);
 				this.aspectRatio = aspectRatio;
@@ -588,7 +596,7 @@ public class RUISCamera : MonoBehaviour
 
 	private void UpdateStereo()
 	{
-		if(associatedDisplay.isStereo && !isVRCamera)
+		if(associatedDisplay.isStereo && !isHmdCamera)
 		{
 			centerCamera.enabled = false;
 			leftCamera.enabled = true;

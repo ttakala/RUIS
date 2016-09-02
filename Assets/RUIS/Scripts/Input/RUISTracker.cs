@@ -381,9 +381,10 @@ public class RUISTracker : MonoBehaviour
 //		}
 
 
-		if(headPositionInput == HeadPositionSource.OpenVR)
+		if(headPositionInput == HeadPositionSource.OpenVR || headRotationInput == HeadRotationSource.OpenVR)
 		{
-			if(RUISDisplayManager.IsOpenVrAccessible()) // *** TODO HACK Valve API
+			// If we are just using OpenVR controllers, or if there is any HMD detected
+			if(RUISDisplayManager.IsOpenVrAccessible() || RUISDisplayManager.IsHmdPresent()) 
 			{
 				// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
 				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)
@@ -395,9 +396,18 @@ public class RUISTracker : MonoBehaviour
 			}
 			else
 			{
-				Debug.LogError(	  "Unable to access OpenVR library. Is SteamVR installed? " + typeof(RUISTracker) 
-								+ " set Position Tracker from " + HeadPositionSource.OpenVR + " to " + HeadPositionSource.None);
-				headPositionInput = HeadPositionSource.None;
+				string errorMessage = "Could not detect a head-mounted display. ";
+				if(headPositionInput == HeadPositionSource.OpenVR)
+				{
+					errorMessage = errorMessage + typeof(RUISTracker) + " set Position Tracker from " + HeadPositionSource.OpenVR + " to " + HeadPositionSource.None + ". ";
+					headPositionInput = HeadPositionSource.None;
+				}
+				if(headRotationInput == HeadRotationSource.OpenVR)
+				{
+					errorMessage = errorMessage + typeof(RUISTracker) + " set Rotation Tracker from " + HeadRotationSource.OpenVR + " to " + HeadRotationSource.None + ". ";
+					headRotationInput = HeadRotationSource.None;
+				}
+				Debug.LogError(errorMessage);
 			}
 		}
 

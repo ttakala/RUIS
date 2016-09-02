@@ -133,14 +133,9 @@ public class RUISDisplay : MonoBehaviour
 	{
 		aspectRatio = resolutionX / resolutionY;
         
-		if(!linkedCamera)
+		if(linkedCamera)
 		{
-			Debug.LogError("No camera attached to display: " + name, this);
-		}
-		else
-		{
-			linkedCamera.isKeystoneCorrected = isKeystoneCorrected;
-			linkedCamera.associatedDisplay = this;
+			LinkToCamera(linkedCamera);
 		}
 
 		if(isHmdDisplay && !RUISDisplayManager.IsHmdPresent())
@@ -148,16 +143,20 @@ public class RUISDisplay : MonoBehaviour
 
 	}
 
-	public void Start()
-	{
-//		if(RUISDisplayManager.IsHmdPresent())
-//			UnityEngine.VR.VRSettings.showDeviceView = hmdMirrorMode;
+//	public void Start()
+//	{
+//		if(!linkedCamera)
+//		{
+//			Debug.LogError(   "Please set up a RUISCamera for display: " + name + ". Each RUISDisplay defined in "
+//					+ "RUISDisplayManager should link to a RUISCamera at field 'Attached Camera'.");
+//		}
+//	}
 
-		if(!linkedCamera)
-		{
-			Debug.LogError(   "Please set up a RUISCamera for display: " + name + ". Each RUISDisplay defined in "
-					+ "RUISDisplayManager should link to a RUISCamera at field 'Attached Camera'.");
-		}
+	public void LinkToCamera(RUISCamera ruisCamera)
+	{
+		ruisCamera.isKeystoneCorrected = isKeystoneCorrected;
+		ruisCamera.associatedDisplay = this;
+		this.linkedCamera = ruisCamera;
 	}
 
 	public void SetupViewports(int xCoordinate, Vector2 totalRawResolution)

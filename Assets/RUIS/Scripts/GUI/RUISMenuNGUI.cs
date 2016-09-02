@@ -154,7 +154,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 		
 		if(	   displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum 
 			&& displayManager.displays[displayManager.guiDisplayChoice].linkedCamera 
-			&& !displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.isVRCamera)
+			&& !displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.isHmdCamera)
 		{
 			this.transform.localRotation = Quaternion.LookRotation(-displayManager.displays[displayManager.guiDisplayChoice].DisplayNormal, 
 			                                                        displayManager.displays[displayManager.guiDisplayChoice].DisplayUp     );
@@ -357,7 +357,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 
 			if(	   displayManager.displays[displayManager.guiDisplayChoice].isObliqueFrustum 
 				&& displayManager.displays[displayManager.guiDisplayChoice].linkedCamera 
-				&& !displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.isVRCamera)
+				&& !displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.isHmdCamera)
 			{
 				Quaternion outerRot = displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.transform.rotation;
 				Quaternion wallOrientation = Quaternion.LookRotation(
@@ -673,9 +673,9 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(inputManager.enableKinect 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect 1 - PSMove");
 		if(inputManager.enableKinect2 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect 2 - PSMove");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (controller)");
-		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
-		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enablePSMove)  dropDownChoices.Add("PSMove - OpenVR (HMD)");
-		if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPresent() && inputManager.enableKinect)  dropDownChoices.Add("Kinect 1 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enablePSMove)  dropDownChoices.Add("PSMove - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  dropDownChoices.Add("Kinect 1 - OpenVR (HMD)");
 
 		
 		if(dropDownChoices.Count == 0) 
