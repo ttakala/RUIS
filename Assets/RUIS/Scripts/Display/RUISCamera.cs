@@ -312,7 +312,7 @@ public class RUISCamera : MonoBehaviour
 				}
 				else
 				{
-					Debug.LogError("RUISTracker is none, you need to set it from the inspector!", associatedDisplay);
+					Debug.LogError(typeof(RUISDisplay) + " is set as 'Head Tracked CAVE Display', but its 'CAVE Head Tracker' is not set!", associatedDisplay);
 				}
 			}
 		}

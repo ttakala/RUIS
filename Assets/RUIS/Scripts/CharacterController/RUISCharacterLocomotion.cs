@@ -30,6 +30,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	public float runAdder = 1.0f;
     public float maxVelocityChange = 20.0f;
 
+	PSMoveWrapper moveWrapper;
     public bool usePSNavigationController = true;
     public int PSNaviControllerID = 1;
 	public bool strafeInsteadTurning = false;
@@ -63,13 +64,14 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
     public float direction { get; private set; }
     public bool jump { get; private set; }
-	
-    // TUUKKA
+
+
 	public bool useRazerHydra = true;
 	public SixenseHands razerHydraID = SixenseHands.RIGHT;
 	SixenseInput.Controller razerController;
-	
-    PSMoveWrapper moveWrapper;
+
+
+	public bool useOpenVrController = true;
 
     bool shouldJump = false;
 
@@ -141,7 +143,11 @@ public class RUISCharacterLocomotion : MonoBehaviour
 //							 +	"controller for character locomotion controls, but you have "
 //							 +	"disabled PS Move from RUIS InputManager.");
 		}
-		
+
+		if(useOpenVrController && !RUISDisplayManager.IsOpenVrAccessible())
+		{
+			useOpenVrController = false;
+		}
 	}
 
     void Update()
@@ -180,6 +186,19 @@ public class RUISCharacterLocomotion : MonoBehaviour
                 }
             }
 		}
+
+//		if(useOpenVrController)
+//		{
+//			// *** HACK TODO
+//			for(int i = 0; i < Valve.VR.OpenVR.k_unMaxTrackedDeviceCount; ++i)
+//			{
+//				if(	   SteamVR_Controller.Input(i) != null && SteamVR_Controller.Input(i).connected 
+//					&& SteamVR_Controller.Input(i).GetPressDown(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu))
+//				{
+//					shouldJump = true;
+//				}
+//			}
+//		}
 
         if (shouldJump)
         {
@@ -287,7 +306,21 @@ public class RUISCharacterLocomotion : MonoBehaviour
             }
         }
 
-        // TUUKKA
+//		if(useOpenVrController)
+//		{
+//			// *** HACK TODO
+//			for(int i = 0; i < Valve.VR.OpenVR.k_unMaxTrackedDeviceCount; ++i)
+//			{
+//				if(SteamVR_Controller.Input(i) != null && SteamVR_Controller.Input(i).connected)
+//				{
+//					if(!airborne && SteamVR_Controller.Input(i).GetPress(Valve.VR.EVRButtonId.k_EButton_Grip))
+//						extraSpeed = 1;
+//					else
+//						extraSpeed = 0;
+//				}
+//			}
+//		}
+
         if (useRazerHydra) // Check if moving with Razer Hydra controller
         {
             razerController = SixenseInput.GetController(razerHydraID);

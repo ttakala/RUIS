@@ -30,7 +30,9 @@ public class RUISCharacterLocomotionEditor : Editor {
 	
 	SerializedProperty useRazerHydra;
 	SerializedProperty razerHydraID;
-	
+
+	SerializedProperty useOpenVrController;
+
     SerializedProperty jumpStrength;
 	SerializedProperty jumpSpeedEffect;
 	SerializedProperty aerialAcceleration;
@@ -50,6 +52,7 @@ public class RUISCharacterLocomotionEditor : Editor {
         speed = serializedObject.FindProperty("speed");
 		runAdder = serializedObject.FindProperty("runAdder");
         maxVelocityChange = serializedObject.FindProperty("maxVelocityChange");
+		useOpenVrController = serializedObject.FindProperty("useOpenVrController");
         usePSNavigationController = serializedObject.FindProperty("usePSNavigationController");
         PSNaviControllerID = serializedObject.FindProperty("PSNaviControllerID");
         strafeInsteadTurning = serializedObject.FindProperty("strafeInsteadTurning");
@@ -120,7 +123,9 @@ public class RUISCharacterLocomotionEditor : Editor {
 		                                                             + "to the 'Moving Speed': Value 0 means that the character can't be controlled in the air, "
 		                                                             + "value 1 means that the character can change its velocity up to 'Moving Speed' in the air, "
 		                                                             + "value 2 means double of that and so on. Value 1.5 is a good default."));
-		
+
+//		EditorGUILayout.PropertyField(useOpenVrController, new GUIContent("Use OpenVR Controller", "Enable locomotion controls with an OpenVR controller (e.g. Vive)"));
+
         EditorGUILayout.PropertyField(useRazerHydra, new GUIContent("Use Razer Hydra", "Enable locomotion controls with a Razer Hydra controller"));
 		
 		if(useRazerHydra.boolValue)

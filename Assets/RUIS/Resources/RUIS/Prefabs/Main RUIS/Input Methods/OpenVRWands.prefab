@@ -215,7 +215,7 @@ MonoBehaviour:
   grabWhileButtonDown: 1
   ignoredLayers:
     serializedVersion: 2
-    m_Bits: 3328
+    m_Bits: 7424
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
   selectedGameObjectsLayer: 11
@@ -336,7 +336,7 @@ MonoBehaviour:
   grabWhileButtonDown: 1
   ignoredLayers:
     serializedVersion: 2
-    m_Bits: 3328
+    m_Bits: 7424
   positionSelectionGrabType: 2
   rotationSelectionGrabType: 1
   selectedGameObjectsLayer: 11

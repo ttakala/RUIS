@@ -160,7 +160,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 			
             colliderHeight = defaultColliderHeight;
 
-            if (combinerChildrenInstantiated)
+			if (combinerChildrenInstantiated || !kinectAndMecanimCombinerExists)
             {
 				if ( skeletonController.followHmdPosition || skeletonController.followMoveController )
                 {

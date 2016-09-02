@@ -448,7 +448,9 @@ public class RUISTrackerEditor : Editor
         EditorGUILayout.Space();
 
 		
-		if(headRotationInput.enumValueIndex != (int)RUISTracker.HeadRotationSource.InputTransform)
+		if(	   (	headRotationInput.enumValueIndex != (int)RUISTracker.HeadRotationSource.InputTransform 
+				&&  headRotationInput.enumValueIndex != (int)RUISTracker.HeadRotationSource.OpenVR			)
+			|| headPositionInput.enumValueIndex == (int)RUISTracker.HeadPositionSource.OpenVR 				 )
 		{
 			EditorGUI.BeginDisabledGroup(true);
 	        EditorGUILayout.PropertyField(externalDriftCorrection, new GUIContent(    "Yaw Drift Correction", "Enables external yaw drift correction "
@@ -460,8 +462,8 @@ public class RUISTrackerEditor : Editor
 				EditorGUILayout.LabelField("PS Move doesn't need drift correction");
 			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.RazerHydra)
 				EditorGUILayout.LabelField("Razer Hydra doesn't need drift correction");
-			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.OpenVR)
-				EditorGUILayout.LabelField("OpenVR devices don't need drift correction");
+//			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.OpenVR)
+//				EditorGUILayout.LabelField("OpenVR devices don't need drift correction");
 			if(headRotationInput.enumValueIndex == (int)RUISTracker.HeadRotationSource.None)
 				EditorGUILayout.LabelField("No Rotation Tracker: Drift correction disabled");
 			EditorGUI.EndDisabledGroup();

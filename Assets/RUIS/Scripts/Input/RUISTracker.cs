@@ -301,7 +301,7 @@ public class RUISTracker : MonoBehaviour
 //		{
 //			useOculusRiftRotation = false;
 //		}
-		if(RUISDisplayManager.IsHmdPresent())
+		if(RUISDisplayManager.IsHmdPresent() && headPositionInput != HeadPositionSource.OpenVR && headRotationInput == HeadRotationSource.OpenVR)
 			useHmdRotation = true;
 		else
 			useHmdRotation = false;
@@ -678,7 +678,6 @@ public class RUISTracker : MonoBehaviour
 		        ||	headRotationInput == HeadRotationSource.Kinect2
 				||  headRotationInput == HeadRotationSource.PSMove
 				||  headRotationInput == HeadRotationSource.RazerHydra
-				||  headRotationInput == HeadRotationSource.OpenVR		// *** TODO: Some OpenVR HMDs might have yaw drift
 				||  headRotationInput == HeadRotationSource.None	  )
 			compass = CompassSource.None; // The above rotation sources do not need yaw drift correction
 		if(		headPositionInput != HeadPositionSource.RazerHydra
@@ -1003,10 +1002,10 @@ public class RUISTracker : MonoBehaviour
 		}
 		
 		// Determine whether rotation source is Oculus Rift or some other device
-		if(useHmdRotation) // TODO: *** Depending on OVR version, the below section might change
-		{
-			// UNITY54: commented this whole branch because it was specific to Oculus DK1/2 
-			// If we are using Oculus for rotation tracking but NOT positional tracking, then add a counter translation
+//		if(useHmdRotation) // TODO: *** Depending on OVR version, the below section might change
+//		{
+//			// UNITY54: commented this whole branch because it was specific to Oculus DK1/2 
+//			// If we are using Oculus for rotation tracking but NOT positional tracking, then add a counter translation
 //			if(ovrCameraRig)
 //			{
 //				// Negate completely Oculus position tracking, including rotation-based neck offset
@@ -1020,8 +1019,8 @@ public class RUISTracker : MonoBehaviour
 //			{
 //					tempLocalRotation = coordinateSystem.GetOculusRiftOrientation(); // GetHmdOrientationInMasterFrame()
 //			}
-		}
-		else // useHmdRotation == false 
+//		}
+//		else // useHmdRotation == false 
 		{
 			switch(headRotationInput) 
 			{
@@ -1036,7 +1035,7 @@ public class RUISTracker : MonoBehaviour
 			        {
 						filterRotation = filterRotationKinect;
 						rotationNoiseCovariance = rotationNoiseCovarianceKinect;
-					jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID, kinectSensorID);
+						jointData = skeletonManager.GetJointData(rotationJoint, rotationPlayerID, kinectSensorID);
 						// Most stable joint:
 						if(jointData != null && jointData.rotationConfidence >= 1)
 							measuredHeadRotation = jointData.rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect));
@@ -1064,6 +1063,10 @@ public class RUISTracker : MonoBehaviour
 						if(isRazerBaseMobile)
 							measuredHeadRotation = hydraBaseRotation * measuredHeadRotation;
 					}
+					break;
+				case HeadRotationSource.OpenVR:
+					measuredHeadRotation = coordinateSystem.GetHmdOrientationInMasterFrame();
+					filterRotation = false;
 					break;
 				case HeadRotationSource.InputTransform:
 					if(rotationInput)
@@ -1104,15 +1107,15 @@ public class RUISTracker : MonoBehaviour
 		if(	   !externalDriftCorrection
 			|| compass == CompassSource.None )
 		{
-			if(!useHmdRotation)
-			{
+//			if(!useHmdRotation)
+//			{
 				localRotation = rawRotation;
 				transform.localRotation = rawRotation;
-			}
+//			}
 		}
 		else
 		{
-			if(		!useHmdRotation )
+//			if(		!useHmdRotation )
 //				|| 	(ovrManager != null && ovrManager.usePositionTracking == false)  ) //06to08 // *** UNITY54
 //			   || (		ovrHmdVersion == Ovr.HmdType.DK1 
 //			    	||  ovrHmdVersion == Ovr.HmdType.DKHD 
