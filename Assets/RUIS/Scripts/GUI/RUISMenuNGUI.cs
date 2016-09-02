@@ -2,7 +2,7 @@
 
 Content    :   A manager for display configurations
 Authors    :   Heikki Heiskanen, Tuukka Takala
-Copyright  :   Copyright 2015 Tuukka Takala, Heikki Heiskanen. All Rights reserved.
+Copyright  :   Copyright 2016 Tuukka Takala, Heikki Heiskanen. All Rights reserved.
 Licensing  :   RUIS is distributed under the LGPL Version 3 license.
 
 ******************************************************************************/
@@ -11,6 +11,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 //using Ovr;
+
+
+// RESTRICTION: THERE SHOULD BE ONLY ONE RUISMenuNGUI INSTANCE WHICH RUISDisplayManager HANDLES
 
 public class RUISMenuNGUI : MonoBehaviour {
 
@@ -356,24 +359,26 @@ public class RUISMenuNGUI : MonoBehaviour {
 				&& displayManager.displays[displayManager.guiDisplayChoice].linkedCamera 
 				&& !displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.isVRCamera)
 			{
+				Quaternion outerRot = displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.transform.rotation;
+				Quaternion wallOrientation = Quaternion.LookRotation(
+					(-displayManager.displays[displayManager.guiDisplayChoice].DisplayNormal), 
+					 displayManager.displays[displayManager.guiDisplayChoice].DisplayUp);
 
-//				wallOrientation = Quaternion.LookRotation(-ruisCamera.associatedDisplay.DisplayNormal, ruisCamera.associatedDisplay.DisplayUp);
-//
-//				instancedCursor.transform.rotation = instancedCursor.transform.rotation * wallOrientation;
-//				trackerPosition = ruisCamera.transform.position + ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
-//				ray.origin += trackerPosition;
-//				ray.direction = wallOrientation * ray.direction;
+				// *** HACK why is this sign flip necessary to keep the menu at right place??
+				outerRot = new Quaternion(outerRot.x, outerRot.y, -outerRot.z, outerRot.w);
 
-				Vector3 eulerAngles = this.transform.rotation.eulerAngles;
-				eulerAngles.z = -eulerAngles.z; // *** HACK TODO
+				this.transform.rotation = outerRot * wallOrientation;
+
 				this.transform.position = displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.transform.position
-					+ Quaternion.Euler(eulerAngles) * (	  displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.KeystoningHeadTrackerPosition
-													+ new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ));
+						+ outerRot * (displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.KeystoningHeadTrackerPosition
+						+ wallOrientation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ));
+						
+				// Vector3 eulerAngles = this.transform.rotation.eulerAngles;
+				// eulerAngles.z = -eulerAngles.z; // *** HACK TODO
+				// this.transform.position = displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.transform.position
+					// + Quaternion.Euler(eulerAngles) * (	  displayManager.displays[displayManager.guiDisplayChoice].linkedCamera.KeystoningHeadTrackerPosition
+													// + new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ));
 
-//				this.transform.localRotation = Quaternion.LookRotation(-displayManager.displays[displayManager.guiDisplayChoice].DisplayNormal, 
-//					displayManager.displays[displayManager.guiDisplayChoice].DisplayUp     );
-//				this.transform.localPosition = displayManager.displays[displayManager.guiDisplayChoice].displayCenterPosition
-//					+ this.transform.localRotation * new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ);
 			}
 
 			switch(currentMenuState) 

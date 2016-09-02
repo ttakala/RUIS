@@ -30,9 +30,10 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Camera))]
 public class UICamera : MonoBehaviour
 {
-	// CORE HACK by heikki.j.heiskanen@aalto.fi
+	// RUIS CORE HACK
 	public static RUISCamera ruisCamera;
-	// END CORE HACK
+	public static RUISDisplayManager displayManager;
+	// END RUIS CORE HACK
 	
 	/// <summary>
 	/// Whether the touch event will be sending out the OnClick notification at the end.
@@ -512,9 +513,17 @@ public class UICamera : MonoBehaviour
 					ray = currentCamera.ScreenPointToRay(inPos);
 					if(ruisCamera && ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isObliqueFrustum)
 					{
-						Quaternion wallOrientation = Quaternion.LookRotation(-ruisCamera.associatedDisplay.DisplayNormal, ruisCamera.associatedDisplay.DisplayUp);
-						ray.origin += ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
-						ray.direction = wallOrientation * ray.direction;
+						Quaternion outerRot = ruisCamera.transform.rotation;
+						Quaternion wallOrientation = Quaternion.LookRotation(-ruisCamera.associatedDisplay.DisplayNormal, 
+																			 ruisCamera.associatedDisplay.DisplayUp		 );
+
+						// *** HACK why is this sign flip necessary to keep the menu at right place??
+						outerRot = new Quaternion(outerRot.x, outerRot.y, -outerRot.z, outerRot.w);
+
+						ray.origin += outerRot * ruisCamera.KeystoningHeadTrackerPosition;
+						if(displayManager)
+							ray.origin -= outerRot * (new Vector3(displayManager.guiX, displayManager.guiY, displayManager.guiZ));
+//						ray.direction = wallOrientation * ray.direction;
 					}
 				}
 			}
@@ -817,7 +826,7 @@ public class UICamera : MonoBehaviour
 		}
 	}
 
-	// CORE HACK by heikki.j.heiskanen@aalto.fi
+	// RUIS CORE HACK
 	void Start() 
 	{
 		if(this.transform.parent) 
@@ -826,8 +835,10 @@ public class UICamera : MonoBehaviour
 			if(!ruisCamera)
 				ruisCamera = this.transform.GetComponent<RUISCamera>(); // Non stereo camera
 		}
+		
+		displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
 	}
-	// END CORE HACK
+	// END RUIS CORE HACK
 	
 	/// <summary>
 	/// Check the input and send out appropriate events.

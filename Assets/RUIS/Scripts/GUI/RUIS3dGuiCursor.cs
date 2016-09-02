@@ -163,16 +163,19 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 
 			if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isObliqueFrustum)
 			{
+				Quaternion outerRot = ruisCamera.transform.rotation;
 				wallOrientation = Quaternion.LookRotation(-ruisCamera.associatedDisplay.DisplayNormal, ruisCamera.associatedDisplay.DisplayUp);
-				
-				instancedCursor.transform.rotation = instancedCursor.transform.rotation * wallOrientation;
 
-				//ray.origin = ruisCamera.associatedDisplay.displayCenterPosition;
-				//translateColumn = ruisCamera.centerCamera.projectionMatrix.GetColumn(3);
-//				trackerPosition.Set(translateColumn.x, translateColumn.y, translateColumn.z);
-				trackerPosition = ruisCamera.transform.rotation * ruisCamera.KeystoningHeadTrackerPosition;
-				ray.origin += trackerPosition;
-				ray.direction = wallOrientation * ray.direction;
+				// *** HACK why is this sign flip necessary to keep the menu at right place??
+				outerRot = new Quaternion(outerRot.x, outerRot.y, -outerRot.z, outerRot.w);
+
+				instancedCursor.transform.rotation = outerRot * wallOrientation;
+
+				trackerPosition = outerRot * ruisCamera.KeystoningHeadTrackerPosition;
+				ray.origin += trackerPosition - outerRot * (new Vector3(ruisDisplayManager.guiX, 
+																		ruisDisplayManager.guiY, 
+																		ruisDisplayManager.guiZ ));
+//				ray.direction =  wallOrientation * ray.direction;
 			}
 
 			if(Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask(LayerMask.LayerToName(ruisDisplayManager.menuLayer))))
