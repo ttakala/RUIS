@@ -147,11 +147,11 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 					firstDevice = RUISDevice.Kinect_2;
 					secondDevice = RUISDevice.PS_Move;
 				break;
-				case "Kinect 2 - OpenVR (controller)":
+				case "Kinect 2 - OpenVR (controller)": // *** HACK TODO hacky
 					firstDevice = RUISDevice.Kinect_2;
 					secondDevice = RUISDevice.OpenVR;
 				break;
-				case "Kinect 2 - OpenVR (HMD)":
+				case "Kinect 2 - OpenVR (HMD)": // *** HACK TODO hacky see other (HMD)s below
 					firstDevice = RUISDevice.Kinect_2;
 					secondDevice = RUISDevice.OpenVR;
 					hmdCalibration = true;
