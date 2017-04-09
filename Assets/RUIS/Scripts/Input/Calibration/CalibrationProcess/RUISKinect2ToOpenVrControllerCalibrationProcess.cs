@@ -86,7 +86,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
 		this.numberOfSamplesPerSecond = calibrationSettings.numberOfSamplesPerSecond;
 
-		SteamVR_Utils.Event.Listen("device_connected", OnDeviceConnected);
+//		SteamVR_Utils.Event.Listen("device_connected", OnDeviceConnected);
+		SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
 
 		trackingIDs = new trackedBody[6]; 
 		for(int y = 0; y < trackingIDs.Length; y++) {
@@ -793,10 +794,10 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 
 	public Valve.VR.VRControllerState_t controllerState;
 
-	private void OnDeviceConnected(params object[] args)
+	private void OnDeviceConnected(int deviceId, bool isConnected)
 	{
 		int htcViveControllerIndex = 3;
-		var index = (int)args[0];
+//		var index = (int)args[0];
 
 //		if (index == leftIndex)
 //		{
@@ -839,6 +840,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 
 	~RUISKinect2ToOpenVrControllerCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
 	{
-		SteamVR_Utils.Event.Remove("device_connected", OnDeviceConnected);
+//		SteamVR_Utils.Event.Remove("device_connected", OnDeviceConnected);
+		SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
 	}
 }

@@ -7,17 +7,25 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: Assets/RUIS/Examples/BowlingAlley/BowlingAlley.unity
+    guid: bc0f76325b2f6ac4293b9109050de74d
   - enabled: 0
     path: Assets/RUIS/Examples/CaveExample/CaveExample.unity
+    guid: e6a82b315d897db4fbe38bfe35b4e890
   - enabled: 0
     path: Assets/RUIS/Examples/DisplayManagerExample/DisplayManagerExample.unity
+    guid: a8df20877dbf30844a6b4b7135763bfe
   - enabled: 0
     path: Assets/RUIS/Examples/KinectTwoPlayers/KinectTwoPlayers.unity
+    guid: 73b4fef0827f0fb4eb89941a64729522
   - enabled: 0
     path: Assets/RUIS/Examples/MinimalScene/MinimalScene.unity
-  - enabled: 0
-    path: Assets/RUIS/Examples/OpenVrExample/OpenVrExample.unity
+    guid: 4f63b42ec86c61f46b0cc11afb24e482
   - enabled: 1
+    path: Assets/RUIS/Examples/OpenVrExample/OpenVrExample.unity
+    guid: b30ffb4d9c166844a8214463f6ff6f72
+  - enabled: 0
     path: Assets/VertigoTuukka/vertigo.unity
+    guid: ea321a10bfd8dc94c9f736f76656d9e9
   - enabled: 1
     path: Assets/RUIS/Scenes/calibration.unity
+    guid: 176f3c6957c2bac4d9290bb9cdc1ae91
