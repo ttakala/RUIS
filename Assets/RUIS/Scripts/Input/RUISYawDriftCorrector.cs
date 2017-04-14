@@ -13,7 +13,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RUISYawDriftCorrector : MonoBehaviour {
+public class RUISYawDriftCorrector : MonoBehaviour 
+{
 
 	[Tooltip(  "Leave this field as none if the drifting rotation is stored in the driftingChild's world rotation variable. "
 			 + "If the drifting rotation is stored in the driftingChild's localRotation variable, then set this field as the "
@@ -65,20 +66,22 @@ public class RUISYawDriftCorrector : MonoBehaviour {
 	float currentCorrectionVelocity;
 
 	// Use this for initialization
-	void Awake () {
+	void Awake() 
+	{
 		filterDrift = new KalmanFilter();
 		filterDrift.initialize(2,2);
 
 		currentCorrectionVelocity = driftCorrectionVelocity;
 
-		if (!driftingChild) {
-			Debug.LogError (  "Field " + driftingChild.name + " must be defined! It should contain the rotation that has yaw drift. Disabling " 
+		if(!driftingChild) 
+		{
+			Debug.LogError(   "Field " + driftingChild.name + " must be defined! It should contain the rotation that has yaw drift. Disabling " 
 							+ typeof(RUISYawDriftCorrector));
 			this.enabled = false;
 			return;
 		}
-		if (!driftingChild) {
-			Debug.LogError (  "Field " + driftlessTransform.name + " must be defined! It should contain the \"compass\" rotation that has no yaw drift. "
+		if(!driftingChild) {
+			Debug.LogError(   "Field " + driftlessTransform.name + " must be defined! It should contain the \"compass\" rotation that has no yaw drift. "
 							+ "Disabling " + typeof(RUISYawDriftCorrector));
 			this.enabled = false;
 			return;
@@ -88,14 +91,14 @@ public class RUISYawDriftCorrector : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void LateUpdate () {
+	void LateUpdate() {
 		// drifting rotation transform.rotation = Quaternion.Inverse (parent.rotation) * child.rotation;
 
 		if(Input.GetKeyDown(resetCorrectionButton))
 			StartCoroutine("CorrectImmediately");
 
-		if (driftingParent)
-			driftingRotation = Quaternion.Inverse (driftingParent.rotation) * driftingChild.rotation;
+		if(driftingParent)
+			driftingRotation = Quaternion.Inverse(driftingParent.rotation) * driftingChild.rotation;
 		else
 			driftingRotation = driftingChild.rotation;
 
@@ -108,30 +111,31 @@ public class RUISYawDriftCorrector : MonoBehaviour {
 		#endif
 
 		// HACK: Project forward vectors to XZ-plane. This is a problem if they are constantly parallel to Y-axis, e.g. HMD user looking directly up or down 
-		driftingForward.Set (driftingForward.x, 0, driftingForward.z);
-		driftlessForward.Set (driftlessForward.x, 0, driftlessForward.z);
+		driftingForward.Set(driftingForward.x, 0, driftingForward.z);
+		driftlessForward.Set(driftlessForward.x, 0, driftlessForward.z);
 
 		// HACK: If either forward vector is constantly parallel to Y-axis, no drift correction occurs. Occasionally this is OK, as the drift correction occurs gradually.
-		if (driftingForward.magnitude > 0.01f && driftlessForward.magnitude > 0.01f) {
+		if(driftingForward.magnitude > 0.01f && driftlessForward.magnitude > 0.01f) 
+		{
 
 			// HACK: Vector projection to XZ-plane ensures that the change in the below driftVector is continuous, 
 			//		 as long as rotation change in driftingRotation and driftlessTransform is continuous. Otherwise 
 			//		 more math is needed to ensure the continuity...
-			driftVector = Quaternion.Euler(0, -Vector3.Angle (driftingForward, driftlessForward), 0) * Vector3.forward;
+			driftVector = Quaternion.Euler(0, -Vector3.Angle(driftingForward, driftlessForward), 0) * Vector3.forward;
 
 			// 2D vector rotated by yaw difference has continuous components
-			measuredDrift [0] = driftVector.x;
-			measuredDrift [1] = driftVector.z;
+			measuredDrift[0] = driftVector.x;
+			measuredDrift[1] = driftVector.z;
 
 			// Simple Kalman filtering
 			filterDrift.setR(Time.deltaTime * driftNoiseCovariance);
 			filterDrift.predict();
-			filterDrift.update (measuredDrift);
+			filterDrift.update(measuredDrift);
 			filteredDrift = filterDrift.getState();
 
-			filteredRotation = Quaternion.RotateTowards (filteredRotation, 
-														 Quaternion.LookRotation (new Vector3 ((float)filteredDrift [0], 0, (float)filteredDrift [1])), 
-														 currentCorrectionVelocity * Time.deltaTime);
+			filteredRotation = Quaternion.RotateTowards(filteredRotation, 
+														Quaternion.LookRotation (new Vector3 ((float)filteredDrift [0], 0, (float)filteredDrift [1])), 
+														currentCorrectionVelocity * Time.deltaTime);
 
 			if(correctionTarget)
 				correctionTarget.localRotation = filteredRotation;

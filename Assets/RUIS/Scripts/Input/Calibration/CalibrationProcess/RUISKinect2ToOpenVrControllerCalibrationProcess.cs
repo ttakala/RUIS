@@ -331,7 +331,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		{
 			foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 			{
-				//				Debug.Log(trackedOpenVRObject.index + " " + ((int) trackedOpenVRObject.index));
+//				Debug.Log(trackedOpenVRObject.index + " " + ((int) trackedOpenVRObject.index));
 				if(   SteamVR_Controller.Input((int)trackedOpenVRObject.index).connected
 				   && SteamVR_Controller.Input((int)trackedOpenVRObject.index).GetHairTrigger())
 				{
@@ -551,6 +551,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		lastKinect2Sample = kinect2_sample;
 		lastViveSample    = vive_sample;
 
+//		Debug.Log(vive_sample + " " + kinect2_sample);
 		samples_Kinect2.Add(kinect2_sample);
 		samples_Vive.Add(vive_sample);
 		calibrationSpheres.Add(MonoBehaviour.Instantiate(calibrationSphere, vive_sample, Quaternion.identity) as GameObject);
@@ -595,28 +596,58 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		}
 		if(device == RUISDevice.OpenVR)
 		{
-//			Ovr.Posef headpose = RUISOVRManager.ovrHmd.GetTrackingState().HeadPose.ThePose;  //06to08
-//			float px =  headpose.Position.x;
-//			float py =  headpose.Position.y;
-//			float pz = -headpose.Position.z; // This needs to be negated TODO: might change with future OVR version
+			if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
+				trackedOpenVRObjects = vivePrefabContainer.instantiatedViveCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-//			tempSample = new Vector3(px, py, pz);  //06to08
-//			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);  //06to08  notice that the conversion happens after negation
-
-			if(    SteamVR_Controller.Input(viveControllerIndex).valid
-				&& SteamVR_Controller.Input(viveControllerIndex).connected
-				&& SteamVR_Controller.Input(viveControllerIndex).hasTracking)
+			if(trackedOpenVRObjects != null)
 			{
-				var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(viveControllerIndex).GetPose().mDeviceToAbsoluteTracking);
+				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
+				{
+					if(viveControllerIndex == (int)trackedOpenVRObject.index)
+					{
+						if(   SteamVR_Controller.Input(viveControllerIndex).connected
+						   && SteamVR_Controller.Input(viveControllerIndex).valid
+						   && SteamVR_Controller.Input(viveControllerIndex).hasTracking)
+						{
+							sample = trackedOpenVRObject.transform.localPosition;
+							device2Error = false;
 
-				sample = pose.pos;
-				device2Error = false;
+							break;
+						}
+						else
+						{
+							device2Error = true;
+							this.guiTextUpperLocal = openVRDeviceName + " controller not tracked.";
+						}
+					}
+
+					if (trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1) 
+					{
+						device2Error = true;
+						this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
+					}
+				}
 			}
 			else
 			{
 				device2Error = true;
 				this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
 			}
+
+//			if(    SteamVR_Controller.Input(viveControllerIndex).valid
+//				&& SteamVR_Controller.Input(viveControllerIndex).connected
+//				&& SteamVR_Controller.Input(viveControllerIndex).hasTracking)
+//			{
+//				var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(viveControllerIndex).GetPose().mDeviceToAbsoluteTracking);
+//
+//				sample = pose.pos;
+//				device2Error = false;
+//			}
+//			else
+//			{
+//				device2Error = true;
+//				this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
+//			}
 		}
 		
 		return sample;
