@@ -91,8 +91,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		samples_Kinect1 = new List<Vector3>();
 		samples_Kinect2 = new List<Vector3>();
 		
-		this.calibrationCube = calibrationSettings.calibrationCubePrefab;
-		this.calibrationSphere = calibrationSettings.calibrationSpherePrefab;
+		this.calibrationCube = calibrationSettings.device1SamplePrefab;
+		this.calibrationSphere = calibrationSettings.device2SamplePrefab;
 		this.calibrationPhaseObjects = calibrationSettings.calibrationPhaseObjects;
 		this.calibrationResultPhaseObjects = calibrationSettings.calibrationResultPhaseObjects;
 		

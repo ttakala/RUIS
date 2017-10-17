@@ -1,9 +1,11 @@
 /*****************************************************************************
 
 Content    :   Inspector behaviour for RUISCoordinateCalibrationEditor script
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Authors    :   Mikael Matveinen, Tuukka Takala
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -20,8 +22,14 @@ public class RUISCoordinateCalibrationEditor : Editor
 	SerializedProperty numberOfSamplesToTake;
 	SerializedProperty samplesPerSecond;
 	SerializedProperty xmlFilename;
-	SerializedProperty sampleCube;
-	SerializedProperty sampleSphere;
+	SerializedProperty device1SamplePrefab;
+	SerializedProperty device2SamplePrefab;
+	SerializedProperty customDevice1Tracker;
+	SerializedProperty customDevice2Tracker;
+	SerializedProperty customDevice1FloorPoint;
+	SerializedProperty customDevice2FloorPoint;
+
+	GUIStyle italicStyle = new GUIStyle();
 	
 	public void OnEnable()
 	{
@@ -30,26 +38,60 @@ public class RUISCoordinateCalibrationEditor : Editor
 		numberOfSamplesToTake = serializedObject.FindProperty("numberOfSamplesToTake");
 		samplesPerSecond = serializedObject.FindProperty("samplesPerSecond");
 		xmlFilename = serializedObject.FindProperty("xmlFilename");
-		sampleCube = serializedObject.FindProperty("sampleCube");
-		sampleSphere = serializedObject.FindProperty("sampleSphere");
+		device1SamplePrefab = serializedObject.FindProperty("device1SamplePrefab");
+		device2SamplePrefab = serializedObject.FindProperty("device2SamplePrefab");
+		customDevice1Tracker = serializedObject.FindProperty("customDevice1Tracker");
+		customDevice2Tracker = serializedObject.FindProperty("customDevice2Tracker");
+		customDevice1FloorPoint = serializedObject.FindProperty("customDevice1FloorPoint");
+		customDevice2FloorPoint = serializedObject.FindProperty("customDevice2FloorPoint");
+		italicStyle.fontStyle = FontStyle.Italic;
 	}
 	
 	public override void OnInspectorGUI()
 	{
 		serializedObject.Update();
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(firstDevice, new GUIContent("First Calibration Device", ""));
-		EditorGUILayout.PropertyField(secondDevice, new GUIContent("Second Calibration Device", ""));
-		EditorGUILayout.PropertyField(numberOfSamplesToTake, new GUIContent("Number Of Samples To Take", ""));
-		EditorGUILayout.PropertyField(samplesPerSecond, new GUIContent("Samples Per Second", ""));
-		
+		EditorGUILayout.PropertyField(firstDevice, new GUIContent("1st Calibration Device", ""));
+		EditorGUILayout.PropertyField(secondDevice, new GUIContent("2nd Calibration Device", ""));
+		EditorGUILayout.PropertyField(numberOfSamplesToTake, new GUIContent("Number Of Samples To Take", "Calibration finishes after "
+																			+ "this number of samples have been collected."));
+		EditorGUILayout.PropertyField(samplesPerSecond, new GUIContent("Samples Per Second", "Rate at which device position is sampled"));
+
 		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.PropertyField(xmlFilename, new GUIContent("Calibration XML File Name", ""));
-		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(sampleCube, new GUIContent("Cube prefab", "Prefab of a cube that is used to visualize device samples"));
-		EditorGUILayout.PropertyField(sampleSphere, new GUIContent("Sphere prefab", "Prefab of a sphere that is used to visualize device samples"));
+		EditorGUILayout.PropertyField(device1SamplePrefab, new GUIContent("1st Device Sample Prefab", "Prefab that is used to visualize "
+			+ "tracked device samples"));
+		EditorGUILayout.PropertyField(device2SamplePrefab, new GUIContent("2nd Device Sample Prefab", "Prefab that is used to visualize "
+			+ " tracked device samples"));
+		
+		RUISEditorUtility.HorizontalRuler();
+		EditorGUILayout.LabelField("   Custom Tracked Devices", italicStyle);
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(customDevice1Tracker, new GUIContent("CustomDevice1 Tracked Pose", "Transform whose pose is updated "
+																			+ "with the position of the tracked device. Link this field "
+																			+ "with a Game Object that has a script or component that updates "
+																			+ "its position with the location of the tracked custom device."));
+		EditorGUILayout.PropertyField(customDevice1FloorPoint, new GUIContent("CustomDevice1FloorPose", "OPTIONAL: Transform which "
+																			+ "includes a position that is a 3D point on the floor plane, "
+																			+ "and an orientation whose up direction is the floor normal. "
+																			+ "The Floor Pose should be in the same coordinate system as the "
+																			+ "'CustomDevice1 Tracked Pose'. Set this to NONE if floor data "
+																			+ "is not available to this device: then the floor will be "
+																			+ "assumed to be in origin with a floor normal of (0,1,0)"));
+
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(customDevice2Tracker, new GUIContent("CustomDevice2 Tracked Pose", "Transform whose pose is updated "
+																			+ "with the position of the tracked device. Link this field "
+																			+ "with a Game Object that has a script or component that updates "
+																			+ "its position with the location of the tracked custom device."));
+		EditorGUILayout.PropertyField(customDevice2FloorPoint, new GUIContent("CustomDevice2FloorPose", "OPTIONAL: Transform which "
+																			+ "includes a position that is a 3D point on the floor plane, "
+																			+ "and an orientation whose up direction is the floor normal. "
+																			+ "The Floor Pose should be in the same coordinate system as the "
+																			+ "'CustomDevice2 Tracked Pose'. Set this to NONE if floor data "
+																			+ "is not available to this device: then the floor will be "
+																			+ "assumed to be in origin with a floor normal of (0,1,0)"));
 		serializedObject.ApplyModifiedProperties();
 	}
-
 }

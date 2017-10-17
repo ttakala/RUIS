@@ -16,7 +16,7 @@ using CSML;
 using Kinect = Windows.Kinect;
 using Valve.VR;
 
-public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationProcess {
+public class RUISCustomDevice1ToOpenVrControllerCalibrationProcess : RUISCalibrationProcess {
 	
 	public string getUpperText() {
 		return this.guiTextUpperLocal;
@@ -35,28 +35,29 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 	public override string guiTextLower { get{return getLowerText();} }
 
 	private string openVRDeviceName = "OpenVR";
+	private string customDevice1Name = "Custom Device 1"; //###
 
 	bool showMovementAlert = false;
 	float lastMovementAlertTime = 0;
 
 	// Custom variables
-	private List<Vector3> samples_Kinect2, samples_Vive;
+	private List<Vector3> samples_Custom1, samples_Vive;
 	private int numberOfSamplesTaken, numberOfSamplesToTake, numberOfSamplesPerSecond;
 	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart = 0;
 	public RUISCoordinateSystem coordinateSystem;
 	public RUISInputManager inputManager;
-	private bool viveChecked = false, kinect2Checked = false, calibrationFinnished = false;
+	private bool viveChecked = false, custom1Checked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, viveCameraObject, 
-	kinect2ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
-	viveIcon, kinect2Icon, deviceModelObjects, depthViewObjects, iconObjects;
+	custom1ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
+	viveIcon, custom1Icon, deviceModelObjects, depthViewObjects, iconObjects;
 	
-	private Vector3 lastKinect2Sample, lastViveSample;
+	private Vector3 lastCustom1Sample, lastViveSample;
 	private string xmlFilename;
 	
 	private Matrix4x4 rotationMatrix, transformMatrix;
 	
-	Kinect2SourceManager kinect2SourceManager;
+	Kinect2SourceManager kinect2SourceManager; // ###
 	Kinect.Body[] bodyData; 
 	
 	private trackedBody[] trackingIDs = null; // Defined in RUISKinect2DepthView
@@ -78,10 +79,10 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 	Vector3 translateAtTuneStart = Vector3.zero;
 	Vector3 controllerPositionAtTuneStart = Vector3.zero;
 
-	public RUISKinect2ToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
+	public RUISCustomDevice1ToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
 		this.inputDevice1 = RUISDevice.OpenVR;
-		this.inputDevice2 = RUISDevice.Kinect_2;
+		this.inputDevice2 = RUISDevice.CustomDevice1;
 		
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
 		this.numberOfSamplesPerSecond = calibrationSettings.numberOfSamplesPerSecond;
@@ -96,10 +97,10 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		
 		inputManager = MonoBehaviour.FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-		kinect2SourceManager = MonoBehaviour.FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
+		kinect2SourceManager = MonoBehaviour.FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager; // ###
 
-		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == RUISDevice.Kinect_2)
-			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
+		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == RUISDevice.CustomDevice1)
+			coordinateSystem.rootDevice = RUISDevice.CustomDevice1;
 		else
 			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 
@@ -138,7 +139,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		
 		calibrationSpheres = new List<GameObject>();
 		
-		samples_Kinect2 = new List<Vector3>();
+		samples_Custom1 = new List<Vector3>();
 		samples_Vive = new List<Vector3>();
 		
 		this.calibrationCube = calibrationSettings.device1SamplePrefab;
@@ -157,14 +158,14 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		
 		// Models
 		this.viveCameraObject = GameObject.Find ("HmdCamera"); // Was "OculusDK2Camera"
-		this.kinect2ModelObject = GameObject.Find ("Kinect2Camera");
+		this.custom1ModelObject = GameObject.Find ("Kinect2Camera"); // ###
 
 		// Depth view
-		this.depthView = GameObject.Find ("Kinect2DepthView");
+		this.depthView = GameObject.Find ("Kinect2DepthView"); //###
 		
 		// Icons
 		this.viveIcon = GameObject.Find ("Hmd Icon"); // Was "OculusDK2 Icon"
-		this.kinect2Icon = GameObject.Find ("Kinect2 Icon");
+		this.custom1Icon = GameObject.Find ("Kinect2 Icon");
 		
 		this.floorPlane = GameObject.Find ("Floor");
 		
@@ -188,12 +189,12 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		
 		if(this.viveCameraObject)
 			this.viveCameraObject.SetActive(false);
-		if(this.kinect2ModelObject)
-			this.kinect2ModelObject.SetActive(true);
+		if(this.custom1ModelObject)
+			this.custom1ModelObject.SetActive(true);
 		if(this.viveIcon)
 			this.viveIcon.SetActive(true);
-		if(this.kinect2Icon)
-			this.kinect2Icon.SetActive(true);
+		if(this.custom1Icon)
+			this.custom1Icon.SetActive(true);
 		if(this.calibrationPhaseObjects)
 			this.calibrationPhaseObjects.SetActive(true);
 		if(this.calibrationResultPhaseObjects)
@@ -210,7 +211,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		
 		if(timeSinceScriptStart < 2)
 		{
-			this.guiTextLowerLocal = "Calibration of Kinect 2 and OpenVR Tracking\n\n Starting up...";
+			this.guiTextLowerLocal = "Calibration of " + customDevice1Name + " and OpenVR Tracking\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
 
@@ -256,9 +257,9 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		}
 
 		// Execute once only
-		if(!kinect2Checked)
+		if(!custom1Checked)
 		{
-			kinect2Checked = true;	
+			custom1Checked = true;	
 			if (!kinect2SourceManager.GetSensor().IsOpen || !kinect2SourceManager.GetSensor().IsAvailable)
 			{
 				this.guiTextLowerLocal = "Connecting to Kinect 2. \n\n Error: Could not connect to Kinect 2.";
@@ -338,7 +339,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 					viveControllerIndex = (int)trackedOpenVRObject.index;
 					viveControllerTransform = trackedOpenVRObject.transform;
 					lastViveSample = new Vector3(0, 0, 0);
-					lastKinect2Sample = new Vector3(0, 0, 0);
+					lastCustom1Sample = new Vector3(0, 0, 0);
 					return RUISCalibrationPhase.Calibration;
 				}
 
@@ -392,7 +393,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 			{
 				GameObject sphere = calibrationSpheres[i];
 //				Vector3 cubePosition =  transformMatrix.MultiplyPoint3x4(samples_Kinect2[i]);
-				Vector3 cubePosition = transformMatrix.inverse.MultiplyPoint3x4(samples_Kinect2[i]);
+				Vector3 cubePosition = transformMatrix.inverse.MultiplyPoint3x4(samples_Custom1[i]);
 				GameObject cube = MonoBehaviour.Instantiate(calibrationCube, cubePosition, Quaternion.identity) as GameObject;
 				cube.GetComponent<RUISSampleDifferenceVisualizer>().kinectCalibrationSphere = sphere;
 				
@@ -469,8 +470,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		//		kinect2ModelObject.transform.rotation = kinect2PitchRotation;
 		//		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
 
-		kinect2ModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Kinect_2);
-		kinect2ModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Kinect_2);
+		custom1ModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Kinect_2);
+		custom1ModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Kinect_2);
 
 		//		viveCameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
 		//		viveCameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Vive);
@@ -528,7 +529,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		}
 
 		// Check that we are not taking samples too frequently
-		if(   Vector3.Distance(kinect2_sample, lastKinect2Sample) < 0.3
+		if(   Vector3.Distance(kinect2_sample, lastCustom1Sample) < 0.3
 		   || Vector3.Distance(vive_sample, lastViveSample)       < 0.3)
 		{
 			if(!showMovementAlert && Time.time - lastMovementAlertTime > 3)
@@ -548,11 +549,11 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 			this.guiTextUpperLocal = "";
 		}
 
-		lastKinect2Sample = kinect2_sample;
+		lastCustom1Sample = kinect2_sample;
 		lastViveSample    = vive_sample;
 
 //		Debug.Log(vive_sample + " " + kinect2_sample);
-		samples_Kinect2.Add(kinect2_sample);
+		samples_Custom1.Add(kinect2_sample);
 		samples_Vive.Add(vive_sample);
 		calibrationSpheres.Add(MonoBehaviour.Instantiate(calibrationSphere, vive_sample, Quaternion.identity) as GameObject);
 		numberOfSamplesTaken++;
@@ -657,7 +658,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 	
 	private void CalculateTransformation()
 	{
-		if (samples_Kinect2.Count != numberOfSamplesTaken || samples_Vive.Count != numberOfSamplesTaken)
+		if (samples_Custom1.Count != numberOfSamplesTaken || samples_Vive.Count != numberOfSamplesTaken)
 		{
 			Debug.LogError("Mismatch in sample list lengths!");
 		}
@@ -666,7 +667,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		Matrix kinect2Matrix;
 		
 		viveMatrix = Matrix.Zeros (samples_Vive.Count, 4);
-		kinect2Matrix = Matrix.Zeros (samples_Kinect2.Count, 3);
+		kinect2Matrix = Matrix.Zeros (samples_Custom1.Count, 3);
 		
 		for (int i = 1; i <= samples_Vive.Count; i++) {
 			viveMatrix [i, 1] = new Complex (samples_Vive [i - 1].x);
@@ -674,10 +675,10 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 			viveMatrix [i, 3] = new Complex (samples_Vive [i - 1].z);
 			viveMatrix [i, 4] = new Complex (1.0f);
 		}
-		for (int i = 1; i <= samples_Kinect2.Count; i++) {
-			kinect2Matrix [i, 1] = new Complex (samples_Kinect2 [i - 1].x);
-			kinect2Matrix [i, 2] = new Complex (samples_Kinect2 [i - 1].y);
-			kinect2Matrix [i, 3] = new Complex (samples_Kinect2 [i - 1].z);
+		for (int i = 1; i <= samples_Custom1.Count; i++) {
+			kinect2Matrix [i, 1] = new Complex (samples_Custom1 [i - 1].x);
+			kinect2Matrix [i, 2] = new Complex (samples_Custom1 [i - 1].y);
+			kinect2Matrix [i, 3] = new Complex (samples_Custom1 [i - 1].z);
 		}
 		
 		//perform a matrix solve Ax = B. We have to get transposes and inverses because viveMatrix isn't square
@@ -869,7 +870,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 
 	}
 
-	~RUISKinect2ToOpenVrControllerCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
+	~RUISCustomDevice1ToOpenVrControllerCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
 	{
 //		SteamVR_Utils.Event.Remove("device_connected", OnDeviceConnected);
 		SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);

@@ -2,7 +2,7 @@
 
 Content    :   Handles the calibration procedure between PS Move and Kinect
 Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen. All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
                restricted for commercial projects. Contact tmtakala@gmail.com
                for more information.
@@ -17,13 +17,17 @@ using Kinect = Windows.Kinect;
 
 public enum RUISDevice
 {
-	Kinect_1,
-	Kinect_2,
-	PS_Move,
-	OpenVR,
-	Null
+	Kinect_1 = 0,
+	Kinect_2 = 1,
+	PS_Move = 2,
+	OpenVR = 3,
+	CustomDevice1 = int.MaxValue - 2,
+	CustomDevice2 = int.MaxValue - 1,
+	Null = int.MaxValue
 }
-public enum RUISCalibrationPhase {
+
+public enum RUISCalibrationPhase 
+{
 	Initial,
 	Preparation,
 	ReadyToCalibrate,
@@ -33,8 +37,8 @@ public enum RUISCalibrationPhase {
 }
 
 
-public abstract class RUISCalibrationProcess {
-	
+public abstract class RUISCalibrationProcess 
+{	
 	RUISDevice inputDevice1, inputDevice2;
 
 	public abstract string guiTextUpper { get; }
@@ -83,8 +87,8 @@ public class RUISCalibrationProcessSettings
 
 	public int numberOfSamplesToTake;
 	public int numberOfSamplesPerSecond;
-	public GameObject calibrationSpherePrefab;
-	public GameObject calibrationCubePrefab;
+	public GameObject device1SamplePrefab;
+	public GameObject device2SamplePrefab;
 	public GameObject floorPlane;
 	public GameObject calibrationPhaseObjects; 
 	public GameObject calibrationResultPhaseObjects;
@@ -92,12 +96,12 @@ public class RUISCalibrationProcessSettings
 	public GameObject deviceModelObjects, depthViewObjects, iconObjects;
 }
 
-public class RUISCoordinateCalibration : MonoBehaviour {
-    
+public class RUISCoordinateCalibration : MonoBehaviour 
+{    
 	private GUIText upperText, lowerText;
 	
-	public GameObject sampleCube;
-	public GameObject sampleSphere;
+	public GameObject device1SamplePrefab;
+	public GameObject device2SamplePrefab;
 
 	private bool hmdCalibration = false;
 
@@ -105,7 +109,12 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 	public RUISDevice secondDevice;
 	public int numberOfSamplesToTake = 50;
     public int samplesPerSecond = 1;
- 	
+
+	public Transform customDevice1Tracker;
+	public Transform customDevice2Tracker;
+	public Transform customDevice1FloorPoint;
+	public Transform customDevice2FloorPoint;
+
 	public GameObject calibrationSpherePrefab, calibrationCubePrefab, floorPlane, 
 					calibrationPhaseObjects, calibrationResultPhaseObjects, depthViews, 
 					deviceModels, icons;
@@ -200,8 +209,8 @@ public class RUISCoordinateCalibration : MonoBehaviour {
 		calibrationProcessSettings.xmlFilename = xmlFilename;
 		calibrationProcessSettings.numberOfSamplesToTake = numberOfSamplesToTake;
 		calibrationProcessSettings.numberOfSamplesPerSecond = samplesPerSecond;
-		calibrationProcessSettings.calibrationCubePrefab = this.sampleCube;
-		calibrationProcessSettings.calibrationSpherePrefab = this.sampleSphere;
+		calibrationProcessSettings.device1SamplePrefab = this.device1SamplePrefab;
+		calibrationProcessSettings.device2SamplePrefab = this.device2SamplePrefab;
 		calibrationProcessSettings.calibrationPhaseObjects = this.calibrationPhaseObjects;
 		calibrationProcessSettings.calibrationResultPhaseObjects = this.calibrationResultPhaseObjects;
 		calibrationProcessSettings.deviceModelObjects = deviceModels;
