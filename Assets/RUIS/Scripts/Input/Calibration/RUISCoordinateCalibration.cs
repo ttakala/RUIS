@@ -87,6 +87,7 @@ public class RUISCalibrationProcessSettings
 
 	public int numberOfSamplesToTake;
 	public int numberOfSamplesPerSecond;
+	public float sampleMinDistance;
 	public GameObject device1SamplePrefab;
 	public GameObject device2SamplePrefab;
 	public GameObject floorPlane;
@@ -94,6 +95,11 @@ public class RUISCalibrationProcessSettings
 	public GameObject calibrationResultPhaseObjects;
 	public string xmlFilename;
 	public GameObject deviceModelObjects, depthViewObjects, iconObjects;
+
+	public Transform customDevice1Tracker;
+	public Transform customDevice2Tracker;
+	public Transform customDevice1FloorPoint;
+	public Transform customDevice2FloorPoint;
 }
 
 public class RUISCoordinateCalibration : MonoBehaviour 
@@ -109,6 +115,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 	public RUISDevice secondDevice;
 	public int numberOfSamplesToTake = 50;
     public int samplesPerSecond = 1;
+	public float sampleMinDistance = 0.3f;
 
 	public Transform customDevice1Tracker;
 	public Transform customDevice2Tracker;
@@ -209,13 +216,19 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		calibrationProcessSettings.xmlFilename = xmlFilename;
 		calibrationProcessSettings.numberOfSamplesToTake = numberOfSamplesToTake;
 		calibrationProcessSettings.numberOfSamplesPerSecond = samplesPerSecond;
+		calibrationProcessSettings.sampleMinDistance = this.sampleMinDistance;
 		calibrationProcessSettings.device1SamplePrefab = this.device1SamplePrefab;
 		calibrationProcessSettings.device2SamplePrefab = this.device2SamplePrefab;
+		calibrationProcessSettings.floorPlane = this.floorPlane;
 		calibrationProcessSettings.calibrationPhaseObjects = this.calibrationPhaseObjects;
 		calibrationProcessSettings.calibrationResultPhaseObjects = this.calibrationResultPhaseObjects;
 		calibrationProcessSettings.deviceModelObjects = deviceModels;
 		calibrationProcessSettings.depthViewObjects = depthViews;
 		calibrationProcessSettings.iconObjects = icons;
+		calibrationProcessSettings.customDevice1Tracker = this.customDevice1Tracker;
+		calibrationProcessSettings.customDevice2Tracker = this.customDevice2Tracker;
+		calibrationProcessSettings.customDevice1FloorPoint = this.customDevice1FloorPoint;
+		calibrationProcessSettings.customDevice2FloorPoint = this.customDevice2FloorPoint;
 	}
 
     void Start()

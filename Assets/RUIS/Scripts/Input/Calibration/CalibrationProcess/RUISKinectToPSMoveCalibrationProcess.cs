@@ -268,7 +268,7 @@ public class RUISKinectToPSMoveCalibrationProcess : RUISCalibrationProcess {
 				GameObject sphere = calibrationSpheres[i];
 				Vector3 cubePosition =  transformMatrix.MultiplyPoint3x4(samples_PSMove[i]);
 				GameObject cube = MonoBehaviour.Instantiate(calibrationCube, cubePosition, Quaternion.identity) as GameObject;
-				cube.GetComponent<RUISSampleDifferenceVisualizer>().kinectCalibrationSphere = sphere;
+				cube.GetComponent<RUISSampleDifferenceVisualizer>().device2SamplePrefab = sphere;
 				
 				
 				distance += Vector3.Distance(sphere.transform.position, cubePosition);

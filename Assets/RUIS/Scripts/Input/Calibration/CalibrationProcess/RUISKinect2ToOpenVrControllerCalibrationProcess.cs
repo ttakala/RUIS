@@ -78,6 +78,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 	Vector3 translateAtTuneStart = Vector3.zero;
 	Vector3 controllerPositionAtTuneStart = Vector3.zero;
 
+	RUISCalibrationProcessSettings calibrationSettings;
+
 	public RUISKinect2ToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
 		this.inputDevice1 = RUISDevice.OpenVR;
@@ -140,7 +142,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		
 		samples_Kinect2 = new List<Vector3>();
 		samples_Vive = new List<Vector3>();
-		
+
+		this.calibrationSettings = calibrationSettings;
 		this.calibrationCube = calibrationSettings.device1SamplePrefab;
 		this.calibrationSphere = calibrationSettings.device2SamplePrefab;
 		this.calibrationPhaseObjects = calibrationSettings.calibrationPhaseObjects;
@@ -394,7 +397,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 //				Vector3 cubePosition =  transformMatrix.MultiplyPoint3x4(samples_Kinect2[i]);
 				Vector3 cubePosition = transformMatrix.inverse.MultiplyPoint3x4(samples_Kinect2[i]);
 				GameObject cube = MonoBehaviour.Instantiate(calibrationCube, cubePosition, Quaternion.identity) as GameObject;
-				cube.GetComponent<RUISSampleDifferenceVisualizer>().kinectCalibrationSphere = sphere;
+				cube.GetComponent<RUISSampleDifferenceVisualizer>().device2SamplePrefab = sphere;
 				
 				
 				distance += Vector3.Distance(sphere.transform.position, cubePosition);
@@ -479,7 +482,6 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		{
 			if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
 			{
-				// *** TODO HACK will RUISDevice.Vive be replaced..?
 				vivePrefabContainer.instantiatedViveCameraRig.transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.OpenVR);
 				vivePrefabContainer.instantiatedViveCameraRig.transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.OpenVR);
 				vivePrefabContainer.instantiatedViveCameraRig.transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.OpenVR);
@@ -528,8 +530,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		}
 
 		// Check that we are not taking samples too frequently
-		if(   Vector3.Distance(kinect2_sample, lastKinect2Sample) < 0.3
-		   || Vector3.Distance(vive_sample, lastViveSample)       < 0.3)
+		if(   Vector3.Distance(kinect2_sample, lastKinect2Sample) < calibrationSettings.sampleMinDistance
+		   || Vector3.Distance(vive_sample, lastViveSample)       < calibrationSettings.sampleMinDistance)
 		{
 			if(!showMovementAlert && Time.time - lastMovementAlertTime > 3)
 			{

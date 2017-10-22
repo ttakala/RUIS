@@ -21,6 +21,7 @@ public class RUISCoordinateCalibrationEditor : Editor
 	SerializedProperty secondDevice;
 	SerializedProperty numberOfSamplesToTake;
 	SerializedProperty samplesPerSecond;
+	SerializedProperty sampleMinDistance;
 	SerializedProperty xmlFilename;
 	SerializedProperty device1SamplePrefab;
 	SerializedProperty device2SamplePrefab;
@@ -37,6 +38,7 @@ public class RUISCoordinateCalibrationEditor : Editor
 		secondDevice  = serializedObject.FindProperty("secondDevice");
 		numberOfSamplesToTake = serializedObject.FindProperty("numberOfSamplesToTake");
 		samplesPerSecond = serializedObject.FindProperty("samplesPerSecond");
+		sampleMinDistance = serializedObject.FindProperty("sampleMinDistance");
 		xmlFilename = serializedObject.FindProperty("xmlFilename");
 		device1SamplePrefab = serializedObject.FindProperty("device1SamplePrefab");
 		device2SamplePrefab = serializedObject.FindProperty("device2SamplePrefab");
@@ -56,6 +58,11 @@ public class RUISCoordinateCalibrationEditor : Editor
 		EditorGUILayout.PropertyField(numberOfSamplesToTake, new GUIContent("Number Of Samples To Take", "Calibration finishes after "
 																			+ "this number of samples have been collected."));
 		EditorGUILayout.PropertyField(samplesPerSecond, new GUIContent("Samples Per Second", "Rate at which device position is sampled"));
+		EditorGUILayout.PropertyField(sampleMinDistance, new GUIContent("Sample Min Gap", "Minimum required distance between two "
+																		+ "subsequent samples. If the new sample candidate is closer to "
+																		+ "the previous accepted sample than this gap value, then the "
+																		+ "new sample won't be accepted. NOTE: CURRENTLY DOES NOT APPLY "
+																		+ "ALL DEVICE PAIRS"));
 
 		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.PropertyField(xmlFilename, new GUIContent("Calibration XML File Name", ""));
