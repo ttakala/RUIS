@@ -1,8 +1,10 @@
 /*****************************************************************************
 
 Content    :   
-Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Authors    :   Tuukka Takala, Mikael Matveinen, Heikki Heiskanen
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
