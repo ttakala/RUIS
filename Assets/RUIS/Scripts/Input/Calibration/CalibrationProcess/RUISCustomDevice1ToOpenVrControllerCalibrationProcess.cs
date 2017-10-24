@@ -48,7 +48,7 @@ public class RUISCustomDevice1ToOpenVrControllerCalibrationProcess : RUISCalibra
 	private bool viveChecked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, viveCameraObject, 
-	custom1ModelObject, floorPlane, depthView,
+	custom1ModelObject, floorPlane, /*depthView,*/
 	viveIcon, custom1Icon, deviceModelObjects, depthViewObjects, iconObjects;
 	
 	private Vector3 lastCustom1Sample, lastViveSample;
@@ -148,7 +148,7 @@ public class RUISCustomDevice1ToOpenVrControllerCalibrationProcess : RUISCalibra
 		this.custom1ModelObject = GameObject.Find ("Kinect2Camera"); // ###
 
 		// Depth view
-		this.depthView = GameObject.Find ("Kinect2DepthView"); //###
+//		this.depthView = GameObject.Find ("Kinect2DepthView"); // ***
 		
 		// Icons
 		this.viveIcon = GameObject.Find ("Hmd Icon"); // ###
@@ -184,8 +184,8 @@ public class RUISCustomDevice1ToOpenVrControllerCalibrationProcess : RUISCalibra
 			this.calibrationPhaseObjects.SetActive(true);
 		if(this.calibrationResultPhaseObjects)
 			this.calibrationResultPhaseObjects.SetActive(false);
-		if(this.depthView)
-			this.depthView.SetActive(true);
+//		if(this.depthView) // ***
+//			this.depthView.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 	}
 	
@@ -252,7 +252,6 @@ public class RUISCustomDevice1ToOpenVrControllerCalibrationProcess : RUISCalibra
 		{
 			this.guiTextLowerLocal = "Error: 'CustomDevice1 Tracked Pose' field in\n" 
 									+ typeof(RUISCoordinateCalibration) + " component is null!";
-			return RUISCalibrationPhase.Invalid;
 		}
 		
 		return RUISCalibrationPhase.Invalid; // Loop should not get this far
@@ -351,7 +350,7 @@ public class RUISCustomDevice1ToOpenVrControllerCalibrationProcess : RUISCalibra
 			timeSinceScriptStart = 0;
 			this.calibrationPhaseObjects.SetActive(false);
 			this.calibrationResultPhaseObjects.SetActive(true);
-			this.depthView.SetActive(false);
+//			this.depthView.SetActive(false); // ***
 			return RUISCalibrationPhase.ShowResults;
 		}
 		else 

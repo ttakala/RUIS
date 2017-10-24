@@ -33,7 +33,7 @@ public class RUISPSMoveToOpenVrHmdCalibrationProcess : RUISCalibrationProcess {
 	private bool oculusChecked = false, PSMoveChecked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, psEyeModelObject, 
-	oculusDK2CameraObject, calibrationSphere, calibrationCube, depthView,
+	oculusDK2CameraObject, calibrationSphere, calibrationCube,
 	psMoveIcon, oculusDK2Icon, deviceModelObjects, depthViewObjects, iconObjects, PSMoveWandObject,
 	mannequin, oculusRiftModel;
 	

@@ -58,7 +58,6 @@ public class RUISYawDriftCorrector : MonoBehaviour
 	[HideInInspector]
 	public Quaternion filteredRotation = Quaternion.identity;
 	Quaternion driftingRotation;
-	Vector3 yawDifferenceDirection = Vector3.zero;
 	Vector3 driftingForward;
 	Vector3 driftlessForward;
 	Vector3 driftVector;

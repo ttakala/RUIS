@@ -391,9 +391,9 @@ public class RUISDisplayManager : MonoBehaviour
 			camera.eventReceiverMask = LayerMask.GetMask(LayerMask.LayerToName(menuLayer));
 		}
 
-		string primaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCameraName;
-		string secondaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCameraName;
-		string tertiaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCameraName;
+//		string primaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCameraName;
+//		string secondaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.rightCameraName;
+//		string tertiaryMenuParent = displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.leftCameraName;
 		if(		displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera
 			&& !(   displays[guiDisplayChoice].GetComponent<RUISDisplay>().isStereo && RUISDisplayManager.IsHmdPresent() 
 				 && displays[guiDisplayChoice].GetComponent<RUISDisplay>().linkedCamera.centerCamera.stereoTargetEye != StereoTargetEyeMask.None))
@@ -434,6 +434,7 @@ public class RUISDisplayManager : MonoBehaviour
 	private static bool isOpenVrAccessible = false;
 	private static bool failedToAccessOpenVr = false;
 
+	// TODO: Go back to using UnityEngine.VR.VRDevice.isPresent when it gets rid of false negatives 
 	public static bool IsHmdPresent()
 	{
 		// When the the status has been polled sufficiently, then assume that it will remain constant
@@ -487,6 +488,7 @@ public class RUISDisplayManager : MonoBehaviour
 		try
 		{
 			bool isOpenVrHmdPresent = Valve.VR.OpenVR.IsHmdPresent();
+			isOpenVrAccessible = isOpenVrHmdPresent; // This redundant assignment is to avoid a compiler warning about isOpenVrHmdPresent
 			isOpenVrAccessible = UnityEngine.VR.VRSettings.enabled;
 		}
 		catch

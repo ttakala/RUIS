@@ -31,7 +31,7 @@ public class RUISCharacterLocomotionEditor : Editor {
 	SerializedProperty useRazerHydra;
 	SerializedProperty razerHydraID;
 
-	SerializedProperty useOpenVrController;
+//	SerializedProperty useOpenVrController;
 
     SerializedProperty jumpStrength;
 	SerializedProperty jumpSpeedEffect;
@@ -52,7 +52,7 @@ public class RUISCharacterLocomotionEditor : Editor {
         speed = serializedObject.FindProperty("speed");
 		runAdder = serializedObject.FindProperty("runAdder");
         maxVelocityChange = serializedObject.FindProperty("maxVelocityChange");
-		useOpenVrController = serializedObject.FindProperty("useOpenVrController");
+//		useOpenVrController = serializedObject.FindProperty("useOpenVrController");
         usePSNavigationController = serializedObject.FindProperty("usePSNavigationController");
         PSNaviControllerID = serializedObject.FindProperty("PSNaviControllerID");
         strafeInsteadTurning = serializedObject.FindProperty("strafeInsteadTurning");
