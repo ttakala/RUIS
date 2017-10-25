@@ -71,7 +71,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 
 	bool device1Error, device2Error;
 
-	RUISVivePrefabContainer vivePrefabContainer;
+	RUISOpenVrPrefabContainer vivePrefabContainer;
 	SteamVR_TrackedObject[] trackedOpenVRObjects;
 	int viveControllerIndex = 0;
 	Transform viveControllerTransform;
@@ -105,13 +105,13 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		else
 			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 
-		vivePrefabContainer = Component.FindObjectOfType<RUISVivePrefabContainer>();
+		vivePrefabContainer = Component.FindObjectOfType<RUISOpenVrPrefabContainer>();
 		if(vivePrefabContainer)
 		{
-			if(vivePrefabContainer.viveCameraRigPrefab)
+			if(vivePrefabContainer.openVrCameraRigPrefab)
 			{
-				vivePrefabContainer.instantiatedViveCameraRig = GameObject.Instantiate(vivePrefabContainer.viveCameraRigPrefab);
-				Camera[] rigCams = vivePrefabContainer.instantiatedViveCameraRig.GetComponentsInChildren<Camera>();
+				vivePrefabContainer.instantiatedOpenVrCameraRig = GameObject.Instantiate(vivePrefabContainer.openVrCameraRigPrefab);
+				Camera[] rigCams = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<Camera>();
 				if(rigCams != null)
 				{
 					foreach(Camera cam in rigCams)
@@ -123,11 +123,11 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 				}
 			}
 			else
-				Debug.LogError("The viveCameraRigPrefab field in " + typeof(RUISVivePrefabContainer) + " is null, and calibration will not work!");
+				Debug.LogError("The viveCameraRigPrefab field in " + typeof(RUISOpenVrPrefabContainer) + " is null, and calibration will not work!");
 		}
 		else
 		{
-			Debug.LogError("Could not locate " + typeof(RUISVivePrefabContainer) + " component in this scene, and calibration will not work!");
+			Debug.LogError("Could not locate " + typeof(RUISOpenVrPrefabContainer) + " component in this scene, and calibration will not work!");
 		}
 
 		this.timeSinceScriptStart = 0;
@@ -291,8 +291,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		}
 
 
-		if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
-			trackedOpenVRObjects = vivePrefabContainer.instantiatedViveCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
+		if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
+			trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
 		if(trackedOpenVRObjects != null)
 		{
@@ -327,8 +327,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 			return RUISCalibrationPhase.Preparation;
 		}
 
-		if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
-			trackedOpenVRObjects = vivePrefabContainer.instantiatedViveCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
+		if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
+			trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
 		if(trackedOpenVRObjects != null)
 		{
@@ -425,8 +425,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		}
 
 		// Fine tune translation with Vive controller
-		if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
-			trackedOpenVRObjects = vivePrefabContainer.instantiatedViveCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
+		if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
+			trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
 		if(    SteamVR_Controller.Input(viveControllerIndex).connected )
 		{
@@ -480,11 +480,11 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 
 		if(coordinateSystem.rootDevice == RUISDevice.Kinect_2)
 		{
-			if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
+			if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
 			{
-				vivePrefabContainer.instantiatedViveCameraRig.transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.OpenVR);
-				vivePrefabContainer.instantiatedViveCameraRig.transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.OpenVR);
-				vivePrefabContainer.instantiatedViveCameraRig.transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.OpenVR);
+				vivePrefabContainer.instantiatedOpenVrCameraRig.transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.OpenVR);
+				vivePrefabContainer.instantiatedOpenVrCameraRig.transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.OpenVR);
+				vivePrefabContainer.instantiatedOpenVrCameraRig.transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.OpenVR);
 			}
 		}
 
@@ -598,8 +598,8 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		}
 		if(device == RUISDevice.OpenVR)
 		{
-			if(vivePrefabContainer && vivePrefabContainer.instantiatedViveCameraRig)
-				trackedOpenVRObjects = vivePrefabContainer.instantiatedViveCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
+			if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
+				trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
 			if(trackedOpenVRObjects != null)
 			{

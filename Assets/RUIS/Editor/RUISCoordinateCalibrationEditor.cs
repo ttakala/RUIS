@@ -78,7 +78,8 @@ public class RUISCoordinateCalibrationEditor : Editor
 		EditorGUILayout.PropertyField(customDevice1Tracker, new GUIContent("CustomDevice1 Tracked Pose", "Transform whose pose is updated "
 																			+ "with the position of the tracked device. Link this field "
 																			+ "with a Game Object that has a script or component that updates "
-																			+ "its position with the location of the tracked custom device."));
+																			+ "its position with the xyz-position of the tracked custom "
+																			+ "device."));
 		EditorGUILayout.PropertyField(customDevice1FloorPoint, new GUIContent("CustomDevice1 Floor Pose", "OPTIONAL: Transform which "
 																			+ "includes a position that is a 3D point on the floor plane, "
 																			+ "and an orientation whose up direction is the floor normal. "
@@ -91,7 +92,8 @@ public class RUISCoordinateCalibrationEditor : Editor
 		EditorGUILayout.PropertyField(customDevice2Tracker, new GUIContent("CustomDevice2 Tracked Pose", "Transform whose pose is updated "
 																			+ "with the position of the tracked device. Link this field "
 																			+ "with a Game Object that has a script or component that updates "
-																			+ "its position with the location of the tracked custom device."));
+																			+ "its position with the xyz-position of the tracked custom "
+																			+ "device."));
 		EditorGUILayout.PropertyField(customDevice2FloorPoint, new GUIContent("CustomDevice2 Floor Pose", "OPTIONAL: Transform which "
 																			+ "includes a position that is a 3D point on the floor plane, "
 																			+ "and an orientation whose up direction is the floor normal. "
