@@ -18,8 +18,15 @@
 			<element name="PS_Move-Kinect_2" type="tns:TransformsFieldsType"/>
 			<element name="PS_Move-OpenVR" type="tns:TransformsFieldsType"/>
 			<element name="OpenVR-Kinect_1" type="tns:TransformsFieldsType"/>
-			<element name="Kinect_2-Kinect_1" type="tns:TransformsFieldsType"/>
 			<element name="OpenVR-Kinect_2" type="tns:TransformsFieldsType"/>
+			<element name="OpenVR-Custom_1" type="tns:TransformsFieldsType"/>
+			<element name="OpenVR-Custom_2" type="tns:TransformsFieldsType"/>
+			<element name="Custom_1-Custom_2" type="tns:TransformsFieldsType"/>
+			<element name="Kinect_1-Custom_1" type="tns:TransformsFieldsType"/>
+			<element name="Kinect_2-Custom_1" type="tns:TransformsFieldsType"/>
+			<element name="Kinect_1-Custom_2" type="tns:TransformsFieldsType"/>
+			<element name="Kinect_2-Custom_2" type="tns:TransformsFieldsType"/>
+			<element name="Kinect_2-Kinect_1" type="tns:TransformsFieldsType"/>
 		</all>
 	</complexType>
 	
@@ -27,6 +34,8 @@
 		<all minOccurs="0">
 			<element name="Kinect_2" type="tns:FloorDataFieldsType" maxOccurs="1"/>
 			<element name="Kinect_1" type="tns:FloorDataFieldsType" maxOccurs="1"/>
+			<element name="Custom_1" type="tns:FloorDataFieldsType" maxOccurs="1"/>
+			<element name="Custom_2" type="tns:FloorDataFieldsType" maxOccurs="1"/>
 		</all>
 	</complexType>	
 	

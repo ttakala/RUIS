@@ -85,6 +85,8 @@ public class RUISCalibrationProcessSettings
 	static public Vector3 positionOffset;
 	static public RUISDevice originalMasterCoordinateSystem;
 
+	public RUISDevice device1;
+	public RUISDevice device2;
 	public int numberOfSamplesToTake;
 	public int numberOfSamplesPerSecond;
 	public float sampleMinDistance;
@@ -217,6 +219,8 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		calibrationProcessSettings.numberOfSamplesToTake = numberOfSamplesToTake;
 		calibrationProcessSettings.numberOfSamplesPerSecond = samplesPerSecond;
 		calibrationProcessSettings.sampleMinDistance = this.sampleMinDistance;
+		calibrationProcessSettings.device1 = firstDevice;
+		calibrationProcessSettings.device2 = secondDevice;
 		calibrationProcessSettings.device1SamplePrefab = this.device1SamplePrefab;
 		calibrationProcessSettings.device2SamplePrefab = this.device2SamplePrefab;
 		calibrationProcessSettings.floorPlane = this.floorPlane;
@@ -241,6 +245,24 @@ public class RUISCoordinateCalibration : MonoBehaviour
 				calibrationProcess = new RUISKinect2ToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 			else
 				calibrationProcess = new RUISKinect2ToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(	(firstDevice == RUISDevice.CustomDevice1  && secondDevice == RUISDevice.OpenVR)
+				 ||	(secondDevice == RUISDevice.CustomDevice1 && firstDevice == RUISDevice.OpenVR )) 
+		{
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+//			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
+				calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
+//			else
+//				calibrationProcess = new RUISCustomDeviceToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(	(firstDevice == RUISDevice.CustomDevice2  && secondDevice == RUISDevice.OpenVR)
+				 ||	(secondDevice == RUISDevice.CustomDevice2 && firstDevice == RUISDevice.OpenVR )) 
+		{
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+			//			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
+			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
+			//			else
+			//				calibrationProcess = new RUISCustomDeviceToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_2)
 		   		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Kinect_2 )) 
