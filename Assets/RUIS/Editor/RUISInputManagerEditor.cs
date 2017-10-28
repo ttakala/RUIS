@@ -14,7 +14,9 @@ using System.Collections;
 [CustomEditor(typeof(RUISInputManager))]
 [CanEditMultipleObjects]
 public class RUISInputManagerEditor : Editor {
-    RUISInputManager inputConfig;
+	RUISInputManager inputManager;
+
+	SerializedObject inputManagerLink;
 
     SerializedProperty xmlSchema;
     SerializedProperty filename;
@@ -44,12 +46,22 @@ public class RUISInputManagerEditor : Editor {
 
 	SerializedProperty enableRazerHydra;
 
-//    SerializedProperty riftMagnetometerMode;
+	SerializedProperty enableCustomDevice1;
+	SerializedProperty enableCustomDevice2;
+
+	SerializedProperty customDevice1Name;
+	SerializedProperty customDevice2Name;
+
+	SerializedProperty customDevice1Conversion;
+	SerializedProperty customDevice2Conversion;
+
+	//    SerializedProperty riftMagnetometerMode;
 
     
     void OnEnable()
     {
-        inputConfig = target as RUISInputManager;
+		inputManager = target as RUISInputManager;
+		inputManagerLink = new SerializedObject(inputManager);
 		
         xmlSchema = serializedObject.FindProperty("xmlSchema");
         filename = serializedObject.FindProperty("filename");
@@ -78,6 +90,15 @@ public class RUISInputManagerEditor : Editor {
 
 		enableRazerHydra = serializedObject.FindProperty("enableRazerHydra");
 
+		enableCustomDevice1 = serializedObject.FindProperty("enableCustomDevice1");
+		enableCustomDevice2 = serializedObject.FindProperty("enableCustomDevice2");
+
+		customDevice1Name = serializedObject.FindProperty("customDevice1Name");
+		customDevice2Name = serializedObject.FindProperty("customDevice2Name");
+
+		customDevice1Conversion = inputManagerLink.FindProperty("customDevice1Conversion");
+		customDevice2Conversion = inputManagerLink.FindProperty("customDevice2Conversion");
+
 //        riftMagnetometerMode = serializedObject.FindProperty("riftMagnetometerMode");
         
 	}
@@ -85,6 +106,8 @@ public class RUISInputManagerEditor : Editor {
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+		customDevice1Conversion.serializedObject.Update();
+		customDevice2Conversion.serializedObject.Update();
 
         EditorGUILayout.Space();
 		
@@ -183,10 +206,9 @@ public class RUISInputManagerEditor : Editor {
 			                                                                         + "is stored in 'calibration.xml'."));
             EditorGUI.indentLevel -= 2;
         }
-		EditorGUILayout.Space();
 
+		EditorGUILayout.Space();
 		EditorGUILayout.PropertyField(kinect2Enabled, new GUIContent("Kinect 2 Enabled"));
-		
 		if (kinect2Enabled.boolValue)
 		{
 			EditorGUI.indentLevel += 2;
@@ -201,14 +223,67 @@ public class RUISInputManagerEditor : Editor {
 		}
 
         EditorGUILayout.Space();
-		
+		EditorGUILayout.PropertyField(enableCustomDevice1, new GUIContent("CustomDevice1 Enabled", "The coordinate systems of a CustomDevice "
+																			+ "and another device can be calibrated with each other, but you "
+																			+ "need to first modify the CustomDevice Game Objects in "
+																			+ "'calibration.scene'."));
+		if (enableCustomDevice1.boolValue)
+		{
+			EditorGUI.indentLevel += 2;
+
+			EditorGUILayout.PropertyField(customDevice1Name, new GUIContent(  "Name for CustomDevice1", "You can give a name to your "
+																			+ "custom device. It will be used in various places, otherwise "
+																			+ "this variable has no effect."));
+			EditorGUILayout.PropertyField(customDevice1Conversion, new GUIContent("Input Conversion", "If your CustomDevice gives tracked "
+																				+ "pose in Unity's left-handed coordinate system where 1 unit "
+																				+ "= 1 meter, then disable these options and set 'Unit Scale' "
+																				+ "to 1. Otherwise you can use these options to convert "
+																				+ "the CustomDevice's tracked pose into Unity's left-handed "
+																				+ "coordinate system, which is compatible with tracking input "
+																				+ "from native and OpenVR devices. For example, a common "
+																				+ "conversion for a device with right-handed coordinate system "
+																				+ "is to enable 'Z Pos Negate', 'X Rot Negate', and 'Y Rot Negate'. "
+																				+ "NOTE: Incorrect conversion breaks the input, especially "
+																				+ "rotations."), true);
+			EditorGUI.indentLevel -= 2;
+		}
+
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(enableCustomDevice2, new GUIContent("CustomDevice2 Enabled", "The coordinate systems of a CustomDevice "
+																			+ "and another device can be calibrated with each other, but you "
+																			+ "need to first modify the CustomDevice Game Objects in "
+																			+ "'calibration.scene'."));
+		if (enableCustomDevice2.boolValue)
+		{
+			EditorGUI.indentLevel += 2;
+
+			EditorGUILayout.PropertyField(customDevice2Name, new GUIContent(  "Name for CustomDevice2", "You can give a name to your "
+																			+ "custom device. It will be used in various places, otherwise "
+																			+ "this variable has no effect."));
+			EditorGUILayout.PropertyField(customDevice2Conversion, new GUIContent("Input Conversion", "If your CustomDevice gives tracked "
+																				+ "pose in Unity's left-handed coordinate system where 1 unit "
+																				+ "= 1 meter, then disable these options and set 'Unit Scale' "
+																				+ "to 1. Otherwise you can use these options to convert "
+																				+ "the CustomDevice's tracked pose into Unity's left-handed "
+																				+ "coordinate system, which is compatible with tracking input "
+																				+ "from native and OpenVR devices. For example, a common "
+																				+ "conversion for a device with right-handed coordinate system "
+																				+ "is to enable 'Z Pos Negate', 'X Rot Negate', and 'Y Rot Negate'. "
+																				+ "NOTE: Incorrect conversion breaks the input, especially "
+																				+ "rotations."), true);
+			EditorGUI.indentLevel -= 2;
+		}
+
+		EditorGUILayout.Space();
+
 //        EditorGUILayout.PropertyField(riftMagnetometerMode, new GUIContent("Rift Drift Correction", "Choose whether Oculus Rift's "
  //                                                                   + "magnetometer is calibrated at the beginning of the scene (for yaw "
   //                                                                  + "drift correction). It can always be (re)calibrated in-game with the "
    //                                                                 + "buttons defined in RUISOculusHUD component of RUISMenu."));
 
-
-        serializedObject.ApplyModifiedProperties();
+		serializedObject.ApplyModifiedProperties();
+		customDevice1Conversion.serializedObject.ApplyModifiedProperties();
+		customDevice2Conversion.serializedObject.ApplyModifiedProperties();
     }
 
     private bool Import()
@@ -216,7 +291,7 @@ public class RUISInputManagerEditor : Editor {
         string filename = EditorUtility.OpenFilePanel("Import Input Configuration", null, "xml");
         if (filename.Length != 0)
         {
-            return inputConfig.Import(filename);
+            return inputManager.Import(filename);
         }
         else
         {
@@ -228,7 +303,7 @@ public class RUISInputManagerEditor : Editor {
     {
         string filename = EditorUtility.SaveFilePanel("Export Input Configuration", null, "inputConfig", "xml");
         if (filename.Length != 0)
-            return inputConfig.Export(filename);
+            return inputManager.Export(filename);
         else
             return false;
     }

@@ -57,7 +57,17 @@ public class RUISInputManager : MonoBehaviour
 	
 	public bool enableRazerHydra = false;
 	private SixenseInput sixense = null;
-	
+
+	public bool enableCustomDevice1 = false;
+	public bool enableCustomDevice2 = false;
+	public string customDevice1Name = "";
+	public string customDevice2Name = "";
+
+	[SerializeField]
+	public RUISCoordinateSystem.DeviceCoordinateConversion customDevice1Conversion;
+	[SerializeField]
+	public RUISCoordinateSystem.DeviceCoordinateConversion customDevice2Conversion;
+
 	private RUISCoordinateSystem coordinateSystem = null;
     public OpenNI.SceneAnalyzer sceneAnalyzer = null;
 	//private bool usingExistingSceneAnalyzer = false;
@@ -84,12 +94,18 @@ public class RUISInputManager : MonoBehaviour
     	// Check if we are in calibration scene
 		if(RUISCalibrationProcessSettings.isCalibrating) 
 		{		
-			this.enablePSMove = RUISCalibrationProcessSettings.enablePSMove;
-			this.enableKinect = RUISCalibrationProcessSettings.enableKinect;
-			this.enableKinect2 = RUISCalibrationProcessSettings.enableKinect2;
+			this.enablePSMove 		 = RUISCalibrationProcessSettings.enablePSMove;
+			this.enableKinect 		 = RUISCalibrationProcessSettings.enableKinect;
+			this.enableKinect2 		 = RUISCalibrationProcessSettings.enableKinect2;
+			this.enableRazerHydra 	 = RUISCalibrationProcessSettings.enableRazerHydra;
+			this.enableCustomDevice1 = RUISCalibrationProcessSettings.enableCustomDevice1;
+			this.enableCustomDevice2 = RUISCalibrationProcessSettings.enableCustomDevice2;
+			this.customDevice1Name 		 = RUISCalibrationProcessSettings.customDevice1Name;
+			this.customDevice2Name 		 = RUISCalibrationProcessSettings.customDevice2Name;
+			this.customDevice1Conversion = RUISCalibrationProcessSettings.customDevice1Conversion;
+			this.customDevice2Conversion = RUISCalibrationProcessSettings.customDevice2Conversion;
 			this.jumpGestureEnabled = RUISCalibrationProcessSettings.jumpGestureEnabled;
-			this.enableRazerHydra = RUISCalibrationProcessSettings.enableRazerHydra;
-			this.PSMoveIP = RUISCalibrationProcessSettings.PSMoveIP;
+			this.PSMoveIP 	= RUISCalibrationProcessSettings.PSMoveIP;
 			this.PSMovePort = RUISCalibrationProcessSettings.PSMovePort;
 //			this.kinectDriftCorrectionPreferred = ruisNGUIMenu.originalKinectDriftCorrection;
 

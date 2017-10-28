@@ -255,13 +255,19 @@ public class RUISMenuNGUI : MonoBehaviour {
 						RUISCalibrationProcessSettings.isCalibrating = true;
 						RUISCalibrationProcessSettings.devicePair = this.calibrationDropDownSelection; // dropDownSelectionSubstring
 						RUISCalibrationProcessSettings.previousSceneId = Application.loadedLevel;
-						RUISCalibrationProcessSettings.enablePSMove = inputManager.enablePSMove;
-						RUISCalibrationProcessSettings.enableKinect = inputManager.enableKinect;
-						RUISCalibrationProcessSettings.enableKinect2 = inputManager.enableKinect2;
+						RUISCalibrationProcessSettings.enablePSMove 		= inputManager.enablePSMove;
+						RUISCalibrationProcessSettings.enableKinect 		= inputManager.enableKinect;
+						RUISCalibrationProcessSettings.enableKinect2 		= inputManager.enableKinect2;
+						RUISCalibrationProcessSettings.enableRazerHydra 	= inputManager.enableRazerHydra;
+						RUISCalibrationProcessSettings.enableCustomDevice1 	= inputManager.enableCustomDevice1;
+						RUISCalibrationProcessSettings.enableCustomDevice2 	= inputManager.enableCustomDevice2;
+						RUISCalibrationProcessSettings.customDevice1Name  = inputManager.customDevice1Name;
+						RUISCalibrationProcessSettings.customDevice2Name  = inputManager.customDevice2Name;
+						RUISCalibrationProcessSettings.customDevice1Conversion = inputManager.customDevice1Conversion;
+						RUISCalibrationProcessSettings.customDevice2Conversion = inputManager.customDevice2Conversion;
 						RUISCalibrationProcessSettings.jumpGestureEnabled = inputManager.jumpGestureEnabled;
-						RUISCalibrationProcessSettings.enableRazerHydra = inputManager.enableRazerHydra;
-						RUISCalibrationProcessSettings.PSMoveIP = inputManager.PSMoveIP;
-						RUISCalibrationProcessSettings.PSMovePort = inputManager.PSMovePort;
+						RUISCalibrationProcessSettings.PSMoveIP 		  = inputManager.PSMoveIP;
+						RUISCalibrationProcessSettings.PSMovePort 		  = inputManager.PSMovePort;
 						if(coordinateSystem)
 						{
 							RUISCalibrationProcessSettings.yawOffset = coordinateSystem.yawOffset;

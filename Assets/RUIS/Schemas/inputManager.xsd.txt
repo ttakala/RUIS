@@ -10,9 +10,9 @@
 			<element name="PSMoveSettings" type="tns:PSMoveSettingsType" maxOccurs="1"/>
 			<element name="KinectSettings" type="tns:KinectSettingsType" maxOccurs="1"/>
 			<element name="Kinect2Settings" type="tns:Kinect2SettingsType" maxOccurs="1"/>
+			<element name="RazerSettings" type="tns:RazerSettingsType" maxOccurs="1"/>
 			<element name="Custom1Settings" type="tns:CustomSettingsType" maxOccurs="1"/>
 			<element name="Custom2Settings" type="tns:CustomSettingsType" maxOccurs="1"/>
-			<element name="RazerSettings" type="tns:CustomSettingsType" maxOccurs="1"/>
 			<element name="CoordinateSystemSettings" type="tns:CoordinateSystemSettingsType" maxOccurs="1"/>
 		</sequence>
 	</complexType>
@@ -20,7 +20,7 @@
 	<complexType name="BooleanType">
 		<attribute name="value" type="boolean" use="required" />
 	</complexType>
-	
+
 	<complexType name="StringType">
 		<attribute name="value" type="string" use="required" />
 	</complexType>
@@ -38,7 +38,22 @@
 		<attribute name="y" type="float" use="required" />
 		<attribute name="z" type="float" use="required" />
 	</complexType>
-	
+
+	<complexType name="PositionConversionType">
+		<attribute name="unitScale" type="float" use="required" />
+		<attribute name="xNegate" type="boolean" use="required" />
+		<attribute name="yNegate" type="boolean" use="required" />
+		<attribute name="zNegate" type="boolean" use="required" />
+	</complexType>
+
+	<complexType name="RotationConversionType">
+		<attribute name="invert"  type="boolean" use="required" />
+		<attribute name="xNegate" type="boolean" use="required" />
+		<attribute name="yNegate" type="boolean" use="required" />
+		<attribute name="zNegate" type="boolean" use="required" />
+		<attribute name="wNegate" type="boolean" use="required" />
+	</complexType>
+
 	<complexType name="PSMoveSettingsType" >
 		<sequence>
 			<element name="enabled" type="tns:BooleanType"/>
@@ -59,7 +74,7 @@
 		</sequence>
 	</complexType>
 
-	<complexType name="Kinect2SettingsType" mixed="true">
+	<complexType name="Kinect2SettingsType">
 		<sequence>
 			<element name="enabled" type="tns:BooleanType"/>
 			<element name="floorDetection" type="tns:BooleanType"/>
@@ -67,6 +82,13 @@
 	</complexType>
 	
 	<complexType name="CustomSettingsType">
+		<sequence>
+			<element name="positionConversion" type="tns:PositionConversionType"/>
+			<element name="rotationConversion" type="tns:RotationConversionType"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="RazerSettingsType">
 		<sequence>
 			<element name="enabled" type="tns:BooleanType"/>
 		</sequence>

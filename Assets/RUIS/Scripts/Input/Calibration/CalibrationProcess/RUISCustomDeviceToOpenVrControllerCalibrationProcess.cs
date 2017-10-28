@@ -71,18 +71,21 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 	RUISCalibrationProcessSettings calibrationSettings;
 
+	// *** TODO: Input conversion (also for floor normal and point)
 	public RUISCustomDeviceToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
 		
 		inputDevice1 = RUISDevice.OpenVR;
 		if(calibrationSettings.device1 == RUISDevice.CustomDevice1 || calibrationSettings.device2 == RUISDevice.CustomDevice1)
 		{
 			inputDevice2 = RUISDevice.CustomDevice1;
-			customDeviceName = "CustomDevice1";
+			customDeviceName = "CustomDevice1" + (string.IsNullOrEmpty(RUISCalibrationProcessSettings.customDevice1Name)?
+															"":(" (" + RUISCalibrationProcessSettings.customDevice1Name + ")"));
 		}
 		else if(calibrationSettings.device1 == RUISDevice.CustomDevice2 || calibrationSettings.device2 == RUISDevice.CustomDevice2)
 		{
 			inputDevice2 = RUISDevice.CustomDevice2;
-			customDeviceName = "CustomDevice2";
+			customDeviceName = "CustomDevice2" + (string.IsNullOrEmpty(RUISCalibrationProcessSettings.customDevice2Name)?
+															"":(" (" + RUISCalibrationProcessSettings.customDevice2Name + ")"));
 		}
 		else
 			Debug.LogError("Variable calibrationSettings.device1 is " + calibrationSettings.device1 + ", and " 
@@ -208,7 +211,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		
 		if(timeSinceScriptStart < 2)
 		{
-			this.guiTextLowerLocal = "Calibration of " + customDeviceName + " and OpenVR Tracking\n\n Starting up...";
+			this.guiTextLowerLocal = "Calibration of '" + customDeviceName + "' and 'OpenVR Tracking'\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
 

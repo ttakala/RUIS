@@ -84,6 +84,12 @@ public class RUISCalibrationProcessSettings
 	static public float yawOffset;
 	static public Vector3 positionOffset;
 	static public RUISDevice originalMasterCoordinateSystem;
+	static public bool enableCustomDevice1;
+	static public bool enableCustomDevice2;
+	static public string customDevice1Name;
+	static public string customDevice2Name;
+	static public RUISCoordinateSystem.DeviceCoordinateConversion customDevice1Conversion;
+	static public RUISCoordinateSystem.DeviceCoordinateConversion customDevice2Conversion;
 
 	public RUISDevice device1;
 	public RUISDevice device2;
