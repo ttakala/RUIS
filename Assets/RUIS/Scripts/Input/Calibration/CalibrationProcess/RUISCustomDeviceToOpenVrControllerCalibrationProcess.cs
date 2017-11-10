@@ -758,8 +758,8 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			customPitchRotation = Quaternion.Inverse(customFloorRotator);
 		}
 
-		coordinateSystem.SetDistanceFromFloor(customDistanceFromFloor, inputDevice2); // CustomDevice1/2 
-		coordinateSystem.SetFloorNormal(customFloorNormal, inputDevice2); // CustomDevice1/2 
+		coordinateSystem.SetDistanceFromFloor(customDistanceFromFloor, inputDevice2); // Custom_1/2 
+		coordinateSystem.SetFloorNormal(customFloorNormal, inputDevice2); // Custom_1/2 
 	}
 
 	public Valve.VR.VRControllerState_t controllerState;
