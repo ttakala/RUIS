@@ -262,7 +262,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		if(!kinect2Checked)
 		{
 			kinect2Checked = true;	
-			if (!kinect2SourceManager.GetSensor().IsOpen || !kinect2SourceManager.GetSensor().IsAvailable)
+			if (kinect2SourceManager.GetSensor() == null || !kinect2SourceManager.GetSensor().IsOpen || !kinect2SourceManager.GetSensor().IsAvailable)
 			{
 				this.guiTextLowerLocal = "Connecting to Kinect 2. \n\n Error: Could not connect to Kinect 2.";
 				return RUISCalibrationPhase.Invalid;

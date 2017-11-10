@@ -23,24 +23,24 @@ public class RUISCoordinateSystem : MonoBehaviour
 	[System.Serializable]
 	public class DeviceCoordinateConversion
 	{
-		[Tooltip("Multiplier for the raw position input values from the tracked CustomDevice. Keep this value as 1 if one unit is one meter.")]
+		[Tooltip("Multiplier for the raw position input values from the tracked Custom device. Keep this value as 1 if one unit is one meter.")]
 		public float unitScale = 1;
-		[Tooltip("Negate the raw X-position values (i.e. flip X-axis) for the tracked CustomDevice. In most cases you leave this disabled.")]
+		[Tooltip("Negate the raw X-position values (i.e. flip X-axis) for the tracked Custom device. In most cases you leave this disabled.")]
 		public bool xPosNegate = false;
-		[Tooltip("Negate the raw Y-position values (i.e. flip Y-axis) for the tracked CustomDevice. In most cases you leave this disabled.")]
+		[Tooltip("Negate the raw Y-position values (i.e. flip Y-axis) for the tracked Custom device. In most cases you leave this disabled.")]
 		public bool yPosNegate = false;
-		[Tooltip("Negate the raw Z-position values (i.e. flip Z-axis) for the tracked CustomDevice. In most cases you leave this disabled.")]
+		[Tooltip("Negate the raw Z-position values (i.e. flip Z-axis) for the tracked Custom device. In most cases you leave this disabled.")]
 		public bool zPosNegate = false;
 		[Space]
-		[Tooltip("Inverse the raw rotation quaternion from the tracked CustomDevice. In most cases you leave this disabled.")]
+		[Tooltip("Inverse the raw rotation quaternion from the tracked Custom device. In most cases you leave this disabled.")]
 		public bool rotationInverse = false;
-		[Tooltip("Negate the raw rotation quaternion's X-component value for the tracked CustomDevice. In most cases you leave this disabled.")]
+		[Tooltip("Negate the raw rotation quaternion's X-component value for the tracked Custom device. In most cases you leave this disabled.")]
 		public bool xRotNegate = false;
-		[Tooltip("Negate the raw rotation quaternion's Y-component value for the tracked CustomDevice. In most cases you leave this disabled.")]
+		[Tooltip("Negate the raw rotation quaternion's Y-component value for the tracked Custom device. In most cases you leave this disabled.")]
 		public bool yRotNegate = false;
-		[Tooltip("Negate the raw rotation quaternion's Z-component value for the tracked CustomDevice. In most cases you leave this disabled.")]
+		[Tooltip("Negate the raw rotation quaternion's Z-component value for the tracked Custom device. In most cases you leave this disabled.")]
 		public bool zRotNegate = false;
-		[Tooltip("Negate the raw rotation quaternion's W-component value for the tracked CustomDevice. In most cases you leave this disabled.")]
+		[Tooltip("Negate the raw rotation quaternion's W-component value for the tracked Custom device. In most cases you leave this disabled.")]
 		public bool wRotNegate = false;
 	};
 
@@ -450,17 +450,17 @@ public class RUISCoordinateSystem : MonoBehaviour
 		XmlElement wrapperElement = xmlDoc.CreateElement(wrapperElementName);
 		groupElement.AppendChild(wrapperElement);
 		
-		XmlElement kinectFloorNormalElement = xmlDoc.CreateElement("floorNormal");
+		XmlElement deviceFloorNormalElement = xmlDoc.CreateElement("floorNormal");
 		
-		kinectFloorNormalElement.SetAttribute("x", normal.x.ToString());
-		kinectFloorNormalElement.SetAttribute("y", normal.y.ToString());
-		kinectFloorNormalElement.SetAttribute("z", normal.z.ToString());
-		wrapperElement.AppendChild(kinectFloorNormalElement);
+		deviceFloorNormalElement.SetAttribute("x", normal.x.ToString());
+		deviceFloorNormalElement.SetAttribute("y", normal.y.ToString());
+		deviceFloorNormalElement.SetAttribute("z", normal.z.ToString());
+		wrapperElement.AppendChild(deviceFloorNormalElement);
 		
-		XmlElement kinectDistanceFromFloorElement = xmlDoc.CreateElement("distanceFromFloor");
-		kinectDistanceFromFloorElement.SetAttribute("value", distance.ToString());
+		XmlElement deviceDistanceFromFloorElement = xmlDoc.CreateElement("distanceFromFloor");
+		deviceDistanceFromFloorElement.SetAttribute("value", distance.ToString());
 		
-		wrapperElement.AppendChild(kinectDistanceFromFloorElement);
+		wrapperElement.AppendChild(deviceDistanceFromFloorElement);
 		
 		XmlNode groupNode = xmlDoc.DocumentElement.SelectSingleNode("FloorData");
 		XmlNode testNode = groupNode.SelectSingleNode(wrapperElementName);

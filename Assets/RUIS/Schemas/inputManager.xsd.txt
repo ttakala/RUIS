@@ -70,7 +70,6 @@
 			<element name="enabled" type="tns:BooleanType"/>
 			<element name="maxPlayers" type="tns:IntType"/>
 			<element name="floorDetection" type="tns:BooleanType"/>
-			<element name="jumpGestureEnabled" type="tns:BooleanType"/>
 		</sequence>
 	</complexType>
 
@@ -83,6 +82,8 @@
 	
 	<complexType name="CustomSettingsType">
 		<sequence>
+			<element name="enabled" type="tns:BooleanType"/>
+			<element name="name" type="tns:StringType"/>
 			<element name="positionConversion" type="tns:PositionConversionType"/>
 			<element name="rotationConversion" type="tns:RotationConversionType"/>
 		</sequence>

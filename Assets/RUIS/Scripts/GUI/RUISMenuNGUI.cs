@@ -37,8 +37,10 @@ public class RUISMenuNGUI : MonoBehaviour {
 	public bool 	originalEnablePSMove,
 					originalEnableKinect, 
 					originalEnableKinect2, 
-					originalEnableJumpGesture,
+					originalEnableCustom1,
+					originalEnableCustom2,
 					originalEnableHydra;
+//					originalEnableJumpGesture,
 //					originalKinectDriftCorrection; 
 	
 	public string 	originalPSMoveIP;
@@ -55,7 +57,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 //	private bool calibrationInfoMessageShown = false;
 	
 	// selectAndConfigureDevices phase initial GUI element positions
-	Vector3 kinectOrigGUIPos, kinect2OrigGUIPos, hydraOrigGUIPos, infotextOrigGUIPos;
+	Vector3 kinectOrigGUIPos, kinect2OrigGUIPos, hydraOrigGUIPos, infotextOrigGUIPos, custom1OrigGUIPos, custom2OrigGUIPos;
 //	Vector3 psMoveOrigGUIPos, buttonsOrigGUIPos;
 	
 	public string calibrationDropDownSelection;
@@ -81,24 +83,28 @@ public class RUISMenuNGUI : MonoBehaviour {
 		buttons.Add(this.transform.Find ("NGUIControls/Panel/keyStoneConfiguration/Button - End Display Editing").gameObject);
 		
 		// CHECKBOXES
-		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").gameObject);
-		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").gameObject);
-		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject);
-		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").gameObject);
-		checkBoxes.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").gameObject);
+		checkBoxes.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").gameObject);
+		checkBoxes.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").gameObject);
+//		checkBoxes.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject);
+		checkBoxes.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").gameObject);
+		checkBoxes.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").gameObject);
+		checkBoxes.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Custom1/Checkbox - Use Custom 1").gameObject);
+		checkBoxes.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Custom2/Checkbox - Use Custom 2").gameObject);
 		
 		// TEXTFIELDS
-		textFields.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").gameObject);
-		textFields.Add (this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject);
+		textFields.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").gameObject);
+		textFields.Add(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject);
 		
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		displayManager = FindObjectOfType(typeof(RUISDisplayManager)) as RUISDisplayManager;
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 
-		kinectOrigGUIPos = this.transform.Find ( "NGUIControls/Panel/selectAndConfigureDevices/Kinect").transform.localPosition;
-		kinect2OrigGUIPos = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2").transform.localPosition;
-		hydraOrigGUIPos = this.transform.Find (  "NGUIControls/Panel/selectAndConfigureDevices/Hydra").transform.localPosition;
-		infotextOrigGUIPos = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Infotexts").transform.localPosition;
+		kinectOrigGUIPos 	= this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect").transform.localPosition;
+		kinect2OrigGUIPos 	= this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2").transform.localPosition;
+		custom1OrigGUIPos   = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Custom1").transform.localPosition;
+		custom2OrigGUIPos   = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Custom2").transform.localPosition;
+		hydraOrigGUIPos 	= this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Hydra").transform.localPosition;
+		infotextOrigGUIPos 	= this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Infotexts").transform.localPosition;
 //		psMoveOrigGUIPos = this.transform.Find  ("NGUIControls/Panel/selectAndConfigureDevices/PSMove").transform.localPosition;
 //		buttonsOrigGUIPos = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons").transform.localPosition;
 	}
@@ -194,10 +200,12 @@ public class RUISMenuNGUI : MonoBehaviour {
 		switch(clickedGameObject.name) 
 		{
 			case "Checkbox - Use Kinect": inputManager.enableKinect = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
-			case "Checkbox - Use Kinect 2":inputManager.enableKinect2 = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
-//			case "Checkbox - Use Kinect Drift Correction": inputManager.kinectDriftCorrectionPreferred = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
+			case "Checkbox - Use Kinect 2": inputManager.enableKinect2 = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
+			case "Checkbox - Use Custom 1": inputManager.enableCustomDevice1 = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
+			case "Checkbox - Use Custom 2": inputManager.enableCustomDevice2 = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
 			case "Checkbox - Use PSMove": inputManager.enablePSMove = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
-			case "Checkbox - Use Hydra":inputManager.enableRazerHydra = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
+			case "Checkbox - Use Hydra": inputManager.enableRazerHydra = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
+//			case "Checkbox - Use Kinect Drift Correction": inputManager.kinectDriftCorrectionPreferred = clickedGameObject.GetComponent<UICheckbox>().isChecked; break;
 		}
 		updateCalibratableDevices();
 	}
@@ -265,9 +273,9 @@ public class RUISMenuNGUI : MonoBehaviour {
 						RUISCalibrationProcessSettings.customDevice2Name  = inputManager.customDevice2Name;
 						RUISCalibrationProcessSettings.customDevice1Conversion = inputManager.customDevice1Conversion;
 						RUISCalibrationProcessSettings.customDevice2Conversion = inputManager.customDevice2Conversion;
-						RUISCalibrationProcessSettings.jumpGestureEnabled = inputManager.jumpGestureEnabled;
 						RUISCalibrationProcessSettings.PSMoveIP 		  = inputManager.PSMoveIP;
 						RUISCalibrationProcessSettings.PSMovePort 		  = inputManager.PSMovePort;
+//						RUISCalibrationProcessSettings.jumpGestureEnabled = inputManager.jumpGestureEnabled;
 						if(coordinateSystem)
 						{
 							RUISCalibrationProcessSettings.yawOffset = coordinateSystem.yawOffset;
@@ -415,14 +423,14 @@ public class RUISMenuNGUI : MonoBehaviour {
 						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").gameObject.SetActive(false);
 					}
 					
-					if(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked) 
-					{
-						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject.SetActive(true);
-					}
-					else 
-					{
-						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject.SetActive(false);
-					}
+//					if(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked) 
+//					{
+//						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject.SetActive(true);
+//					}
+//					else 
+//					{
+//						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect Drift Correction").gameObject.SetActive(false);
+//					}
 					
 					handleSelectAndConfigureDevicesGUISpacing();
 					
@@ -442,18 +450,22 @@ public class RUISMenuNGUI : MonoBehaviour {
 	
 	private void handleSelectAndConfigureDevicesGUISpacing() 
 	{
-//		Transform PSMoveGUIObj = this.transform.Find      ("NGUIControls/Panel/selectAndConfigureDevices/PSMove").transform;
-		Transform KinectGUIObj = this.transform.Find      ("NGUIControls/Panel/selectAndConfigureDevices/Kinect").transform;
-		Transform Kinect2GUIObj = this.transform.Find     ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2").transform;
-		Transform HydraGUIObj = this.transform.Find       ("NGUIControls/Panel/selectAndConfigureDevices/Hydra").transform;
+//		Transform PSMoveGUIObj  	 = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/PSMove").transform;
+		Transform KinectGUIObj  	 = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Kinect").transform;
+		Transform Kinect2GUIObj 	 = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Kinect2").transform;
+		Transform Custom1GUIObj 	 = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Custom1").transform;
+		Transform Custom2GUIObj 	 = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Custom2").transform;
+		Transform HydraGUIObj   	 = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Hydra").transform;
 		Transform InfotextsGUIObject = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Infotexts").transform;
 		
 //		Transform ButtonsGUIObj = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons").transform;
 
-		bool kinectSelected = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked;
+		bool kinectSelected   = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked;
 		bool kinect2Selected = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked;
-		bool psMoveSelected = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked;
-		bool hydraSelected = this.transform.Find  ("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked;
+		bool custom1Selected = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Custom1/Checkbox - Use Custom 1").GetComponent<UICheckbox>().isChecked;
+		bool custom2Selected = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Custom2/Checkbox - Use Custom 2").GetComponent<UICheckbox>().isChecked;
+		bool psMoveSelected   = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked;
+		bool hydraSelected     = this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked;
 		
 		Vector3 overAllOffset = new Vector3(0, 0, 0);
 		Vector3 kinectOffset = new Vector3(0,0,0);
@@ -466,37 +478,24 @@ public class RUISMenuNGUI : MonoBehaviour {
 			kinectOffset = overAllOffset;
 		}
 		if(kinectSelected || psMoveSelected) {
-			if(kinectSelected) overAllOffset +=  new Vector3(0, -30.0f, 0); 	
+//			if(kinectSelected) overAllOffset +=  new Vector3(0, -30.0f, 0); 	
 			kinect2Offset = overAllOffset; 	
 		}
 		if(kinect2Selected || kinectSelected || psMoveSelected) {
-			if(kinect2Selected) overAllOffset += new Vector3(0, 0, 0); 	
+//			if(kinect2Selected) overAllOffset += new Vector3(0, 0, 0); 	
 			hydraOffset = overAllOffset; 	
 		}	
 		if(hydraSelected || kinect2Selected || kinectSelected || psMoveSelected) {
-			if(hydraSelected) overAllOffset += new Vector3(0, 0, 0); 	
+//			if(hydraSelected) overAllOffset += new Vector3(0, 0, 0);
 			infotextsOffset = overAllOffset; 	
 		}
-		/*	
-		if(hydraSelected || kinect2Selected || kinectSelected || psMoveSelected) {
-			if(hydraSelected) overAllOffset += new Vector3(0, 0, 0); 	
-			buttonsOffset = overAllOffset; 	
-		}
-		*/
-		
-		
-		KinectGUIObj.localPosition = kinectOrigGUIPos;
-		Kinect2GUIObj.localPosition = kinect2OrigGUIPos;
-		HydraGUIObj.localPosition = hydraOrigGUIPos;
-		InfotextsGUIObject.localPosition = infotextOrigGUIPos;
-		//ButtonsGUIObj.localPosition = buttonsOrigGUIPos;
-				
-		KinectGUIObj.localPosition = kinectOrigGUIPos + kinectOffset; 
+
+		KinectGUIObj.localPosition 	= kinectOrigGUIPos 	+ kinectOffset; 
 		Kinect2GUIObj.localPosition = kinect2OrigGUIPos + kinect2Offset; 
-		HydraGUIObj.localPosition = hydraOrigGUIPos + hydraOffset; 
+		HydraGUIObj.localPosition 	= hydraOrigGUIPos 	+ hydraOffset; 
+		Custom1GUIObj.localPosition = custom1OrigGUIPos + overAllOffset;
+		Custom2GUIObj.localPosition = custom2OrigGUIPos + overAllOffset;
 		InfotextsGUIObject.localPosition = infotextOrigGUIPos + infotextsOffset;
-		//ButtonsGUIObj.localPosition = buttonsOrigGUIPos + buttonsOffset;
-		
 	}
 	
 	private void handleInfotexts() 
@@ -574,9 +573,9 @@ public class RUISMenuNGUI : MonoBehaviour {
 			   originalEnablePSMove == inputManager.enablePSMove && 
 			   originalEnableKinect == inputManager.enableKinect && 
 			   originalEnableKinect2 == inputManager.enableKinect2 && 
-			   originalEnableJumpGesture == inputManager.jumpGestureEnabled && 
 			   originalEnableHydra == inputManager.enableRazerHydra)
-//			   && originalKinectDriftCorrection == inputManager.kinectDriftCorrectionPreferred) 
+//			   originalEnableJumpGesture == inputManager.jumpGestureEnabled && 
+//			   originalKinectDriftCorrection == inputManager.kinectDriftCorrectionPreferred) 
 			   {
 		   			infotext_Changes_saved.SetActive(true);
 					infotext_Changes_not_saved_yet.SetActive(false);
@@ -613,8 +612,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 		originalEnablePSMove = inputManager.enablePSMove;
 		originalEnableKinect = inputManager.enableKinect;
 		originalEnableKinect2 = inputManager.enableKinect2;
-		originalEnableJumpGesture = inputManager.jumpGestureEnabled;
 		originalEnableHydra = inputManager.enableRazerHydra;
+//		originalEnableJumpGesture = inputManager.jumpGestureEnabled;
 //		originalKinectDriftCorrection = inputManager.kinectDriftCorrectionPreferred;
 	}
 	
@@ -623,22 +622,22 @@ public class RUISMenuNGUI : MonoBehaviour {
 		inputManager.enablePSMove = originalEnablePSMove;
 		inputManager.enableKinect = originalEnableKinect;
 		inputManager.enableKinect2 = originalEnableKinect2;
-		if (jumpGesture)
-		{
-			if (originalEnableJumpGesture)
-			{
-				jumpGesture.EnableGesture();
-			}
-			else
-			{
-				jumpGesture.DisableGesture();
-			}
-		}
-		inputManager.jumpGestureEnabled = originalEnableJumpGesture;
+//		if (jumpGesture)
+//		{
+//			if (originalEnableJumpGesture)
+//			{
+//				jumpGesture.EnableGesture();
+//			}
+//			else
+//			{
+//				jumpGesture.DisableGesture();
+//			}
+//		}
 		inputManager.enableRazerHydra = originalEnableHydra;
-//		inputManager.kinectDriftCorrectionPreferred = originalKinectDriftCorrection;
 		inputManager.PSMoveIP = originalPSMoveIP;
 		inputManager.PSMovePort = originalPSMovePort;
+//		inputManager.jumpGestureEnabled = originalEnableJumpGesture;
+//		inputManager.kinectDriftCorrectionPreferred = originalKinectDriftCorrection;
 	}
 	
 	private void UpdateGUI() 
@@ -647,13 +646,15 @@ public class RUISMenuNGUI : MonoBehaviour {
 		{
 			if(inputManager.enablePSMove) 
 			{
-				this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").GetComponent<UIInput>().text = inputManager.PSMoveIP;
-				this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").GetComponent<UIInput>().text = inputManager.PSMovePort.ToString();
+				this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove IP").GetComponent<UIInput>().text = inputManager.PSMoveIP;
+				this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Input - PSMove Port").GetComponent<UIInput>().text = inputManager.PSMovePort.ToString();
 			}	
-			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect;
-			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect2;
-			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked = inputManager.enablePSMove;
-			this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked = inputManager.enableRazerHydra;
+			this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Kinect/Checkbox - Use Kinect").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect;
+			this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Kinect2/Checkbox - Use Kinect 2").GetComponent<UICheckbox>().isChecked = inputManager.enableKinect2;
+			this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Custom1/Checkbox - Use Custom 1").GetComponent<UICheckbox>().isChecked = inputManager.enableCustomDevice1;
+			this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Custom2/Checkbox - Use Custom 2").GetComponent<UICheckbox>().isChecked = inputManager.enableCustomDevice2;
+			this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked = inputManager.enablePSMove;
+			this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").GetComponent<UICheckbox>().isChecked = inputManager.enableRazerHydra;
 //			if(inputManager.enableKinect) 
 //			{
 //				this.transform.Find(
@@ -675,13 +676,18 @@ public class RUISMenuNGUI : MonoBehaviour {
 		    
 		// NOTE: The dropDownChoices determine the device pair to be calibrated, and they must follow the format "Device A - Device B". 
 		//       The string must correspond the options in the Awake() method of RUISCoordinateCalibration script
-		if(inputManager.enableKinect 			   && inputManager.enableKinect2) dropDownChoices.Add("Kinect 1 - Kinect2");
-		if(inputManager.enableKinect 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect 1 - PSMove");
-		if(inputManager.enableKinect2 			   && inputManager.enablePSMove)  dropDownChoices.Add("Kinect 2 - PSMove");
-		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (controller)");
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enablePSMove)  dropDownChoices.Add("PSMove - OpenVR (HMD)");
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  dropDownChoices.Add("Kinect 1 - OpenVR (HMD)");
+		if(inputManager.enableKinect 			   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 1 - Kinect2");
+		if(inputManager.enableKinect 			   && inputManager.enablePSMove)  		dropDownChoices.Add("Kinect 1 - PSMove");
+		if(inputManager.enableKinect2 			   && inputManager.enablePSMove)  		dropDownChoices.Add("Kinect 2 - PSMove");
+		if(inputManager.enableCustomDevice1 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 1 - Custom 2");
+		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableCustomDevice1)	dropDownChoices.Add("Custom 1 - OpenVR (controller)");
+		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableCustomDevice2)	dropDownChoices.Add("Custom 2 - OpenVR (controller)");
+		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - OpenVR (controller)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  		dropDownChoices.Add("Kinect 1 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enablePSMove)  		dropDownChoices.Add("PSMove - OpenVR (HMD)");
 
 		
 		if(dropDownChoices.Count == 0) 

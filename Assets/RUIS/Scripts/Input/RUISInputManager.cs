@@ -74,9 +74,7 @@ public class RUISInputManager : MonoBehaviour
 	
     public RUISPSMoveWand[] moveControllers;
 
-   // public RiftMagnetometer riftMagnetometerMode = RiftMagnetometer.Off;
-
-    public bool jumpGestureEnabled = false;
+//	public bool jumpGestureEnabled = false;
 
     public void Awake()
     {
@@ -104,9 +102,9 @@ public class RUISInputManager : MonoBehaviour
 			this.customDevice2Name 		 = RUISCalibrationProcessSettings.customDevice2Name;
 			this.customDevice1Conversion = RUISCalibrationProcessSettings.customDevice1Conversion;
 			this.customDevice2Conversion = RUISCalibrationProcessSettings.customDevice2Conversion;
-			this.jumpGestureEnabled = RUISCalibrationProcessSettings.jumpGestureEnabled;
 			this.PSMoveIP 	= RUISCalibrationProcessSettings.PSMoveIP;
 			this.PSMovePort = RUISCalibrationProcessSettings.PSMovePort;
+//			this.jumpGestureEnabled = RUISCalibrationProcessSettings.jumpGestureEnabled;
 //			this.kinectDriftCorrectionPreferred = ruisNGUIMenu.originalKinectDriftCorrection;
 
 			RUISCalibrationProcessSettings.isCalibrating = false;

@@ -13,7 +13,6 @@
     <enabled value="false" />
     <maxPlayers value="1" />
     <floorDetection value="true" />
-    <jumpGestureEnabled value="true" />
   </KinectSettings>
   <Kinect2Settings>
     <enabled value="true" />
@@ -22,13 +21,25 @@
   <RazerSettings>
     <enabled value="false" />
   </RazerSettings>
+  <Custom1Settings>
+    <enabled value="false" />
+    <name value="" />
+    <positionConversion unitScale="1" xNegate="false" yNegate="false" zNegate="false" />
+    <rotationConversion invert="false" xNegate="false" yNegate="false" zNegate="false" wNegate="false" />
+  </Custom1Settings>
+  <Custom2Settings>
+    <enabled value="false" />
+    <name value="" />
+    <positionConversion unitScale="1" xNegate="false" yNegate="false" zNegate="false" />
+    <rotationConversion invert="false" xNegate="false" yNegate="false" zNegate="false" wNegate="false" />
+  </Custom2Settings>
   <CoordinateSystemSettings>
     <!--Below values will override the settings made in Unity Editor if you uncomment them.-->
     <!--
     <useMasterCoordinateSystem value="true" /> 
     <masterCoordinateSystemSensor value="Kinect_2" />
 -->
-    <!-- Kinect_2, Kinect_1, OpenVR, PS_Move -->
+    <!-- Kinect_1, Kinect_2, OpenVR, PS_Move, Custom_1, Custom_2 -->
     <!--
     <switchMasterToAvailableSensor value="true" />
     <coordinateSystemLocationOffset x="0" y="0" z="0" />

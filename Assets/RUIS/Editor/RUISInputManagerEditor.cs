@@ -223,22 +223,22 @@ public class RUISInputManagerEditor : Editor {
 		}
 
         EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(enableCustomDevice1, new GUIContent("CustomDevice1 Enabled", "The coordinate systems of a CustomDevice "
+		EditorGUILayout.PropertyField(enableCustomDevice1, new GUIContent("Custom 1 Enabled", "The coordinate systems of Custom 1 "
 																			+ "and another device can be calibrated with each other, but you "
-																			+ "need to first modify the CustomDevice Game Objects in "
+																			+ "need to first modify the 'Custom 1 Pose' Game Object in "
 																			+ "'calibration.scene'."));
 		if (enableCustomDevice1.boolValue)
 		{
 			EditorGUI.indentLevel += 2;
 
-			EditorGUILayout.PropertyField(customDevice1Name, new GUIContent(  "Name for CustomDevice1", "You can give a name to your "
-																			+ "custom device. It will be used in various places, otherwise "
+			EditorGUILayout.PropertyField(customDevice1Name, new GUIContent(  "Name for Custom 1", "You can give a name to your "
+																			+ "Custom device. It will be used in various places, otherwise "
 																			+ "this variable has no effect."));
-			EditorGUILayout.PropertyField(customDevice1Conversion, new GUIContent("Input Conversion", "If your CustomDevice gives tracked "
+			EditorGUILayout.PropertyField(customDevice1Conversion, new GUIContent("Input Conversion", "If your Custom device gives tracked "
 																				+ "pose in Unity's left-handed coordinate system where 1 unit "
 																				+ "= 1 meter, then disable these options and set 'Unit Scale' "
 																				+ "to 1. Otherwise you can use these options to convert "
-																				+ "the CustomDevice's tracked pose into Unity's left-handed "
+																				+ "the Custom device's tracked pose into Unity's left-handed "
 																				+ "coordinate system, which is compatible with tracking input "
 																				+ "from native and OpenVR devices. For example, a common "
 																				+ "conversion for a device with right-handed coordinate system "
@@ -249,22 +249,22 @@ public class RUISInputManagerEditor : Editor {
 		}
 
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(enableCustomDevice2, new GUIContent("CustomDevice2 Enabled", "The coordinate systems of a CustomDevice "
+		EditorGUILayout.PropertyField(enableCustomDevice2, new GUIContent("Custom 2 Enabled", "The coordinate systems of Custom 2 "
 																			+ "and another device can be calibrated with each other, but you "
-																			+ "need to first modify the CustomDevice Game Objects in "
+																			+ "need to first modify the 'Custom 2 Pose' Game Object in "
 																			+ "'calibration.scene'."));
 		if (enableCustomDevice2.boolValue)
 		{
 			EditorGUI.indentLevel += 2;
 
-			EditorGUILayout.PropertyField(customDevice2Name, new GUIContent(  "Name for CustomDevice2", "You can give a name to your "
-																			+ "custom device. It will be used in various places, otherwise "
+			EditorGUILayout.PropertyField(customDevice2Name, new GUIContent(  "Name for Custom 2", "You can give a name to your "
+																			+ "Custom device. It will be used in various places, otherwise "
 																			+ "this variable has no effect."));
-			EditorGUILayout.PropertyField(customDevice2Conversion, new GUIContent("Input Conversion", "If your CustomDevice gives tracked "
+			EditorGUILayout.PropertyField(customDevice2Conversion, new GUIContent("Input Conversion", "If your Custom device gives tracked "
 																				+ "pose in Unity's left-handed coordinate system where 1 unit "
 																				+ "= 1 meter, then disable these options and set 'Unit Scale' "
 																				+ "to 1. Otherwise you can use these options to convert "
-																				+ "the CustomDevice's tracked pose into Unity's left-handed "
+																				+ "the Custom device's tracked pose into Unity's left-handed "
 																				+ "coordinate system, which is compatible with tracking input "
 																				+ "from native and OpenVR devices. For example, a common "
 																				+ "conversion for a device with right-handed coordinate system "

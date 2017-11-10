@@ -21,8 +21,8 @@ public enum RUISDevice
 	Kinect_2 = 1,
 	PS_Move = 2,
 	OpenVR = 3,
-	CustomDevice1 = int.MaxValue - 2,
-	CustomDevice2 = int.MaxValue - 1,
+	Custom_1 = int.MaxValue - 2,
+	Custom_2 = int.MaxValue - 1,
 	Null = int.MaxValue
 }
 
@@ -77,7 +77,7 @@ public class RUISCalibrationProcessSettings
 	static public bool enablePSMove;
 	static public bool enableKinect;
 	static public bool enableKinect2;
-	static public bool jumpGestureEnabled;
+//	static public bool jumpGestureEnabled;
 	static public bool enableRazerHydra;
 	static public string PSMoveIP;
 	static public int PSMovePort;
@@ -252,8 +252,8 @@ public class RUISCoordinateCalibration : MonoBehaviour
 			else
 				calibrationProcess = new RUISKinect2ToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
 		}
-		else if(	(firstDevice == RUISDevice.CustomDevice1  && secondDevice == RUISDevice.OpenVR)
-				 ||	(secondDevice == RUISDevice.CustomDevice1 && firstDevice == RUISDevice.OpenVR )) 
+		else if(	(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.OpenVR)
+				 ||	(secondDevice == RUISDevice.Custom_1 && firstDevice == RUISDevice.OpenVR )) 
 		{
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 //			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
@@ -261,8 +261,8 @@ public class RUISCoordinateCalibration : MonoBehaviour
 //			else
 //				calibrationProcess = new RUISCustomDeviceToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 		}
-		else if(	(firstDevice == RUISDevice.CustomDevice2  && secondDevice == RUISDevice.OpenVR)
-				 ||	(secondDevice == RUISDevice.CustomDevice2 && firstDevice == RUISDevice.OpenVR )) 
+		else if(	(firstDevice == RUISDevice.Custom_2  && secondDevice == RUISDevice.OpenVR)
+				 ||	(secondDevice == RUISDevice.Custom_2 && firstDevice == RUISDevice.OpenVR )) 
 		{
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			//			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess

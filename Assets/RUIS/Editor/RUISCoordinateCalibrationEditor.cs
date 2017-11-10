@@ -75,30 +75,30 @@ public class RUISCoordinateCalibrationEditor : Editor
 		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.LabelField("   Custom Tracked Devices", italicStyle);
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(customDevice1Tracker, new GUIContent("CustomDevice1 Tracked Pose", "Transform whose pose is updated "
+		EditorGUILayout.PropertyField(customDevice1Tracker, new GUIContent("Custom 1 Tracked Pose", "Transform whose pose is updated "
 																			+ "with the position of the tracked device. Link this field "
 																			+ "with a Game Object that has a component that updates its "
 																			+ "transform.position with the 'raw' position of the tracked "
-																			+ "custom device."));
-		EditorGUILayout.PropertyField(customDevice1FloorPoint, new GUIContent("CustomDevice1 Floor Pose", "OPTIONAL: Transform which "
+																			+ "Custom device."));
+		EditorGUILayout.PropertyField(customDevice1FloorPoint, new GUIContent("Custom 1 Floor Pose", "OPTIONAL: Transform which "
 																			+ "includes a position that is a 3D point on the floor plane, "
 																			+ "and an orientation whose up direction is the floor normal. "
 																			+ "The Floor Pose should be in the same 'raw' coordinate system "
-																			+ "as the above 'CustomDevice1 Tracked Pose'. Set this to NONE if "
+																			+ "as the above 'Custom 1 Tracked Pose'. Set this to NONE if "
 																			+ "floor data is not available to this device: then the floor will "
 																			+ "be assumed to be in origin with a floor normal of (0,1,0)"));
 
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(customDevice2Tracker, new GUIContent("CustomDevice2 Tracked Pose", "Transform whose pose is updated "
+		EditorGUILayout.PropertyField(customDevice2Tracker, new GUIContent("Custom 2 Tracked Pose", "Transform whose pose is updated "
 																			+ "with the position of the tracked device. Link this field "
 																			+ "with a Game Object that has a component that updates its "
 																			+ "transform.position with the 'raw' position of the tracked "
-																			+ "custom device."));
-		EditorGUILayout.PropertyField(customDevice2FloorPoint, new GUIContent("CustomDevice2 Floor Pose", "OPTIONAL: Transform which "
+																			+ "Custom device."));
+		EditorGUILayout.PropertyField(customDevice2FloorPoint, new GUIContent("Custom 2 Floor Pose", "OPTIONAL: Transform which "
 																			+ "includes a position that is a 3D point on the floor plane, "
 																			+ "and an orientation whose up direction is the floor normal. "
 																			+ "The Floor Pose should be in the same 'raw' coordinate system "
-																			+ "as the above 'CustomDevice2 Tracked Pose'. Set this to NONE if "
+																			+ "as the above 'Custom 2 Tracked Pose'. Set this to NONE if "
 																			+ "floor data is not available to this device: then the floor will "
 																			+ "be assumed to be in origin with a floor normal of (0,1,0)"));
 		serializedObject.ApplyModifiedProperties();

@@ -206,14 +206,17 @@ public class RUISKinect2DepthView : MonoBehaviour
 	
 	void OnGUI()
 	{	
-		if(	(coordinateCalibration.firstDevice == RUISDevice.Kinect_1  && coordinateCalibration.secondDevice == RUISDevice.Kinect_2)
-		   ||	(coordinateCalibration.secondDevice == RUISDevice.Kinect_1 && coordinateCalibration.firstDevice == RUISDevice.Kinect_2 )) 
+		if(texture)
 		{
-			GUI.DrawTexture(new Rect(Screen.width, Screen.height, -Screen.width / 2, -Screen.height/2), texture, ScaleMode.StretchToFill, false);
-		}
-		else 
-		{
-			GUI.DrawTexture(new Rect(0, Screen.height/2, Screen.width/2, -Screen.height/2), texture, ScaleMode.StretchToFill, false);
+			if(	(coordinateCalibration.firstDevice == RUISDevice.Kinect_1  && coordinateCalibration.secondDevice == RUISDevice.Kinect_2)
+			   ||	(coordinateCalibration.secondDevice == RUISDevice.Kinect_1 && coordinateCalibration.firstDevice == RUISDevice.Kinect_2 )) 
+			{
+				GUI.DrawTexture(new Rect(Screen.width, Screen.height, -Screen.width / 2, -Screen.height/2), texture, ScaleMode.StretchToFill, false);
+			}
+			else 
+			{
+				GUI.DrawTexture(new Rect(0, Screen.height/2, Screen.width/2, -Screen.height/2), texture, ScaleMode.StretchToFill, false);
+			}
 		}
 	}
 	
