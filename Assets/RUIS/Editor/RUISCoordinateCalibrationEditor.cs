@@ -29,8 +29,14 @@ public class RUISCoordinateCalibrationEditor : Editor
 	SerializedProperty customDevice2Tracker;
 	SerializedProperty customDevice1FloorPoint;
 	SerializedProperty customDevice2FloorPoint;
+	SerializedProperty leftIconText;
+	SerializedProperty rightIconText;
+	SerializedProperty leftIcon;
+	SerializedProperty rightIcon;
 
 	GUIStyle italicStyle = new GUIStyle();
+
+	bool showExtraProperties = false;
 	
 	public void OnEnable()
 	{
@@ -46,6 +52,10 @@ public class RUISCoordinateCalibrationEditor : Editor
 		customDevice2Tracker = serializedObject.FindProperty("customDevice2Tracker");
 		customDevice1FloorPoint = serializedObject.FindProperty("customDevice1FloorPoint");
 		customDevice2FloorPoint = serializedObject.FindProperty("customDevice2FloorPoint");
+		leftIconText = serializedObject.FindProperty("leftIconText");
+		rightIconText = serializedObject.FindProperty("rightIconText");
+		leftIcon = serializedObject.FindProperty("leftIcon");
+		rightIcon = serializedObject.FindProperty("rightIcon");
 		italicStyle.fontStyle = FontStyle.Italic;
 	}
 	
@@ -66,11 +76,6 @@ public class RUISCoordinateCalibrationEditor : Editor
 
 		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.PropertyField(xmlFilename, new GUIContent("Calibration XML File Name", ""));
-		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(device1SamplePrefab, new GUIContent("1st Device Sample Prefab", "Prefab that is used to visualize "
-																			+ "tracked device samples during and after calibration"));
-		EditorGUILayout.PropertyField(device2SamplePrefab, new GUIContent("2nd Device Sample Prefab", "Prefab that is used to visualize "
-																			+ "tracked device samples during and after calibration"));
 		
 		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.LabelField("   Custom Tracked Devices", italicStyle);
@@ -101,6 +106,29 @@ public class RUISCoordinateCalibrationEditor : Editor
 																			+ "as the above 'Custom 2 Tracked Pose'. Set this to NONE if "
 																			+ "floor data is not available to this device: then the floor will "
 																			+ "be assumed to be in origin with a floor normal of (0,1,0)"));
+
+		RUISEditorUtility.HorizontalRuler();
+		showExtraProperties = EditorGUILayout.Foldout(showExtraProperties, "Graphical Representation", true);
+		if(showExtraProperties)
+		{
+			EditorGUI.indentLevel += 1;
+			EditorGUILayout.LabelField("No changes recommended in this section", italicStyle);
+
+			EditorGUILayout.Space();
+			EditorGUILayout.PropertyField(device1SamplePrefab, new GUIContent("1st Device Sample Prefab", "Prefab that is used to visualize "
+																				+ "tracked device samples during and after calibration."));
+			EditorGUILayout.PropertyField(device2SamplePrefab, new GUIContent("2nd Device Sample Prefab", "Prefab that is used to visualize "
+																				+ "tracked device samples during and after calibration."));
+
+			EditorGUILayout.PropertyField(leftIcon, new GUIContent("Left Icon", "GUI Texture component of the left device icon."));
+			EditorGUILayout.PropertyField(rightIcon, new GUIContent("Right Icon", "GUI Texture component of the right device icon."));
+			EditorGUILayout.PropertyField(leftIconText, new GUIContent("Left Icon GUI Text", "GUI Text component that is overlaid on "
+																		+ "the left device icon."));
+			EditorGUILayout.PropertyField(rightIconText, new GUIContent("Right Icon GUI Text", "GUI Text component that is overlaid on "
+																		+ "the right device icon."));
+			EditorGUILayout.Space();
+			EditorGUI.indentLevel -= 1;
+		}
 		serializedObject.ApplyModifiedProperties();
 	}
 }

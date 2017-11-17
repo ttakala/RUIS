@@ -685,9 +685,14 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - OpenVR (controller)");
 		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
 		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  		dropDownChoices.Add("Kinect 1 - OpenVR (HMD)");
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - OpenVR (HMD)");
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - OpenVR (HMD)");
+//		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - OpenVR (HMD)"); //TODO
+//		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - OpenVR (HMD)"); //TODO
 		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enablePSMove)  		dropDownChoices.Add("PSMove - OpenVR (HMD)");
+//		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect) 		dropDownChoices.Add("Kinect 1 - OpenVR (controller)"); //TODO
+//		if(RUISDisplayManager.enableKinect		   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 1");
+//		if(RUISDisplayManager.enableKinect2		   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - Kinect 2)"); 
+//		if(RUISDisplayManager.enableKinect2 	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 2");
+//		if(RUISDisplayManager.enableKinect		   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - Kinect 1)"); //TODO
 
 		
 		if(dropDownChoices.Count == 0) 

@@ -134,7 +134,12 @@ public class RUISCoordinateCalibration : MonoBehaviour
 					calibrationPhaseObjects, calibrationResultPhaseObjects, depthViews, 
 					deviceModels, icons;
 	public string xmlFilename = "calibration.xml";
-	
+
+	public GUIText leftIconText;
+	public GUIText rightIconText;
+	public GUITexture leftIcon;
+	public GUITexture rightIcon;
+
 	private Vector3 floorNormal;
 	public RUISCalibrationProcess calibrationProcess;
 	RUISCalibrationPhase currentPhase, nextPhase, lastPhase;
@@ -197,6 +202,28 @@ public class RUISCoordinateCalibration : MonoBehaviour
 				case "Kinect 2 floor data":
 					firstDevice = RUISDevice.Kinect_2;
 					secondDevice = RUISDevice.Kinect_2;
+				break;
+				case "Custom 1 - Custom 2":
+					firstDevice = RUISDevice.Custom_1;
+					secondDevice = RUISDevice.Custom_2;
+					break;
+				case "Custom 1 - OpenVR (controller)":
+					firstDevice = RUISDevice.OpenVR;
+					secondDevice = RUISDevice.Custom_1;
+					break;
+				case "Custom 2 - OpenVR (controller)":
+					firstDevice = RUISDevice.OpenVR;
+					secondDevice = RUISDevice.Custom_2;
+				break;
+//				case "Custom 1 - OpenVR (HMD)":
+//					firstDevice = RUISDevice.OpenVR;
+//					secondDevice = RUISDevice.Custom_1;
+//					hmdCalibration = true;
+//					break;
+//				case "Custom 2 - OpenVR (HMD)":
+//					firstDevice = RUISDevice.OpenVR;
+//					secondDevice = RUISDevice.Custom_2;
+//					hmdCalibration = true;
 				break;
 				default:
 					firstDevice = RUISDevice.Null;
@@ -317,7 +344,22 @@ public class RUISCoordinateCalibration : MonoBehaviour
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
 		}
-		else 
+		else if(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.Custom_2 ) 
+		{
+			coordinateSystem.rootDevice = RUISDevice.Custom_1;
+			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(firstDevice == RUISDevice.OpenVR  && secondDevice == RUISDevice.Custom_1 ) 
+		{
+			coordinateSystem.rootDevice = RUISDevice.OpenVR;
+			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(firstDevice == RUISDevice.OpenVR  && secondDevice == RUISDevice.Custom_2 ) 
+		{
+			coordinateSystem.rootDevice = RUISDevice.OpenVR;
+			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
+		}
+		else
 		{
 			calibrationProcess = null;
 		}	
@@ -359,8 +401,6 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		coordinateSystem.RUISCalibrationResultsIn4x4Matrix[devicePairName2] = Matrix4x4.identity;
 		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[secondDevice] = 0.0f;
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[secondDevice] = Quaternion.identity;
-		
-    	
     }
 
 	void Update ()
