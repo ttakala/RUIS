@@ -33,6 +33,8 @@ public class RUISCoordinateCalibrationEditor : Editor
 	SerializedProperty rightIconText;
 	SerializedProperty leftIcon;
 	SerializedProperty rightIcon;
+	SerializedProperty customDevice1;
+	SerializedProperty customDevice2;
 
 	GUIStyle italicStyle = new GUIStyle();
 
@@ -56,6 +58,9 @@ public class RUISCoordinateCalibrationEditor : Editor
 		rightIconText = serializedObject.FindProperty("rightIconText");
 		leftIcon = serializedObject.FindProperty("leftIcon");
 		rightIcon = serializedObject.FindProperty("rightIcon");
+		customDevice1 = serializedObject.FindProperty("customDevice1");
+		customDevice2 = serializedObject.FindProperty("customDevice2");
+
 		italicStyle.fontStyle = FontStyle.Italic;
 	}
 	
@@ -115,6 +120,10 @@ public class RUISCoordinateCalibrationEditor : Editor
 			EditorGUILayout.LabelField("No changes recommended in this section", italicStyle);
 
 			EditorGUILayout.Space();
+
+
+			EditorGUILayout.PropertyField (customDevice1, new GUIContent ("1st Device Prefab", "Visualizer GameObject for " + RUISDevice.Custom_1));
+			EditorGUILayout.PropertyField (customDevice2, new GUIContent ("2nd Device Prefab", "Visualizer GameObject for " + RUISDevice.Custom_2));
 			EditorGUILayout.PropertyField(device1SamplePrefab, new GUIContent("1st Device Sample Prefab", "Prefab that is used to visualize "
 																				+ "tracked device samples during and after calibration."));
 			EditorGUILayout.PropertyField(device2SamplePrefab, new GUIContent("2nd Device Sample Prefab", "Prefab that is used to visualize "

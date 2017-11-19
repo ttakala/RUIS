@@ -69,21 +69,33 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	Vector3 translateAtTuneStart = Vector3.zero;
 	Vector3 controllerPositionAtTuneStart = Vector3.zero;
 
+	RUISCoordinateCalibration calibration;
 	RUISCalibrationProcessSettings calibrationSettings;
 
 	// *** TODO: Input conversion (also for floor normal and point)
 	public RUISCustomDeviceToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
-		
+
+		calibration = Component.FindObjectOfType<RUISCoordinateCalibration>();
+		if(!calibration) 
+		{
+			Debug.LogError ("Component " + typeof(RUISCoordinateCalibration) + " not found in the calibration scene, cannot continue!");
+			return;
+		}
+
 		inputDevice1 = RUISDevice.OpenVR;
 		if(calibrationSettings.device1 == RUISDevice.Custom_1 || calibrationSettings.device2 == RUISDevice.Custom_1)
 		{
 			inputDevice2 = RUISDevice.Custom_1;
+			if(calibration.customDevice1)
+				calibration.customDevice1.SetActive(true);
 			customDeviceName = RUISDevice.Custom_1 + (string.IsNullOrEmpty(RUISCalibrationProcessSettings.customDevice1Name)?
 															"":(" (" + RUISCalibrationProcessSettings.customDevice1Name + ")"));
 		}
 		else if(calibrationSettings.device1 == RUISDevice.Custom_2 || calibrationSettings.device2 == RUISDevice.Custom_2)
 		{
 			inputDevice2 = RUISDevice.Custom_2;
+			if(calibration.customDevice2)
+				calibration.customDevice2.SetActive(true);
 			customDeviceName = RUISDevice.Custom_2 + (string.IsNullOrEmpty(RUISCalibrationProcessSettings.customDevice2Name)?
 															"":(" (" + RUISCalibrationProcessSettings.customDevice2Name + ")"));
 		}
@@ -208,6 +220,13 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	public override RUISCalibrationPhase InitialPhase(float deltaTime) 
 	{
 		timeSinceScriptStart += deltaTime;
+
+
+		if(!calibration) 
+		{
+			this.guiTextLowerLocal = "Component " + typeof(RUISCoordinateCalibration) + " not found in\n the calibration scene, cannot continue!";
+			return RUISCalibrationPhase.Invalid;
+		}
 		
 		if(timeSinceScriptStart < 2)
 		{
@@ -242,6 +261,12 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 				this.guiTextLowerLocal = "Failed to access " + openVRDeviceName + ". \n\n Error: OpenVR not found! Is SteamVR installed?";
 				return RUISCalibrationPhase.Invalid;
 			}
+		}
+
+		if (calibration.customDevice1 && calibration.customDevice1.activeInHierarchy) 
+		{ // TODO
+			calibration.customDevice1.transform.position = coordinateSystem.ConvertLocation (calibrationSettings.customDevice1Tracker.position, RUISDevice.Custom_1);
+			calibration.customDevice1.transform.rotation = coordinateSystem.ConvertRotation (calibrationSettings.customDevice1Tracker.rotation, RUISDevice.Custom_1);
 		}
 
 		if(timeSinceScriptStart < 4)

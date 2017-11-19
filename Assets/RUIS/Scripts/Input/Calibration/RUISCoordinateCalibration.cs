@@ -130,8 +130,8 @@ public class RUISCoordinateCalibration : MonoBehaviour
 	public Transform customDevice1FloorPoint;
 	public Transform customDevice2FloorPoint;
 
-	public GameObject calibrationSpherePrefab, calibrationCubePrefab, floorPlane, 
-					calibrationPhaseObjects, calibrationResultPhaseObjects, depthViews, 
+	public GameObject calibrationSpherePrefab, calibrationCubePrefab, customDevice1, customDevice2, 
+					floorPlane, calibrationPhaseObjects, calibrationResultPhaseObjects, depthViews, 
 					deviceModels, icons;
 	public string xmlFilename = "calibration.xml";
 
@@ -278,6 +278,15 @@ public class RUISCoordinateCalibration : MonoBehaviour
 				calibrationProcess = new RUISKinect2ToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 			else
 				calibrationProcess = new RUISKinect2ToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.OpenVR)
+				||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.OpenVR )) 
+		{
+			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+//			if(hmdCalibration)
+				calibrationProcess = new RUISKinectToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
+//			else
+//				calibrationProcess = new RUISKinectToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.OpenVR)
 				 ||	(secondDevice == RUISDevice.Custom_1 && firstDevice == RUISDevice.OpenVR )) 
