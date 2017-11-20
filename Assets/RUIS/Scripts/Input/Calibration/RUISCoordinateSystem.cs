@@ -689,6 +689,35 @@ public class RUISCoordinateSystem : MonoBehaviour
 		return GetHmdCoordinateSystemYaw(RUISDevice.OpenVR) * GetHmdRawRotation();
 	}
 
+	static public Vector3 ConvertRawLocation(Vector3 rawLocation, DeviceCoordinateConversion conversion)
+	{
+		if(conversion != null)
+		{
+			rawLocation.Set((conversion.xPosNegate?-1:1)*rawLocation.x, 
+							(conversion.yPosNegate?-1:1)*rawLocation.y, 
+							(conversion.zPosNegate?-1:1)*rawLocation.z );
+			return conversion.unitScale*rawLocation;
+		}
+		else
+			return rawLocation;
+	}
+
+	static public Quaternion ConvertRawRotation(Quaternion rawRotation, DeviceCoordinateConversion conversion)
+	{
+		if(conversion != null)
+		{
+			if(conversion.rotationInverse)
+				rawRotation = Quaternion.Inverse(rawRotation);
+			rawRotation.Set((conversion.xRotNegate?-1:1)*rawRotation.x, 
+							(conversion.yRotNegate?-1:1)*rawRotation.y, 
+							(conversion.zRotNegate?-1:1)*rawRotation.z, 
+							(conversion.wRotNegate?-1:1)*rawRotation.w );
+			return rawRotation;
+		}
+		else
+			return rawRotation;
+	}
+
 	/*
 	 * 	Oculus Rift - Lots of obsolete functions, bits of which might be needed in the future if Oculus Unity Utilities support will be added
 	 */

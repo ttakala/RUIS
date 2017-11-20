@@ -130,7 +130,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 	public Transform customDevice1FloorPoint;
 	public Transform customDevice2FloorPoint;
 
-	public GameObject calibrationSpherePrefab, calibrationCubePrefab, customDevice1, customDevice2, 
+	public GameObject calibrationSpherePrefab, calibrationCubePrefab, customDevice1Object, customDevice2Object, 
 					floorPlane, calibrationPhaseObjects, calibrationResultPhaseObjects, depthViews, 
 					deviceModels, icons;
 	public string xmlFilename = "calibration.xml";

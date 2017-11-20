@@ -122,8 +122,10 @@ public class RUISCoordinateCalibrationEditor : Editor
 			EditorGUILayout.Space();
 
 
-			EditorGUILayout.PropertyField (customDevice1, new GUIContent ("1st Device Prefab", "Visualizer GameObject for " + RUISDevice.Custom_1));
-			EditorGUILayout.PropertyField (customDevice2, new GUIContent ("2nd Device Prefab", "Visualizer GameObject for " + RUISDevice.Custom_2));
+			EditorGUILayout.PropertyField (customDevice1, new GUIContent ("1st Device Model", "Visualizer GameObject for " + RUISDevice.Custom_1
+																		+ " device."));
+			EditorGUILayout.PropertyField (customDevice2, new GUIContent ("2nd Device Model", "Visualizer GameObject for " + RUISDevice.Custom_2
+																		+ " device."));
 			EditorGUILayout.PropertyField(device1SamplePrefab, new GUIContent("1st Device Sample Prefab", "Prefab that is used to visualize "
 																				+ "tracked device samples during and after calibration."));
 			EditorGUILayout.PropertyField(device2SamplePrefab, new GUIContent("2nd Device Sample Prefab", "Prefab that is used to visualize "

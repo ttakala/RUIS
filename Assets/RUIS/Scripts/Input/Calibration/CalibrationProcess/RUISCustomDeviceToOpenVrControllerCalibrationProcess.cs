@@ -33,7 +33,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	public override string guiTextUpper { get{return getUpperText();} }
 	public override string guiTextLower { get{return getLowerText();} }
 
-	private string openVRDeviceName = "OpenVR";
+	private string openVRDeviceName = "OpenVR"; // TODO: both devices can be custom
 	private string customDeviceName = "Custom_1";
 
 	bool showMovementAlert = false;
@@ -47,8 +47,8 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	public RUISInputManager inputManager;
 	private bool openVrChecked = false, calibrationFinished = false;
 	List<GameObject> calibrationSpheres;
-	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, openVrCameraObject, 
-	customModelObject, floorPlane, /*depthView,*/
+	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, 
+	customOriginObject, floorPlane, /*depthView,*/
 	openVrIcon, customIcon, deviceModelObjects, depthViewObjects, iconObjects;
 	
 	private Vector3 lastCustomSample, lastOpenVrSample;
@@ -56,9 +56,12 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	
 	private Matrix4x4 rotationMatrix, transformMatrix;
 
-	Quaternion customPitchRotation = Quaternion.identity;
-	float customDistanceFromFloor = 0;
-	Vector3 customFloorNormal = Vector3.up;
+	Quaternion firstCustomPitchRotation = Quaternion.identity;
+	float firstCustomDistanceFromFloor = 0;
+	Vector3 firstCustomFloorNormal = Vector3.up;
+	Quaternion secondCustomPitchRotation = Quaternion.identity;
+	float secondCustomDistanceFromFloor = 0;
+	Vector3 secondCustomFloorNormal = Vector3.up;
 
 	bool device1Error, device2Error;
 
@@ -73,33 +76,79 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	RUISCalibrationProcessSettings calibrationSettings;
 
 	// *** TODO: Input conversion (also for floor normal and point)
-	public RUISCustomDeviceToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
+	public RUISCustomDeviceToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) 
+	{
+		inputManager 	 = MonoBehaviour.FindObjectOfType<RUISInputManager>();
+		coordinateSystem = MonoBehaviour.FindObjectOfType<RUISCoordinateSystem>();
+		calibration 	 = MonoBehaviour.FindObjectOfType<RUISCoordinateCalibration>();
 
-		calibration = Component.FindObjectOfType<RUISCoordinateCalibration>();
+		if(!inputManager) 
+		{
+			Debug.LogError ("Component " + typeof(RUISInputManager) + " not found in the calibration scene, cannot continue!");
+			return;
+		}
+		if(!coordinateSystem) 
+		{
+			Debug.LogError ("Component " + typeof(RUISCoordinateSystem) + " not found in the calibration scene, cannot continue!");
+			return;
+		}
 		if(!calibration) 
 		{
 			Debug.LogError ("Component " + typeof(RUISCoordinateCalibration) + " not found in the calibration scene, cannot continue!");
 			return;
 		}
 
-		inputDevice1 = RUISDevice.OpenVR;
+		this.deviceModelObjects = calibrationSettings.deviceModelObjects;
+		this.depthViewObjects = calibrationSettings.depthViewObjects;
+		this.iconObjects = calibrationSettings.iconObjects;
+		this.floorPlane = calibrationSettings.floorPlane; //GameObject.Find ("Floor");
+
+		foreach (Transform child in this.deviceModelObjects.transform)
+			child.gameObject.SetActive(false);
+		foreach (Transform child in this.depthViewObjects.transform)
+			child.gameObject.SetActive(false);
+		foreach (Transform child in this.iconObjects.transform)
+			child.gameObject.SetActive(false);
+
+		bool calibratingOpenVR = false;
+		if(calibrationSettings.device1 == RUISDevice.OpenVR || calibrationSettings.device2 == RUISDevice.OpenVR)
+		{
+			inputDevice1 = RUISDevice.OpenVR;
+			calibratingOpenVR = true;
+		}
+
 		if(calibrationSettings.device1 == RUISDevice.Custom_1 || calibrationSettings.device2 == RUISDevice.Custom_1)
 		{
-			inputDevice2 = RUISDevice.Custom_1;
-			if(calibration.customDevice1)
-				calibration.customDevice1.SetActive(true);
-			customDeviceName = RUISDevice.Custom_1 + (string.IsNullOrEmpty(RUISCalibrationProcessSettings.customDevice1Name)?
-															"":(" (" + RUISCalibrationProcessSettings.customDevice1Name + ")"));
+			if(calibratingOpenVR)
+				inputDevice2 = RUISDevice.Custom_1;
+			else
+				inputDevice1 = RUISDevice.Custom_1;
+			if(calibration.customDevice1Object)
+				calibration.customDevice1Object.SetActive(true);
+			
+			string deviceName;
+			if(string.IsNullOrEmpty(RUISCalibrationProcessSettings.customDevice1Name))
+				deviceName = inputManager.customDevice1Name;
+			else
+				deviceName = RUISCalibrationProcessSettings.customDevice1Name;
+			customDeviceName = RUISDevice.Custom_1 + (string.IsNullOrEmpty(deviceName)?"":(" (" + deviceName + ")"));
 		}
-		else if(calibrationSettings.device1 == RUISDevice.Custom_2 || calibrationSettings.device2 == RUISDevice.Custom_2)
+
+		if(calibrationSettings.device1 == RUISDevice.Custom_2 || calibrationSettings.device2 == RUISDevice.Custom_2)
 		{
 			inputDevice2 = RUISDevice.Custom_2;
-			if(calibration.customDevice2)
-				calibration.customDevice2.SetActive(true);
-			customDeviceName = RUISDevice.Custom_2 + (string.IsNullOrEmpty(RUISCalibrationProcessSettings.customDevice2Name)?
-															"":(" (" + RUISCalibrationProcessSettings.customDevice2Name + ")"));
+			if(calibration.customDevice2Object)
+				calibration.customDevice2Object.SetActive(true);
+			
+			string deviceName;
+			if(string.IsNullOrEmpty(RUISCalibrationProcessSettings.customDevice2Name))
+				deviceName = inputManager.customDevice2Name;
+			else
+				deviceName = RUISCalibrationProcessSettings.customDevice2Name;
+			customDeviceName = RUISDevice.Custom_2 + (string.IsNullOrEmpty(deviceName)?"":(" (" + deviceName + ")"));
 		}
-		else
+
+		if(inputDevice1 != RUISDevice.Custom_1 && inputDevice2 != RUISDevice.Custom_1 && inputDevice2 != RUISDevice.Custom_2)
 			Debug.LogError("Variable calibrationSettings.device1 is " + calibrationSettings.device1 + ", and " 
 							+ "calibrationSettings.device2 is " + calibrationSettings.device2 + ". Expected one of them to be " 
 							+ RUISDevice.Custom_1 + " or " + RUISDevice.Custom_2);
@@ -108,38 +157,40 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		this.numberOfSamplesPerSecond = calibrationSettings.numberOfSamplesPerSecond;
 
 		SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
-		
-		inputManager = MonoBehaviour.FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
-		coordinateSystem = MonoBehaviour.FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 
 		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == inputDevice2) // Custom_1/2
 			coordinateSystem.rootDevice = inputDevice2; // Custom_1/2
 		else
 			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 
-		openVrPrefabContainer = Component.FindObjectOfType<RUISOpenVrPrefabContainer>();
-		if(openVrPrefabContainer)
+		openVrPrefabContainer = MonoBehaviour.FindObjectOfType<RUISOpenVrPrefabContainer>();
+		if(inputDevice1 == RUISDevice.OpenVR)
 		{
-			if(openVrPrefabContainer.openVrCameraRigPrefab)
+			if(openVrPrefabContainer)
 			{
-				openVrPrefabContainer.instantiatedOpenVrCameraRig = GameObject.Instantiate(openVrPrefabContainer.openVrCameraRigPrefab);
-				Camera[] rigCams = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<Camera>();
-				if(rigCams != null)
+				if(openVrPrefabContainer.openVrCameraRigPrefab)
 				{
-					foreach(Camera cam in rigCams)
+					openVrPrefabContainer.instantiatedOpenVrCameraRig = GameObject.Instantiate(openVrPrefabContainer.openVrCameraRigPrefab);
+					Camera[] rigCams = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<Camera>();
+					if(rigCams != null)
 					{
-						// *** TODO HACK Ugly fix, not 100% sure if in the future all the perspective cameras in the ViveCameraRig work well with below code
-						if(!cam.orthographic)
-							cam.nearClipPlane = 0.15f;
+						foreach(Camera cam in rigCams)
+						{
+							// *** TODO HACK Ugly fix, not 100% sure if in the future all the perspective cameras in the ViveCameraRig work well with below code
+							if(!cam.orthographic)
+								cam.nearClipPlane = 0.15f;
+						}
 					}
 				}
+				else
+					Debug.LogError("The viveCameraRigPrefab field in " + typeof(RUISOpenVrPrefabContainer) 
+								 + " is null, and calibration will not work!");
 			}
 			else
-				Debug.LogError("The viveCameraRigPrefab field in " + typeof(RUISOpenVrPrefabContainer) + " is null, and calibration will not work!");
-		}
-		else
-		{
-			Debug.LogError("Could not locate " + typeof(RUISOpenVrPrefabContainer) + " component in this scene, and calibration will not work!");
+			{
+				Debug.LogError("Could not locate " + typeof(RUISOpenVrPrefabContainer) 
+							 + " component in this scene, and calibration will not work!");
+			}
 		}
 
 		this.timeSinceScriptStart = 0;
@@ -160,19 +211,13 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		this.calibrationPhaseObjects = calibrationSettings.calibrationPhaseObjects;
 		this.calibrationResultPhaseObjects = calibrationSettings.calibrationResultPhaseObjects;
 		
-		this.deviceModelObjects = calibrationSettings.deviceModelObjects;
-		this.depthViewObjects = calibrationSettings.depthViewObjects;
-		this.iconObjects = calibrationSettings.iconObjects;
-		this.floorPlane = calibrationSettings.floorPlane; //GameObject.Find ("Floor");
-		
 		if(GameObject.Find ("PSMoveWand") != null)
 			GameObject.Find ("PSMoveWand").SetActive(false);
 		if(GameObject.Find ("HmdModel")) // "Was OculusRift"
 			GameObject.Find ("HmdModel").SetActive(false);
 		
 		// Models
-		this.openVrCameraObject = GameObject.Find ("HmdCamera"); // ###
-		this.customModelObject = GameObject.Find ("Kinect2Camera"); // ###
+		this.customOriginObject = GameObject.Find ("Kinect2Camera"); // ### TODO Custom1/2 origin GameObject
 
 		// Depth view
 //		this.depthView = GameObject.Find ("Kinect2DepthView"); // ***
@@ -184,25 +229,8 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		if(this.openVrIcon && this.openVrIcon.GetComponent<GUITexture>())
 			this.openVrIcon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
 		
-		foreach (Transform child in this.deviceModelObjects.transform)
-		{
-			child.gameObject.SetActive(false);
-		}
-		
-		foreach (Transform child in this.depthViewObjects.transform)
-		{
-			child.gameObject.SetActive(false);
-		}
-		
-		foreach (Transform child in this.iconObjects.transform)
-		{
-			child.gameObject.SetActive(false);
-		}
-		
-		if(this.openVrCameraObject)
-			this.openVrCameraObject.SetActive(false);
-		if(this.customModelObject)
-			this.customModelObject.SetActive(true);
+		if(this.customOriginObject != null)
+			this.customOriginObject.SetActive(true);
 		if(this.openVrIcon)
 			this.openVrIcon.SetActive(true);
 		if(this.customIcon)
@@ -221,16 +249,27 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	{
 		timeSinceScriptStart += deltaTime;
 
-
+		if(!inputManager) 
+		{
+			this.guiTextLowerLocal = "Component " + typeof(RUISInputManager) + " not found in\n the calibration scene, cannot continue!";
+			return RUISCalibrationPhase.Invalid;
+		}
+		if(!coordinateSystem) 
+		{
+			this.guiTextLowerLocal = "Component " + typeof(RUISCoordinateSystem) + " not found in\n the calibration scene, cannot continue!";
+			return RUISCalibrationPhase.Invalid;
+		}
 		if(!calibration) 
 		{
 			this.guiTextLowerLocal = "Component " + typeof(RUISCoordinateCalibration) + " not found in\n the calibration scene, cannot continue!";
 			return RUISCalibrationPhase.Invalid;
 		}
-		
+
+		PlaceCustomTrackedDevices();
+
 		if(timeSinceScriptStart < 2)
 		{
-			this.guiTextLowerLocal = "Calibration of '" + customDeviceName + "' and 'OpenVR Tracking'\n\n Starting up...";
+			this.guiTextLowerLocal = "Calibration of '" + customDeviceName + "'\nand 'OpenVR Tracking'\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
 
@@ -252,21 +291,16 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 				
 				if(!Valve.VR.OpenVR.IsHmdPresent()) // *** TODO HACK Valve API
 				{
-					this.guiTextLowerLocal = "Head-mounted display is not detected!\nYou might not be able to access the " + openVRDeviceName + " controllers.";
-					Debug.LogError(  "Head-mounted display is not detected! This could be an indication of a bigger problem and you might not be able to access the "
-								   + openVRDeviceName + " controllers.");
+					this.guiTextLowerLocal = "Head-mounted display is not detected!\nYou might not be able to access the " 
+											+ openVRDeviceName + " controllers.";
+					Debug.LogError(  "Head-mounted display is not detected! This could be an indication of a bigger problem and you might "
+									+ "not be able to access the " + openVRDeviceName + " controllers.");
 				}
 			} catch
 			{
 				this.guiTextLowerLocal = "Failed to access " + openVRDeviceName + ". \n\n Error: OpenVR not found! Is SteamVR installed?";
 				return RUISCalibrationPhase.Invalid;
 			}
-		}
-
-		if (calibration.customDevice1 && calibration.customDevice1.activeInHierarchy) 
-		{ // TODO
-			calibration.customDevice1.transform.position = coordinateSystem.ConvertLocation (calibrationSettings.customDevice1Tracker.position, RUISDevice.Custom_1);
-			calibration.customDevice1.transform.rotation = coordinateSystem.ConvertRotation (calibrationSettings.customDevice1Tracker.rotation, RUISDevice.Custom_1);
 		}
 
 		if(timeSinceScriptStart < 4)
@@ -301,23 +335,27 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	
 	public override RUISCalibrationPhase PreparationPhase(float deltaTime)
 	{
-		this.guiTextLowerLocal = "Hold " + openVRDeviceName + " controller and " + customDeviceName + " together.";
+		this.guiTextLowerLocal = "Hold " + openVRDeviceName + " controller and \n" + customDeviceName + " together.";
 
-		if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
+		PlaceCustomTrackedDevices();
+
+		if(inputDevice1 == RUISDevice.OpenVR && openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
 			trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-		if(trackedOpenVRObjects != null)
+		if(inputDevice1 == RUISDevice.OpenVR)
 		{
-			foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
+			if(trackedOpenVRObjects != null)
 			{
-
-				if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
-					this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
+				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
+				{
+					if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
+						this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
+				}
 			}
-		}
-		else
-		{
-			this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
+			else
+			{
+				this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
+			}
 		}
 
 		// Has a duration of timeSinceLastSample passed?
@@ -337,10 +375,11 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			
 			if(lastCustomSample != customDeviceTrackerPosition)
 				return RUISCalibrationPhase.ReadyToCalibrate;
-			else
+			else if(inputDevice1 != RUISDevice.OpenVR || (trackedOpenVRObjects != null && trackedOpenVRObjects.Length > 1))
 				this.guiTextUpperLocal = "No motion detected in '" + customDeviceName + " Tracked Pose' of\n" 
 										+ typeof(RUISCoordinateCalibration) + " component. Its position should correspond to\nthe tracked "
 										+ customDeviceName;
+
 			lastCustomSample = customDeviceTrackerPosition;
 		}
 
@@ -353,8 +392,9 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		this.guiTextLowerLocal = "Hold " + openVRDeviceName + " controller and " + customDeviceName + " together."
 								+"\nPress the trigger button to start calibrating.";
 
+		PlaceCustomTrackedDevices();
 
-		if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
+		if(inputDevice1 == RUISDevice.OpenVR && openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
 			trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
 		if(trackedOpenVRObjects != null)
@@ -391,6 +431,9 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 											   + "Keep the " + openVRDeviceName + " controller in your right\n"
 											   + "hand and make wide, calm motions with it.\n"
 		                                       + "Have both sensors see it.", numberOfSamplesTaken, numberOfSamplesToTake);
+
+		PlaceCustomTrackedDevices();
+
 		TakeSample(deltaTime);
 		
 		if(numberOfSamplesTaken >= numberOfSamplesToTake) 
@@ -451,8 +494,10 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			calibrationFinished = true;                                  
 		}
 
+		PlaceCustomTrackedDevices();
+
 		// Fine tune translation with OpenVR controller
-		if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
+		if(inputDevice1 == RUISDevice.OpenVR && openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
 			trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
 		if(    SteamVR_Controller.Input(openVrControllerIndex).connected )
@@ -486,26 +531,66 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			{
 				coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
 				coordinateSystem.SaveTransformDataToXML(xmlFilename, inputDevice1, inputDevice2); 
-				coordinateSystem.SaveFloorData(xmlFilename, inputDevice2, customFloorNormal, customDistanceFromFloor); // Custom_1/2
+//				coordinateSystem.SaveFloorData(xmlFilename, inputDevice2, firstCustomFloorNormal, firstCustomDistanceFromFloor);
 			}
 		}
 
 		return RUISCalibrationPhase.ShowResults;
 	}
 
+	public void PlaceCustomTrackedDevices()
+	{
+		if(		(inputDevice1 == RUISDevice.Custom_1 || inputDevice2 == RUISDevice.Custom_1) 
+			&& 	calibration.customDevice1Object && calibration.customDevice1Tracker) 
+		{
+			calibration.customDevice1Object.transform.position = RUISCoordinateSystem.ConvertRawLocation(calibration.customDevice1Tracker.position, 
+																										 inputManager.customDevice1Conversion	   );
+			calibration.customDevice1Object.transform.rotation = RUISCoordinateSystem.ConvertRawRotation(calibration.customDevice1Tracker.rotation,
+																										 inputManager.customDevice1Conversion	   );
+			if(calibrationFinished && coordinateSystem.rootDevice != RUISDevice.Custom_1)
+			{
+				calibration.customDevice1Object.transform.position = 
+								coordinateSystem.ConvertLocation(calibration.customDevice1Object.transform.position, coordinateSystem.rootDevice);
+				calibration.customDevice1Object.transform.rotation = 
+								coordinateSystem.ConvertRotation(calibration.customDevice1Object.transform.rotation, coordinateSystem.rootDevice);
+			}
+				
+		}
+		if(		inputDevice2 == RUISDevice.Custom_2
+			&& 	calibration.customDevice2Object && calibration.customDevice2Tracker) 
+		{
+			calibration.customDevice2Object.transform.position = RUISCoordinateSystem.ConvertRawLocation(calibration.customDevice2Tracker.position, 
+																										 inputManager.customDevice2Conversion	   );
+			calibration.customDevice2Object.transform.rotation = RUISCoordinateSystem.ConvertRawRotation(calibration.customDevice2Tracker.rotation,
+																										 inputManager.customDevice2Conversion	   );
+			if(calibrationFinished && coordinateSystem.rootDevice != RUISDevice.Custom_2)
+			{
+				calibration.customDevice2Object.transform.position = 
+								coordinateSystem.ConvertLocation(calibration.customDevice2Object.transform.position, coordinateSystem.rootDevice);
+				calibration.customDevice2Object.transform.rotation = 
+								coordinateSystem.ConvertRotation(calibration.customDevice2Object.transform.rotation, coordinateSystem.rootDevice);
+			}
+		}
+	}
+
 	public override void PlaceSensorModels()
 	{
-		customModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, inputDevice2); // Custom_1/2
-		customModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, inputDevice2); // Custom_1/2
 
 		if(coordinateSystem.rootDevice == inputDevice2) // Custom_1/2
 		{
-			if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
+			if(inputDevice1 == RUISDevice.OpenVR && openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
 			{
 				openVrPrefabContainer.instantiatedOpenVrCameraRig.transform.localRotation = coordinateSystem.GetHmdCoordinateSystemYaw(RUISDevice.OpenVR);
 				openVrPrefabContainer.instantiatedOpenVrCameraRig.transform.localScale    = coordinateSystem.ExtractLocalScale(RUISDevice.OpenVR);
 				openVrPrefabContainer.instantiatedOpenVrCameraRig.transform.localPosition = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.OpenVR);
 			}
+		}
+
+		// TODO Now this uses distance from floor and "sensor pitch". Set to custom origin of non-rootDevice
+		if(customOriginObject)
+		{
+			customOriginObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, coordinateSystem.rootDevice);
+			customOriginObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, coordinateSystem.rootDevice);
 		}
 
 		if(this.floorPlane)
@@ -552,7 +637,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 		// Check that we are not taking samples too frequently
 		if(   Vector3.Distance(customSample, lastCustomSample) < calibrationSettings.sampleMinDistance
-		   || Vector3.Distance(openVrSample, lastOpenVrSample)       < calibrationSettings.sampleMinDistance)
+		   || Vector3.Distance(openVrSample, lastOpenVrSample) < calibrationSettings.sampleMinDistance)
 		{
 			if(!showMovementAlert && Time.time - lastMovementAlertTime > 3)
 			{
@@ -572,7 +657,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		}
 
 		lastCustomSample = customSample;
-		lastOpenVrSample    = openVrSample;
+		lastOpenVrSample = openVrSample;
 
 //		Debug.Log(openVrSample + " " + customSample);
 		samplesCustom.Add(customSample);
@@ -588,12 +673,17 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 		if(device == RUISDevice.Custom_1) 
 		{
-			sample = calibrationSettings.customDevice1Tracker.position;
-			device2Error = false;
+			sample = RUISCoordinateSystem.ConvertRawLocation(calibration.customDevice1Tracker.position, inputManager.customDevice1Conversion);
+
+			if(inputDevice2 == RUISDevice.Custom_1)
+				device2Error = false;
+			else 
+				device1Error = false;
 		}
 		if(device == RUISDevice.Custom_2) 
 		{
-			sample = calibrationSettings.customDevice2Tracker.position;
+			sample = RUISCoordinateSystem.ConvertRawLocation(calibration.customDevice2Tracker.position, inputManager.customDevice2Conversion);
+			
 			device2Error = false;
 		}
 		if(device == RUISDevice.OpenVR)
@@ -653,8 +743,6 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		}
 		
 		return sample;
-		
-		
 	}
 	
 	private void CalculateTransformation()
@@ -700,24 +788,35 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		transformMatrix = MathUtil.MatrixToMatrix4x4(transformMatrixSolution);//CreateTransformMatrix(transformMatrixSolution);
 		Debug.Log(transformMatrix);
 
-		UpdateFloorNormalAndDistance(); 
+		if(inputDevice1 == RUISDevice.Custom_1 || inputDevice2 == RUISDevice.Custom_1)
+			UpdateFloorNormalAndDistance(RUISDevice.Custom_1);
+		if(inputDevice2 == RUISDevice.Custom_2)
+			UpdateFloorNormalAndDistance(RUISDevice.Custom_2);
 
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
 
 		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
-		coordinateSystem.SaveTransformDataToXML(xmlFilename, RUISDevice.OpenVR,  inputDevice2); // Custom_1/2 
-		coordinateSystem.SaveFloorData(xmlFilename, inputDevice2, customFloorNormal, customDistanceFromFloor); // Custom_1/2 
-
+		coordinateSystem.SaveTransformDataToXML(xmlFilename, inputDevice1,  inputDevice2); // OpenVR/Custom_1, Custom_1/2 [3 permutations]
 
 		Vector3 translate = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
 		updateDictionaries(	coordinateSystem.RUISCalibrationResultsInVector3, 
 		                   	coordinateSystem.RUISCalibrationResultsInQuaternion,
 		                   	coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
 							translate, rotationQuaternion, transformMatrix,
-							RUISDevice.OpenVR, inputDevice2); // Custom_1/2 
-		                   
-		coordinateSystem.RUISCalibrationResultsDistanceFromFloor[inputDevice2] = customDistanceFromFloor; // Custom_1/2 
-		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[inputDevice2] = customPitchRotation; // Custom_1/2 
+							inputDevice1, inputDevice2); // OpenVR/Custom_1, Custom_1/2 [3 permutations]
+
+		if(inputDevice1 == RUISDevice.Custom_1 || inputDevice2 == RUISDevice.Custom_1)
+		{
+			coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Custom_1, firstCustomFloorNormal, firstCustomDistanceFromFloor);
+			coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Custom_1]  = firstCustomDistanceFromFloor;
+			coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Custom_1] = firstCustomPitchRotation;
+		}
+		if(inputDevice2 == RUISDevice.Custom_2)
+		{
+			coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Custom_2, secondCustomFloorNormal, secondCustomDistanceFromFloor);
+			coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Custom_2]  = secondCustomDistanceFromFloor;
+			coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Custom_2] = secondCustomPitchRotation;
+		}
 	}
 	
 	
@@ -747,18 +846,38 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	}
 
 	// *** ### TODO: Test that this works
-	private void UpdateFloorNormalAndDistance()
+	private void UpdateFloorNormalAndDistance(RUISDevice device)
 	{
-		coordinateSystem.ResetFloorNormal(inputDevice2); // CustomDevice1/2 
 		Transform customDeviceFloorPoint = null;
-		if(inputDevice2 == RUISDevice.Custom_1)
-			customDeviceFloorPoint = calibrationSettings.customDevice1FloorPoint;
-		if(inputDevice2 == RUISDevice.Custom_2)
-			customDeviceFloorPoint = calibrationSettings.customDevice2FloorPoint;
+
+		coordinateSystem.ResetFloorNormal(device); // CustomDevice1/2
+		if(device == RUISDevice.Custom_1 && calibration.customDevice1FloorPoint)
+		{
+			customDeviceFloorPoint = calibration.customDevice1FloorPoint;
+		}
+		if(device == RUISDevice.Custom_2 && calibration.customDevice2FloorPoint)
+		{
+			customDeviceFloorPoint = calibration.customDevice2FloorPoint;
+		}
 		if(customDeviceFloorPoint)
 		{
 			Vector3 newFloorNormal   = customDeviceFloorPoint.up.normalized;
 			Vector3 newFloorPosition = customDeviceFloorPoint.position;
+
+			if(device == RUISDevice.Custom_1)
+			{
+				newFloorPosition = RUISCoordinateSystem.ConvertRawLocation(	calibration.customDevice1FloorPoint.position, 
+																			inputManager.customDevice1Conversion		 );
+				newFloorNormal   = RUISCoordinateSystem.ConvertRawLocation( calibration.customDevice1FloorPoint.up, 
+																			inputManager.customDevice1Conversion   );
+			}
+			if(device == RUISDevice.Custom_2)
+			{
+				newFloorPosition = RUISCoordinateSystem.ConvertRawLocation(	calibration.customDevice2FloorPoint.position, 
+																			inputManager.customDevice2Conversion		 );
+				newFloorNormal   = RUISCoordinateSystem.ConvertRawLocation( calibration.customDevice2FloorPoint.up, 
+																			inputManager.customDevice2Conversion   );
+			}
 
 			//Project the position of the customDevice origin onto the floor
 			//http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
@@ -777,14 +896,30 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			if(newFloorNormal.sqrMagnitude < 0.1f)
 				newFloorNormal = Vector3.up;
 
-			customDistanceFromFloor = closestFloorPointToCustomDevice.magnitude;
-			customFloorNormal = newFloorNormal;
-			
-			customPitchRotation = Quaternion.Inverse(customFloorRotator);
+			if(device == RUISDevice.Custom_1)
+			{
+				firstCustomDistanceFromFloor = closestFloorPointToCustomDevice.magnitude;
+				firstCustomFloorNormal		 = newFloorNormal;
+				firstCustomPitchRotation	 = Quaternion.Inverse(customFloorRotator);
+			}
+			if(device == RUISDevice.Custom_2)
+			{
+				secondCustomDistanceFromFloor = closestFloorPointToCustomDevice.magnitude;
+				secondCustomFloorNormal		  = newFloorNormal;
+				secondCustomPitchRotation	  = Quaternion.Inverse(customFloorRotator);
+			}
 		}
 
-		coordinateSystem.SetDistanceFromFloor(customDistanceFromFloor, inputDevice2); // Custom_1/2 
-		coordinateSystem.SetFloorNormal(customFloorNormal, inputDevice2); // Custom_1/2 
+		if(device == RUISDevice.Custom_1)
+		{
+			coordinateSystem.SetDistanceFromFloor(firstCustomDistanceFromFloor, RUISDevice.Custom_1);
+			coordinateSystem.SetFloorNormal(firstCustomFloorNormal, RUISDevice.Custom_1);
+		}
+		if(device == RUISDevice.Custom_2)
+		{
+			coordinateSystem.SetDistanceFromFloor(secondCustomDistanceFromFloor, RUISDevice.Custom_2);
+			coordinateSystem.SetFloorNormal(secondCustomFloorNormal, RUISDevice.Custom_2);
+		}
 	}
 
 	public Valve.VR.VRControllerState_t controllerState;
