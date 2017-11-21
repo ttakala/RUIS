@@ -69,8 +69,8 @@ public abstract class RUISCalibrationProcess
 	}
 }
 
-public class RUISCalibrationProcessSettings 
-{
+public class RUISCalibrationProcessSettings
+{	// HACK to convey calibration settings to calibration.scene when entering it from another scene via RUISMenu. Consider using existing XML instead
 	static public bool isCalibrating = false;
 	static public string devicePair;
 	static public int previousSceneId;
@@ -91,8 +91,8 @@ public class RUISCalibrationProcessSettings
 	static public RUISCoordinateSystem.DeviceCoordinateConversion customDevice1Conversion;
 	static public RUISCoordinateSystem.DeviceCoordinateConversion customDevice2Conversion;
 
-	public RUISDevice device1;
-	public RUISDevice device2;
+	public RUISDevice firstDevice;
+	public RUISDevice secondDevice;
 	public int numberOfSamplesToTake;
 	public int numberOfSamplesPerSecond;
 	public float sampleMinDistance;
@@ -103,11 +103,6 @@ public class RUISCalibrationProcessSettings
 	public GameObject calibrationResultPhaseObjects;
 	public string xmlFilename;
 	public GameObject deviceModelObjects, depthViewObjects, iconObjects;
-
-	public Transform customDevice1Tracker;
-	public Transform customDevice2Tracker;
-	public Transform customDevice1FloorPoint;
-	public Transform customDevice2FloorPoint;
 }
 
 public class RUISCoordinateCalibration : MonoBehaviour 
@@ -135,10 +130,12 @@ public class RUISCoordinateCalibration : MonoBehaviour
 					deviceModels, icons;
 	public string xmlFilename = "calibration.xml";
 
-	public GUIText leftIconText;
-	public GUIText rightIconText;
-	public GUITexture leftIcon;
-	public GUITexture rightIcon;
+	public GUIText firstIconText;
+	public GUIText secondIconText;
+	public GUITexture firstIcon;
+	public GUITexture secondIcon;
+
+	public List<Texture2D> iconTextures = new List<Texture2D>();
 
 	private Vector3 floorNormal;
 	public RUISCalibrationProcess calibrationProcess;
@@ -252,8 +249,8 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		calibrationProcessSettings.numberOfSamplesToTake = numberOfSamplesToTake;
 		calibrationProcessSettings.numberOfSamplesPerSecond = samplesPerSecond;
 		calibrationProcessSettings.sampleMinDistance = this.sampleMinDistance;
-		calibrationProcessSettings.device1 = firstDevice;
-		calibrationProcessSettings.device2 = secondDevice;
+		calibrationProcessSettings.firstDevice  = firstDevice;
+		calibrationProcessSettings.secondDevice = secondDevice;
 		calibrationProcessSettings.device1SamplePrefab = this.device1SamplePrefab;
 		calibrationProcessSettings.device2SamplePrefab = this.device2SamplePrefab;
 		calibrationProcessSettings.floorPlane = this.floorPlane;
@@ -262,10 +259,6 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		calibrationProcessSettings.deviceModelObjects = deviceModels;
 		calibrationProcessSettings.depthViewObjects = depthViews;
 		calibrationProcessSettings.iconObjects = icons;
-		calibrationProcessSettings.customDevice1Tracker = this.customDevice1Tracker;
-		calibrationProcessSettings.customDevice2Tracker = this.customDevice2Tracker;
-		calibrationProcessSettings.customDevice1FloorPoint = this.customDevice1FloorPoint;
-		calibrationProcessSettings.customDevice2FloorPoint = this.customDevice2FloorPoint;
 	}
 
     void Start()
@@ -305,6 +298,12 @@ public class RUISCoordinateCalibration : MonoBehaviour
 			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
 			//			else
 			//				calibrationProcess = new RUISCustomDeviceToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(	(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.Custom_2)
+				 || (secondDevice == RUISDevice.Custom_1 && firstDevice == RUISDevice.Custom_2 ))
+		{
+			coordinateSystem.rootDevice = RUISDevice.Custom_1;
+			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_2)
 		   		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Kinect_2 )) 
@@ -351,21 +350,6 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		{
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
-			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
-		}
-		else if(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.Custom_2 ) 
-		{
-			coordinateSystem.rootDevice = RUISDevice.Custom_1;
-			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
-		}
-		else if(firstDevice == RUISDevice.OpenVR  && secondDevice == RUISDevice.Custom_1 ) 
-		{
-			coordinateSystem.rootDevice = RUISDevice.OpenVR;
-			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
-		}
-		else if(firstDevice == RUISDevice.OpenVR  && secondDevice == RUISDevice.Custom_2 ) 
-		{
-			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);
 		}
 		else

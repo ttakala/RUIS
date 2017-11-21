@@ -2,7 +2,7 @@
 
 Content    :   Handles the calibration procedure between Kinect 2 and OpenVR
 Authors    :   Tuukka Takala
-Copyright  :   Copyright 2016 Tuukka Takala. All Rights reserved.
+Copyright  :   Copyright 2018 Tuukka Takala. All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
                restricted for commercial projects. Contact tmtakala@gmail.com
                for more information.
@@ -16,8 +16,8 @@ using CSML;
 using Kinect = Windows.Kinect;
 using Valve.VR;
 
-public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationProcess {
-	
+public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationProcess 
+{
 	public string getUpperText() {
 		return this.guiTextUpperLocal;
 	}
@@ -49,7 +49,7 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, viveCameraObject, 
 	kinect2ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
-	viveIcon, kinect2Icon, deviceModelObjects, depthViewObjects, iconObjects;
+	deviceModelObjects, depthViewObjects, iconObjects;
 	
 	private Vector3 lastKinect2Sample, lastViveSample;
 	private string xmlFilename;
@@ -78,10 +78,19 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 	Vector3 translateAtTuneStart = Vector3.zero;
 	Vector3 controllerPositionAtTuneStart = Vector3.zero;
 
+	RUISCoordinateCalibration calibration;
 	RUISCalibrationProcessSettings calibrationSettings;
 
-	public RUISKinect2ToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
-		
+	public RUISKinect2ToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) 
+	{
+		calibration = MonoBehaviour.FindObjectOfType<RUISCoordinateCalibration>();
+
+		if(!calibration) 
+		{
+			Debug.LogError ("Component " + typeof(RUISCoordinateCalibration) + " not found in the calibration scene, cannot continue!");
+			return;
+		}
+
 		this.inputDevice1 = RUISDevice.OpenVR;
 		this.inputDevice2 = RUISDevice.Kinect_2;
 		
@@ -165,38 +174,53 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		// Depth view
 		this.depthView = GameObject.Find ("Kinect2DepthView");
 		
-		// Icons
-		this.viveIcon = GameObject.Find ("Hmd Icon"); // Was "OculusDK2 Icon"
-		this.kinect2Icon = GameObject.Find ("Kinect2 Icon");
-		
 		this.floorPlane = GameObject.Find ("Floor");
 		
-		if(this.viveIcon && this.viveIcon.GetComponent<GUITexture>())
-			this.viveIcon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
-		
 		foreach (Transform child in this.deviceModelObjects.transform)
-		{
 			child.gameObject.SetActive(false);
-		}
-		
 		foreach (Transform child in this.depthViewObjects.transform)
-		{
 			child.gameObject.SetActive(false);
-		}
-		
 		foreach (Transform child in this.iconObjects.transform)
-		{
 			child.gameObject.SetActive(false);
-		}
 		
+		if(calibration.iconTextures != null)
+		{
+			foreach(Texture2D iconTexture in calibration.iconTextures)
+			{
+				if(iconTexture.name == "oculus_camera_icon") // TODO replace with OpenVR controller icon
+				{
+					if(calibration.firstIcon)
+					{
+						calibration.firstIcon.gameObject.SetActive(true);
+						calibration.firstIcon.texture = iconTexture;
+					}
+				}
+				if(iconTexture.name == "kinect2_icon")
+				{
+					if(calibration.secondIcon)
+					{
+						calibration.secondIcon.gameObject.SetActive(true);
+						calibration.secondIcon.texture = iconTexture;
+					}
+				}
+			}
+		}
+
+		if(calibration.firstIconText)
+		{
+			calibration.firstIconText.gameObject.SetActive(true);
+			calibration.firstIconText.text = RUISDevice.OpenVR.ToString();
+		}
+		if(calibration.secondIconText)
+		{
+			calibration.secondIconText.gameObject.SetActive(true);
+			calibration.secondIconText.text = RUISDevice.Kinect_2.ToString();
+		}
+
 		if(this.viveCameraObject)
 			this.viveCameraObject.SetActive(false);
 		if(this.kinect2ModelObject)
 			this.kinect2ModelObject.SetActive(true);
-		if(this.viveIcon)
-			this.viveIcon.SetActive(true);
-		if(this.kinect2Icon)
-			this.kinect2Icon.SetActive(true);
 		if(this.calibrationPhaseObjects)
 			this.calibrationPhaseObjects.SetActive(true);
 		if(this.calibrationResultPhaseObjects)

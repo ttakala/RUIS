@@ -29,12 +29,13 @@ public class RUISCoordinateCalibrationEditor : Editor
 	SerializedProperty customDevice2Tracker;
 	SerializedProperty customDevice1FloorPoint;
 	SerializedProperty customDevice2FloorPoint;
-	SerializedProperty leftIconText;
-	SerializedProperty rightIconText;
-	SerializedProperty leftIcon;
-	SerializedProperty rightIcon;
-	SerializedProperty customDevice1;
-	SerializedProperty customDevice2;
+	SerializedProperty firstIconText;
+	SerializedProperty secondIconText;
+	SerializedProperty firstIcon;
+	SerializedProperty secondIcon;
+	SerializedProperty iconTextures;
+	SerializedProperty customDevice1Object;
+	SerializedProperty customDevice2Object;
 
 	GUIStyle italicStyle = new GUIStyle();
 
@@ -54,12 +55,13 @@ public class RUISCoordinateCalibrationEditor : Editor
 		customDevice2Tracker = serializedObject.FindProperty("customDevice2Tracker");
 		customDevice1FloorPoint = serializedObject.FindProperty("customDevice1FloorPoint");
 		customDevice2FloorPoint = serializedObject.FindProperty("customDevice2FloorPoint");
-		leftIconText = serializedObject.FindProperty("leftIconText");
-		rightIconText = serializedObject.FindProperty("rightIconText");
-		leftIcon = serializedObject.FindProperty("leftIcon");
-		rightIcon = serializedObject.FindProperty("rightIcon");
-		customDevice1 = serializedObject.FindProperty("customDevice1");
-		customDevice2 = serializedObject.FindProperty("customDevice2");
+		firstIconText = serializedObject.FindProperty("firstIconText");
+		secondIconText = serializedObject.FindProperty("secondIconText");
+		firstIcon = serializedObject.FindProperty("firstIcon");
+		secondIcon = serializedObject.FindProperty("secondIcon");
+		iconTextures = serializedObject.FindProperty("iconTextures");
+		customDevice1Object = serializedObject.FindProperty("customDevice1Object");
+		customDevice2Object = serializedObject.FindProperty("customDevice2Object");
 
 		italicStyle.fontStyle = FontStyle.Italic;
 	}
@@ -68,8 +70,12 @@ public class RUISCoordinateCalibrationEditor : Editor
 	{
 		serializedObject.Update();
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(firstDevice, new GUIContent("1st Calibration Device", ""));
-		EditorGUILayout.PropertyField(secondDevice, new GUIContent("2nd Calibration Device", ""));
+		EditorGUILayout.PropertyField(firstDevice, new GUIContent("1st Calibration Device", "The 1st device whose coordinate system (and/or "
+																+ "floor information) will be calibrated against the 2nd device. The 1st and "
+																+ "2nd refer to the calibration pair \"slot\" index."));
+		EditorGUILayout.PropertyField(secondDevice, new GUIContent("2nd Calibration Device", "The 2nd device whose coordinate system (and/or "
+																+ "floor information) will be calibrated against the 1st device. The 1st and "
+																+ "2nd refer to the calibration pair \"slot\" index."));
 		EditorGUILayout.PropertyField(numberOfSamplesToTake, new GUIContent("Number Of Samples To Take", "Calibration finishes after "
 																			+ "this number of samples have been collected."));
 		EditorGUILayout.PropertyField(samplesPerSecond, new GUIContent("Samples Per Second", "Rate at which device position is sampled"));
@@ -85,32 +91,32 @@ public class RUISCoordinateCalibrationEditor : Editor
 		RUISEditorUtility.HorizontalRuler();
 		EditorGUILayout.LabelField("   Custom Tracked Devices", italicStyle);
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(customDevice1Tracker, new GUIContent("Custom 1 Tracked Pose", "Transform whose pose is updated "
-																			+ "with the position of the tracked device. Link this field "
-																			+ "with a Game Object that has a component that updates its "
+		EditorGUILayout.PropertyField(customDevice1Tracker, new GUIContent(   RUISDevice.Custom_1 + " Tracked Pose", "Transform whose pose is "
+																			+ "updated with the position of the tracked device. Link this "
+																			+ "field with a Game Object that has a component that updates its "
 																			+ "transform.position with the 'raw' position of the tracked "
 																			+ "Custom device."));
-		EditorGUILayout.PropertyField(customDevice1FloorPoint, new GUIContent("Custom 1 Floor Pose", "OPTIONAL: Transform which "
+		EditorGUILayout.PropertyField(customDevice1FloorPoint, new GUIContent(RUISDevice.Custom_1 + " Floor Pose", "OPTIONAL: Transform which "
 																			+ "includes a position that is a 3D point on the floor plane, "
 																			+ "and an orientation whose up direction is the floor normal. "
-																			+ "The Floor Pose should be in the same 'raw' coordinate system "
-																			+ "as the above 'Custom 1 Tracked Pose'. Set this to NONE if "
-																			+ "floor data is not available to this device: then the floor will "
-																			+ "be assumed to be in origin with a floor normal of (0,1,0)"));
+																			+ "The Floor Pose should be in the same 'raw' coordinate system as "
+																			+ "the above '" + RUISDevice.Custom_1 + " Tracked Pose'. Set this to "
+																			+ "NONE if floor data is not available to this device: then the floor "
+																			+ "will be assumed to be in origin with a floor normal of (0,1,0)"));
 
 		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(customDevice2Tracker, new GUIContent("Custom 2 Tracked Pose", "Transform whose pose is updated "
-																			+ "with the position of the tracked device. Link this field "
-																			+ "with a Game Object that has a component that updates its "
+		EditorGUILayout.PropertyField(customDevice2Tracker, new GUIContent(   RUISDevice.Custom_2 + " Tracked Pose", "Transform whose pose is "
+																			+ "updated with the position of the tracked device. Link this "
+																			+ "field with a Game Object that has a component that updates its "
 																			+ "transform.position with the 'raw' position of the tracked "
 																			+ "Custom device."));
-		EditorGUILayout.PropertyField(customDevice2FloorPoint, new GUIContent("Custom 2 Floor Pose", "OPTIONAL: Transform which "
+		EditorGUILayout.PropertyField(customDevice2FloorPoint, new GUIContent(RUISDevice.Custom_2 + " Floor Pose", "OPTIONAL: Transform which "
 																			+ "includes a position that is a 3D point on the floor plane, "
 																			+ "and an orientation whose up direction is the floor normal. "
-																			+ "The Floor Pose should be in the same 'raw' coordinate system "
-																			+ "as the above 'Custom 2 Tracked Pose'. Set this to NONE if "
-																			+ "floor data is not available to this device: then the floor will "
-																			+ "be assumed to be in origin with a floor normal of (0,1,0)"));
+																			+ "The Floor Pose should be in the same 'raw' coordinate system as "
+																			+ "the above '" + RUISDevice.Custom_2 + " Tracked Pose'. Set this to "
+																			+ "NONE if floor data is not available to this device: then the floor "
+																			+ "will be assumed to be in origin with a floor normal of (0,1,0)"));
 
 		RUISEditorUtility.HorizontalRuler();
 		showExtraProperties = EditorGUILayout.Foldout(showExtraProperties, "Graphical Representation", true);
@@ -121,23 +127,29 @@ public class RUISCoordinateCalibrationEditor : Editor
 
 			EditorGUILayout.Space();
 
+			EditorGUILayout.PropertyField(customDevice1Object, new GUIContent ("1st Device Model", "Visualizer GameObject for the 1st " 
+																								 + "device in the calibration pair."));
+			EditorGUILayout.PropertyField(firstIcon, new GUIContent("1st Icon",   "GUI Texture component for the icon of the 1st "
+																				+ "device in the calibration pair."));
+			EditorGUILayout.PropertyField(firstIconText, new GUIContent("1st Icon Text",  "GUI Text component that is overlaid on the "
+																						+ "icon of the 1st device in the calibration pair."));
+			EditorGUILayout.PropertyField(device1SamplePrefab, new GUIContent("1st Device Sample Prefab", "Prefab that is used during and after "
+													+ "calibration to visualize position samples of the 1st device in the calibration pair."));
 
-			EditorGUILayout.PropertyField (customDevice1, new GUIContent ("1st Device Model", "Visualizer GameObject for " + RUISDevice.Custom_1
-																		+ " device."));
-			EditorGUILayout.PropertyField (customDevice2, new GUIContent ("2nd Device Model", "Visualizer GameObject for " + RUISDevice.Custom_2
-																		+ " device."));
-			EditorGUILayout.PropertyField(device1SamplePrefab, new GUIContent("1st Device Sample Prefab", "Prefab that is used to visualize "
-																				+ "tracked device samples during and after calibration."));
-			EditorGUILayout.PropertyField(device2SamplePrefab, new GUIContent("2nd Device Sample Prefab", "Prefab that is used to visualize "
-																				+ "tracked device samples during and after calibration."));
-
-			EditorGUILayout.PropertyField(leftIcon, new GUIContent("Left Icon", "GUI Texture component of the left device icon."));
-			EditorGUILayout.PropertyField(rightIcon, new GUIContent("Right Icon", "GUI Texture component of the right device icon."));
-			EditorGUILayout.PropertyField(leftIconText, new GUIContent("Left Icon GUI Text", "GUI Text component that is overlaid on "
-																		+ "the left device icon."));
-			EditorGUILayout.PropertyField(rightIconText, new GUIContent("Right Icon GUI Text", "GUI Text component that is overlaid on "
-																		+ "the right device icon."));
 			EditorGUILayout.Space();
+
+			EditorGUILayout.PropertyField(customDevice2Object, new GUIContent ("2nd Device Model", "Visualizer GameObject for the 2nd " 
+																								 + "device in the calibration pair."));
+			EditorGUILayout.PropertyField(secondIcon, new GUIContent("2nd Icon",  "GUI Texture component for the icon of the 2nd "
+																				+ "device in the calibration pair."));
+			EditorGUILayout.PropertyField(secondIconText, new GUIContent("2nd Icon Text", "GUI Text component that is overlaid on the "
+																						+ "icon of the 2nd device in the calibration pair."));
+			EditorGUILayout.PropertyField(device2SamplePrefab, new GUIContent("2nd Device Sample Prefab", "Prefab that is used during and after "
+													+ "calibration to visualize position samples of the 2nd device in the calibration pair."));
+			EditorGUILayout.Space();
+
+
+			EditorGUILayout.PropertyField(iconTextures, new GUIContent ("Icon Textures", "Pool of device icon textures "), true);
 			EditorGUI.indentLevel -= 1;
 		}
 		serializedObject.ApplyModifiedProperties();

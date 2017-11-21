@@ -269,12 +269,12 @@ public class RUISMenuNGUI : MonoBehaviour {
 						RUISCalibrationProcessSettings.enableRazerHydra 	= inputManager.enableRazerHydra;
 						RUISCalibrationProcessSettings.enableCustomDevice1 	= inputManager.enableCustomDevice1;
 						RUISCalibrationProcessSettings.enableCustomDevice2 	= inputManager.enableCustomDevice2;
-						RUISCalibrationProcessSettings.customDevice1Name  = inputManager.customDevice1Name;
-						RUISCalibrationProcessSettings.customDevice2Name  = inputManager.customDevice2Name;
+						RUISCalibrationProcessSettings.customDevice1Name	= inputManager.customDevice1Name;
+						RUISCalibrationProcessSettings.customDevice2Name	= inputManager.customDevice2Name;
 						RUISCalibrationProcessSettings.customDevice1Conversion = inputManager.customDevice1Conversion;
 						RUISCalibrationProcessSettings.customDevice2Conversion = inputManager.customDevice2Conversion;
-						RUISCalibrationProcessSettings.PSMoveIP 		  = inputManager.PSMoveIP;
-						RUISCalibrationProcessSettings.PSMovePort 		  = inputManager.PSMovePort;
+						RUISCalibrationProcessSettings.PSMoveIP 			= inputManager.PSMoveIP;
+						RUISCalibrationProcessSettings.PSMovePort 			= inputManager.PSMovePort;
 //						RUISCalibrationProcessSettings.jumpGestureEnabled = inputManager.jumpGestureEnabled;
 						if(coordinateSystem)
 						{

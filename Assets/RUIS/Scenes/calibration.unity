@@ -190,7 +190,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1549391996850526, guid: 2a8e46fd5681b8c4f8613dba12463b15, type: 2}
       propertyPath: m_Name
-      value: CustomDevice2
+      value: 2nd Device
       objectReference: {fileID: 0}
     - target: {fileID: 1549391996850526, guid: 2a8e46fd5681b8c4f8613dba12463b15, type: 2}
       propertyPath: m_IsActive
@@ -1235,7 +1235,7 @@ GameObject:
   - component: {fileID: 948579715}
   - component: {fileID: 948579716}
   m_Layer: 12
-  m_Name: Right Icon Background
+  m_Name: 2nd Icon Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1442,8 +1442,8 @@ GUIText:
   m_PixelOffset: {x: 0, y: 0}
   m_LineSpacing: 1
   m_TabSize: 4
-  m_Font: {fileID: 12800000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
-  m_Material: {fileID: 2100000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
+  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Material: {fileID: 0}
   m_FontSize: 19
   m_FontStyle: 0
   m_Color:
@@ -1509,7 +1509,7 @@ GameObject:
   - component: {fileID: 1069734014}
   - component: {fileID: 1069734015}
   m_Layer: 12
-  m_Name: Left Icon Text
+  m_Name: 1st Icon Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1536,7 +1536,7 @@ GUIText:
   m_GameObject: {fileID: 1069734013}
   m_Enabled: 1
   serializedVersion: 3
-  m_Text: Custom 1
+  m_Text: 1st Icon
   m_Anchor: 4
   m_Alignment: 1
   m_PixelOffset: {x: 40, y: 33}
@@ -1840,7 +1840,7 @@ GameObject:
   - component: {fileID: 1374814728}
   - component: {fileID: 1374814729}
   m_Layer: 12
-  m_Name: Right Icon Text
+  m_Name: 2nd Icon Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1867,7 +1867,7 @@ GUIText:
   m_GameObject: {fileID: 1374814727}
   m_Enabled: 1
   serializedVersion: 3
-  m_Text: Custom 2
+  m_Text: 2nd Icon
   m_Anchor: 4
   m_Alignment: 1
   m_PixelOffset: {x: 120, y: 33}
@@ -1892,7 +1892,7 @@ GameObject:
   - component: {fileID: 1391162237}
   - component: {fileID: 1391162238}
   m_Layer: 12
-  m_Name: Left Icon Background
+  m_Name: 1st Icon Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2533,8 +2533,8 @@ GUIText:
   m_PixelOffset: {x: 0, y: 0}
   m_LineSpacing: 1
   m_TabSize: 4
-  m_Font: {fileID: 12800000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
-  m_Material: {fileID: 2100000, guid: cab97e1efe2d6594980b10069a7ed975, type: 3}
+  m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Material: {fileID: 0}
   m_FontSize: 23
   m_FontStyle: 0
   m_Color:
@@ -2812,7 +2812,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1549391996850526, guid: 2a8e46fd5681b8c4f8613dba12463b15, type: 2}
       propertyPath: m_Name
-      value: CustomDevice1
+      value: 1st Device
       objectReference: {fileID: 0}
     - target: {fileID: 1549391996850526, guid: 2a8e46fd5681b8c4f8613dba12463b15, type: 2}
       propertyPath: m_IsActive
@@ -3049,8 +3049,8 @@ MonoBehaviour:
   customDevice2FloorPoint: {fileID: 161391100}
   calibrationSpherePrefab: {fileID: 0}
   calibrationCubePrefab: {fileID: 0}
-  customDevice1: {fileID: 1833416029}
-  customDevice2: {fileID: 95177930}
+  customDevice1Object: {fileID: 1833416029}
+  customDevice2Object: {fileID: 95177930}
   floorPlane: {fileID: 0}
   calibrationPhaseObjects: {fileID: 0}
   calibrationResultPhaseObjects: {fileID: 0}
@@ -3058,10 +3058,15 @@ MonoBehaviour:
   deviceModels: {fileID: 0}
   icons: {fileID: 0}
   xmlFilename: calibration.xml
-  leftIconText: {fileID: 1069734015}
-  rightIconText: {fileID: 1374814729}
-  leftIcon: {fileID: 1391162238}
-  rightIcon: {fileID: 948579716}
+  firstIconText: {fileID: 1069734015}
+  secondIconText: {fileID: 1374814729}
+  firstIcon: {fileID: 1391162238}
+  secondIcon: {fileID: 948579716}
+  iconTextures:
+  - {fileID: 2800000, guid: 4c68098cb515dce4abb967b4c579466c, type: 3}
+  - {fileID: 2800000, guid: 99f069ea7bf041c4295c3b808afb916a, type: 3}
+  - {fileID: 2800000, guid: 2a7bfbe395a4ce0458d84a5a66ab4f55, type: 3}
+  - {fileID: 2800000, guid: 4fb7adfa15d72d2408194a64dffb1611, type: 3}
 --- !u!114 &1951725782
 MonoBehaviour:
   m_ObjectHideFlags: 0
