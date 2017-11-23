@@ -137,15 +137,16 @@ public class RUISCoordinateCalibration : MonoBehaviour
 
 	public List<Texture2D> iconTextures = new List<Texture2D>();
 
-	private Vector3 floorNormal;
+	public RUISSkeletonController skeletonController;
+
 	public RUISCalibrationProcess calibrationProcess;
+
+	private Vector3 floorNormal;
 	RUISCalibrationPhase currentPhase, nextPhase, lastPhase;
 	
 	RUISCalibrationProcessSettings calibrationProcessSettings;
-	
-	RUISSkeletonController skeletonController;
-	RUISCoordinateSystem coordinateSystem;
 
+	public RUISCoordinateSystem coordinateSystem;
 
 	bool menuIsVisible = false;
 	
@@ -239,8 +240,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		
 		upperText = GameObject.Find ("Upper Text").GetComponent<GUIText>();
 		lowerText = GameObject.Find ("Lower Text").GetComponent<GUIText>();
-		
-		skeletonController = FindObjectOfType(typeof(RUISSkeletonController)) as RUISSkeletonController;
+
 		coordinateSystem  = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 
 		// Pass variables and objects to calibrationProcess
@@ -259,6 +259,14 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		calibrationProcessSettings.deviceModelObjects = deviceModels;
 		calibrationProcessSettings.depthViewObjects = depthViews;
 		calibrationProcessSettings.iconObjects = icons;
+
+		if(!coordinateSystem) 
+		{
+			Debug.LogError ("Component " + typeof(RUISCoordinateSystem) + " not found in the calibration scene, cannot continue!");
+			upperText.text = "Component " + typeof(RUISCoordinateSystem) + " not found in\n the calibration scene, cannot continue!";
+			lowerText.text = upperText.text;
+			this.enabled = false;
+		}
 	}
 
     void Start()
@@ -396,7 +404,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		coordinateSystem.RUISCalibrationResultsFloorPitchRotation[secondDevice] = Quaternion.identity;
     }
 
-	void Update ()
+	void LateUpdate ()
 	{
 		if(Input.GetKeyDown(KeyCode.Escape))
 			menuIsVisible = !menuIsVisible;

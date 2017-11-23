@@ -480,6 +480,10 @@ Prefab:
       propertyPath: trackAnkle
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
+      propertyPath: bodyTrackingDevice
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
   m_IsPrefabParent: 0
@@ -1616,6 +1620,12 @@ Transform:
 Transform:
   m_PrefabParentObject: {fileID: 458990, guid: 4f35fa249b5008c44ac2998be6f82d4d, type: 2}
   m_PrefabInternal: {fileID: 1372513671}
+--- !u!114 &1199220712 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11400000, guid: 86a23107ea4b92141b1e3b27393f8f48,
+    type: 2}
+  m_PrefabInternal: {fileID: 383751229}
+  m_Script: {fileID: 11500000, guid: 05aba9f308687b5488803eaabdcca968, type: 3}
 --- !u!1 &1203165609
 GameObject:
   m_ObjectHideFlags: 0
@@ -3067,6 +3077,8 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 99f069ea7bf041c4295c3b808afb916a, type: 3}
   - {fileID: 2800000, guid: 2a7bfbe395a4ce0458d84a5a66ab4f55, type: 3}
   - {fileID: 2800000, guid: 4fb7adfa15d72d2408194a64dffb1611, type: 3}
+  skeletonController: {fileID: 1199220712}
+  coordinateSystem: {fileID: 0}
 --- !u!114 &1951725782
 MonoBehaviour:
   m_ObjectHideFlags: 0

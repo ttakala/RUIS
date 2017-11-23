@@ -25,9 +25,11 @@ public class RUISSkeletonController : MonoBehaviour
 
 
 	public Transform root;
-	public Transform head;
+	public Transform torso;   // pelvis // previously: torso
+	public Transform abdomen; // new
+	public Transform chest;   // new
 	public Transform neck;
-	public Transform torso;
+	public Transform head;
 	public Transform rightShoulder;
 	public Transform rightElbow;
 	public Transform rightHand;
@@ -45,9 +47,11 @@ public class RUISSkeletonController : MonoBehaviour
 
 	// Transform sources for custom motion tracking
 	public Transform customRoot;
-	public Transform customHead;
-	public Transform customNeck;
 	public Transform customTorso;
+	public Transform customAbdomen;
+	public Transform customChest;
+	public Transform customNeck;
+	public Transform customHead;
 	public Transform customRightShoulder;
 	public Transform customRightElbow;
 	public Transform customRightHand;
@@ -91,7 +95,15 @@ public class RUISSkeletonController : MonoBehaviour
 		GenericMotionTracker
 	}
 
+	public enum CustomConversion
+	{
+		None, 
+		Custom_1, 
+		Custom_2
+	}
+
 	public bodyTrackingDeviceType bodyTrackingDevice = bodyTrackingDeviceType.Kinect1;
+	public CustomConversion customConversion = CustomConversion.None;
 
 	public int bodyTrackingDeviceID = 0;
 	public int playerId = 0;
@@ -175,7 +187,8 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public float neckHeightTweaker = 0.0f;
 	private Vector3 neckOriginalLocalPosition;
-	private Transform chest;
+
+	private bool tweakableHips = false;
 	private Vector3 chestOriginalLocalPosition;
 
 	public float forearmLengthRatio = 1.0f;
@@ -295,14 +308,22 @@ public class RUISSkeletonController : MonoBehaviour
 				neckOriginalLocalPosition = neck.localPosition;
 				if(neck.parent)
 				{
-					chest = neck.parent;
-					if(chest == torso)
+					// Below relates to adjustVerticalHipsPosition, which is mostly relevant to Kinect based avatar animation
+					if(bodyTrackingDevice != bodyTrackingDeviceType.GenericMotionTracker)
 					{
-						Debug.Log(typeof(RUISSkeletonController) + ": Hierarchical model stored in GameObject " + this.name
-						+ " does not have enough joints between neck and torso for Hips Vertical Tweaker to work.");
-						chest = null;
+						if(!chest)
+							chest = neck.parent;
+						if(chest == torso)
+						{
+							Debug.Log(typeof(RUISSkeletonController) + ": Hierarchical model stored in GameObject " + this.name
+							+ " does not have enough joints between neck and torso for Hips Vertical Tweaker to work.");
+						}
+						else
+						{
+							chestOriginalLocalPosition = chest.localPosition;
+							tweakableHips = true;
+						}
 					}
-					chestOriginalLocalPosition = chest.localPosition;
 				}
 			}
 		}
@@ -1238,18 +1259,19 @@ public class RUISSkeletonController : MonoBehaviour
 
 	private void TweakNeckHeight()
 	{
-		if(!neck)
+		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker || !neck)
 			return;
 		neck.localPosition = neckOriginalLocalPosition + neck.InverseTransformDirection(spineDirection) * neckHeightTweaker / torsoScale;
 	}
 
 	private void TweakHipPosition()
 	{
-		if(!chest)
+		if(!tweakableHips)
 			return;
 		// TODO: Below needs to be modified
 		//chest.position -= hipOffset;
-		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(spineDirection.normalized) * adjustVerticalHipsPosition / torsoScale;
+		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(spineDirection.normalized)
+																										* adjustVerticalHipsPosition / torsoScale;
 
 	}
 

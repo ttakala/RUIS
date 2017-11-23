@@ -36,6 +36,7 @@ public class RUISCoordinateCalibrationEditor : Editor
 	SerializedProperty iconTextures;
 	SerializedProperty customDevice1Object;
 	SerializedProperty customDevice2Object;
+	SerializedProperty skeletonController;
 
 	GUIStyle italicStyle = new GUIStyle();
 
@@ -62,6 +63,7 @@ public class RUISCoordinateCalibrationEditor : Editor
 		iconTextures = serializedObject.FindProperty("iconTextures");
 		customDevice1Object = serializedObject.FindProperty("customDevice1Object");
 		customDevice2Object = serializedObject.FindProperty("customDevice2Object");
+		skeletonController = serializedObject.FindProperty("skeletonController");
 
 		italicStyle.fontStyle = FontStyle.Italic;
 	}
@@ -127,6 +129,13 @@ public class RUISCoordinateCalibrationEditor : Editor
 
 			EditorGUILayout.Space();
 
+			EditorGUILayout.PropertyField(skeletonController, new GUIContent ("Avatar Visualizer", "GameObject that contains "
+				+ typeof(RUISSkeletonController) + " script, and in its child " 
+				+ " GameObjects the required bone hierarchy and " 
+				+ typeof(SkinnedMeshRenderer) + " in its child GameObject."));
+
+			EditorGUILayout.Space();
+
 			EditorGUILayout.PropertyField(customDevice1Object, new GUIContent ("1st Device Model", "Visualizer GameObject for the 1st " 
 																								 + "device in the calibration pair."));
 			EditorGUILayout.PropertyField(firstIcon, new GUIContent("1st Icon",   "GUI Texture component for the icon of the 1st "
@@ -149,7 +158,8 @@ public class RUISCoordinateCalibrationEditor : Editor
 			EditorGUILayout.Space();
 
 
-			EditorGUILayout.PropertyField(iconTextures, new GUIContent ("Icon Textures", "Pool of device icon textures "), true);
+			EditorGUILayout.PropertyField(iconTextures, new GUIContent ("Icon Textures", "Pool of device icon textures."), true);
+
 			EditorGUI.indentLevel -= 1;
 		}
 		serializedObject.ApplyModifiedProperties();
