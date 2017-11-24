@@ -181,11 +181,11 @@ public class RUISDisplay : MonoBehaviour
 
 		if(isStereo)
 		{
-			if(linkedCamera.leftCamera.pixelRect.Contains(screenPoint))
+			if(linkedCamera.leftCamera && linkedCamera.leftCamera.pixelRect.Contains(screenPoint))
 			{
 				return linkedCamera.leftCamera;
 			}
-			else if(linkedCamera.rightCamera.pixelRect.Contains(screenPoint))
+			else if(linkedCamera.rightCamera && linkedCamera.rightCamera.pixelRect.Contains(screenPoint))
 			{
 				return linkedCamera.rightCamera;
 			}
@@ -194,7 +194,7 @@ public class RUISDisplay : MonoBehaviour
 		}
 		else
 		{
-			if(linkedCamera.centerCamera.pixelRect.Contains(screenPoint))
+			if(linkedCamera.centerCamera && linkedCamera.centerCamera.pixelRect.Contains(screenPoint))
 			{
 				return linkedCamera.centerCamera;
 			}

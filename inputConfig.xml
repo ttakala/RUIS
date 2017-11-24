@@ -15,14 +15,14 @@
     <floorDetection value="true" />
   </KinectSettings>
   <Kinect2Settings>
-    <enabled value="true" />
+    <enabled value="false" />
     <floorDetection value="true" />
   </Kinect2Settings>
   <RazerSettings>
     <enabled value="false" />
   </RazerSettings>
   <Custom1Settings>
-    <enabled value="false" />
+    <enabled value="true" />
     <name value="" />
     <positionConversion unitScale="1" xNegate="false" yNegate="false" zNegate="false" />
     <rotationConversion invert="false" xNegate="false" yNegate="false" zNegate="false" wNegate="false" />
