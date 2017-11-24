@@ -766,6 +766,9 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		Vector3 newVelocity = velocity;
 
+		if(device == RUISDevice.Null)
+			return velocity;
+		
 		if(applyToRootCoordinates && rootDevice != device)
 		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
@@ -795,6 +798,9 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		Vector3 outputLocation = inputLocation;
 
+		if(device == RUISDevice.Null)
+			return inputLocation;
+		
 		// Transform location into master coordinate system
 		if(applyToRootCoordinates && rootDevice != device)
 		{
@@ -841,7 +847,10 @@ public class RUISCoordinateSystem : MonoBehaviour
 	public Quaternion ConvertRotation(Quaternion inputRotation, RUISDevice device)
 	{
 		Quaternion outputRotation = inputRotation;
-		
+
+		if(device == RUISDevice.Null)
+			return inputRotation;
+
 		if(applyToRootCoordinates && rootDevice != device)
 		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
@@ -872,7 +881,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 	/// </summary>
 	public Vector3 ExtractLocalScale(RUISDevice device)
 	{
-		if(applyToRootCoordinates && rootDevice != device)
+		if(applyToRootCoordinates && rootDevice != device && device != RUISDevice.Null)
 		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 			Matrix4x4 matrix = RUISCalibrationResultsIn4x4Matrix[devicePairString];

@@ -274,6 +274,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		if(			(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.OpenVR)
 		  		 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.OpenVR )) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect2;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
 			if(hmdCalibration)
 				calibrationProcess = new RUISKinect2ToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
@@ -283,6 +284,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.OpenVR)
 				||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.OpenVR )) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 //			if(hmdCalibration)
 				calibrationProcess = new RUISKinectToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
@@ -292,6 +294,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.OpenVR)
 				 ||	(secondDevice == RUISDevice.Custom_1 && firstDevice == RUISDevice.OpenVR )) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 //			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
 				calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
@@ -301,6 +304,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Custom_2  && secondDevice == RUISDevice.OpenVR)
 				 ||	(secondDevice == RUISDevice.Custom_2 && firstDevice == RUISDevice.OpenVR )) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			//			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
 			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
@@ -316,6 +320,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_2)
 		   		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Kinect_2 )) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
 			calibrationProcess = new RUISKinect2ToKinectCalibrationProcess(calibrationProcessSettings);
@@ -323,6 +328,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.PS_Move)
 		  		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.PS_Move )) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
 			calibrationProcess = new RUISKinectToPSMoveCalibrationProcess(calibrationProcessSettings);
@@ -330,6 +336,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.PS_Move)
 		       	 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.PS_Move )) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect2;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 			calibrationProcess = new RUISKinect2ToPSMoveCalibrationProcess(calibrationProcessSettings);
@@ -337,6 +344,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(hmdCalibration &&  (	(firstDevice == RUISDevice.PS_Move  && secondDevice == RUISDevice.OpenVR)
 									||	(secondDevice == RUISDevice.PS_Move && firstDevice == RUISDevice.OpenVR )))
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 			calibrationProcess = new RUISPSMoveToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
@@ -344,18 +352,21 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(hmdCalibration &&  (	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.OpenVR)
 									 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.OpenVR ))) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 			calibrationProcess = new RUISKinectToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_1 ) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
 			calibrationProcess = new RUISKinectFloorDataCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.Kinect_2 ) 
 		{
+			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect2;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
 			calibrationProcess = new RUISKinect2FloorDataCalibrationProcess(calibrationProcessSettings);

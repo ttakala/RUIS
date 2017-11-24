@@ -26,7 +26,6 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public Transform root;
 	public Transform torso;   // pelvis // previously: torso
-	public Transform abdomen; // new
 	public Transform chest;   // new
 	public Transform neck;
 	public Transform head;
@@ -104,6 +103,8 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public bodyTrackingDeviceType bodyTrackingDevice = bodyTrackingDeviceType.Kinect1;
 	public CustomConversion customConversion = CustomConversion.None;
+	private RUISCoordinateSystem.DeviceCoordinateConversion conversion;
+	private RUISDevice sourceDevice = RUISDevice.Null;
 
 	public int bodyTrackingDeviceID = 0;
 	public int playerId = 0;
@@ -239,7 +240,12 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-		
+		if(!coordinateSystem)
+		{
+			Debug.LogError(typeof(RUISCoordinateSystem) + " not found in the scene! Disabling this script.");
+			this.enabled = false;
+		}
+
 		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect1)
 			bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 		if(bodyTrackingDevice == bodyTrackingDeviceType.Kinect2)
@@ -273,6 +279,24 @@ public class RUISSkeletonController : MonoBehaviour
 			skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 			if(!skeletonManager)
 				Debug.LogError("The scene is missing " + typeof(RUISSkeletonManager) + " script!");
+		}
+
+		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)
+			skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking = true;
+
+		switch(customConversion)
+		{
+			case CustomConversion.Custom_1:
+				conversion = inputManager.customDevice1Conversion;
+				sourceDevice = RUISDevice.Custom_1;
+				break;
+			case CustomConversion.Custom_2:
+				conversion = inputManager.customDevice2Conversion;
+				sourceDevice = RUISDevice.Custom_2;
+				break;
+			default:
+				conversion = null;
+				break;
 		}
 
 		// Disable features that are only available for Kinect2 or custom motion tracker
@@ -382,36 +406,36 @@ public class RUISSkeletonController : MonoBehaviour
 		// variables, if you are not tracking thumbs with Kinect 2. They also depend on your animation rig.
 		switch(boneLengthAxis)
 		{
-		case RUISAxis.X:
-			// Thumb phalange rotations when hand is clenched to a fist
-			clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
-			clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
-			clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
-			// Phalange rotations of other fingers when hand is clenched to a fist
-			clenchedRotationMCP = Quaternion.Euler(0, 0, -45);
-			clenchedRotationPIP = Quaternion.Euler(0, 0, -100);
-			clenchedRotationDIP = Quaternion.Euler(0, 0, -70);
-			break;
-		case RUISAxis.Y:
-			// Thumb phalange rotations when hand is clenched to a fist
-			clenchedRotationThumbTM = Quaternion.Euler(0, 0, 0); 
-			clenchedRotationThumbMCP = Quaternion.Euler(0, 0, 0);
-			clenchedRotationThumbIP = Quaternion.Euler(0, 0, 80);
-			// Phalange rotations of other fingers when hand is clenched to a fist
-			clenchedRotationMCP = Quaternion.Euler(45, 0, 0);
-			clenchedRotationPIP = Quaternion.Euler(100, 0, 0);
-			clenchedRotationDIP = Quaternion.Euler(70, 0, 0);
-			break;
-		case RUISAxis.Z: // TODO: Not yet tested with a real rig
-			// Thumb phalange rotations when hand is clenched to a fist
-			clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
-			clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
-			clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
-			// Phalange rotations of other fingers when hand is clenched to a fist
-			clenchedRotationMCP = Quaternion.Euler(0, -45, 0);
-			clenchedRotationPIP = Quaternion.Euler(0, -100, 0);
-			clenchedRotationDIP = Quaternion.Euler(0, -70, 0);
-			break;
+			case RUISAxis.X:
+				// Thumb phalange rotations when hand is clenched to a fist
+				clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
+				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
+				clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
+				// Phalange rotations of other fingers when hand is clenched to a fist
+				clenchedRotationMCP = Quaternion.Euler(0, 0, -45);
+				clenchedRotationPIP = Quaternion.Euler(0, 0, -100);
+				clenchedRotationDIP = Quaternion.Euler(0, 0, -70);
+				break;
+			case RUISAxis.Y:
+				// Thumb phalange rotations when hand is clenched to a fist
+				clenchedRotationThumbTM = Quaternion.Euler(0, 0, 0); 
+				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, 0);
+				clenchedRotationThumbIP = Quaternion.Euler(0, 0, 80);
+				// Phalange rotations of other fingers when hand is clenched to a fist
+				clenchedRotationMCP = Quaternion.Euler(45, 0, 0);
+				clenchedRotationPIP = Quaternion.Euler(100, 0, 0);
+				clenchedRotationDIP = Quaternion.Euler(70, 0, 0);
+				break;
+			case RUISAxis.Z: // TODO: Not yet tested with a real rig
+				// Thumb phalange rotations when hand is clenched to a fist
+				clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
+				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
+				clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
+				// Phalange rotations of other fingers when hand is clenched to a fist
+				clenchedRotationMCP = Quaternion.Euler(0, -45, 0);
+				clenchedRotationPIP = Quaternion.Euler(0, -100, 0);
+				clenchedRotationDIP = Quaternion.Euler(0, -70, 0);
+				break;
 		}
 
 		if(inputManager)
@@ -434,7 +458,8 @@ public class RUISSkeletonController : MonoBehaviour
 						+	"Character Pivot in " + gameObject.name + "'s parent GameObject");
 					}
 
-					if(!inputManager.enableKinect && !inputManager.enableKinect2 && !followMoveController)
+					if(   !inputManager.enableKinect && !inputManager.enableKinect2 && !followMoveController
+					   && bodyTrackingDevice != bodyTrackingDeviceType.GenericMotionTracker)
 					{
 						if(RUISDisplayManager.IsHmdPresent())
 						{
@@ -471,131 +496,166 @@ public class RUISSkeletonController : MonoBehaviour
 		// topsy turvy) so we can utilize same code as we did with Kinect 1 and 2
 		if(bodyTrackingDevice == bodyTrackingDeviceType.GenericMotionTracker)
 		{
-			skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking = true;
 
 			if(customRoot)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.rotation = customRoot.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.position = customRoot.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customRoot.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customRoot.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].root.rotationConfidence = 1;
 			}
 			if(customHead)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.rotation = customHead.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.position = customHead.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customHead.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customHead.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].head.rotationConfidence = 1;
 			}
 			if(customNeck)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.rotation = customNeck.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.position = customNeck.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customNeck.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customNeck.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].neck.rotationConfidence = 1;
 			}
 			if(customTorso)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotation = customTorso.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.position = customTorso.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customTorso.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customTorso.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.rotationConfidence = 1;
 			}
 			if(customRightShoulder)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.rotation = customRightShoulder.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position = customRightShoulder.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customRightShoulder.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customRightShoulder.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightShoulder.rotationConfidence = 1;
 			}
 			if(customLeftShoulder)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.rotation = customLeftShoulder.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position = customLeftShoulder.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customLeftShoulder.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customLeftShoulder.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftShoulder.rotationConfidence = 1;
 			}
 			if(customRightElbow)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.rotation = customRightElbow.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.position = customRightElbow.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customRightElbow.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customRightElbow.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightElbow.rotationConfidence = 1;
 			}
 			if(customLeftElbow)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.rotation = customLeftElbow.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.position = customLeftElbow.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customLeftElbow.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customLeftElbow.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftElbow.rotationConfidence = 1;
 			}
 			if(customRightHand)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.rotation = customRightHand.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.position = customRightHand.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customRightHand.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customRightHand.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHand.rotationConfidence = 1;
 			}
 			if(customLeftHand)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.rotation = customLeftHand.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.position = customLeftHand.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customLeftHand.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customLeftHand.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHand.rotationConfidence = 1;
 			}
 			if(customRightHip)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.rotation = customRightHip.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position = customRightHip.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customRightHip.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customRightHip.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightHip.rotationConfidence = 1;
 			}
 			if(customLeftHip)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.rotation = customLeftHip.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position = customLeftHip.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customLeftHip.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customLeftHip.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftHip.rotationConfidence = 1;
 			}
 			if(customRightKnee)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.rotation = customRightKnee.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.position = customRightKnee.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customRightKnee.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customRightKnee.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightKnee.rotationConfidence = 1;
 			}
 			if(customLeftKnee)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.rotation = customLeftKnee.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.position = customLeftKnee.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customLeftKnee.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customLeftKnee.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftKnee.rotationConfidence = 1;
 			}
 			if(customRightFoot)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.rotation = customRightFoot.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.position = customRightFoot.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customRightFoot.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customRightFoot.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightFoot.rotationConfidence = 1;
 			}
 			if(customLeftFoot)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.rotation = customLeftFoot.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.position = customLeftFoot.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customLeftFoot.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customLeftFoot.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftFoot.rotationConfidence = 1;
 			}
 			if(customRightThumb)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.rotation = customRightThumb.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.position = customRightThumb.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customRightThumb.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customRightThumb.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].rightThumb.rotationConfidence = 1;
 			}
 			if(customLeftThumb)
 			{
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.rotation = customLeftThumb.rotation;
-				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.position = customLeftThumb.position;
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.rotation = 
+					coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(customLeftThumb.rotation, conversion), sourceDevice);
+				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.position = 
+					coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(customLeftThumb.position, conversion), sourceDevice);
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.positionConfidence = 1;
 				skeletonManager.skeletons[bodyTrackingDeviceID, playerId].leftThumb.rotationConfidence = 1;
 			}

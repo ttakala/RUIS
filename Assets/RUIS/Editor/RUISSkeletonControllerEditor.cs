@@ -44,9 +44,8 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty thumbZRotationOffset;
 
     SerializedProperty rootBone;
-	SerializedProperty torsoBone;
-	SerializedProperty abdomenBone;
 	SerializedProperty chestBone;
+	SerializedProperty torsoBone;
 	SerializedProperty neckBone;
 	SerializedProperty headBone;
 
@@ -84,7 +83,6 @@ public class RUISSkeletonControllerEditor : Editor
 	
 	SerializedProperty customRoot;
 	SerializedProperty customTorso;
-	SerializedProperty customAbdomen;
 	SerializedProperty customChest;
 	SerializedProperty customNeck;
 	SerializedProperty customHead;
@@ -152,7 +150,6 @@ public class RUISSkeletonControllerEditor : Editor
         headBone 	= serializedObject.FindProperty("head");
         neckBone 	= serializedObject.FindProperty("neck");
 		torsoBone 	= serializedObject.FindProperty("torso");
-		abdomenBone	= serializedObject.FindProperty("abdomen");
 		chestBone 	= serializedObject.FindProperty("chest");
 
         leftShoulderBone = serializedObject.FindProperty("leftShoulder");
@@ -189,7 +186,6 @@ public class RUISSkeletonControllerEditor : Editor
 		
 		customRoot		= serializedObject.FindProperty("customRoot");
 		customTorso  	= serializedObject.FindProperty("customTorso");
-		customAbdomen	= serializedObject.FindProperty("customAbdomen");
 		customChest		= serializedObject.FindProperty("customChest");
 		customNeck		= serializedObject.FindProperty("customNeck");
 		customHead		= serializedObject.FindProperty("customHead");
@@ -355,8 +351,7 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.LabelField("Source for Torso and Head", customLabelStyle);
 			EditorGUILayout.PropertyField(customTorso, 	 new GUIContent("Pelvis", 	"The pelvis bone, has to be parent or grandparent of all the "
 																				  + "other bones except root bone. Can be same as root bone."));
-			EditorGUILayout.PropertyField(customAbdomen, new GUIContent("Abdomen",	"The abdomen bone, has to be child or grandchild of pelvis."));
-			EditorGUILayout.PropertyField(customChest, 	 new GUIContent("Chest", 	"The chest bone, has to be child or grandchild of abdomen."));
+			EditorGUILayout.PropertyField(customChest, 	 new GUIContent("Chest", 	"The chest bone, has to be child or grandchild of pelvis."));
 			EditorGUILayout.PropertyField(customNeck, 	 new GUIContent("Neck", 	"The neck bone, has to be child or grandchild of chest."));
 			EditorGUILayout.PropertyField(customHead, 	 new GUIContent("Head", 	"The head bone, has to be child or grandchild of neck."));
 			
@@ -445,9 +440,7 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.LabelField("Torso and Head Targets", EditorStyles.boldLabel);
 		EditorGUILayout.PropertyField(torsoBone, 	new GUIContent("Pelvis", 		"The pelvis bone, has to be parent or grandparent of all the "
 																				  + "other bones except root bone. Can be same as root bone."));
-		EditorGUILayout.PropertyField(abdomenBone, 	new GUIContent("Abdomen",		"The abdomen bone, has to be child or grandchild of pelvis. "
-																				  + "Can be 'None'."));
-		EditorGUILayout.PropertyField(chestBone, 	new GUIContent("Chest", 		"The chest bone, has to be child or grandchild of abdomen. "
+		EditorGUILayout.PropertyField(chestBone, 	new GUIContent("Chest", 		"The chest bone, has to be child or grandchild of pelvis. "
 																				  + "Can be 'None'."));
 		EditorGUILayout.PropertyField(neckBone, 	new GUIContent("Neck", 			"The neck bone, has to be child or grandchild of chest."));
 		EditorGUILayout.PropertyField(headBone, 	new GUIContent("Head", 			"The head bone, has to be child or grandchild of neck."));
