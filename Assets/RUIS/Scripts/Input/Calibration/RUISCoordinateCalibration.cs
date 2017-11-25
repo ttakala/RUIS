@@ -296,6 +296,8 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		{
 			skeletonController.bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker;
 			skeletonController.bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+			skeletonController.customSourceDevice = RUISDevice.Custom_1;  // *** HACK TODO bodyTrackingDevice getter/setter, do I really want to apply previous calibration results?
+//			skeletonController.deviceConversion = RUISInputManager. // ***
 //			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
 				calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
 //			else

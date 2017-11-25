@@ -614,44 +614,49 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		return RUISCalibrationPhase.ShowResults;
 	}
 
+	private Vector3 tempPosition;
+	private Quaternion tempRotation;
 	public void PlaceCustomTrackedDevices()
 	{
 		// device1* and device2* variables always refer to RUISDevice.Custom_1 and RUISDevice.Custom_2, respectively
 		if(		(firstInputDevice == RUISDevice.Custom_1 || secondInputDevice == RUISDevice.Custom_1) 
 			&& 	calibration.customDevice1Object && calibration.customDevice1Tracker) 
 		{
-			calibration.customDevice1Object.transform.position = RUISCoordinateSystem.ConvertRawLocation(calibration.customDevice1Tracker.position, 
-																										 device1Conversion						   );
-			calibration.customDevice1Object.transform.rotation = RUISCoordinateSystem.ConvertRawRotation(calibration.customDevice1Tracker.rotation,
-																										 device1Conversion						   );
-			if(calibrationFinished && calibration.coordinateSystem.rootDevice != RUISDevice.Custom_1)
+			tempPosition = RUISCoordinateSystem.ConvertRawLocation(calibration.customDevice1Tracker.position, device1Conversion);
+			tempRotation = RUISCoordinateSystem.ConvertRawRotation(calibration.customDevice1Tracker.rotation, device1Conversion);
+			if(calibrationFinished)
 			{
-				calibration.customDevice1Object.transform.position = calibration.coordinateSystem.ConvertLocation(
-														calibration.customDevice1Object.transform.position, calibration.coordinateSystem.rootDevice);
-				calibration.customDevice1Object.transform.rotation = calibration.coordinateSystem.ConvertRotation(
-														calibration.customDevice1Object.transform.rotation, calibration.coordinateSystem.rootDevice);
+				calibration.customDevice1Object.transform.position = calibration.coordinateSystem.ConvertLocation(tempPosition, RUISDevice.Custom_1);
+				calibration.customDevice1Object.transform.rotation = calibration.coordinateSystem.ConvertRotation(tempRotation, RUISDevice.Custom_1);
+			}
+			else
+			{
+//				Debug.Log("orig " + calibration.coordinateSystem.rootDevice + " " + device1Conversion);
+				calibration.customDevice1Object.transform.position = tempPosition;
+				calibration.customDevice1Object.transform.rotation = tempRotation;
 			}
 		}
 		if(		secondInputDevice == RUISDevice.Custom_2
 			&& 	calibration.customDevice2Object && calibration.customDevice2Tracker) 
 		{
-			calibration.customDevice2Object.transform.position = RUISCoordinateSystem.ConvertRawLocation(calibration.customDevice2Tracker.position, 
-																										 device2Conversion						   );
-			calibration.customDevice2Object.transform.rotation = RUISCoordinateSystem.ConvertRawRotation(calibration.customDevice2Tracker.rotation,
-																										 device2Conversion						   );
-			if(calibrationFinished && calibration.coordinateSystem.rootDevice != RUISDevice.Custom_2)
+			tempPosition = RUISCoordinateSystem.ConvertRawLocation(calibration.customDevice2Tracker.position, device2Conversion);
+			tempRotation = RUISCoordinateSystem.ConvertRawRotation(calibration.customDevice2Tracker.rotation, device2Conversion);
+			if(calibrationFinished)
 			{
-				calibration.customDevice2Object.transform.position = calibration.coordinateSystem.ConvertLocation(
-														calibration.customDevice2Object.transform.position, calibration.coordinateSystem.rootDevice);
-				calibration.customDevice2Object.transform.rotation = calibration.coordinateSystem.ConvertRotation(
-														calibration.customDevice2Object.transform.rotation, calibration.coordinateSystem.rootDevice);
+				calibration.customDevice2Object.transform.position = calibration.coordinateSystem.ConvertLocation(tempPosition, RUISDevice.Custom_2);
+				calibration.customDevice2Object.transform.rotation = calibration.coordinateSystem.ConvertRotation(tempRotation, RUISDevice.Custom_2);
+			}
+			else
+			{
+				calibration.customDevice2Object.transform.position = tempPosition;
+				calibration.customDevice2Object.transform.rotation = tempRotation;
 			}
 		}
 	}
 
+	// This is invoked from RUISCoordinateCalibration.cs
 	public override void PlaceSensorModels()
 	{
-
 		if(calibration.coordinateSystem.rootDevice == secondInputDevice) // Custom_1/2
 		{
 			if(firstInputDevice == RUISDevice.OpenVR && openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
@@ -678,7 +683,8 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			this.floorPlane.transform.position = new Vector3(0, 0, 0);
 	}
 	
-	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
+	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) 
+	{
 		// Source: http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
 		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 		Quaternion q = new Quaternion();

@@ -490,9 +490,9 @@ public class RUISKinect2ToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		return RUISCalibrationPhase.ShowResults;
 	}
 
+	// This is invoked from RUISCoordinateCalibration.cs
 	public override void PlaceSensorModels()
 	{
-
 		//		kinect2ModelObject.transform.rotation = kinect2PitchRotation;
 		//		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
 
