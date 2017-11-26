@@ -101,7 +101,7 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty customLeftThumb;
 	SerializedProperty customRightThumb;
 
-	SerializedProperty customConversion;
+	SerializedProperty customConversionType;
 
 	GUIStyle customLabelStyle = new GUIStyle();
 	GUIStyle customItalicLabelStyle = new GUIStyle();
@@ -206,7 +206,7 @@ public class RUISSkeletonControllerEditor : Editor
 		customLeftFoot  = serializedObject.FindProperty("customLeftFoot");
 		customLeftThumb  = serializedObject.FindProperty("customLeftThumb");
 
-		customConversion = serializedObject.FindProperty("customConversion");
+		customConversionType = serializedObject.FindProperty("customConversionType");
 
 		skeletonController = target as RUISSkeletonController;
     }
@@ -218,7 +218,19 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Space();
 		 
 		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", "The source device for body tracking.")); 
-		
+		switch(bodyTrackingDevice.enumValueIndex)
+		{
+			case RUISSkeletonManager.kinect1SensorID:
+				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+				break;
+			case RUISSkeletonManager.kinect2SensorID:
+				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+				break;
+			case RUISSkeletonManager.customSensorID:
+				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+				break;
+		}
+
 		EditorGUILayout.Space();
 		EditorGUILayout.PropertyField(playerId, new GUIContent("Skeleton ID", "The player ID number"));
 		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect1SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID) 
@@ -270,10 +282,10 @@ public class RUISSkeletonControllerEditor : Editor
 		                                                                      +"responsive. Default value is 500."));
 
 		if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
-		   && skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
+		   && skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
 		{
-			skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId].filterRotations = filterRotations.boolValue;
-			skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId].rotationNoiseCovariance = 
+			skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId].filterRotations = filterRotations.boolValue;
+			skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId].rotationNoiseCovariance = 
 																																rotationNoiseCovariance.floatValue;
 		}
 
@@ -337,7 +349,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 			EditorGUILayout.Space();
 
-			EditorGUILayout.PropertyField(customConversion, new GUIContent("Coordinate Conversion", "The conversion that will be applied to the "
+			EditorGUILayout.PropertyField(customConversionType, new GUIContent("Coordinate Conversion", "The conversion that will be applied to the "
 																		+ "Source Transform poses before copying them to Target Transforms (below). "
 																		+ "The conversions are defined in " + typeof(RUISInputManager)
 																		+ "'s \"Custom 1\" and \"Custom 2\" settings, and also stored in the "
@@ -529,8 +541,8 @@ public class RUISSkeletonControllerEditor : Editor
 				                                                              							+ "45, but it might depend on your avatar rig."));
 				EditorGUI.indentLevel--;
 				if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
-				   && skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
-					skeletonController.skeletonManager.skeletons [skeletonController.bodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
+				   && skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
+					skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
 																																		thumbZRotationOffset.floatValue;
 			}
 		}

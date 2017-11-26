@@ -93,7 +93,7 @@ public class RUISCharacterController : MonoBehaviour
 			bodyParts.Add(skeletonController.leftFoot);
 			bodyParts.Add(skeletonController.rightFoot);
 			kinectPlayerId = skeletonController.playerId;
-			bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+			bodyTrackingDeviceID = skeletonController.BodyTrackingDeviceID;
 		}
 		else
 		{

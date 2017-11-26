@@ -165,9 +165,9 @@ public class RUISSkeletonManager : MonoBehaviour {
 	public Skeleton[,] skeletons = new Skeleton[3,6];
 	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
 
-	public static int kinect1SensorID = 0;
-	public static int kinect2SensorID = 1;
-	public static int customSensorID  = 2;
+	public const int kinect1SensorID = 0;
+	public const int kinect2SensorID = 1;
+	public const int customSensorID  = 2;
 	
 	public bool isNewKinect2Frame { get; private set; }
 	public float timeSinceLastKinect2Frame { get; private set; }

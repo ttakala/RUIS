@@ -7,7 +7,7 @@ public class RUISBimanualSwingingRecognizer : MonoBehaviour {
 	public int skeletonID = 0;
 	
 	// Body tracking type
-	public RUISSkeletonController.bodyTrackingDeviceType bodyTrackingType = RUISSkeletonController.bodyTrackingDeviceType.Kinect2;
+	public RUISSkeletonController.BodyTrackingDeviceType bodyTrackingType = RUISSkeletonController.BodyTrackingDeviceType.Kinect2;
 	
 	// Angle limits
 	[Range(0, 180)][Header("")]	
@@ -200,9 +200,9 @@ public class RUISBimanualSwingingRecognizer : MonoBehaviour {
 	private void updateArmAngles() 
 	{
 		// Support live switching between sensors
-		if(bodyTrackingType == RUISSkeletonController.bodyTrackingDeviceType.Kinect1) bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
-		if(bodyTrackingType == RUISSkeletonController.bodyTrackingDeviceType.Kinect2) bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
-		if(bodyTrackingType == RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker) bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+		if(bodyTrackingType == RUISSkeletonController.BodyTrackingDeviceType.Kinect1) bodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+		if(bodyTrackingType == RUISSkeletonController.BodyTrackingDeviceType.Kinect2) bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+		if(bodyTrackingType == RUISSkeletonController.BodyTrackingDeviceType.GenericMotionTracker) bodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 		
 		// Create plane normal that is parallel to torso forward and up direction
 		vectorRight = skeletonManager.skeletons[bodyTrackingDeviceID, skeletonID].leftHip.position - skeletonManager.skeletons[bodyTrackingDeviceID, skeletonID].rightHip.position;//upperTorsoPosition - rightShoulder;

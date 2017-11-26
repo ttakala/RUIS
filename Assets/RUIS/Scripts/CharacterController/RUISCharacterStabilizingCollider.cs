@@ -95,7 +95,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 			if(skeletonController)
 			{
 				playerId = skeletonController.playerId;
-				bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+				bodyTrackingDeviceID = skeletonController.BodyTrackingDeviceID;
 			}
 		}
 
@@ -148,7 +148,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 						               + "children of " + gameObject.transform.parent.name
 						               + ", something is very wrong with this character setup!");
 					
-					bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+					bodyTrackingDeviceID = skeletonController.BodyTrackingDeviceID;
 					playerId = skeletonController.playerId;
 					combinerChildrenInstantiated = true;
 				}

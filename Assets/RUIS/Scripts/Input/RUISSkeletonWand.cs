@@ -17,7 +17,7 @@ public class RUISSkeletonWand : RUISWand
 {
 
 	public int playerId = 0;
-	public RUISSkeletonController.bodyTrackingDeviceType bodyTrackingDevice = 0;
+	public RUISSkeletonController.BodyTrackingDeviceType bodyTrackingDevice = 0;
 	public int bodyTrackingDeviceID;
 	public int gestureSelectionMethod;
 	public string gestureSelectionScriptName;
@@ -107,15 +107,15 @@ public class RUISSkeletonWand : RUISWand
 		{
 			if(switchToAvailableKinect)
 			{
-				if(   bodyTrackingDevice == RUISSkeletonController.bodyTrackingDeviceType.Kinect1
+				if(   bodyTrackingDevice == RUISSkeletonController.BodyTrackingDeviceType.Kinect1
 				   && !inputManager.enableKinect && inputManager.enableKinect2)
 				{
-					bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect2;
+					bodyTrackingDevice = RUISSkeletonController.BodyTrackingDeviceType.Kinect2;
 				}
-				else if(   bodyTrackingDevice == RUISSkeletonController.bodyTrackingDeviceType.Kinect2
+				else if(   bodyTrackingDevice == RUISSkeletonController.BodyTrackingDeviceType.Kinect2
 				        && !inputManager.enableKinect2 && inputManager.enableKinect)
 				{
-					bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
+					bodyTrackingDevice = RUISSkeletonController.BodyTrackingDeviceType.Kinect1;
 
 					if(gestureRecognizer != holdGestureRecognizer) // Switching to the only selection gesture that RUIS has for Kinect 1
 					{

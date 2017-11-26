@@ -631,7 +631,6 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			}
 			else
 			{
-//				Debug.Log("orig " + calibration.coordinateSystem.rootDevice + " " + device1Conversion);
 				calibration.customDevice1Object.transform.position = tempPosition;
 				calibration.customDevice1Object.transform.rotation = tempRotation;
 			}

@@ -53,7 +53,7 @@ public class RUISJumpGestureRecognizer : RUISGestureRecognizer
     }
 	public void Start() {
 		
-		bodyTrackingDeviceID = skeletonController.bodyTrackingDeviceID;
+		bodyTrackingDeviceID = skeletonController.BodyTrackingDeviceID;
 	}
     public void Update()
     {

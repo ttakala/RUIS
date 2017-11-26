@@ -57,7 +57,7 @@ public class RUISCharacterControllerEditor : Editor
 		                                                                 + "what is the rotation center for the character when turning with the "
 		                                                                 + typeof(RUISCharacterLocomotion).Name + " script. Pivot orientation also defines "
 		                                                                 + "the Forward movement direction. Currently 'Kinect Head' is NOT recommended."));
-		RUISSkeletonController.bodyTrackingDeviceType bodyTrackingDevice = RUISSkeletonController.bodyTrackingDeviceType.Kinect1;
+		RUISSkeletonController.BodyTrackingDeviceType bodyTrackingDevice = RUISSkeletonController.BodyTrackingDeviceType.Kinect1;
 		int kinectPlayerId = 0;
 		if(characterController)
 		{

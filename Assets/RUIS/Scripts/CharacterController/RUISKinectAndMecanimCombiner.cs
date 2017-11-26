@@ -101,8 +101,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		//		    &&  (skeletonController.bodyTrackingDevice != RUISSkeletonController.bodyTrackingDeviceType.GenericMotionTracker))
 		if(skeletonController != null && (   skeletonController.followHmdPosition || inputManager == null
 		                                  || (	   skeletonController.followMoveController 
-		    									&& (   (skeletonController.bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect )
-		    										|| (skeletonController.bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)))))
+		    									&& (   (skeletonController.BodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect )
+		    										|| (skeletonController.BodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)))))
 		{
 			// Without the below if-clause the legs will twist with PS Move head tracker (when Move is enabled but Kinect is not)
 			//if(!inputManager.enablePSMove)
@@ -441,8 +441,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 			kinectTorsoForward = skeletonController.trackedDeviceYawRotation * Vector3.forward;
 		}
 		else // If Kinect torso/head is character pivot
-			if(skeletonManager != null && skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId] != null)
-				kinectTorsoForward = skeletonManager.skeletons[skeletonController.bodyTrackingDeviceID, skeletonController.playerId].torso.rotation*Vector3.forward;
+			if(skeletonManager != null && skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
+				kinectTorsoForward = skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId].torso.rotation*Vector3.forward;
 
 		//kinectTorsoUp.y = 0;
 		//kinectTorsoUp.Normalize();
