@@ -28,12 +28,14 @@ public class RUISSkeletonController : MonoBehaviour
 	public Transform chest;   // new
 	public Transform neck;
 	public Transform head;
+	public Transform rightClavicle; // new
 	public Transform rightShoulder;
 	public Transform rightElbow;
 	public Transform rightHand;
 	public Transform rightHip;
 	public Transform rightKnee;
 	public Transform rightFoot;
+	public Transform leftClavicle; // new
 	public Transform leftShoulder;
 	public Transform leftElbow;
 	public Transform leftHand;
@@ -45,17 +47,18 @@ public class RUISSkeletonController : MonoBehaviour
 
 	// Transform sources for custom motion tracking
 	public Transform customRoot;
-	public Transform customTorso;
-	public Transform customAbdomen;
-	public Transform customChest;
+	public Transform customTorso; // pelvis // previously: torso
+	public Transform customChest; // new
 	public Transform customNeck;
 	public Transform customHead;
+	public Transform customRightClavicle; // new
 	public Transform customRightShoulder;
 	public Transform customRightElbow;
 	public Transform customRightHand;
 	public Transform customRightHip;
 	public Transform customRightKnee;
 	public Transform customRightFoot;
+	public Transform customLeftClavicle; // new
 	public Transform customLeftShoulder;
 	public Transform customLeftElbow;
 	public Transform customLeftHand;
@@ -380,8 +383,9 @@ public class RUISSkeletonController : MonoBehaviour
 
 			Vector3 torsoUp = head.position - torso.position;
 			torsoUp.Normalize();
-			torsoOffset = Vector3.Dot(realRootPos - assumedRootPos, torsoUp);
-			//torsoOffset = (realRootPos - assumedRootPos).y;
+
+			if(BodyTrackingDeviceID != RUISSkeletonManager.customSensorID) // *** OPTIHACK
+				torsoOffset = Vector3.Dot(realRootPos - assumedRootPos, torsoUp);
 
 			if(neck)
 			{
@@ -410,6 +414,8 @@ public class RUISSkeletonController : MonoBehaviour
 
 		SaveInitialRotation(root);
 		SaveInitialRotation(head);
+		SaveInitialRotation(neck); // *** OPTIHACK
+		SaveInitialRotation(chest); // *** OPTIHACK
 		SaveInitialRotation(torso);
 		SaveInitialRotation(rightShoulder);
 		SaveInitialRotation(rightElbow);
@@ -439,7 +445,10 @@ public class RUISSkeletonController : MonoBehaviour
 		SaveInitialDistance(leftHip, leftKnee);
 		SaveInitialDistance(leftKnee, leftFoot);
 
-		SaveInitialDistance(torso, head);
+//		SaveInitialDistance(torso, head); // *** OPTIHACK THIS WAS NOT USED ANYWHERE??
+		SaveInitialDistance(torso, chest); // *** OPTIHACK
+		SaveInitialDistance(chest, neck); // *** OPTIHACK
+		SaveInitialDistance(neck, head); // *** OPTIHACK *** ADD neck -> clavicle -> shoulder
 
 		SaveInitialDistance(rightShoulder, leftShoulder);
 		SaveInitialDistance(rightHip, leftHip);
@@ -738,6 +747,8 @@ public class RUISSkeletonController : MonoBehaviour
 				UpdateSkeletonPosition();
 
 				UpdateTransform(ref torso, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, maxAngularVelocity);
+				UpdateTransform(ref chest, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, maxAngularVelocity); // *** OPTIHACK
+				UpdateTransform(ref neck, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck, maxAngularVelocity);	 // *** OPTIHACK
 				UpdateTransform(ref head, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head, maxAngularVelocity);
 			}
 				
@@ -1007,7 +1018,7 @@ public class RUISSkeletonController : MonoBehaviour
 		if(updateJointPositions && jointToGet.positionConfidence >= minimumConfidenceToUpdate)
 		{
 			// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
-			if(jointToGet.jointID == RUISSkeletonManager.Joint.Torso)
+			if(jointToGet.jointID == RUISSkeletonManager.Joint.Torso && BodyTrackingDeviceID != RUISSkeletonManager.customSensorID) // ** OPTIHACK second clause added
 				transformToUpdate.localPosition = Vector3.zero;
 			else
 				transformToUpdate.localPosition = jointToGet.position - skeletonPosition;
@@ -1201,34 +1212,34 @@ public class RUISSkeletonController : MonoBehaviour
 		
 		switch(boneToScaleTracker.jointID)
 		{
-		case RUISSkeletonManager.Joint.LeftHip:
-			thickness = leftLegThickness;
-			break;
-		case RUISSkeletonManager.Joint.RightHip:
-			thickness = rightLegThickness;
-			break;
-		case RUISSkeletonManager.Joint.LeftShoulder:
-			thickness = leftArmThickness;
-			break;
-		case RUISSkeletonManager.Joint.RightShoulder:
-			thickness = rightArmThickness;
-			break;
-		case RUISSkeletonManager.Joint.LeftKnee:
-			thickness = leftLegThickness;
-			extremityTweaker = shinLengthRatio;
-			break;
-		case RUISSkeletonManager.Joint.RightKnee:
-			thickness = rightLegThickness;
-			extremityTweaker = shinLengthRatio;
-			break;
-		case RUISSkeletonManager.Joint.LeftElbow:
-			thickness = leftArmThickness;
-			extremityTweaker = forearmLengthRatio;
-			break;
-		case RUISSkeletonManager.Joint.RightElbow:
-			thickness = rightArmThickness;
-			extremityTweaker = forearmLengthRatio;
-			break;
+			case RUISSkeletonManager.Joint.LeftHip:
+				thickness = leftLegThickness;
+				break;
+			case RUISSkeletonManager.Joint.RightHip:
+				thickness = rightLegThickness;
+				break;
+			case RUISSkeletonManager.Joint.LeftShoulder:
+				thickness = leftArmThickness;
+				break;
+			case RUISSkeletonManager.Joint.RightShoulder:
+				thickness = rightArmThickness;
+				break;
+			case RUISSkeletonManager.Joint.LeftKnee:
+				thickness = leftLegThickness;
+				extremityTweaker = shinLengthRatio;
+				break;
+			case RUISSkeletonManager.Joint.RightKnee:
+				thickness = rightLegThickness;
+				extremityTweaker = shinLengthRatio;
+				break;
+			case RUISSkeletonManager.Joint.LeftElbow:
+				thickness = leftArmThickness;
+				extremityTweaker = forearmLengthRatio;
+				break;
+			case RUISSkeletonManager.Joint.RightElbow:
+				thickness = rightArmThickness;
+				extremityTweaker = forearmLengthRatio;
+				break;
 		}
 
 		if(scaleBoneLengthOnly)

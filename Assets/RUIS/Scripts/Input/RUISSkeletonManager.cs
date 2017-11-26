@@ -23,7 +23,9 @@ public class RUISSkeletonManager : MonoBehaviour {
     {
         Root,
         Head,
+		Neck, // *** OPTIHACK
         Torso,
+		Chest, // *** OPTIHACK
         LeftShoulder,
         LeftElbow,
         LeftHand,
@@ -59,7 +61,9 @@ public class RUISSkeletonManager : MonoBehaviour {
         public bool isTracking = false;
 		public JointData root = new JointData(Joint.Root);
 		public JointData head = new JointData(Joint.Head);
+		public JointData neck = new JointData(Joint.Neck);
 		public JointData torso = new JointData(Joint.Torso);
+		public JointData chest = new JointData(Joint.Chest);
 		public JointData leftShoulder = new JointData(Joint.LeftShoulder);
 		public JointData leftElbow = new JointData(Joint.LeftElbow);
 		public JointData leftHand = new JointData(Joint.LeftHand);
@@ -85,7 +89,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 		public JointData rightHandTip = new JointData(Joint.None);
 		public JointData leftThumb = new JointData(Joint.None);
 		public JointData rightThumb = new JointData(Joint.None);
-		public JointData neck = new JointData(Joint.None);
 
 		public handState rightHandStatus = handState.unknown;
 		public handState leftHandStatus = handState.unknown;
@@ -682,6 +685,10 @@ public class RUISSkeletonManager : MonoBehaviour {
                 return skeletons[bodyTrackingDeviceID, playerID].root;
             case Joint.Head:
 				return skeletons[bodyTrackingDeviceID, playerID].head;
+			case Joint.Neck: // *** OPTIHACK
+				return skeletons[bodyTrackingDeviceID, playerID].neck; // *** OPTIHACK
+			case Joint.Chest: // *** OPTIHACK
+				return skeletons[bodyTrackingDeviceID, playerID].chest; // *** OPTIHACK
             case Joint.Torso:
 				return skeletons[bodyTrackingDeviceID, playerID].torso;
             case Joint.LeftShoulder:
