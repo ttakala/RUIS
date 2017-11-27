@@ -16,9 +16,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Kinect = Windows.Kinect;
 
-public class RUISSkeletonManager : MonoBehaviour {
-    RUISCoordinateSystem coordinateSystem;
-
+public class RUISSkeletonManager : MonoBehaviour 
+{
+	
     public enum Joint
     {
         Root,
@@ -26,9 +26,11 @@ public class RUISSkeletonManager : MonoBehaviour {
 		Neck, // *** OPTIHACK
         Torso,
 		Chest, // *** OPTIHACK
+		LeftClavicle, // *** OPTIHACK
         LeftShoulder,
         LeftElbow,
-        LeftHand,
+		LeftHand,
+		RightClavicle, // *** OPTIHACK
         RightShoulder,
         RightElbow,
         RightHand,
@@ -47,7 +49,6 @@ public class RUISSkeletonManager : MonoBehaviour {
         public Quaternion rotation = Quaternion.identity;
         public float positionConfidence = 0.0f;
         public float rotationConfidence = 0.0f;
-		public Kinect.TrackingState TrackingState = Kinect.TrackingState.NotTracked;
 		public Joint jointID = Joint.None;
 
 		public JointData(Joint jointID)
@@ -59,23 +60,25 @@ public class RUISSkeletonManager : MonoBehaviour {
     public class Skeleton
     {
         public bool isTracking = false;
-		public JointData root = new JointData(Joint.Root);
-		public JointData head = new JointData(Joint.Head);
-		public JointData neck = new JointData(Joint.Neck);
-		public JointData torso = new JointData(Joint.Torso);
-		public JointData chest = new JointData(Joint.Chest);
-		public JointData leftShoulder = new JointData(Joint.LeftShoulder);
-		public JointData leftElbow = new JointData(Joint.LeftElbow);
-		public JointData leftHand = new JointData(Joint.LeftHand);
+		public JointData root 		   = new JointData(Joint.Root);
+		public JointData torso 		   = new JointData(Joint.Torso);
+		public JointData chest 		   = new JointData(Joint.Chest);
+		public JointData neck 		   = new JointData(Joint.Neck);
+		public JointData head 		   = new JointData(Joint.Head);
+		public JointData leftClavicle  = new JointData(Joint.LeftClavicle);
+		public JointData leftShoulder  = new JointData(Joint.LeftShoulder);
+		public JointData leftElbow 	   = new JointData(Joint.LeftElbow);
+		public JointData leftHand 	   = new JointData(Joint.LeftHand);
+		public JointData rightClavicle = new JointData(Joint.RightClavicle);
 		public JointData rightShoulder = new JointData(Joint.RightShoulder);
-		public JointData rightElbow = new JointData(Joint.RightElbow);
-		public JointData rightHand = new JointData(Joint.RightHand);
-		public JointData leftHip = new JointData(Joint.LeftHip);
-		public JointData leftKnee = new JointData(Joint.LeftKnee);
-		public JointData leftFoot = new JointData(Joint.LeftFoot);
-		public JointData rightHip = new JointData(Joint.RightHip);
-		public JointData rightKnee = new JointData(Joint.RightKnee);
-		public JointData rightFoot = new JointData(Joint.RightFoot);
+		public JointData rightElbow    = new JointData(Joint.RightElbow);
+		public JointData rightHand 	   = new JointData(Joint.RightHand);
+		public JointData leftHip 	   = new JointData(Joint.LeftHip);
+		public JointData leftKnee 	   = new JointData(Joint.LeftKnee);
+		public JointData leftFoot 	   = new JointData(Joint.LeftFoot);
+		public JointData rightHip 	   = new JointData(Joint.RightHip);
+		public JointData rightKnee 	   = new JointData(Joint.RightKnee);
+		public JointData rightFoot 	   = new JointData(Joint.RightFoot);
 
 		// Kinect 2 joints, TODO: add Kinect 2 joint enumerations to Joint
 		public JointData baseSpine = new JointData(Joint.None);
@@ -93,7 +96,8 @@ public class RUISSkeletonManager : MonoBehaviour {
 		public handState rightHandStatus = handState.unknown;
 		public handState leftHandStatus = handState.unknown;
 		
-		public enum handState {
+		public enum handState
+		{
 			closed,
 			open,
 			pointing,
@@ -161,8 +165,10 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 
 	NIPlayerManager playerManager;
-	RUISInputManager inputManager;
 	RUISKinect2Data RUISKinect2Data;
+
+	RUISCoordinateSystem coordinateSystem;
+	RUISInputManager inputManager;
 
 	public readonly int skeletonsHardwareLimit = 4; // Kinect 1 legacy (RUISTrackerEditor)
 	public Skeleton[,] skeletons = new Skeleton[3,6];
@@ -263,7 +269,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 
 	void Update () 
 	{
-
 		if (inputManager.enableKinect) 
 		{
 			for (int i = 0; i < playerManager.m_MaxNumberOfPlayers; i++) 
@@ -682,21 +687,25 @@ public class RUISSkeletonManager : MonoBehaviour {
         switch (joint)
         {
             case Joint.Root:
-                return skeletons[bodyTrackingDeviceID, playerID].root;
+			return skeletons[bodyTrackingDeviceID, playerID].root;
+			case Joint.Torso:
+				return skeletons[bodyTrackingDeviceID, playerID].torso;
+			case Joint.Chest: 											// *** OPTIHACK
+				return skeletons[bodyTrackingDeviceID, playerID].chest; // *** OPTIHACK
+			case Joint.Neck: 											// *** OPTIHACK
+				return skeletons[bodyTrackingDeviceID, playerID].neck; 	// *** OPTIHACK
             case Joint.Head:
 				return skeletons[bodyTrackingDeviceID, playerID].head;
-			case Joint.Neck: // *** OPTIHACK
-				return skeletons[bodyTrackingDeviceID, playerID].neck; // *** OPTIHACK
-			case Joint.Chest: // *** OPTIHACK
-				return skeletons[bodyTrackingDeviceID, playerID].chest; // *** OPTIHACK
-            case Joint.Torso:
-				return skeletons[bodyTrackingDeviceID, playerID].torso;
+			case Joint.LeftClavicle:  											// *** OPTIHACK
+				return skeletons[bodyTrackingDeviceID, playerID].leftClavicle;  // *** OPTIHACK
             case Joint.LeftShoulder:
 				return skeletons[bodyTrackingDeviceID, playerID].leftShoulder;
             case Joint.LeftElbow:
 				return skeletons[bodyTrackingDeviceID, playerID].leftElbow;
             case Joint.LeftHand:
 				return skeletons[bodyTrackingDeviceID, playerID].leftHand;
+			case Joint.RightClavicle:  											// *** OPTIHACK
+				return skeletons[bodyTrackingDeviceID, playerID].rightClavicle; // *** OPTIHACK
             case Joint.RightShoulder:
 				return skeletons[bodyTrackingDeviceID, playerID].rightShoulder;
             case Joint.RightElbow:
@@ -743,8 +752,6 @@ public class RUISSkeletonManager : MonoBehaviour {
 			jointData.positionConfidence = 0.0f;
 			jointData.rotationConfidence = 0.0f;
 		}
-		jointData.TrackingState = jointPosition.TrackingState;
-
 		return jointData;
 	}
 }
