@@ -39,6 +39,9 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty rightLegThickness;
 	SerializedProperty leftLegThickness;
 
+	SerializedProperty filterPosition;
+	SerializedProperty positionNoiseCovariance;
+
 	SerializedProperty filterRotations;
 	SerializedProperty rotationNoiseCovariance;
 	SerializedProperty thumbZRotationOffset;
@@ -82,7 +85,11 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty trackWrist;
 	SerializedProperty trackAnkle;
 //	SerializedProperty rotateWristFromElbow;
-	
+
+	SerializedProperty pelvisOffset;
+	SerializedProperty shoulderOffset;
+	SerializedProperty hipOffset;
+
 	SerializedProperty customRoot;
 	SerializedProperty customTorso;
 	SerializedProperty customChest;
@@ -150,6 +157,9 @@ public class RUISSkeletonControllerEditor : Editor
 		rotationNoiseCovariance = serializedObject.FindProperty("rotationNoiseCovariance");
 		thumbZRotationOffset = serializedObject.FindProperty("thumbZRotationOffset");
 
+		filterPosition = serializedObject.FindProperty("filterPosition");
+		positionNoiseCovariance = serializedObject.FindProperty("positionNoiseCovariance");
+
         rootBone 	= serializedObject.FindProperty("root");
         headBone 	= serializedObject.FindProperty("head");
         neckBone 	= serializedObject.FindProperty("neck");
@@ -216,6 +226,10 @@ public class RUISSkeletonControllerEditor : Editor
 
 		customConversionType = serializedObject.FindProperty("customConversionType");
 
+		pelvisOffset 	= serializedObject.FindProperty("pelvisOffset");
+		shoulderOffset  = serializedObject.FindProperty("shoulderOffset");
+		hipOffset 		= serializedObject.FindProperty("hipOffset");
+
 		skeletonController = target as RUISSkeletonController;
     }
 
@@ -226,10 +240,20 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Space();
 		 
 		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", "The source device for body tracking.")); 
+
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(playerId, new GUIContent("Skeleton ID", "The skeleton ID number as reported by Kinect (i.e. 0 for the first "
+														+ "person to be tracked, 1 for the second, and so on). When using "
+														+ RUISSkeletonController.BodyTrackingDeviceType.GenericMotionTracker + ", increment this "
+														+ "index for any additional person that you are concurrently tracking. This value needs "
+														+ "to between 0 and " + (RUISSkeletonManager.maxTrackedSkeletons - 1) + "."));
+		playerId.intValue = Mathf.Clamp(playerId.intValue, 0, RUISSkeletonManager.maxTrackedSkeletons - 1);
+
 		switch(bodyTrackingDevice.enumValueIndex)
 		{
 			case RUISSkeletonManager.kinect1SensorID:
 				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+				playerId.intValue = Mathf.Clamp(playerId.intValue, 0, RUISSkeletonManager.kinect1HardwareLimit - 1);
 				break;
 			case RUISSkeletonManager.kinect2SensorID:
 				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
@@ -239,8 +263,6 @@ public class RUISSkeletonControllerEditor : Editor
 				break;
 		}
 
-		EditorGUILayout.Space();
-		EditorGUILayout.PropertyField(playerId, new GUIContent("Skeleton ID", "The player ID number"));
 		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect1SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID) 
 		{
 			EditorGUILayout.PropertyField(switchToAvailableKinect, new GUIContent(  "Switch To Available Kinect", "Examine RUIS InputManager settings, and "
@@ -251,43 +273,60 @@ public class RUISSkeletonControllerEditor : Editor
 		RUISEditorUtility.HorizontalRuler();
 
         EditorGUILayout.PropertyField(useHierarchicalModel, new GUIContent(  "Hierarchical Model", "Is the model rig hierarchical (a tree) "
-		                                                                   + "instead of non-hierarchical (all bones are on same level)?"));
+		                                                                   + "instead of non-hierarchical (all bones are on same level)? "
+																		   + "in almost all cases this option should be enabled."));
 
         EditorGUILayout.PropertyField(updateRootPosition, new GUIContent(  "Update Root Position", "Update the position of this GameObject according "
 		                                                                 + "to the skeleton root position"));
-		
+
 		GUI.enabled = updateRootPosition.boolValue;
 		EditorGUI.indentLevel++;
-		EditorGUILayout.PropertyField(rootSpeedScaling, new GUIContent(  "Root Speed Scaling", "Multiply Kinect root position, making the character move "
-		                                                               + "larger distances than Kinect tracking area allows. This is not propagated to "
+		EditorGUILayout.PropertyField(rootSpeedScaling, new GUIContent(  "Root Speed Scaling", "Multiply skeleton root position, making the character move "
+		                                                               + "larger distances than mocap tracking area allows. This is not propagated to "
 		                                                               + "Skeleton Wands or other devices (e.g. head trackers) even if they are calibrated "
-		                                                               + "with Kinect's coordinate system. Default and recommended value is (1,1,1)."));
+		                                                               + "with mocap system's coordinate frame. Default and recommended value is (1,1,1)."));
 
-		EditorGUILayout.PropertyField(rootOffset, new GUIContent(  "HMD Root Offset", "This offset is applied only when the Body Tracking Device is not available, "
+		EditorGUILayout.PropertyField(rootOffset, new GUIContent(  "HMD Root Offset", "This offset is applied only when the \"Body Tracking Device\" is not available, "
 																 + "and the avatar follows the head-mounted display position. The offset is useful if your "
 																 + "view in those situations appears to be in a wrong place inside the avatar 3D model "));
 		
 		EditorGUI.indentLevel--;
-		GUI.enabled = true;
 
         GUI.enabled = !useHierarchicalModel.boolValue;
-		EditorGUILayout.PropertyField(updateJointPositions, new GUIContent(  "Update Joint Positions", "Unavailable for hierarchical "
-		                                                                   + "models, since there the skeleton structure already "
-		                                                                   + "handles positions with joint rotations."));
-        if(useHierarchicalModel.boolValue) updateJointPositions.boolValue = false;
-        GUI.enabled = true;
+		EditorGUILayout.PropertyField(updateJointPositions, new GUIContent(  "Update Joint Positions", "If \"Hierarchical Model\" is enabled, "
+																			+ "Joint Positions are always updated implicitly through "
+																			+ "Joint Rotations (and scales if \"Scale Bones\" is enabled)."));
+		
+        if(useHierarchicalModel.boolValue)
+			updateJointPositions.boolValue = true;
 
-        EditorGUILayout.PropertyField(updateJointRotations, new GUIContent(  "Update Joint Rotations", "Enabling this is especially "
-		                                                                   + "important for hierarchical models."));
+		GUI.enabled = true;
+		EditorGUI.indentLevel++;
+		EditorGUILayout.PropertyField(filterPosition, new GUIContent(  "Filter Positions",   "Smoothen the root, shoulder, and hip positions with "
+															+ "a basic Kalman filter. Enabling this option is especially important when using "
+															+ "Kinect. Disable this option when using more accurate and responsive mocap systems."));
+		EditorGUILayout.PropertyField(positionNoiseCovariance, new GUIContent("Position Smoothness", "Sets the magnitude of position smoothing "
+																			+ "(measurement noise variance). Larger values makes the movement "
+																			+ "smoother, at the expense of responsiveness. Default value is 100."));
+		positionNoiseCovariance.floatValue = Mathf.Clamp(positionNoiseCovariance.floatValue, 0.1f, float.MaxValue);
 
+		// HACK: fourJointsNoiseCovariance is usually half of positionNoiseCovariance, but never less than 100 units away
+		skeletonController.fourJointsNoiseCovariance = Mathf.Max(0.5f*positionNoiseCovariance.floatValue, positionNoiseCovariance.floatValue - 100);
+
+		EditorGUI.indentLevel--;
+
+		GUI.enabled = true;
+        EditorGUILayout.PropertyField(updateJointRotations, new GUIContent(  "Update Joint Rotations", "Enabling this option is especially "
+		                                                                   + "important for hierarchical models when using Kinect. Disable this "
+																		   + "option when using more accurate and responsive mocap systems."));
 
 		EditorGUI.indentLevel++;
-		
 		EditorGUILayout.PropertyField(filterRotations, new GUIContent(  "Filter Rotations",   "Smoothen rotations with a basic Kalman filter. For now this is "
 		                                                              						+ "only done for the arm joints of Kinect 2 tracked skeletons."));
-		EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing. "
-		                                                                      +"Larger values make the rotation smoother, but makes it less "
-		                                                                      +"responsive. Default value is 500."));
+		EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing "
+																+ "(measurement noise variance). Larger values make the rotation smoother, "
+																+ "at the expense of responsiveness. Default value for Kinect is 500. Use smaller "
+																+ "values for more accurate and responsive mocap systems."));
 
 		if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
 		   && skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
@@ -298,28 +337,30 @@ public class RUISSkeletonControllerEditor : Editor
 		}
 
 		EditorGUILayout.PropertyField(HMDRotatesHead, new GUIContent(  "HMD Rotates Head",   "Rotate character head using orientation from the connected head-mounted display."));
-		
-		
+
 		EditorGUI.indentLevel--;
 
         GUI.enabled = useHierarchicalModel.boolValue;
         EditorGUILayout.PropertyField(scaleHierarchicalModelBones, new GUIContent(  "Scale Bones", "Scale the bones of the model based on the "
-		                                                                          + "real-life lengths of the player bones. This option is only "
-		                                                                          + "available for hierarchical models."));
+		                                                                          + "real-life limb lengths of the tracked person, making the "
+																				  + "model size correspond to the tracked person size. This "
+																				  + "option is only available for hierarchical models."));
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent(  "Bone Length Axis", "Determines the axis that points the bone direction in each " 
 		                                                             + "joint transform of the animation rig. This value depends on your rig, and it is "
-		                                                             + "only used if you have 'Scale Length Only' enabled or you are using Kinect 2 to "
+		                                                             + "only used if you have \"Scale Length Only\" enabled or you are using Kinect 2 to "
 		                                                             + "curl fingers (fist clenching). You can discover the correct axis by examining "
 		                                                             + "the animation rig hierarchy, by looking at the directional axis between parent "
 		                                                             + "joints and their child joints in local coordinate system. IMPORTANT: Disable the "
-		                                                             + "below 'Scale Length Only' option if the same localScale axis is not consistently "
+		                                                             + "below \"Scale Length Only\" option if the same localScale axis is not consistently "
 		                                                             + "used in all the joints of the animation rig."));
 		EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Scale Length Only", "Scale the bone length (localScale.x/y/z) but not the "
 		                                                                  + "bone thickness (localScale.yz/xz/xy). WARNING: Enabling this option could "
-		                                                                  + "lead to peculiar results, depending on the animation rig."));
+		                                                                  + "lead to peculiar results, depending on the animation rig. At the very least "
+																		  + "it leads to non-uniform scaling, for which there are slight mitigations in "
+																		  + "the code."));
 
 		if(scaleBoneLengthOnly.boolValue)
 		{
@@ -365,7 +406,10 @@ public class RUISSkeletonControllerEditor : Editor
 
 			EditorGUILayout.PropertyField(customRoot, new GUIContent("Source Root", "The source Transform for the skeleton hierarchy's root bone. "
 																	+ "The source Transforms of this section should be moved by realtime input from "
-																	+ "a custom mocap system."));
+																	+ "a custom mocap system.\nIf you want this avatar to copy "
+																	+ "the pose of another " + typeof(RUISSkeletonController) + " that has the "
+																	+ "Custom Source fields already set, then you only need to use the same "
+																	+ "\"Skeleton ID\" and you can leave the below Custom Source fields empty."));
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.LabelField("Source for Torso and Head", customLabelStyle);
@@ -499,14 +543,14 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUIUtility.labelWidth = 0;
 
 		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
-			EditorGUILayout.PropertyField(trackWrist, new GUIContent("Track Wrist", "Track the rotation of the hand bone"));
+			EditorGUILayout.PropertyField(trackWrist, new GUIContent("Track Wrist Rotation", "Track the rotation of the hand bone"));
 
 		// TODO: Restore this when implementation is fixed
 //		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
 //			EditorGUILayout.PropertyField(rotateWristFromElbow, new GUIContent("Wrist Rotates Lower Arm", "Should wrist rotate whole lower arm or just the hand?"));
 
 		EditorGUILayout.Space();
-	
+
 		EditorGUILayout.LabelField("Leg Targets", EditorStyles.boldLabel);
 		EditorGUIUtility.labelWidth = Screen.width / 6;
         EditorGUILayout.BeginHorizontal();
@@ -526,7 +570,7 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUIUtility.labelWidth = 0;
 
 		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
-			EditorGUILayout.PropertyField(trackAnkle, new GUIContent("Track Ankle", "Track the rotation of the ankle bone"));
+			EditorGUILayout.PropertyField(trackAnkle, new GUIContent("Track Ankle Rotation", "Track the rotation of the ankle bone"));
 		
 		EditorGUILayout.Space();
 
@@ -543,55 +587,88 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
 			EditorGUIUtility.labelWidth = 0;
-			
-			EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent(  "Track Fist Clenching", "When user is making a fist, curl finger joints "
-			                                                              + "(child gameObjects under 'Left Hand' and 'Right Hand' whose name include "
-			                                                              + "the substring 'finger' or 'Finger'.). If you have assigned 'Left Thumb' " +
-			                                                              	"and 'Right Thumb', they will receive a slightly different finger curling."));
-			EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track Thumbs", "Track thumb movement."));
 
-			if(trackThumbs.boolValue)
+			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
 			{
-				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(thumbZRotationOffset, new GUIContent("Z Rotation Offset",   "Offset Z rotation of the thumb. Default value is "
-				                                                              							+ "45, but it might depend on your avatar rig."));
-				EditorGUI.indentLevel--;
-				if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
-				   && skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
-					skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
-																																		thumbZRotationOffset.floatValue;
+				EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent(  "Track Fist Clenching", "When user is making a fist, curl finger joints "
+				                                                              + "(child gameObjects under 'Left Hand' and 'Right Hand' whose name include "
+				                                                              + "the substring 'finger' or 'Finger'.). If you have assigned 'Left Thumb' " +
+				                                                              	"and 'Right Thumb', they will receive a slightly different finger curling."));
+				EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track Thumbs", "Track thumb movement."));
+				if(trackThumbs.boolValue)
+				{
+					EditorGUI.indentLevel++;
+					EditorGUILayout.PropertyField(thumbZRotationOffset, new GUIContent("Z Rotation Offset",   "Offset Z rotation of the thumb. Default value is "
+						+ "45, but it might depend on your avatar rig."));
+					EditorGUI.indentLevel--;
+					if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
+						&& skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
+						skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
+							thumbZRotationOffset.floatValue;
+				}
 			}
+
 		}
-		
+
+		EditorGUILayout.Space();
+
 		RUISEditorUtility.HorizontalRuler();
 		
-        EditorGUILayout.LabelField("Tweaking", EditorStyles.boldLabel);
-        EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Min Confidence to Update", "The minimum confidence in joint "
-		                                                                        + "positions and rotations needed to update these values. "
-		                                                                        + "The confidence is either 0; 0,5; or 1."));
+		EditorGUILayout.LabelField("  Adjustments", italicLabelStyle);
         EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
-		                                                              + "for damping character bone movement (smaller values)"));
+		                                                              + "for damping character bone movement (smaller values). The values are in "
+																	  + "degrees. For Kinect and similar devices, a value of 360 is suitable. For "
+																	  + "more accurate and responsive mocap systems, this value can easily be set "
+																	  + "to 7200 or more, so that very fast motions are not restricted."));
+
+		GUI.enabled = useHierarchicalModel.boolValue && scaleHierarchicalModelBones.boolValue;
+		EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Max Scale Rate", "The maximum amount the scale of a bone can "
+		                                                             + "change per second when using \"Hierarchical Model\" and \"Scale Bones\""));
+
+		GUI.enabled = true;
+		EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Min Confidence to Update", "The minimum confidence in joint "
+			+ "positions and rotations needed to update these values. "
+			+ "The confidence is either 0; 0,5; or 1. This setting is only "
+			+ "relevant with Kinect tracking."));
+
+		EditorGUILayout.Space();
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
-		EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent(  "Max Scale Rate", "The maximum amount the scale of a bone can "
-		                                                             + "change per second when using Hierarchical Model and Scale Bones"));
 
+		// *** OPTIHACK
+		EditorGUILayout.PropertyField(pelvisOffset, new GUIContent("Pelvis Offset",   "Offsets pelvis joint position in its local frame. WARNING: "
+																					+ "This offsets the absolute positions of all spine and clavicle "
+																					+ "joints! This setting has effect only when \"Hierarchical"
+																					+ "Model\" and \"Scale Bones\" are enabled."));
+		// *** OPTIHACK
+		EditorGUILayout.PropertyField(shoulderOffset, new GUIContent("Shoulder Offset",   "Offsets shoulder joint positions in their local frame. "
+																						+ "WARNING: This offsets the absolute positions of all the "
+																						+ "arm joints! This setting has effect only when "
+																						+ "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+		// *** OPTIHACK
+		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame. WARNING: This "
+																			  + "offsets the absolute positions of all the leg joints! This "
+																			  + "setting has effect only when \"Hierarchical Model\" and \"Scale " 
+																			  + "Bones\" are enabled."));
+
+		EditorGUILayout.Space();
+
+		// *** OPTIHACK Consider removing adjustVerticalHipsPosition because pelvisOffset does the same thing and more
 		EditorGUILayout.PropertyField(adjustVerticalHipsPosition, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
-		                                                                         + "position in the spine direction (usually vertical axis) "
-		                                                                         + "when using Hierarchical Model and Scale Bones is enabled."));
+		                                                                         + "position in the spine direction (usually vertical axis) when "
+		                                                                         + "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
 		EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent(  "Neck Height Tweaker", "Offset the tracked neck position in the spine "
-		                                                                + "direction (usually vertical axis) when using Hierarchical Model and "
-		                                                                + "Scale Bones is enabled."));
-		GUI.enabled = true;
+		                                                                + "direction (usually vertical axis) when \"Hierarchical Model\" and "
+		                                                                + "\"Scale Bones\" are enabled."));
 
 		GUI.enabled = useHierarchicalModel.boolValue;
 		EditorGUILayout.PropertyField(forearmLengthTweaker, new GUIContent(  "Forearm Length Tweaker", "The forearm length ratio "
-		                                                                   + "compared to the real-world value, use this to lengthen "
-		                                                                   + "or shorten the forearms. Only used if Hierarchical Model is enabled"));
+		                                                                   + "compared to the real-world value, use this to lengthen or "
+		                                                                   + "shorten the forearms. Only used if \"Hierarchical Model\" is enabled"));
 		EditorGUILayout.PropertyField(shinLengthTweaker, new GUIContent(  "Shin Length Tweaker", "The shin length ratio compared to the "
 		                                                                + "real-world value, use this to lengthen or shorten the "
-		                                                                + "shins. Only used if Hierarchical Model is enabled"));
+		                                                                + "shins. Only used if \"Hierarchical Model\" is enabled"));
 		EditorGUILayout.Space();
 		
 		GUI.enabled = true;

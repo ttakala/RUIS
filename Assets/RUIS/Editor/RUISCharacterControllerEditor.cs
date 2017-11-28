@@ -73,13 +73,13 @@ public class RUISCharacterControllerEditor : Editor
 	        switch (characterPivotType.enumValueIndex)
 	        {
 			
-			case (int)RUISCharacterController.CharacterPivotType.KinectHead:
+			case (int)RUISCharacterController.CharacterPivotType.SkeletonHead:
 				
 			EditorGUILayout.LabelField(new GUIContent(bodyTrackingDevice.ToString() + " Skeleton ID " + kinectPlayerId,  
 			                                          "You can change this value from " + typeof(RUISSkeletonController).ToString() 
 			                                          + " script that is in one of the child objects."));
 				break;
-			case (int)RUISCharacterController.CharacterPivotType.KinectTorso:
+			case (int)RUISCharacterController.CharacterPivotType.SkeletonPelvis:
 				EditorGUILayout.LabelField(new GUIContent(bodyTrackingDevice.ToString() + " Skeleton ID " + kinectPlayerId, "You can change this value from " 
 	                          							  + typeof(RUISSkeletonController).ToString() + " script that is in one of the child objects."));
 				break;

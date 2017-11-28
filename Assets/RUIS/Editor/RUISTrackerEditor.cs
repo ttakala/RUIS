@@ -107,8 +107,7 @@ public class RUISTrackerEditor : Editor
 		if(skeletonManagerGameObject != null)
 		{
 			RUISSkeletonManager playerManager = skeletonManagerGameObject.GetComponent<RUISSkeletonManager>();
-			if(playerManager != null)
-				maxKinectSkeletons = playerManager.skeletonsHardwareLimit;
+			maxKinectSkeletons = RUISSkeletonManager.kinect1HardwareLimit;
 		}
 		
 		defaultPosition = serializedObject.FindProperty("defaultPosition");

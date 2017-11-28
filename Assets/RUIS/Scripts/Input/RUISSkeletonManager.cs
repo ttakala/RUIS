@@ -170,8 +170,10 @@ public class RUISSkeletonManager : MonoBehaviour
 	RUISCoordinateSystem coordinateSystem;
 	RUISInputManager inputManager;
 
-	public readonly int skeletonsHardwareLimit = 4; // Kinect 1 legacy (RUISTrackerEditor)
-	public Skeleton[,] skeletons = new Skeleton[3,6];
+	public const int maxTrackedSkeletons = 6;
+	public const int kinect1HardwareLimit = 4; // Kinect 1 legacy (RUISTrackerEditor)
+
+	public Skeleton[,] skeletons = new Skeleton[3, maxTrackedSkeletons];
 	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
 
 	public const int kinect1SensorID = 0;
@@ -205,7 +207,7 @@ public class RUISSkeletonManager : MonoBehaviour
 
 		for (int x = 0; x < 3; x++) // Kinect 1, Kinect 2, Custom Tracker
 		{
-			for (int i = 0; i < 6; i++) 
+			for (int i = 0; i < maxTrackedSkeletons; i++) 
 			{
 				skeletons [x, i] = new Skeleton ();
 

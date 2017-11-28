@@ -15,12 +15,12 @@ public class RUISCharacterController : MonoBehaviour
 {
 	public enum CharacterPivotType
 	{
-		KinectHead,
-		KinectTorso,
+		SkeletonHead,
+		SkeletonPelvis,
 		MoveController
 	}
 
-	public CharacterPivotType characterPivotType = CharacterPivotType.KinectTorso;
+	public CharacterPivotType characterPivotType = CharacterPivotType.SkeletonPelvis;
 
 	public bool useHmdPositionalTracking = false;
 	public bool headRotatesBody = true;
@@ -108,8 +108,8 @@ public class RUISCharacterController : MonoBehaviour
 			colliderComponent = stabilizingCollider.gameObject.GetComponent<Collider>();
 			if(colliderComponent)
 			{
-				if(characterPivotType == CharacterPivotType.KinectHead
-				   || characterPivotType == CharacterPivotType.KinectTorso)
+				if(characterPivotType == CharacterPivotType.SkeletonHead
+				   || characterPivotType == CharacterPivotType.SkeletonPelvis)
 				{
 					if(coordinateSystem && (inputManager.enableKinect || inputManager.enableKinect2) && !coordinateSystem.setKinectOriginToFloor)
 						Debug.LogWarning("It is best to enable 'setKinectOriginToFloor' from RUISCoordinateSystem " +
@@ -143,8 +143,8 @@ public class RUISCharacterController : MonoBehaviour
 				}
 			}
 		}
-		if((characterPivotType == CharacterPivotType.KinectHead
-		   || characterPivotType == CharacterPivotType.KinectTorso)
+		if((characterPivotType == CharacterPivotType.SkeletonHead
+		   || characterPivotType == CharacterPivotType.SkeletonPelvis)
 		   && (skeletonController && skeletonController.playerId != kinectPlayerId))
 			Debug.LogError("The 'Kinect Player Id' variable in RUISCharacterController script in gameObject '" + gameObject.name
 			+ "is different from the Kinect Player Id of the RUISSkeletonController script (located in child "
@@ -307,7 +307,7 @@ public class RUISCharacterController : MonoBehaviour
 
 		switch(characterPivotType)
 		{
-		case CharacterPivotType.KinectHead:
+		case CharacterPivotType.SkeletonHead:
 			if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
 			    || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
 				break;
@@ -316,7 +316,7 @@ public class RUISCharacterController : MonoBehaviour
 			else
 				characterForward = Vector3.forward;
 			break;
-		case CharacterPivotType.KinectTorso:
+		case CharacterPivotType.SkeletonPelvis:
 			if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
 			    || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
 				break;
@@ -368,7 +368,7 @@ public class RUISCharacterController : MonoBehaviour
 		{
 			switch(characterPivotType)
 			{
-			case CharacterPivotType.KinectHead:
+			case CharacterPivotType.SkeletonHead:
 				{
 					if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
 					   || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
@@ -383,7 +383,7 @@ public class RUISCharacterController : MonoBehaviour
 					}
 					break;
 				}
-			case CharacterPivotType.KinectTorso:
+			case CharacterPivotType.SkeletonPelvis:
 				{
 					if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
 					   || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))

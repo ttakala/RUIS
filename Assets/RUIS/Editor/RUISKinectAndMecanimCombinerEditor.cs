@@ -45,9 +45,9 @@ public class RUISKinectAndMecanimCombinerEditor : Editor
 
         EditorGUILayout.LabelField("Blend Weights");
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("", GUILayout.MaxWidth(130), GUILayout.MinWidth(130));
-        EditorGUILayout.LabelField("Kinect", GUILayout.ExpandWidth(true));
-        EditorGUILayout.LabelField("Mecanim", GUILayout.MaxWidth(60));
+        EditorGUILayout.LabelField("", GUILayout.MaxWidth(70), GUILayout.MinWidth(70));
+        EditorGUILayout.LabelField("Tracking", GUILayout.ExpandWidth(true));
+        EditorGUILayout.LabelField("Animation", GUILayout.MaxWidth(60));
         EditorGUILayout.EndHorizontal();
         EditorGUI.indentLevel++;
         EditorGUILayout.Slider(rootBlendWeight, 0, 1, new GUIContent("Root", "Blend weight for skeleton root"));
