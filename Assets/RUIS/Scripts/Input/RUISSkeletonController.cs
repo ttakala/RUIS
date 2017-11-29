@@ -254,10 +254,14 @@ public class RUISSkeletonController : MonoBehaviour
 	public float forearmLengthRatio = 1.0f;
 	public float shinLengthRatio = 1.0f;
 
-	private Vector3 unalteredRightForearmScale;
-	private Vector3 unalteredLeftForearmScale;
-	private Vector3 unalteredRightShinScale;
-	private Vector3 unalteredLeftShinScale;
+	private Vector3 prevRightShoulder;
+	private Vector3 prevRightForearmScale;
+	private Vector3 prevRightHip;
+	private Vector3 prevRightShinScale;
+	private Vector3 prevLeftShoulder;
+	private Vector3 prevLeftForearmScale;
+	private Vector3 prevLeftHip;
+	private Vector3 prevLeftShinScale;
 	
 	//	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None; //06to08
 
@@ -442,10 +446,12 @@ public class RUISSkeletonController : MonoBehaviour
 
 		saveInitialFingerRotations();
 
-		SaveInitialDistance(rightClavicle, rightShoulder);
+		if(rightClavicle)
+			SaveInitialDistance(rightClavicle, rightShoulder);
 		SaveInitialDistance(rightShoulder, rightElbow);
 		SaveInitialDistance(rightElbow,   rightHand);
-		SaveInitialDistance(leftClavicle, leftShoulder);
+		if(leftClavicle)
+			SaveInitialDistance(leftClavicle, leftShoulder);
 		SaveInitialDistance(leftShoulder, leftElbow);
 		SaveInitialDistance(leftElbow,    leftHand);
 
@@ -455,27 +461,48 @@ public class RUISSkeletonController : MonoBehaviour
 		SaveInitialDistance(leftKnee,  leftFoot);
 
 //		SaveInitialDistance(torso, head); // *** OPTIHACK THIS WAS NOT USED ANYWHERE??
-		SaveInitialDistance(torso, chest); // *** OPTIHACK
-		SaveInitialDistance(chest, neck); // *** OPTIHACK
-		SaveInitialDistance(neck, head); // *** OPTIHACK
-		SaveInitialDistance(neck, leftClavicle);
-		SaveInitialDistance(neck, rightClavicle);
+		if(chest)
+		{
+			SaveInitialDistance(torso, chest); // *** OPTIHACK
+			SaveInitialDistance(chest, neck); // *** OPTIHACK
+		}
+		if(neck)
+		{
+			SaveInitialDistance(neck, head); // *** OPTIHACK
+			if(leftClavicle)
+				SaveInitialDistance(neck, leftClavicle);
+			if(rightClavicle)
+				SaveInitialDistance(neck, rightClavicle);
+		}
 
 		SaveInitialDistance(rightShoulder, leftShoulder);
 		SaveInitialDistance(rightHip, leftHip);
 
-		
+
+		if(rightShoulder)
+			prevRightShoulder = rightShoulder.localScale;
+
 		if(rightElbow)
-			unalteredRightForearmScale = rightElbow.localScale;
+			prevRightForearmScale = rightElbow.localScale;
+
+		if(rightHip)
+			prevRightHip = rightHip.localScale;
+
+		if(rightKnee)
+			prevRightShinScale = rightKnee.localScale;
+
+		if(leftShoulder)
+			prevLeftShoulder = leftShoulder.localScale;
 		
 		if(leftElbow)
-			unalteredLeftForearmScale = leftElbow.localScale;
-		
-		if(rightKnee)
-			unalteredRightShinScale = rightKnee.localScale;
-		
+			prevLeftForearmScale = leftElbow.localScale;
+
+		if(leftHip)
+			prevLeftHip = leftHip.localScale;
+
 		if(leftKnee)
-			unalteredLeftShinScale = leftKnee.localScale;
+			prevLeftShinScale = leftKnee.localScale;
+
 
 		// Finger clench rotations: these depend on your animation rig
 		// Also see method handleFingersCurling() and its clenchedRotationThumbTM_corrected and clenchedRotationThumbIP_corrected
@@ -1066,16 +1093,19 @@ public class RUISSkeletonController : MonoBehaviour
 
 		torsoScale = UpdateTorsoScale();
 
-		// Revert to previous localScale values becore tweaking
-		if(rightElbow)
-			rightElbow.localScale = unalteredRightForearmScale;
-		if(leftElbow)
-			leftElbow.localScale = unalteredLeftForearmScale;
-		if(rightKnee)
-			rightKnee.localScale = unalteredRightShinScale;
-		if(leftKnee)
-			leftKnee.localScale = unalteredLeftShinScale;
-
+		// *** HACK
+//		if(scaleBoneLengthOnly)
+//		{
+//			// Revert to previous localScale values becore tweaking
+//			if(rightElbow)
+//				rightElbow.localScale = unalteredRightForearmScale;
+//			if(leftElbow)
+//				leftElbow.localScale = unalteredLeftForearmScale;
+//			if(rightKnee)
+//				rightKnee.localScale = unalteredRightShinScale;
+//			if(leftKnee)
+//				leftKnee.localScale = unalteredLeftShinScale;
+//		}
 
 		// *** OPTIHACK UpdateBoneScaling(): joint pairs from pelvis (toros) to head, from neck to r/lClavicle to r/lShoulder
 
@@ -1115,6 +1145,8 @@ public class RUISSkeletonController : MonoBehaviour
 //		}
 	}
 
+		private Vector3 originalBoneScale = Vector3.one; 
+
 	private float UpdateBoneScaling(Transform boneToScale, Transform comparisonBone, RUISSkeletonManager.JointData boneToScaleTracker, RUISSkeletonManager.JointData comparisonBoneTracker, float cumulativeScale)
 	{
 		float modelBoneLength = 1;
@@ -1124,6 +1156,8 @@ public class RUISSkeletonController : MonoBehaviour
 		float parentBoneThickness = 1;
 		float extremityTweaker = 1;
 		float skewedScaleTweak = 1;
+		Vector3 previousScale = Vector3.one;
+
 
 		if(boneToScale && comparisonBone)
 			modelBoneLength = jointInitialDistances[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)];
@@ -1131,83 +1165,100 @@ public class RUISSkeletonController : MonoBehaviour
 		if(!boneToScale)
 			return cumulativeScale;
 
-		newScale = playerBoneLength / modelBoneLength / cumulativeScale;
-		
+		newScale = playerBoneLength / modelBoneLength; //playerBoneLength / modelBoneLength / cumulativeScale;
 		
 		switch(boneToScaleTracker.jointID)
 		{
 			case RUISSkeletonManager.Joint.LeftHip:
 				thickness = leftLegThickness;
+				previousScale = prevLeftHip;
 				break;
 			case RUISSkeletonManager.Joint.RightHip:
 				thickness = rightLegThickness;
+				previousScale = prevRightHip;
 				break;
 			case RUISSkeletonManager.Joint.LeftShoulder:
 				thickness = leftArmThickness;
+				previousScale = prevLeftShoulder;
 				break;
 			case RUISSkeletonManager.Joint.RightShoulder:
 				thickness = rightArmThickness;
+				previousScale = prevRightShoulder;
 				break;
 			case RUISSkeletonManager.Joint.LeftKnee:
 				thickness = leftLegThickness;
 				extremityTweaker = shinLengthRatio;
+				previousScale = prevLeftShinScale;
 				break;
 			case RUISSkeletonManager.Joint.RightKnee:
 				thickness = rightLegThickness;
 				extremityTweaker = shinLengthRatio;
+				previousScale = prevRightShinScale;
 				break;
 			case RUISSkeletonManager.Joint.LeftElbow:
 				thickness = leftArmThickness;
 				extremityTweaker = forearmLengthRatio;
+				previousScale = prevLeftForearmScale;
 				break;
 			case RUISSkeletonManager.Joint.RightElbow:
 				thickness = rightArmThickness;
 				extremityTweaker = forearmLengthRatio;
+				previousScale = prevRightForearmScale;
 				break;
 		}
+		
 
 		if(scaleBoneLengthOnly)
 		{
-			bool isExtremityJoint = (boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftElbow || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightElbow
-			                        || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftKnee || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightKnee);
+			bool isExtremityJoint = (  boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftElbow || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightElbow
+			                        || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftKnee  || boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightKnee);
 
 			if(isExtremityJoint && boneToScale.parent && comparisonBone)
 			{
 				float jointAngle = Vector3.Angle(boneToScale.position - comparisonBone.position, boneToScale.parent.position - boneToScale.position);
 				float cosAngle = Mathf.Cos(Mathf.Deg2Rad * jointAngle);
 				float sinAngle = Mathf.Sin(Mathf.Deg2Rad * jointAngle);
-				switch(boneLengthAxis)
-				{
-				case RUISAxis.X:
-					parentBoneThickness = boneToScale.parent.localScale.y;
-					break;
-				case RUISAxis.Y:
-					parentBoneThickness = boneToScale.parent.localScale.z;
-					break;
-				case RUISAxis.Z:
-					parentBoneThickness = boneToScale.parent.localScale.x;
-					break;
-				}
+//				switch(boneLengthAxis)
+//				{
+//					case RUISAxis.X:
+//						parentBoneThickness = boneToScale.parent.localScale.y;
+//						break;
+//					case RUISAxis.Y:
+//						parentBoneThickness = boneToScale.parent.localScale.z;
+//						break;
+//					case RUISAxis.Z:
+//						parentBoneThickness = boneToScale.parent.localScale.x;
+//						break;
+//				}
 
-				newScale = (playerBoneLength / modelBoneLength); // / ( cumulativeScale * cosAngle * cosAngle + parentBoneThickness * sinAngle * sinAngle );
-				thickness = Mathf.Pow(thickness, sinAngle * sinAngle); //cosAngle * cosAngle + sinAngle * sinAngle * thickness;
-				skewedScaleTweak = 1 / (cumulativeScale * cosAngle * cosAngle + parentBoneThickness * sinAngle * sinAngle);
+				skewedScaleTweak = extremityTweaker / (cosAngle * cosAngle + thickness * sinAngle * sinAngle);
+				thickness = 1f;// / (sinAngle * sinAngle + cosAngle * cosAngle); // Mathf.Pow(thickness, sinAngle * sinAngle);
+				//newScale = playerBoneLength / modelBoneLength; // / ( cumulativeScale * cosAngle * cosAngle + parentBoneThickness * sinAngle * sinAngle );
+
+			}
+			else
+			{
+				skewedScaleTweak = extremityTweaker / cumulativeScale;
+				thickness /=  cumulativeScale;
 			}
 
-			switch(boneLengthAxis)
+			switch(boneLengthAxis) // Calculating untweaked scales
 			{
-			case RUISAxis.X:
-				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, thickness, thickness), maxScaleFactor * deltaTime);
-				boneToScale.localScale = new Vector3(boneToScale.localScale.x, thickness, thickness);
-				break;
-			case RUISAxis.Y:
-				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, newScale, thickness), maxScaleFactor * deltaTime);
-				boneToScale.localScale = new Vector3(thickness, boneToScale.localScale.y, thickness);
-				break;
-			case RUISAxis.Z:
-				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, thickness, newScale), maxScaleFactor * deltaTime);
-				boneToScale.localScale = new Vector3(thickness, thickness, boneToScale.localScale.z);
-				break;
+				case RUISAxis.X:
+//					originalBoneScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, thickness, thickness), maxScaleFactor * deltaTime);
+//					boneToScale.localScale = new Vector3(skewedScaleTweak * originalBoneScale.x, thickness, thickness);
+					boneToScale.localScale = new Vector3(skewedScaleTweak * Mathf.MoveTowards(previousScale.x, newScale, maxScaleFactor * deltaTime), thickness, thickness);
+					break;
+				case RUISAxis.Y:
+//					originalBoneScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, newScale, thickness), maxScaleFactor * deltaTime);
+//					boneToScale.localScale = new Vector3(thickness, skewedScaleTweak * originalBoneScale.y, thickness);
+					boneToScale.localScale = new Vector3(thickness, skewedScaleTweak * Mathf.MoveTowards(previousScale.y, newScale, maxScaleFactor * deltaTime), thickness);
+					break;
+				case RUISAxis.Z:
+//					originalBoneScale = Vector3.MoveTowards(boneToScale.localScale, new Vector3(thickness, thickness, newScale), maxScaleFactor * deltaTime);
+//					boneToScale.localScale = new Vector3(thickness, thickness, skewedScaleTweak * originalBoneScale.z);
+					boneToScale.localScale = new Vector3(thickness, thickness, skewedScaleTweak * Mathf.MoveTowards(previousScale.z, newScale, maxScaleFactor * deltaTime));
+					break;
 			}
 
 			if(isExtremityJoint)
@@ -1215,37 +1266,56 @@ public class RUISSkeletonController : MonoBehaviour
 				// Save untweaked scales
 				switch(boneToScaleTracker.jointID)
 				{
-					case RUISSkeletonManager.Joint.LeftKnee:  
-						unalteredLeftShinScale = boneToScale.localScale;
+					case RUISSkeletonManager.Joint.LeftHip:
+						prevLeftHip = newScale * Vector3.one;
 						break;
-					case RUISSkeletonManager.Joint.RightKnee:   
-						unalteredRightShinScale = boneToScale.localScale;
+					case RUISSkeletonManager.Joint.LeftKnee:  
+						prevLeftShinScale = newScale * Vector3.one;
+						break;
+					case RUISSkeletonManager.Joint.LeftShoulder:
+						prevLeftShoulder = newScale * Vector3.one;
 						break;
 					case RUISSkeletonManager.Joint.LeftElbow:   
-						unalteredLeftForearmScale = boneToScale.localScale;
+						prevLeftForearmScale = newScale * Vector3.one;
+						break;
+					case RUISSkeletonManager.Joint.RightShoulder:
+						prevRightShoulder = newScale * Vector3.one;
 						break;
 					case RUISSkeletonManager.Joint.RightElbow: 
-						unalteredRightForearmScale = boneToScale.localScale;
+						prevRightForearmScale = newScale * Vector3.one;
+						break;
+					case RUISSkeletonManager.Joint.RightHip:
+						prevRightHip = newScale * Vector3.one;
+						break;
+					case RUISSkeletonManager.Joint.RightKnee:   
+						prevRightShinScale = newScale * Vector3.one;
 						break;
 				}
 
+				// *** There are actually two disting thickness values (axes orthogonal to bone length), there is no way around it
+
 				// Apply bone length tweaks
-				switch(boneLengthAxis)
-				{
-					case RUISAxis.X:
-						boneToScale.localScale = new Vector3(extremityTweaker * skewedScaleTweak * boneToScale.localScale.x, thickness, thickness);
-						break;
-					case RUISAxis.Y:
-						boneToScale.localScale = new Vector3(thickness, extremityTweaker * skewedScaleTweak * boneToScale.localScale.y, thickness);
-						break;
-					case RUISAxis.Z:
-						boneToScale.localScale = new Vector3(thickness, thickness, extremityTweaker * skewedScaleTweak * boneToScale.localScale.z);
-						break;
-				}
+//				switch(boneLengthAxis)
+//				{
+//					case RUISAxis.X:
+//						boneToScale.localScale = new Vector3(extremityTweaker * skewedScaleTweak * boneToScale.localScale.x, thickness, thickness);
+//						break;
+//					case RUISAxis.Y:
+//						boneToScale.localScale = new Vector3(thickness, extremityTweaker * skewedScaleTweak * boneToScale.localScale.y, thickness);
+//						break;
+//					case RUISAxis.Z:
+//						boneToScale.localScale = new Vector3(thickness, thickness, extremityTweaker * skewedScaleTweak * boneToScale.localScale.z);
+//						break;
+//				}
 			}
 		}
 		else
-			boneToScale.localScale = extremityTweaker * Vector3.MoveTowards(boneToScale.localScale, new Vector3(newScale, newScale, newScale), maxScaleFactor * deltaTime);
+			boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
+															(newScale / cumulativeScale) * Vector3.one, maxScaleFactor * deltaTime);
+
+
+//			if(boneToScaleTracker.jointID == RUISSkeletonManager.Joint.LeftElbow)
+//				print(skewedScaleTweak + " " + cumulativeScale + " " + newScale + " " + boneToScale.localScale + " " + leftShoulder.localScale);
 
 		switch(boneLengthAxis)
 		{
@@ -1277,28 +1347,29 @@ public class RUISSkeletonController : MonoBehaviour
 //		float playerLength = (Vector3.Distance( fourJointPositions[0], fourJointPositions[1]) +
 //		                      Vector3.Distance( fourJointPositions[2], fourJointPositions[3])  ) / 2;
 		
-		float newScale = Mathf.Abs(playerLength / modelLength);
+		float newScale = Mathf.Abs(playerLength / modelLength) * (scaleBoneLengthOnly ? torsoThickness : 1);
 
 		// Here we halve the maxScaleFactor because the torso is bigger than the limbs
 		torsoScale = Mathf.Lerp(torsoScale, newScale, 0.5f * maxScaleFactor * deltaTime);
 
 		if(scaleBoneLengthOnly)
 		{
-			switch(boneLengthAxis)
-			{
-				case RUISAxis.X:
-					torso.localScale = new Vector3(torsoScale, torsoThickness * torsoScale, torsoThickness * torsoScale);
-					break;
-				case RUISAxis.Y:
-					torso.localScale = new Vector3(torsoThickness * torsoScale, torsoScale, torsoThickness * torsoScale);
-					break;
-				case RUISAxis.Z:
-					torso.localScale = new Vector3(torsoThickness * torsoScale, torsoThickness * torsoScale, torsoScale);
-					break;
-			}
+//			switch(boneLengthAxis)
+//			{
+//				case RUISAxis.X:
+//					torso.localScale = new Vector3(torsoScale, torsoThickness * torsoScale, torsoThickness * torsoScale);
+//					break;
+//				case RUISAxis.Y:
+//					torso.localScale = new Vector3(torsoThickness * torsoScale, torsoScale, torsoThickness * torsoScale);
+//					break;
+//				case RUISAxis.Z:
+//					torso.localScale = new Vector3(torsoThickness * torsoScale, torsoThickness * torsoScale, torsoScale);
+//					break;
+//			}
+			torso.localScale = torsoScale * Vector3.one;
 		}
 		else
-			torso.localScale = new Vector3(torsoScale, torsoScale, torsoScale);
+			torso.localScale = torsoScale * Vector3.one;
 		return torsoScale;
 	}
 
