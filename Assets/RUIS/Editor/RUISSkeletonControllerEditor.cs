@@ -87,8 +87,20 @@ public class RUISSkeletonControllerEditor : Editor
 //	SerializedProperty rotateWristFromElbow;
 
 	SerializedProperty pelvisOffset;
+	SerializedProperty chestOffset;
+	SerializedProperty neckOffset;
+	SerializedProperty headOffset;
+	SerializedProperty clavicleOffset;
 	SerializedProperty shoulderOffset;
 	SerializedProperty hipOffset;
+
+	SerializedProperty feetRotationOffset;
+
+	SerializedProperty pelvisScaleAdjust;
+	SerializedProperty chestScaleAdjust;
+	SerializedProperty neckScaleAdjust;
+	SerializedProperty headScaleAdjust;
+	SerializedProperty clavicleScaleAdjust;
 
 	SerializedProperty customRoot;
 	SerializedProperty customTorso;
@@ -227,8 +239,20 @@ public class RUISSkeletonControllerEditor : Editor
 		customConversionType = serializedObject.FindProperty("customConversionType");
 
 		pelvisOffset 	= serializedObject.FindProperty("pelvisOffset");
+		chestOffset 	= serializedObject.FindProperty("chestOffset");
+		neckOffset 		= serializedObject.FindProperty("neckOffset");
+		headOffset 		= serializedObject.FindProperty("headOffset");
+		clavicleOffset 	= serializedObject.FindProperty("clavicleOffset");
 		shoulderOffset  = serializedObject.FindProperty("shoulderOffset");
 		hipOffset 		= serializedObject.FindProperty("hipOffset");
+
+		feetRotationOffset = serializedObject.FindProperty("feetRotationOffset");
+
+		pelvisScaleAdjust 	= serializedObject.FindProperty("pelvisScaleAdjust");
+		chestScaleAdjust 	= serializedObject.FindProperty("chestScaleAdjust");
+		neckScaleAdjust 	= serializedObject.FindProperty("neckScaleAdjust");
+		headScaleAdjust 	= serializedObject.FindProperty("headScaleAdjust");
+		clavicleScaleAdjust = serializedObject.FindProperty("clavicleScaleAdjust");
 
 		skeletonController = target as RUISSkeletonController;
     }
@@ -637,19 +661,57 @@ public class RUISSkeletonControllerEditor : Editor
 
 		// *** OPTIHACK
 		EditorGUILayout.PropertyField(pelvisOffset, new GUIContent("Pelvis Offset",   "Offsets pelvis joint position in its local frame. WARNING: "
-																					+ "This offsets the absolute positions of all spine and clavicle "
-																					+ "joints! This setting has effect only when \"Hierarchical"
-																					+ "Model\" and \"Scale Bones\" are enabled."));
-		// *** OPTIHACK
+																					+ "This also offsets the absolute positions of all spine and clavicle "
+						                                                            + "joints! The offset is relative to the scale of pelvis joint. This setting "
+						                                                            + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Slider(pelvisScaleAdjust, 0.01f, 3, new GUIContent("Pelvis Scale Adjust",   "Scales pelvis. This setting has effect only when \"Hierarchical "
+		                                                                   + "Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.PropertyField(chestOffset, new GUIContent("Chest Offset",   "Offsets chest joint position in its local frame. "
+		                                                          + "WARNING: This also offsets the absolute positions of neck, head and "
+		                                                          + "clavicle joints! The offset is relative to the scale of pelvis joint. This setting "
+		                                                          + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Slider(chestScaleAdjust, 0.01f, 3, new GUIContent("Chest Scale Adjust",   "Scales chest. This setting has effect only when \"Hierarchical "
+		                                                                + "Model\" and \"Scale Bones\" are enabled."));
+		
+		EditorGUILayout.PropertyField(neckOffset, new GUIContent("Neck Offset",   "Offsets neck joint position in its local frame. "
+		                                                         + "WARNING: This also offsets the absolute positions of head and "
+		                                                         + "clavicle joints! The offset is relative to the scale of chest joint. This setting "
+		                                                         + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Slider(neckScaleAdjust, 0.01f, 3, new GUIContent("Neck Scale Adjust",   "Scales neck. This setting has effect only when \"Hierarchical "
+		                                                               + "Model\" and \"Scale Bones\" are enabled."));
+		
+		EditorGUILayout.PropertyField(headOffset, new GUIContent("Head Offset",   "Offsets head joint position in its local frame. "
+		                                                         + "The offset is relative to the scale of neck joint. This setting has effect only when \"Hierarchical "
+		                                                         + "Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Slider(headScaleAdjust, 0.01f, 3, new GUIContent("Head Scale Adjust",   "Scales head. This setting has effect only when \"Hierarchical "
+		                                                              + "Model\" and \"Scale Bones\" are enabled."));
+		
+		EditorGUILayout.PropertyField(clavicleOffset, new GUIContent("Clavicle Offset",   "Offsets clavicle joint positions in their "
+		                                                             + "local frame. The offset is relative to the scale of neck joint. This setting has effect only when "
+		                                                             + "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Slider(clavicleScaleAdjust, 0.01f, 3, new GUIContent("Clavice Scale Adjust",   "Scales clavicles. This setting has effect only when \"Hierarchical "
+		                                                              + "Model\" and \"Scale Bones\" are enabled."));
+		
 		EditorGUILayout.PropertyField(shoulderOffset, new GUIContent("Shoulder Offset",   "Offsets shoulder joint positions in their local frame. "
-																						+ "WARNING: This offsets the absolute positions of all the "
-																						+ "arm joints! This setting has effect only when "
-																						+ "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+																						+ "WARNING: This also offsets the absolute positions of all the "
+																						+ "arm joints! Offset is relative to the scale of parent joint. This setting "
+		                                                   						        + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 		// *** OPTIHACK
-		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame. WARNING: This "
-																			  + "offsets the absolute positions of all the leg joints! This "
-																			  + "setting has effect only when \"Hierarchical Model\" and \"Scale " 
-																			  + "Bones\" are enabled."));
+		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame. WARNING: This also "
+					                                                          + "offsets the absolute positions of all the leg joints! Offset is relative to the "
+					                                                          + "scale of pelvis joint. This setting has effect only when \"Hierarchical Model\" and " 
+																			  + "\"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Space();
+
+		EditorGUILayout.PropertyField(feetRotationOffset, new GUIContent("Foot Rotation Offset", "Offsets the joint rotations of both feet in their local frame."));
+		
 
 		EditorGUILayout.Space();
 
