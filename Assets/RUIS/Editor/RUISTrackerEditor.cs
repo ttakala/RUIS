@@ -16,8 +16,6 @@ using System.Collections;
 [CanEditMultipleObjects]
 public class RUISTrackerEditor : Editor
 {
-	GameObject skeletonManagerGameObject;
-	int maxKinectSkeletons = 4;
 	int maxPSMoveControllers = 4;
 	float minNoiseCovariance = 0.001f;
 	float minDriftCorrectionRate = 0.001f;
@@ -102,14 +100,6 @@ public class RUISTrackerEditor : Editor
 
     public void OnEnable()
     {
-		skeletonManagerGameObject = GameObject.Find("SkeletonManager");
-		
-		if(skeletonManagerGameObject != null)
-		{
-			RUISSkeletonManager playerManager = skeletonManagerGameObject.GetComponent<RUISSkeletonManager>();
-			maxKinectSkeletons = RUISSkeletonManager.kinect1HardwareLimit;
-		}
-		
 		defaultPosition = serializedObject.FindProperty("defaultPosition");
 	    //skeletonManager = serializedObject.FindProperty("skeletonManager");
 	    headPositionInput = serializedObject.FindProperty("headPositionInput");
@@ -224,7 +214,7 @@ public class RUISTrackerEditor : Editor
 				break;
             case (int)RUISTracker.HeadPositionSource.Kinect1:
 			case (int)RUISTracker.HeadPositionSource.Kinect2:
-				positionPlayerID.intValue = Mathf.Clamp(positionPlayerID.intValue, 0, maxKinectSkeletons - 1);
+				positionPlayerID.intValue = Mathf.Clamp(positionPlayerID.intValue, 0, RUISSkeletonManager.kinect1HardwareLimit - 1);
 				if(positionNoiseCovarianceKinect.floatValue < minNoiseCovariance)
 					positionNoiseCovarianceKinect.floatValue = minNoiseCovariance;
                 EditorGUILayout.PropertyField(positionPlayerID, new GUIContent("Kinect Player Id", "Between 0 and 3"));
@@ -358,7 +348,7 @@ public class RUISTrackerEditor : Editor
 	        {
 	            case (int)RUISTracker.HeadRotationSource.Kinect1:
 				case (int)RUISTracker.HeadRotationSource.Kinect2:
-					rotationPlayerID.intValue = Mathf.Clamp(rotationPlayerID.intValue, 0, maxKinectSkeletons - 1);
+					rotationPlayerID.intValue = Mathf.Clamp(rotationPlayerID.intValue, 0, RUISSkeletonManager.kinect1HardwareLimit - 1);
 					if(rotationNoiseCovarianceKinect.floatValue < minNoiseCovariance)
 						rotationNoiseCovarianceKinect.floatValue = minNoiseCovariance;
 					EditorGUI.BeginDisabledGroup(!pickRotationSource.boolValue);
@@ -538,7 +528,7 @@ public class RUISTrackerEditor : Editor
 			        {
 						case (int)RUISTracker.CompassSource.Kinect1:
 						case (int)RUISTracker.CompassSource.Kinect2:
-							compassPlayerID.intValue = Mathf.Clamp(compassPlayerID.intValue, 0, maxKinectSkeletons - 1);
+							compassPlayerID.intValue = Mathf.Clamp(compassPlayerID.intValue, 0, RUISSkeletonManager.kinect1HardwareLimit - 1);
 							driftCorrectionRateKinect.floatValue = Mathf.Clamp(driftCorrectionRateKinect.floatValue, minDriftCorrectionRate, 
 																													 maxDriftCorrectionRate );
 							EditorGUI.BeginDisabledGroup(compassIsPositionTracker.boolValue);
