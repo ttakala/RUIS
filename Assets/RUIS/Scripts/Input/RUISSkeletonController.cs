@@ -296,6 +296,11 @@ public class RUISSkeletonController : MonoBehaviour
 	public Quaternion clenchedRotationPIP;
 	public Quaternion clenchedRotationDIP;
 
+	public bool leftThumbHasIndependentRotations = false;
+	public Quaternion clenchedLeftThumbTM;
+	public Quaternion clenchedLeftThumbMCP;
+	public Quaternion clenchedLeftThumbIP;
+
 	void Awake()
 	{
 		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
@@ -563,6 +568,12 @@ public class RUISSkeletonController : MonoBehaviour
 				clenchedRotationPIP = Quaternion.Euler(0, -100, 0);
 				clenchedRotationDIP = Quaternion.Euler(0, -70, 0);
 				break;
+		}
+		if(leftThumbHasIndependentRotations)
+		{
+			clenchedLeftThumbTM  = Quaternion.Euler(15, 0, -25);
+			clenchedLeftThumbMCP = Quaternion.Euler(0, 0, 0);
+			clenchedLeftThumbIP  = Quaternion.Euler(0, 0, 30);
 		}
 
 		if(inputManager)
@@ -1501,6 +1512,7 @@ public class RUISSkeletonController : MonoBehaviour
 		int invert = 1;
 		float rotationSpeed = 10.0f; // Per second
 		Quaternion clenchedRotationThumbTM_corrected = Quaternion.identity;
+		Quaternion clenchedRotationThumbMCP_corrected = Quaternion.identity;
 		Quaternion clenchedRotationThumbIP_corrected = Quaternion.identity;
 		
 		RUISSkeletonManager.Skeleton.handState currentLeftHandStatus = leftHandStatus;
@@ -1557,6 +1569,12 @@ public class RUISSkeletonController : MonoBehaviour
 					clenchedRotationThumbTM.eulerAngles.y * invert, clenchedRotationThumbTM.eulerAngles.z);
 				clenchedRotationThumbIP_corrected = clenchedRotationThumbTM;
 				break;
+			}
+			if(leftThumbHasIndependentRotations && i == 1) // i == 1 is left hand
+			{
+				clenchedRotationThumbTM_corrected 	= clenchedLeftThumbTM;
+				clenchedRotationThumbMCP_corrected 	= clenchedLeftThumbMCP;
+				clenchedRotationThumbIP_corrected 	= clenchedLeftThumbIP;
 			}
 
 			for(int a = 0; a < 5; a++)
