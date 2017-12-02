@@ -1554,22 +1554,28 @@ public class RUISSkeletonController : MonoBehaviour
 			// Thumb rotation correction: these depend on your animation rig
 			switch(boneLengthAxis)
 			{
-			case RUISAxis.X:
-				clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x
-				* invert, clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
-				clenchedRotationThumbIP_corrected = clenchedRotationThumbTM;
+				case RUISAxis.X:
+					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x * invert, 
+															clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
+					clenchedRotationThumbMCP_corrected = clenchedRotationThumbMCP;
+					clenchedRotationThumbIP_corrected  = clenchedRotationThumbIP;
 				break;
-			case RUISAxis.Y:
-				clenchedRotationThumbTM_corrected = clenchedRotationThumbTM;
-				clenchedRotationThumbIP_corrected = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x, 
-					clenchedRotationThumbIP.eulerAngles.y, clenchedRotationThumbIP.eulerAngles.z * invert);
-				break;
-			case RUISAxis.Z:
-				clenchedRotationThumbTM_corrected = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x,
-					clenchedRotationThumbTM.eulerAngles.y * invert, clenchedRotationThumbTM.eulerAngles.z);
-				clenchedRotationThumbIP_corrected = clenchedRotationThumbTM;
-				break;
+				case RUISAxis.Y:
+					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x, clenchedRotationThumbTM.eulerAngles.y,
+					                                                      clenchedRotationThumbTM.eulerAngles.z * invert);
+					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedRotationThumbMCP.eulerAngles.x, clenchedRotationThumbMCP.eulerAngles.y, 
+						                                                  clenchedRotationThumbMCP.eulerAngles.z * invert);
+					clenchedRotationThumbIP_corrected  = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x, clenchedRotationThumbIP.eulerAngles.y, 
+						                                                  clenchedRotationThumbIP.eulerAngles.z * invert);
+					break;
+				case RUISAxis.Z:
+					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x,
+															clenchedRotationThumbTM.eulerAngles.y * invert, clenchedRotationThumbTM.eulerAngles.z);
+					clenchedRotationThumbMCP_corrected = clenchedRotationThumbMCP;
+					clenchedRotationThumbIP_corrected  = clenchedRotationThumbIP;
+					break;
 			}
+			// If left thumb rotatioons have been set separately
 			if(leftThumbHasIndependentRotations && i == 1) // i == 1 is left hand
 			{
 				clenchedRotationThumbTM_corrected 	= clenchedLeftThumbTM;
@@ -1604,7 +1610,7 @@ public class RUISSkeletonController : MonoBehaviour
 						if(fingerTransforms[i, a, 0])
 							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 1])
-							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP, deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP_corrected, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 2])
 							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP_corrected, deltaTime * rotationSpeed);
 					}	

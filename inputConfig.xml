@@ -3,7 +3,7 @@
   <!--Boolean values always with a lower case, e.g. "true" or "false"-->
   <PSMoveSettings>
     <enabled value="false" />
-    <ip value="127.0.0.1" />
+    <ip value="130.233.46.216" />
     <port value="7899" />
     <autoConnect value="true" />
     <enableInGameCalibration value="false" />
@@ -11,7 +11,7 @@
   </PSMoveSettings>
   <KinectSettings>
     <enabled value="false" />
-    <maxPlayers value="1" />
+    <maxPlayers value="2" />
     <floorDetection value="true" />
   </KinectSettings>
   <Kinect2Settings>
@@ -24,8 +24,8 @@
   <Custom1Settings>
     <enabled value="true" />
     <name value="" />
-    <positionConversion unitScale="1" xNegate="false" yNegate="false" zNegate="false" />
-    <rotationConversion invert="false" xNegate="false" yNegate="false" zNegate="false" wNegate="false" />
+    <positionConversion unitScale="1" xNegate="true" yNegate="false" zNegate="true" />
+    <rotationConversion invert="false" xNegate="true" yNegate="false" zNegate="true" wNegate="false" />
   </Custom1Settings>
   <Custom2Settings>
     <enabled value="false" />
