@@ -228,7 +228,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 						{
 							// *** TODO HACK Ugly fix, not 100% sure if in the future all the perspective cameras in the ViveCameraRig work well with below code
 							if(!cam.orthographic)
-								cam.nearClipPlane = 0.15f;
+								cam.nearClipPlane = 0.10f; // TODO: switch back to 0.15f;
 						}
 					}
 				}
@@ -445,10 +445,10 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 				customDeviceTrackerPosition = calibration.customDevice1Tracker.position;
 			if(secondInputDevice == RUISDevice.Custom_2)
 				customDeviceTrackerPosition = calibration.customDevice2Tracker.position;
-			
+
 			if(lastCustomSample != customDeviceTrackerPosition)
 				return RUISCalibrationPhase.ReadyToCalibrate;
-			else if(firstInputDevice != RUISDevice.OpenVR || (trackedOpenVRObjects != null && trackedOpenVRObjects.Length > 1))
+			else if(firstInputDevice != RUISDevice.OpenVR || (trackedOpenVRObjects != null && trackedOpenVRObjects.Length > 0))
 				this.guiTextUpperLocal = "No motion detected in\n'" + secondInputDevice + " Tracked Pose' field of\n" 
 										+ typeof(RUISCoordinateCalibration) + " component.\nIts position should correspond to\nthe tracked "
 										+ secondInputName + " device.";
