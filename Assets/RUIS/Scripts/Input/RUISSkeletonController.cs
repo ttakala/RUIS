@@ -122,7 +122,7 @@ public class RUISSkeletonController : MonoBehaviour
 	}
 
 	/// <summary>Never set/substitute this variable. Set bodyTrackingDeviceID variable instead.</summary>
-	public BodyTrackingDeviceType bodyTrackingDevice = BodyTrackingDeviceType.Kinect1;
+	public BodyTrackingDeviceType bodyTrackingDevice = BodyTrackingDeviceType.Kinect2;
 
 	// *** HACK: Ideally bodyTrackingDevice would have public getter and public setter, and bodyTrackingDeviceID would have public getter
 	//			and private setter. But since bodyTrackingDevice is exposed in the Custom Inspector (RUISSkeletonController) and I was too
@@ -130,7 +130,7 @@ public class RUISSkeletonController : MonoBehaviour
 	//			Developers should not set the value of bodyTrackingDevice variable, instead they should set the bodyTrackingDeviceID variable
 	//			to either RUISSkeletonManager.kinect1SensorID, RUISSkeletonManager.kinect2SensorID, or RUISSkeletonManager.customSensorID.
 	//			Failing to do so will create issues when using Custom / GenericMotionTracker for skeleton tracking.
-	private int _bodyTrackingDeviceID = 0;
+	private int _bodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
 
 	/// <summary>This value should be either RUISSkeletonManager.kinect1SensorID, RUISSkeletonManager.kinect2SensorID, or RUISSkeletonManager.customSensorID.</summary>
 	public int BodyTrackingDeviceID
@@ -194,7 +194,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool updateJointPositions = true;
 	public bool updateJointRotations = true;
 
-	public bool useHierarchicalModel = false;
+	public bool useHierarchicalModel = true;
 	public bool scaleHierarchicalModelBones = true;
 	public bool scaleBoneLengthOnly = false;
 	public RUISAxis boneLengthAxis = RUISAxis.X;
@@ -1509,11 +1509,11 @@ public class RUISSkeletonController : MonoBehaviour
 	private void handleFingersCurling(bool trackThumbs)
 	{
 		bool closeHand;
-		int invert = 1;
+		int inv = 1;
 		float rotationSpeed = 10.0f; // Per second
-		Quaternion clenchedRotationThumbTM_corrected = Quaternion.identity;
+		Quaternion clenchedRotationThumbTM_corrected  = Quaternion.identity;
 		Quaternion clenchedRotationThumbMCP_corrected = Quaternion.identity;
-		Quaternion clenchedRotationThumbIP_corrected = Quaternion.identity;
+		Quaternion clenchedRotationThumbIP_corrected  = Quaternion.identity;
 		
 		RUISSkeletonManager.Skeleton.handState currentLeftHandStatus = leftHandStatus;
 		RUISSkeletonManager.Skeleton.handState currentRightHandStatus = rightHandStatus;
@@ -1544,35 +1544,39 @@ public class RUISSkeletonController : MonoBehaviour
 			if(i == 0)
 			{
 				closeHand = (currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.closed);
-				invert = -1;
+				inv = -1;
 			}
 			else
 			{
 				closeHand = (currentLeftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
-				invert = 1;
+				inv = 1;
 			}
 			// Thumb rotation correction: these depend on your animation rig
 			switch(boneLengthAxis)
 			{
 				case RUISAxis.X:
-					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x * invert, 
-															clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
-					clenchedRotationThumbMCP_corrected = clenchedRotationThumbMCP;
-					clenchedRotationThumbIP_corrected  = clenchedRotationThumbIP;
+					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x * inv, 
+																		  clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
+					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedRotationThumbMCP.eulerAngles.x * inv, 
+																		  clenchedRotationThumbMCP.eulerAngles.y, clenchedRotationThumbMCP.eulerAngles.z);
+					clenchedRotationThumbIP_corrected  = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x * inv, 
+																		  clenchedRotationThumbIP.eulerAngles.y, clenchedRotationThumbIP.eulerAngles.z);
 				break;
 				case RUISAxis.Y:
 					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x, clenchedRotationThumbTM.eulerAngles.y,
-					                                                      clenchedRotationThumbTM.eulerAngles.z * invert);
+					                                                      clenchedRotationThumbTM.eulerAngles.z * inv);
 					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedRotationThumbMCP.eulerAngles.x, clenchedRotationThumbMCP.eulerAngles.y, 
-						                                                  clenchedRotationThumbMCP.eulerAngles.z * invert);
+						                                                  clenchedRotationThumbMCP.eulerAngles.z * inv);
 					clenchedRotationThumbIP_corrected  = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x, clenchedRotationThumbIP.eulerAngles.y, 
-						                                                  clenchedRotationThumbIP.eulerAngles.z * invert);
+						                                                  clenchedRotationThumbIP.eulerAngles.z * inv);
 					break;
 				case RUISAxis.Z:
 					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x,
-															clenchedRotationThumbTM.eulerAngles.y * invert, clenchedRotationThumbTM.eulerAngles.z);
-					clenchedRotationThumbMCP_corrected = clenchedRotationThumbMCP;
-					clenchedRotationThumbIP_corrected  = clenchedRotationThumbIP;
+																		  clenchedRotationThumbTM.eulerAngles.y  * inv, clenchedRotationThumbTM.eulerAngles.z);
+					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedRotationThumbMCP.eulerAngles.x,
+																		  clenchedRotationThumbMCP.eulerAngles.y * inv, clenchedRotationThumbMCP.eulerAngles.z);
+					clenchedRotationThumbIP_corrected  = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x,
+																		  clenchedRotationThumbIP.eulerAngles.y  * inv, clenchedRotationThumbIP.eulerAngles.z);
 					break;
 			}
 			// If left thumb rotatioons have been set separately
@@ -1608,11 +1612,11 @@ public class RUISSkeletonController : MonoBehaviour
 					else if(!trackThumbs)
 					{ // Thumbs (if separate thumb  tracking is not enabled)
 						if(fingerTransforms[i, a, 0])
-							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationThumbTM_corrected, deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation,  clenchedRotationThumbTM_corrected, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 1])
 							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP_corrected, deltaTime * rotationSpeed);
 						if(fingerTransforms[i, a, 2])
-							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationThumbIP_corrected, deltaTime * rotationSpeed);
+							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation,  clenchedRotationThumbIP_corrected, deltaTime * rotationSpeed);
 					}	
 				}	
 			}

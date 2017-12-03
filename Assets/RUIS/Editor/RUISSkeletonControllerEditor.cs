@@ -133,6 +133,9 @@ public class RUISSkeletonControllerEditor : Editor
 	GUIStyle italicLabelStyle = new GUIStyle();
 
 	RUISSkeletonController skeletonController;
+	Animator animator;
+	string missedBones = "";
+	string obtainedTransforms = "";
 
     public void OnEnable()
     {
@@ -260,7 +263,7 @@ public class RUISSkeletonControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-		 
+
 		EditorGUILayout.Space();
 		 
 		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", "The source device for body tracking.")); 
@@ -523,6 +526,139 @@ public class RUISSkeletonControllerEditor : Editor
 		string mocapSource = "Kinect.";
 		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
 			mocapSource = "the above \"Custom Mocap Source Transforms\".";
+
+		if(GUILayout.Button(new GUIContent("Obtain Targets from Animator", "Attempt to automatically obtain below Target Transforms "
+											+ "from an Animator component, if such a component can be found from this GameObject "
+											+ "or its children. WARNING: Make sure that the Transforms are correct!")))
+		{
+			if(skeletonController)
+			{
+				animator = skeletonController.GetComponentInChildren<Animator>();
+				if(animator)
+				{
+					rootBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.LastBone); //
+					torsoBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.Hips);
+					chestBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.Spine);
+					neckBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.Neck); //
+					headBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.Head);
+					leftClavicle.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftShoulder);
+					leftShoulderBone.objectReferenceValue 	= animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+					leftElbowBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
+					leftHandBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftHand);
+					rightClavicle.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightShoulder);
+					rightShoulderBone.objectReferenceValue 	= animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
+					rightElbowBone.objectReferenceValue 	= animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
+					rightHandBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightHand);
+					leftHipBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
+					leftKneeBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
+					leftFootBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftFoot);
+					rightHipBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightUpperLeg);
+					rightKneeBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightLowerLeg);
+					rightFootBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightFoot);
+					leftThumb.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.LeftThumbProximal);
+					rightThumb.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightThumbProximal);
+
+					if(		rootBone.objectReferenceValue && ((Transform) rootBone.objectReferenceValue).IsChildOf(animator.transform)
+						&& 	animator.transform != ((Transform) rootBone.objectReferenceValue))
+					{
+						// Iterate until rootBone is direct child of animator.transform
+						Transform child = (Transform) rootBone.objectReferenceValue;
+						for(int i=0; i<100; ++i)
+						{
+							if(child.parent == animator.transform)
+							{
+								rootBone.objectReferenceValue = child;
+								break;
+							}
+							if(i==99)
+							{
+								rootBone.objectReferenceValue = null;
+								break;
+							}
+							child = child.parent;
+						}
+					}
+
+					if(!neckBone.objectReferenceValue && headBone.objectReferenceValue)
+						neckBone.objectReferenceValue = ((Transform) headBone.objectReferenceValue).parent;
+
+					if(!rootBone.objectReferenceValue)
+						missedBones += "Root, ";
+					if(!torsoBone.objectReferenceValue)
+						missedBones += "Pelvis, ";
+					if(!chestBone.objectReferenceValue)
+						missedBones += "Chest, ";
+					if(!neckBone.objectReferenceValue)
+						missedBones += "Neck, ";
+					if(!headBone.objectReferenceValue)
+						missedBones += "Head, ";
+					if(!leftClavicle.objectReferenceValue)
+						missedBones += "Left Clavicle, ";
+					if(!leftShoulderBone.objectReferenceValue)
+						missedBones += "Left Shoulder, ";
+					if(!leftElbowBone.objectReferenceValue)
+						missedBones += "Left Elbow, ";
+					if(!leftHandBone.objectReferenceValue)
+						missedBones += "Left Hand, ";
+					if(!rightClavicle.objectReferenceValue)
+						missedBones += "Right Clavicle, ";
+					if(!rightShoulderBone.objectReferenceValue)
+						missedBones += "Right Shoulder, ";
+					if(!rightElbowBone.objectReferenceValue)
+						missedBones += "Right Elbow, ";
+					if(!rightHandBone.objectReferenceValue)
+						missedBones += "Right Hand, ";
+					if(!leftHipBone.objectReferenceValue)
+						missedBones += "Left Hip, ";
+					if(!leftKneeBone.objectReferenceValue)
+						missedBones += "Left Knee, ";
+					if(!leftFootBone.objectReferenceValue)
+						missedBones += "Left Foot, ";
+					if(!leftThumb.objectReferenceValue)
+						missedBones += "Left Thumb, ";
+					if(!rightThumb.objectReferenceValue)
+						missedBones += "Right Thumb, ";
+
+					EditorStyles.textField.wordWrap = true;
+					if(!string.IsNullOrEmpty(missedBones))
+					{
+						missedBones = missedBones.Substring(0, missedBones.Length - 2);
+						Debug.LogWarning("Obtained some Target Transforms from Animator component of '" + animator.gameObject.name 
+										+ "' GameObject. The following Transforms were NOT obtained: " + missedBones + ". Please check that the "
+										+ "automatically obtained Transforms correspond to the semantic labels by clicking the below Target "
+										+ "Transform fields.");
+
+						obtainedTransforms =   "Obtained some Target Transforms but not all. Please check that they correspond to the semantic "
+											 + "labels by clicking the below target Transform fields.";
+					}
+					else
+					{
+						Debug.LogWarning("Obtained all Target Transforms from Animator component of '" + animator.gameObject.name 
+							+ "' GameObject. Please check that the automatically obtained Transforms correspond to the semantic labels by clicking "
+							+ "the below Target Transform fields.");
+
+						obtainedTransforms =   "Obtained Target Transforms. Please check that they correspond to the semantic labels by clicking "
+											 + "the below target Transform fields.";
+					}
+				}
+				else
+				{
+					EditorUtility.DisplayDialog("Failed to obtain Targets", "Could not find an Animator component in this GameObject " 
+												+ "or its children. You must assign the Avatar Target Transforms manually.", "OK");
+					obtainedTransforms = "";
+				}
+			}
+			
+		}
+
+		if(!string.IsNullOrEmpty(obtainedTransforms))
+		{
+			GUI.enabled = false;
+			EditorGUILayout.TextArea(obtainedTransforms);
+			GUI.enabled = true;
+		}
+
+		EditorGUILayout.Space();
 
 		EditorGUILayout.PropertyField(rootBone, new GUIContent("Target Root", "The target Transform that is the animated avatar's root bone in "
 																			+ "the skeleton hierarchy. The target Transforms of this section will "
