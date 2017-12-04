@@ -28,7 +28,8 @@ public class RUISSkeletonControllerEditor : Editor
 	
 	SerializedProperty rootSpeedScaling;
 	SerializedProperty rootOffset;
-	SerializedProperty HMDRotatesHead;
+	SerializedProperty hmdRotatesHead;
+	SerializedProperty hmdMovesHead;
 
 	SerializedProperty scaleHierarchicalModelBones;
 	SerializedProperty scaleBoneLengthOnly;
@@ -157,7 +158,8 @@ public class RUISSkeletonControllerEditor : Editor
 		
 		rootSpeedScaling = serializedObject.FindProperty("rootSpeedScaling");
 		rootOffset = serializedObject.FindProperty("rootOffset");
-		HMDRotatesHead = serializedObject.FindProperty("HmdRotatesHead");
+		hmdRotatesHead = serializedObject.FindProperty("hmdRotatesHead");
+		hmdMovesHead = serializedObject.FindProperty("hmdMovesHead");
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
@@ -308,7 +310,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = updateRootPosition.boolValue;
 		EditorGUI.indentLevel++;
-		EditorGUILayout.PropertyField(rootSpeedScaling, new GUIContent(  "Root Speed Scaling", "Multiply skeleton root position, making the character move "
+		EditorGUILayout.PropertyField(rootSpeedScaling, new GUIContent(  "Root Speed Scaling", "Multiply skeleton root position, making the avatar move "
 		                                                               + "larger distances than mocap tracking area allows. This is not propagated to "
 		                                                               + "Skeleton Wands or other devices (e.g. head trackers) even if they are calibrated "
 		                                                               + "with mocap system's coordinate frame. Default and recommended value is (1,1,1)."));
@@ -332,13 +334,20 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.PropertyField(filterPosition, new GUIContent(  "Filter Positions",   "Smoothen the root, shoulder, and hip positions with "
 															+ "a basic Kalman filter. Enabling this option is especially important when using "
 															+ "Kinect. Disable this option when using more accurate and responsive mocap systems."));
-		EditorGUILayout.PropertyField(positionNoiseCovariance, new GUIContent("Position Smoothness", "Sets the magnitude of position smoothing "
-																			+ "(measurement noise variance). Larger values makes the movement "
-																			+ "smoother, at the expense of responsiveness. Default value is 100."));
-		positionNoiseCovariance.floatValue = Mathf.Clamp(positionNoiseCovariance.floatValue, 0.1f, float.MaxValue);
+		if(filterPosition.boolValue)
+		{
+			EditorGUILayout.PropertyField(positionNoiseCovariance, new GUIContent("Position Smoothness", "Sets the magnitude of position smoothing "
+																				+ "(measurement noise variance). Larger values makes the movement "
+																				+ "smoother, at the expense of responsiveness. Default value is 100."));
+			positionNoiseCovariance.floatValue = Mathf.Clamp(positionNoiseCovariance.floatValue, 0.1f, float.MaxValue);
 
-		// HACK: fourJointsNoiseCovariance is usually half of positionNoiseCovariance, but never less than 100 units away
-		skeletonController.fourJointsNoiseCovariance = Mathf.Max(0.5f*positionNoiseCovariance.floatValue, positionNoiseCovariance.floatValue - 100);
+			// HACK: fourJointsNoiseCovariance is usually half of positionNoiseCovariance, but never less than 100 units away
+			skeletonController.fourJointsNoiseCovariance = Mathf.Max(0.5f*positionNoiseCovariance.floatValue, positionNoiseCovariance.floatValue - 100);
+		}
+
+		EditorGUILayout.PropertyField(hmdMovesHead, new GUIContent("HMD Moves Head", "Make avatar head follow the position tracking of the connected " 
+														+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice 
+														+ " coordinate system must be calibrated with the HMD position tracking coordinate system!"));
 
 		EditorGUI.indentLevel--;
 
@@ -350,10 +359,13 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(filterRotations, new GUIContent(  "Filter Rotations",   "Smoothen rotations with a basic Kalman filter. For now this is "
 		                                                              						+ "only done for the arm joints of Kinect 2 tracked skeletons."));
-		EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing "
+		if(filterRotations.boolValue)
+		{
+			EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing "
 																+ "(measurement noise variance). Larger values make the rotation smoother, "
 																+ "at the expense of responsiveness. Default value for Kinect is 500. Use smaller "
 																+ "values for more accurate and responsive mocap systems."));
+		}
 
 		if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
 		   && skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
@@ -363,7 +375,9 @@ public class RUISSkeletonControllerEditor : Editor
 																																rotationNoiseCovariance.floatValue;
 		}
 
-		EditorGUILayout.PropertyField(HMDRotatesHead, new GUIContent(  "HMD Rotates Head",   "Rotate character head using orientation from the connected head-mounted display."));
+		EditorGUILayout.PropertyField(hmdRotatesHead, new GUIContent("HMD Rotates Head", "Rotate avatar head using orientation from the connected "
+														+ "head-mounted display.NOTE: The " + skeletonController.bodyTrackingDevice 
+														+ " coordinate system must be calibrated or otherwise aligned with the HMD's coordinate system!"));
 
 		EditorGUI.indentLevel--;
 
@@ -776,7 +790,7 @@ public class RUISSkeletonControllerEditor : Editor
 		
 		EditorGUILayout.LabelField("  Adjustments", italicLabelStyle);
         EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
-		                                                              + "for damping character bone movement (smaller values). The values are in "
+		                                                              + "for damping avatar bone movement (smaller values). The values are in "
 																	  + "degrees. For Kinect and similar devices, a value of 360 is suitable. For "
 																	  + "more accurate and responsive mocap systems, this value can easily be set "
 																	  + "to 7200 or more, so that very fast motions are not restricted."));
@@ -852,21 +866,21 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Space();
 
 		// *** OPTIHACK Consider removing adjustVerticalHipsPosition because pelvisOffset does the same thing and more
-		EditorGUILayout.PropertyField(adjustVerticalHipsPosition, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
-		                                                                         + "position in the spine direction (usually vertical axis) when "
-		                                                                         + "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
-
-		EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent(  "Neck Height Tweaker", "Offset the tracked neck position in the spine "
-		                                                                + "direction (usually vertical axis) when \"Hierarchical Model\" and "
-		                                                                + "\"Scale Bones\" are enabled."));
+//		EditorGUILayout.PropertyField(adjustVerticalHipsPosition, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
+//		                                                                         + "position in the spine direction (usually vertical axis) when "
+//		                                                                         + "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+		// *** TODO remove this from RUISSkeletonController
+//		EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent(  "Neck Height Tweaker", "Offset the tracked neck position in the spine "
+//		                                                                + "direction (usually vertical axis) when \"Hierarchical Model\" and "
+//		                                                                + "\"Scale Bones\" are enabled."));
 
 		GUI.enabled = useHierarchicalModel.boolValue;
-		EditorGUILayout.PropertyField(forearmLengthTweaker, new GUIContent(  "Forearm Length Tweaker", "The forearm length ratio "
-		                                                                   + "compared to the real-world value, use this to lengthen or "
-		                                                                   + "shorten the forearms. Only used if \"Hierarchical Model\" is enabled"));
-		EditorGUILayout.PropertyField(shinLengthTweaker, new GUIContent(  "Shin Length Tweaker", "The shin length ratio compared to the "
-		                                                                + "real-world value, use this to lengthen or shorten the "
-		                                                                + "shins. Only used if \"Hierarchical Model\" is enabled"));
+		EditorGUILayout.Slider(forearmLengthTweaker, 0.01f, 3, new GUIContent(   "Forearm Scale Adjust", "The forearm length ratio "
+			                                                                   + "compared to the real-world value, use this to lengthen or "
+			                                                                   + "shorten the forearms. Only used if \"Hierarchical Model\" is enabled"));
+		EditorGUILayout.Slider(shinLengthTweaker, 0.01f, 3, new GUIContent(   "Shin Scale Adjust", "The shin length ratio compared to the "
+			                                                                + "real-world value, use this to lengthen or shorten the "
+			                                                                + "shins. Only used if \"Hierarchical Model\" is enabled"));
 		EditorGUILayout.Space();
 		
 		GUI.enabled = true;

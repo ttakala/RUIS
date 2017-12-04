@@ -401,7 +401,7 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		    																				   && limbRootBone.bodypartClassification != BodypartClassification.RightArm)
 			                                                            || (headRotatesBody && limbRootBone.bodypartClassification != BodypartClassification.LeftLeg 
 			                        														&& limbRootBone.bodypartClassification != BodypartClassification.RightLeg)
-																		|| (headRotates && limbRootBone.bodypartClassification == BodypartClassification.Head && skeletonController.HmdRotatesHead))
+																		|| (headRotates && limbRootBone.bodypartClassification == BodypartClassification.Head && skeletonController.hmdRotatesHead))
 		                                                            );
 
         kinectToMecanimYaw = Quaternion.Slerp(Quaternion.identity, kinectToMecanimYaw, limbRootBlendWeight);   
