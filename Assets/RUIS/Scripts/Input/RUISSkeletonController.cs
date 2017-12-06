@@ -168,7 +168,7 @@ public class RUISSkeletonController : MonoBehaviour
 								break;
 							case CustomConversionType.None:
 								deviceConversion = new RUISCoordinateSystem.DeviceCoordinateConversion();
-								customSourceDevice = RUISDevice.Null;
+								customSourceDevice = RUISDevice.None;
 								break;
 						}
 					}
@@ -179,7 +179,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public CustomConversionType customConversionType = CustomConversionType.None;
 	private RUISCoordinateSystem.DeviceCoordinateConversion deviceConversion;
-	private RUISDevice customSourceDevice = RUISDevice.Null;
+	private RUISDevice customSourceDevice = RUISDevice.None;
 
 	public int playerId = 0;
 	public bool switchToAvailableKinect = false;

@@ -116,7 +116,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 				if(!inputManager.enableKinect2)
 					needToSwitch = true;
 				break;
-			case RUISDevice.PS_Move:
+			case RUISDevice.UnityXR:
 				if(!inputManager.enablePSMove)
 					needToSwitch = true;
 				break;
@@ -153,7 +153,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 				else if(inputManager.enableKinect)
 					rootDevice = RUISDevice.Kinect_1;
 				else if(inputManager.enablePSMove)
-					rootDevice = RUISDevice.PS_Move;
+					rootDevice = RUISDevice.UnityXR;
 
 				if(rootDevice != previousDevice)
 				{
@@ -766,7 +766,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		Vector3 newVelocity = velocity;
 
-		if(device == RUISDevice.Null)
+		if(device == RUISDevice.None)
 			return velocity;
 		
 		if(applyToRootCoordinates && rootDevice != device)
@@ -798,7 +798,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		Vector3 outputLocation = inputLocation;
 
-		if(device == RUISDevice.Null)
+		if(device == RUISDevice.None)
 			return inputLocation;
 		
 		// Transform location into master coordinate system
@@ -848,7 +848,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 	{
 		Quaternion outputRotation = inputRotation;
 
-		if(device == RUISDevice.Null)
+		if(device == RUISDevice.None)
 			return inputRotation;
 
 		if(applyToRootCoordinates && rootDevice != device)
@@ -881,7 +881,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 	/// </summary>
 	public Vector3 ExtractLocalScale(RUISDevice device)
 	{
-		if(applyToRootCoordinates && rootDevice != device && device != RUISDevice.Null)
+		if(applyToRootCoordinates && rootDevice != device && device != RUISDevice.None)
 		{
 			string devicePairString = device.ToString() + "-" + rootDevice.ToString();
 			Matrix4x4 matrix = RUISCalibrationResultsIn4x4Matrix[devicePairString];

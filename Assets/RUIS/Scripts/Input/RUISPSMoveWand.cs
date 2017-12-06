@@ -280,7 +280,7 @@ public class RUISPSMoveWand : RUISWand {
     {
         get
         {
-			return coordinateSystem.ConvertRotation(coordinateSystem.ConvertRawPSMoveRotation(psMoveWrapper.qOrientation[controllerId]),RUISDevice.PS_Move);
+			return coordinateSystem.ConvertRotation(coordinateSystem.ConvertRawPSMoveRotation(psMoveWrapper.qOrientation[controllerId]),RUISDevice.UnityXR);
         }
     }
 
@@ -295,7 +295,7 @@ public class RUISPSMoveWand : RUISWand {
 			Vector3 newVelocity = psMoveWrapper.angularVelocity[controllerId];
 			newVelocity.x = -newVelocity.x;
 			newVelocity.y = -newVelocity.y;
-			return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.PS_Move);
+			return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.UnityXR);
         }
 	}
 
@@ -314,7 +314,7 @@ public class RUISPSMoveWand : RUISWand {
 			Vector3 newVelocity = psMoveWrapper.angularAcceleration[controllerId];
 			newVelocity.x = -newVelocity.x;
 			newVelocity.y = -newVelocity.y;
-			return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.PS_Move);
+			return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.UnityXR);
         }
     }
 
@@ -391,12 +391,12 @@ public class RUISPSMoveWand : RUISWand {
     {
 		Vector3 newVelocity = new Vector3(value.x, value.y, -value.z);
 		newVelocity = newVelocity * RUISCoordinateSystem.moveToUnityScale;
-		return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.PS_Move);
+		return coordinateSystem.ConvertVelocity(newVelocity, RUISDevice.UnityXR);
     }
 	
     private Vector3 TransformPosition(Vector3 value)
     {
-		return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawPSMoveLocation(value), RUISDevice.PS_Move);
+		return coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawPSMoveLocation(value), RUISDevice.UnityXR);
     }
 
 	/// <summary>

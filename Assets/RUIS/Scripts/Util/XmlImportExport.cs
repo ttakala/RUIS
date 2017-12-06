@@ -271,7 +271,7 @@ public class XmlImportExport {
 		coordinateSystemSettingsElement.AppendChild(coordinateComment1);
 
 		XmlComment coordinateComment2 = xmlDoc.CreateComment(" " + RUISDevice.Kinect_1 + ", " + RUISDevice.Kinect_2 + ", " + RUISDevice.OpenVR + ", " 
-																 + RUISDevice.PS_Move  + ", " + RUISDevice.Custom_1 + ", " + RUISDevice.Custom_2 + " ");
+																 + RUISDevice.UnityXR  + ", " + RUISDevice.Custom_1 + ", " + RUISDevice.Custom_2 + " ");
 		coordinateSystemSettingsElement.AppendChild(coordinateComment2);
 
 		XmlComment coordinateComment3 = xmlDoc.CreateComment(  "\n    <switchMasterToAvailableSensor value=\"true\" />\n"

@@ -48,7 +48,7 @@ public class RUISPSMoveToOpenVrHmdCalibrationProcess : RUISCalibrationProcess {
 		
 		
 		this.inputDevice1 = RUISDevice.OpenVR;
-		this.inputDevice2 = RUISDevice.PS_Move;
+		this.inputDevice2 = RUISDevice.UnityXR;
 		
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
 		this.numberOfSamplesPerSecond = calibrationSettings.numberOfSamplesPerSecond;
@@ -272,8 +272,8 @@ public class RUISPSMoveToOpenVrHmdCalibrationProcess : RUISCalibrationProcess {
 
 	public override void PlaceSensorModels()
 	{
-		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.PS_Move);
-		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.PS_Move);
+		psEyeModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.UnityXR);
+		psEyeModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.UnityXR);
 	}
 
 	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
@@ -343,7 +343,7 @@ public class RUISPSMoveToOpenVrHmdCalibrationProcess : RUISCalibrationProcess {
 			}
 			
 		}
-		if(device == RUISDevice.PS_Move) {
+		if(device == RUISDevice.UnityXR) {
 			if(psMoveWrapper.sphereVisible[calibratingPSMoveControllerId] && 
 			   psMoveWrapper.handleVelocity[calibratingPSMoveControllerId].magnitude <= 10.0f) {
 				tempSample = coordinateSystem.ConvertRawPSMoveLocation(psMoveWrapper.handlePosition[calibratingPSMoveControllerId]);
@@ -411,7 +411,7 @@ public class RUISPSMoveToOpenVrHmdCalibrationProcess : RUISCalibrationProcess {
 		Debug.Log(transformMatrix);
 		
 		coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
-		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.PS_Move, RUISDevice.OpenVR);
+		coordinateSystem.SaveTransformDataToXML(xmlFilename,RUISDevice.UnityXR, RUISDevice.OpenVR);
 		
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
 		Vector3 translate = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
@@ -419,7 +419,7 @@ public class RUISPSMoveToOpenVrHmdCalibrationProcess : RUISCalibrationProcess {
 		                   coordinateSystem.RUISCalibrationResultsInQuaternion,
 		                   coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
 		                   translate, rotationQuaternion, transformMatrix,
-		                   RUISDevice.PS_Move, RUISDevice.OpenVR);
+		                   RUISDevice.UnityXR, RUISDevice.OpenVR);
 		
 	}
 	
