@@ -102,6 +102,8 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty neckScaleAdjust;
 	SerializedProperty headScaleAdjust;
 	SerializedProperty clavicleScaleAdjust;
+	SerializedProperty handScaleAdjust;
+	SerializedProperty footScaleAdjust;
 
 	SerializedProperty customRoot;
 	SerializedProperty customTorso;
@@ -258,6 +260,8 @@ public class RUISSkeletonControllerEditor : Editor
 		neckScaleAdjust 	= serializedObject.FindProperty("neckScaleAdjust");
 		headScaleAdjust 	= serializedObject.FindProperty("headScaleAdjust");
 		clavicleScaleAdjust = serializedObject.FindProperty("clavicleScaleAdjust");
+		handScaleAdjust		= serializedObject.FindProperty("handScaleAdjust");
+		footScaleAdjust		= serializedObject.FindProperty("footScaleAdjust");
 
 		skeletonController = target as RUISSkeletonController;
     }
@@ -859,6 +863,12 @@ public class RUISSkeletonControllerEditor : Editor
 																			  + "\"Scale Bones\" are enabled."));
 
 		EditorGUILayout.Space();
+
+		EditorGUILayout.Slider(handScaleAdjust, 0.01f, 3, new GUIContent("Hand Scale Adjust", "Scales hands. This setting has effect only when \"Hierarchical "
+																		+ "Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Slider(footScaleAdjust, 0.01f, 3, new GUIContent("Foot Scale Adjust", "Scales feet. This setting has effect only when \"Hierarchical "
+																		+ "Model\" and \"Scale Bones\" are enabled."));
 
 		EditorGUILayout.PropertyField(feetRotationOffset, new GUIContent("Foot Rotation Offset", "Offsets the joint rotations of both feet in their local frame."));
 		
