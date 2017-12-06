@@ -149,6 +149,8 @@ public class RUISInputManagerEditor : Editor {
 
         RUISEditorUtility.HorizontalRuler();
         
+		// *** OPTIHACK
+/*
         EditorGUILayout.PropertyField(psMoveEnabled, new GUIContent("PS Move Enabled"));
 
         if (psMoveEnabled.boolValue)
@@ -190,7 +192,8 @@ public class RUISInputManagerEditor : Editor {
 
         EditorGUILayout.Space();
 		EditorGUILayout.PropertyField(enableRazerHydra, new GUIContent("Razer Hydra Enabled"));
-		
+*/
+
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(kinectEnabled, new GUIContent("Kinect Enabled"));
         if (kinectEnabled.boolValue)

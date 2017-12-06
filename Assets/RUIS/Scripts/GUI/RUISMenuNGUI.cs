@@ -408,6 +408,10 @@ public class RUISMenuNGUI : MonoBehaviour {
 					this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices").gameObject.SetActive(true);
 					this.transform.Find("NGUIControls/Panel/keyStoneConfiguration").gameObject.SetActive(false);
 					
+
+					this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").gameObject.SetActive(false); // *** OPTIHACK
+					this.transform.Find("NGUIControls/Panel/selectAndConfigureDevices/Hydra/Checkbox - Use Hydra").gameObject.SetActive(false); // *** OPTIHACK
+
 					if(this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Checkbox - Use PSMove").GetComponent<UICheckbox>().isChecked) 
 					{
 						this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/PSMove/Label - PSMove IP").gameObject.SetActive(true);
@@ -683,8 +687,8 @@ public class RUISMenuNGUI : MonoBehaviour {
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableCustomDevice1)	dropDownChoices.Add("Custom 1 - OpenVR (controller)");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableCustomDevice2)	dropDownChoices.Add("Custom 2 - OpenVR (controller)");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - OpenVR (controller)");
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  		dropDownChoices.Add("Kinect 1 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - UnityXR (HMD)"); // *** OPTIHACK was: "Kinect 2 - OpenVR (HMD)"
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  		dropDownChoices.Add("Kinect 1 - UnityXR (HMD)"); // *** OPTIHACK was: "Kinect 1 - OpenVR (HMD)"
 //		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - OpenVR (HMD)"); //TODO
 //		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - OpenVR (HMD)"); //TODO
 		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enablePSMove)  		dropDownChoices.Add("PSMove - OpenVR (HMD)");
