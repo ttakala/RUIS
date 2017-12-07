@@ -15,7 +15,7 @@
     <floorDetection value="true" />
   </KinectSettings>
   <Kinect2Settings>
-    <enabled value="false" />
+    <enabled value="true" />
     <floorDetection value="true" />
   </Kinect2Settings>
   <RazerSettings>
@@ -39,7 +39,7 @@
     <useMasterCoordinateSystem value="true" /> 
     <masterCoordinateSystemSensor value="Kinect_2" />
 -->
-    <!-- Kinect_1, Kinect_2, OpenVR, PS_Move, Custom_1, Custom_2 -->
+    <!-- Kinect_1, Kinect_2, OpenVR, UnityXR, Custom_1, Custom_2 -->
     <!--
     <switchMasterToAvailableSensor value="true" />
     <coordinateSystemLocationOffset x="0" y="0" z="0" />

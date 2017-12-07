@@ -695,7 +695,7 @@ public class RUISMenuNGUI : MonoBehaviour {
 //		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect) 		dropDownChoices.Add("Kinect 1 - OpenVR (controller)"); //TODO
 //		if(RUISDisplayManager.enableKinect		   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 1");
 //		if(RUISDisplayManager.enableKinect2		   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - Kinect 2)"); 
-//		if(RUISDisplayManager.enableKinect2 	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 2");
+		if(inputManager.enableKinect2 	   		   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 2"); //TODO
 //		if(RUISDisplayManager.enableKinect		   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - Kinect 1)"); //TODO
 
 		

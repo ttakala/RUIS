@@ -89,8 +89,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool fistCurlFingers = true;
 	public bool externalCurlTrigger = false;
 	public bool trackThumbs = false;
-	public bool trackWrist = true;
-	public bool trackAnkle = true;
+	public bool trackWrist = false;
+	public bool trackAnkle = false;
 	public bool rotateWristFromElbow = true;
 
 	public bool neckParentsShoulders = false;
@@ -217,8 +217,8 @@ public class RUISSkeletonController : MonoBehaviour
 	// Constrained between [0,  180] in Unity Editor script
 	public float handRollAngleMaximum = 180; 
 
-	public bool hmdRotatesHead = true;
-	public bool hmdMovesHead = true;
+	public bool hmdRotatesHead = false;
+	public bool hmdMovesHead = false;
 
 	public bool followHmdPosition { get; private set; }
 
