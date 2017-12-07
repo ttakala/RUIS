@@ -220,6 +220,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool hmdRotatesHead = false;
 	public bool hmdMovesHead = false;
 
+	public bool isIMUMocap = false;
+
 	public bool followHmdPosition { get; private set; }
 
 	public Quaternion trackedDeviceYawRotation { get; private set; }

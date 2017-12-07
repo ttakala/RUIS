@@ -51,7 +51,7 @@ public class RUISKinectAndMecanimCombinerEditor : Editor
         EditorGUILayout.EndHorizontal();
         EditorGUI.indentLevel++;
         EditorGUILayout.Slider(rootBlendWeight, 0, 1, new GUIContent("Root", "Blend weight for skeleton root"));
-        EditorGUILayout.Slider(torsoBlendWeight, 0, 1, new GUIContent("Torso", "Blend weight for torso"));
+        EditorGUILayout.Slider(torsoBlendWeight, 0, 1, new GUIContent("Pelvis", "Blend weight for pelvis"));
         EditorGUILayout.Slider(headBlendWeight, 0, 1, new GUIContent("Head", "Blend weight for head"));
         EditorGUILayout.Slider(rightArmBlendWeight, 0, 1, new GUIContent("Right Arm", "Blend weight for right arm"));
         EditorGUILayout.Slider(leftArmBlendWeight, 0, 1, new GUIContent("Left Arm", "Blend weight for left arm"));

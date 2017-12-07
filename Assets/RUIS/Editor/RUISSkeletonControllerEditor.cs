@@ -105,6 +105,8 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty handScaleAdjust;
 	SerializedProperty footScaleAdjust;
 
+	SerializedProperty isIMUMocap;
+
 	SerializedProperty customRoot;
 	SerializedProperty customTorso;
 	SerializedProperty customChest;
@@ -218,7 +220,9 @@ public class RUISSkeletonControllerEditor : Editor
 		
 		fistCurlFingers = serializedObject.FindProperty("fistCurlFingers");
 		trackThumbs = serializedObject.FindProperty("trackThumbs");
-		
+
+		isIMUMocap = serializedObject.FindProperty("isIMUMocap");
+
 		customRoot		= serializedObject.FindProperty("customRoot");
 		customTorso  	= serializedObject.FindProperty("customTorso");
 		customChest		= serializedObject.FindProperty("customChest");
@@ -442,6 +446,18 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorStyles.label.normal.textColor = customLabelColor;
 
 			EditorGUILayout.Space();
+
+			EditorGUILayout.PropertyField(isIMUMocap, new GUIContent("IMU Motion Capture", "Is the motion captured with an IMU suit (e.g. Perception "
+															+ "Neuron, Xsens)? Such suits measure relative joint rotations, and can only roughly "
+															+ "estimate joint positions. Enable this option if you are using your IMU suit together "
+															+ "with a HMD or some other device that has its rotation or position tracked."));
+
+			if(isIMUMocap.boolValue)
+			{
+				EditorGUI.indentLevel++;
+
+				EditorGUI.indentLevel--;
+			}
 
 			EditorGUILayout.PropertyField(customConversionType, new GUIContent("Coordinate Conversion", "The conversion that will be applied to the "
 																		+ "Source Transform poses before copying them to Target Transforms (below). "
