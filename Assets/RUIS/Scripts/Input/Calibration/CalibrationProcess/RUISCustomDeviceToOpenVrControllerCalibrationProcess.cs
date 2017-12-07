@@ -501,9 +501,9 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
 		
 		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken.\n\n"
-											   + "Keep the " + firstInputName + " in your right\n"
-											   + "hand and make wide, calm motions with it.\n"
-		                                       + "Have both sensors see it.", numberOfSamplesTaken, numberOfSamplesToTake);
+		                                       + "Keep the " + firstInputName + " right next to the " + secondInputDevice
+		                                       + "\ntracking target, and make wide, calm motions with them.\n"
+		                                       + "Have both sensors see them.", numberOfSamplesTaken, numberOfSamplesToTake);
 
 		PlaceCustomTrackedDevices();
 
