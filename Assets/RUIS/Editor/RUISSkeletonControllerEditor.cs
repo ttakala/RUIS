@@ -34,6 +34,8 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty scaleHierarchicalModelBones;
 	SerializedProperty scaleBoneLengthOnly;
 	SerializedProperty boneLengthAxis;
+	SerializedProperty limbsAreScaled;
+	SerializedProperty independentTorsoSegmentsScaling;
 	SerializedProperty torsoThickness;
 	SerializedProperty rightArmThickness;
 	SerializedProperty leftArmThickness;
@@ -168,6 +170,8 @@ public class RUISSkeletonControllerEditor : Editor
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
 		boneLengthAxis = serializedObject.FindProperty("boneLengthAxis");
+		limbsAreScaled = serializedObject.FindProperty("limbsAreScaled");
+		independentTorsoSegmentsScaling = serializedObject.FindProperty("independentTorsoSegmentsScaling");
 		torsoThickness = serializedObject.FindProperty("torsoThickness");
 		rightArmThickness = serializedObject.FindProperty("rightArmThickness");
 		leftArmThickness = serializedObject.FindProperty("leftArmThickness");
@@ -329,15 +333,12 @@ public class RUISSkeletonControllerEditor : Editor
 		
 		EditorGUI.indentLevel--;
 
-        GUI.enabled = !useHierarchicalModel.boolValue;
-		EditorGUILayout.PropertyField(updateJointPositions, new GUIContent(  "Update Joint Positions", "If \"Hierarchical Model\" is enabled, "
-																			+ "Joint Positions are always updated implicitly through "
-																			+ "Joint Rotations (and scales if \"Scale Bones\" is enabled)."));
-		
-        if(useHierarchicalModel.boolValue)
-			updateJointPositions.boolValue = true;
-
 		GUI.enabled = true;
+		EditorGUILayout.PropertyField(updateJointPositions, new GUIContent(  "Update Joint Positions", "Place Joint Positions according to the "
+																			+ "motion capture input. If \"Scale Bones\" is enabled, then the "
+																			+ "tracked positions are not explicitly assigned, rather they come "
+																			+ "from the combination of tracked rotations and bone lengths."));
+		
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(filterPosition, new GUIContent(  "Filter Positions",   "Smoothen the root, shoulder, and hip positions with "
 															+ "a basic Kalman filter. Enabling this option is especially important when using "
@@ -360,9 +361,8 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUI.indentLevel--;
 
 		GUI.enabled = true;
-        EditorGUILayout.PropertyField(updateJointRotations, new GUIContent(  "Update Joint Rotations", "Enabling this option is especially "
-		                                                                   + "important for hierarchical models when using Kinect. Disable this "
-																		   + "option when using more accurate and responsive mocap systems."));
+        EditorGUILayout.PropertyField(updateJointRotations, new GUIContent(  "Update Joint Rotations", "Joint Rotations will be updated according to "
+																									 + "the motion capture input."));
 
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(filterRotations, new GUIContent(  "Filter Rotations",   "Smoothen rotations with a basic Kalman filter. For now this is "
@@ -390,8 +390,8 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUI.indentLevel--;
 
         GUI.enabled = useHierarchicalModel.boolValue;
-        EditorGUILayout.PropertyField(scaleHierarchicalModelBones, new GUIContent(  "Scale Bones", "Scale the bones of the model based on the "
-		                                                                          + "real-life limb lengths of the tracked person, making the "
+        EditorGUILayout.PropertyField(scaleHierarchicalModelBones, new GUIContent(  "Scale Body", "Scale the torso of the model based on the "
+		                                                                          + "real-life torso length of the tracked person, making the "
 																				  + "model size correspond to the tracked person size. This "
 																				  + "option is only available for hierarchical models."));
 
@@ -405,20 +405,40 @@ public class RUISSkeletonControllerEditor : Editor
 		                                                             + "joints and their child joints in local coordinate system. IMPORTANT: Disable the "
 		                                                             + "below \"Scale Length Only\" option if the same localScale axis is not consistently "
 		                                                             + "used in all the joints of the animation rig."));
-		EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Scale Length Only", "Scale the bone length (localScale.x/y/z) but not the "
+
+		EditorGUILayout.PropertyField(independentTorsoSegmentsScaling, new GUIContent("Torso Segments", "Apply uniform scaling to individual "
+																			+ "torso segments (abdomen and chest) to resolve segment proportion " 
+																			+ "differences between the user and avatar model. If you leave this "
+																			+ "disabled, then translations between segments and a single scale "
+																			+ "accross the whole torso are used to resolve the differences. This "
+																			+ "option is effective when you use more accurate mocap systems than "
+																			+ "Kinect."));
+
+		EditorGUILayout.Slider(torsoThickness, 0.1f, 3, new GUIContent(  "Torso Thickness", "Uniform scale that gets applied to the torso. This also "
+																					+ "affects automatic model joint translation, so for example "
+																					+ "neck position wouldn't get scaled too high above shoulders."));
+		EditorGUILayout.PropertyField(limbsAreScaled, new GUIContent(  "Scale Limbs", "In most cases you should enable this option. The limbs will be "
+																	+ "scaled so that their proportions match to that of the tracked user. If this "
+																	+ "option is disabled, then the bone joints are simply translated (if \"Update "
+																	+ "Joint Positions\" is enabled), which will likely result in broken avatars "
+																	+ "especially on users who are smaller than the model size."));
+
+		if(limbsAreScaled.boolValue)
+		{
+			EditorGUI.indentLevel++;
+			EditorGUILayout.PropertyField(scaleBoneLengthOnly, new GUIContent(  "Length Only", "Scale the limb length (localScale.x/y/z) but not the "
 		                                                                  + "bone thickness (localScale.yz/xz/xy). WARNING: Enabling this option could "
 		                                                                  + "lead to peculiar results, depending on the animation rig. At the very least "
 																		  + "it leads to non-uniform scaling, for which there are slight mitigations in "
 																		  + "the code."));
-
-		if(scaleBoneLengthOnly.boolValue)
-		{
-			EditorGUI.indentLevel++;
-			EditorGUILayout.PropertyField(torsoThickness, new GUIContent(  "Torso Thickness", "Thickness scale for torso around its Length Axis."));
-			EditorGUILayout.PropertyField(rightArmThickness, new GUIContent(  "Right Arm Thickness", "Thickness scale for right arm around its Length Axis."));
-			EditorGUILayout.PropertyField(leftArmThickness,  new GUIContent(  "Left Arm Thickness", "Thickness scale for left arm around its Length Axis."));
-			EditorGUILayout.PropertyField(rightLegThickness, new GUIContent(  "Right Leg Thickness", "Thickness scale for right leg around its Length Axis."));
-			EditorGUILayout.PropertyField(leftLegThickness,  new GUIContent(  "Left Leg Thickness", "Thickness scale for left leg around its Length Axis."));
+		
+			if(scaleBoneLengthOnly.boolValue)
+			{
+				EditorGUILayout.Slider(rightArmThickness, 0.1f, 3, new GUIContent("Right Arm Thickness", "Thickness scale for right arm around its Length Axis."));
+				EditorGUILayout.Slider(leftArmThickness,  0.1f, 3, new GUIContent("Left Arm Thickness", "Thickness scale for left arm around its Length Axis."));
+				EditorGUILayout.Slider(rightLegThickness, 0.1f, 3, new GUIContent("Right Leg Thickness", "Thickness scale for right leg around its Length Axis."));
+				EditorGUILayout.Slider(leftLegThickness,  0.1f, 3, new GUIContent("Left Leg Thickness", "Thickness scale for left leg around its Length Axis."));
+			}
 			EditorGUI.indentLevel--;
 		}
 
@@ -428,8 +448,8 @@ public class RUISSkeletonControllerEditor : Editor
 		{
 			scaleHierarchicalModelBones.boolValue = false;
 		}
-		if(!scaleHierarchicalModelBones.boolValue)
-			scaleBoneLengthOnly.boolValue = false;
+//		if(!scaleHierarchicalModelBones.boolValue)
+//			scaleBoneLengthOnly.boolValue = false;
 
         GUI.enabled = true;
 
