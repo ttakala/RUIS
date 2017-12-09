@@ -30,6 +30,7 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty rootOffset;
 	SerializedProperty hmdRotatesHead;
 	SerializedProperty hmdMovesHead;
+	SerializedProperty hmdLocalOffset;
 
 	SerializedProperty scaleHierarchicalModelBones;
 	SerializedProperty scaleBoneLengthOnly;
@@ -43,6 +44,7 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty leftLegThickness;
 
 	SerializedProperty filterPosition;
+	SerializedProperty filterHeadPositionOnly;
 	SerializedProperty positionNoiseCovariance;
 
 	SerializedProperty filterRotations;
@@ -166,6 +168,7 @@ public class RUISSkeletonControllerEditor : Editor
 		rootOffset = serializedObject.FindProperty("rootOffset");
 		hmdRotatesHead = serializedObject.FindProperty("hmdRotatesHead");
 		hmdMovesHead = serializedObject.FindProperty("hmdMovesHead");
+		hmdLocalOffset = serializedObject.FindProperty("hmdLocalOffset");
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
@@ -183,6 +186,7 @@ public class RUISSkeletonControllerEditor : Editor
 		thumbZRotationOffset = serializedObject.FindProperty("thumbZRotationOffset");
 
 		filterPosition = serializedObject.FindProperty("filterPosition");
+		filterHeadPositionOnly = serializedObject.FindProperty("filterHeadPositionOnly");
 		positionNoiseCovariance = serializedObject.FindProperty("positionNoiseCovariance");
 
         rootBone 	= serializedObject.FindProperty("root");
@@ -345,6 +349,10 @@ public class RUISSkeletonControllerEditor : Editor
 															+ "Kinect. Disable this option when using more accurate and responsive mocap systems."));
 		if(filterPosition.boolValue)
 		{
+			// *** OPTIHACK TODO tooltip
+			EditorGUILayout.PropertyField(filterHeadPositionOnly, new GUIContent("Filter Head Position Only", "Smoothen only the head position with "
+																							+ "a basic Kalman filter, and do not smooth other joints."));
+			
 			EditorGUILayout.PropertyField(positionNoiseCovariance, new GUIContent("Position Smoothness", "Sets the magnitude of position smoothing "
 																				+ "(measurement noise variance). Larger values makes the movement "
 																				+ "smoother, at the expense of responsiveness. Default value is 100."));
@@ -357,6 +365,10 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.PropertyField(hmdMovesHead, new GUIContent("HMD Moves Head", "Make avatar head follow the position tracking of the connected " 
 														+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice 
 														+ " coordinate system must be calibrated with the HMD position tracking coordinate system!"));
+
+		if(hmdMovesHead.boolValue) // *** OPTIHACK TODO tooltip
+			EditorGUILayout.PropertyField(hmdLocalOffset, new GUIContent("HMD Local Offset", "Offset the head model in HMD's local coordinate system."));
+		
 
 		EditorGUI.indentLevel--;
 
@@ -898,6 +910,7 @@ public class RUISSkeletonControllerEditor : Editor
 					                                                          + "scale of pelvis joint. This setting has effect only when \"Hierarchical Model\" and " 
 																			  + "\"Scale Bones\" are enabled."));
 
+		
 		EditorGUILayout.Space();
 
 		EditorGUILayout.Slider(handScaleAdjust, 0.01f, 3, new GUIContent("Hand Scale Adjust", "Scales hands. This setting has effect only when \"Hierarchical "

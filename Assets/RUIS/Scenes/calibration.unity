@@ -8451,6 +8451,7 @@ MonoBehaviour:
   trackWrist: 1
   trackAnkle: 1
   rotateWristFromElbow: 0
+  independentTorsoSegmentsScaling: 1
   neckParentsShoulders: 0
   leftHandStatus: 1
   rightHandStatus: 1
@@ -8469,9 +8470,10 @@ MonoBehaviour:
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
-  scaleBoneLengthOnly: 1
+  scaleBoneLengthOnly: 0
   boneLengthAxis: 1
   maxScaleFactor: 0.5
+  limbsAreScaled: 1
   torsoThickness: 1
   rightArmThickness: 1
   leftArmThickness: 1
@@ -8483,6 +8485,7 @@ MonoBehaviour:
   handRollAngleMaximum: 180
   hmdRotatesHead: 0
   hmdMovesHead: 0
+  isIMUMocap: 0
   filterPosition: 0
   positionNoiseCovariance: 100
   fourJointsNoiseCovariance: 50
@@ -13672,7 +13675,7 @@ MonoBehaviour:
   device2SamplePrefab: {fileID: 100000, guid: 1f41274c93d59074eaa3d7a1a929adaa, type: 2}
   firstDevice: 3
   secondDevice: 2147483645
-  numberOfSamplesToTake: 100
+  numberOfSamplesToTake: 150
   samplesPerSecond: 5
   sampleMinDistance: 0.3
   customDevice1Tracker: {fileID: 1958649272}

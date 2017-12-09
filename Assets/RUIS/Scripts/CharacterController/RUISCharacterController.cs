@@ -258,6 +258,7 @@ public class RUISCharacterController : MonoBehaviour
 						
 						if(grounded && (Time.fixedTime - lastJumpTime) > 1)
 						{
+							// *** OPTIHACK TODO HACK this creates a new physics material and only 65000 of them are allowed!!!
 							colliderComponent.material = originalMaterial;
 						}
 						else

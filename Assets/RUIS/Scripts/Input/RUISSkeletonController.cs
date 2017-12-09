@@ -222,6 +222,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool hmdRotatesHead = false;
 	public bool hmdMovesHead = false;
 
+	public Vector3 hmdLocalOffset = Vector3.zero;
+
 	public bool isIMUMocap = false;
 
 	public bool followHmdPosition { get; private set; }
@@ -239,12 +241,13 @@ public class RUISSkeletonController : MonoBehaviour
 	private float deltaTime = 0.03f;
 
 	public bool filterPosition = true;
+	public bool filterHeadPositionOnly = false;
 	private KalmanFilter positionKalman;
 	private double[] measuredPos = { 0, 0, 0 };
 	private double[] pos = { 0, 0, 0 };
 	public float positionNoiseCovariance = 100;
 
-	private KalmanFilter[] fourJointsKalman = new KalmanFilter[4];
+	private KalmanFilter[] fourJointsKalman = new KalmanFilter[5];
 	public float fourJointsNoiseCovariance = 50;
 	private Vector3[] forcedJointPositions = new Vector3[18];
 	
@@ -752,8 +755,8 @@ public class RUISSkeletonController : MonoBehaviour
 			SetCustomJointData(customLeftElbow, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow, 	1, 1);
 			SetCustomJointData(customLeftHand, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	1, 1);
 			SetCustomJointData(customLeftThumb, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftThumb, 	1, 1);
-			SetCustomJointData(customLeftHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		1, 1);
-			SetCustomJointData(customLeftKnee, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 	1, 1);
+			SetCustomJointData(customLeftHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		1, 1); // *** OPTIHACK make offsets work
+			SetCustomJointData(customLeftKnee, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 	1, 1/*, kneeOffset*/); // *** OPTIHACK make symmetric along X
 			SetCustomJointData(customLeftFoot, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, 	1, 1);
 			SetCustomJointData(customRightClavicle, ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 1, 1);
 			SetCustomJointData(customRightShoulder, ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, 1, 1);
@@ -761,7 +764,7 @@ public class RUISSkeletonController : MonoBehaviour
 			SetCustomJointData(customRightHand, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	 1, 1);
 			SetCustomJointData(customRightThumb, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightThumb, 	 1, 1);
 			SetCustomJointData(customRightHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, 	 1, 1);
-			SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1);
+			SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1/*, kneeOffset*/); // *** OPTIHACK make symmetric along X
 			SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
 		}
 
@@ -828,12 +831,6 @@ public class RUISSkeletonController : MonoBehaviour
 						(jointInitialRotations.ContainsKey(head) ? jointInitialRotations[head] : Quaternion.identity);
 					else
 						head.localRotation = hmdRotation; //skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head;
-				}
-				if(hmdMovesHead)
-				{
-					// *** TODO RUISDevice.OpenVR could also be RUISDevice.UnityXR
-					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.position = coordinateSystem.ConvertLocation(
-														UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR);
 				}
 			}
 			
@@ -967,12 +964,20 @@ public class RUISSkeletonController : MonoBehaviour
 //							deltaT = skeletonManager.kinect2FrameDeltaT;
 //						else
 						deltaT = deltaTime;
+
+						if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+						{
+							// *** TODO RUISDevice.OpenVR could also be RUISDevice.UnityXR
+							skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.position = 
+								UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); // *** TODO ConvertLocation can be UnityXR too
+						}
+
 //						ForceUpdatePosition(ref torso, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, 		10, deltaT);
 //						if(!independentTorsoSegmentsScaling)
 						{
 							ForceUpdatePosition(ref chest, 		   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, 	   11, deltaT);
-							ForceUpdatePosition(ref neck, 		   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck, 		   12, deltaT);
-							ForceUpdatePosition(ref head, 		   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head, 		   13, deltaT);
+							ForceUpdatePosition(ref neck, 		   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck, 		    5, deltaT);
+							ForceUpdatePosition(ref head, 		   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head, 		    4, deltaT);
 							ForceUpdatePosition(ref rightClavicle, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 8, deltaT);
 							ForceUpdatePosition(ref leftClavicle,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle,  9, deltaT);
 						}
@@ -983,8 +988,8 @@ public class RUISSkeletonController : MonoBehaviour
 						ForceUpdatePosition(ref leftHip, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		 3, deltaT);
 						if(!limbsAreScaled)
 						{
-							ForceUpdatePosition(ref rightHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	 4, deltaT);
-							ForceUpdatePosition(ref leftHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	 5, deltaT);
+							ForceUpdatePosition(ref rightHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	12, deltaT);
+							ForceUpdatePosition(ref leftHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	13, deltaT);
 							ForceUpdatePosition(ref rightFoot, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 6, deltaT);
 							ForceUpdatePosition(ref leftFoot, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, 	 7, deltaT);
 							ForceUpdatePosition(ref rightElbow, 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, 	14, deltaT);
@@ -996,18 +1001,24 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 				else if(updateJointPositions)
 				{
+					if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+					{
+						// *** TODO RUISDevice.OpenVR could also be RUISDevice.UnityXR
+						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.position = 
+							coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR); // *** TODO ConvertLocation can be UnityXR
+					}
 					ForceUpdatePosition(ref torso, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, 		10, deltaTime);
 					ForceUpdatePosition(ref chest, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, 		11, deltaTime);
-					ForceUpdatePosition(ref neck, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck, 		12, deltaTime);
-					ForceUpdatePosition(ref head, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head, 		13, deltaTime);
+					ForceUpdatePosition(ref neck, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck, 		 5, deltaTime);
+					ForceUpdatePosition(ref head, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head, 		 4, deltaTime);
 					ForceUpdatePosition(ref rightClavicle, 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 8, deltaTime);
 					ForceUpdatePosition(ref leftClavicle, 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle,  9, deltaTime);
 					ForceUpdatePosition(ref rightShoulder, 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, 0, deltaTime);
 					ForceUpdatePosition(ref leftShoulder, 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftShoulder,  1, deltaTime);
 					ForceUpdatePosition(ref rightElbow, 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, 	14, deltaTime);
 					ForceUpdatePosition(ref leftElbow, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow,  	15, deltaTime);
-					ForceUpdatePosition(ref rightHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	 4, deltaTime);
-					ForceUpdatePosition(ref leftHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	 5, deltaTime);
+					ForceUpdatePosition(ref rightHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	12, deltaTime);
+					ForceUpdatePosition(ref leftHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	13, deltaTime);
 					ForceUpdatePosition(ref rightHip, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, 	 2, deltaTime);
 					ForceUpdatePosition(ref leftHip, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		 3, deltaTime);
 					ForceUpdatePosition(ref rightKnee, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	16, deltaTime);
@@ -1123,14 +1134,14 @@ public class RUISSkeletonController : MonoBehaviour
 		TweakNeckHeight();
 	}
 
-	private void SetCustomJointData(Transform sourceTransform, ref RUISSkeletonManager.JointData jointToSet, float posConfidence, float rotConfidence)
+	private void SetCustomJointData(Transform sourceTransform, ref RUISSkeletonManager.JointData jointToSet, float posConfidence, float rotConfidence, Vector3 offset = new Vector3())
 	{
 		if(sourceTransform)
 		{
 			jointToSet.rotation = coordinateSystem.ConvertRotation(RUISCoordinateSystem.ConvertRawRotation(sourceTransform.rotation, 
 																										   deviceConversion), customSourceDevice);
 			jointToSet.position = coordinateSystem.ConvertLocation(RUISCoordinateSystem.ConvertRawLocation(sourceTransform.position, 
-																										   deviceConversion), customSourceDevice);
+																										   deviceConversion), customSourceDevice) + jointToSet.rotation * offset;
 			jointToSet.positionConfidence = posConfidence;
 			jointToSet.rotationConfidence = rotConfidence;
 		}
@@ -1216,7 +1227,7 @@ public class RUISSkeletonController : MonoBehaviour
 //			transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
 //		else
 		{
-			if(filterPosition && jointID < fourJointsKalman.Length)
+			if(filterPosition && jointID < fourJointsKalman.Length && !(filterHeadPositionOnly && jointID != 4)) // *** TODO set ÍDs in better manner
 			{
 				measuredPos[0] = jointToGet.position.x;
 				measuredPos[1] = jointToGet.position.y;
@@ -1249,7 +1260,16 @@ public class RUISSkeletonController : MonoBehaviour
 					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.rotation * neckOffset;
 					break;
 				case RUISSkeletonManager.Joint.Head:
-					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation * headOffset;
+					if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+					{
+						offsetScale = 1; // OPTIHACK *** CHECK THAT WORKS, torso.localScale.x is better // Below *** TODO can be UNITYXR
+//						jointOffset = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR) * headOffset;
+							// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
+							jointOffset = headOffset 
+								+ coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR) * hmdLocalOffset;
+					}
+					else
+						jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation * headOffset;
 					break;
 				case RUISSkeletonManager.Joint.LeftClavicle:
 					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle.rotation * clavicleOffset;
@@ -1276,7 +1296,7 @@ public class RUISSkeletonController : MonoBehaviour
 					jointOffset.Set(0, 0, 0);
 					break;
 			}
-			
+
 			// *** NOTE the use of transformToUpdate.parent.localScale.x <-- assumes uniform scale from the parent (clavicle/torso)
 				transformToUpdate.position = transform.TransformPoint(forcedJointPositions[jointID] - skeletonPosition + jointOffset * offsetScale);
 		}
@@ -1288,7 +1308,7 @@ public class RUISSkeletonController : MonoBehaviour
 	// Gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
 	private void UpdateSkeletonPosition()
 	{
-		if(filterPosition)
+		if(filterPosition && !filterHeadPositionOnly)
 		{
 			newRootPosition = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].root.position;
 
@@ -1417,14 +1437,14 @@ public class RUISSkeletonController : MonoBehaviour
 							skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, prevLeftHandScale, cumulativeScale);
 
 		cumulativeScale = UpdateBoneScaling(rightHip, rightKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, 
-											skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, cumulatedPelvisScale * pelvisScaleAdjust);
+											skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, cumulatedPelvisScale);
 		cumulativeScale = UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 
 											skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, cumulativeScale);
 		UpdateEndBoneScaling(rightFoot, footScaleAdjust * transform.localScale.y * Vector3.one, 
 							skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, prevRightFootScale, cumulativeScale);
 
 		cumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 
-											skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, cumulatedPelvisScale * pelvisScaleAdjust);
+											skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, cumulatedPelvisScale);
 		cumulativeScale = UpdateBoneScaling(leftKnee, leftFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 
 											skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, cumulativeScale);
 		UpdateEndBoneScaling(leftFoot, footScaleAdjust * transform.localScale.y * Vector3.one, 
