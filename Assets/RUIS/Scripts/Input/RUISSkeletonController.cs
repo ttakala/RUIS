@@ -1025,6 +1025,10 @@ public class RUISSkeletonController : MonoBehaviour
 					ForceUpdatePosition(ref leftKnee, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 	17, deltaTime);
 					ForceUpdatePosition(ref rightFoot, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 6, deltaTime);
 					ForceUpdatePosition(ref leftFoot, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, 	 7, deltaTime);
+
+					// *** OPTIHACK TODO for forearms too... use initial localScales
+					leftKnee.localScale  = shinLengthRatio * Vector3.one;
+					rightKnee.localScale = shinLengthRatio * Vector3.one;
 				}
 			}
 
@@ -1258,18 +1262,22 @@ public class RUISSkeletonController : MonoBehaviour
 					break;
 				case RUISSkeletonManager.Joint.Neck:
 					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.rotation * neckOffset;
+					offsetScale = 1; // OPTIHACK TODO ***
 					break;
 				case RUISSkeletonManager.Joint.Head:
 					if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
 					{
 						offsetScale = 1; // OPTIHACK *** CHECK THAT WORKS, torso.localScale.x is better // Below *** TODO can be UNITYXR
 //						jointOffset = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR) * headOffset;
-							// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
-							jointOffset = headOffset 
-								+ coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR) * hmdLocalOffset;
+						// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
+						jointOffset = headOffset
+						+ coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR) * hmdLocalOffset;
 					}
 					else
+					{
+						offsetScale = 1; // OPTIHACK TODO ***
 						jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation * headOffset;
+					}
 					break;
 				case RUISSkeletonManager.Joint.LeftClavicle:
 					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle.rotation * clavicleOffset;
@@ -1820,9 +1828,10 @@ public class RUISSkeletonController : MonoBehaviour
 
 //			updatedScale.Set(axisScales[axisLabels[0]]*boneToScale.localScale.x, axisScales[axisLabels[1]]*boneToScale.localScale.y, 
 //				axisScales[axisLabels[2]]*boneToScale.localScale.z);
-			updatedScale.Set(boneToScale.localScale.x + delta.x * 10 * signChanged.x * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[0]]), 2), 
-							 boneToScale.localScale.y + delta.y * 10 * signChanged.y * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[1]]), 2), 
-							 boneToScale.localScale.z + delta.z * 10 * signChanged.z * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[2]]), 2));
+			float descentSpeed = 10;
+			updatedScale.Set(boneToScale.localScale.x + delta.x * descentSpeed * signChanged.x * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[0]]), 2), 
+			                 boneToScale.localScale.y + delta.y * descentSpeed * signChanged.y * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[1]]), 2), 
+			                 boneToScale.localScale.z + delta.z * descentSpeed * signChanged.z * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[2]]), 2));
 			// *** TODO clamp updatedScale with "metropolitan max"
 			// *** small boneScaleTarget values tend to blow up the updatedScale.. it probably veers into negative numbers. Fix that
 
