@@ -1,9 +1,11 @@
 ﻿/*****************************************************************************
 
-Content    :   Inspector behaviour for RUISKinectAndMecanimCombiner script
-Authors    :   Mikael Matveinen
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Content    :   Inspector behaviour for RUISSkeletonController script
+Authors    :   Tuukka Takala, Mikael Matveinen
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -97,8 +99,22 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty headOffset;
 	SerializedProperty clavicleOffset;
 	SerializedProperty shoulderOffset;
+	SerializedProperty elbowOffset;
+	SerializedProperty handOffset;
 	SerializedProperty hipOffset;
+	SerializedProperty kneeOffset;
+	SerializedProperty footOffset;
 
+	SerializedProperty pelvisRotationOffset;
+	SerializedProperty chestRotationOffset;
+	SerializedProperty neckRotationOffset;
+	SerializedProperty headRotationOffset;
+	SerializedProperty clavicleRotationOffset;
+	SerializedProperty shoulderRotationOffset;
+	SerializedProperty elbowRotationOffset;
+	SerializedProperty handRotationOffset;
+	SerializedProperty hipRotationOffset;
+	SerializedProperty kneeRotationOffset;
 	SerializedProperty feetRotationOffset;
 
 	SerializedProperty pelvisScaleAdjust;
@@ -106,7 +122,9 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty neckScaleAdjust;
 	SerializedProperty headScaleAdjust;
 	SerializedProperty clavicleScaleAdjust;
+	SerializedProperty shoulderScaleAdjust;
 	SerializedProperty handScaleAdjust;
+	SerializedProperty hipScaleAdjust;
 	SerializedProperty footScaleAdjust;
 
 	SerializedProperty isIMUMocap;
@@ -145,6 +163,8 @@ public class RUISSkeletonControllerEditor : Editor
 	Animator animator;
 	string missedBones = "";
 	string obtainedTransforms = "";
+
+	static bool showLocalOffsets;
 
     public void OnEnable()
     {
@@ -263,16 +283,32 @@ public class RUISSkeletonControllerEditor : Editor
 		headOffset 		= serializedObject.FindProperty("headOffset");
 		clavicleOffset 	= serializedObject.FindProperty("clavicleOffset");
 		shoulderOffset  = serializedObject.FindProperty("shoulderOffset");
+		elbowOffset 	= serializedObject.FindProperty("elbowOffset");
+		handOffset 		= serializedObject.FindProperty("handOffset");
 		hipOffset 		= serializedObject.FindProperty("hipOffset");
+		kneeOffset 		= serializedObject.FindProperty("kneeOffset");
+		footOffset 		= serializedObject.FindProperty("footOffset");
 
-		feetRotationOffset = serializedObject.FindProperty("feetRotationOffset");
+		pelvisRotationOffset   = serializedObject.FindProperty("pelvisRotationOffset");
+		chestRotationOffset    = serializedObject.FindProperty("chestRotationOffset");
+		neckRotationOffset     = serializedObject.FindProperty("neckRotationOffset");
+		headRotationOffset     = serializedObject.FindProperty("headRotationOffset");
+		clavicleRotationOffset = serializedObject.FindProperty("clavicleRotationOffset");
+		shoulderRotationOffset = serializedObject.FindProperty("shoulderRotationOffset");
+		elbowRotationOffset    = serializedObject.FindProperty("elbowRotationOffset");
+		handRotationOffset     = serializedObject.FindProperty("handRotationOffset");
+		hipRotationOffset      = serializedObject.FindProperty("hipRotationOffset");
+		kneeRotationOffset     = serializedObject.FindProperty("kneeRotationOffset");
+		feetRotationOffset     = serializedObject.FindProperty("feetRotationOffset");;
 
 		pelvisScaleAdjust 	= serializedObject.FindProperty("pelvisScaleAdjust");
 		chestScaleAdjust 	= serializedObject.FindProperty("chestScaleAdjust");
 		neckScaleAdjust 	= serializedObject.FindProperty("neckScaleAdjust");
 		headScaleAdjust 	= serializedObject.FindProperty("headScaleAdjust");
 		clavicleScaleAdjust = serializedObject.FindProperty("clavicleScaleAdjust");
+		shoulderScaleAdjust = serializedObject.FindProperty("shoulderScaleAdjust");
 		handScaleAdjust		= serializedObject.FindProperty("handScaleAdjust");
+		hipScaleAdjust		= serializedObject.FindProperty("hipScaleAdjust");
 		footScaleAdjust		= serializedObject.FindProperty("footScaleAdjust");
 
 		skeletonController = target as RUISSkeletonController;
@@ -904,24 +940,23 @@ public class RUISSkeletonControllerEditor : Editor
 																						+ "WARNING: This also offsets the absolute positions of all the "
 																						+ "arm joints! Offset is relative to the scale of parent joint. This setting "
 		                                                   						        + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.PropertyField(elbowOffset, new GUIContent("Elbow Offset",   "Offsets elbow joint positions in their "
+			+ "local frame."));
+		EditorGUILayout.PropertyField(handOffset, new GUIContent("Hand Offset",   "Offsets hand joint positions in their "
+			+ "local frame."));
+		
 		// *** OPTIHACK
 		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame. WARNING: This also "
 					                                                          + "offsets the absolute positions of all the leg joints! Offset is relative to the "
 					                                                          + "scale of pelvis joint. This setting has effect only when \"Hierarchical Model\" and " 
 																			  + "\"Scale Bones\" are enabled."));
 
+		EditorGUILayout.PropertyField(kneeOffset, new GUIContent("Knee Offset",   "Offsets knee joint positions in their "
+			+ "local frame."));
+		EditorGUILayout.PropertyField(footOffset, new GUIContent("Foot Offset",   "Offsets foot joint positions in their "
+			+ "local frame."));
 		
-		EditorGUILayout.Space();
-
-		EditorGUILayout.Slider(handScaleAdjust, 0.01f, 3, new GUIContent("Hand Scale Adjust", "Scales hands. This setting has effect only when \"Hierarchical "
-																		+ "Model\" and \"Scale Bones\" are enabled."));
-
-		EditorGUILayout.Slider(footScaleAdjust, 0.01f, 3, new GUIContent("Foot Scale Adjust", "Scales feet. This setting has effect only when \"Hierarchical "
-																		+ "Model\" and \"Scale Bones\" are enabled."));
-
-		EditorGUILayout.PropertyField(feetRotationOffset, new GUIContent("Foot Rotation Offset", "Offsets the joint rotations of both feet in their local frame."));
-		
-
 		EditorGUILayout.Space();
 
 		// *** OPTIHACK Consider removing adjustVerticalHipsPosition because pelvisOffset does the same thing and more
@@ -941,6 +976,32 @@ public class RUISSkeletonControllerEditor : Editor
 			                                                                + "real-world value, use this to lengthen or shorten the "
 			                                                                + "shins. Only used if \"Hierarchical Model\" is enabled"));
 		EditorGUILayout.Space();
+
+		EditorGUILayout.Slider(handScaleAdjust, 0.01f, 3, new GUIContent("Hand Scale Adjust", "Scales hands. This setting has effect only when "
+																		+ "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Slider(footScaleAdjust, 0.01f, 3, new GUIContent("Foot Scale Adjust", "Scales feet. This setting has effect only when "
+																		+ "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+
+		EditorGUILayout.Space();
+
+		showLocalOffsets = EditorGUILayout.Foldout(showLocalOffsets, "Local Rotation Offsets", true);
+		if(showLocalOffsets)
+		{
+			EditorGUI.indentLevel += 1;
+			EditorGUILayout.PropertyField(pelvisRotationOffset, new GUIContent("Pelvis (Rot)", "Offsets the pelvis joint rotation in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(chestRotationOffset, new GUIContent("Chest (Rot)", "Offsets the chest joint rotation in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(neckRotationOffset, new GUIContent("Neck (Rot)", "Offsets the neck joint rotation in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(headRotationOffset, new GUIContent("Head (Rot)", "Offsets the head joint rotation in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(clavicleRotationOffset, new GUIContent("Clavicles (Rot)", "Offsets the clavicle joint rotations in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(shoulderRotationOffset, new GUIContent("Shoulders (Rot)", "Offsets the shoulder joint rotations in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(elbowRotationOffset, new GUIContent("Elbows (Rot)", "Offsets the elbow joint rotations in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(handRotationOffset, new GUIContent("Hands (Rot)", "Offsets the hand joint rotations in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(hipRotationOffset, new GUIContent("Hips (Rot)", "Offsets the hip joint rotations in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(kneeRotationOffset, new GUIContent("Knees (Rot)", "Offsets the knee joint rotations in the local body segment frame (Euler angles)."));
+			EditorGUILayout.PropertyField(feetRotationOffset, new GUIContent("Feet (Rot)", "Offsets the foot joint rotations in the local body segment frame (Euler angles)."));
+			EditorGUI.indentLevel -= 1;
+		}
 		
 		GUI.enabled = true;
 

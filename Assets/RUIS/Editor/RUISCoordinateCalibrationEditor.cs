@@ -40,7 +40,7 @@ public class RUISCoordinateCalibrationEditor : Editor
 
 	GUIStyle italicStyle = new GUIStyle();
 
-	bool showExtraProperties = false;
+	static bool showExtraProperties = false;
 	
 	public void OnEnable()
 	{
