@@ -20,6 +20,7 @@ public enum RUISAxis
 	Z
 }
 
+[DisallowMultipleComponent]
 public class RUISSkeletonController : MonoBehaviour
 {
 
@@ -74,11 +75,11 @@ public class RUISSkeletonController : MonoBehaviour
 	public Vector3 headOffset	  = Vector3.zero;
 	public Vector3 clavicleOffset = Vector3.zero;
 	public Vector3 shoulderOffset = Vector3.zero;
-	public Vector3 elbowOffset 	  = Vector3.zero; // TODO
-	public Vector3 handOffset 	  = Vector3.zero; // TODO
+	public Vector3 elbowOffset 	  = Vector3.zero;
+	public Vector3 handOffset 	  = Vector3.zero;
 	public Vector3 hipOffset 	  = Vector3.zero;
-	public Vector3 kneeOffset 	  = Vector3.zero; // TODO
-	public Vector3 footOffset 	  = Vector3.zero; // TODO
+	public Vector3 kneeOffset 	  = Vector3.zero;
+	public Vector3 footOffset 	  = Vector3.zero;
 
 	public Vector3 pelvisRotationOffset   = Vector3.zero;
 	public Vector3 chestRotationOffset	  = Vector3.zero;
@@ -111,6 +112,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool trackAnkle = false;
 	public bool rotateWristFromElbow = true;
 	public bool independentTorsoSegmentsScaling = false;
+	public bool heightAffectsOffsets = false; // TODO
 
 	public bool neckParentsShoulders = false;
 	
@@ -542,6 +544,9 @@ public class RUISSkeletonController : MonoBehaviour
 		SaveInitialDistance(leftHip,   leftKnee);
 		SaveInitialDistance(leftKnee,  leftFoot);
 
+		SaveInitialDistance(rightShoulder, leftShoulder);
+		SaveInitialDistance(rightHip, leftHip);
+
 		if(chest)
 		{
 			modelSpineLength += SaveInitialDistance(torso, chest); // *** OPTIHACK
@@ -575,11 +580,7 @@ public class RUISSkeletonController : MonoBehaviour
 			modelSpineLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, 		leftHip)] +
 								jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
 		}
-
-		SaveInitialDistance(rightShoulder, leftShoulder);
-		SaveInitialDistance(rightHip, leftHip);
-
-
+			
 		automaticBoneScales[RUISSkeletonManager.Joint.Torso] = 1; // Are we multiplying (1) or adding (0)?
 		automaticBoneScales[RUISSkeletonManager.Joint.Chest] = 1;
 		automaticBoneScales[RUISSkeletonManager.Joint.Neck]  = 1;
@@ -1010,14 +1011,14 @@ public class RUISSkeletonController : MonoBehaviour
 						ForceUpdatePosition(ref leftHip, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		 3, deltaT);
 						if(!limbsAreScaled)
 						{
-							ForceUpdatePosition(ref rightHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	12, deltaT);
-							ForceUpdatePosition(ref leftHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	13, deltaT);
-							ForceUpdatePosition(ref rightFoot, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 6, deltaT);
-							ForceUpdatePosition(ref leftFoot, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, 	 7, deltaT);
 							ForceUpdatePosition(ref rightElbow, 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, 	14, deltaT);
 							ForceUpdatePosition(ref leftElbow, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow,	15, deltaT);
 							ForceUpdatePosition(ref rightKnee, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	16, deltaT);
 							ForceUpdatePosition(ref leftKnee, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 	17, deltaT);
+							ForceUpdatePosition(ref rightHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	12, deltaT);
+							ForceUpdatePosition(ref leftHand, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	13, deltaT);
+							ForceUpdatePosition(ref rightFoot, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 6, deltaT);
+							ForceUpdatePosition(ref leftFoot, 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, 	 7, deltaT);
 						}
 					}
 				}
@@ -1253,7 +1254,8 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		return yaw;
 	}
-			
+
+	float offsetScale;
 	private Vector3 jointOffset = Vector3.zero; // *** OPTIHACK
 
 	private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, int jointID, float deltaT)
@@ -1281,11 +1283,17 @@ public class RUISSkeletonController : MonoBehaviour
 			else
 				forcedJointPositions[jointID] = jointToGet.position;
 			
-				float offsetScale = torso.localScale.x;
-				if(jointToGet.jointID != RUISSkeletonManager.Joint.Torso)
-					offsetScale = transformToUpdate.parent.localScale.x; // *** CHECK IF THIS IS BEST offsetScale or if torsoScale would be better
+			if(heightAffectsOffsets)
+			{
+				if(jointToGet.jointID == RUISSkeletonManager.Joint.Torso)
+					offsetScale = torso.localScale.x;
+				else
+					offsetScale = transformToUpdate.parent.localScale.x; // *** TODO CHECK IF THIS IS BEST offsetScale or if torsoScale would be better
 																		 //     considering offset invariance between users of different height
-
+			}
+			else
+				offsetScale = 1;
+				
 			switch(jointToGet.jointID) // *** OPTIHACK
 			{
 				case RUISSkeletonManager.Joint.Torso:
@@ -1327,12 +1335,40 @@ public class RUISSkeletonController : MonoBehaviour
 					jointOffset.Set(-shoulderOffset.x, shoulderOffset.y, shoulderOffset.z);
 					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder.rotation * jointOffset;
 					break;
+				case RUISSkeletonManager.Joint.LeftElbow:
+					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow.rotation * elbowOffset;
+					break;
+				case RUISSkeletonManager.Joint.RightElbow:
+					jointOffset.Set(-elbowOffset.x, elbowOffset.y, elbowOffset.z);
+					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow.rotation * jointOffset;
+					break;
+				case RUISSkeletonManager.Joint.LeftHand:
+					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand.rotation * handOffset;
+					break;
+				case RUISSkeletonManager.Joint.RightHand:
+					jointOffset.Set(-handOffset.x, handOffset.y, handOffset.z);
+					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand.rotation * jointOffset;
+					break;
 				case RUISSkeletonManager.Joint.LeftHip:
 					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip.rotation * hipOffset;
 					break;
 				case RUISSkeletonManager.Joint.RightHip:
 					jointOffset.Set(-hipOffset.x, hipOffset.y, hipOffset.z);
 					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip.rotation * jointOffset;
+					break;
+				case RUISSkeletonManager.Joint.LeftKnee:
+					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee.rotation * kneeOffset;
+					break;
+				case RUISSkeletonManager.Joint.RightKnee:
+					jointOffset.Set(-kneeOffset.x, kneeOffset.y, kneeOffset.z);
+					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee.rotation * jointOffset;
+					break;
+				case RUISSkeletonManager.Joint.LeftFoot:
+					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot.rotation * footOffset;
+					break;
+				case RUISSkeletonManager.Joint.RightFoot:
+					jointOffset.Set(-footOffset.x, footOffset.y, footOffset.z);
+					jointOffset = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot.rotation * jointOffset;
 					break;
 				default:
 					jointOffset.Set(0, 0, 0);
@@ -2181,7 +2217,7 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
-	
+	// If memory serves me correctly, this method doesn't work quite right
 	private Quaternion limitZRotation(Quaternion inputRotation, float rollMinimum, float rollMaximum)
 	{
 		/**
@@ -2221,9 +2257,10 @@ public class RUISSkeletonController : MonoBehaviour
 			outputRotation = rotationWithoutRoll * Quaternion.Euler(limitedRoll);
 		}
 		
-		print(rollAngle + " " + rotationWithoutRoll.eulerAngles);
+//		print(rollAngle + " " + rotationWithoutRoll.eulerAngles);
 		
 		return outputRotation;
 	}
-	
 }
+
+			

@@ -12,46 +12,53 @@ Licensing  :   LGPL Version 3 license for non-commercial projects. Use
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
+#if UNITY_EDITOR
+using System;
+using System.Reflection;
+#endif
 
 [CustomEditor(typeof(RUISSkeletonController))]
 [CanEditMultipleObjects]
 public class RUISSkeletonControllerEditor : Editor
 {
+	// Below those SerializedProperty fields that are marked with public can be saved after exiting play mode
 
 	SerializedProperty bodyTrackingDevice;
-	SerializedProperty playerId;
+	public SerializedProperty playerId;
 	SerializedProperty switchToAvailableKinect;
 
-    SerializedProperty useHierarchicalModel;
+	SerializedProperty useHierarchicalModel;
 
-    SerializedProperty updateRootPosition;
-    SerializedProperty updateJointPositions;
-    SerializedProperty updateJointRotations;
+	public SerializedProperty updateRootPosition;
+	public SerializedProperty updateJointPositions;
+	public SerializedProperty updateJointRotations;
 	
-	SerializedProperty rootSpeedScaling;
-	SerializedProperty rootOffset;
-	SerializedProperty hmdRotatesHead;
-	SerializedProperty hmdMovesHead;
-	SerializedProperty hmdLocalOffset;
+	public SerializedProperty rootSpeedScaling;
+	public SerializedProperty rootOffset;
+	public SerializedProperty hmdRotatesHead;
+	public SerializedProperty hmdMovesHead;
+	public SerializedProperty hmdLocalOffset;
 
-	SerializedProperty scaleHierarchicalModelBones;
-	SerializedProperty scaleBoneLengthOnly;
+	public SerializedProperty scaleHierarchicalModelBones;
+	public SerializedProperty scaleBoneLengthOnly;
 	SerializedProperty boneLengthAxis;
-	SerializedProperty limbsAreScaled;
-	SerializedProperty independentTorsoSegmentsScaling;
-	SerializedProperty torsoThickness;
-	SerializedProperty rightArmThickness;
-	SerializedProperty leftArmThickness;
-	SerializedProperty rightLegThickness;
-	SerializedProperty leftLegThickness;
+	public SerializedProperty limbsAreScaled;
+	public SerializedProperty independentTorsoSegmentsScaling;
+	public SerializedProperty heightAffectsOffsets;
+	public SerializedProperty torsoThickness;
+	public SerializedProperty rightArmThickness;
+	public SerializedProperty leftArmThickness;
+	public SerializedProperty rightLegThickness;
+	public SerializedProperty leftLegThickness;
 
-	SerializedProperty filterPosition;
-	SerializedProperty filterHeadPositionOnly;
-	SerializedProperty positionNoiseCovariance;
+	public SerializedProperty filterPosition;
+	public SerializedProperty filterHeadPositionOnly;
+	public SerializedProperty positionNoiseCovariance;
 
-	SerializedProperty filterRotations;
-	SerializedProperty rotationNoiseCovariance;
-	SerializedProperty thumbZRotationOffset;
+	public SerializedProperty filterRotations;
+	public SerializedProperty rotationNoiseCovariance;
+	public SerializedProperty thumbZRotationOffset;
 
     SerializedProperty rootBone;
 	SerializedProperty chestBone;
@@ -78,54 +85,54 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty leftThumb;
 	SerializedProperty rightThumb;
 
-    SerializedProperty maxScaleFactor;
-    SerializedProperty minimumConfidenceToUpdate;
-    SerializedProperty rotationDamping;
-    SerializedProperty neckHeightTweaker;
-	SerializedProperty forearmLengthTweaker;
-	SerializedProperty shinLengthTweaker;
+	public SerializedProperty maxScaleFactor;
+	public SerializedProperty minimumConfidenceToUpdate;
+	public SerializedProperty rotationDamping;
+    SerializedProperty neckHeightTweaker; // TODO remove
+	public SerializedProperty forearmLengthTweaker;
+	public SerializedProperty shinLengthTweaker;
 //	SerializedProperty adjustVerticalTorsoPosition;
-	SerializedProperty adjustVerticalHipsPosition;
+	SerializedProperty adjustVerticalHipsPosition; // TODO remove
 
-	SerializedProperty fistCurlFingers;
-	SerializedProperty trackThumbs;
-	SerializedProperty trackWrist;
-	SerializedProperty trackAnkle;
+	public SerializedProperty fistCurlFingers;
+	public SerializedProperty trackThumbs;
+	public SerializedProperty trackWrist;
+	public SerializedProperty trackAnkle;
 //	SerializedProperty rotateWristFromElbow;
 
-	SerializedProperty pelvisOffset;
-	SerializedProperty chestOffset;
-	SerializedProperty neckOffset;
-	SerializedProperty headOffset;
-	SerializedProperty clavicleOffset;
-	SerializedProperty shoulderOffset;
-	SerializedProperty elbowOffset;
-	SerializedProperty handOffset;
-	SerializedProperty hipOffset;
-	SerializedProperty kneeOffset;
-	SerializedProperty footOffset;
+	public SerializedProperty pelvisOffset;
+	public SerializedProperty chestOffset;
+	public SerializedProperty neckOffset;
+	public SerializedProperty headOffset;
+	public SerializedProperty clavicleOffset;
+	public SerializedProperty shoulderOffset;
+	public SerializedProperty elbowOffset;
+	public SerializedProperty handOffset;
+	public SerializedProperty hipOffset;
+	public SerializedProperty kneeOffset;
+	public SerializedProperty footOffset;
 
-	SerializedProperty pelvisRotationOffset;
-	SerializedProperty chestRotationOffset;
-	SerializedProperty neckRotationOffset;
-	SerializedProperty headRotationOffset;
-	SerializedProperty clavicleRotationOffset;
-	SerializedProperty shoulderRotationOffset;
-	SerializedProperty elbowRotationOffset;
-	SerializedProperty handRotationOffset;
-	SerializedProperty hipRotationOffset;
-	SerializedProperty kneeRotationOffset;
-	SerializedProperty feetRotationOffset;
+	public SerializedProperty pelvisRotationOffset;
+	public SerializedProperty chestRotationOffset;
+	public SerializedProperty neckRotationOffset;
+	public SerializedProperty headRotationOffset;
+	public SerializedProperty clavicleRotationOffset;
+	public SerializedProperty shoulderRotationOffset;
+	public SerializedProperty elbowRotationOffset;
+	public SerializedProperty handRotationOffset;
+	public SerializedProperty hipRotationOffset;
+	public SerializedProperty kneeRotationOffset;
+	public SerializedProperty feetRotationOffset;
 
-	SerializedProperty pelvisScaleAdjust;
-	SerializedProperty chestScaleAdjust;
-	SerializedProperty neckScaleAdjust;
-	SerializedProperty headScaleAdjust;
-	SerializedProperty clavicleScaleAdjust;
-	SerializedProperty shoulderScaleAdjust;
-	SerializedProperty handScaleAdjust;
-	SerializedProperty hipScaleAdjust;
-	SerializedProperty footScaleAdjust;
+	public SerializedProperty pelvisScaleAdjust;
+	public SerializedProperty chestScaleAdjust;
+	public SerializedProperty neckScaleAdjust;
+	public SerializedProperty headScaleAdjust;
+	public SerializedProperty clavicleScaleAdjust;
+	public SerializedProperty shoulderScaleAdjust;
+	public SerializedProperty handScaleAdjust;
+	public SerializedProperty hipScaleAdjust;
+	public SerializedProperty footScaleAdjust;
 
 	SerializedProperty isIMUMocap;
 
@@ -166,8 +173,8 @@ public class RUISSkeletonControllerEditor : Editor
 
 	static bool showLocalOffsets;
 
-    public void OnEnable()
-    {
+	public void OnEnable()
+	{
 		customLabelStyle.fontStyle = FontStyle.Bold;
 		customLabelStyle.normal.textColor = customLabelColor;
 		customItalicLabelStyle.fontStyle = FontStyle.BoldAndItalic;
@@ -195,6 +202,7 @@ public class RUISSkeletonControllerEditor : Editor
 		boneLengthAxis = serializedObject.FindProperty("boneLengthAxis");
 		limbsAreScaled = serializedObject.FindProperty("limbsAreScaled");
 		independentTorsoSegmentsScaling = serializedObject.FindProperty("independentTorsoSegmentsScaling");
+		heightAffectsOffsets = serializedObject.FindProperty("heightAffectsOffsets");
 		torsoThickness = serializedObject.FindProperty("torsoThickness");
 		rightArmThickness = serializedObject.FindProperty("rightArmThickness");
 		leftArmThickness = serializedObject.FindProperty("leftArmThickness");
@@ -889,16 +897,21 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = true;
 		EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Min Confidence to Update", "The minimum confidence in joint "
-			+ "positions and rotations needed to update these values. "
-			+ "The confidence is either 0; 0,5; or 1. This setting is only "
-			+ "relevant with Kinect tracking."));
-
-		EditorGUILayout.Space();
+																				+ "positions and rotations needed to update these values. "
+																				+ "The confidence is either 0; 0,5; or 1. This setting is only "
+																				+ "relevant with Kinect tracking."));
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 
+		EditorGUILayout.PropertyField(heightAffectsOffsets, new GUIContent("Scaled Offsets", "When this option is enabled, then the below position "
+																+ "offsets are scaled according to the detected user height. The scale factor "
+																+ "comes from the user's sitting height (pelvis to head distance), where sitting "
+																+ "height of 1 meter equals to factor of 1."));
+
+		EditorGUILayout.Space();
+
 		// *** OPTIHACK
-		EditorGUILayout.PropertyField(pelvisOffset, new GUIContent("Pelvis Offset",   "Offsets pelvis joint position in its local frame. WARNING: "
+		EditorGUILayout.PropertyField(pelvisOffset, new GUIContent("Pelvis Offset",   "Offsets pelvis joint position in its local frame in meters. WARNING: "
 																					+ "This also offsets the absolute positions of all spine and clavicle "
 						                                                            + "joints! The offset is relative to the scale of pelvis joint. This setting "
 						                                                            + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
@@ -906,7 +919,7 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Slider(pelvisScaleAdjust, 0.01f, 3, new GUIContent("Pelvis Scale Adjust",   "Scales pelvis. This setting has effect only when \"Hierarchical "
 		                                                                   + "Model\" and \"Scale Bones\" are enabled."));
 
-		EditorGUILayout.PropertyField(chestOffset, new GUIContent("Chest Offset",   "Offsets chest joint position in its local frame. "
+		EditorGUILayout.PropertyField(chestOffset, new GUIContent("Chest Offset",   "Offsets chest joint position in its local frame in meters. "
 		                                                          + "WARNING: This also offsets the absolute positions of neck, head and "
 		                                                          + "clavicle joints! The offset is relative to the scale of pelvis joint. This setting "
 		                                                          + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
@@ -914,7 +927,7 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Slider(chestScaleAdjust, 0.01f, 3, new GUIContent("Chest Scale Adjust",   "Scales chest. This setting has effect only when \"Hierarchical "
 		                                                                + "Model\" and \"Scale Bones\" are enabled."));
 		
-		EditorGUILayout.PropertyField(neckOffset, new GUIContent("Neck Offset",   "Offsets neck joint position in its local frame. "
+		EditorGUILayout.PropertyField(neckOffset, new GUIContent("Neck Offset",   "Offsets neck joint position in its local frame in meters. "
 		                                                         + "WARNING: This also offsets the absolute positions of head and "
 		                                                         + "clavicle joints! The offset is relative to the scale of chest joint. This setting "
 		                                                         + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
@@ -922,41 +935,45 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Slider(neckScaleAdjust, 0.01f, 3, new GUIContent("Neck Scale Adjust",   "Scales neck. This setting has effect only when \"Hierarchical "
 		                                                               + "Model\" and \"Scale Bones\" are enabled."));
 		
-		EditorGUILayout.PropertyField(headOffset, new GUIContent("Head Offset",   "Offsets head joint position in its local frame. "
+		EditorGUILayout.PropertyField(headOffset, new GUIContent("Head Offset",   "Offsets head joint position in its local frame in meters. "
 		                                                         + "The offset is relative to the scale of neck joint. This setting has effect only when \"Hierarchical "
 		                                                         + "Model\" and \"Scale Bones\" are enabled."));
 
 		EditorGUILayout.Slider(headScaleAdjust, 0.01f, 3, new GUIContent("Head Scale Adjust",   "Scales head. This setting has effect only when \"Hierarchical "
 		                                                              + "Model\" and \"Scale Bones\" are enabled."));
 		
-		EditorGUILayout.PropertyField(clavicleOffset, new GUIContent("Clavicle Offset",   "Offsets clavicle joint positions in their "
-		                                                             + "local frame. The offset is relative to the scale of neck joint. This setting has effect only when "
+		EditorGUILayout.PropertyField(clavicleOffset, new GUIContent("Clavicle Offset",   "Offsets clavicle joint positions in their local frame in meters. "
+																	 + "The offset is relative to the scale of neck joint. This setting has effect only when "
 		                                                             + "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
 		EditorGUILayout.Slider(clavicleScaleAdjust, 0.01f, 3, new GUIContent("Clavice Scale Adjust",   "Scales clavicles. This setting has effect only when \"Hierarchical "
 		                                                              + "Model\" and \"Scale Bones\" are enabled."));
 		
-		EditorGUILayout.PropertyField(shoulderOffset, new GUIContent("Shoulder Offset",   "Offsets shoulder joint positions in their local frame. "
+		EditorGUILayout.PropertyField(shoulderOffset, new GUIContent("Shoulder Offset",   "Offsets shoulder joint positions in their local frame in meters. "
 																						+ "WARNING: This also offsets the absolute positions of all the "
 																						+ "arm joints! Offset is relative to the scale of parent joint. This setting "
 		                                                   						        + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
+		GUI.enabled = !limbsAreScaled.boolValue;
 		EditorGUILayout.PropertyField(elbowOffset, new GUIContent("Elbow Offset",   "Offsets elbow joint positions in their "
-			+ "local frame."));
+																+ "local frame in meters. This offset has no effect if \"Scale Limbs\" is enabled."));
 		EditorGUILayout.PropertyField(handOffset, new GUIContent("Hand Offset",   "Offsets hand joint positions in their "
-			+ "local frame."));
-		
+																+ "local frame in meters. This offset has no effect if \"Scale Limbs\" is enabled."));
+		GUI.enabled = true;
+
 		// *** OPTIHACK
-		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame. WARNING: This also "
+		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame in meters. WARNING: This also "
 					                                                          + "offsets the absolute positions of all the leg joints! Offset is relative to the "
 					                                                          + "scale of pelvis joint. This setting has effect only when \"Hierarchical Model\" and " 
 																			  + "\"Scale Bones\" are enabled."));
 
+		GUI.enabled = !limbsAreScaled.boolValue;
 		EditorGUILayout.PropertyField(kneeOffset, new GUIContent("Knee Offset",   "Offsets knee joint positions in their "
-			+ "local frame."));
+																+ "local frame in meters. This offset has no effect if \"Scale Limbs\" is enabled."));
 		EditorGUILayout.PropertyField(footOffset, new GUIContent("Foot Offset",   "Offsets foot joint positions in their "
-			+ "local frame."));
-		
+																+ "local frame in meters. This offset has no effect if \"Scale Limbs\" is enabled."));
+		GUI.enabled = true;
+
 		EditorGUILayout.Space();
 
 		// *** OPTIHACK Consider removing adjustVerticalHipsPosition because pelvisOffset does the same thing and more
@@ -1007,4 +1024,133 @@ public class RUISSkeletonControllerEditor : Editor
 
         serializedObject.ApplyModifiedProperties();
     }
+
+
+	public void Awake()
+	{
+		Debug.Log("Awakaeee");
+
+		#if UNITY_EDITOR
+		RUISSkeletonControllerCheckPlayModeChanges.AddScript(this);
+		#endif
+	}
 }
+
+
+#if UNITY_EDITOR
+[InitializeOnLoad]
+public static class RUISSkeletonControllerCheckPlayModeChanges
+{
+	static List<RUISSkeletonControllerEditor> skeletonControllerEditors;
+	static List<GameObject> gameObjects;
+
+	static Dictionary<GameObject, FieldInfo[]> controllerProperties;
+
+	static GameObject obj;
+	static Vector3 vect;
+	static bool hier;
+
+	static RUISSkeletonControllerCheckPlayModeChanges() 
+	{
+		skeletonControllerEditors = new List<RUISSkeletonControllerEditor>();
+		gameObjects = new List<GameObject>();
+		controllerProperties = new Dictionary<GameObject, FieldInfo[]>();
+		EditorApplication.playmodeStateChanged += PlaymodeStateChange;
+	}
+
+	static void PlaymodeStateChange()
+	{
+		// From edit mode to play mode
+		if(!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode)
+		{
+
+		}
+
+		FieldInfo[] fields;
+
+		if(EditorApplication.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode)
+		{        
+			foreach(RUISSkeletonControllerEditor editor in skeletonControllerEditors)
+			{
+				fields = editor.GetType().GetFields();
+				if(editor.target)
+					controllerProperties.Add(((RUISSkeletonController) editor.target).gameObject, fields);
+//				foreach (FieldInfo thisVar in  fields)
+//				{
+//					Debug.Log("Var Name:  " + thisVar.Name + "         Type:  " + thisVar.FieldType);
+//				}
+
+				foreach (FieldInfo thisVar in fields)
+				{
+					Debug.Log("Var Name:  " + thisVar.Name + "    Type:  " + ((SerializedProperty)thisVar.GetValue(editor)).propertyType);
+					if(((SerializedProperty)thisVar.GetValue(editor)).propertyType == SerializedPropertyType.Float)
+						Debug.Log(((SerializedProperty)thisVar.GetValue(editor)).floatValue);
+				}
+			}
+			foreach(GameObject gameObject in gameObjects)
+			{
+				RUISSkeletonController skeletonController = gameObject.GetComponent<RUISSkeletonController>();
+				if(skeletonController)
+				{
+					vect = skeletonController.handOffset;
+					hier = skeletonController.useHierarchicalModel;
+				}
+				obj = gameObject;
+				// add gameObject and its script's properties to dictionary
+			}
+			Debug.Log("save"); // Save;
+
+			// USE reflection to save field values
+		} 
+		else if(!EditorApplication.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode)
+		{
+			Debug.Log("load"); // Load;
+
+			foreach(RUISSkeletonControllerEditor editor in skeletonControllerEditors)
+			{
+				fields = editor.GetType().GetFields();
+
+				foreach(KeyValuePair<GameObject, FieldInfo[]> entry in controllerProperties)
+				{
+//					foreach (FieldInfo thisVar in entry.Value)
+//					{
+//						Debug.Log("Var Name:  " + thisVar.Name + "         Type:  " + ((SerializedProperty)thisVar.GetValue(null)).propertyType);
+//					}
+
+					// do something with entry.Value or entry.Key
+				}
+
+				if(editor.target)
+				{
+					controllerProperties.Add(((RUISSkeletonController) editor.target).gameObject, fields);
+
+				}
+
+			}
+			if(gameObjects.Contains(obj))
+				Debug.Log("contains");
+			foreach(GameObject gameObject in gameObjects)
+			{
+				Debug.Log(gameObject);
+				RUISSkeletonController skeletonController = gameObject.GetComponent<RUISSkeletonController>();
+				if(skeletonController)
+				{
+					skeletonController.handOffset = vect;
+					skeletonController.useHierarchicalModel = hier;
+				}
+			}
+			skeletonControllerEditors.Clear();
+			gameObjects.Clear();
+			controllerProperties.Clear();
+			// USE reflection to load field values
+		}
+	}
+
+	public static void AddScript(RUISSkeletonControllerEditor skeletonControllerEditor)
+	{
+		skeletonControllerEditors.Add(skeletonControllerEditor);
+		if(skeletonControllerEditor && skeletonControllerEditor.target)
+			gameObjects.Add(((RUISSkeletonController) skeletonControllerEditor.target).gameObject);
+	}
+}
+#endif
