@@ -129,6 +129,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public RUISSkeletonManager skeletonManager;
 	private RUISCoordinateSystem coordinateSystem;
 	public RUISCharacterController characterController;
+	public RUISKinectAndMecanimCombiner mecanimCombiner;
 
 	public enum BodyTrackingDeviceType
 	{

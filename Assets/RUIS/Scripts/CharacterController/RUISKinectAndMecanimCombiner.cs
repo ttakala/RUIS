@@ -173,7 +173,9 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
             Transform blendedRootBone = FindBone(transform, kinectRootBone.name);
             skeletonRoot = new BoneTriplet(kinectRootBone, mecanimRootBone, blendedRootBone, BodypartClassification.Root);
 
-            if (torsoIsRoot)
+			skeletonController.mecanimCombiner = this;
+
+            if(torsoIsRoot) // *** OPTIHACK TODO check this
             {
                 torsoRoot = skeletonRoot;
                 AddChildren(ref torsoRoot, BodypartClassification.Torso);
