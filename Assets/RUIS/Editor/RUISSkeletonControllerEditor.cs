@@ -323,11 +323,6 @@ public class RUISSkeletonControllerEditor : Editor
 
 		#if UNITY_EDITOR
 		RUISSkeletonControllerCheckPlayModeChanges.SaveFieldNames(this);
-		if(EditorApplication.isPlaying)
-		{
-//			RUISSkeletonControllerCheckPlayModeChanges.AddScript(this);
-//			Debug.Log("Selected");
-		}
 		Selection.selectionChanged += SelectionChangedCallback;
 		#endif
     }
@@ -404,7 +399,7 @@ public class RUISSkeletonControllerEditor : Editor
 		if(filterPosition.boolValue)
 		{
 			// *** OPTIHACK TODO tooltip
-			EditorGUILayout.PropertyField(filterHeadPositionOnly, new GUIContent("Filter Head Position Only", "Smoothen only the head position with "
+			EditorGUILayout.PropertyField(filterHeadPositionOnly, new GUIContent("Filter Only Head Position", "Smoothen ONLY the head position with "
 																							+ "a basic Kalman filter, and do not smooth other joints."));
 			
 			EditorGUILayout.PropertyField(positionNoiseCovariance, new GUIContent("Position Smoothness", "Sets the magnitude of position smoothing "
@@ -920,6 +915,8 @@ public class RUISSkeletonControllerEditor : Editor
 
 		EditorGUILayout.Space();
 
+		GUI.enabled = true;
+
 		// *** OPTIHACK
 		EditorGUILayout.PropertyField(pelvisOffset, new GUIContent("Pelvis Offset",   "Offsets pelvis joint position in its local frame in meters. WARNING: "
 																					+ "This also offsets the absolute positions of all spine and clavicle "
@@ -1050,17 +1047,13 @@ public class RUISSkeletonControllerEditor : Editor
 		RUISSkeletonControllerCheckPlayModeChanges.SaveFieldNames(this);
 		if(EditorApplication.isPlaying)
 		{
-			Debug.Log("OnDisable " + selectedTransforms.Length);
 			foreach(Transform transform in selectedTransforms)
 			{
-				Debug.Log("transform " + transform);
 				if(transform)
 				{
 					skeletonController = transform.GetComponent<RUISSkeletonController>();
-					Debug.Log("skeletonController " + skeletonController);
 					if(skeletonController)
 					{
-						Debug.Log("  Was selected " + transform.name);
 						bool isSelected = false;
 						foreach(Transform selectedTransform in Selection.transforms)
 						{
@@ -1072,20 +1065,19 @@ public class RUISSkeletonControllerEditor : Editor
 						}
 						if(!isSelected)
 						{
+							// Update stored variables of those RUISSkeletonControllers that were just selected
 							RUISSkeletonControllerCheckPlayModeChanges.SaveSkeletonControllerVariables(skeletonController);
-							Debug.Log("  Got deselected " + transform.name);
 						}
 					}
 				}
 			}
-			// Update stored variables of those RUISSkeletonControllers that were just selected
 		}
 		Selection.selectionChanged -= SelectionChangedCallback;
 	}
 	#endif
 
+	#if UNITY_EDITOR
 	Transform[] selectedTransforms = new Transform[1];
-
 	public void SelectionChangedCallback()
 	{
 //		string gameObjectName = "";
@@ -1096,6 +1088,7 @@ public class RUISSkeletonControllerEditor : Editor
 		selectedTransforms = Selection.transforms;
 		RUISSkeletonControllerCheckPlayModeChanges.serializedObject = serializedObject;
 	}
+	#endif
 }
 
 
@@ -1105,26 +1098,19 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 {
 	public static SerializedObject serializedObject;
 
-//	static List<RUISSkeletonControllerEditor> skeletonControllerEditors;
-//	static List<RUISSkeletonController> skeletonControllers;
 	static List<GameObject> gameObjects;
 	static FieldInfo[] editorFields;
 	static List<string> fieldNameList;
-
 	static Dictionary<GameObject, System.Object[]> controllerProperties;
 
 	static RUISSkeletonControllerCheckPlayModeChanges() 
 	{
-//		skeletonControllerEditors = new List<RUISSkeletonControllerEditor>();
-//		skeletonControllers = new List<RUISSkeletonController>();
 		gameObjects = new List<GameObject>();
 		controllerProperties = new Dictionary<GameObject, System.Object[]>();
 		EditorApplication.playmodeStateChanged += PlaymodeStateChange;
 
 		editorFields = typeof(RUISSkeletonControllerEditor).GetFields();
 		fieldNameList = new List<string>();
-//		foreach (FieldInfo field in editorFields)
-//			Debug.Log("Var Name:  " + field.Name + "    Type:  " + field.FieldType);
 	}
 
 	static void PlaymodeStateChange()
@@ -1132,24 +1118,14 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 		RUISSkeletonController skeletonController;
 		
 		// From edit mode to play mode
-		if(!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode)
-		{
-			// Update stored variables of selected RUISSkeletonControllers
-			foreach(Transform transform in Selection.transforms)
-			{
-				skeletonController = transform.GetComponent<RUISSkeletonController>();
-				if(skeletonController)
-				{
-					Debug.Log("Entered PlayMode " + skeletonController.gameObject);
-				}
-			}
-		}
+//		if(!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode)
+//		{
+//		}
 
-		FieldInfo[] sourceFields;
-		FieldInfo[] targetFields;
-		System.Object[] values;
+		// Exiting play mode
 		if(EditorApplication.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode)
-		{        
+		{
+			// Save variables of all RUISSkeletonControllers that were selected at some point during play mode
 			foreach(Transform transform in Selection.transforms)
 			{
 				if(transform)
@@ -1196,81 +1172,11 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 				}
 			}
 
-//			foreach(RUISSkeletonControllerEditor editor in skeletonControllerEditors)
-//			{
-//				if(editor)
-//				{
-//					sourceFields = editor.GetType().GetFields();
-//					values = new System.Object[sourceFields.Length];
-//					FieldInfo field;
-//					for(int i = 0; i < sourceFields.Length; ++i)
-//					{
-//						if(sourceFields[i].FieldType == typeof(SerializedProperty))
-//						{
-//							values[i] = sourceFields[i].GetValue(editor);
-//						}
-//					}
-//					if(editor.target && sourceFields.Length > 0)
-//					{
-//						skeletonController = (RUISSkeletonController) editor.target;
-//
-//						// We need to do this because RUISKinectAndMecanimCombiner moves RUISSkeletonController to a new GameObject in run-time 
-//						if(skeletonController.mecanimCombiner)
-//						{
-//							if(!controllerProperties.ContainsKey(skeletonController.mecanimCombiner.gameObject))
-//								controllerProperties.Add(	skeletonController.mecanimCombiner.gameObject, sourceFields); // TODO check
-//
-//							gameObjects.Add(skeletonController.mecanimCombiner.gameObject);
-//							Debug.Log("gobject " + skeletonController.mecanimCombiner.gameObject);
-//						}
-//						else
-//						{
-//							if(!controllerProperties.ContainsKey(((RUISSkeletonController) editor.target).gameObject))
-//								controllerProperties.Add(	((RUISSkeletonController) editor.target).gameObject, sourceFields); // TODO check
-//
-//							gameObjects.Add(((RUISSkeletonController) editor.target).gameObject);
-//							Debug.Log("gobject " + ((RUISSkeletonController) editor.target).gameObject);
-//						}
-//					}
-//				}
-//			}
-//			foreach(GameObject gameObject in gameObjects)
-//			{
-//				skeletonController = gameObject.GetComponent<RUISSkeletonController>();
-//				if(skeletonController)
-//				{
-//					vect = skeletonController.handOffset;
-//					hier = skeletonController.useHierarchicalModel;
-//					Debug.Log(vect + " " + hier);
-//					uobj = (System.Object) vect;
-//					vect = (Vector3) uobj;
-//					bobj = (System.Object) hier;
-//					hier = (bool) bobj;
-//					Debug.Log(vect + " " + hier);
-//				}
-//				obj = gameObject;
-//			}
-			Debug.Log("save"); // Save;
-
-
-//			if(serializedObject != null) // *** TODO remove or move somewhere where this works
-//			{
-//				foreach(UnityEngine.Object targetObject in serializedObject.targetObjects)
-//				{
-//					if(targetObject)
-//					{
-//						Debug.Log("  targetObject " + targetObject);
-//					}
-//				}
-//				serializedObject.SetIsDifferentCacheDirty();
-//			}
-
-			// USE reflection to save field values
-		} 
-		else if(!EditorApplication.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode)
+//			Debug.Log("Save");
+		}
+		else if(!EditorApplication.isPlaying && !EditorApplication.isPlayingOrWillChangePlaymode) // Exited play mode
 		{
-			Debug.Log("load"); // Load;
-
+			// Load stored variables of all RUISSkeletonControllers that were selected at some point during play mode
 			foreach(KeyValuePair<GameObject, System.Object[]> entry in controllerProperties)
 			{
 				if(entry.Key && entry.Value != null)
@@ -1278,77 +1184,18 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 					skeletonController = entry.Key.GetComponent<RUISSkeletonController>();
 					if(skeletonController)
 					{
-						Debug.Log(" shutting down " + entry.Value.Length + " " + fieldNameList.Count);
+//						Debug.Log(" shutting down " + entry.Value.Length + " " + fieldNameList.Count);
 						for(int i = 0; i < entry.Value.Length; ++i)
 						{
 							if(i < fieldNameList.Count && typeof(RUISSkeletonController).GetField(fieldNameList[i]) != null && entry.Value[i] != null)
 								typeof(RUISSkeletonController).GetField(fieldNameList[i]).SetValue(skeletonController, entry.Value[i]);
-
-//							for(int i = 0; i < fieldNameList.Count; ++i)
-//							{
-//								if(typeof(RUISSkeletonController).GetField(fieldNameList[i]) != null)
-//									savedFields[i] = typeof(RUISSkeletonController).GetField(fieldNameList[i]);
-//								else
-//									savedFields[i] = null;
-//								//				targetFields[i] = typeof(RUISSkeletonController).GetField(editorFields[i].Name).GetValue(skeletonController);
-//							}
 						}
+						EditorUtility.SetDirty(skeletonController);
 					}
 				}
 			}
-
-//			GameObject gameObject;
-//			FieldInfo[] variables;
-//
-//			foreach(RUISSkeletonControllerEditor editor in skeletonControllerEditors)
-//			{
-//				if(editor && editor.target)
-//				{
-//					skeletonController = (RUISSkeletonController) editor.target;
-//					gameObject = skeletonController.gameObject;
-//				
-//					targetFields = editor.GetType().GetFields(); // TODO match fields by their name 
-//					if(controllerProperties.ContainsKey(gameObject))
-//					{
-//						variables = controllerProperties[gameObject];
-//
-////						transform   = entry.Key;
-////						sourceFields = variables.Key;
-////						values 		 = variables.Value;
-//
-////						for(int i = 0; i < sourceFields.Length; ++i) // TODO match fields by their name 
-////						{
-////							if(targetFields[i].FieldType == typeof(SerializedProperty))
-////							{
-////								Debug.Log("Var Name:  " + sourceFields[i].Name + "    Type:  " + ((SerializedProperty) sourceFields[i].GetValue(editor)).propertyType);
-////								if(((SerializedProperty) sourceFields[i].GetValue(editor)).propertyType == SerializedPropertyType.Float)
-////									((SerializedProperty) sourceFields[i].GetValue(editor)).floatValue = (float) values[i];
-////								else if(((SerializedProperty) sourceFields[i].GetValue(editor)).propertyType == SerializedPropertyType.Integer)
-////									((SerializedProperty) sourceFields[i].GetValue(editor)).intValue = (int) values[i];
-////								else if(((SerializedProperty) sourceFields[i].GetValue(editor)).propertyType == SerializedPropertyType.Boolean)
-////									((SerializedProperty) sourceFields[i].GetValue(editor)).boolValue = (bool) values[i];
-////								else if(((SerializedProperty) sourceFields[i].GetValue(editor)).propertyType == SerializedPropertyType.Vector3)
-////									((SerializedProperty) sourceFields[i].GetValue(editor)).vector3Value = (Vector3) values[i];
-////							}
-////						}
-//					}
-//				}
-//			}
-////			if(gameObjects.Contains(obj))
-////				Debug.Log("contains");
-//			Debug.Log("gameObjects: " + gameObjects.Count + " , Editors: " + skeletonControllerEditors.Count);
-//			foreach(GameObject gObject in gameObjects)
-//			{
-//				Debug.Log(gObject.name + ", script: " + gObject.GetComponent<RUISSkeletonController>());
-//				skeletonController = gObject.GetComponent<RUISSkeletonController>();
-//				if(skeletonController)
-//				{
-//					skeletonController.handOffset = vect;
-//					skeletonController.useHierarchicalModel = hier;
-//				}
-//			}
-//			skeletonControllerEditors.Clear();
-
+//			Debug.Log("Load");
+				
 			gameObjects.Clear();
 			controllerProperties.Clear();
 		}
@@ -1401,22 +1248,10 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 					savedValues[i] = typeof(RUISSkeletonController).GetField(fieldNameList[i]).GetValue(skeletonController);
 				else
 					savedValues[i] = null;
-//				targetFields[i] = typeof(RUISSkeletonController).GetField(editorFields[i].Name).GetValue(skeletonController);
 			}
 
 			controllerProperties.Add(skeletonController.gameObject, savedValues);
 		}
 	}
-		
-//	public static void AddScript(RUISSkeletonControllerEditor skeletonControllerEditor)
-//	{
-//		if(skeletonControllerEditor)
-//		{		
-//			if(!skeletonControllerEditors.Contains(skeletonControllerEditor))
-//				skeletonControllerEditors.Add(skeletonControllerEditor);
-//			if(skeletonControllerEditor.target && !skeletonControllers.Contains((RUISSkeletonController) skeletonControllerEditor.target))
-//				skeletonControllers.Add((RUISSkeletonController) skeletonControllerEditor.target);
-//		}
-//	}
 }
 #endif

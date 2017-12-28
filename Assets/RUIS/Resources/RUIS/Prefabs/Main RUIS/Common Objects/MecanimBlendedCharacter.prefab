@@ -2204,15 +2204,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   root: {fileID: 400044}
   torso: {fileID: 400044}
-  chest: {fileID: 0}
+  chest: {fileID: 400050}
   neck: {fileID: 400018}
   head: {fileID: 400134}
+  rightClavicle: {fileID: 400076}
   rightShoulder: {fileID: 400086}
   rightElbow: {fileID: 400014}
   rightHand: {fileID: 400082}
   rightHip: {fileID: 400102}
   rightKnee: {fileID: 400042}
   rightFoot: {fileID: 400008}
+  leftClavicle: {fileID: 400156}
   leftShoulder: {fileID: 400124}
   leftElbow: {fileID: 400002}
   leftHand: {fileID: 400078}
@@ -2223,16 +2225,17 @@ MonoBehaviour:
   rightThumb: {fileID: 400154}
   customRoot: {fileID: 0}
   customTorso: {fileID: 0}
-  customAbdomen: {fileID: 0}
   customChest: {fileID: 0}
   customNeck: {fileID: 0}
   customHead: {fileID: 0}
+  customRightClavicle: {fileID: 0}
   customRightShoulder: {fileID: 0}
   customRightElbow: {fileID: 0}
   customRightHand: {fileID: 0}
   customRightHip: {fileID: 0}
   customRightKnee: {fileID: 0}
   customRightFoot: {fileID: 0}
+  customLeftClavicle: {fileID: 0}
   customLeftShoulder: {fileID: 0}
   customLeftElbow: {fileID: 0}
   customLeftHand: {fileID: 0}
@@ -2241,33 +2244,70 @@ MonoBehaviour:
   customLeftFoot: {fileID: 0}
   customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
+  pelvisOffset: {x: 0, y: 0, z: 0}
+  chestOffset: {x: 0, y: 0, z: 0}
+  neckOffset: {x: 0, y: 0, z: 0}
+  headOffset: {x: 0, y: 0, z: 0}
+  clavicleOffset: {x: 0, y: 0, z: 0}
+  shoulderOffset: {x: 0, y: 0, z: 0}
+  elbowOffset: {x: 0, y: 0, z: 0}
+  handOffset: {x: 0, y: 0, z: 0}
+  hipOffset: {x: 0, y: 0, z: 0}
+  kneeOffset: {x: 0, y: 0, z: 0}
+  footOffset: {x: 0, y: 0, z: 0}
+  pelvisRotationOffset: {x: 0, y: 0, z: 0}
+  chestRotationOffset: {x: 0, y: 0, z: 0}
+  neckRotationOffset: {x: 0, y: 0, z: 0}
+  headRotationOffset: {x: 0, y: 0, z: 0}
+  clavicleRotationOffset: {x: 0, y: 0, z: 0}
+  shoulderRotationOffset: {x: 0, y: 0, z: 0}
+  elbowRotationOffset: {x: 0, y: 0, z: 0}
+  handRotationOffset: {x: 0, y: 0, z: 0}
+  hipRotationOffset: {x: 0, y: 0, z: 0}
+  kneeRotationOffset: {x: 0, y: 0, z: 0}
+  feetRotationOffset: {x: 0, y: 0, z: 0}
+  pelvisScaleAdjust: 1
+  chestScaleAdjust: 1
+  neckScaleAdjust: 1
+  headScaleAdjust: 1
+  clavicleScaleAdjust: 1
+  shoulderScaleAdjust: 1
+  elbowScaleAdjust: 1
+  handScaleAdjust: 1
+  hipScaleAdjust: 1
+  kneeScaleAdjust: 1
+  footScaleAdjust: 1
   fistCurlFingers: 1
   externalCurlTrigger: 0
   trackThumbs: 1
   trackWrist: 1
   trackAnkle: 1
   rotateWristFromElbow: 0
+  independentTorsoSegmentsScaling: 0
+  heightAffectsOffsets: 0
+  neckParentsShoulders: 0
   leftHandStatus: 1
   rightHandStatus: 1
   externalLeftStatus: 1
   externalRightStatus: 1
   skeletonManager: {fileID: 0}
   characterController: {fileID: 0}
+  mecanimCombiner: {fileID: 0}
   bodyTrackingDevice: 1
-  customConversion: 0
-  bodyTrackingDeviceID: 0
+  customConversionType: 0
   playerId: 0
   switchToAvailableKinect: 1
   updateRootPosition: 1
   rootSpeedScaling: {x: 1, y: 1, z: 1}
   rootOffset: {x: 0, y: 0, z: -0.1}
-  updateJointPositions: 0
+  updateJointPositions: 1
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
   scaleBoneLengthOnly: 0
   boneLengthAxis: 0
   maxScaleFactor: 0.5
+  limbsAreScaled: 1
   torsoThickness: 1
   rightArmThickness: 1
   leftArmThickness: 1
@@ -2277,11 +2317,17 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
-  HmdRotatesHead: 1
+  hmdRotatesHead: 0
+  hmdMovesHead: 0
+  hmdLocalOffset: {x: 0, y: 0, z: 0}
+  isIMUMocap: 0
+  filterPosition: 1
+  filterHeadPositionOnly: 0
+  positionNoiseCovariance: 100
+  fourJointsNoiseCovariance: 50
   filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
-  adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
   forearmLengthRatio: 1
@@ -2292,6 +2338,10 @@ MonoBehaviour:
   clenchedRotationMCP: {x: 0, y: 0, z: -0.38268346, w: 0.9238795}
   clenchedRotationPIP: {x: 0, y: 0, z: -0.76604444, w: 0.64278764}
   clenchedRotationDIP: {x: 0, y: 0, z: -0.57357645, w: 0.81915206}
+  leftThumbHasIndependentRotations: 0
+  clenchedLeftThumbTM: {x: 0, y: 0, z: 0, w: 0}
+  clenchedLeftThumbMCP: {x: 0, y: 0, z: 0, w: 0}
+  clenchedLeftThumbIP: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &11400014
 MonoBehaviour:
   m_ObjectHideFlags: 1

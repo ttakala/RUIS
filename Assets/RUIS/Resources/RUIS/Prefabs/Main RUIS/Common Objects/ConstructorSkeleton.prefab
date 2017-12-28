@@ -1750,17 +1750,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   root: {fileID: 400026}
   torso: {fileID: 400028}
-  chest: {fileID: 0}
+  chest: {fileID: 400084}
   neck: {fileID: 400020}
   head: {fileID: 400072}
-  rightClavicle: {fileID: 0}
+  rightClavicle: {fileID: 400088}
   rightShoulder: {fileID: 400032}
   rightElbow: {fileID: 400110}
   rightHand: {fileID: 400056}
   rightHip: {fileID: 400080}
   rightKnee: {fileID: 400092}
   rightFoot: {fileID: 400070}
-  leftClavicle: {fileID: 0}
+  leftClavicle: {fileID: 400038}
   leftShoulder: {fileID: 400052}
   leftElbow: {fileID: 400076}
   leftHand: {fileID: 400096}
@@ -1796,19 +1796,41 @@ MonoBehaviour:
   headOffset: {x: 0, y: 0, z: 0}
   clavicleOffset: {x: 0, y: 0, z: 0}
   shoulderOffset: {x: 0, y: 0, z: 0}
+  elbowOffset: {x: 0, y: 0, z: 0}
+  handOffset: {x: 0, y: 0, z: 0}
   hipOffset: {x: 0, y: 0, z: 0}
+  kneeOffset: {x: 0, y: 0, z: 0}
+  footOffset: {x: 0, y: 0, z: 0}
+  pelvisRotationOffset: {x: 0, y: 0, z: 0}
+  chestRotationOffset: {x: 0, y: 0, z: 0}
+  neckRotationOffset: {x: 0, y: 0, z: 0}
+  headRotationOffset: {x: 0, y: 0, z: 0}
+  clavicleRotationOffset: {x: 0, y: 0, z: 0}
+  shoulderRotationOffset: {x: 0, y: 0, z: 0}
+  elbowRotationOffset: {x: 0, y: 0, z: 0}
+  handRotationOffset: {x: 0, y: 0, z: 0}
+  hipRotationOffset: {x: 0, y: 0, z: 0}
+  kneeRotationOffset: {x: 0, y: 0, z: 0}
   feetRotationOffset: {x: 0, y: 0, z: 0}
   pelvisScaleAdjust: 1
   chestScaleAdjust: 1
   neckScaleAdjust: 1
   headScaleAdjust: 1
   clavicleScaleAdjust: 1
+  shoulderScaleAdjust: 1
+  elbowScaleAdjust: 1
+  handScaleAdjust: 1
+  hipScaleAdjust: 1
+  kneeScaleAdjust: 1
+  footScaleAdjust: 1
   fistCurlFingers: 1
   externalCurlTrigger: 0
   trackThumbs: 1
   trackWrist: 1
   trackAnkle: 1
   rotateWristFromElbow: 1
+  independentTorsoSegmentsScaling: 0
+  heightAffectsOffsets: 0
   neckParentsShoulders: 0
   leftHandStatus: 1
   rightHandStatus: 1
@@ -1816,6 +1838,7 @@ MonoBehaviour:
   externalRightStatus: 1
   skeletonManager: {fileID: 0}
   characterController: {fileID: 0}
+  mecanimCombiner: {fileID: 0}
   bodyTrackingDevice: 1
   customConversionType: 0
   playerId: 0
@@ -1830,6 +1853,7 @@ MonoBehaviour:
   scaleBoneLengthOnly: 0
   boneLengthAxis: 0
   maxScaleFactor: 0.5
+  limbsAreScaled: 1
   torsoThickness: 1
   rightArmThickness: 1
   leftArmThickness: 1
@@ -1839,14 +1863,17 @@ MonoBehaviour:
   rotationDamping: 360
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
-  HmdRotatesHead: 1
+  hmdRotatesHead: 0
+  hmdMovesHead: 0
+  hmdLocalOffset: {x: 0, y: 0, z: 0}
+  isIMUMocap: 0
   filterPosition: 1
+  filterHeadPositionOnly: 0
   positionNoiseCovariance: 100
   fourJointsNoiseCovariance: 50
   filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
-  adjustVerticalTorsoLocation: 0
   adjustVerticalHipsPosition: 0
   neckHeightTweaker: 0
   forearmLengthRatio: 1
