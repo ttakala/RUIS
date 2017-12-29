@@ -88,11 +88,8 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty maxScaleFactor;
 	public SerializedProperty minimumConfidenceToUpdate;
 	public SerializedProperty rotationDamping;
-    SerializedProperty neckHeightTweaker; // TODO remove
 	public SerializedProperty forearmLengthTweaker;
 	public SerializedProperty shinLengthTweaker;
-//	SerializedProperty adjustVerticalTorsoPosition;
-	SerializedProperty adjustVerticalHipsPosition; // TODO remove
 
 	public SerializedProperty fistCurlFingers;
 	public SerializedProperty trackThumbs;
@@ -244,13 +241,10 @@ public class RUISSkeletonControllerEditor : Editor
 		trackWrist = serializedObject.FindProperty ("trackWrist");
 		trackAnkle = serializedObject.FindProperty ("trackAnkle");
 //		rotateWristFromElbow = serializedObject.FindProperty ("rotateWristFromElbow");
-		
-//		adjustVerticalTorsoPosition = serializedObject.FindProperty("adjustVerticalTorsoPosition");
-		adjustVerticalHipsPosition = serializedObject.FindProperty("adjustVerticalHipsPosition");
+
         maxScaleFactor = serializedObject.FindProperty("maxScaleFactor");
         minimumConfidenceToUpdate = serializedObject.FindProperty("minimumConfidenceToUpdate");
         rotationDamping = serializedObject.FindProperty("rotationDamping");
-        neckHeightTweaker = serializedObject.FindProperty("neckHeightTweaker");
         forearmLengthTweaker = serializedObject.FindProperty("forearmLengthRatio");
 		shinLengthTweaker = serializedObject.FindProperty("shinLengthRatio");
 		
@@ -979,18 +973,8 @@ public class RUISSkeletonControllerEditor : Editor
 																+ "local frame in meters. This offset has no effect if \"Scale Limbs\" is enabled."));
 		EditorGUILayout.PropertyField(footOffset, new GUIContent("Foot Offset",   "Offsets foot joint positions in their "
 																+ "local frame in meters. This offset has no effect if \"Scale Limbs\" is enabled."));
-		GUI.enabled = true;
 
 		EditorGUILayout.Space();
-
-		// *** OPTIHACK Consider removing adjustVerticalHipsPosition because pelvisOffset does the same thing and more
-//		EditorGUILayout.PropertyField(adjustVerticalHipsPosition, new GUIContent(  "Hips Vertical Tweaker", "Offset the tracked hip center point "
-//		                                                                         + "position in the spine direction (usually vertical axis) when "
-//		                                                                         + "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
-		// *** TODO remove this from RUISSkeletonController
-//		EditorGUILayout.PropertyField(neckHeightTweaker, new GUIContent(  "Neck Height Tweaker", "Offset the tracked neck position in the spine "
-//		                                                                + "direction (usually vertical axis) when \"Hierarchical Model\" and "
-//		                                                                + "\"Scale Bones\" are enabled."));
 
 		GUI.enabled = useHierarchicalModel.boolValue;
 		EditorGUILayout.Slider(forearmLengthTweaker, 0.01f, 3, new GUIContent(   "Forearm Scale Adjust", "The forearm length ratio "

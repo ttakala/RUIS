@@ -58,6 +58,7 @@ public class RUISCharacterController : MonoBehaviour
 	
 	public bool dynamicFriction = true;
 	public PhysicMaterial dynamicMaterial;
+	private PhysicMaterial dynamicMaterialInstance;
 	private PhysicMaterial originalMaterial;
 	private Collider colliderComponent;
 
@@ -126,21 +127,25 @@ public class RUISCharacterController : MonoBehaviour
 				
 				if(dynamicMaterial == null)
 				{
-					dynamicMaterial = new PhysicMaterial();
+					dynamicMaterialInstance = new PhysicMaterial();
 					
-					dynamicMaterial.dynamicFriction = 0;
-					dynamicMaterial.staticFriction = 0;
-					dynamicMaterial.frictionCombine = PhysicMaterialCombine.Minimum;
+					dynamicMaterialInstance.dynamicFriction = 0;
+					dynamicMaterialInstance.staticFriction = 0;
+					dynamicMaterialInstance.frictionCombine = PhysicMaterialCombine.Minimum;
 					
 					if(colliderComponent.material)
 					{
-						dynamicMaterial.bounceCombine = originalMaterial.bounceCombine;
-						dynamicMaterial.bounciness = originalMaterial.bounciness;
-//						dynamicMaterial.staticFriction2 = originalMaterial.staticFriction2; // Deprecated since Unity 5.2ish
-//						dynamicMaterial.dynamicFriction2 = originalMaterial.dynamicFriction2;
-//						dynamicMaterial.frictionDirection2 = originalMaterial.frictionDirection2;
+						dynamicMaterialInstance.bounceCombine = originalMaterial.bounceCombine;
+						dynamicMaterialInstance.bounciness = originalMaterial.bounciness;
 					}
 				}
+				else
+				{
+					dynamicMaterialInstance = Instantiate(dynamicMaterial);
+				}
+
+				colliderComponent.material = dynamicMaterialInstance; // This creates an instance of the dynamicMaterialInstance into the scene (apparently)
+				dynamicMaterialInstance = colliderComponent.material;
 			}
 		}
 		if((characterPivotType == CharacterPivotType.SkeletonHead
@@ -259,11 +264,21 @@ public class RUISCharacterController : MonoBehaviour
 						if(grounded && (Time.fixedTime - lastJumpTime) > 1)
 						{
 							// *** OPTIHACK TODO HACK this creates a new physics material and only 65000 of them are allowed!!!
-							colliderComponent.material = originalMaterial;
+							// fixed it maybe... uncomment the two if-clauses and let the scene run for a few minutes
+//							if(colliderComponent.material != originalMaterial)
+							{
+								colliderComponent.material = originalMaterial;
+							}
+//							colliderComponent.material.staticFriction  = originalMaterial.staticFriction; // doesn't seem to work
+//							colliderComponent.material.dynamicFriction = originalMaterial.dynamicFriction;
+//							print(" on ground stat " + colliderComponent.material.staticFriction + " dyn " + colliderComponent.material.dynamicFriction);
 						}
 						else
 						{
-							colliderComponent.material = dynamicMaterial; 
+//							if(colliderComponent.material != dynamicMaterialInstance)
+							{ // HACK: (colliderComponent.material != dynamicMaterialInstance) returns always TRUE !!!
+								colliderComponent.material = dynamicMaterialInstance;
+							}
 						}
 					}
 				}

@@ -288,11 +288,8 @@ public class RUISSkeletonController : MonoBehaviour
 
 	private Vector3 initialLocalPosition = Vector3.zero;
 	private Vector3 initialWorldPosition = Vector3.zero;
+	private Vector3 initialLossyScale = Vector3.one;
 	private Quaternion initialWorldRotation = Quaternion.identity;
-
-	public float adjustVerticalHipsPosition = 0; // *** OPTIHACK TODO remove
-	private Vector3 spineDirection = Vector3.zero; // *** OPTIHACK TODO remove
-	//private RUISSkeletonManager.JointData adjustedHipJoint = new RUISSkeletonManager.JointData();
 
 	private float modelSpineLength = 0;
 	private int customSpineJointCount = 0;
@@ -302,12 +299,6 @@ public class RUISSkeletonController : MonoBehaviour
 	private float torsoOffset = 0.0f;
 
 	private float torsoScale = 1.0f;
-
-	public float neckHeightTweaker = 0.0f; // *** OPTIHACK TODO remove
-	private Vector3 neckOriginalLocalPosition; // *** OPTIHACK TODO remove
-
-	private bool tweakableHips = false; // *** OPTIHACK TODO remove
-	private Vector3 chestOriginalLocalPosition; // *** OPTIHACK TODO remove
 
 	public float forearmLengthRatio = 1.0f;
 	public float shinLengthRatio = 1.0f;
@@ -489,31 +480,6 @@ public class RUISSkeletonController : MonoBehaviour
 
 			if(BodyTrackingDeviceID != RUISSkeletonManager.customSensorID) // *** OPTIHACK
 				torsoOffset = Vector3.Dot(realRootPos - assumedRootPos, torsoUp);
-
-			if(neck)
-			{
-				neckOriginalLocalPosition = neck.localPosition;
-				if(neck.parent)
-				{
-					// Below relates to adjustVerticalHipsPosition, which is mostly relevant to Kinect based avatar animation
-					if(bodyTrackingDevice != BodyTrackingDeviceType.GenericMotionTracker)
-					{
-						if(!chest)
-							chest = neck.parent;
-						if(chest == torso)
-						{
-							// TODO *** OPTIHACK remove this
-							Debug.Log(typeof(RUISSkeletonController) + ": Hierarchical model stored in GameObject " + this.name
-							+ " does not have enough joints between neck and torso for Hips Vertical Tweaker to work.");
-						}
-						else
-						{
-							chestOriginalLocalPosition = chest.localPosition;
-							tweakableHips = true;
-						}
-					}
-				}
-			}
 		}
 
 		// Stores (world) rotation, LocalPosition, and localScale
@@ -722,6 +688,7 @@ public class RUISSkeletonController : MonoBehaviour
 		initialLocalPosition = transform.localPosition;
 		initialWorldPosition = transform.position;
 		initialWorldRotation = transform.rotation;
+		initialLossyScale = transform.lossyScale;
 
 		if(hmdRotatesHead && !RUISDisplayManager.IsHmdPresent())
 			hmdRotatesHead = false;
@@ -829,6 +796,7 @@ public class RUISSkeletonController : MonoBehaviour
 				UpdateTransform(ref rightClavicle, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, maxAngularVelocity, clavicleRotationOffset);
 			}
 
+			// *** OPTIHACK4 these are unnecessary for hierarchicalModels because of the later calls to ForceUpdatePosition( chest/neck/... ) ?
 			if(chest)
 				chest.localPosition = chestOffset + jointInitialLocalPositions[chest];
 			if(neck)
@@ -984,16 +952,6 @@ public class RUISSkeletonController : MonoBehaviour
 //																  - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition)
 //																  + skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation * pelvisOffset * torso.localScale.x);
 					// *** NOTE above how pelvisOffset is scaled with torso.localScale.x   <-- This assumes uniform scaling of torso
-
-					// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
-					spineDirection = transform.TransformPoint(-torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
-//					spineDirection = transform.TransformPoint (skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position - skeletonPosition 
-//					                                           - torsoDirection * (torsoOffset * torsoScale + adjustVerticalHipsPosition - 1));
-					                                           
-					// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
-					spineDirection = skeletonPosition - spineDirection;
-//					spineDirection = torso.position - spineDirection;
-					spineDirection.Normalize();
 
 					// Obtained new body tracking data. TODO test that Kinect 1 still works
 //					if(bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame)
@@ -1173,13 +1131,9 @@ public class RUISSkeletonController : MonoBehaviour
 					tempRotation = UpdateTransformWithTrackedDevice(ref root, hmdYaw);
 					
 				if(updateRootPosition) 
-					transform.localPosition = skeletonPosition + tempRotation*rootOffset;
-				
+					transform.localPosition = skeletonPosition + tempRotation*rootOffset;	
 			}
 		}
-
-		TweakHipPosition();
-		TweakNeckHeight();
 	}
 
 	private void SetCustomJointData(Transform sourceTransform, ref RUISSkeletonManager.JointData jointToSet, float posConfidence, float rotConfidence)
@@ -1310,9 +1264,12 @@ public class RUISSkeletonController : MonoBehaviour
 			else
 				offsetScale = 1;
 				
-			switch(jointToGet.jointID) // *** OPTIHACK
+			// *** OPTIHACK4 change all skeletonManager.skeletons[]*.rotations preceding *Offset to *.rotation (e.g. chest.rotation) ? 
+			//		Not that simple... the jointOffsets need to be in the tracking/skeleton frame. 
+			//		Quaternion.Inverse(transform.rotation)*chest.rotation might suffice... Finally add jointoffsets to RUISKinectAndMecanimCombiner
+			switch(jointToGet.jointID) 
 			{
-				case RUISSkeletonManager.Joint.Torso: // *** OPTIHACK still using hacky Kinect1/2 pelvis offset adjustments
+				case RUISSkeletonManager.Joint.Torso: // *** OPTIHACK still using hacky Kinect1/2 pelvis offset adjustments. TODO: consider switching to use pelvisOffset
 					if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
 						jointOffset =  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation * pelvisOffset * torso.localScale.x
 									 - torsoDirection * torsoOffset * torsoScale;
@@ -1399,8 +1356,9 @@ public class RUISSkeletonController : MonoBehaviour
 			if(!hasBeenTracked)
 			{
 				// Below is hacky but seems to work
-				forcedJointPositions[jointID] = Quaternion.Inverse(initialWorldRotation) * (jointInitialWorldPositions[transformToUpdate] - jointInitialWorldPositions[root]) 
-													+ Vector3.Scale(initialLocalPosition, transform.localScale);
+				forcedJointPositions[jointID].Set(1/initialLossyScale.x, 1/initialLossyScale.y, 1/initialLossyScale.z);
+				forcedJointPositions[jointID] = Vector3.Scale(initialLocalPosition, transform.localScale) + Quaternion.Inverse(initialWorldRotation) 
+													* Vector3.Scale(forcedJointPositions[jointID], jointInitialWorldPositions[transformToUpdate] - jointInitialWorldPositions[root]);
 			}
 
 			// *** NOTE the use of transformToUpdate.parent.localScale.x <-- assumes uniform scale from the parent (clavicle/torso)
@@ -1489,7 +1447,7 @@ public class RUISSkeletonController : MonoBehaviour
 		if(!ConfidenceGoodEnoughForScaling() && hasBeenTracked)
 			return;
 
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK
+//		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK4 commented this
 		{
 			if(independentTorsoSegmentsScaling)
 			{
@@ -1522,19 +1480,19 @@ public class RUISSkeletonController : MonoBehaviour
 			if(head && neckScale != 0) // cumulativeScale contains the accumulated scale of head's parent
 				head.localScale = (headScaleAdjust / cumulativeScale) * Vector3.one; 
 		}
-		else
-		{
-			// *** TODO torsoScale is now assigned below and INSIDE the method. Get rid of hip/neck tweaks and reconsider how torsoScale is assigned
-			if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking)
-				torsoScale = UpdateTorsoScale();
-			torsoMultiplier = torsoScale * torsoThickness;
-			torso.localScale = torsoMultiplier * Vector3.one; // *** OPTIHACK3
-			limbStartScale = torsoScale; 
-			if(head && neckScale != 0)
-				head.localScale = (headScaleAdjust/torsoScale) * Vector3.one; // *** OPTIHACK added this
-		}
+//		else // *** OPTIHACK4 commented this whole else clause
+//		{
+//			// *** TODO torsoScale is now assigned below and INSIDE the method. Get rid of hip/neck tweaks and reconsider how torsoScale is assigned
+//			if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking)
+//				torsoScale = UpdateTorsoScale();
+//			torsoMultiplier = torsoScale * torsoThickness;
+//			torso.localScale = torsoMultiplier * Vector3.one; // *** OPTIHACK3
+//			limbStartScale = torsoScale; 
+//			if(head && neckScale != 0)
+//				head.localScale = (headScaleAdjust/torsoScale) * Vector3.one;
+//		}
 
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK
+//		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK4 commented this
 			limbStartScale = UpdateUniformBoneScaling(rightClavicle, rightShoulder, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 
 													  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, 
 													  torsoMultiplier * clavicleScaleAdjust, neckScale);
@@ -1546,7 +1504,7 @@ public class RUISSkeletonController : MonoBehaviour
 		UpdateEndBoneScaling(rightHand, handScaleAdjust * Vector3.one, 
 							skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, prevRightHandScale, cumulativeScale);
 
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK
+//		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK4 commented this
 			limbStartScale = UpdateUniformBoneScaling(leftClavicle, leftShoulder, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle, 
 													  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftShoulder, 
 													  torsoMultiplier * clavicleScaleAdjust, neckScale);
@@ -1562,7 +1520,7 @@ public class RUISSkeletonController : MonoBehaviour
 											skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, cumulatedPelvisScale);
 		cumulativeScale = UpdateBoneScaling(rightKnee, rightFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 
 											skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, cumulativeScale);
-				UpdateEndBoneScaling(rightFoot, footScaleAdjust * Vector3.one, 
+		UpdateEndBoneScaling(rightFoot, footScaleAdjust * Vector3.one, 
 							skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, prevRightFootScale, cumulativeScale);
 
 		cumulativeScale = UpdateBoneScaling(leftHip, leftKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 
@@ -2037,23 +1995,6 @@ public class RUISSkeletonController : MonoBehaviour
 	{
 		Vector3 boneVector = toJoint - fromJoint;
 		return Quaternion.FromToRotation(boneVector, wantedDirection);
-	}
-
-	private void TweakNeckHeight()
-	{
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker || !neck)
-			return;
-		neck.localPosition = neckOriginalLocalPosition + neck.InverseTransformDirection(spineDirection) * neckHeightTweaker / torsoScale;
-	}
-
-	private void TweakHipPosition()
-	{
-		if(!tweakableHips)
-			return;
-		// TODO: Below needs to be modified
-		//chest.position -= hipOffset;
-		chest.localPosition = chestOriginalLocalPosition - chest.InverseTransformDirection(spineDirection.normalized)
-																										* adjustVerticalHipsPosition / torsoScale;
 	}
 
 	public float GetTrackedSpineLength()

@@ -210,8 +210,10 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
         if (neckRoot != null)
         {
+			// *** OPTIHACK4 mecanimTransform's need body segment offsets as well? what about scales?
+			//     TODO RUISSkeletonController needs to set the nonUniform scales according to actual blended Kinect-Mecanim joint rotations !!!!
             //apply kinect neck height tweak to mecanim
-            neckRoot.mecanimTransform.localPosition = neckRoot.mecanimTransform.localPosition - neckRoot.mecanimTransform.InverseTransformDirection(Vector3.up) * skeletonController.neckHeightTweaker;
+//            neckRoot.mecanimTransform.localPosition = neckRoot.mecanimTransform.localPosition - neckRoot.mecanimTransform.InverseTransformDirection(Vector3.up) * skeletonController.neckHeightTweaker;
         }
 
         if (torsoIsRoot)
