@@ -212,13 +212,15 @@ public class RUISInputManager : MonoBehaviour
 		coordinateSystem.SetDistanceFromFloor(dictionaryDistanceFromFloor, coordinateSystem.rootDevice);
 			
 		//check whether the kinect camera is actually connected
-        if (enableKinect)
+        if(enableKinect)
         {
             OpenNISettingsManager settingsManager = FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
-            if (settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid)
+            if(settingsManager.UserGenrator == null || !settingsManager.UserGenrator.Valid)
             {
-                Debug.LogError("Could not start OpenNI! Check your Kinect connection.");
-                GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
+				Debug.LogError("Could not start OpenNI! Check your Kinect connection. Disabling Kinect in RUISInputManager.");
+				if(GetComponentInChildren<RUISKinectDisabler>())
+	                GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
+				enableKinect = false; // *** OPTITRACK4 added this line, check that everything still works (calibration etc.)
             }
         }
 

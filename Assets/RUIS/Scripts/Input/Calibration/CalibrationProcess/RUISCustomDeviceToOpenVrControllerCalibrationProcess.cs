@@ -448,11 +448,12 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 			if(lastCustomSample != customDeviceTrackerPosition)
 				return RUISCalibrationPhase.ReadyToCalibrate;
-			else if(firstInputDevice != RUISDevice.OpenVR || (trackedOpenVRObjects != null && trackedOpenVRObjects.Length > 0))
+			else if(	firstInputDevice != RUISDevice.OpenVR 
+					|| (	trackedOpenVRObjects != null && trackedOpenVRObjects.Length > 0
+						&& (trackedOpenVRObjects.Length != 1 || trackedOpenVRObjects[0].index != SteamVR_TrackedObject.EIndex.Hmd)))
 				this.guiTextUpperLocal = "No motion detected in\n'" + secondInputDevice + " Tracked Pose' field of\n" 
 										+ typeof(RUISCoordinateCalibration) + " component.\nIts position should correspond to\nthe tracked "
 										+ secondInputName + " device.";
-
 			lastCustomSample = customDeviceTrackerPosition;
 		}
 

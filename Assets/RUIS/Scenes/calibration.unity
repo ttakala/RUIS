@@ -710,6 +710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &94079142
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,6 +1166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &158988831
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1392,6 +1394,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &178321266
 GameObject:
   m_ObjectHideFlags: 0
@@ -1981,6 +1984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &209769084
 GameObject:
   m_ObjectHideFlags: 0
@@ -2080,14 +2084,32 @@ MonoBehaviour:
   headOffset: {x: 0, y: 0.02, z: -0.01}
   clavicleOffset: {x: 0, y: 0, z: 0}
   shoulderOffset: {x: 0, y: 0, z: 0}
+  elbowOffset: {x: 0, y: 0, z: 0}
+  handOffset: {x: 0, y: 0, z: 0}
   hipOffset: {x: 0, y: 0, z: 0}
+  kneeOffset: {x: 0, y: 0, z: 0}
+  footOffset: {x: 0, y: 0, z: 0}
+  pelvisRotationOffset: {x: 0, y: 0, z: 0}
+  chestRotationOffset: {x: 0, y: 0, z: 0}
+  neckRotationOffset: {x: 0, y: 0, z: 0}
+  headRotationOffset: {x: 0, y: 0, z: 0}
+  clavicleRotationOffset: {x: 0, y: 0, z: 0}
+  shoulderRotationOffset: {x: 0, y: 0, z: 0}
+  elbowRotationOffset: {x: 0, y: 0, z: 0}
+  handRotationOffset: {x: 0, y: 0, z: 0}
+  hipRotationOffset: {x: 0, y: 0, z: 0}
+  kneeRotationOffset: {x: 0, y: 0, z: 0}
   feetRotationOffset: {x: 0, y: 0, z: 0}
   pelvisScaleAdjust: 0.8
   chestScaleAdjust: 0.9
   neckScaleAdjust: 0.4
   headScaleAdjust: 1.2
   clavicleScaleAdjust: 1
+  shoulderScaleAdjust: 1
+  elbowScaleAdjust: 1
   handScaleAdjust: 1
+  hipScaleAdjust: 1
+  kneeScaleAdjust: 1
   footScaleAdjust: 1
   fistCurlFingers: 1
   externalCurlTrigger: 0
@@ -2096,6 +2118,7 @@ MonoBehaviour:
   trackAnkle: 1
   rotateWristFromElbow: 0
   independentTorsoSegmentsScaling: 0
+  heightAffectsOffsets: 0
   neckParentsShoulders: 0
   leftHandStatus: 1
   rightHandStatus: 1
@@ -2103,6 +2126,7 @@ MonoBehaviour:
   externalRightStatus: 1
   skeletonManager: {fileID: 0}
   characterController: {fileID: 0}
+  mecanimCombiner: {fileID: 0}
   bodyTrackingDevice: 2
   customConversionType: 0
   playerId: 0
@@ -2138,8 +2162,6 @@ MonoBehaviour:
   filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
-  adjustVerticalHipsPosition: 0
-  neckHeightTweaker: 0
   forearmLengthRatio: 1
   shinLengthRatio: 1
   clenchedRotationThumbTM: {x: 0.38268346, y: 0, z: 0, w: 0.9238795}
@@ -2788,6 +2810,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &253445268
 GameObject:
   m_ObjectHideFlags: 0
@@ -3262,6 +3285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &301199000
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4732,6 +4756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &446722661
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5885,6 +5910,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &590184316
 GameObject:
   m_ObjectHideFlags: 0
@@ -7037,6 +7063,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &679023021
 GameObject:
   m_ObjectHideFlags: 0
@@ -7139,6 +7166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &679306943
 GameObject:
   m_ObjectHideFlags: 0
@@ -7581,6 +7609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &699919722
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7951,6 +7980,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &712146458
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8981,6 +9011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &781486436
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9145,6 +9176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &798515782
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9247,6 +9279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &798951468
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -9404,6 +9437,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1001 &803780564
 Prefab:
   m_ObjectHideFlags: 0
@@ -9583,6 +9617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &825084085
 GameObject:
   m_ObjectHideFlags: 0
@@ -10501,6 +10536,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &935255478
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -10658,6 +10694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &945270684
 GameObject:
   m_ObjectHideFlags: 0
@@ -11412,6 +11449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1006093294
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11629,6 +11667,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1020131673
 GameObject:
   m_ObjectHideFlags: 0
@@ -12062,6 +12101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1033981612
 GameObject:
   m_ObjectHideFlags: 0
@@ -12759,6 +12799,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1096497340
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12861,6 +12902,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1105436484
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -13714,6 +13756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1189229838
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14478,6 +14521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1216457339
 GameObject:
   m_ObjectHideFlags: 0
@@ -14657,14 +14701,32 @@ MonoBehaviour:
   headOffset: {x: 0, y: 0.02, z: -0.01}
   clavicleOffset: {x: 0, y: 0, z: 0}
   shoulderOffset: {x: 0, y: 0, z: 0}
+  elbowOffset: {x: 0, y: 0, z: 0}
+  handOffset: {x: 0, y: 0, z: 0}
   hipOffset: {x: 0, y: 0, z: 0}
+  kneeOffset: {x: 0, y: 0, z: 0}
+  footOffset: {x: 0, y: 0, z: 0}
+  pelvisRotationOffset: {x: 0, y: 0, z: 0}
+  chestRotationOffset: {x: 0, y: 0, z: 0}
+  neckRotationOffset: {x: 0, y: 0, z: 0}
+  headRotationOffset: {x: 0, y: 0, z: 0}
+  clavicleRotationOffset: {x: 0, y: 0, z: 0}
+  shoulderRotationOffset: {x: 0, y: 0, z: 0}
+  elbowRotationOffset: {x: 0, y: 0, z: 0}
+  handRotationOffset: {x: 0, y: 0, z: 0}
+  hipRotationOffset: {x: 0, y: 0, z: 0}
+  kneeRotationOffset: {x: 0, y: 0, z: 0}
   feetRotationOffset: {x: -15, y: 0, z: 0}
   pelvisScaleAdjust: 0.8
   chestScaleAdjust: 0.9
   neckScaleAdjust: 0.4
   headScaleAdjust: 1.2
   clavicleScaleAdjust: 1
+  shoulderScaleAdjust: 1
+  elbowScaleAdjust: 1
   handScaleAdjust: 1
+  hipScaleAdjust: 1
+  kneeScaleAdjust: 1
   footScaleAdjust: 1
   fistCurlFingers: 1
   externalCurlTrigger: 0
@@ -14673,6 +14735,7 @@ MonoBehaviour:
   trackAnkle: 1
   rotateWristFromElbow: 0
   independentTorsoSegmentsScaling: 1
+  heightAffectsOffsets: 0
   neckParentsShoulders: 0
   leftHandStatus: 1
   rightHandStatus: 1
@@ -14680,6 +14743,7 @@ MonoBehaviour:
   externalRightStatus: 1
   skeletonManager: {fileID: 0}
   characterController: {fileID: 0}
+  mecanimCombiner: {fileID: 0}
   bodyTrackingDevice: 2
   customConversionType: 1
   playerId: 0
@@ -14715,8 +14779,6 @@ MonoBehaviour:
   filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
-  adjustVerticalHipsPosition: 0
-  neckHeightTweaker: 0
   forearmLengthRatio: 0.9
   shinLengthRatio: 0.7
   clenchedRotationThumbTM: {x: 0.38268346, y: 0, z: 0, w: 0.9238795}
@@ -15063,6 +15125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1287086720
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15668,6 +15731,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1350612938
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16473,6 +16537,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1391162236
 GameObject:
   m_ObjectHideFlags: 0
@@ -17737,6 +17802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1469135139
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19094,6 +19160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1598388361
 GameObject:
   m_ObjectHideFlags: 0
@@ -19172,6 +19239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1600071314
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20179,6 +20247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1710112184
 GameObject:
   m_ObjectHideFlags: 0
@@ -20679,6 +20748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1757445615
 GameObject:
   m_ObjectHideFlags: 0
@@ -21129,6 +21199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1769460921
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -21763,6 +21834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1827824202
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -22461,6 +22533,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1884405994
 GameObject:
   m_ObjectHideFlags: 0
@@ -22836,6 +22909,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &1925038522
 GameObject:
   m_ObjectHideFlags: 0
@@ -23556,6 +23630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &1962148243
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -24184,6 +24259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &2055282277
 GameObject:
   m_ObjectHideFlags: 0
@@ -25647,6 +25723,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: -0.02, y: 0.02, z: 0.02}
+  font: {fileID: 0}
 --- !u!23 &2116732359
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -25948,6 +26025,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontSize: 23
   scale: {x: 1, y: 1, z: 1}
+  font: {fileID: 0}
 --- !u!1 &2139691589
 GameObject:
   m_ObjectHideFlags: 0

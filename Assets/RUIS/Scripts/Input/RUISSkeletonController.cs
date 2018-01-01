@@ -283,6 +283,7 @@ public class RUISSkeletonController : MonoBehaviour
 	private Dictionary<Transform, Vector3> jointInitialLocalPositions;
 	private Dictionary<Transform, Vector3> jointInitialLocalScales;
 	private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
+	private Dictionary<KeyValuePair<Transform, Transform>, float> trackedBoneLengths;
 	private Dictionary<RUISSkeletonManager.Joint, float> automaticBoneScales;
 	private Dictionary<RUISSkeletonManager.Joint, float> automaticBoneOffsets;
 
@@ -341,42 +342,12 @@ public class RUISSkeletonController : MonoBehaviour
 
 	void Awake()
 	{
-		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
-
-		if(inputManager)
-		{
-			if(switchToAvailableKinect)
-			{
-				if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect1
-				   && !inputManager.enableKinect && inputManager.enableKinect2)
-				{
-					bodyTrackingDevice = BodyTrackingDeviceType.Kinect2;
-				}
-				else if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2
-				        && !inputManager.enableKinect2 && inputManager.enableKinect)
-				{
-					bodyTrackingDevice = BodyTrackingDeviceType.Kinect1;
-				}
-			}
-		}
-
-		// Following substitution ensures that customConversionType, customSourceDevice, and deviceConversion variables will be set in bodyTrackingDeviceID setter
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
-			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
-		
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		if(!coordinateSystem)
 		{
 			Debug.LogError(typeof(RUISCoordinateSystem) + " not found in the scene! The script will be disabled.");
 			this.enabled = false;
 		}
-
-		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
-			BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
-		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2)
-			BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
-			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 
 		followHmdPosition = false;
 		followMoveController = false;
@@ -387,6 +358,7 @@ public class RUISSkeletonController : MonoBehaviour
 		jointInitialLocalPositions = new Dictionary<Transform, Vector3>();
 		jointInitialLocalScales    = new Dictionary<Transform, Vector3>();
 		jointInitialDistances 	   = new Dictionary<KeyValuePair<Transform, Transform>, float>();
+		trackedBoneLengths				   = new Dictionary<KeyValuePair<Transform, Transform>, float>();
 		automaticBoneScales 	   = new Dictionary<RUISSkeletonManager.Joint, float>();
 		automaticBoneOffsets 	   = new Dictionary<RUISSkeletonManager.Joint, float>();
 		
@@ -405,6 +377,7 @@ public class RUISSkeletonController : MonoBehaviour
 	void Start()
 	{
 		skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
+		inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 		if(!skeletonManager)
 		{
 			Debug.LogError("The scene is missing " + typeof(RUISSkeletonManager) + " script! The script will be disabled.");
@@ -427,17 +400,56 @@ public class RUISSkeletonController : MonoBehaviour
 
 		hasBeenTracked = false;
 
+		if(inputManager) // *** OPTITRACK4 moved this here from Awake(), check that everything still works
+		{
+			if(switchToAvailableKinect)
+			{
+				if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect1
+					&& !inputManager.enableKinect && inputManager.enableKinect2)
+				{
+					bodyTrackingDevice = BodyTrackingDeviceType.Kinect2;
+				}
+				else if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2
+					&& !inputManager.enableKinect2 && inputManager.enableKinect)
+				{
+					bodyTrackingDevice = BodyTrackingDeviceType.Kinect1;
+				}
+			}
+		}
+
+		// Following substitution ensures that customConversionType, customSourceDevice, and deviceConversion variables will be set in bodyTrackingDeviceID setter
+		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)  // *** OPTITRACK4 moved this here from Awake(), check that everything still works
+		{
+			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+			minimumConfidenceToUpdate = 0.5f;
+		}
+
+		// *** OPTITRACK4 moved these 6 lines here from Awake(), check that everything still works
+		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
+			BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2)
+			BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
+			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+		
+
 		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking = true;
 
 		switch(customConversionType)
 		{
 			case CustomConversionType.Custom_1:
-				deviceConversion = inputManager.customDevice1Conversion;
+				if(inputManager)
+					deviceConversion = inputManager.customDevice1Conversion;
+				else
+					deviceConversion = new RUISCoordinateSystem.DeviceCoordinateConversion();
 				customSourceDevice = RUISDevice.Custom_1;
 				break;
 			case CustomConversionType.Custom_2:
-				deviceConversion = inputManager.customDevice2Conversion;
+				if(inputManager)
+					deviceConversion = inputManager.customDevice2Conversion;
+				else
+					deviceConversion = new RUISCoordinateSystem.DeviceCoordinateConversion();
 				customSourceDevice = RUISDevice.Custom_2;
 				break;
 			default:
@@ -542,7 +554,7 @@ public class RUISSkeletonController : MonoBehaviour
 			if(rightClavicle)
 				SaveInitialDistance(neck, rightClavicle);
 			if(!chest)
-				modelSpineLength += SaveInitialDistance(torso, chest); // *** OPTIHACK
+				modelSpineLength += SaveInitialDistance(torso, neck); // *** OPTIHACK
 		}
 		if(head)
 		{
@@ -652,6 +664,10 @@ public class RUISSkeletonController : MonoBehaviour
 
 		if(inputManager)
 		{
+			// *** OPTITRACK4 added this, check that it works: Below if-clause means that if Kinect1/2 was enabled and detected, offsets and scaling works only when the skeleton is tracked
+			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && (inputManager.enableKinect || inputManager.enableKinect2))
+				hasBeenTracked = true;
+
 			if(gameObject.transform.parent != null)
 			{
 				characterController = gameObject.transform.parent.GetComponent<RUISCharacterController>();
@@ -702,14 +718,6 @@ public class RUISSkeletonController : MonoBehaviour
 				skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRot[i].rotationNoiseCovariance = rotationNoiseCovariance;
 		}
 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].thumbZRotationOffset = thumbZRotationOffset;
-
-		if(!trackAnkle)
-		{
-			if(leftFoot)
-				leftFoot.localRotation = Quaternion.Euler(feetRotationOffset) * leftFoot.localRotation;
-			if(rightFoot)
-				rightFoot.localRotation = Quaternion.Euler(feetRotationOffset) * rightFoot.localRotation;
-		}
 
 		if(neck && leftShoulder && rightShoulder)
 			neckParentsShoulders = leftShoulder.IsChildOf(neck) || rightShoulder.IsChildOf(neck);
@@ -784,7 +792,7 @@ public class RUISSkeletonController : MonoBehaviour
 			UpdateSkeletonPosition();
 
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
-			if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
+			if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking || !hasBeenTracked  /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
 			{
 				UpdateTransform(ref torso, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, maxAngularVelocity, pelvisRotationOffset);
 				UpdateTransform(ref chest, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, maxAngularVelocity, chestRotationOffset); // *** OPTIHACK
@@ -810,7 +818,7 @@ public class RUISSkeletonController : MonoBehaviour
 				
 			if(RUISDisplayManager.IsHmdPresent() && coordinateSystem)
 			{
-				if(hmdRotatesHead)
+				if(hmdRotatesHead && head)
 				{
 					Quaternion hmdRotation = Quaternion.identity;
 
@@ -834,30 +842,24 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 			
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
-			if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
+			if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking || !hasBeenTracked /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
 			{
 				UpdateTransform(ref leftShoulder, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftShoulder, maxAngularVelocity, shoulderRotationOffset);
 				UpdateTransform(ref rightShoulder, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, maxAngularVelocity, shoulderRotationOffset);
-
-				if(trackWrist || !useHierarchicalModel)
-				{
-					UpdateTransform(ref leftHand, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 2 * maxAngularVelocity, handRotationOffset);
-					UpdateTransform(ref rightHand, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 2 * maxAngularVelocity, handRotationOffset);
-				}
+				UpdateTransform(ref rightElbow, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, maxAngularVelocity, elbowRotationOffset);
+				UpdateTransform(ref leftElbow, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow, maxAngularVelocity, elbowRotationOffset);
+				// HACK the multiplier: 2 * maxAngularVelocity
+				UpdateTransform(ref leftHand, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 2 * maxAngularVelocity, handRotationOffset);
+				UpdateTransform(ref rightHand, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 2 * maxAngularVelocity, handRotationOffset);
 
 				UpdateTransform(ref leftHip, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, maxAngularVelocity, hipRotationOffset);
 				UpdateTransform(ref rightHip, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, maxAngularVelocity, hipRotationOffset);
 				UpdateTransform(ref leftKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, maxAngularVelocity, kneeRotationOffset);
 				UpdateTransform(ref rightKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, maxAngularVelocity, kneeRotationOffset);
 				
-				UpdateTransform(ref rightElbow, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, maxAngularVelocity, elbowRotationOffset);
-				UpdateTransform(ref leftElbow, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow, maxAngularVelocity, elbowRotationOffset);
-
-				if(trackAnkle || !useHierarchicalModel)
-				{
-					UpdateTransform(ref leftFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, maxAngularVelocity, feetRotationOffset);
-					UpdateTransform(ref rightFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, maxAngularVelocity, feetRotationOffset);
-				}
+				UpdateTransform(ref leftFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, maxAngularVelocity, feetRotationOffset);
+				UpdateTransform(ref rightFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, maxAngularVelocity, feetRotationOffset);
+				
 				// *** TODO in below clause we need to have initial localRotations...
 //#if UNITY_EDITOR
 //				else
@@ -919,17 +921,17 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 				if(!trackWrist)
 				{
-					if(leftHand && leftElbow)
-						leftHand.localRotation = leftElbow.localRotation;
+					if(leftHand && leftElbow) // *** OPTITRACK4 no axis minus in left handRotationOffset, check that this works
+						leftHand.localRotation  = leftElbow.localRotation  * Quaternion.Euler(handRotationOffset);
 					if(rightHand && rightElbow)
-						rightHand.localRotation = rightElbow.localRotation;
+						rightHand.localRotation = rightElbow.localRotation * Quaternion.Euler(handRotationOffset);
 				}
 				if(!trackAnkle)
 				{
-					if(leftFoot && leftKnee)
-						leftFoot.localRotation = leftKnee.localRotation;
+					if(leftFoot && leftKnee) // *** OPTITRACK4 no axis minus in left feetRotationOffset, check that this works
+						leftFoot.localRotation  = leftKnee.localRotation  * Quaternion.Euler(feetRotationOffset);
 					if(rightFoot && rightKnee)
-						rightFoot.localRotation = rightKnee.localRotation;
+						rightFoot.localRotation = rightKnee.localRotation * Quaternion.Euler(feetRotationOffset);
 				}
 				// *** TODO bone scaling
 			}
@@ -975,8 +977,13 @@ public class RUISSkeletonController : MonoBehaviour
 							ForceUpdatePosition(ref chest, 		   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, 	   11, deltaT);
 							ForceUpdatePosition(ref neck, 		   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck, 		    5, deltaT);
 							ForceUpdatePosition(ref head, 		   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head, 		    4, deltaT);
-							ForceUpdatePosition(ref rightClavicle, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 8, deltaT);
-							ForceUpdatePosition(ref leftClavicle,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle,  9, deltaT);
+							if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
+							{
+								if(customRightClavicle)
+									ForceUpdatePosition(ref rightClavicle, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 8, deltaT);
+								if(customLeftClavicle)
+									ForceUpdatePosition(ref leftClavicle,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle,  9, deltaT);
+							}
 						}
 						// *** OPTIHACK3 above were added
 						ForceUpdatePosition(ref rightShoulder, 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, 0, deltaT);
@@ -1151,11 +1158,13 @@ public class RUISSkeletonController : MonoBehaviour
 
 	private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, float maxAngularVelocity, Vector3 rotOffset)
 	{
+		bool useParentRotation = false;
+
 		if(transformToUpdate == null)
 		{
 			return;
 		}
-
+		
 		if(updateJointPositions && !useHierarchicalModel && jointToGet.positionConfidence >= minimumConfidenceToUpdate)
 		{
 			// HACK TODO: in Kinect 1/2 skeletonManager.skeletons[].torso = skeletonManager.skeletons[].root, so lets use filtered version of that (==skeletonPosition)
@@ -1170,25 +1179,64 @@ public class RUISSkeletonController : MonoBehaviour
 			case RUISSkeletonManager.Joint.LeftClavicle: 
 			case RUISSkeletonManager.Joint.LeftShoulder: 
 			case RUISSkeletonManager.Joint.LeftElbow: 
-			case RUISSkeletonManager.Joint.LeftHand: 
 			case RUISSkeletonManager.Joint.LeftHip: 
 			case RUISSkeletonManager.Joint.LeftKnee: 
-			case RUISSkeletonManager.Joint.LeftFoot: 
 				rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
-			break;
+				break;
+			case RUISSkeletonManager.Joint.LeftHand: 
+				if(!trackWrist)
+				{
+					useParentRotation = true;
+					switch(boneLengthAxis)
+					{
+						case RUISAxis.X: rotOffset.Set(-rotOffset.x, -rotOffset.y,  rotOffset.z); break; // HACK do these work with all rigs?
+						case RUISAxis.Y: rotOffset.Set( rotOffset.x, -rotOffset.y, -rotOffset.z); break;
+						case RUISAxis.Z: rotOffset.Set(-rotOffset.x,  rotOffset.y, -rotOffset.z); break; // *** not tested with any "Z-rig"
+					}
+				}
+				else
+					rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
+				break;
+			case RUISSkeletonManager.Joint.LeftFoot: 
+				if(!trackAnkle)
+				{
+					useParentRotation = true;
+					switch(boneLengthAxis)
+					{
+						case RUISAxis.X: rotOffset.Set(-rotOffset.x, -rotOffset.y,  rotOffset.z); break; // HACK do these work with all rigs?
+						case RUISAxis.Y: rotOffset.Set( rotOffset.x, -rotOffset.y, -rotOffset.z); break;
+						case RUISAxis.Z: rotOffset.Set(-rotOffset.x,  rotOffset.y, -rotOffset.z); break; // *** not tested with any "Z-rig"
+					}
+				}
+				else
+					rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
+				break;
+			case RUISSkeletonManager.Joint.RightHand: 
+				if(!trackWrist)
+					useParentRotation = true;
+				break;
+			case RUISSkeletonManager.Joint.RightFoot:
+				if(!trackAnkle)
+					useParentRotation = true;
+				break;
 		}
+
 		Quaternion rotationOffset = Quaternion.Euler(rotOffset);
 
-		if(updateJointRotations && jointToGet.rotationConfidence >= minimumConfidenceToUpdate)
+		if(updateJointRotations && (jointToGet.rotationConfidence >= minimumConfidenceToUpdate || !hasBeenTracked))
 		{
 			if(useHierarchicalModel)
 			{
-				Quaternion newRotation = transform.rotation * jointToGet.rotation * rotationOffset *
-				                                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
+				Quaternion newRotation;
+				if(useParentRotation && transformToUpdate.parent) // *** OPTIHACK4 check that disabling trackWrist & trackAnkle still works
+					newRotation = transformToUpdate.parent.rotation * rotationOffset;
+				else
+					newRotation = transform.rotation * jointToGet.rotation * rotationOffset *
+					                                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 				transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularVelocity);
 			}
 			else
-			{	// *** TODO check that rotationOffset multiplication belongs to right side
+			{	// *** OPTITRACK4  check that this works and rotationOffset multiplication belongs to right side
 				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation,  jointToGet.rotation * rotationOffset, maxAngularVelocity);
 			}
 		}
@@ -1253,6 +1301,10 @@ public class RUISSkeletonController : MonoBehaviour
 			else
 				forcedJointPositions[jointID] = jointToGet.position;
 			
+			// return; invocation is here as well so that the above Kalman filter will be updated even with "bad" confidence values
+			if(jointToGet.positionConfidence < minimumConfidenceToUpdate && hasBeenTracked)
+				return;
+
 			if(heightAffectsOffsets)
 			{
 				if(jointToGet.jointID != RUISSkeletonManager.Joint.Torso)
@@ -1428,6 +1480,7 @@ public class RUISSkeletonController : MonoBehaviour
 		Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
 		float distance = Vector3.Distance(Vector3.Scale(rootTransform.position, scaler), Vector3.Scale(distanceTo.position, scaler));
 		jointInitialDistances.Add(new KeyValuePair<Transform, Transform>(rootTransform, distanceTo), distance);
+		trackedBoneLengths.Add(new KeyValuePair<Transform, Transform>(rootTransform, distanceTo), distance); // Initialized bone lengths
 		return distance;
 	}
 
@@ -1559,12 +1612,20 @@ public class RUISSkeletonController : MonoBehaviour
 		if(independentTorsoSegmentsScaling || !isMidsectionBone)
 		{
 			if(comparisonBone)
+			{
 				modelBoneLength = jointInitialDistances[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)];
 
-			playerBoneLength = Vector3.Distance(boneToScaleTracker.position, comparisonBoneTracker.position);
-
-			if(hasBeenTracked)
-				newScale = playerBoneLength / modelBoneLength;
+				if(boneToScaleTracker.positionConfidence > 0 && comparisonBoneTracker.positionConfidence > 0)
+				{
+					playerBoneLength = Vector3.Distance(boneToScaleTracker.position, comparisonBoneTracker.position);
+					trackedBoneLengths[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)] = playerBoneLength; // *** OPTIHACK4 check that works
+				}
+				else
+					playerBoneLength = trackedBoneLengths[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)];
+						
+				if(hasBeenTracked)
+					newScale = playerBoneLength / modelBoneLength;
+			}
 		}
 
 		boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, adjustScale * extremityTweaker * (newScale / accumulatedScale) * Vector3.one,
@@ -1586,7 +1647,7 @@ public class RUISSkeletonController : MonoBehaviour
 			return accumulatedScale;
 
 		float modelBoneLength = 1;
-		float playerBoneLength = Vector3.Distance(boneToScaleTracker.position, comparisonBoneTracker.position);
+		float playerBoneLength = 1;
 		float newScale = 1;
 		float thickness = 1;
 		float parentBoneThickness = 1;
@@ -1598,13 +1659,34 @@ public class RUISSkeletonController : MonoBehaviour
 		bool isExtremityJoint = false;
 		bool isEndBone = false;
 		Vector3 previousScale = Vector3.one;
+		Vector3 avatarBoneVector;
 
-		if(boneToScale && comparisonBone)
+		if(comparisonBone)
 		{
 			modelBoneLength = jointInitialDistances[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)];
 
+			if(boneToScaleTracker.positionConfidence > 0 && comparisonBoneTracker.positionConfidence > 0)
+			{
+				playerBoneLength = Vector3.Distance(boneToScaleTracker.position, comparisonBoneTracker.position);
+				trackedBoneLengths[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)] = playerBoneLength; // *** OPTIHACK4 check that works
+			}
+			else
+				playerBoneLength = trackedBoneLengths[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)];
+
 			if(hasBeenTracked)
 				newScale = playerBoneLength / modelBoneLength; //playerBoneLength / modelBoneLength / accumulatedScale;
+
+			avatarBoneVector = boneToScale.position - comparisonBone.position;
+		}
+		else
+		{
+			switch(boneLengthAxis) // *** OPTIHACK4 check that works
+			{
+				case RUISAxis.X: avatarBoneVector = boneToScale.rotation * Vector3.right; 	break;
+				case RUISAxis.Y: avatarBoneVector = boneToScale.rotation * Vector3.up;		break;
+				case RUISAxis.Z: avatarBoneVector = boneToScale.rotation * Vector3.forward; break;
+				default: avatarBoneVector = boneToScale.rotation * Vector3.forward; break;
+			}
 		}
 		
 		switch(boneToScaleTracker.jointID)
@@ -1712,6 +1794,7 @@ public class RUISSkeletonController : MonoBehaviour
 		{
 			if(isExtremityJoint && boneToScale.parent)
 			{
+				Vector3 avatarParentBone = boneToScale.parent.position - boneToScale.position;
 				Vector3 u, v, w; // *** TODO remove w
 				switch(boneLengthAxis)
 				{
@@ -1721,7 +1804,7 @@ public class RUISSkeletonController : MonoBehaviour
 					default: u = Vector3.up; v = Vector3.forward; w = Vector3.right; break;
 				}
 				// *** OPTIHACK2
-//				float jointAngle = Vector3.Angle(boneToScale.position - comparisonBone.position, boneToScale.parent.position - boneToScale.position);
+//				float jointAngle = Vector3.Angle(boneVector, avatarParentBone);
 //				float cosAngle = Mathf.Cos(Mathf.Deg2Rad * jointAngle);
 //				float sinAngle = Mathf.Sin(Mathf.Deg2Rad * jointAngle);
 
@@ -1736,31 +1819,22 @@ public class RUISSkeletonController : MonoBehaviour
 					axisScales[1] = boneToScale.parent.localScale.y;
 					axisScales[2] = boneToScale.parent.localScale.z;
 
-//					skewedScaleTweak = CalculateScale(boneToScale.rotation * w, 
-//													  boneToScale.parent.position - boneToScale.position, axisScales[wAxis], accumulatedScale);	
-//					thicknessU = CalculateScale(boneToScale.rotation * u, 
-//												boneToScale.parent.position - boneToScale.position, axisScales[uAxis], accumulatedScale);
-//					thicknessV = CalculateScale(boneToScale.rotation * v, 
-//												boneToScale.parent.position - boneToScale.position, axisScales[vAxis], accumulatedScale);
+//					skewedScaleTweak = CalculateScale(boneToScale.rotation * w, avatarParentBone, axisScales[wAxis], accumulatedScale);	
+//					thicknessU = CalculateScale(boneToScale.rotation * u, avatarParentBone, axisScales[uAxis], accumulatedScale);
+//					thicknessV = CalculateScale(boneToScale.rotation * v, avatarParentBone, axisScales[vAxis], accumulatedScale);
 
-					skewedScaleTweak = CalculateScale(boneToScale.rotation * w, 
-													  boneToScale.parent.position - boneToScale.position, thickness, accumulatedScale);	
-					thicknessU = CalculateScale(boneToScale.rotation * u, 
-												boneToScale.parent.position - boneToScale.position, thickness, accumulatedScale);
-					thicknessV = CalculateScale(boneToScale.rotation * v, 
-												boneToScale.parent.position - boneToScale.position, thickness, accumulatedScale);						
+					skewedScaleTweak = CalculateScale(boneToScale.rotation * w, avatarParentBone, thickness, accumulatedScale);	
+					thicknessU 		 = CalculateScale(boneToScale.rotation * u, avatarParentBone, thickness, accumulatedScale);
+					thicknessV 		 = CalculateScale(boneToScale.rotation * v, avatarParentBone, thickness, accumulatedScale);						
 //				if(boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightHand)
 //						print(skewedScaleTweak + " " + thicknessU + " " + thicknessV + " " + boneToScale.lossyScale + " " + boneToScale.localScale);
 				}
 				else // Forearm / Lower Leg
 				{	
 //					skewedScaleTweak = extremityTweaker / (accumulatedScale * cosAngle * cosAngle + thickness * sinAngle * sinAngle);
-					skewedScaleTweak = extremityTweaker * CalculateScale(boneToScale.position - comparisonBone.position, 
-																		 boneToScale.parent.position - boneToScale.position, thickness, accumulatedScale);
-					thicknessU = thickness * CalculateScale(boneToScale.rotation * u, 
-															boneToScale.parent.position - boneToScale.position, thickness, accumulatedScale);
-					thicknessV = thickness * CalculateScale(boneToScale.rotation * v, 
-															boneToScale.parent.position - boneToScale.position, thickness, accumulatedScale);
+					skewedScaleTweak = extremityTweaker * CalculateScale(avatarBoneVector, 			avatarParentBone, thickness, accumulatedScale);
+					thicknessU 		 = thickness 		* CalculateScale(boneToScale.rotation * u,  avatarParentBone, thickness, accumulatedScale);
+					thicknessV 		 = thickness 		* CalculateScale(boneToScale.rotation * v,  avatarParentBone, thickness, accumulatedScale);
 
 					// Below is a bit of a hack (average of thickness and accumulatedScale). A proper solution would have two thickness axes
 //					thickness = thickness / (0.5f*(thickness + accumulatedScale) * sinAngle * sinAngle + thickness * cosAngle * cosAngle);
@@ -1869,6 +1943,9 @@ public class RUISSkeletonController : MonoBehaviour
 	private void UpdateEndBoneScaling(Transform boneToScale, Vector3 boneScaleTarget, RUISSkeletonManager.JointData joint, Vector3 previousDelta, 
 									  float accumulatedScale)
 	{
+		if(!boneToScale)
+			return;
+				
 		Vector3 updatedScale = Vector3.one;
 
 		if(scaleBoneLengthOnly && limbsAreScaled)

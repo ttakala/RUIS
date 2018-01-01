@@ -244,14 +244,14 @@ public class RUISSkeletonManager : MonoBehaviour
 //			return;
 //		}
 
-		if (jointID == 8 || jointID == 9) // Heuristic for leftHand, rightHand
+		if(jointID == 8 || jointID == 9) // Heuristic for leftHand, rightHand
 			covarianceMultiplier = 2;
 		
-		if (jointID > 9 && jointID < 14) // Heuristic for leftHip, rightHip, leftKnee, rightKnee
+		if(jointID > 9 && jointID < 14) // Heuristic for leftHip, rightHip, leftKnee, rightKnee
 			covarianceMultiplier = 3;
 		
 		updateAngle = Mathf.Abs(Quaternion.Angle(joint.rotation, skeleton.previousRotation[jointID])); // New measurement vs previous rotation
-		if (updateAngle < angleThreshold)
+		if(updateAngle < angleThreshold)
 		{
 //			joint.rotation = Quaternion.Slerp (skeleton.previousRotation [jointID], joint.rotation, rotateSpeed * kalmanDeltaTime );
 			skeleton.filterRot[jointID].rotationNoiseCovariance = covarianceMultiplier*skeleton.rotationNoiseCovariance*(0.05f + 0.95f*(angleThreshold-updateAngle)/angleThreshold);
@@ -269,42 +269,42 @@ public class RUISSkeletonManager : MonoBehaviour
 		skeleton.previousRotation[jointID] = joint.rotation;
 	}
 
-	void Update () 
+	void Update() 
 	{
-		if (inputManager.enableKinect) 
+		if(inputManager.enableKinect) 
 		{
-			for (int i = 0; i < playerManager.m_MaxNumberOfPlayers; i++) 
+			for(int i = 0; i < playerManager.m_MaxNumberOfPlayers; i++) 
 			{
-				skeletons [kinect1SensorID, i].isTracking = playerManager.GetPlayer (i).Tracking;
+				skeletons[kinect1SensorID, i].isTracking = playerManager.GetPlayer(i).Tracking;
 
-				if (!skeletons [kinect1SensorID, i].isTracking)
-						continue;
+				if(!skeletons [kinect1SensorID, i].isTracking)
+					continue;
 
 				UpdateKinectRootData (i);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.Head, i, ref skeletons [kinect1SensorID, i].head);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.Torso, i, ref skeletons [kinect1SensorID, i].torso);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons [kinect1SensorID, i].leftShoulder);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.LeftElbow, i, ref skeletons [kinect1SensorID, i].leftElbow);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.LeftHand, i, ref skeletons [kinect1SensorID, i].leftHand);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.RightShoulder, i, ref skeletons [kinect1SensorID, i].rightShoulder);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.RightElbow, i, ref skeletons [kinect1SensorID, i].rightElbow);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.RightHand, i, ref skeletons [kinect1SensorID, i].rightHand);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.LeftHip, i, ref skeletons [kinect1SensorID, i].leftHip);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.LeftKnee, i, ref skeletons [kinect1SensorID, i].leftKnee);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.LeftFoot, i, ref skeletons [kinect1SensorID, i].leftFoot);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.RightHip, i, ref skeletons [kinect1SensorID, i].rightHip);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.RightKnee, i, ref skeletons [kinect1SensorID, i].rightKnee);
-				UpdateKinectJointData (OpenNI.SkeletonJoint.RightFoot, i, ref skeletons [kinect1SensorID, i].rightFoot);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.Head, i, ref skeletons[kinect1SensorID, i].head);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.Torso, i, ref skeletons[kinect1SensorID, i].torso);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons[kinect1SensorID, i].leftShoulder);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftElbow, i, ref skeletons[kinect1SensorID, i].leftElbow);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftHand, i, ref skeletons[kinect1SensorID, i].leftHand);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.RightShoulder, i, ref skeletons[kinect1SensorID, i].rightShoulder);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.RightElbow, i, ref skeletons[kinect1SensorID, i].rightElbow);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.RightHand, i, ref skeletons[kinect1SensorID, i].rightHand);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftHip, i, ref skeletons[kinect1SensorID, i].leftHip);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftKnee, i, ref skeletons[kinect1SensorID, i].leftKnee);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftFoot, i, ref skeletons[kinect1SensorID, i].leftFoot);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.RightHip, i, ref skeletons[kinect1SensorID, i].rightHip);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.RightKnee, i, ref skeletons[kinect1SensorID, i].rightKnee);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.RightFoot, i, ref skeletons[kinect1SensorID, i].rightFoot);
 			}
 		}
 
-		if (inputManager.enableKinect2) 
+		if(inputManager.enableKinect2) 
 		{
 			bool isNewFrame = false;
 			Kinect.Body[] data = RUISKinect2Data.getData(out isNewFrame);
 			isNewKinect2Frame = isNewFrame;
 
-			if (data != null && isNewFrame) 
+			if(data != null && isNewFrame) 
 			{
 				Vector3 relativePos;
 				int playerID = 0;
@@ -362,34 +362,34 @@ public class RUISSkeletonManager : MonoBehaviour
 
 						trackingIDtoIndex[body.TrackingId] = playerID;
 						skeletons [kinect2SensorID, playerID].trackingId = body.TrackingId;
-						
-						// HACK TO make things faster, remove later
-//						if(playerID > 0)
-//							return;
-						
+
 						// HACK: Kinect 2 can't track closer than 0.5 meters!
 						if(body.Joints[Kinect.JointType.SpineMid].Position.Z < 0.5f)
 						{
 							skeletons [kinect2SensorID, playerID].isTracking = false;
 						}
 
-
+						// *** OPTIHACK4 this probably should be SpineBase??
 						UpdateKinect2RootData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID);
 
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.Head], body.JointOrientations[Kinect.JointType.Head]), playerID, ref skeletons [kinect2SensorID, playerID].head);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.Neck], body.JointOrientations[Kinect.JointType.Neck]), playerID, ref skeletons [kinect2SensorID, playerID].neck);
+						// *** OPTIHACK4 consider using SpineBase here as well, at least for the position
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].torso);
-						
+
+						// *** OPTIHACK4 This needs to be seriously checked! Is torsoOffsetKinect2 really needed? Does SpineBase have a rotation (that is similar to SpineMid)?
 						// Kinect 2 SpineMid position adjusted to correspond to Kinect 1's torso position (so that hip-torso segment doesn't stretch):
-						// First get SpineBase position
+						// Below gets the SpineBase position with SpineMid orientation (latter of which is discarded because only .position of the JointData is used)
 						tempVector = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawKinect2Location(
 																				GetKinect2JointData(body.Joints[Kinect.JointType.SpineBase], 
 								                    												body.JointOrientations[Kinect.JointType.SpineMid]).position), RUISDevice.Kinect_2);
 						// tempVector = torsoPosition + offset * (spineBasePosition - torsoPosition)
+						// torsoOffsetKinect2 interpolates between SpineMid and SpineBase position
 						tempVector = skeletons [kinect2SensorID, playerID].torso.position + torsoOffsetKinect2 * (tempVector - skeletons[kinect2SensorID, playerID].torso.position);
-						skeletons[kinect2SensorID, playerID].root.position  = tempVector;
-						skeletons[kinect2SensorID, playerID].torso.position = tempVector;
+						skeletons[kinect2SensorID, playerID].root.position  = tempVector; //  root.rotation was set by  UpdateKinect2RootData() to that of SpineMid
+						skeletons[kinect2SensorID, playerID].torso.position = tempVector; // torso.rotation was set by UpdateKinect2JointData() to that of SpineMid
 
+						// *** OPTIHACK4 skeletons [kinect2SensorID, playerID].midSpine <-- change to .chest
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].midSpine);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineShoulder], body.JointOrientations[Kinect.JointType.SpineShoulder]), playerID, ref skeletons [kinect2SensorID, playerID].shoulderSpine);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.ShoulderLeft], body.JointOrientations[Kinect.JointType.ShoulderLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftShoulder);
@@ -432,70 +432,71 @@ public class RUISSkeletonManager : MonoBehaviour
 						// *** TODO: Check that avatar rotations match that of Kinect 2 demo with boxes as body parts. Not sure about shoulders, hands, and thumbs
 						//           Upper arm 45 degree rotation ??
 							
-						// Head
-						relativePos =  skeletons [kinect2SensorID, playerID].head.position -  skeletons [kinect2SensorID, playerID].neck.position;
-						skeletons [kinect2SensorID, playerID].head.rotation = Quaternion.LookRotation(relativePos,
-						                                     			skeletons [kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, -90, -90);
+						// Head // *** OPTIHACK4 change .midSpine to .chest when it has been changed in the above UpdateKinect2JointData() call
+						relativePos =  skeletons[kinect2SensorID, playerID].head.position -  skeletons[kinect2SensorID, playerID].neck.position;
+						skeletons[kinect2SensorID, playerID].head.rotation = Quaternion.LookRotation(relativePos,
+						                                     			skeletons[kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, -90, -90);
 
-						// Torso
-						relativePos =  skeletons [kinect2SensorID, playerID].midSpine.position - skeletons [kinect2SensorID, playerID].shoulderSpine.position;
-						skeletons [kinect2SensorID, playerID].torso.rotation  = Quaternion.LookRotation(relativePos, 
-						           			skeletons [kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90); // TODO: Bug when turning right
+						// Torso // *** OPTIHACK4 change .midSpine to .chest when it has been changed in the above UpdateKinect2JointData() call
+						relativePos =  skeletons[kinect2SensorID, playerID].midSpine.position - skeletons[kinect2SensorID, playerID].shoulderSpine.position;
+						skeletons[kinect2SensorID, playerID].torso.rotation  = Quaternion.LookRotation(relativePos, 
+						           			skeletons[kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90); // TODO: Bug when turning right
 						
 						// Upper leg
-						skeletons [kinect2SensorID, playerID].leftHip.rotation = skeletons [kinect2SensorID, playerID].leftKnee.rotation * Quaternion.Euler(180, -90, 0);
-						skeletons [kinect2SensorID, playerID].rightHip.rotation = skeletons [kinect2SensorID, playerID].rightKnee.rotation * Quaternion.Euler(180, 90, 0);;
+						skeletons[kinect2SensorID, playerID].leftHip.rotation = skeletons[kinect2SensorID, playerID].leftKnee.rotation * Quaternion.Euler(180, -90, 0);
+						skeletons[kinect2SensorID, playerID].rightHip.rotation = skeletons[kinect2SensorID, playerID].rightKnee.rotation * Quaternion.Euler(180, 90, 0);;
 						
-						// Lower leg
-						relativePos = skeletons [kinect2SensorID, playerID].leftAnkle.position - skeletons [kinect2SensorID, playerID].leftKnee.position;
-						skeletons [kinect2SensorID, playerID].leftKnee.rotation = Quaternion.LookRotation(relativePos,
-						                                                                                  skeletons [kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90);
+						// Lower leg // *** OPTIHACK4 change .midSpine to .chest when it has been changed in the above UpdateKinect2JointData() call
+						relativePos = skeletons[kinect2SensorID, playerID].leftAnkle.position - skeletons[kinect2SensorID, playerID].leftKnee.position;
+						skeletons[kinect2SensorID, playerID].leftKnee.rotation = Quaternion.LookRotation(relativePos,
+						                                                                                  skeletons[kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90);
 						//						skeletons [kinect2SensorID, playerID].leftKnee.rotation = skeletons [kinect2SensorID, playerID].leftAnkle.rotation  * Quaternion.Euler(180, -90, 0);
-						
-						relativePos = skeletons [kinect2SensorID, playerID].rightAnkle.position - skeletons [kinect2SensorID, playerID].rightKnee.position;
-						skeletons [kinect2SensorID, playerID].rightKnee.rotation = Quaternion.LookRotation(relativePos,
-						                                                                                   skeletons [kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90);
+
+						// *** OPTIHACK4 change .midSpine to .chest when it has been changed in the above UpdateKinect2JointData() call
+						relativePos = skeletons[kinect2SensorID, playerID].rightAnkle.position - skeletons[kinect2SensorID, playerID].rightKnee.position;
+						skeletons[kinect2SensorID, playerID].rightKnee.rotation = Quaternion.LookRotation(relativePos,
+						                                                                                   skeletons[kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90);
 						//						skeletons [kinect2SensorID, playerID].rightKnee.rotation = skeletons [kinect2SensorID, playerID].rightAnkle.rotation  * Quaternion.Euler(180, 90, 0);;
 						
 						// Feet / Ankles
-						relativePos = skeletons [kinect2SensorID, playerID].leftAnkle.position - skeletons [kinect2SensorID, playerID].leftFoot.position;
-						skeletons [kinect2SensorID, playerID].leftFoot.rotation = Quaternion.LookRotation(relativePos) * Quaternion.Euler(0, 180, 0); 
+						relativePos = skeletons[kinect2SensorID, playerID].leftAnkle.position - skeletons[kinect2SensorID, playerID].leftFoot.position;
+						skeletons[kinect2SensorID, playerID].leftFoot.rotation = Quaternion.LookRotation(relativePos) * Quaternion.Euler(0, 180, 0); 
 						
-						relativePos = skeletons [kinect2SensorID, playerID].rightAnkle.position - skeletons [kinect2SensorID, playerID].rightFoot.position;
-						skeletons [kinect2SensorID, playerID].rightFoot.rotation = Quaternion.LookRotation(relativePos) * Quaternion.Euler(0, 180, 0);
+						relativePos = skeletons[kinect2SensorID, playerID].rightAnkle.position - skeletons[kinect2SensorID, playerID].rightFoot.position;
+						skeletons[kinect2SensorID, playerID].rightFoot.rotation = Quaternion.LookRotation(relativePos) * Quaternion.Euler(0, 180, 0);
 
 						// Upper arm
 						//relativePos =  skeletons [kinect2SensorID, playerID].leftElbow.position - skeletons [kinect2SensorID, playerID].leftShoulder.position;
 						//skeletons [kinect2SensorID, playerID].leftShoulder.rotation = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].leftElbow.rotation * Vector3.right) * Quaternion.Euler(-45, 90, 0);
-						skeletons [kinect2SensorID, playerID].leftShoulder.rotation = skeletons [kinect2SensorID, playerID].leftElbow.rotation * Quaternion.Euler(0, 45, -90);
+						skeletons[kinect2SensorID, playerID].leftShoulder.rotation = skeletons[kinect2SensorID, playerID].leftElbow.rotation * Quaternion.Euler(0, 45, -90);
 
 						//relativePos = skeletons [kinect2SensorID, playerID].rightElbow.position - skeletons [kinect2SensorID, playerID].rightShoulder.position;
 						//skeletons [kinect2SensorID, playerID].rightShoulder.rotation = Quaternion.LookRotation(relativePos, skeletons [kinect2SensorID, playerID].rightElbow.rotation * Vector3.right) * Quaternion.Euler(135, 270, 0);
-						skeletons [kinect2SensorID, playerID].rightShoulder.rotation = skeletons [kinect2SensorID, playerID].rightElbow.rotation * Quaternion.Euler(0, -45, 90);
+						skeletons[kinect2SensorID, playerID].rightShoulder.rotation = skeletons[kinect2SensorID, playerID].rightElbow.rotation * Quaternion.Euler(0, -45, 90);
 						
 						// Lower arm
-						relativePos = skeletons [kinect2SensorID, playerID].leftElbow.position - skeletons [kinect2SensorID, playerID].leftWrist.position;
-						skeletons [kinect2SensorID, playerID].leftElbow.rotation = Quaternion.LookRotation(relativePos, 
-						                                             skeletons [kinect2SensorID, playerID].leftShoulder.rotation * Vector3.forward) * Quaternion.Euler(180, -90, 0); 
+						relativePos = skeletons[kinect2SensorID, playerID].leftElbow.position - skeletons[kinect2SensorID, playerID].leftWrist.position;
+						skeletons[kinect2SensorID, playerID].leftElbow.rotation = Quaternion.LookRotation(relativePos, 
+						                                             skeletons[kinect2SensorID, playerID].leftShoulder.rotation * Vector3.forward) * Quaternion.Euler(180, -90, 0); 
 						//skeletons [kinect2SensorID, playerID].leftElbow.rotation = skeletons [kinect2SensorID, playerID].leftWrist.rotation  * Quaternion.Euler(0, 180, -90); 
 						
-						relativePos = skeletons [kinect2SensorID, playerID].rightElbow.position - skeletons [kinect2SensorID, playerID].rightWrist.position;
-						skeletons [kinect2SensorID, playerID].rightElbow.rotation = Quaternion.LookRotation(relativePos,
-						                                             skeletons [kinect2SensorID, playerID].rightShoulder.rotation * Vector3.forward) * Quaternion.Euler(180, 90, 0); 
+						relativePos = skeletons[kinect2SensorID, playerID].rightElbow.position - skeletons[kinect2SensorID, playerID].rightWrist.position;
+						skeletons[kinect2SensorID, playerID].rightElbow.rotation = Quaternion.LookRotation(relativePos,
+						                                             skeletons[kinect2SensorID, playerID].rightShoulder.rotation * Vector3.forward) * Quaternion.Euler(180, 90, 0); 
 						//skeletons [kinect2SensorID, playerID].rightElbow.rotation = skeletons [kinect2SensorID, playerID].rightWrist.rotation  * Quaternion.Euler(0, -180, 90); 
 						
 						// Hands
-						skeletons [kinect2SensorID, playerID].leftHand.rotation *= Quaternion.Euler(0, 180, -90);
-						skeletons [kinect2SensorID, playerID].rightHand.rotation *= Quaternion.Euler(0, 180, 90);
+						skeletons[kinect2SensorID, playerID].leftHand.rotation *= Quaternion.Euler(0, 180, -90);
+						skeletons[kinect2SensorID, playerID].rightHand.rotation *= Quaternion.Euler(0, 180, 90);
 
 						// Thumbs
-						relativePos = skeletons [kinect2SensorID, playerID].leftThumb.position - skeletons[kinect2SensorID, playerID].leftWrist.position;
-						skeletons [kinect2SensorID, playerID].leftThumb.rotation = Quaternion.LookRotation(relativePos,
+						relativePos = skeletons[kinect2SensorID, playerID].leftThumb.position - skeletons[kinect2SensorID, playerID].leftWrist.position;
+						skeletons[kinect2SensorID, playerID].leftThumb.rotation = Quaternion.LookRotation(relativePos,
 																						skeletons[kinect2SensorID, playerID].leftHand.rotation * Vector3.up)
-																						* Quaternion.Euler(-90, 0,  skeletons[kinect2SensorID, playerID].thumbZRotationOffset); 
+																						* Quaternion.Euler(-90, 0, skeletons[kinect2SensorID, playerID].thumbZRotationOffset); 
 						
-						relativePos = skeletons [kinect2SensorID, playerID].rightThumb.position - skeletons[kinect2SensorID, playerID].rightWrist.position;
-						skeletons [kinect2SensorID, playerID].rightThumb.rotation = Quaternion.LookRotation(relativePos,
+						relativePos = skeletons[kinect2SensorID, playerID].rightThumb.position - skeletons[kinect2SensorID, playerID].rightWrist.position;
+						skeletons[kinect2SensorID, playerID].rightThumb.rotation = Quaternion.LookRotation(relativePos,
 						                                                                skeletons[kinect2SensorID, playerID].rightHand.rotation * Vector3.up)
 																						* Quaternion.Euler(-90, 0, -skeletons[kinect2SensorID, playerID].thumbZRotationOffset); 
 
@@ -503,33 +504,33 @@ public class RUISSkeletonManager : MonoBehaviour
 						switch(body.HandLeftState) 
 						{
 							case Kinect.HandState.Closed:
-								skeletons [kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.closed;
+								skeletons[kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.closed;
 							break;	
 							case Kinect.HandState.Open:
-								skeletons [kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.open;
+								skeletons[kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.open;
 							break;	
 							case Kinect.HandState.Lasso:
-								skeletons [kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.pointing;
+								skeletons[kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.pointing;
 							break;
 							case Kinect.HandState.Unknown:
 							case Kinect.HandState.NotTracked:
-								skeletons [kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.unknown;
+								skeletons[kinect2SensorID, playerID].leftHandStatus = RUISSkeletonManager.Skeleton.handState.unknown;
 							break;
 						}
 						switch(body.HandRightState) 
 						{
 							case Kinect.HandState.Closed:
-								skeletons [kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.closed;
+								skeletons[kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.closed;
 								break;	
 							case Kinect.HandState.Open:
-								skeletons [kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.open;
+								skeletons[kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.open;
 								break;	
 							case Kinect.HandState.Lasso:
-								skeletons [kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.pointing;
+								skeletons[kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.pointing;
 								break;
 							case Kinect.HandState.Unknown:
 							case Kinect.HandState.NotTracked:
-								skeletons [kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.unknown;
+								skeletons[kinect2SensorID, playerID].rightHandStatus = RUISSkeletonManager.Skeleton.handState.unknown;
 								break;
 						}
 
@@ -568,10 +569,10 @@ public class RUISSkeletonManager : MonoBehaviour
 							////							skeletons[kinect2SensorID, playerID].torso.rotation = skeletons[kinect2SensorID, playerID].filterRot[5].Update(measuredRotation, kalmanDeltaTime);
 							//							
 							// TODO uncomment
-//							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].midSpine, 6, kalmanDeltaTime);
+//							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].chest, 6, kalmanDeltaTime);
 							//
-							////							measuredRotation = skeletons[kinect2SensorID, playerID].midSpine.rotation;
-							////							skeletons[kinect2SensorID, playerID].midSpine.rotation = skeletons[kinect2SensorID, playerID].filterRot[6].Update(measuredRotation, kalmanDeltaTime);
+							////							measuredRotation = skeletons[kinect2SensorID, playerID].chest.rotation;
+							////							skeletons[kinect2SensorID, playerID].chest.rotation = skeletons[kinect2SensorID, playerID].filterRot[6].Update(measuredRotation, kalmanDeltaTime);
 							//							
 							// TODO uncomment
 //							filterJointRotation(ref skeletons[kinect2SensorID, playerID], ref skeletons[kinect2SensorID, playerID].shoulderSpine, 7, kalmanDeltaTime);
@@ -625,6 +626,7 @@ public class RUISSkeletonManager : MonoBehaviour
 				timeSinceLastKinect2Frame += Time.deltaTime;
 		}
 	}
+
 	/*
 	 * 	Kinect 1 functions
 	 */
@@ -661,22 +663,24 @@ public class RUISSkeletonManager : MonoBehaviour
 		jointData.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);
         jointData.rotationConfidence = data.Orientation.Confidence;
     }
+
 	/*
 	 * 	Kinect 2 functions
 	 */
 	private void UpdateKinect2RootData(JointData torso, int player)
 	{
-		Vector3 newRootPosition = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinect2Location(torso.position), RUISDevice.Kinect_2);
-		skeletons [kinect2SensorID, player].root.position = newRootPosition;
-		skeletons [kinect2SensorID, player].root.positionConfidence = torso.positionConfidence;
-		skeletons [kinect2SensorID, player].root.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinect2Rotation(torso.rotation), RUISDevice.Kinect_2);
-		skeletons [kinect2SensorID, player].root.rotationConfidence = torso.rotationConfidence;
+		Vector3 newRootPosition = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawKinect2Location(torso.position), RUISDevice.Kinect_2);
+		skeletons[kinect2SensorID, player].root.position = newRootPosition;
+		skeletons[kinect2SensorID, player].root.positionConfidence = torso.positionConfidence;
+		skeletons[kinect2SensorID, player].root.rotation = coordinateSystem.ConvertRotation(coordinateSystem.ConvertRawKinect2Rotation(torso.rotation), RUISDevice.Kinect_2);
+		skeletons[kinect2SensorID, player].root.rotationConfidence = torso.rotationConfidence;
 	}
+
 	private void UpdateKinect2JointData(JointData joint, int player, ref JointData jointData)
 	{
-		jointData.position = coordinateSystem.ConvertLocation (coordinateSystem.ConvertRawKinect2Location(joint.position), RUISDevice.Kinect_2);
+		jointData.position = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawKinect2Location(joint.position), RUISDevice.Kinect_2);
 		jointData.positionConfidence = joint.positionConfidence; 
-		jointData.rotation = coordinateSystem.ConvertRotation (coordinateSystem.ConvertRawKinect2Rotation(joint.rotation), RUISDevice.Kinect_2);
+		jointData.rotation = coordinateSystem.ConvertRotation(coordinateSystem.ConvertRawKinect2Rotation(joint.rotation), RUISDevice.Kinect_2);
 		jointData.rotationConfidence = joint.rotationConfidence;
 	}
 
@@ -686,7 +690,7 @@ public class RUISSkeletonManager : MonoBehaviour
 		if(playerID >= skeletons.GetLength(1))
 			return null;
 
-        switch (joint)
+        switch(joint)
         {
             case Joint.Root:
 			return skeletons[bodyTrackingDeviceID, playerID].root;
@@ -738,19 +742,23 @@ public class RUISSkeletonManager : MonoBehaviour
 		jointData.rotation = new Quaternion(jointRotation.Orientation.X,jointRotation.Orientation.Y,jointRotation.Orientation.Z,jointRotation.Orientation.W);
 		jointData.position = new Vector3(jointPosition.Position.X, jointPosition.Position.Y, jointPosition.Position.Z);
 
-		if(jointPosition.TrackingState == Kinect.TrackingState.Tracked)  {
+		if(jointPosition.TrackingState == Kinect.TrackingState.Tracked)  
+		{
 			jointData.positionConfidence = 1.0f;
 			jointData.rotationConfidence = 1.0f;
 		}
-		else if(jointPosition.TrackingState == Kinect.TrackingState.Inferred)  {
+		else if(jointPosition.TrackingState == Kinect.TrackingState.Inferred)  
+		{
 			jointData.positionConfidence = 0.5f;
 			jointData.rotationConfidence = 0.5f;
 		}
-		else if(jointPosition.TrackingState == Kinect.TrackingState.NotTracked)  {
+		else if(jointPosition.TrackingState == Kinect.TrackingState.NotTracked)  
+		{
 			jointData.positionConfidence = 0.0f;
 			jointData.rotationConfidence = 0.0f;
 		}
-		else {
+		else 
+		{
 			jointData.positionConfidence = 0.0f;
 			jointData.rotationConfidence = 0.0f;
 		}

@@ -450,17 +450,16 @@ public class RUISSkeletonControllerEditor : Editor
 																				  + "model size correspond to the tracked person size. This "
 																				  + "option is only available for hierarchical models."));
 
-		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent(  "Bone Length Axis", "Determines the axis that points the bone direction in each " 
-		                                                             + "joint transform of the animation rig. This value depends on your rig, and it is "
-		                                                             + "only used if you have \"Scale Length Only\" enabled or you are using Kinect 2 to "
-		                                                             + "curl fingers (fist clenching). You can discover the correct axis by examining "
-		                                                             + "the animation rig hierarchy, by looking at the directional axis between parent "
-		                                                             + "joints and their child joints in local coordinate system. IMPORTANT: Disable the "
-		                                                             + "below \"Scale Length Only\" option if the same localScale axis is not consistently "
-		                                                             + "used in all the joints of the animation rig."));
+		                                                             + "joint transform of the animation rig. This value depends on your rig. You can "
+																	 + "discover the correct axis by examining the animation rig hierarchy, by looking"
+																	 + "at the directional axis between parent joints and their child joints in local "
+																	 + "coordinate system. IMPORTANT: Disable the below \"Scale Length Only\" option "
+																	 + "if the same localScale axis is not consistently used in all the joints of the "
+																	 + "animation rig."));
 
+		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 		EditorGUILayout.PropertyField(independentTorsoSegmentsScaling, new GUIContent("Torso Segments", "Apply uniform scaling to individual "
 																			+ "torso segments (abdomen and chest) to resolve segment proportion " 
 																			+ "differences between the user and avatar model. If you leave this "
@@ -899,6 +898,7 @@ public class RUISSkeletonControllerEditor : Editor
 																				+ "positions and rotations needed to update these values. "
 																				+ "The confidence is either 0; 0,5; or 1. This setting is only "
 																				+ "relevant with Kinect tracking."));
+		minimumConfidenceToUpdate.floatValue = Mathf.Clamp01(minimumConfidenceToUpdate.floatValue);
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 
