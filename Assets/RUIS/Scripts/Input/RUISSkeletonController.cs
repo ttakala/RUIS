@@ -340,6 +340,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public Quaternion clenchedLeftThumbMCP;
 	public Quaternion clenchedLeftThumbIP;
 
+	public bool keepPlayModeChanges = true; // This is only for the custom inspector to use
+
 	void Awake()
 	{
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
@@ -569,6 +571,7 @@ public class RUISSkeletonController : MonoBehaviour
 								jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
 		}
 			
+		// *** TODO implementation that uses these
 		automaticBoneScales[RUISSkeletonManager.Joint.Torso] = 1; // Are we multiplying (1) or adding (0)?
 		automaticBoneScales[RUISSkeletonManager.Joint.Chest] = 1;
 		automaticBoneScales[RUISSkeletonManager.Joint.Neck]  = 1;
@@ -705,9 +708,6 @@ public class RUISSkeletonController : MonoBehaviour
 		initialWorldPosition = transform.position;
 		initialWorldRotation = transform.rotation;
 		initialLossyScale = transform.lossyScale;
-
-		if(hmdRotatesHead && !RUISDisplayManager.IsHmdPresent())
-			hmdRotatesHead = false;
 
 		// HACK for filtering Kinect 2 arm rotations
 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRotations = filterRotations;

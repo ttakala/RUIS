@@ -22,12 +22,17 @@ using System.Reflection;
 [CanEditMultipleObjects]
 public class RUISSkeletonControllerEditor : Editor
 {
-	// Below those SerializedProperty fields that are marked with public can be saved after exiting play mode
+	Color customLabelColor   = new Color(0.0f, 0.5f, 0.8f);
+	Color keepPlayModeChangesRGB = new Color(1.0f, 0.9f, 0.5f);
+
+	// Below those SerializedProperty fields that are marked with public can be kept (saved) after exiting play mode
 
 	SerializedProperty bodyTrackingDevice;
-	public SerializedProperty playerId;
-	SerializedProperty switchToAvailableKinect;
 
+	public SerializedProperty keepPlayModeChanges;
+	public SerializedProperty playerId;
+
+	SerializedProperty switchToAvailableKinect;
 	SerializedProperty useHierarchicalModel;
 
 	public SerializedProperty updateRootPosition;
@@ -42,7 +47,9 @@ public class RUISSkeletonControllerEditor : Editor
 
 	public SerializedProperty scaleHierarchicalModelBones;
 	public SerializedProperty scaleBoneLengthOnly;
-	SerializedProperty boneLengthAxis;
+
+	public SerializedProperty boneLengthAxis;
+
 	public SerializedProperty limbsAreScaled;
 	public SerializedProperty independentTorsoSegmentsScaling;
 	public SerializedProperty heightAffectsOffsets;
@@ -86,7 +93,9 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty rightThumb;
 
 	public SerializedProperty maxScaleFactor;
-	public SerializedProperty minimumConfidenceToUpdate;
+
+	SerializedProperty minimumConfidenceToUpdate;
+
 	public SerializedProperty rotationDamping;
 	public SerializedProperty forearmLengthTweaker;
 	public SerializedProperty shinLengthTweaker;
@@ -157,11 +166,11 @@ public class RUISSkeletonControllerEditor : Editor
 
 	SerializedProperty customConversionType;
 
-	GUIStyle customLabelStyle = new GUIStyle();
-	GUIStyle customItalicLabelStyle = new GUIStyle();
+	GUIStyle coloredBoldStyle = new GUIStyle();
+	GUIStyle coloredBoldItalicStyle = new GUIStyle();
 	Color normalLabelColor;
-	Color customLabelColor = new Color(0.0f, 0.5f, 0.8f);
-	GUIStyle italicLabelStyle = new GUIStyle();
+	Color normalGUIColor;
+	GUIStyle boldItalicStyle = new GUIStyle();
 
 	RUISSkeletonController skeletonController;
 	Animator animator;
@@ -172,11 +181,13 @@ public class RUISSkeletonControllerEditor : Editor
 
 	public void OnEnable()
 	{
-		customLabelStyle.fontStyle = FontStyle.Bold;
-		customLabelStyle.normal.textColor = customLabelColor;
-		customItalicLabelStyle.fontStyle = FontStyle.BoldAndItalic;
-		customItalicLabelStyle.normal.textColor = customLabelColor;
-		italicLabelStyle.fontStyle = FontStyle.BoldAndItalic;
+		coloredBoldStyle.fontStyle = FontStyle.Bold;
+		coloredBoldStyle.normal.textColor = customLabelColor;
+		coloredBoldItalicStyle.fontStyle = FontStyle.BoldAndItalic;
+		coloredBoldItalicStyle.normal.textColor = customLabelColor;
+		boldItalicStyle.fontStyle = FontStyle.BoldAndItalic;
+
+		keepPlayModeChanges = serializedObject.FindProperty("keepPlayModeChanges");
 
 		bodyTrackingDevice = serializedObject.FindProperty("bodyTrackingDevice");
 		playerId = serializedObject.FindProperty("playerId");
@@ -324,10 +335,21 @@ public class RUISSkeletonControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-
 		EditorGUILayout.Space();
 		 
 		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", "The source device for body tracking.")); 
+
+		normalGUIColor = GUI.color;	
+		if(!EditorApplication.isPlaying)
+			GUI.color = keepPlayModeChangesRGB;
+
+		SwitchToKeepChangesFieldColor();
+		EditorGUILayout.PropertyField(keepPlayModeChanges, new GUIContent("Keep PlayMode Changes", "Any changes made in PlayMode will persist "
+														+ "for those variables that are marked with RGB(" + keepPlayModeChangesRGB.r + ", " 
+														+ keepPlayModeChangesRGB.g + ", " + keepPlayModeChangesRGB.b  +  ") when exiting PlayMode."));
+		if(!EditorApplication.isPlaying)
+			GUI.color = normalGUIColor;
+		
 
 		EditorGUILayout.Space();
 		EditorGUILayout.PropertyField(playerId, new GUIContent("Skeleton ID", "The skeleton ID number as reported by Kinect (i.e. 0 for the first "
@@ -357,14 +379,17 @@ public class RUISSkeletonControllerEditor : Editor
 			                                                                      + "switch Body Tracking Device from Kinect 1 to Kinect 2 in run-time if "
 			                                                                      + "the latter is enabled but the former is not, and vice versa."));
         }
-		
+
 		RUISEditorUtility.HorizontalRuler();
+
 
         EditorGUILayout.PropertyField(useHierarchicalModel, new GUIContent(  "Hierarchical Model", "Is the model rig hierarchical (a tree) "
 		                                                                   + "instead of non-hierarchical (all bones are on same level)? "
 																		   + "in almost all cases this option should be enabled."));
 
-        EditorGUILayout.PropertyField(updateRootPosition, new GUIContent(  "Update Root Position", "Update the position of this GameObject according "
+		SwitchToKeepChangesFieldColor();
+
+		EditorGUILayout.PropertyField(updateRootPosition, new GUIContent(  "Update Root Position", "Update the position of this GameObject according "
 		                                                                 + "to the skeleton root position"));
 
 		GUI.enabled = updateRootPosition.boolValue;
@@ -498,23 +523,24 @@ public class RUISSkeletonControllerEditor : Editor
 
 		EditorGUI.indentLevel--;
 
-        if(!useHierarchicalModel.boolValue)
-		{
-			scaleHierarchicalModelBones.boolValue = false;
-		}
+//        if(!useHierarchicalModel.boolValue)
+//		{
+//			scaleHierarchicalModelBones.boolValue = false;
+//		}
 //		if(!scaleHierarchicalModelBones.boolValue)
 //			scaleBoneLengthOnly.boolValue = false;
 
         GUI.enabled = true;
 
 		EditorGUILayout.Space();
-		
+
+		SwitchToNormalFieldColor();
 		
 		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
 		{	
 			RUISEditorUtility.HorizontalRuler();
 
-			EditorGUILayout.LabelField("  Custom Mocap Source Transforms", customItalicLabelStyle);
+			EditorGUILayout.LabelField("  Custom Mocap Source Transforms", coloredBoldItalicStyle);
 
 			normalLabelColor = EditorStyles.label.normal.textColor;
 			EditorStyles.label.normal.textColor = customLabelColor;
@@ -547,7 +573,7 @@ public class RUISSkeletonControllerEditor : Editor
 																	+ "\"Skeleton ID\" and you can leave the below Custom Source fields empty."));
 			EditorGUILayout.Space();
 			
-			EditorGUILayout.LabelField("Source for Torso and Head", customLabelStyle);
+			EditorGUILayout.LabelField("Source for Torso and Head", coloredBoldStyle);
 			EditorGUILayout.PropertyField(customTorso, 	 new GUIContent("Pelvis", 	"The pelvis bone, has to be parent or grandparent of all the "
 																				  + "other bones except root bone. Can be same as root bone."));
 			EditorGUILayout.PropertyField(customChest, 	 new GUIContent("Chest", 	"The chest bone, has to be child or grandchild of pelvis."));
@@ -556,7 +582,7 @@ public class RUISSkeletonControllerEditor : Editor
 			
 			EditorGUILayout.Space();
 			
-			EditorGUILayout.LabelField("Source for Arms", customLabelStyle);
+			EditorGUILayout.LabelField("Source for Arms", coloredBoldStyle);
 			EditorGUIUtility.labelWidth = Screen.width / 6;
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
@@ -586,7 +612,7 @@ public class RUISSkeletonControllerEditor : Editor
 			
 			EditorGUILayout.Space();
 			
-			EditorGUILayout.LabelField("Source for Legs", customLabelStyle);
+			EditorGUILayout.LabelField("Source for Legs", coloredBoldStyle);
 			EditorGUIUtility.labelWidth = Screen.width / 6;
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
@@ -610,7 +636,7 @@ public class RUISSkeletonControllerEditor : Editor
 			
 			EditorGUILayout.Space();
 			
-			EditorGUILayout.LabelField("Source for Fingers", customLabelStyle);
+			EditorGUILayout.LabelField("Source for Fingers", coloredBoldStyle);
 			EditorGUIUtility.labelWidth = Screen.width / 6;
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
@@ -628,7 +654,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		RUISEditorUtility.HorizontalRuler();
 
-		EditorGUILayout.LabelField("  Avatar Target Transforms", italicLabelStyle);
+		EditorGUILayout.LabelField("  Avatar Target Transforms", boldItalicStyle);
 
 		EditorGUILayout.Space();
 		string mocapSource = "Kinect.";
@@ -811,7 +837,11 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUIUtility.labelWidth = 0;
 
 		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
+		{	
+			SwitchToKeepChangesFieldColor();
 			EditorGUILayout.PropertyField(trackWrist, new GUIContent("Track Wrist Rotation", "Track the rotation of the hand bone"));
+			SwitchToNormalFieldColor();
+		}
 
 		// TODO: Restore this when implementation is fixed
 //		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
@@ -838,8 +868,12 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUIUtility.labelWidth = 0;
 
 		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
+		{
+			SwitchToKeepChangesFieldColor();
 			EditorGUILayout.PropertyField(trackAnkle, new GUIContent("Track Ankle Rotation", "Track the rotation of the ankle bone"));
-		
+			SwitchToNormalFieldColor();
+		}
+
 		EditorGUILayout.Space();
 
 		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
@@ -858,6 +892,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
 			{
+				SwitchToKeepChangesFieldColor();
 				EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent(  "Track Fist Clenching", "When user is making a fist, curl finger joints "
 				                                                              + "(child gameObjects under 'Left Hand' and 'Right Hand' whose name include "
 				                                                              + "the substring 'finger' or 'Finger'.). If you have assigned 'Left Thumb' " +
@@ -874,6 +909,7 @@ public class RUISSkeletonControllerEditor : Editor
 						skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
 							thumbZRotationOffset.floatValue;
 				}
+				SwitchToNormalFieldColor();
 			}
 
 		}
@@ -881,8 +917,10 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Space();
 
 		RUISEditorUtility.HorizontalRuler();
-		
-		EditorGUILayout.LabelField("  Adjustments", italicLabelStyle);
+
+		SwitchToKeepChangesFieldColor();
+
+		EditorGUILayout.LabelField("  Adjustments", boldItalicStyle);
         EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
 		                                                              + "for damping avatar bone movement (smaller values). The values are in "
 																	  + "degrees. For Kinect and similar devices, a value of 360 is suitable. For "
@@ -894,11 +932,13 @@ public class RUISSkeletonControllerEditor : Editor
 		                                                             + "change per second when using \"Hierarchical Model\" and \"Scale Bones\""));
 
 		GUI.enabled = true;
+		SwitchToNormalFieldColor();
 		EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Min Confidence to Update", "The minimum confidence in joint "
 																				+ "positions and rotations needed to update these values. "
 																				+ "The confidence is either 0; 0,5; or 1. This setting is only "
 																				+ "relevant with Kinect tracking."));
 		minimumConfidenceToUpdate.floatValue = Mathf.Clamp01(minimumConfidenceToUpdate.floatValue);
+		SwitchToKeepChangesFieldColor();
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 
@@ -1010,11 +1050,25 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.PropertyField(feetRotationOffset, new GUIContent("Feet (Rot)", "Offsets the foot joint rotations in the local body segment frame (Euler angles)."));
 			EditorGUI.indentLevel -= 1;
 		}
-		
+
+		SwitchToNormalFieldColor();
+
 		GUI.enabled = true;
 
         serializedObject.ApplyModifiedProperties();
     }
+
+	private void SwitchToKeepChangesFieldColor()
+	{
+		if(EditorApplication.isPlaying && keepPlayModeChanges.boolValue)
+			GUI.color = keepPlayModeChangesRGB;
+	}
+
+	private void SwitchToNormalFieldColor()
+	{
+		if(EditorApplication.isPlaying)
+			GUI.color = normalGUIColor;
+	}
 
 	#if UNITY_EDITOR
 	public void Awake()
@@ -1166,7 +1220,10 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 				if(entry.Key && entry.Value != null)
 				{
 					skeletonController = entry.Key.GetComponent<RUISSkeletonController>();
-					if(skeletonController)
+					// *** OPTIHACK5 TODO THIS DOESN'T WORK WITH MECANIMBLENDED CHARACTER
+					if(skeletonController && (   (!skeletonController.mecanimCombiner && skeletonController.keepPlayModeChanges)
+											  || (skeletonController.mecanimCombiner && skeletonController.mecanimCombiner.skeletonController 
+												  && skeletonController.mecanimCombiner.skeletonController.keepPlayModeChanges)))
 					{
 //						Debug.Log(" shutting down " + entry.Value.Length + " " + fieldNameList.Count);
 						for(int i = 0; i < entry.Value.Length; ++i)
@@ -1191,7 +1248,7 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 			return;
 
 		fieldNameList = new List<string>();
-		
+
 		editorFields = typeof(RUISSkeletonControllerEditor).GetFields();
 		if(editor && editorFields != null)
 		{
@@ -1205,11 +1262,13 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 						case SerializedPropertyType.Integer:
 						case SerializedPropertyType.Boolean:
 						case SerializedPropertyType.Vector3:
+						case SerializedPropertyType.Enum:
 							fieldNameList.Add(((SerializedProperty) editorFields[i].GetValue(editor)).name);
 						break;
 					}
 				}
 			}
+
 //			foreach(string name in fieldNameList)
 //				Debug.Log("  var name: " + name);
 		}
