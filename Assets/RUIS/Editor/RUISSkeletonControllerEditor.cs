@@ -1221,9 +1221,8 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 				{
 					skeletonController = entry.Key.GetComponent<RUISSkeletonController>();
 					// *** OPTIHACK5 TODO THIS DOESN'T WORK WITH MECANIMBLENDED CHARACTER
-					if(skeletonController && (   (!skeletonController.mecanimCombiner && skeletonController.keepPlayModeChanges)
-											  || (skeletonController.mecanimCombiner && skeletonController.mecanimCombiner.skeletonController 
-												  && skeletonController.mecanimCombiner.skeletonController.keepPlayModeChanges)))
+					if(		skeletonController && fieldNameList != null && (fieldNameList.IndexOf("keepPlayModeChanges") >= 0 
+						&& ((bool) entry.Value[fieldNameList.IndexOf("keepPlayModeChanges")])))
 					{
 //						Debug.Log(" shutting down " + entry.Value.Length + " " + fieldNameList.Count);
 						for(int i = 0; i < entry.Value.Length; ++i)
