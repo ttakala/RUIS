@@ -91,6 +91,14 @@ public class RUISSkeletonControllerEditor : Editor
 
 	SerializedProperty leftThumb;
 	SerializedProperty rightThumb;
+	SerializedProperty leftIndexF;
+	SerializedProperty rightIndexF;
+	SerializedProperty leftMiddleF;
+	SerializedProperty rightMiddleF;
+	SerializedProperty leftRingF;
+	SerializedProperty rightRingF;
+	SerializedProperty leftLittleF;
+	SerializedProperty rightLittleF;
 
 	public SerializedProperty maxScaleFactor;
 
@@ -161,8 +169,18 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty customLeftHip;
 	SerializedProperty customLeftKnee;
 	SerializedProperty customLeftFoot;
-	SerializedProperty customLeftThumb;
+
 	SerializedProperty customRightThumb;
+	SerializedProperty customRightIndexF;
+	SerializedProperty customRightMiddleF;
+	SerializedProperty customRightRingF;
+	SerializedProperty customRightLittleF;
+
+	SerializedProperty customLeftThumb;
+	SerializedProperty customLeftIndexF;
+	SerializedProperty customLeftMiddleF;
+	SerializedProperty customLeftRingF;
+	SerializedProperty customLeftLittleF;
 
 	SerializedProperty customConversionType;
 
@@ -171,6 +189,8 @@ public class RUISSkeletonControllerEditor : Editor
 	Color normalLabelColor;
 	Color normalGUIColor;
 	GUIStyle boldItalicStyle = new GUIStyle();
+	GUIStyle boldFoldoutStyle = null;
+	GUIStyle coloredBoldFoldoutStyle = null;
 
 	RUISSkeletonController skeletonController;
 	Animator animator;
@@ -178,6 +198,8 @@ public class RUISSkeletonControllerEditor : Editor
 	string obtainedTransforms = "";
 
 	static bool showLocalOffsets;
+	static bool showTargetFingers;
+	static bool showSourceFingers;
 
 	public void OnEnable()
 	{
@@ -186,7 +208,7 @@ public class RUISSkeletonControllerEditor : Editor
 		coloredBoldItalicStyle.fontStyle = FontStyle.BoldAndItalic;
 		coloredBoldItalicStyle.normal.textColor = customLabelColor;
 		boldItalicStyle.fontStyle = FontStyle.BoldAndItalic;
-
+		
 		keepPlayModeChanges = serializedObject.FindProperty("keepPlayModeChanges");
 
 		bodyTrackingDevice = serializedObject.FindProperty("bodyTrackingDevice");
@@ -247,8 +269,17 @@ public class RUISSkeletonControllerEditor : Editor
         rightKneeBone 	= serializedObject.FindProperty("rightKnee");
         rightFootBone 	= serializedObject.FindProperty("rightFoot");
 
-		leftThumb = serializedObject.FindProperty ("leftThumb");
-		rightThumb = serializedObject.FindProperty ("rightThumb");
+		leftThumb 	 = serializedObject.FindProperty("leftThumb");
+		rightThumb   = serializedObject.FindProperty("rightThumb");
+		leftIndexF   = serializedObject.FindProperty("leftIndexF");
+		rightIndexF  = serializedObject.FindProperty("rightIndexF");
+		leftMiddleF  = serializedObject.FindProperty("leftMiddleF");
+		rightMiddleF = serializedObject.FindProperty("rightMiddleF");
+		leftRingF    = serializedObject.FindProperty("leftRingF");
+		rightRingF   = serializedObject.FindProperty("rightRingF");
+		leftLittleF  = serializedObject.FindProperty("leftLittleF");
+		rightLittleF = serializedObject.FindProperty("rightLittleF");
+
 		trackWrist = serializedObject.FindProperty ("trackWrist");
 		trackAnkle = serializedObject.FindProperty ("trackAnkle");
 //		rotateWristFromElbow = serializedObject.FindProperty ("rotateWristFromElbow");
@@ -277,7 +308,6 @@ public class RUISSkeletonControllerEditor : Editor
 		customRightHip  	= serializedObject.FindProperty("customRightHip");
 		customRightKnee  	= serializedObject.FindProperty("customRightKnee");
 		customRightFoot  	= serializedObject.FindProperty("customRightFoot");
-		customRightThumb  	= serializedObject.FindProperty("customRightThumb");
 
 		customLeftClavicle	= serializedObject.FindProperty("customLeftClavicle");
 		customLeftShoulder	= serializedObject.FindProperty("customLeftShoulder");
@@ -286,7 +316,19 @@ public class RUISSkeletonControllerEditor : Editor
 		customLeftHip 		= serializedObject.FindProperty("customLeftHip");
 		customLeftKnee 		= serializedObject.FindProperty("customLeftKnee");
 		customLeftFoot 		= serializedObject.FindProperty("customLeftFoot");
+
+		customRightThumb  	= serializedObject.FindProperty("customRightThumb");
+		customRightIndexF	= serializedObject.FindProperty("customRightIndexF");
+		customRightMiddleF	= serializedObject.FindProperty("customRightMiddleF");
+		customRightRingF	= serializedObject.FindProperty("customRightRingF");
+		customRightLittleF	= serializedObject.FindProperty("customRightLittleF");
+
 		customLeftThumb 	= serializedObject.FindProperty("customLeftThumb");
+		customLeftIndexF	= serializedObject.FindProperty("customLeftIndexF");
+		customLeftMiddleF	= serializedObject.FindProperty("customLeftMiddleF");
+		customLeftRingF		= serializedObject.FindProperty("customLeftRingF");
+		customLeftLittleF	= serializedObject.FindProperty("customLeftLittleF");
+
 
 		customConversionType = serializedObject.FindProperty("customConversionType");
 
@@ -335,11 +377,40 @@ public class RUISSkeletonControllerEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+
+		normalGUIColor = GUI.color;	
+
+		if(EditorStyles.foldout != null)
+		{
+			if(boldFoldoutStyle == null)
+			{
+				boldFoldoutStyle = new GUIStyle(EditorStyles.foldout);
+				boldFoldoutStyle.fontStyle = FontStyle.Bold;
+				boldFoldoutStyle.normal.textColor = EditorStyles.label.normal.textColor;
+				boldFoldoutStyle.onNormal.textColor = EditorStyles.label.normal.textColor;
+				boldFoldoutStyle.focused.textColor = EditorStyles.label.normal.textColor;
+				boldFoldoutStyle.onFocused.textColor = EditorStyles.label.normal.textColor;
+				boldFoldoutStyle.active.textColor = EditorStyles.label.normal.textColor;
+				boldFoldoutStyle.onActive.textColor = EditorStyles.label.normal.textColor;
+			}
+			if(coloredBoldFoldoutStyle == null)
+			{
+				coloredBoldFoldoutStyle = new GUIStyle(EditorStyles.foldout);
+				coloredBoldFoldoutStyle.fontStyle = FontStyle.Bold;
+				coloredBoldFoldoutStyle.normal.textColor = customLabelColor;
+				coloredBoldFoldoutStyle.onNormal.textColor = customLabelColor;
+				coloredBoldFoldoutStyle.focused.textColor = customLabelColor;
+				coloredBoldFoldoutStyle.onFocused.textColor = customLabelColor;
+				coloredBoldFoldoutStyle.active.textColor = customLabelColor;
+				coloredBoldFoldoutStyle.onActive.textColor = customLabelColor;
+
+			}
+		}
+
 		EditorGUILayout.Space();
 		 
 		EditorGUILayout.PropertyField(bodyTrackingDevice, new GUIContent("Body Tracking Device", "The source device for body tracking.")); 
 
-		normalGUIColor = GUI.color;	
 		if(!EditorApplication.isPlaying)
 			GUI.color = keepPlayModeChangesRGB;
 
@@ -383,9 +454,10 @@ public class RUISSkeletonControllerEditor : Editor
 		RUISEditorUtility.HorizontalRuler();
 
 
-        EditorGUILayout.PropertyField(useHierarchicalModel, new GUIContent(  "Hierarchical Model", "Is the model rig hierarchical (a tree) "
-		                                                                   + "instead of non-hierarchical (all bones are on same level)? "
-																		   + "in almost all cases this option should be enabled."));
+        EditorGUILayout.PropertyField(useHierarchicalModel, new GUIContent(  "Hierarchical Model", "Is the model rig hierarchical (ẗhe bone Transforms form "
+																		+ "a deep tree structure in the Hierarchy window) or non-hierarchical (all bone "
+																		+ "Transforms are on same level)? In almost all cases this option should be "
+																		+ "enabled."));
 
 		SwitchToKeepChangesFieldColor();
 
@@ -537,7 +609,7 @@ public class RUISSkeletonControllerEditor : Editor
 		SwitchToNormalFieldColor();
 		
 		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
-		{	
+		{
 			RUISEditorUtility.HorizontalRuler();
 
 			EditorGUILayout.LabelField("  Custom Mocap Source Transforms", coloredBoldItalicStyle);
@@ -565,20 +637,23 @@ public class RUISSkeletonControllerEditor : Editor
 																		+ "'s \"Custom 1\" and \"Custom 2\" settings, and also stored in the "
 																		+ "associated 'inputConfig.xml'-file."));
 
-			EditorGUILayout.PropertyField(customRoot, new GUIContent("Source Root", "The source Transform for the skeleton hierarchy's root bone. "
-																	+ "The source Transforms of this section should be moved by realtime input from "
-																	+ "a custom mocap system.\nIf you want this avatar to copy "
-																	+ "the pose of another " + typeof(RUISSkeletonController) + " that has the "
-																	+ "Custom Source fields already set, then you only need to use the same "
-																	+ "\"Skeleton ID\" and you can leave the below Custom Source fields empty."));
+			EditorGUILayout.PropertyField(customRoot, new GUIContent("Source Root", "REQUIRED: The source Transform for the skeleton hierarchy's root bone. This "
+																	+ "Transform can be same as the below 'Pelvis' source Transform.\nThe source Transforms of "
+																	+ "this section should be moved by realtime input from a custom mocap system." /* \nIf you want "
+																	+ "this avatar to copy the pose of another " + typeof(RUISSkeletonController) + " that "
+																	+ "has the Custom Source fields already set, then you only need to use the same "
+																	+ "\"Skeleton ID\" and you can leave the below Custom Source fields empty." */));
 			EditorGUILayout.Space();
 			
 			EditorGUILayout.LabelField("Source for Torso and Head", coloredBoldStyle);
-			EditorGUILayout.PropertyField(customTorso, 	 new GUIContent("Pelvis", 	"The pelvis bone, has to be parent or grandparent of all the "
-																				  + "other bones except root bone. Can be same as root bone."));
-			EditorGUILayout.PropertyField(customChest, 	 new GUIContent("Chest", 	"The chest bone, has to be child or grandchild of pelvis."));
-			EditorGUILayout.PropertyField(customNeck, 	 new GUIContent("Neck", 	"The neck bone, has to be child or grandchild of chest."));
-			EditorGUILayout.PropertyField(customHead, 	 new GUIContent("Head", 	"The head bone, has to be child or grandchild of neck."));
+			EditorGUILayout.PropertyField(customTorso, 	 new GUIContent("Pelvis", 	"REQUIRED: The source Transform with tracked pose of the pelvis. Its world frame "
+																		+ "location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customChest, 	 new GUIContent("Chest", 	"Optional: The source Transform with tracked pose of the chest. Its world frame "
+																		+ "location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customNeck, 	 new GUIContent("Neck", 	"Optional: The source Transform with tracked pose of the neck. Its world frame "
+																		+ "location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customHead, 	 new GUIContent("Head", 	"Optional: The source Transform with tracked pose of the head. Its world frame "
+																		+ "location and rotation will be utilized, so be mindful about parent Transforms."));
 			
 			EditorGUILayout.Space();
 			
@@ -587,25 +662,25 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
 
-			EditorGUILayout.PropertyField(customLeftClavicle, 	new GUIContent("Left Clavicle",   "The left clavicle bone, "
-			                                                                   					+ "has to be child of neck."));
-			EditorGUILayout.PropertyField(customLeftShoulder, 	new GUIContent("Left Shoulder",   "The left shoulder bone (upper arm), "
-																								+ "has to be child or grandchild of neck."));
-			EditorGUILayout.PropertyField(customLeftElbow, 	  	new GUIContent("Left Elbow",	  "The left elbow bone (forearm), "
-																								+ "has to be child of left shoulder."));
-			EditorGUILayout.PropertyField(customLeftHand, 		new GUIContent("Left Hand", 	  "The left wrist bone (hand), "
-																								+ "has to be child of left elbow."));
+			EditorGUILayout.PropertyField(customLeftClavicle, 	new GUIContent("Left Clavicle", "Optional: The source Transform with tracked pose of the left clavicle. "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customLeftShoulder, 	new GUIContent("Left Shoulder", "REQUIRED: The source Transform with tracked pose of the left shoulder (upper arm). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customLeftElbow, 	  	new GUIContent("Left Elbow",	"Optional: The source Transform with tracked pose of the left elbow (forearm). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customLeftHand, 		new GUIContent("Left Hand", 	"Optional: The source Transform with tracked pose of the  left wrist (hand). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.EndVertical();
 
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(customRightClavicle, 	new GUIContent("Right Clavicle",  "The right clavicle bone, "
-			                                                                   					+ "has to be child of neck."));
-			EditorGUILayout.PropertyField(customRightShoulder,	new GUIContent("Right Shoulder",  "The right shoulder bone (upper arm), "
-																								+ "has to be child or grandchild of neck."));
-			EditorGUILayout.PropertyField(customRightElbow, 	new GUIContent("Right Elbow", 	  "The right elbow bone (forearm), "
-																								+ "has to be child of right shoulder."));
-			EditorGUILayout.PropertyField(customRightHand,		new GUIContent("Right Hand",	  "The right wrist bone (hand), "
-																								+ "has to be child of right elbow."));
+			EditorGUILayout.PropertyField(customRightClavicle, new GUIContent("Right Clavicle", "Optional: The source Transform with tracked pose of the right clavicle. "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customRightShoulder, new GUIContent("Right Shoulder", "REQUIRED: The source Transform with tracked pose of the right shoulder (upper arm). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customRightElbow,    new GUIContent("Right Elbow", 	"Optional: The source Transform with tracked pose of the right elbow (forearm). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customRightHand,	   new GUIContent("Right Hand",	    "Optional: The source Transform with tracked pose of the right wrist (hand). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
 			EditorGUIUtility.labelWidth = 0;
@@ -616,40 +691,60 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUIUtility.labelWidth = Screen.width / 6;
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(customLeftHip,  new GUIContent("Left Hip",  "The left hip bone (thigh), "
-																					+ "has to be child or grandchild of pelvis."));
-			EditorGUILayout.PropertyField(customLeftKnee, new GUIContent("Left Knee", "The left knee bone (shin), "
-																					+ "has to be child of left hip."));
-			EditorGUILayout.PropertyField(customLeftFoot, new GUIContent("Left Foot", "The left ankle bone (foot), "
-																					+ "has to be child of left knee."));
+			EditorGUILayout.PropertyField(customLeftHip,  new GUIContent("Left Hip",  "REQUIRED: The source Transform with tracked pose of the left hip (thigh). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customLeftKnee, new GUIContent("Left Knee", "Optional: The source Transform with tracked pose of the left knee (shin). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customLeftFoot, new GUIContent("Left Foot", "Optional: The source Transform with tracked pose of the left ankle (foot). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(customRightHip,  new GUIContent("Right Hip",	"The right hip bone (thigh), "
-																					  + "has to be child or grandchild of pelvis."));
-			EditorGUILayout.PropertyField(customRightKnee, new GUIContent("Right Knee", "The right knee bone (shin), "
-																					  + "has to be child of right hip."));
-			EditorGUILayout.PropertyField(customRightFoot, new GUIContent("Right Foot", "The right ankle bone (foot), "
-																					  + "has to be child of right knee."));
+			EditorGUILayout.PropertyField(customRightHip,  new GUIContent("Right Hip",	"REQUIRED: The source Transform with tracked pose of the right hip (thigh). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customRightKnee, new GUIContent("Right Knee", "Optional: The source Transform with tracked pose of the right knee (shin). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
+			EditorGUILayout.PropertyField(customRightFoot, new GUIContent("Right Foot", "Optional: The source Transform with tracked pose of the right ankle (foot). "
+														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
 			EditorGUIUtility.labelWidth = 0;
 			
 			EditorGUILayout.Space();
-			
-			EditorGUILayout.LabelField("Source for Fingers", coloredBoldStyle);
-			EditorGUIUtility.labelWidth = Screen.width / 6;
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(customLeftThumb, new GUIContent("Left Thumb",   "The left thumb, has to be child of left hand."));
-			EditorGUILayout.EndVertical();
-			EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(customRightThumb, new GUIContent("Right Thumb", "The right thumb, has to be child of right hand."));
-			EditorGUILayout.EndVertical();
-			EditorGUILayout.EndHorizontal();
-			EditorGUIUtility.labelWidth = 0;
+
+			showSourceFingers = EditorGUILayout.Foldout(showSourceFingers, "Source for Fingers", true, coloredBoldFoldoutStyle);
+			if(showSourceFingers)
+			{
+				EditorGUIUtility.labelWidth = Screen.width / 6;
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
+				EditorGUILayout.PropertyField(customLeftThumb, new GUIContent ("Left Thumb CMC", "The source Transform for the 'root' of left thumb, also known as carpometacarpal (CMC) "
+					+ "joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftIndexF,  new GUIContent ("Left Index Finger MCP",	"The source Transform for the 'root' of left index finger, also known as "
+					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftMiddleF, new GUIContent ("Left Middle Finger MCP", "The source Transform for the 'root' of left middle finger, also known as "
+					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftRingF,   new GUIContent ("Left Ring Finger MCP", "The source Transform for the 'root' of left ring finger, also known as "
+					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftLittleF, new GUIContent ("Left Little Finger MCP", "The source Transform for the 'root' of left little finger, also known as "
+					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.EndVertical();
+				EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
+				EditorGUILayout.PropertyField(customRightThumb, new GUIContent ("Right Thumb CMC", "The source Transform for the 'root' of right thumb, also known as carpometacarpal (CMC) "
+					+ "joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightIndexF,  new GUIContent ("Right Index Finger MCP", "The source Transform for the 'root' of right index finger, also known as "
+					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightMiddleF, new GUIContent ("Right Middle Finger MCP", "The source Transform for the 'root' of right middle finger, also known as "
+					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightRingF,   new GUIContent ("Right Ring Finger MCP", "The source Transform for the 'root' of right ring finger, also known as "
+					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightLittleF, new GUIContent ("Right Little Finger MCP", "The source Transform for the 'root' of right little finger, also known as "
+					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.EndVertical();
+				EditorGUILayout.EndHorizontal();
+				EditorGUIUtility.labelWidth = 0;
+			}
 
 			EditorStyles.label.normal.textColor = normalLabelColor;
-
 		}
 
 		RUISEditorUtility.HorizontalRuler();
@@ -876,16 +971,34 @@ public class RUISSkeletonControllerEditor : Editor
 
 		EditorGUILayout.Space();
 
-		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
+		showTargetFingers = EditorGUILayout.Foldout(showTargetFingers, "Finger Targets", true, boldFoldoutStyle);
+		if(showTargetFingers)
 		{
-			EditorGUILayout.LabelField("Finger Targets", EditorStyles.boldLabel);
 			EditorGUIUtility.labelWidth = Screen.width / 6;
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(leftThumb, new GUIContent ("Left Thumb",		"The left thumb, has to be child of left hand."));
+			EditorGUILayout.PropertyField(leftThumb,   new GUIContent ("Left Thumb CMC", "The 'root' of left thumb, also known as carpometacarpal (CMC) "
+																+ "joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
+			EditorGUILayout.PropertyField(leftIndexF,  new GUIContent ("Left Index Finger MCP",	"The 'root' of left index finger, also known as "
+									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+			EditorGUILayout.PropertyField(leftMiddleF, new GUIContent ("Left Middle Finger MCP", "The 'root' of left middle finger, also known as "
+									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+			EditorGUILayout.PropertyField(leftRingF,   new GUIContent ("Left Ring Finger MCP", "The 'root' of left ring finger, also known as "
+									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+			EditorGUILayout.PropertyField(leftLittleF, new GUIContent ("Left Little Finger MCP", "The 'root' of left little finger, also known as "
+									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(rightThumb, new GUIContent ("Right Thumb",	"The right thumb, has to be child of right hand."));
+			EditorGUILayout.PropertyField(rightThumb,   new GUIContent ("Right Thumb CMC", "The 'root' of right thumb, also known as carpometacarpal (CMC) "
+																+ "joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
+			EditorGUILayout.PropertyField(rightIndexF,  new GUIContent ("Right Index Finger MCP", "The 'root' of right index finger, also known as "
+									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+			EditorGUILayout.PropertyField(rightMiddleF, new GUIContent ("Right Middle Finger MCP", "The 'root' of right middle finger, also known as "
+									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+			EditorGUILayout.PropertyField(rightRingF,   new GUIContent ("Right Ring Finger MCP", "The 'root' of right ring finger, also known as "
+									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+			EditorGUILayout.PropertyField(rightLittleF, new GUIContent ("Right Little Finger MCP", "The 'root' of right little finger, also known as "
+									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
 			EditorGUIUtility.labelWidth = 0;

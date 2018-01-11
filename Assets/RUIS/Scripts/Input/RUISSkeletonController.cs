@@ -43,8 +43,17 @@ public class RUISSkeletonController : MonoBehaviour
 	public Transform leftHip;
 	public Transform leftKnee;
 	public Transform leftFoot;
+
 	public Transform leftThumb;
 	public Transform rightThumb;
+	public Transform leftIndexF;
+	public Transform rightIndexF;
+	public Transform leftMiddleF;
+	public Transform rightMiddleF;
+	public Transform leftRingF;
+	public Transform rightRingF;
+	public Transform leftLittleF;
+	public Transform rightLittleF;
 
 	// Transform sources for custom motion tracking
 	public Transform customRoot;
@@ -66,8 +75,17 @@ public class RUISSkeletonController : MonoBehaviour
 	public Transform customLeftHip;
 	public Transform customLeftKnee;
 	public Transform customLeftFoot;
-	public Transform customLeftThumb;
+
 	public Transform customRightThumb;
+	public Transform customRightIndexF;
+	public Transform customRightMiddleF;
+	public Transform customRightRingF;
+	public Transform customRightLittleF;
+	public Transform customLeftThumb;
+	public Transform customLeftIndexF;
+	public Transform customLeftMiddleF;
+	public Transform customLeftRingF;
+	public Transform customLeftLittleF;
 
 	public Vector3 pelvisOffset   = Vector3.zero;
 	public Vector3 chestOffset	  = Vector3.zero;
@@ -722,6 +740,7 @@ public class RUISSkeletonController : MonoBehaviour
 		if(neck && leftShoulder && rightShoulder)
 			neckParentsShoulders = leftShoulder.IsChildOf(neck) || rightShoulder.IsChildOf(neck);
 
+		// *** OPTIHACK4 following is not true because of trackedSpineJoints: "... you can leave the below Custom Source fields empty."
 		trackedSpineJoints[customSpineJointCount] = customTorso;
 		++customSpineJointCount;
 		if(customChest)
