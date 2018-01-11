@@ -340,7 +340,8 @@ public class RUISSkeletonController : MonoBehaviour
 	// 2 hands, 5 fingers, 3 finger bones
 	Quaternion[,,] initialFingerRotations = new Quaternion[2, 5, 3];
 	// For quick access to finger gameobjects
-	Transform[,,] fingerTransforms = new Transform[2, 5, 3];
+	Transform[,,] fingerTargets = new Transform[2, 5, 3];
+	Transform[,,] fingerSources = new Transform[2, 5, 3];
 
 	// NOTE: The below phalange rotations are set in Start() method !!! See clause that starts with switch(boneLengthAxis)
 	// Thumb phalange rotations when hand is clenched to a fist
@@ -353,7 +354,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public Quaternion clenchedRotationPIP;
 	public Quaternion clenchedRotationDIP;
 
-	public bool leftThumbHasIndependentRotations = false;
+	public bool leftThumbHasIndependentRotations = false; // *** OPTITRACK5 remove this
 	public Quaternion clenchedLeftThumbTM;
 	public Quaternion clenchedLeftThumbMCP;
 	public Quaternion clenchedLeftThumbIP;
@@ -420,7 +421,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 		hasBeenTracked = false;
 
-		if(inputManager) // *** OPTITRACK4 moved this here from Awake(), check that everything still works
+		if(inputManager) // *** OPTIHACK4 moved this here from Awake(), check that everything still works
 		{
 			if(switchToAvailableKinect)
 			{
@@ -437,14 +438,7 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 
-		// Following substitution ensures that customConversionType, customSourceDevice, and deviceConversion variables will be set in bodyTrackingDeviceID setter
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)  // *** OPTITRACK4 moved this here from Awake(), check that everything still works
-		{
-			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
-			minimumConfidenceToUpdate = 0.5f;
-		}
-
-		// *** OPTITRACK4 moved these 6 lines here from Awake(), check that everything still works
+		// *** OPTIHACK4 moved these 6 lines here from Awake(), check that everything still works
 		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
 			BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2)
@@ -452,9 +446,24 @@ public class RUISSkeletonController : MonoBehaviour
 		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
 			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 		
+		// Disable features that are only available for Kinect2 or custom motion tracker
+		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
+		{
+			fistCurlFingers = false;
+			trackThumbs = false;
+			//			trackWrist = false;
+			//			trackAnkle = false;
+			rotateWristFromElbow = false;
+		}
 
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
+		// Following substitution ensures that customConversionType, customSourceDevice, and deviceConversion variables will be set in bodyTrackingDeviceID setter
+		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)  // *** OPTIHACK4 moved this here from Awake(), check that everything still works
+		{
+			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+			minimumConfidenceToUpdate = 0.5f;
+			trackThumbs = true;
 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking = true;
+		}
 
 		switch(customConversionType)
 		{
@@ -476,16 +485,6 @@ public class RUISSkeletonController : MonoBehaviour
 				deviceConversion = new RUISCoordinateSystem.DeviceCoordinateConversion();
 				deviceConversion = null;
 				break;
-		}
-
-		// Disable features that are only available for Kinect2 or custom motion tracker
-		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
-		{
-			fistCurlFingers = false;
-			trackThumbs = false;
-			trackWrist = false;
-			trackAnkle = false;
-			rotateWristFromElbow = false;
 		}
 
 		if(useHierarchicalModel)
@@ -538,7 +537,8 @@ public class RUISSkeletonController : MonoBehaviour
 		SaveInitialTransform(leftThumb);
 		SaveInitialTransform(rightThumb);
 
-		SaveInitialFingerRotations();
+		FindAndInitializeFingers(fingerTargets, isTargetFingers: true );
+		FindAndInitializeFingers(fingerSources, isTargetFingers: false);
 
 		SaveInitialDistance(rightClavicle, rightShoulder);
 		SaveInitialDistance(rightShoulder, rightElbow);
@@ -676,7 +676,7 @@ public class RUISSkeletonController : MonoBehaviour
 				clenchedRotationDIP = Quaternion.Euler(0, -70, 0);
 				break;
 		}
-		if(leftThumbHasIndependentRotations)
+		if(leftThumbHasIndependentRotations) // *** TODO HACK
 		{
 			clenchedLeftThumbTM  = Quaternion.Euler(15, 0, -25);
 			clenchedLeftThumbMCP = Quaternion.Euler(0, 0, 0);
@@ -685,7 +685,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 		if(inputManager)
 		{
-			// *** OPTITRACK4 added this, check that it works: Below if-clause means that if Kinect1/2 was enabled and detected, offsets and scaling works only when the skeleton is tracked
+			// *** OPTIHACK4 added this, check that it works: Below if-clause means that if Kinect1/2 was enabled and detected, offsets and scaling works only when the skeleton is tracked
 			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && (inputManager.enableKinect || inputManager.enableKinect2))
 				hasBeenTracked = true;
 
@@ -940,14 +940,14 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 				if(!trackWrist)
 				{
-					if(leftHand && leftElbow) // *** OPTITRACK4 no axis minus in left handRotationOffset, check that this works
+					if(leftHand && leftElbow) // *** OPTIHACK4 no axis minus in left handRotationOffset, check that this works
 						leftHand.localRotation  = leftElbow.localRotation  * Quaternion.Euler(handRotationOffset);
 					if(rightHand && rightElbow)
 						rightHand.localRotation = rightElbow.localRotation * Quaternion.Euler(handRotationOffset);
 				}
 				if(!trackAnkle)
 				{
-					if(leftFoot && leftKnee) // *** OPTITRACK4 no axis minus in left feetRotationOffset, check that this works
+					if(leftFoot && leftKnee) // *** OPTIHACK4 no axis minus in left feetRotationOffset, check that this works
 						leftFoot.localRotation  = leftKnee.localRotation  * Quaternion.Euler(feetRotationOffset);
 					if(rightFoot && rightKnee)
 						rightFoot.localRotation = rightKnee.localRotation * Quaternion.Euler(feetRotationOffset);
@@ -1255,7 +1255,7 @@ public class RUISSkeletonController : MonoBehaviour
 				transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularVelocity);
 			}
 			else
-			{	// *** OPTITRACK4  check that this works and rotationOffset multiplication belongs to right side
+			{	// *** OPTIHACK4  check that this works and rotationOffset multiplication belongs to right side
 				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation,  jointToGet.rotation * rotationOffset, maxAngularVelocity);
 			}
 		}
@@ -2203,32 +2203,32 @@ public class RUISSkeletonController : MonoBehaviour
 			{ // Fingers
 				if(!closeHand && !(a == 4 && trackThumbs))
 				{
-					if(fingerTransforms[i, a, 0])
-						fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, initialFingerRotations[i, a, 0], deltaTime * rotationSpeed);
-					if(fingerTransforms[i, a, 1])
-						fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, initialFingerRotations[i, a, 1], deltaTime * rotationSpeed);
-					if(fingerTransforms[i, a, 2])
-						fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, initialFingerRotations[i, a, 2], deltaTime * rotationSpeed);
+					if(fingerTargets[i, a, 0])
+						fingerTargets[i, a, 0].localRotation = Quaternion.Slerp(fingerTargets[i, a, 0].localRotation, initialFingerRotations[i, a, 0], deltaTime * rotationSpeed);
+					if(fingerTargets[i, a, 1])
+						fingerTargets[i, a, 1].localRotation = Quaternion.Slerp(fingerTargets[i, a, 1].localRotation, initialFingerRotations[i, a, 1], deltaTime * rotationSpeed);
+					if(fingerTargets[i, a, 2])
+						fingerTargets[i, a, 2].localRotation = Quaternion.Slerp(fingerTargets[i, a, 2].localRotation, initialFingerRotations[i, a, 2], deltaTime * rotationSpeed);
 				}
 				else
 				{
 					if(a != 4)
 					{
-						if(fingerTransforms[i, a, 0])
-							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation, clenchedRotationMCP, deltaTime * rotationSpeed);
-						if(fingerTransforms[i, a, 1])
-							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationPIP, deltaTime * rotationSpeed);
-						if(fingerTransforms[i, a, 2])
-							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation, clenchedRotationDIP, deltaTime * rotationSpeed);
+						if(fingerTargets[i, a, 0])
+							fingerTargets[i, a, 0].localRotation = Quaternion.Slerp(fingerTargets[i, a, 0].localRotation, clenchedRotationMCP, deltaTime * rotationSpeed);
+						if(fingerTargets[i, a, 1])
+							fingerTargets[i, a, 1].localRotation = Quaternion.Slerp(fingerTargets[i, a, 1].localRotation, clenchedRotationPIP, deltaTime * rotationSpeed);
+						if(fingerTargets[i, a, 2])
+							fingerTargets[i, a, 2].localRotation = Quaternion.Slerp(fingerTargets[i, a, 2].localRotation, clenchedRotationDIP, deltaTime * rotationSpeed);
 					}
 					else if(!trackThumbs)
 					{ // Thumbs (if separate thumb  tracking is not enabled)
-						if(fingerTransforms[i, a, 0])
-							fingerTransforms[i, a, 0].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 0].localRotation,  clenchedRotationThumbTM_corrected, deltaTime * rotationSpeed);
-						if(fingerTransforms[i, a, 1])
-							fingerTransforms[i, a, 1].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 1].localRotation, clenchedRotationThumbMCP_corrected, deltaTime * rotationSpeed);
-						if(fingerTransforms[i, a, 2])
-							fingerTransforms[i, a, 2].localRotation = Quaternion.Slerp(fingerTransforms[i, a, 2].localRotation,  clenchedRotationThumbIP_corrected, deltaTime * rotationSpeed);
+						if(fingerTargets[i, a, 0])
+							fingerTargets[i, a, 0].localRotation = Quaternion.Slerp(fingerTargets[i, a, 0].localRotation,  clenchedRotationThumbTM_corrected, deltaTime * rotationSpeed);
+						if(fingerTargets[i, a, 1])
+							fingerTargets[i, a, 1].localRotation = Quaternion.Slerp(fingerTargets[i, a, 1].localRotation, clenchedRotationThumbMCP_corrected, deltaTime * rotationSpeed);
+						if(fingerTargets[i, a, 2])
+							fingerTargets[i, a, 2].localRotation = Quaternion.Slerp(fingerTargets[i, a, 2].localRotation,  clenchedRotationThumbIP_corrected, deltaTime * rotationSpeed);
 					}	
 				}	
 			}
@@ -2272,7 +2272,7 @@ public class RUISSkeletonController : MonoBehaviour
 				
 					// First bone
 					initialFingerRotations[i, index, 0] = finger.localRotation;
-					fingerTransforms[i, index, 0] = finger;
+					fingerTargets[i, index, 0] = finger;
 					Transform[] nextFingerParts = finger.gameObject.GetComponentsInChildren<Transform>();
 					foreach(Transform part1 in nextFingerParts)
 					{
@@ -2281,7 +2281,7 @@ public class RUISSkeletonController : MonoBehaviour
 						{
 							// Second bone
 							initialFingerRotations[i, index, 1] = part1.localRotation;
-							fingerTransforms[i, index, 1] = part1;
+							fingerTargets[i, index, 1] = part1;
 							Transform[] nextFingerParts2 = finger.gameObject.GetComponentsInChildren<Transform>();
 							foreach(Transform part2 in nextFingerParts2)
 							{
@@ -2290,7 +2290,7 @@ public class RUISSkeletonController : MonoBehaviour
 								{
 									// Third bone
 									initialFingerRotations[i, index, 2] = part2.localRotation;
-									fingerTransforms[i, index, 2] = part2; 
+									fingerTargets[i, index, 2] = part2; 
 								}
 							}
 						}
@@ -2298,6 +2298,163 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 			}	
 		}
+	}
+
+	private void FindAndInitializeFingers(Transform[,,] fingerArray, bool isTargetFingers)
+	{	
+		Transform handObject;
+
+		for(int i = 0; i < 2; i++) // rightHand: i == 0, leftHand: i == 1
+		{ 
+			// Assign fingerArray with fingers (more accurately, their proximal phalanx transforms)
+			if(isTargetFingers)
+			{
+				if(i == 0) // Right
+				{
+					fingerArray[i, 0, 0] = rightLittleF;
+					fingerArray[i, 1, 0] = rightRingF;
+					fingerArray[i, 2, 0] = rightMiddleF;
+					fingerArray[i, 3, 0] = rightIndexF;
+					fingerArray[i, 4, 0] = rightThumb;
+				}
+				else // Left
+				{
+					fingerArray[i, 0, 0] = leftLittleF;
+					fingerArray[i, 1, 0] = leftRingF;
+					fingerArray[i, 2, 0] = leftMiddleF;
+					fingerArray[i, 3, 0] = leftIndexF;
+					fingerArray[i, 4, 0] = leftThumb;
+				}
+			}
+			else // Custom Finger Sources
+			{
+				if(i == 0) // Right
+				{
+					fingerArray[i, 0, 0] = customRightLittleF;
+					fingerArray[i, 1, 0] = customRightRingF;
+					fingerArray[i, 2, 0] = customRightMiddleF;
+					fingerArray[i, 3, 0] = customRightIndexF;
+					fingerArray[i, 4, 0] = customRightThumb;
+				}
+				else // Left
+				{
+					fingerArray[i, 0, 0] = customLeftLittleF;
+					fingerArray[i, 1, 0] = customLeftRingF;
+					fingerArray[i, 2, 0] = customLeftMiddleF;
+					fingerArray[i, 3, 0] = customLeftIndexF;
+					fingerArray[i, 4, 0] = customLeftThumb;
+				}
+			}
+			
+			List<int> unassignedFingers = new List<int>();
+
+			// First fill the finger (phalanx) array with Transforms that have been assigned in the Editor (Finger Targets/Sources)
+			for(int j = 0; j < 5; ++j)
+			{
+				if(fingerArray[i, j, 0])
+				{
+					// Proximal phalanx (1st one from the hand)
+					if(isTargetFingers)
+						initialFingerRotations[i, j, 0] = fingerArray[i, j, 0].localRotation;
+					foreach(Transform middlePhalanx in fingerArray[i, j, 0].GetComponentsInChildren<Transform>(true))
+					{
+						if(middlePhalanx.parent.gameObject == fingerArray[i, j, 0].gameObject)
+						{
+							// Middle phalanx (2nd one from the hand)
+							if(isTargetFingers)
+								initialFingerRotations[i, j, 1] = middlePhalanx.localRotation;
+							fingerArray[i, j, 1] = middlePhalanx;
+							foreach(Transform distalPhalanx in middlePhalanx.GetComponentsInChildren<Transform>(true))
+							{
+								if(distalPhalanx.parent.gameObject == middlePhalanx.gameObject)
+								{
+									// Distal phalanx (3rd one from the hand)
+									if(isTargetFingers)
+										initialFingerRotations[i, j, 2] = distalPhalanx.localRotation;
+									fingerArray[i, j, 2] = distalPhalanx; 
+								}
+							}
+						}
+					}
+				}
+				else if(isTargetFingers)
+				{
+					// This finger target Transform index has not been assigned in Editor
+					unassignedFingers.Add(j);
+				}
+			}
+
+			// If there were unassigned Finger Targets in the Editor, then try to fill them using child transforms from each hand
+			if(isTargetFingers && unassignedFingers.Count > 0)
+			{
+				if(i == 0)
+					handObject = rightHand;
+				else
+					handObject = leftHand;
+
+				if(handObject == null)
+					continue;
+
+				Transform[] fingers;
+				int foundFingerCount = 0;
+
+				fingers = handObject.GetComponentsInChildren<Transform>();
+				foreach(Transform finger in fingers)
+				{
+					int fingerIndex = unassignedFingers[foundFingerCount]; // Get index of next unassigned finger 
+
+					if(finger.parent && finger.parent.gameObject == handObject.gameObject && ContainsFingerSubstring(finger.name))
+					{
+						bool isAlreadyAssigned = false;
+						for(int j = 0; j < 5; ++j)
+						{
+							if(finger == fingerArray[i, j, 0])
+							{
+								// Make sure that the finger was not assigned in the previous loop
+								isAlreadyAssigned = true;
+								break;
+							}
+						}
+
+						if(isAlreadyAssigned || fingerIndex > 5)
+							continue;
+
+						// Found an unassigned finger of an unknown identity (thumb/index/middle/ring/little finger?)
+						foundFingerCount++;
+
+						// Proximal phalanx (1st one from the hand)
+						initialFingerRotations[i, fingerIndex, 0] = finger.localRotation;
+						fingerArray[i, fingerIndex, 0] = finger;
+						foreach(Transform middlePhalanx in finger.GetComponentsInChildren<Transform>())
+						{
+							if(middlePhalanx.parent.gameObject == finger.gameObject && ContainsFingerSubstring(middlePhalanx.name))
+							{
+								// Middle phalanx (2nd one from the hand)
+								initialFingerRotations[i, fingerIndex, 1] = middlePhalanx.localRotation;
+								fingerArray[i, fingerIndex, 1] = middlePhalanx;
+								foreach(Transform distalPhalanx in finger.GetComponentsInChildren<Transform>())
+								{
+									if(distalPhalanx.parent.gameObject == middlePhalanx.gameObject && ContainsFingerSubstring(distalPhalanx.name))
+									{
+										// Distal phalanx (3rd one from the hand)
+										initialFingerRotations[i, fingerIndex, 2] = distalPhalanx.localRotation;
+										fingerArray[i, fingerIndex, 2] = distalPhalanx; 
+									}
+								}
+							}
+						}
+
+						if(foundFingerCount >= unassignedFingers.Count)
+							break; // Only 5 fingers allowed!
+					}
+				}
+			}
+		}
+	}
+
+	private bool ContainsFingerSubstring(string str)
+	{
+		return (str.Contains("finger") || str.Contains("Finger") || str.Contains("FINGER"));
 	}
 
 	// If memory serves me correctly, this method doesn't work quite right

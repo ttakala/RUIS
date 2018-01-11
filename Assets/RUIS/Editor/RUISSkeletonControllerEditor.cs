@@ -108,8 +108,8 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty forearmLengthTweaker;
 	public SerializedProperty shinLengthTweaker;
 
-	public SerializedProperty fistCurlFingers;
-	public SerializedProperty trackThumbs;
+	SerializedProperty fistCurlFingers;
+	SerializedProperty trackThumbs;
 	public SerializedProperty trackWrist;
 	public SerializedProperty trackAnkle;
 //	SerializedProperty rotateWristFromElbow;
@@ -403,7 +403,6 @@ public class RUISSkeletonControllerEditor : Editor
 				coloredBoldFoldoutStyle.onFocused.textColor = customLabelColor;
 				coloredBoldFoldoutStyle.active.textColor = customLabelColor;
 				coloredBoldFoldoutStyle.onActive.textColor = customLabelColor;
-
 			}
 		}
 
@@ -931,7 +930,7 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.EndHorizontal();
 		EditorGUIUtility.labelWidth = 0;
 
-		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
+//		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
 		{	
 			SwitchToKeepChangesFieldColor();
 			EditorGUILayout.PropertyField(trackWrist, new GUIContent("Track Wrist Rotation", "Track the rotation of the hand bone"));
@@ -962,7 +961,7 @@ public class RUISSkeletonControllerEditor : Editor
         EditorGUILayout.EndHorizontal();
 		EditorGUIUtility.labelWidth = 0;
 
-		if (bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
+//		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
 		{
 			SwitchToKeepChangesFieldColor();
 			EditorGUILayout.PropertyField(trackAnkle, new GUIContent("Track Ankle Rotation", "Track the rotation of the ankle bone"));
@@ -1005,12 +1004,13 @@ public class RUISSkeletonControllerEditor : Editor
 
 			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
 			{
-				SwitchToKeepChangesFieldColor();
+				EditorGUI.indentLevel++;
 				EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent(  "Track Fist Clenching", "When user is making a fist, curl finger joints "
 				                                                              + "(child gameObjects under 'Left Hand' and 'Right Hand' whose name include "
 				                                                              + "the substring 'finger' or 'Finger'.). If you have assigned 'Left Thumb' " +
 				                                                              	"and 'Right Thumb', they will receive a slightly different finger curling."));
 				EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track Thumbs", "Track thumb movement."));
+				SwitchToKeepChangesFieldColor();
 				if(trackThumbs.boolValue)
 				{
 					EditorGUI.indentLevel++;
@@ -1018,11 +1018,12 @@ public class RUISSkeletonControllerEditor : Editor
 						+ "45, but it might depend on your avatar rig."));
 					EditorGUI.indentLevel--;
 					if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
-						&& skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
-						skeletonController.skeletonManager.skeletons [skeletonController.BodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
+						&& skeletonController.skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
+						skeletonController.skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
 							thumbZRotationOffset.floatValue;
 				}
 				SwitchToNormalFieldColor();
+				EditorGUI.indentLevel--;
 			}
 
 		}
