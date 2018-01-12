@@ -25,6 +25,11 @@ public class RUISSkeletonControllerEditor : Editor
 	Color customLabelColor   = new Color(0.0f, 0.5f, 0.8f);
 	Color keepPlayModeChangesRGB = new Color(1.0f, 0.9f, 0.5f);
 
+	float minScale = 0.01f;
+	float maxScale = 3.0f;
+	float minThickness = 0.1f;
+	float maxThickness = 3.0f;
+
 	// Below those SerializedProperty fields that are marked with public can be kept (saved) after exiting play mode
 
 	SerializedProperty bodyTrackingDevice;
@@ -104,7 +109,8 @@ public class RUISSkeletonControllerEditor : Editor
 
 	SerializedProperty minimumConfidenceToUpdate;
 
-	public SerializedProperty rotationDamping;
+	public SerializedProperty maxAngularVelocity;
+	public SerializedProperty maxFingerAngularVelocity;
 	public SerializedProperty forearmLengthTweaker;
 	public SerializedProperty shinLengthTweaker;
 
@@ -286,7 +292,8 @@ public class RUISSkeletonControllerEditor : Editor
 
         maxScaleFactor = serializedObject.FindProperty("maxScaleFactor");
         minimumConfidenceToUpdate = serializedObject.FindProperty("minimumConfidenceToUpdate");
-        rotationDamping = serializedObject.FindProperty("rotationDamping");
+		maxAngularVelocity = serializedObject.FindProperty("maxAngularVelocity");
+		maxFingerAngularVelocity = serializedObject.FindProperty("maxFingerAngularVelocity");
         forearmLengthTweaker = serializedObject.FindProperty("forearmLengthRatio");
 		shinLengthTweaker = serializedObject.FindProperty("shinLengthRatio");
 		
@@ -564,9 +571,9 @@ public class RUISSkeletonControllerEditor : Editor
 																			+ "option is effective when you use more accurate mocap systems than "
 																			+ "Kinect."));
 
-		EditorGUILayout.Slider(torsoThickness, 0.1f, 3, new GUIContent(  "Torso Thickness", "Uniform scale that gets applied to the torso. This also "
-																					+ "affects automatic model joint translation, so for example "
-																					+ "neck position wouldn't get scaled too high above shoulders."));
+		EditorGUILayout.Slider(torsoThickness, minThickness, maxThickness, new GUIContent(  "Torso Thickness", "Uniform scale that gets applied to the torso. This also "
+																						  + "affects automatic model joint translation, so for example "
+																						  + "neck position wouldn't get scaled too high above shoulders."));
 		EditorGUILayout.PropertyField(limbsAreScaled, new GUIContent(  "Scale Limbs", "In most cases you should enable this option. The limbs will be "
 																	+ "scaled so that their proportions match to that of the tracked user. If this "
 																	+ "option is disabled, then the bone joints are simply translated (if \"Update "
@@ -584,10 +591,10 @@ public class RUISSkeletonControllerEditor : Editor
 		
 			if(scaleBoneLengthOnly.boolValue)
 			{
-				EditorGUILayout.Slider(rightArmThickness, 0.1f, 3, new GUIContent("Right Arm Thickness", "Thickness scale for right arm around its Length Axis."));
-				EditorGUILayout.Slider(leftArmThickness,  0.1f, 3, new GUIContent("Left Arm Thickness", "Thickness scale for left arm around its Length Axis."));
-				EditorGUILayout.Slider(rightLegThickness, 0.1f, 3, new GUIContent("Right Leg Thickness", "Thickness scale for right leg around its Length Axis."));
-				EditorGUILayout.Slider(leftLegThickness,  0.1f, 3, new GUIContent("Left Leg Thickness", "Thickness scale for left leg around its Length Axis."));
+				EditorGUILayout.Slider(rightArmThickness, minThickness, maxThickness, new GUIContent("Right Arm Thickness", "Thickness scale for right arm around its Length Axis."));
+				EditorGUILayout.Slider(leftArmThickness,  minThickness, maxThickness, new GUIContent("Left Arm Thickness", "Thickness scale for left arm around its Length Axis."));
+				EditorGUILayout.Slider(rightLegThickness, minThickness, maxThickness, new GUIContent("Right Leg Thickness", "Thickness scale for right leg around its Length Axis."));
+				EditorGUILayout.Slider(leftLegThickness,  minThickness, maxThickness, new GUIContent("Left Leg Thickness", "Thickness scale for left leg around its Length Axis."));
 			}
 			EditorGUI.indentLevel--;
 		}
@@ -1002,6 +1009,13 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.EndHorizontal();
 			EditorGUIUtility.labelWidth = 0;
 
+
+			EditorGUILayout.PropertyField(maxFingerAngularVelocity, new GUIContent("Max Finger Angular Velocity", "Maximum angular velocity for fingers, "
+																		+ "which can be used for damping finger movement (smaller values). The values "
+																		+ "are in degrees. For noisy and inaccurate finger tracking systems, a value of "
+																		+ "360 is suitable. For more accurate and responsive mocap systems, this value "
+																		+ "can easily be set to 7200 or more, so that very fast motions are not restricted."));
+			
 			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
 			{
 				EditorGUI.indentLevel++;
@@ -1035,7 +1049,7 @@ public class RUISSkeletonControllerEditor : Editor
 		SwitchToKeepChangesFieldColor();
 
 		EditorGUILayout.LabelField("  Adjustments", boldItalicStyle);
-        EditorGUILayout.PropertyField(rotationDamping, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
+        EditorGUILayout.PropertyField(maxAngularVelocity, new GUIContent(  "Max Joint Angular Velocity", "Maximum joint angular velocity can be used "
 		                                                              + "for damping avatar bone movement (smaller values). The values are in "
 																	  + "degrees. For Kinect and similar devices, a value of 360 is suitable. For "
 																	  + "more accurate and responsive mocap systems, this value can easily be set "
@@ -1071,38 +1085,38 @@ public class RUISSkeletonControllerEditor : Editor
 						                                                            + "joints! The offset is relative to the scale of pelvis joint. This setting "
 						                                                            + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
-		EditorGUILayout.Slider(pelvisScaleAdjust, 0.01f, 3, new GUIContent("Pelvis Scale Adjust",   "Scales pelvis. This setting has effect only when \"Hierarchical "
-		                                                                   + "Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.Slider(pelvisScaleAdjust, minScale, maxScale, new GUIContent("Pelvis Scale Adjust",   "Scales pelvis. This setting has effect only when \"Hierarchical "
+		                                                                   			+ "Model\" and \"Scale Bones\" are enabled."));
 
 		EditorGUILayout.PropertyField(chestOffset, new GUIContent("Chest Offset",   "Offsets chest joint position in its local frame in meters. "
 		                                                          + "WARNING: This also offsets the absolute positions of neck, head and "
 		                                                          + "clavicle joints! The offset is relative to the scale of pelvis joint. This setting "
 		                                                          + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
-		EditorGUILayout.Slider(chestScaleAdjust, 0.01f, 3, new GUIContent("Chest Scale Adjust",   "Scales chest. This setting has effect only when \"Hierarchical "
-		                                                                + "Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.Slider(chestScaleAdjust, minScale, maxScale, new GUIContent("Chest Scale Adjust",   "Scales chest. This setting has effect only when \"Hierarchical "
+		                                                     			           + "Model\" and \"Scale Bones\" are enabled."));
 		
 		EditorGUILayout.PropertyField(neckOffset, new GUIContent("Neck Offset",   "Offsets neck joint position in its local frame in meters. "
 		                                                         + "WARNING: This also offsets the absolute positions of head and "
 		                                                         + "clavicle joints! The offset is relative to the scale of chest joint. This setting "
 		                                                         + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
-		EditorGUILayout.Slider(neckScaleAdjust, 0.01f, 3, new GUIContent("Neck Scale Adjust",   "Scales neck. This setting has effect only when \"Hierarchical "
-		                                                               + "Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.Slider(neckScaleAdjust, minScale, maxScale, new GUIContent("Neck Scale Adjust",   "Scales neck. This setting has effect only when \"Hierarchical "
+		                                                    		           + "Model\" and \"Scale Bones\" are enabled."));
 		
 		EditorGUILayout.PropertyField(headOffset, new GUIContent("Head Offset",   "Offsets head joint position in its local frame in meters. "
 		                                                         + "The offset is relative to the scale of neck joint. This setting has effect only when \"Hierarchical "
 		                                                         + "Model\" and \"Scale Bones\" are enabled."));
 
-		EditorGUILayout.Slider(headScaleAdjust, 0.01f, 3, new GUIContent("Head Scale Adjust",   "Scales head. This setting has effect only when \"Hierarchical "
-		                                                              + "Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.Slider(headScaleAdjust, minScale, maxScale, new GUIContent("Head Scale Adjust",   "Scales head. This setting has effect only when \"Hierarchical "
+		                                                             			 + "Model\" and \"Scale Bones\" are enabled."));
 		
 		EditorGUILayout.PropertyField(clavicleOffset, new GUIContent("Clavicle Offset",   "Offsets clavicle joint positions in their local frame in meters. "
 																	 + "The offset is relative to the scale of neck joint. This setting has effect only when "
 		                                                             + "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
-		EditorGUILayout.Slider(clavicleScaleAdjust, 0.01f, 3, new GUIContent("Clavice Scale Adjust",   "Scales clavicles. This setting has effect only when \"Hierarchical "
-		                                                              + "Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.Slider(clavicleScaleAdjust, minScale, maxScale, new GUIContent("Clavice Scale Adjust",   "Scales clavicles. This setting has effect only when \"Hierarchical "
+		                                                    				          + "Model\" and \"Scale Bones\" are enabled."));
 		
 		EditorGUILayout.PropertyField(shoulderOffset, new GUIContent("Shoulder Offset",   "Offsets shoulder joint positions in their local frame in meters. "
 																						+ "WARNING: This also offsets the absolute positions of all the "
@@ -1131,19 +1145,19 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Space();
 
 		GUI.enabled = useHierarchicalModel.boolValue;
-		EditorGUILayout.Slider(forearmLengthTweaker, 0.01f, 3, new GUIContent(   "Forearm Scale Adjust", "The forearm length ratio "
-			                                                                   + "compared to the real-world value, use this to lengthen or "
-			                                                                   + "shorten the forearms. Only used if \"Hierarchical Model\" is enabled"));
-		EditorGUILayout.Slider(shinLengthTweaker, 0.01f, 3, new GUIContent(   "Shin Scale Adjust", "The shin length ratio compared to the "
-			                                                                + "real-world value, use this to lengthen or shorten the "
-			                                                                + "shins. Only used if \"Hierarchical Model\" is enabled"));
+		EditorGUILayout.Slider(forearmLengthTweaker, minScale, maxScale, new GUIContent(   "Forearm Scale Adjust", "The forearm length ratio "
+			                                                  			                 + "compared to the real-world value, use this to lengthen or "
+			                                                  			                 + "shorten the forearms. Only used if \"Hierarchical Model\" is enabled"));
+		EditorGUILayout.Slider(shinLengthTweaker, minScale, maxScale, new GUIContent(   "Shin Scale Adjust", "The shin length ratio compared to the "
+					                                                                + "real-world value, use this to lengthen or shorten the "
+					                                                                + "shins. Only used if \"Hierarchical Model\" is enabled"));
 		EditorGUILayout.Space();
 
-		EditorGUILayout.Slider(handScaleAdjust, 0.01f, 3, new GUIContent("Hand Scale Adjust", "Scales hands. This setting has effect only when "
-																		+ "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.Slider(handScaleAdjust, minScale, maxScale, new GUIContent("Hand Scale Adjust", "Scales hands. This setting has effect only when "
+																				+ "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
-		EditorGUILayout.Slider(footScaleAdjust, 0.01f, 3, new GUIContent("Foot Scale Adjust", "Scales feet. This setting has effect only when "
-																		+ "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.Slider(footScaleAdjust, minScale, maxScale, new GUIContent("Foot Scale Adjust", "Scales feet. This setting has effect only when "
+																				+ "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
 
 		EditorGUILayout.Space();
 

@@ -251,7 +251,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public float leftLegThickness = 1;
 
 	public float minimumConfidenceToUpdate = 0.5f;
-	public float rotationDamping = 360.0f;
+	public float maxAngularVelocity = 360.0f;
+	public float maxFingerAngularVelocity = 720.0f;
 
 	// Constrained between [0, -180] in Unity Editor script
 	public float handRollAngleMinimum = -180; 
@@ -338,10 +339,14 @@ public class RUISSkeletonController : MonoBehaviour
 	//	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None; //06to08
 
 	// 2 hands, 5 fingers, 3 finger bones
-	Quaternion[,,] initialFingerRotations = new Quaternion[2, 5, 3];
+	Quaternion[,,] initialFingerLocalRotations = new Quaternion[2, 5, 3];
+	Quaternion[,,] initialFingerWorldRotations = new Quaternion[2, 5, 3];
 	// For quick access to finger gameobjects
 	Transform[,,] fingerTargets = new Transform[2, 5, 3];
 	Transform[,,] fingerSources = new Transform[2, 5, 3];
+	bool[,,] hasFingerTarget = new bool[2, 5, 3]; // Checking bool value is presumably faster than (fingerTargets[i,j,k] != null)
+	bool[,,] hasFingerSource = new bool[2, 5, 3];
+	float [,] fingerConfidence = new float[2, 5];
 
 	// NOTE: The below phalange rotations are set in Start() method !!! See clause that starts with switch(boneLengthAxis)
 	// Thumb phalange rotations when hand is clenched to a fist
@@ -393,6 +398,20 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		for(int i = 0; i < forcedJointPositions.Length; ++i)
 			forcedJointPositions[i] = Vector3.zero;
+		
+		for(int i = 0; i < hasFingerTarget.GetLength(0); ++i)
+			for(int j = 0; j < hasFingerTarget.GetLength(1); ++j)
+				for(int k = 0; k < hasFingerTarget.GetLength(2); ++k)
+					hasFingerTarget[i, j, k] = false;
+
+		for(int i = 0; i < hasFingerSource.GetLength(0); ++i)
+			for(int j = 0; j < hasFingerSource.GetLength(1); ++j)
+				for(int k = 0; k < hasFingerSource.GetLength(2); ++k)
+					hasFingerSource[i, j, k] = false;
+
+		for(int i = 0; i < fingerConfidence.GetLength(0); ++i)
+			for(int j = 0; j < fingerConfidence.GetLength(1); ++j)
+				fingerConfidence[i, j] = 1.0f; // It's up to the developer to modify these values between 0 and 1 in real-time
 	}
 
 	void Start()
@@ -801,11 +820,11 @@ public class RUISSkeletonController : MonoBehaviour
 //			if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !skeletonManager.isNewKinect2Frame)
 //				return;
 
-			float maxAngularVelocity;
+			float maxAngularChange;
 //			if(bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID)
-//				maxAngularVelocity = skeletonManager.kinect2FrameDeltaT * rotationDamping;
+//				maxAngularChange = skeletonManager.kinect2FrameDeltaT * maxAngularVelocity;
 //			else 
-			maxAngularVelocity = deltaTime * rotationDamping;
+			maxAngularChange = deltaTime * maxAngularVelocity;
 
 
 			UpdateSkeletonPosition();
@@ -813,14 +832,14 @@ public class RUISSkeletonController : MonoBehaviour
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
 			if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking || !hasBeenTracked  /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
 			{
-				UpdateTransform(ref torso, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, maxAngularVelocity, pelvisRotationOffset);
-				UpdateTransform(ref chest, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, maxAngularVelocity, chestRotationOffset); // *** OPTIHACK
-				UpdateTransform(ref neck,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck,  maxAngularVelocity, neckRotationOffset); // *** OPTIHACK
-				UpdateTransform(ref head,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head,  maxAngularVelocity, headRotationOffset);
+				UpdateTransform(ref torso, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, maxAngularChange, pelvisRotationOffset);
+				UpdateTransform(ref chest, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, maxAngularChange, chestRotationOffset); // *** OPTIHACK
+				UpdateTransform(ref neck,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck,  maxAngularChange, neckRotationOffset); // *** OPTIHACK
+				UpdateTransform(ref head,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head,  maxAngularChange, headRotationOffset);
 
 				// *** OPTIHACK
-				UpdateTransform(ref leftClavicle,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle,  maxAngularVelocity, clavicleRotationOffset); 
-				UpdateTransform(ref rightClavicle, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, maxAngularVelocity, clavicleRotationOffset);
+				UpdateTransform(ref leftClavicle,  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle,  maxAngularChange, clavicleRotationOffset); 
+				UpdateTransform(ref rightClavicle, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, maxAngularChange, clavicleRotationOffset);
 			}
 
 			// *** OPTIHACK4 these are unnecessary for hierarchicalModels because of the later calls to ForceUpdatePosition( chest/neck/... ) ?
@@ -863,21 +882,21 @@ public class RUISSkeletonController : MonoBehaviour
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
 			if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking || !hasBeenTracked /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
 			{
-				UpdateTransform(ref leftShoulder, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftShoulder, maxAngularVelocity, shoulderRotationOffset);
-				UpdateTransform(ref rightShoulder, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, maxAngularVelocity, shoulderRotationOffset);
-				UpdateTransform(ref rightElbow, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, maxAngularVelocity, elbowRotationOffset);
-				UpdateTransform(ref leftElbow, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow, maxAngularVelocity, elbowRotationOffset);
-				// HACK the multiplier: 2 * maxAngularVelocity
-				UpdateTransform(ref leftHand, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 2 * maxAngularVelocity, handRotationOffset);
-				UpdateTransform(ref rightHand, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 2 * maxAngularVelocity, handRotationOffset);
+				UpdateTransform(ref leftShoulder, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftShoulder, maxAngularChange, shoulderRotationOffset);
+				UpdateTransform(ref rightShoulder, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, maxAngularChange, shoulderRotationOffset);
+				UpdateTransform(ref rightElbow, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, maxAngularChange, elbowRotationOffset);
+				UpdateTransform(ref leftElbow, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow, maxAngularChange, elbowRotationOffset);
+				// HACK the multiplier: 2 * maxAngularChange
+				UpdateTransform(ref leftHand, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 2 * maxAngularChange, handRotationOffset);
+				UpdateTransform(ref rightHand, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 2 * maxAngularChange, handRotationOffset);
 
-				UpdateTransform(ref leftHip, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, maxAngularVelocity, hipRotationOffset);
-				UpdateTransform(ref rightHip, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, maxAngularVelocity, hipRotationOffset);
-				UpdateTransform(ref leftKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, maxAngularVelocity, kneeRotationOffset);
-				UpdateTransform(ref rightKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, maxAngularVelocity, kneeRotationOffset);
+				UpdateTransform(ref leftHip, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, maxAngularChange, hipRotationOffset);
+				UpdateTransform(ref rightHip, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, maxAngularChange, hipRotationOffset);
+				UpdateTransform(ref leftKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, maxAngularChange, kneeRotationOffset);
+				UpdateTransform(ref rightKnee, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, maxAngularChange, kneeRotationOffset);
 				
-				UpdateTransform(ref leftFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, maxAngularVelocity, feetRotationOffset);
-				UpdateTransform(ref rightFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, maxAngularVelocity, feetRotationOffset);
+				UpdateTransform(ref leftFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, maxAngularChange, feetRotationOffset);
+				UpdateTransform(ref rightFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, maxAngularChange, feetRotationOffset);
 				
 				// *** TODO in below clause we need to have initial localRotations...
 //#if UNITY_EDITOR
@@ -925,9 +944,9 @@ public class RUISSkeletonController : MonoBehaviour
 					if(trackThumbs)
 					{
 						if(rightThumb)
-							UpdateTransform(ref rightThumb, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightThumb, maxAngularVelocity, Vector3.zero);
+							UpdateTransform(ref rightThumb, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightThumb, maxAngularChange, Vector3.zero);
 						if(leftThumb)
-							UpdateTransform(ref leftThumb, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftThumb, maxAngularVelocity, Vector3.zero);
+							UpdateTransform(ref leftThumb, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftThumb, maxAngularChange, Vector3.zero);
 					}
 				}
 				
@@ -960,7 +979,7 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					UpdateBoneScalings();
 
-					torsoRotation = Quaternion.Slerp(torsoRotation, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation, deltaTime * rotationDamping);
+					torsoRotation = Quaternion.Slerp(torsoRotation, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation, deltaTime * maxAngularVelocity);
 					torsoDirection = torsoRotation * Vector3.down;
 
 					ForceUpdatePosition(ref torso, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, 10, deltaTime);
@@ -1175,7 +1194,7 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
-	private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, float maxAngularVelocity, Vector3 rotOffset)
+	private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, float maxAngularChange, Vector3 rotOffset)
 	{
 		bool useParentRotation = false;
 
@@ -1252,11 +1271,11 @@ public class RUISSkeletonController : MonoBehaviour
 				else
 					newRotation = transform.rotation * jointToGet.rotation * rotationOffset *
 					                                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-				transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularVelocity);
+				transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularChange);
 			}
 			else
 			{	// *** OPTIHACK4  check that this works and rotationOffset multiplication belongs to right side
-				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation,  jointToGet.rotation * rotationOffset, maxAngularVelocity);
+				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation,  jointToGet.rotation * rotationOffset, maxAngularChange);
 			}
 		}
 	}
@@ -1275,7 +1294,7 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 //                Quaternion newRotation = transform.rotation * jointToGet.rotation *
 //                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-//                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, deltaTime * rotationDamping);
+//                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, deltaTime * maxAngularVelocity);
 				yaw = Quaternion.Euler(new Vector3(0, controllerYaw, 0));
 				Quaternion newRotation = transform.rotation * yaw *
 				                         (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
@@ -1286,7 +1305,7 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 				transformToUpdate.localRotation = Quaternion.Euler(new Vector3(0, controllerYaw, 0));
 				return transformToUpdate.localRotation;
-//              transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, deltaTime * rotationDamping);
+//              transformToUpdate.localRotation = Quaternion.Slerp(transformToUpdate.localRotation, jointToGet.rotation, deltaTime * maxAngularVelocity);
 			}
 		}
 		return yaw;
@@ -2204,11 +2223,11 @@ public class RUISSkeletonController : MonoBehaviour
 				if(!closeHand && !(a == 4 && trackThumbs))
 				{
 					if(fingerTargets[i, a, 0])
-						fingerTargets[i, a, 0].localRotation = Quaternion.Slerp(fingerTargets[i, a, 0].localRotation, initialFingerRotations[i, a, 0], deltaTime * rotationSpeed);
+						fingerTargets[i, a, 0].localRotation = Quaternion.Slerp(fingerTargets[i, a, 0].localRotation, initialFingerLocalRotations[i, a, 0], deltaTime * rotationSpeed);
 					if(fingerTargets[i, a, 1])
-						fingerTargets[i, a, 1].localRotation = Quaternion.Slerp(fingerTargets[i, a, 1].localRotation, initialFingerRotations[i, a, 1], deltaTime * rotationSpeed);
+						fingerTargets[i, a, 1].localRotation = Quaternion.Slerp(fingerTargets[i, a, 1].localRotation, initialFingerLocalRotations[i, a, 1], deltaTime * rotationSpeed);
 					if(fingerTargets[i, a, 2])
-						fingerTargets[i, a, 2].localRotation = Quaternion.Slerp(fingerTargets[i, a, 2].localRotation, initialFingerRotations[i, a, 2], deltaTime * rotationSpeed);
+						fingerTargets[i, a, 2].localRotation = Quaternion.Slerp(fingerTargets[i, a, 2].localRotation, initialFingerLocalRotations[i, a, 2], deltaTime * rotationSpeed);
 				}
 				else
 				{
@@ -2235,6 +2254,7 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
+	// *** TODO remove
 	private void SaveInitialFingerRotations()
 	{	
 		Transform handObject;
@@ -2271,7 +2291,7 @@ public class RUISSkeletonController : MonoBehaviour
 					}
 				
 					// First bone
-					initialFingerRotations[i, index, 0] = finger.localRotation;
+					initialFingerLocalRotations[i, index, 0] = finger.localRotation;
 					fingerTargets[i, index, 0] = finger;
 					Transform[] nextFingerParts = finger.gameObject.GetComponentsInChildren<Transform>();
 					foreach(Transform part1 in nextFingerParts)
@@ -2280,7 +2300,7 @@ public class RUISSkeletonController : MonoBehaviour
 						    && (part1.gameObject.name.Contains("finger") || part1.gameObject.name.Contains("Finger") || part1.gameObject.name.Contains("FINGER")))
 						{
 							// Second bone
-							initialFingerRotations[i, index, 1] = part1.localRotation;
+							initialFingerLocalRotations[i, index, 1] = part1.localRotation;
 							fingerTargets[i, index, 1] = part1;
 							Transform[] nextFingerParts2 = finger.gameObject.GetComponentsInChildren<Transform>();
 							foreach(Transform part2 in nextFingerParts2)
@@ -2289,7 +2309,7 @@ public class RUISSkeletonController : MonoBehaviour
 								    && (part2.gameObject.name.Contains("finger") || part2.gameObject.name.Contains("Finger") || part2.gameObject.name.Contains("FINGER")))
 								{
 									// Third bone
-									initialFingerRotations[i, index, 2] = part2.localRotation;
+									initialFingerLocalRotations[i, index, 2] = part2.localRotation;
 									fingerTargets[i, index, 2] = part2; 
 								}
 							}
@@ -2355,14 +2375,26 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					// Proximal phalanx (1st one from the hand)
 					if(isTargetFingers)
-						initialFingerRotations[i, j, 0] = fingerArray[i, j, 0].localRotation;
+					{
+						initialFingerWorldRotations[i, j, 0] = GetInitialRotation(fingerArray[i, j, 0]);
+						initialFingerLocalRotations[i, j, 0] = fingerArray[i, j, 0].localRotation;
+						hasFingerTarget[i, j, 0] = true;
+					}
+					else
+						hasFingerSource[i, j, 0] = true;
 					foreach(Transform middlePhalanx in fingerArray[i, j, 0].GetComponentsInChildren<Transform>(true))
 					{
 						if(middlePhalanx.parent.gameObject == fingerArray[i, j, 0].gameObject)
 						{
 							// Middle phalanx (2nd one from the hand)
 							if(isTargetFingers)
-								initialFingerRotations[i, j, 1] = middlePhalanx.localRotation;
+							{
+								initialFingerWorldRotations[i, j, 1] = GetInitialRotation(middlePhalanx);
+								initialFingerLocalRotations[i, j, 1] = middlePhalanx.localRotation;
+								hasFingerTarget[i, j, 1] = true;
+							}
+							else
+								hasFingerSource[i, j, 1] = true;
 							fingerArray[i, j, 1] = middlePhalanx;
 							foreach(Transform distalPhalanx in middlePhalanx.GetComponentsInChildren<Transform>(true))
 							{
@@ -2370,7 +2402,13 @@ public class RUISSkeletonController : MonoBehaviour
 								{
 									// Distal phalanx (3rd one from the hand)
 									if(isTargetFingers)
-										initialFingerRotations[i, j, 2] = distalPhalanx.localRotation;
+									{
+										initialFingerWorldRotations[i, j, 2] = GetInitialRotation(distalPhalanx);
+										initialFingerLocalRotations[i, j, 2] = distalPhalanx.localRotation;
+										hasFingerTarget[i, j, 2] = true;
+									}
+									else
+										hasFingerSource[i, j, 2] = true;
 									fingerArray[i, j, 2] = distalPhalanx; 
 								}
 							}
@@ -2423,21 +2461,21 @@ public class RUISSkeletonController : MonoBehaviour
 						foundFingerCount++;
 
 						// Proximal phalanx (1st one from the hand)
-						initialFingerRotations[i, fingerIndex, 0] = finger.localRotation;
+						initialFingerLocalRotations[i, fingerIndex, 0] = finger.localRotation;
 						fingerArray[i, fingerIndex, 0] = finger;
 						foreach(Transform middlePhalanx in finger.GetComponentsInChildren<Transform>())
 						{
 							if(middlePhalanx.parent.gameObject == finger.gameObject && ContainsFingerSubstring(middlePhalanx.name))
 							{
 								// Middle phalanx (2nd one from the hand)
-								initialFingerRotations[i, fingerIndex, 1] = middlePhalanx.localRotation;
+								initialFingerLocalRotations[i, fingerIndex, 1] = middlePhalanx.localRotation;
 								fingerArray[i, fingerIndex, 1] = middlePhalanx;
 								foreach(Transform distalPhalanx in finger.GetComponentsInChildren<Transform>())
 								{
 									if(distalPhalanx.parent.gameObject == middlePhalanx.gameObject && ContainsFingerSubstring(distalPhalanx.name))
 									{
 										// Distal phalanx (3rd one from the hand)
-										initialFingerRotations[i, fingerIndex, 2] = distalPhalanx.localRotation;
+										initialFingerLocalRotations[i, fingerIndex, 2] = distalPhalanx.localRotation;
 										fingerArray[i, fingerIndex, 2] = distalPhalanx; 
 									}
 								}
@@ -2455,6 +2493,37 @@ public class RUISSkeletonController : MonoBehaviour
 	private bool ContainsFingerSubstring(string str)
 	{
 		return (str.Contains("finger") || str.Contains("Finger") || str.Contains("FINGER"));
+	}
+
+	void UpdateFingerRotations()
+	{
+		if(!updateJointRotations)
+			return;
+		
+		for(int i = 0; i < hasFingerTarget.GetLength(0); ++i)
+		{
+			for(int j = 0; j < hasFingerTarget.GetLength(1); ++j)
+			{
+				for(int k = 0; k < hasFingerTarget.GetLength(2); ++k)
+				{
+					if(hasFingerTarget[i, j, k])
+					{
+						if(hasFingerSource[i, j, k])
+						{
+							/* Quaternion rotationOffset = Quaternion.Euler(rotOffset); */
+
+							if(fingerConfidence[i, j] >= minimumConfidenceToUpdate) // It is up to the developer to modify fingerConfidence[i, j]
+							{
+								// At the moment only hierarchical finger phalanx Transforms are supported
+								Quaternion newRotation = transform.rotation * fingerSources[i, j, k].rotation * /* rotationOffset * */
+															initialFingerWorldRotations[i, j, k];
+								fingerTargets[i, j, k].rotation = Quaternion.RotateTowards(fingerTargets[i, j, k].rotation, newRotation, maxFingerAngularVelocity);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// If memory serves me correctly, this method doesn't work quite right
