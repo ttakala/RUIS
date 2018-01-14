@@ -111,21 +111,30 @@ public class RUISSkeletonController : MonoBehaviour
 	public Vector3 kneeRotationOffset     = Vector3.zero;
 	public Vector3 feetRotationOffset 	  = Vector3.zero;
 
+	public Vector3 thumbRotationOffset	  = Vector3.zero;
+	public Vector3 indexFRotationOffset   = Vector3.zero;
+	public Vector3 middleFRotationOffset  = Vector3.zero;
+	public Vector3 ringFRotationOffset    = Vector3.zero;
+	public Vector3 littleFRotationOffset  = Vector3.zero;
+
 	public float pelvisScaleAdjust   = 1;
 	public float chestScaleAdjust 	 = 1;
 	public float neckScaleAdjust 	 = 1;
 	public float headScaleAdjust 	 = 1;
 	public float clavicleScaleAdjust = 1;
-	public float shoulderScaleAdjust = 1; // TODO is this needed?
-	public float elbowScaleAdjust    = 1; // TODO is this needed?
+//	public float shoulderScaleAdjust = 1; // TODO is this needed?
+//	public float elbowScaleAdjust    = 1; // TODO is this needed?
 	public float handScaleAdjust 	 = 1; // left and right separately
-	public float hipScaleAdjust 	 = 1; // TODO is this needed?
-	public float kneeScaleAdjust     = 1; // TODO is this needed?
+//	public float hipScaleAdjust 	 = 1; // TODO is this needed?
+//	public float kneeScaleAdjust     = 1; // TODO is this needed?
 	public float footScaleAdjust 	 = 1; // left and right separately
 
-	public bool fistCurlFingers = true;
-	public bool externalCurlTrigger = false;
-	public bool trackThumbs = false;
+	/// <summary>
+	/// If enabled, any finger tracking is overriden and externalLeftStatus and externalRightStatus variables can be used to open and close fist. 
+	/// </summary>
+	public bool externalFistTrigger = false;
+	public bool fistMaking = true;
+	public bool kinect2Thumbs = false;
 	public bool trackWrist = false;
 	public bool trackAnkle = false;
 	public bool rotateWristFromElbow = true;
@@ -346,18 +355,26 @@ public class RUISSkeletonController : MonoBehaviour
 	Transform[,,] fingerSources = new Transform[2, 5, 3];
 	bool[,,] hasFingerTarget = new bool[2, 5, 3]; // Checking bool value is presumably faster than (fingerTargets[i,j,k] != null)
 	bool[,,] hasFingerSource = new bool[2, 5, 3];
-	float [,] fingerConfidence = new float[2, 5];
+	float[,] fingerConfidence = new float[2, 5];
 
-	// NOTE: The below phalange rotations are set in Start() method !!! See clause that starts with switch(boneLengthAxis)
+	bool noSourceFingers = true;
+
+	// NOTE: The below clenchedRotation*s are set in Start() method !!! See clause that starts with switch(boneLengthAxis)
 	// Thumb phalange rotations when hand is clenched to a fist
-	public Quaternion clenchedRotationThumbTM;
-	public Quaternion clenchedRotationThumbMCP;
-	public Quaternion clenchedRotationThumbIP;
+//	public Quaternion clenchedRotationThumbTM;
+//	public Quaternion clenchedRotationThumbMCP;
+//	public Quaternion clenchedRotationThumbIP;
+	public Vector3 clenchedThumbAngleTM;
+	public Vector3 clenchedThumbAngleMCP;
+	public Vector3 clenchedThumbAngleIP;
 	
 	// Phalange rotations of other fingers when hand is clenched to a fist
-	public Quaternion clenchedRotationMCP;
-	public Quaternion clenchedRotationPIP;
-	public Quaternion clenchedRotationDIP;
+//	public Quaternion clenchedRotationMCP;
+//	public Quaternion clenchedRotationPIP;
+//	public Quaternion clenchedRotationDIP;
+	public Vector3 clenchedFingerAngleMCP;
+	public Vector3 clenchedFingerAnglePIP;
+	public Vector3 clenchedFingerAngleDIP;
 
 	public bool leftThumbHasIndependentRotations = false; // *** OPTITRACK5 remove this
 	public Quaternion clenchedLeftThumbTM;
@@ -468,10 +485,10 @@ public class RUISSkeletonController : MonoBehaviour
 		// Disable features that are only available for Kinect2 or custom motion tracker
 		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
 		{
-			fistCurlFingers = false;
-			trackThumbs = false;
-			//			trackWrist = false;
-			//			trackAnkle = false;
+//			fistCurlFingers = false;
+			kinect2Thumbs = false;
+//			trackWrist = false;
+//			trackAnkle = false;
 			rotateWristFromElbow = false;
 		}
 
@@ -480,7 +497,7 @@ public class RUISSkeletonController : MonoBehaviour
 		{
 			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			minimumConfidenceToUpdate = 0.5f;
-			trackThumbs = true;
+			kinect2Thumbs = false;
 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking = true;
 		}
 
@@ -662,45 +679,45 @@ public class RUISSkeletonController : MonoBehaviour
 		// Finger clench rotations: these depend on your animation rig
 		// Also see method handleFingersCurling() and its clenchedRotationThumbTM_corrected and clenchedRotationThumbIP_corrected
 		// variables, if you are not tracking thumbs with Kinect 2. They also depend on your animation rig.
-		switch(boneLengthAxis)
-		{
-			case RUISAxis.X:
-				// Thumb phalange rotations when hand is clenched to a fist
-				clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
-				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
-				clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
-				// Phalange rotations of other fingers when hand is clenched to a fist
-				clenchedRotationMCP = Quaternion.Euler(0, 0, -45);
-				clenchedRotationPIP = Quaternion.Euler(0, 0, -100);
-				clenchedRotationDIP = Quaternion.Euler(0, 0, -70);
-				break;
-			case RUISAxis.Y:
-				// Thumb phalange rotations when hand is clenched to a fist
-				clenchedRotationThumbTM = Quaternion.Euler(0, 0, 0); 
-				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, 0);
-				clenchedRotationThumbIP = Quaternion.Euler(0, 0, 80);
-				// Phalange rotations of other fingers when hand is clenched to a fist
-				clenchedRotationMCP = Quaternion.Euler(45, 0, 0);
-				clenchedRotationPIP = Quaternion.Euler(100, 0, 0);
-				clenchedRotationDIP = Quaternion.Euler(70, 0, 0);
-				break;
-			case RUISAxis.Z: // TODO: Not yet tested with a real rig
-				// Thumb phalange rotations when hand is clenched to a fist
-				clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
-				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
-				clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
-				// Phalange rotations of other fingers when hand is clenched to a fist
-				clenchedRotationMCP = Quaternion.Euler(0, -45, 0);
-				clenchedRotationPIP = Quaternion.Euler(0, -100, 0);
-				clenchedRotationDIP = Quaternion.Euler(0, -70, 0);
-				break;
-		}
-		if(leftThumbHasIndependentRotations) // *** TODO HACK
-		{
-			clenchedLeftThumbTM  = Quaternion.Euler(15, 0, -25);
-			clenchedLeftThumbMCP = Quaternion.Euler(0, 0, 0);
-			clenchedLeftThumbIP  = Quaternion.Euler(0, 0, 30);
-		}
+//		switch(boneLengthAxis)
+//		{
+//			case RUISAxis.X:
+//				// Thumb phalange rotations when hand is clenched to a fist
+//				clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
+//				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
+//				clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
+//				// Phalange rotations of other fingers when hand is clenched to a fist
+//				clenchedRotationMCP = Quaternion.Euler(0, 0, -45);
+//				clenchedRotationPIP = Quaternion.Euler(0, 0, -100);
+//				clenchedRotationDIP = Quaternion.Euler(0, 0, -70);
+//				break;
+//			case RUISAxis.Y:
+//				// Thumb phalange rotations when hand is clenched to a fist
+//				clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
+//				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, 25);
+//				clenchedRotationThumbIP = Quaternion.Euler(0, 0, 80);
+//				// Phalange rotations of other fingers when hand is clenched to a fist
+//				clenchedRotationMCP = Quaternion.Euler(45, 0, 0);
+//				clenchedRotationPIP = Quaternion.Euler(100, 0, 0);
+//				clenchedRotationDIP = Quaternion.Euler(70, 0, 0);
+//				break;
+//			case RUISAxis.Z: // TODO: Not yet tested with a real rig
+//				// Thumb phalange rotations when hand is clenched to a fist
+//				clenchedRotationThumbTM = Quaternion.Euler(45, 0, 0); 
+//				clenchedRotationThumbMCP = Quaternion.Euler(0, 0, -25);
+//				clenchedRotationThumbIP = Quaternion.Euler(0, 0, -80);
+//				// Phalange rotations of other fingers when hand is clenched to a fist
+//				clenchedRotationMCP = Quaternion.Euler(0, -45, 0);
+//				clenchedRotationPIP = Quaternion.Euler(0, -100, 0);
+//				clenchedRotationDIP = Quaternion.Euler(0, -70, 0);
+//				break;
+//		}
+//		if(leftThumbHasIndependentRotations) // *** OPTIHACK5 TODO HACK remove
+//		{
+//			clenchedLeftThumbTM  = Quaternion.Euler(15, 0, -25);
+//			clenchedLeftThumbMCP = Quaternion.Euler(0, 0, 0);
+//			clenchedLeftThumbIP  = Quaternion.Euler(0, 0, 30);
+//		}
 
 		if(inputManager)
 		{
@@ -898,19 +915,24 @@ public class RUISSkeletonController : MonoBehaviour
 				UpdateTransform(ref leftFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, maxAngularChange, feetRotationOffset);
 				UpdateTransform(ref rightFoot, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, maxAngularChange, feetRotationOffset);
 				
-				// *** TODO in below clause we need to have initial localRotations...
-//#if UNITY_EDITOR
-//				else
-//				{
-//					if(!trackAnkle)
-//					{
-//						if(leftFoot)
-//							leftFoot.localRotation  = Quaternion.Euler(feetRotationOffset) * jointInitialRotations[leftFoot];
-//						if(rightFoot)
-//							rightFoot.localRotation = Quaternion.Euler(feetRotationOffset) * jointInitialRotations[rightFoot];
-//					}
-//				}
-//#endif
+				if(!useHierarchicalModel)
+				{
+					if(!trackWrist)
+					{
+						if(leftHand && leftElbow) // *** OPTIHACK4 no axis minus in left handRotationOffset, check that this works
+							leftHand.localRotation  = leftElbow.localRotation  * Quaternion.Euler(handRotationOffset);
+						if(rightHand && rightElbow)
+							rightHand.localRotation = rightElbow.localRotation * Quaternion.Euler(handRotationOffset);
+					}
+					if(!trackAnkle)
+					{
+						if(leftFoot && leftKnee) // *** OPTIHACK4 no axis minus in left feetRotationOffset, check that this works
+							leftFoot.localRotation  = leftKnee.localRotation  * Quaternion.Euler(feetRotationOffset);
+						if(rightFoot && rightKnee)
+							rightFoot.localRotation = rightKnee.localRotation * Quaternion.Euler(feetRotationOffset);
+					}
+					// *** TODO bone scaling
+				}
 			
 //				// TODO: Restore this when implementation is fixed
 //				if(rotateWristFromElbow && bodyTrackingDevice == bodyTrackingDeviceType.Kinect2)
@@ -938,42 +960,28 @@ public class RUISSkeletonController : MonoBehaviour
 					leftHandStatus = (skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHandStatus);
 					rightHandStatus = (skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHandStatus);
 
-					if(fistCurlFingers && !externalCurlTrigger)
-						handleFingersCurling(trackThumbs);
+					if(fistMaking && !externalFistTrigger)
+						HandleFistMaking();
 
-					if(trackThumbs)
+					if(kinect2Thumbs)
 					{
+						// UpdateFingerRotations() usually handles all finger rotations, but thumb rotations are handled below if kinect2Thumbs == true
 						if(rightThumb)
-							UpdateTransform(ref rightThumb, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightThumb, maxAngularChange, Vector3.zero);
+							UpdateTransform(ref rightThumb, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightThumb, maxAngularChange, thumbRotationOffset);
 						if(leftThumb)
-							UpdateTransform(ref leftThumb, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftThumb, maxAngularChange, Vector3.zero);
+							UpdateTransform(ref leftThumb, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftThumb, maxAngularChange, thumbRotationOffset);
 					}
 				}
 				
 				// There is some other trigger that determines fist curling (e.g. RUISButtonGestureRecognizer)
-				if(externalCurlTrigger)
-					handleFingersCurling(trackThumbs);
+				if(fistMaking && externalFistTrigger)
+					HandleFistMaking();
 			}
 
-			if(!useHierarchicalModel)
-			{
-				if(!trackWrist)
-				{
-					if(leftHand && leftElbow) // *** OPTIHACK4 no axis minus in left handRotationOffset, check that this works
-						leftHand.localRotation  = leftElbow.localRotation  * Quaternion.Euler(handRotationOffset);
-					if(rightHand && rightElbow)
-						rightHand.localRotation = rightElbow.localRotation * Quaternion.Euler(handRotationOffset);
-				}
-				if(!trackAnkle)
-				{
-					if(leftFoot && leftKnee) // *** OPTIHACK4 no axis minus in left feetRotationOffset, check that this works
-						leftFoot.localRotation  = leftKnee.localRotation  * Quaternion.Euler(feetRotationOffset);
-					if(rightFoot && rightKnee)
-						rightFoot.localRotation = rightKnee.localRotation * Quaternion.Euler(feetRotationOffset);
-				}
-				// *** TODO bone scaling
-			}
-			else
+			if(!fistMaking) // Tracked fingers are reflected by the avatar only if fistMaking is set to false
+				UpdateFingerRotations();
+
+			if(useHierarchicalModel)
 			{
 				if(scaleHierarchicalModelBones)
 				{
@@ -1091,7 +1099,7 @@ public class RUISSkeletonController : MonoBehaviour
 //				pos = positionKalman.getState ();
 
 				// Root speed scaling is applied here
-				transform.localPosition = Vector3.Scale(skeletonPosition, rootSpeedScaling);
+				transform.localPosition = Vector3.Scale(skeletonPosition, rootSpeedScaling); // *** What if this is before updating limb transforms..?
 //				transform.localPosition = Vector3.Scale(new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]), rootSpeedScaling);
 			}
 		}
@@ -1219,6 +1227,7 @@ public class RUISSkeletonController : MonoBehaviour
 			case RUISSkeletonManager.Joint.LeftElbow: 
 			case RUISSkeletonManager.Joint.LeftHip: 
 			case RUISSkeletonManager.Joint.LeftKnee: 
+			case RUISSkeletonManager.Joint.LeftThumb: // *** OPTIHACK5 check that thumb offsets work with Kinect2 tracking
 				rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
 				break;
 			case RUISSkeletonManager.Joint.LeftHand: 
@@ -1345,7 +1354,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 			if(heightAffectsOffsets)
 			{
-				if(jointToGet.jointID != RUISSkeletonManager.Joint.Torso)
+				if(jointToGet.jointID != RUISSkeletonManager.Joint.Torso) // *** OPTIHACK4
 					offsetScale = transformToUpdate.parent.localScale.x; // *** TODO CHECK IF THIS IS BEST offsetScale or if torsoScale would be better
 																		 //     considering offset invariance between users of different height
 				else
@@ -2137,7 +2146,7 @@ public class RUISSkeletonController : MonoBehaviour
 				 skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip.positionConfidence		< minimumConfidenceToUpdate   );
 	}
 
-	private void handleFingersCurling(bool trackThumbs)
+	private void HandleFistMaking()
 	{
 		bool closeHand;
 		int inv = 1;
@@ -2149,7 +2158,7 @@ public class RUISSkeletonController : MonoBehaviour
 		RUISSkeletonManager.Skeleton.handState currentLeftHandStatus = leftHandStatus;
 		RUISSkeletonManager.Skeleton.handState currentRightHandStatus = rightHandStatus;
 
-		if(externalCurlTrigger)
+		if(externalFistTrigger)
 		{
 			currentLeftHandStatus = externalLeftStatus;
 			currentRightHandStatus = externalRightStatus;
@@ -2170,47 +2179,42 @@ public class RUISSkeletonController : MonoBehaviour
 		lastLeftHandStatus = currentLeftHandStatus;
 		lastRightHandStatus = currentRightHandStatus;
 		
+		// Hands
 		for(int i = 0; i < 2; i++)
-		{ // Hands
-			if(i == 0)
+		{
+			if(i == 0) // Right hand
 			{
-				closeHand = (currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.closed);
+				closeHand = (currentRightHandStatus == RUISSkeletonManager.Skeleton.handState.closed); // closeHand == should we make a fist?
 				inv = -1;
 			}
-			else
+			else       // Left hand
 			{
-				closeHand = (currentLeftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);	
+				closeHand = (currentLeftHandStatus == RUISSkeletonManager.Skeleton.handState.closed);  // closeHand == should we make a fist?
 				inv = 1;
 			}
 			// Thumb rotation correction: these depend on your animation rig
 			switch(boneLengthAxis)
 			{
 				case RUISAxis.X:
-					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x * inv, 
-																		  clenchedRotationThumbTM.eulerAngles.y, clenchedRotationThumbTM.eulerAngles.z);
-					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedRotationThumbMCP.eulerAngles.x * inv, 
-																		  clenchedRotationThumbMCP.eulerAngles.y, clenchedRotationThumbMCP.eulerAngles.z);
-					clenchedRotationThumbIP_corrected  = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x * inv, 
-																		  clenchedRotationThumbIP.eulerAngles.y, clenchedRotationThumbIP.eulerAngles.z);
+					clenchedRotationThumbTM_corrected  = Quaternion.Euler( clenchedThumbAngleTM.x * inv,  clenchedThumbAngleTM.y * inv,  clenchedThumbAngleTM.z)
+														 * Quaternion.Euler(thumbRotationOffset.x * inv,   thumbRotationOffset.y * inv,   thumbRotationOffset.z);
+					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedThumbAngleMCP.x * inv, clenchedThumbAngleMCP.y * inv, clenchedThumbAngleMCP.z);
+					clenchedRotationThumbIP_corrected  = Quaternion.Euler( clenchedThumbAngleIP.x * inv,  clenchedThumbAngleIP.y * inv,  clenchedThumbAngleIP.z);
 				break;
 				case RUISAxis.Y:
-					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x, clenchedRotationThumbTM.eulerAngles.y,
-					                                                      clenchedRotationThumbTM.eulerAngles.z * inv);
-					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedRotationThumbMCP.eulerAngles.x, clenchedRotationThumbMCP.eulerAngles.y, 
-						                                                  clenchedRotationThumbMCP.eulerAngles.z * inv);
-					clenchedRotationThumbIP_corrected  = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x, clenchedRotationThumbIP.eulerAngles.y, 
-						                                                  clenchedRotationThumbIP.eulerAngles.z * inv);
+					clenchedRotationThumbTM_corrected  = Quaternion.Euler( clenchedThumbAngleTM.x,  clenchedThumbAngleTM.y * inv,  clenchedThumbAngleTM.z * inv)
+														 * Quaternion.Euler(thumbRotationOffset.x,   thumbRotationOffset.y * inv,   thumbRotationOffset.z * inv);
+					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedThumbAngleMCP.x, clenchedThumbAngleMCP.y * inv, clenchedThumbAngleMCP.z * inv);
+					clenchedRotationThumbIP_corrected  = Quaternion.Euler( clenchedThumbAngleIP.x,  clenchedThumbAngleIP.y * inv,  clenchedThumbAngleIP.z * inv);
 					break;
 				case RUISAxis.Z:
-					clenchedRotationThumbTM_corrected  = Quaternion.Euler(clenchedRotationThumbTM.eulerAngles.x,
-																		  clenchedRotationThumbTM.eulerAngles.y  * inv, clenchedRotationThumbTM.eulerAngles.z);
-					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedRotationThumbMCP.eulerAngles.x,
-																		  clenchedRotationThumbMCP.eulerAngles.y * inv, clenchedRotationThumbMCP.eulerAngles.z);
-					clenchedRotationThumbIP_corrected  = Quaternion.Euler(clenchedRotationThumbIP.eulerAngles.x,
-																		  clenchedRotationThumbIP.eulerAngles.y  * inv, clenchedRotationThumbIP.eulerAngles.z);
+					clenchedRotationThumbTM_corrected  = Quaternion.Euler( clenchedThumbAngleTM.x * inv,  clenchedThumbAngleTM.y,  clenchedThumbAngleTM.z * inv)
+														 * Quaternion.Euler(thumbRotationOffset.x * inv,   thumbRotationOffset.y,   thumbRotationOffset.z * inv);
+					clenchedRotationThumbMCP_corrected = Quaternion.Euler(clenchedThumbAngleMCP.x * inv, clenchedThumbAngleMCP.y, clenchedThumbAngleMCP.z * inv);
+					clenchedRotationThumbIP_corrected  = Quaternion.Euler( clenchedThumbAngleIP.x * inv,  clenchedThumbAngleIP.y,  clenchedThumbAngleIP.z * inv);
 					break;
 			}
-			// If left thumb rotatioons have been set separately
+			// *** OPTIHACK5 this probably should be removed: If left thumb rotations have been set separately 
 			if(leftThumbHasIndependentRotations && i == 1) // i == 1 is left hand
 			{
 				clenchedRotationThumbTM_corrected 	= clenchedLeftThumbTM;
@@ -2218,36 +2222,37 @@ public class RUISSkeletonController : MonoBehaviour
 				clenchedRotationThumbIP_corrected 	= clenchedLeftThumbIP;
 			}
 
-			for(int a = 0; a < 5; a++)
-			{ // Fingers
-				if(!closeHand && !(a == 4 && trackThumbs))
+			// Fingers
+			for(int j = 0; j < 5; j++)
+			{ 
+				if(!closeHand && !(j == 4 && kinect2Thumbs)) // Not making a fist: Lets straighten this finger (unless it's a Kinect 2 -tracked thumb)
 				{
-					if(fingerTargets[i, a, 0])
-						fingerTargets[i, a, 0].localRotation = Quaternion.Slerp(fingerTargets[i, a, 0].localRotation, initialFingerLocalRotations[i, a, 0], deltaTime * rotationSpeed);
-					if(fingerTargets[i, a, 1])
-						fingerTargets[i, a, 1].localRotation = Quaternion.Slerp(fingerTargets[i, a, 1].localRotation, initialFingerLocalRotations[i, a, 1], deltaTime * rotationSpeed);
-					if(fingerTargets[i, a, 2])
-						fingerTargets[i, a, 2].localRotation = Quaternion.Slerp(fingerTargets[i, a, 2].localRotation, initialFingerLocalRotations[i, a, 2], deltaTime * rotationSpeed);
+					if(fingerTargets[i, j, 0])
+						fingerTargets[i, j, 0].localRotation = Quaternion.Slerp(fingerTargets[i, j, 0].localRotation, initialFingerLocalRotations[i, j, 0], deltaTime * rotationSpeed);
+					if(fingerTargets[i, j, 1])
+						fingerTargets[i, j, 1].localRotation = Quaternion.Slerp(fingerTargets[i, j, 1].localRotation, initialFingerLocalRotations[i, j, 1], deltaTime * rotationSpeed);
+					if(fingerTargets[i, j, 2])
+						fingerTargets[i, j, 2].localRotation = Quaternion.Slerp(fingerTargets[i, j, 2].localRotation, initialFingerLocalRotations[i, j, 2], deltaTime * rotationSpeed);
 				}
-				else
+				else // Making a fist: Lets flex this finger
 				{
-					if(a != 4)
+					if(j != 4) // Fingers that are not thumbs
 					{
-						if(fingerTargets[i, a, 0])
-							fingerTargets[i, a, 0].localRotation = Quaternion.Slerp(fingerTargets[i, a, 0].localRotation, clenchedRotationMCP, deltaTime * rotationSpeed);
-						if(fingerTargets[i, a, 1])
-							fingerTargets[i, a, 1].localRotation = Quaternion.Slerp(fingerTargets[i, a, 1].localRotation, clenchedRotationPIP, deltaTime * rotationSpeed);
-						if(fingerTargets[i, a, 2])
-							fingerTargets[i, a, 2].localRotation = Quaternion.Slerp(fingerTargets[i, a, 2].localRotation, clenchedRotationDIP, deltaTime * rotationSpeed);
+						if(fingerTargets[i, j, 0])
+							fingerTargets[i, j, 0].localRotation = Quaternion.Slerp(fingerTargets[i, j, 0].localRotation, Quaternion.Euler(clenchedFingerAngleMCP), deltaTime * rotationSpeed);
+						if(fingerTargets[i, j, 1])
+							fingerTargets[i, j, 1].localRotation = Quaternion.Slerp(fingerTargets[i, j, 1].localRotation, Quaternion.Euler(clenchedFingerAnglePIP), deltaTime * rotationSpeed);
+						if(fingerTargets[i, j, 2])
+							fingerTargets[i, j, 2].localRotation = Quaternion.Slerp(fingerTargets[i, j, 2].localRotation, Quaternion.Euler(clenchedFingerAngleDIP), deltaTime * rotationSpeed);
 					}
-					else if(!trackThumbs)
-					{ // Thumbs (if separate thumb  tracking is not enabled)
-						if(fingerTargets[i, a, 0])
-							fingerTargets[i, a, 0].localRotation = Quaternion.Slerp(fingerTargets[i, a, 0].localRotation,  clenchedRotationThumbTM_corrected, deltaTime * rotationSpeed);
-						if(fingerTargets[i, a, 1])
-							fingerTargets[i, a, 1].localRotation = Quaternion.Slerp(fingerTargets[i, a, 1].localRotation, clenchedRotationThumbMCP_corrected, deltaTime * rotationSpeed);
-						if(fingerTargets[i, a, 2])
-							fingerTargets[i, a, 2].localRotation = Quaternion.Slerp(fingerTargets[i, a, 2].localRotation,  clenchedRotationThumbIP_corrected, deltaTime * rotationSpeed);
+					else if(!kinect2Thumbs) // Thumbs (if separate thumb  tracking is not enabled)
+					{
+						if(fingerTargets[i, j, 0])
+							fingerTargets[i, j, 0].localRotation = Quaternion.Slerp(fingerTargets[i, j, 0].localRotation,  clenchedRotationThumbTM_corrected, deltaTime * rotationSpeed);
+						if(fingerTargets[i, j, 1])
+							fingerTargets[i, j, 1].localRotation = Quaternion.Slerp(fingerTargets[i, j, 1].localRotation, clenchedRotationThumbMCP_corrected, deltaTime * rotationSpeed);
+						if(fingerTargets[i, j, 2])
+							fingerTargets[i, j, 2].localRotation = Quaternion.Slerp(fingerTargets[i, j, 2].localRotation,  clenchedRotationThumbIP_corrected, deltaTime * rotationSpeed);
 					}	
 				}	
 			}
@@ -2381,7 +2386,10 @@ public class RUISSkeletonController : MonoBehaviour
 						hasFingerTarget[i, j, 0] = true;
 					}
 					else
+					{
 						hasFingerSource[i, j, 0] = true;
+						noSourceFingers = false;
+					}
 					foreach(Transform middlePhalanx in fingerArray[i, j, 0].GetComponentsInChildren<Transform>(true))
 					{
 						if(middlePhalanx.parent.gameObject == fingerArray[i, j, 0].gameObject)
@@ -2497,27 +2505,49 @@ public class RUISSkeletonController : MonoBehaviour
 
 	void UpdateFingerRotations()
 	{
-		if(!updateJointRotations)
+		if(noSourceFingers || !updateJointRotations)
 			return;
 		
+		Quaternion rotationOffset;
+		Quaternion newRotation;
+		Vector3 rotOffset;
+		float maxAngularDelta = Time.deltaTime * maxFingerAngularVelocity;
+
 		for(int i = 0; i < hasFingerTarget.GetLength(0); ++i)
 		{
 			for(int j = 0; j < hasFingerTarget.GetLength(1); ++j)
 			{
+				if(j == 4 && kinect2Thumbs)
+					continue;  // Kinect2 is used for thumb tracking
 				for(int k = 0; k < hasFingerTarget.GetLength(2); ++k)
 				{
 					if(hasFingerTarget[i, j, k])
 					{
 						if(hasFingerSource[i, j, k])
 						{
-							/* Quaternion rotationOffset = Quaternion.Euler(rotOffset); */
-
 							if(fingerConfidence[i, j] >= minimumConfidenceToUpdate) // It is up to the developer to modify fingerConfidence[i, j]
 							{
+								if(k == 0) // Proximal phalanges
+								{
+									switch(j)
+									{
+									case 4: rotOffset = thumbRotationOffset;   break; // Thumb
+									case 3: rotOffset = indexFRotationOffset;  break; // Index finger
+									case 2: rotOffset = middleFRotationOffset; break; // Middle finger
+									case 1: rotOffset = ringFRotationOffset;   break; // Ring finger
+									case 0: rotOffset = littleFRotationOffset; break; // Little finger
+									default: rotOffset = Vector3.zero; 		   break; // Mutant fingers should not exist
+									}
+									if(i == 1) // Left hand
+										rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
+								}
+								else // Middle and distal phalanges
+									rotOffset = Vector3.zero;
+								rotationOffset = Quaternion.Euler(rotOffset);
+
 								// At the moment only hierarchical finger phalanx Transforms are supported
-								Quaternion newRotation = transform.rotation * fingerSources[i, j, k].rotation * /* rotationOffset * */
-															initialFingerWorldRotations[i, j, k];
-								fingerTargets[i, j, k].rotation = Quaternion.RotateTowards(fingerTargets[i, j, k].rotation, newRotation, maxFingerAngularVelocity);
+								newRotation = transform.rotation * fingerSources[i, j, k].rotation * rotationOffset * initialFingerWorldRotations[i, j, k];
+								fingerTargets[i, j, k].rotation = Quaternion.RotateTowards(fingerTargets[i, j, k].rotation, newRotation, maxAngularDelta);
 							}
 						}
 					}

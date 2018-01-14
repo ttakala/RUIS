@@ -2057,6 +2057,14 @@ MonoBehaviour:
   leftFoot: {fileID: 697349213}
   leftThumb: {fileID: 1801291310}
   rightThumb: {fileID: 1598388362}
+  leftIndexF: {fileID: 0}
+  rightIndexF: {fileID: 0}
+  leftMiddleF: {fileID: 0}
+  rightMiddleF: {fileID: 0}
+  leftRingF: {fileID: 0}
+  rightRingF: {fileID: 0}
+  leftLittleF: {fileID: 0}
+  rightLittleF: {fileID: 0}
   customRoot: {fileID: 1350612936}
   customTorso: {fileID: 798951466}
   customChest: {fileID: 712146456}
@@ -2076,8 +2084,16 @@ MonoBehaviour:
   customLeftHip: {fileID: 1189229836}
   customLeftKnee: {fileID: 1287086718}
   customLeftFoot: {fileID: 301198998}
-  customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
+  customRightIndexF: {fileID: 0}
+  customRightMiddleF: {fileID: 0}
+  customRightRingF: {fileID: 0}
+  customRightLittleF: {fileID: 0}
+  customLeftThumb: {fileID: 0}
+  customLeftIndexF: {fileID: 0}
+  customLeftMiddleF: {fileID: 0}
+  customLeftRingF: {fileID: 0}
+  customLeftLittleF: {fileID: 0}
   pelvisOffset: {x: 0, y: 0.15, z: 0}
   chestOffset: {x: 0, y: 0.02, z: 0}
   neckOffset: {x: 0, y: 0.02, z: -0.03}
@@ -2100,6 +2116,11 @@ MonoBehaviour:
   hipRotationOffset: {x: 0, y: 0, z: 0}
   kneeRotationOffset: {x: 0, y: 0, z: 0}
   feetRotationOffset: {x: 0, y: 0, z: 0}
+  thumbRotationOffset: {x: 0, y: 0, z: 0}
+  indexFRotationOffset: {x: 0, y: 0, z: 0}
+  middleFRotationOffset: {x: 0, y: 0, z: 0}
+  ringFRotationOffset: {x: 0, y: 0, z: 0}
+  littleFRotationOffset: {x: 0, y: 0, z: 0}
   pelvisScaleAdjust: 0.8
   chestScaleAdjust: 0.9
   neckScaleAdjust: 0.4
@@ -2148,7 +2169,8 @@ MonoBehaviour:
   rightLegThickness: 1
   leftLegThickness: 1
   minimumConfidenceToUpdate: 0.5
-  rotationDamping: 7200
+  maxAngularVelocity: 360
+  maxFingerAngularVelocity: 720
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
   hmdRotatesHead: 0
@@ -2164,16 +2186,17 @@ MonoBehaviour:
   thumbZRotationOffset: 45
   forearmLengthRatio: 1
   shinLengthRatio: 1
-  clenchedRotationThumbTM: {x: 0.38268346, y: 0, z: 0, w: 0.9238795}
-  clenchedRotationThumbMCP: {x: 0, y: 0, z: -0.21643962, w: 0.976296}
-  clenchedRotationThumbIP: {x: 0, y: 0, z: -0.6427876, w: 0.76604444}
-  clenchedRotationMCP: {x: 0, y: 0, z: -0.38268346, w: 0.9238795}
-  clenchedRotationPIP: {x: 0, y: 0, z: -0.76604444, w: 0.64278764}
-  clenchedRotationDIP: {x: 0, y: 0, z: -0.57357645, w: 0.81915206}
+  clenchedThumbAngleTM: {x: 45, y: 0, z: 0}
+  clenchedThumbAngleMCP: {x: 0, y: 0, z: 25}
+  clenchedThumbAngleIP: {x: 0, y: 0, z: 80}
+  clenchedFingerAngleMCP: {x: 45, y: 0, z: 0}
+  clenchedFingerAnglePIP: {x: 100, y: 0, z: 0}
+  clenchedFingerAngleDIP: {x: 70, y: 0, z: 0}
   leftThumbHasIndependentRotations: 0
   clenchedLeftThumbTM: {x: 0, y: 0, z: 0, w: 0}
   clenchedLeftThumbMCP: {x: 0, y: 0, z: 0, w: 0}
   clenchedLeftThumbIP: {x: 0, y: 0, z: 0, w: 0}
+  keepPlayModeChanges: 1
 --- !u!114 &209769087
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14008,7 +14031,6 @@ GameObject:
   - component: {fileID: 1213179655}
   - component: {fileID: 1213179650}
   - component: {fileID: 1213179654}
-  - component: {fileID: 1213179653}
   m_Layer: 0
   m_Name: OptiMuscleDude Demo
   m_TagString: Untagged
@@ -14127,24 +14149,6 @@ MonoBehaviour:
   turningGestureType: 0
   rotationTriggerAngle: 40
   kinect2Heuristics: 0
---- !u!114 &1213179653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114674034610977928, guid: c30eb32b5736f1148a0b12ff7935ea22,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1213179648}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49df534434b573f4cb1e8d14e914346c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thumbTM: {x: 45, y: 0, z: 0}
-  thumbMCP: {x: 0, y: 0, z: -25}
-  thumbIP: {x: 0, y: 0, z: -80}
-  fingerMCP: {x: 0, y: -45, z: 0}
-  fingerPIP: {x: 0, y: -100, z: 0}
-  fingerDIP: {x: 0, y: -70, z: 0}
 --- !u!114 &1213179654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14152,7 +14156,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1213179648}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41391e0625ecf20438a7bfc63eccf907, type: 3}
   m_Name: 
@@ -14674,6 +14678,14 @@ MonoBehaviour:
   leftFoot: {fileID: 27642038}
   leftThumb: {fileID: 399616818}
   rightThumb: {fileID: 695880113}
+  leftIndexF: {fileID: 0}
+  rightIndexF: {fileID: 0}
+  leftMiddleF: {fileID: 0}
+  rightMiddleF: {fileID: 0}
+  leftRingF: {fileID: 0}
+  rightRingF: {fileID: 0}
+  leftLittleF: {fileID: 0}
+  rightLittleF: {fileID: 0}
   customRoot: {fileID: 205611049}
   customTorso: {fileID: 1597506447}
   customChest: {fileID: 679023022}
@@ -14693,8 +14705,16 @@ MonoBehaviour:
   customLeftHip: {fileID: 248743441}
   customLeftKnee: {fileID: 2135884383}
   customLeftFoot: {fileID: 1877392636}
-  customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
+  customRightIndexF: {fileID: 0}
+  customRightMiddleF: {fileID: 0}
+  customRightRingF: {fileID: 0}
+  customRightLittleF: {fileID: 0}
+  customLeftThumb: {fileID: 0}
+  customLeftIndexF: {fileID: 0}
+  customLeftMiddleF: {fileID: 0}
+  customLeftRingF: {fileID: 0}
+  customLeftLittleF: {fileID: 0}
   pelvisOffset: {x: 0, y: 0.15, z: 0}
   chestOffset: {x: 0, y: 0.02, z: 0}
   neckOffset: {x: 0, y: 0.02, z: -0.03}
@@ -14717,6 +14737,11 @@ MonoBehaviour:
   hipRotationOffset: {x: 0, y: 0, z: 0}
   kneeRotationOffset: {x: 0, y: 0, z: 0}
   feetRotationOffset: {x: -15, y: 0, z: 0}
+  thumbRotationOffset: {x: 0, y: 0, z: 0}
+  indexFRotationOffset: {x: 0, y: 0, z: 0}
+  middleFRotationOffset: {x: 0, y: 0, z: 0}
+  ringFRotationOffset: {x: 0, y: 0, z: 0}
+  littleFRotationOffset: {x: 0, y: 0, z: 0}
   pelvisScaleAdjust: 0.8
   chestScaleAdjust: 0.9
   neckScaleAdjust: 0.4
@@ -14765,7 +14790,8 @@ MonoBehaviour:
   rightLegThickness: 1
   leftLegThickness: 1
   minimumConfidenceToUpdate: 0.5
-  rotationDamping: 7200
+  maxAngularVelocity: 360
+  maxFingerAngularVelocity: 720
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
   hmdRotatesHead: 0
@@ -14781,16 +14807,17 @@ MonoBehaviour:
   thumbZRotationOffset: 45
   forearmLengthRatio: 0.9
   shinLengthRatio: 0.7
-  clenchedRotationThumbTM: {x: 0.38268346, y: 0, z: 0, w: 0.9238795}
-  clenchedRotationThumbMCP: {x: 0, y: 0, z: -0.21643962, w: 0.976296}
-  clenchedRotationThumbIP: {x: 0, y: 0, z: -0.6427876, w: 0.76604444}
-  clenchedRotationMCP: {x: 0, y: 0, z: -0.38268346, w: 0.9238795}
-  clenchedRotationPIP: {x: 0, y: 0, z: -0.76604444, w: 0.64278764}
-  clenchedRotationDIP: {x: 0, y: 0, z: -0.57357645, w: 0.81915206}
+  clenchedThumbAngleTM: {x: 0, y: 0, z: 0}
+  clenchedThumbAngleMCP: {x: 0, y: 0, z: 0}
+  clenchedThumbAngleIP: {x: 0, y: 0, z: 0}
+  clenchedFingerAngleMCP: {x: 0, y: 0, z: 0}
+  clenchedFingerAnglePIP: {x: 0, y: 0, z: 0}
+  clenchedFingerAngleDIP: {x: 0, y: 0, z: 0}
   leftThumbHasIndependentRotations: 0
   clenchedLeftThumbTM: {x: 0, y: 0, z: 0, w: 0}
   clenchedLeftThumbMCP: {x: 0, y: 0, z: 0, w: 0}
   clenchedLeftThumbIP: {x: 0, y: 0, z: 0, w: 0}
+  keepPlayModeChanges: 1
 --- !u!114 &1245703908
 MonoBehaviour:
   m_ObjectHideFlags: 0

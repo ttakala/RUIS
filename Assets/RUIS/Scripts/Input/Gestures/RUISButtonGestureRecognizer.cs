@@ -33,7 +33,7 @@ public class RUISButtonGestureRecognizer : RUISGestureRecognizer {
 
 		if(animateFist && skeletonController && this.enabled)
 		{
-			skeletonController.externalCurlTrigger = true;
+			skeletonController.externalFistTrigger = true;
 		}
 
 		// hack for RUISSkeletonController which gets re-instantiated if RUISKinectAndMecanimCombiner is used 

@@ -114,8 +114,8 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty forearmLengthTweaker;
 	public SerializedProperty shinLengthTweaker;
 
-	SerializedProperty fistCurlFingers;
-	SerializedProperty trackThumbs;
+	public SerializedProperty fistMaking;
+	SerializedProperty kinect2Thumbs;
 	public SerializedProperty trackWrist;
 	public SerializedProperty trackAnkle;
 //	SerializedProperty rotateWristFromElbow;
@@ -144,14 +144,27 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty kneeRotationOffset;
 	public SerializedProperty feetRotationOffset;
 
+	public SerializedProperty thumbRotationOffset;
+	public SerializedProperty indexFRotationOffset;
+	public SerializedProperty middleFRotationOffset;
+	public SerializedProperty ringFRotationOffset;
+	public SerializedProperty littleFRotationOffset;
+
+	public SerializedProperty clenchedThumbAngleTM;
+	public SerializedProperty clenchedThumbAngleMCP;
+	public SerializedProperty clenchedThumbAngleIP;
+	public SerializedProperty clenchedFingerAngleMCP;
+	public SerializedProperty clenchedFingerAnglePIP;
+	public SerializedProperty clenchedFingerAngleDIP;
+
 	public SerializedProperty pelvisScaleAdjust;
 	public SerializedProperty chestScaleAdjust;
 	public SerializedProperty neckScaleAdjust;
 	public SerializedProperty headScaleAdjust;
 	public SerializedProperty clavicleScaleAdjust;
-	public SerializedProperty shoulderScaleAdjust;
+//	public SerializedProperty shoulderScaleAdjust;
 	public SerializedProperty handScaleAdjust;
-	public SerializedProperty hipScaleAdjust;
+//	public SerializedProperty hipScaleAdjust;
 	public SerializedProperty footScaleAdjust;
 
 	SerializedProperty isIMUMocap;
@@ -297,8 +310,8 @@ public class RUISSkeletonControllerEditor : Editor
         forearmLengthTweaker = serializedObject.FindProperty("forearmLengthRatio");
 		shinLengthTweaker = serializedObject.FindProperty("shinLengthRatio");
 		
-		fistCurlFingers = serializedObject.FindProperty("fistCurlFingers");
-		trackThumbs = serializedObject.FindProperty("trackThumbs");
+		fistMaking = serializedObject.FindProperty("fistMaking");
+		kinect2Thumbs = serializedObject.FindProperty("kinect2Thumbs");
 
 		isIMUMocap = serializedObject.FindProperty("isIMUMocap");
 
@@ -363,14 +376,27 @@ public class RUISSkeletonControllerEditor : Editor
 		kneeRotationOffset     = serializedObject.FindProperty("kneeRotationOffset");
 		feetRotationOffset     = serializedObject.FindProperty("feetRotationOffset");;
 
+		thumbRotationOffset   = serializedObject.FindProperty("thumbRotationOffset");
+		indexFRotationOffset  = serializedObject.FindProperty("indexFRotationOffset");
+		middleFRotationOffset = serializedObject.FindProperty("middleFRotationOffset");
+		ringFRotationOffset   = serializedObject.FindProperty("ringFRotationOffset");
+		littleFRotationOffset = serializedObject.FindProperty("littleFRotationOffset");
+
+		clenchedThumbAngleTM   = serializedObject.FindProperty("clenchedThumbAngleTM");
+		clenchedThumbAngleMCP  = serializedObject.FindProperty("clenchedThumbAngleMCP");
+		clenchedThumbAngleIP   = serializedObject.FindProperty("clenchedThumbAngleIP");
+		clenchedFingerAngleMCP = serializedObject.FindProperty("clenchedFingerAngleMCP");
+		clenchedFingerAnglePIP = serializedObject.FindProperty("clenchedFingerAnglePIP");
+		clenchedFingerAngleDIP = serializedObject.FindProperty("clenchedFingerAngleDIP");
+
 		pelvisScaleAdjust 	= serializedObject.FindProperty("pelvisScaleAdjust");
 		chestScaleAdjust 	= serializedObject.FindProperty("chestScaleAdjust");
 		neckScaleAdjust 	= serializedObject.FindProperty("neckScaleAdjust");
 		headScaleAdjust 	= serializedObject.FindProperty("headScaleAdjust");
 		clavicleScaleAdjust = serializedObject.FindProperty("clavicleScaleAdjust");
-		shoulderScaleAdjust = serializedObject.FindProperty("shoulderScaleAdjust");
+//		shoulderScaleAdjust = serializedObject.FindProperty("shoulderScaleAdjust");
 		handScaleAdjust		= serializedObject.FindProperty("handScaleAdjust");
-		hipScaleAdjust		= serializedObject.FindProperty("hipScaleAdjust");
+//		hipScaleAdjust		= serializedObject.FindProperty("hipScaleAdjust");
 		footScaleAdjust		= serializedObject.FindProperty("footScaleAdjust");
 
 		skeletonController = target as RUISSkeletonController;
@@ -791,7 +817,16 @@ public class RUISSkeletonControllerEditor : Editor
 					rightKneeBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightLowerLeg);
 					rightFootBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightFoot);
 					leftThumb.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.LeftThumbProximal);
+					leftIndexF.objectReferenceValue			= animator.GetBoneTransform(HumanBodyBones.LeftIndexProximal);
+					leftMiddleF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
+					leftRingF.objectReferenceValue			= animator.GetBoneTransform(HumanBodyBones.LeftRingProximal);
+					leftLittleF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.LeftLittleProximal);
 					rightThumb.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightThumbProximal);
+					rightIndexF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.RightIndexProximal);
+					rightMiddleF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal);
+					rightRingF.objectReferenceValue			= animator.GetBoneTransform(HumanBodyBones.RightRingProximal);
+					rightLittleF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.RightLittleProximal);
+
 
 					if(		rootBone.objectReferenceValue && ((Transform) rootBone.objectReferenceValue).IsChildOf(animator.transform)
 						&& 	animator.transform != ((Transform) rootBone.objectReferenceValue))
@@ -851,8 +886,24 @@ public class RUISSkeletonControllerEditor : Editor
 						missedBones += "Left Foot, ";
 					if(!leftThumb.objectReferenceValue)
 						missedBones += "Left Thumb, ";
+					if(!leftIndexF.objectReferenceValue)
+						missedBones += "Left Index Finger CMC, ";
+					if(!leftMiddleF.objectReferenceValue)
+						missedBones += "Left Middle Finger CMC, ";
+					if(!leftRingF.objectReferenceValue)
+						missedBones += "Left Ring Finger CMC, ";
+					if(!leftLittleF.objectReferenceValue)
+						missedBones += "Left Little Finger CMC, ";
 					if(!rightThumb.objectReferenceValue)
 						missedBones += "Right Thumb, ";
+					if(!rightIndexF.objectReferenceValue)
+						missedBones += "Right Index Finger CMC, ";
+					if(!rightMiddleF.objectReferenceValue)
+						missedBones += "Right Middle Finger CMC, ";
+					if(!rightRingF.objectReferenceValue)
+						missedBones += "Right Ring Finger CMC, ";
+					if(!rightLittleF.objectReferenceValue)
+						missedBones += "Right Little Finger CMC, ";
 
 					EditorStyles.textField.wordWrap = true;
 					if(!string.IsNullOrEmpty(missedBones))
@@ -1009,37 +1060,67 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.EndHorizontal();
 			EditorGUIUtility.labelWidth = 0;
 
+			EditorGUI.indentLevel++;
 
+			SwitchToKeepChangesFieldColor();
 			EditorGUILayout.PropertyField(maxFingerAngularVelocity, new GUIContent("Max Finger Angular Velocity", "Maximum angular velocity for fingers, "
 																		+ "which can be used for damping finger movement (smaller values). The values "
 																		+ "are in degrees. For noisy and inaccurate finger tracking systems, a value of "
 																		+ "360 is suitable. For more accurate and responsive mocap systems, this value "
 																		+ "can easily be set to 7200 or more, so that very fast motions are not restricted."));
-			
-			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
+
+			EditorGUILayout.PropertyField(fistMaking, new GUIContent("Fist Clench Animation", "Disable this option when you are using \"Custom Mocap Source "
+																		+ "Transforms\" for posing avatar fingers!\nWhen this option is enabled, Kinect 2's "
+																		+ "fist gesture recognition is utilized to pose the fingers to either the initial "
+																		+ "finger pose or the fist pose (defined by below angles). As an alternative to "
+																		+ "Kinect 2 tracking you can set the 'externalFistTrigger' variable to true and use "
+																		+ "'externalLeftStatus' and 'externalRightStatus' variables to open and close the "
+																		+ "fists. Remember to assign the above \"Left Thumb CMC\" and \"Right Thumb CMC\", "
+																		+ "so that the thumb Target Transforms will be identified. For the purposes of finger "
+																		+ "clenching, it is not required to assign the other finger CMC Target Transforms "
+																		+ "if they are parented directly under \"Left Hand\" and \"Right Hand\" Target "
+																		+ "Transforms and their names include the substring 'finger', 'Finger', or "
+																		+ "'FINGER'"));
+
+			if(fistMaking.boolValue)
 			{
 				EditorGUI.indentLevel++;
-				EditorGUILayout.PropertyField(fistCurlFingers, new GUIContent(  "Track Fist Clenching", "When user is making a fist, curl finger joints "
-				                                                              + "(child gameObjects under 'Left Hand' and 'Right Hand' whose name include "
-				                                                              + "the substring 'finger' or 'Finger'.). If you have assigned 'Left Thumb' " +
-				                                                              	"and 'Right Thumb', they will receive a slightly different finger curling."));
-				EditorGUILayout.PropertyField(trackThumbs, new GUIContent("Track Thumbs", "Track thumb movement."));
+				EditorGUILayout.PropertyField(clenchedThumbAngleTM,  new GUIContent("Clenched Thumb TM (Rot)", "TM joint (thumb root) rotation for clenched "
+																				  + "fist. Angles are in degrees."));
+				EditorGUILayout.PropertyField(clenchedThumbAngleMCP, new GUIContent("Clenched Thumb MCP (Rot)", "MCP joint (second joint) rotation for clenched "
+																				  + "fist. Angles are in degrees."));
+				EditorGUILayout.PropertyField(clenchedThumbAngleIP,  new GUIContent("Clenched Thumb IP (Rot)", "IP joint (third joint) rotation for clenched "
+																				  + "fist. Angles are in degrees."));
+				EditorGUILayout.PropertyField(clenchedFingerAngleMCP, new GUIContent("Clenched Finger MCP (Rot)", "MCP joint (finger root) rotation for "
+																		+ "index, middle, ring, and little fingers of clenched fist. Angles are in degrees."));
+				EditorGUILayout.PropertyField(clenchedFingerAnglePIP, new GUIContent("Clenched Finger PIP (Rot)", "PIP joint (second joint) rotation for "
+																		+ "index, middle, ring, and little fingers of clenched fist. Angles are in degrees."));
+				EditorGUILayout.PropertyField(clenchedFingerAngleDIP, new GUIContent("Clenched Finger DIP (Rot)", "DIP joint (third joint) rotation for "
+																		+ "index, middle, ring, and little fingers of clenched fist. Angles are in degrees."));
+				EditorGUI.indentLevel--;
+			}
+
+			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID)
+			{
+				SwitchToNormalFieldColor();
+				EditorGUILayout.PropertyField(kinect2Thumbs, new GUIContent("Kinect 2 Thumbs", "This enables Kinect 2 tracking for posing thumbs."));
 				SwitchToKeepChangesFieldColor();
-				if(trackThumbs.boolValue)
+
+				if(kinect2Thumbs.boolValue)
 				{
 					EditorGUI.indentLevel++;
 					EditorGUILayout.PropertyField(thumbZRotationOffset, new GUIContent("Z Rotation Offset",   "Offset Z rotation of the thumb. Default value is "
-						+ "45, but it might depend on your avatar rig."));
+																					 + "45, but it might depend on your avatar rig. This offset is only applied "
+																					 + "if Kinect 2 is used for tracking and \"Kinect 2 Thumbs\" is enabled."));
 					EditorGUI.indentLevel--;
-					if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 
+					if(    Application.isEditor && skeletonController && skeletonController.skeletonManager 
 						&& skeletonController.skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
 						skeletonController.skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId].thumbZRotationOffset = 
 							thumbZRotationOffset.floatValue;
 				}
-				SwitchToNormalFieldColor();
-				EditorGUI.indentLevel--;
 			}
 
+			EditorGUI.indentLevel--;
 		}
 
 		EditorGUILayout.Space();
@@ -1070,6 +1151,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = scaleHierarchicalModelBones.boolValue;
 
+
 		EditorGUILayout.PropertyField(heightAffectsOffsets, new GUIContent("Scaled Offsets", "When this option is enabled, then the below position "
 																+ "offsets are scaled according to the detected user height. The scale factor "
 																+ "comes from the user's sitting height (pelvis to head distance), where sitting "
@@ -1080,48 +1162,40 @@ public class RUISSkeletonControllerEditor : Editor
 		GUI.enabled = true;
 
 		// *** OPTIHACK
-		EditorGUILayout.PropertyField(pelvisOffset, new GUIContent("Pelvis Offset",   "Offsets pelvis joint position in its local frame in meters. WARNING: "
-																					+ "This also offsets the absolute positions of all spine and clavicle "
-						                                                            + "joints! The offset is relative to the scale of pelvis joint. This setting "
-						                                                            + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.PropertyField(pelvisOffset, new GUIContent("Pelvis Offset",   "Offsets pelvis joint position in its local frame in meters. This "
+						                                                            + "setting has effect only when \"Hierarchical Model\" is enabled."));
 
 		EditorGUILayout.Slider(pelvisScaleAdjust, minScale, maxScale, new GUIContent("Pelvis Scale Adjust",   "Scales pelvis. This setting has effect only when \"Hierarchical "
 		                                                                   			+ "Model\" and \"Scale Bones\" are enabled."));
 
-		EditorGUILayout.PropertyField(chestOffset, new GUIContent("Chest Offset",   "Offsets chest joint position in its local frame in meters. "
-		                                                          + "WARNING: This also offsets the absolute positions of neck, head and "
-		                                                          + "clavicle joints! The offset is relative to the scale of pelvis joint. This setting "
-		                                                          + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.PropertyField(chestOffset, new GUIContent("Chest Offset",   "Offsets chest joint position in its local frame in meters. This "
+						                                                          + "setting has effect only when \"Hierarchical Model\" is enabled."));
 
 		EditorGUILayout.Slider(chestScaleAdjust, minScale, maxScale, new GUIContent("Chest Scale Adjust",   "Scales chest. This setting has effect only when \"Hierarchical "
 		                                                     			           + "Model\" and \"Scale Bones\" are enabled."));
 		
-		EditorGUILayout.PropertyField(neckOffset, new GUIContent("Neck Offset",   "Offsets neck joint position in its local frame in meters. "
-		                                                         + "WARNING: This also offsets the absolute positions of head and "
-		                                                         + "clavicle joints! The offset is relative to the scale of chest joint. This setting "
-		                                                         + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.PropertyField(neckOffset, new GUIContent("Neck Offset",   "Offsets neck joint position in its local frame in meters. This "
+						                                                         + "setting has effect only when \"Hierarchical Model\" is enabled."));
 
 		EditorGUILayout.Slider(neckScaleAdjust, minScale, maxScale, new GUIContent("Neck Scale Adjust",   "Scales neck. This setting has effect only when \"Hierarchical "
 		                                                    		           + "Model\" and \"Scale Bones\" are enabled."));
 		
-		EditorGUILayout.PropertyField(headOffset, new GUIContent("Head Offset",   "Offsets head joint position in its local frame in meters. "
-		                                                         + "The offset is relative to the scale of neck joint. This setting has effect only when \"Hierarchical "
-		                                                         + "Model\" and \"Scale Bones\" are enabled."));
+		EditorGUILayout.PropertyField(headOffset, new GUIContent("Head Offset",   "Offsets head joint position in its local frame in meters. This setting "
+						                                                         + "This setting has effect only when \"Hierarchical Model\" is enabled."));
 
 		EditorGUILayout.Slider(headScaleAdjust, minScale, maxScale, new GUIContent("Head Scale Adjust",   "Scales head. This setting has effect only when \"Hierarchical "
 		                                                             			 + "Model\" and \"Scale Bones\" are enabled."));
 		
 		EditorGUILayout.PropertyField(clavicleOffset, new GUIContent("Clavicle Offset",   "Offsets clavicle joint positions in their local frame in meters. "
-																	 + "The offset is relative to the scale of neck joint. This setting has effect only when "
-		                                                             + "\"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+																	 + "This setting has effect only when \"Hierarchical Model\" is enabled."));
 
 		EditorGUILayout.Slider(clavicleScaleAdjust, minScale, maxScale, new GUIContent("Clavice Scale Adjust",   "Scales clavicles. This setting has effect only when \"Hierarchical "
 		                                                    				          + "Model\" and \"Scale Bones\" are enabled."));
 		
 		EditorGUILayout.PropertyField(shoulderOffset, new GUIContent("Shoulder Offset",   "Offsets shoulder joint positions in their local frame in meters. "
 																						+ "WARNING: This also offsets the absolute positions of all the "
-																						+ "arm joints! Offset is relative to the scale of parent joint. This setting "
-		                                                   						        + "has effect only when \"Hierarchical Model\" and \"Scale Bones\" are enabled."));
+																						+ "arm joints if \"Scale Limbs\" is enabled! This setting "
+		                                                   						        + "has effect only when \"Hierarchical Model\" is enabled."));
 
 		GUI.enabled = !limbsAreScaled.boolValue;
 		EditorGUILayout.PropertyField(elbowOffset, new GUIContent("Elbow Offset",   "Offsets elbow joint positions in their "
@@ -1131,10 +1205,9 @@ public class RUISSkeletonControllerEditor : Editor
 		GUI.enabled = true;
 
 		// *** OPTIHACK
-		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame in meters. WARNING: This also "
-					                                                          + "offsets the absolute positions of all the leg joints! Offset is relative to the "
-					                                                          + "scale of pelvis joint. This setting has effect only when \"Hierarchical Model\" and " 
-																			  + "\"Scale Bones\" are enabled."));
+		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame in meters. WARNING: This "
+																			  + "also offsets the absolute positions of all the leg joints if \"Scale Limbs\" "
+																			  + "is enabled! This setting has effect only when \"Hierarchical Model\" is enabled."));
 
 		GUI.enabled = !limbsAreScaled.boolValue;
 		EditorGUILayout.PropertyField(kneeOffset, new GUIContent("Knee Offset",   "Offsets knee joint positions in their "
@@ -1176,6 +1249,19 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.PropertyField(hipRotationOffset, new GUIContent("Hips (Rot)", "Offsets the hip joint rotations in the local body segment frame (Euler angles)."));
 			EditorGUILayout.PropertyField(kneeRotationOffset, new GUIContent("Knees (Rot)", "Offsets the knee joint rotations in the local body segment frame (Euler angles)."));
 			EditorGUILayout.PropertyField(feetRotationOffset, new GUIContent("Feet (Rot)", "Offsets the foot joint rotations in the local body segment frame (Euler angles)."));
+
+			EditorGUILayout.Space();
+			EditorGUILayout.PropertyField(thumbRotationOffset,   new GUIContent("Thumb (Rot)", "Offsets the thumb CMC joint (thumb root) rotation in the "
+																			  + "local hand coordinate frame (Euler angles)."));
+			EditorGUILayout.PropertyField(indexFRotationOffset,  new GUIContent("Index Finger (Rot)", "Offsets the index finger MCP joint (finger root) "
+																			  + "rotation in the local hand coordinate frame (Euler angles)."));
+			EditorGUILayout.PropertyField(middleFRotationOffset, new GUIContent("Middle Finger (Rot)", "Offsets the middle finger MCP joint (finger root) "
+																			  + "rotation in the local hand coordinate frame (Euler angles)."));
+			EditorGUILayout.PropertyField(ringFRotationOffset,   new GUIContent("Ring Finger (Rot)", "Offsets the ring finger MCP joint (finger root) "
+																			  + "rotation in the local hand coordinate frame (Euler angles)."));
+			EditorGUILayout.PropertyField(littleFRotationOffset, new GUIContent("Little Finger (Rot)", "Offsets the little finger MCP joint (finger root) "
+																			  + "rotation in the local hand coordinate frame (Euler angles)."));
+
 			EditorGUI.indentLevel -= 1;
 		}
 
