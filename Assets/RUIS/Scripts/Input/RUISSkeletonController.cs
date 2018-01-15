@@ -87,6 +87,9 @@ public class RUISSkeletonController : MonoBehaviour
 	public Transform customLeftRingF;
 	public Transform customLeftLittleF;
 
+	public Transform customHMDSource;
+	public RUISDevice headsetCoordinates = RUISDevice.OpenVR; 
+
 	public Vector3 pelvisOffset   = Vector3.zero;
 	public Vector3 chestOffset	  = Vector3.zero;
 	public Vector3 neckOffset	  = Vector3.zero;
@@ -275,6 +278,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public Vector3 hmdLocalOffset = Vector3.zero;
 
 	public bool isIMUMocap = false;
+	public Vector3 pelvisIMUOffset = Vector3.zero;
 
 	public bool followHmdPosition { get; private set; }
 
@@ -843,7 +847,6 @@ public class RUISSkeletonController : MonoBehaviour
 //			else 
 			maxAngularChange = deltaTime * maxAngularVelocity;
 
-
 			UpdateSkeletonPosition();
 
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
@@ -871,29 +874,16 @@ public class RUISSkeletonController : MonoBehaviour
 			if(rightClavicle)
 				rightClavicle.localPosition = clavicleOffset + jointInitialLocalPositions[rightClavicle];
 				
-			if(RUISDisplayManager.IsHmdPresent() && coordinateSystem)
+			if(hmdRotatesHead && RUISDisplayManager.IsHmdPresent() && head)
 			{
-				if(hmdRotatesHead && head)
-				{
-					Quaternion hmdRotation = Quaternion.identity;
+				// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+				headsetRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates);
 
-//						if(ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD) //06to08
-//							oculusRotation = coordinateSystem.GetOculusRiftOrientationRaw();
-//						else //06to08
-//							oculusRotation = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) 
-//								                                                  * coordinateSystem.GetOculusRiftOrientationRaw(), RUISDevice.Oculus_DK2);
-					// *** TODO RUISDevice.OpenVR could also be RUISDevice.UnityXR
-					hmdRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR);
-
-//					else if(OVRManager.display != null) //06to08
-//						oculusRotation = OVRManager.display.GetHeadPose().orientation; 
-
-					if(useHierarchicalModel)
-						head.rotation = transform.rotation * hmdRotation /*skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotation*/ *
-						(jointInitialRotations.ContainsKey(head) ? jointInitialRotations[head] : Quaternion.identity);
-					else
-						head.localRotation = hmdRotation; //skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head;
-				}
+				if(useHierarchicalModel)
+					head.rotation = transform.rotation * headsetRotation /*skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head.rotation*/ *
+					(jointInitialRotations.ContainsKey(head) ? jointInitialRotations[head] : Quaternion.identity);
+				else
+					head.localRotation = headsetRotation; //skeletonManager.skeletons [bodyTrackingDeviceID, playerId].head;
 			}
 			
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
@@ -1013,9 +1003,11 @@ public class RUISSkeletonController : MonoBehaviour
 
 						if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
 						{
-							// *** TODO RUISDevice.OpenVR could also be RUISDevice.UnityXR
+							// *** OPTIHACK5 modifying this value outside RUISSkeletonManager is not a good idea!!!
+							// *** OPTIHACK5 TODO Added ConvertLocation() because it was missing. Any side-effects?? RUISDevice.OpenVR
 							skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.position = 
-								UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); // *** TODO ConvertLocation can be UnityXR too
+								coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
+							// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
 						}
 
 //						if(!independentTorsoSegmentsScaling)
@@ -1053,9 +1045,10 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
 					{
-						// *** TODO RUISDevice.OpenVR could also be RUISDevice.UnityXR
+						// *** OPTIHACK5 modifying this value outside RUISSkeletonManager is not a good idea!!!
+						// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
 						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.position = 
-							coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR); // *** TODO ConvertLocation can be UnityXR
+								coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
 					}
 					ForceUpdatePosition(ref torso, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, 		10, deltaTime);
 					ForceUpdatePosition(ref chest, 			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, 		11, deltaTime);
@@ -1159,12 +1152,12 @@ public class RUISSkeletonController : MonoBehaviour
 						{
 //							skeletonPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
 //							skeletonPosition.y = 0;
-							tempPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
+							// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
+							tempPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), headsetCoordinates);
 							skeletonPosition.x = tempPosition.x;
 							skeletonPosition.z = tempPosition.z;
-//							oculusYaw = coordinateSystem.ConvertRotation(Quaternion.Inverse(coordinateSystem.GetOculusCameraOrientationRaw()) * coordinateSystem.GetOculusRiftOrientationRaw(),
-//						                                          	     RUISDevice.Oculus_DK2).eulerAngles.y; //06to08
-							hmdYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR).eulerAngles.y;
+							// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
+							hmdYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates).eulerAngles.y;
 						}
 					}
 					else
@@ -1385,11 +1378,11 @@ public class RUISSkeletonController : MonoBehaviour
 				case RUISSkeletonManager.Joint.Head:
 					if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
 					{
-						offsetScale = 1; // OPTIHACK *** CHECK THAT WORKS, torso.localScale.x is better // Below *** TODO can be UNITYXR
-//						jointOffset = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR) * headOffset;
+						offsetScale = 1; // OPTIHACK *** CHECK THAT WORKS, torso.localScale.x is better
 						// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
-						jointOffset = headOffset
-						+ coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), RUISDevice.OpenVR) * hmdLocalOffset;
+						jointOffset = headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+																					headsetCoordinates) * hmdLocalOffset; 
+						// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
 					}
 					else
 					{
@@ -1469,11 +1462,51 @@ public class RUISSkeletonController : MonoBehaviour
 //		transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
 	}
 
-	private Vector3 newRootPosition;
+	private Vector3    headsetPosition;
+	private Quaternion headsetRotation;
+	private Vector3    newRootPosition;
+	private Vector3 headToHeadsetVector;
+	private Vector3 pelvisToHeadVector;
 
 	// Gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
 	private void UpdateSkeletonPosition()
 	{
+		if(isIMUMocap)
+		{
+//			Vector3 headPelvisOffset = motionSuitHead.position - motionSuitPelvis.position + motionSuitPelvis.rotation * pelvisOffset;
+//			motionSuitPelvis.position = HMDCameraEye.position - headPelvisOffset + HMDCameraEye.rotation * eyeOffset;
+			pelvisToHeadVector =  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.position 
+								- skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.position 
+								+ skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation * rootOffset;
+			
+			if(customHMDSource)
+			{
+				headsetPosition = customHMDSource.localPosition; // ***
+				headsetRotation = customHMDSource.localRotation; // ***
+			}
+			else
+			{
+				if(RUISDisplayManager.IsHmdPresent())
+				{
+					// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+					headsetPosition = coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
+					headsetRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates);
+				}
+				else // If HMD is not present, then the practical effects should limit to only applying headToPelvisVector and hmdLocalOffset
+				{
+					headsetPosition = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.position;
+					headsetRotation = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation;
+				}
+			}
+			
+			headToHeadsetVector = headsetPosition - skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.position + headsetRotation * hmdLocalOffset;
+			// *** OPTIHACK5 this should actually set torso/pelvis location!!! See the first lines of this method
+			// *** OPTIHACK5 modifying these values outside RUISSkeletonManager is not a good idea!!!
+			// *** OPTIHACK5 Apply headToHeadsetVector to each body part position to "drag body with head"
+//			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.position = headsetPosition - headToPelvisVector + headsetRotation * hmdLocalOffset;
+//			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].root.position  = headsetPosition - pelvisToHeadVector + headsetRotation * hmdLocalOffset;
+		}
+
 		if(filterPosition && !filterHeadPositionOnly)
 		{
 			newRootPosition = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].root.position;
