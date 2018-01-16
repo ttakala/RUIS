@@ -206,12 +206,11 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 				coordinateYOffset = coordinateSystem.positionOffset.y;
 			}
 
-
-			// Apply root scaling
+			// Apply root scaling 
 			if(skeletonController)
-				torsoPosition = Vector3.Scale(skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position, skeletonController.rootSpeedScaling);
+				torsoPosition = Vector3.Scale(skeletonController.skeleton.torso.position, skeletonController.rootSpeedScaling);
 			else
-				torsoPosition = skeletonManager.skeletons [bodyTrackingDeviceID, playerId].torso.position;
+				torsoPosition = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.position;
 			
 			measuredPos[0] = torsoPosition.x;
 			measuredPos[1] = torsoPosition.y;

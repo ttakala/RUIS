@@ -109,7 +109,7 @@ public class RUISCharacterController : MonoBehaviour
 			colliderComponent = stabilizingCollider.gameObject.GetComponent<Collider>();
 			if(colliderComponent)
 			{
-				if(characterPivotType == CharacterPivotType.SkeletonHead
+				if(   characterPivotType == CharacterPivotType.SkeletonHead
 				   || characterPivotType == CharacterPivotType.SkeletonPelvis)
 				{
 					if(coordinateSystem && (inputManager.enableKinect || inputManager.enableKinect2) && !coordinateSystem.setKinectOriginToFloor)
@@ -148,8 +148,8 @@ public class RUISCharacterController : MonoBehaviour
 				dynamicMaterialInstance = colliderComponent.material;
 			}
 		}
-		if((characterPivotType == CharacterPivotType.SkeletonHead
-		   || characterPivotType == CharacterPivotType.SkeletonPelvis)
+		if(   (   characterPivotType == CharacterPivotType.SkeletonHead
+		       || characterPivotType == CharacterPivotType.SkeletonPelvis)
 		   && (skeletonController && skeletonController.playerId != kinectPlayerId))
 			Debug.LogError("The 'Kinect Player Id' variable in RUISCharacterController script in gameObject '" + gameObject.name
 			+ "is different from the Kinect Player Id of the RUISSkeletonController script (located in child "
@@ -327,19 +327,19 @@ public class RUISCharacterController : MonoBehaviour
 			if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
 			    || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
 				break;
-			if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+			if(skeletonController)
+				characterForward = skeletonController.skeleton.head.rotation * Vector3.forward;
+			else if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
 				characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.rotation * Vector3.forward;
-			else
-				characterForward = Vector3.forward;
 			break;
 		case CharacterPivotType.SkeletonPelvis:
 			if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
 			    || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
 				break;
-			if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+			if(skeletonController)
+				characterForward = skeletonController.skeleton.torso.rotation * Vector3.forward;
+			else if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
 				characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.rotation * Vector3.forward;
-			else
-				characterForward = Vector3.forward;
 			break;
 		case CharacterPivotType.MoveController:
 			{
@@ -384,37 +384,31 @@ public class RUISCharacterController : MonoBehaviour
 		{
 			switch(characterPivotType)
 			{
-			case CharacterPivotType.SkeletonHead:
+				case CharacterPivotType.SkeletonHead:
 				{
 					if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
 					   || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
 						break;
 
-					if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-					{
-						if(skeletonController) // Add root speed scaling
-							return Vector3.Scale(skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.position, skeletonController.rootSpeedScaling);
-						else
-							return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.position;
-					}
+					if(skeletonController) // Add root speed scaling
+						return Vector3.Scale(skeletonController.skeleton.head.position, skeletonController.rootSpeedScaling);
+					else if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+						return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.position;
 					break;
 				}
-			case CharacterPivotType.SkeletonPelvis:
+				case CharacterPivotType.SkeletonPelvis:
 				{
 					if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
 					   || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
 						break;
 
-					if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-					{
-						if(skeletonController) // Add root speed scaling
-							return Vector3.Scale(skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position, skeletonController.rootSpeedScaling);
-						else
-							return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position;
-					}
+					if(skeletonController) // Add root speed scaling
+						return Vector3.Scale(skeletonController.skeleton.torso.position, skeletonController.rootSpeedScaling);
+					else if(skeletonManager && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+						return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position;
 					break;
 				}
-			case CharacterPivotType.MoveController:
+				case CharacterPivotType.MoveController:
 				{
 					if(!inputManager.enablePSMove)
 						break;

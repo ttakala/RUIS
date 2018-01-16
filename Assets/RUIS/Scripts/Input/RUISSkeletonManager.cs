@@ -82,6 +82,9 @@ public class RUISSkeletonManager : MonoBehaviour
 		public JointData rightKnee 	   = new JointData(Joint.RightKnee);
 		public JointData rightFoot 	   = new JointData(Joint.RightFoot);
 
+		public JointData leftThumb  = new JointData(Joint.LeftThumb);
+		public JointData rightThumb = new JointData(Joint.RightThumb);
+
 		// *** OPTIHACK4 (some of these are unused/unnecessary?) Kinect 2 joints, TODO: add Kinect 2 joint enumerations to Joint
 		public JointData baseSpine = new JointData(Joint.None);
 		public JointData midSpine = new JointData(Joint.None);
@@ -92,8 +95,6 @@ public class RUISSkeletonManager : MonoBehaviour
 		public JointData rightAnkle = new JointData(Joint.None);
 		public JointData leftHandTip = new JointData(Joint.None);
 		public JointData rightHandTip = new JointData(Joint.None);
-		public JointData leftThumb  = new JointData(Joint.LeftThumb);
-		public JointData rightThumb = new JointData(Joint.RightThumb);
 
 		public handState rightHandStatus = handState.unknown;
 		public handState leftHandStatus = handState.unknown;

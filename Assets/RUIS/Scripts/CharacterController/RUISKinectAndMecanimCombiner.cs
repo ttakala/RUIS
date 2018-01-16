@@ -445,8 +445,12 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 			kinectTorsoForward = skeletonController.trackedDeviceYawRotation * Vector3.forward;
 		}
 		else // If Kinect torso/head is character pivot
-			if(skeletonManager != null && skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
+		{
+			if(skeletonController)
+				kinectTorsoForward = skeletonController.skeleton.torso.rotation*Vector3.forward;
+			else if(skeletonManager != null && skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId] != null)
 				kinectTorsoForward = skeletonManager.skeletons[skeletonController.BodyTrackingDeviceID, skeletonController.playerId].torso.rotation*Vector3.forward;
+		}
 
 		//kinectTorsoUp.y = 0;
 		//kinectTorsoUp.Normalize();

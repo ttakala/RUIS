@@ -78,8 +78,11 @@ public class RUISCharacterLocomotion : MonoBehaviour
 
 	// Head/Body turn gesture
 	public bool turnWithGestures = false;
-	public enum TurningGestureType {
-		KinectTorsoYaw, HMDYaw, HMDToKinectTorsoYaw
+	public enum TurningGestureType 
+	{
+		KinectTorsoYaw, 
+		HMDYaw, 
+		HMDToKinectTorsoYaw
 	}
 	public TurningGestureType turningGestureType;
 	public float rotationTriggerAngle = 40;
@@ -100,7 +103,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
         {
             Input.GetAxis("Sprint");
         }
-        catch (UnityException)
+        catch(UnityException)
         {
 			Debug.LogWarning("'Sprint' not defined in Unity Input settings");
         }
@@ -109,7 +112,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
         {
             Input.GetAxis("Turn");
         }
-        catch (UnityException)
+        catch(UnityException)
         {
 			Debug.LogWarning("'Turn' not defined in Unity Input settings");
         }
@@ -157,7 +160,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
         if(characterController == null || !characterController.grounded)
 			return;
         
-        if ((Input.GetButtonDown("Jump") || JumpGestureTriggered()))
+        if((Input.GetButtonDown("Jump") || JumpGestureTriggered()))
         {
             shouldJump = true;
         }
@@ -173,11 +176,11 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		}
 		
 		// Check if jumping with PS Move Navigation controller
-		if (usePSNavigationController && moveWrapper && moveWrapper.isConnected)
+		if(usePSNavigationController && moveWrapper && moveWrapper.isConnected)
         {
-            if (PSNaviControllerID <= moveWrapper.navConnected.Length && PSNaviControllerID >= 1)
+            if(PSNaviControllerID <= moveWrapper.navConnected.Length && PSNaviControllerID >= 1)
             {
-                if (moveWrapper.navConnected[PSNaviControllerID-1])
+                if(moveWrapper.navConnected[PSNaviControllerID-1])
                 {
                     if(moveWrapper.WasPressed(PSNaviControllerID-1, "NavL1"))
 					{
@@ -200,7 +203,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 //			}
 //		}
 
-        if (shouldJump)
+        if(shouldJump)
         {
             jump = true;
         }
@@ -244,7 +247,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		{
 			targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 		}
-		catch (UnityException) { }
+		catch(UnityException) { }
 		
 		if(bimanualSwingingRecognizer) 
 		{
@@ -257,19 +260,19 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	        if (!airborne)
 				targetVelocity *= 1 + extraSpeed*runAdder;
         }
-        catch (UnityException) { }
+        catch(UnityException) { }
 
         // Check if moving with PS Move Navigation controller
-        if (PSNaviControllerID < 1)
+        if(PSNaviControllerID < 1)
         {
             Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
                             + " which is incorrect value: It must be positive!");
         }
-        else if (usePSNavigationController && moveWrapper && moveWrapper.isConnected)
+        else if(usePSNavigationController && moveWrapper && moveWrapper.isConnected)
         {
-            if (PSNaviControllerID <= moveWrapper.navConnected.Length)
+            if(PSNaviControllerID <= moveWrapper.navConnected.Length)
             {
-                if (moveWrapper.navConnected[PSNaviControllerID-1])
+                if(moveWrapper.navConnected[PSNaviControllerID-1])
                 {
 					int horiz = moveWrapper.valueNavAnalogX[PSNaviControllerID-1];
 					int verti = moveWrapper.valueNavAnalogY[PSNaviControllerID-1];
@@ -277,17 +280,17 @@ public class RUISCharacterLocomotion : MonoBehaviour
 						extraSpeed = ((float)moveWrapper.valueNavL2[PSNaviControllerID-1]) / 255f;
 					else
 						extraSpeed = 0;
-                    if (Mathf.Abs(verti) > 20)
+                    if(Mathf.Abs(verti) > 20)
 						targetVelocity += new Vector3(0, 0, -((float)verti) / 128f * (1 + extraSpeed*runAdder));
 
-                    if (strafeInsteadTurning)
+                    if(strafeInsteadTurning)
                     {
-                        if (Mathf.Abs(horiz) > 20)
+                        if(Mathf.Abs(horiz) > 20)
 							targetVelocity += new Vector3(((float)horiz) / 128f * (1 + extraSpeed*runAdder), 0, 0);
                     }
                     else
                     {
-                        if (Mathf.Abs(horiz) > 10)
+                        if(Mathf.Abs(horiz) > 10)
                         {
 							turnMagnitude += ((float)horiz) / 128f;
                         }
@@ -321,10 +324,10 @@ public class RUISCharacterLocomotion : MonoBehaviour
 //			}
 //		}
 
-        if (useRazerHydra) // Check if moving with Razer Hydra controller
+        if(useRazerHydra) // Check if moving with Razer Hydra controller
         {
             razerController = SixenseInput.GetController(razerHydraID);
-            if (razerController != null && razerController.Enabled)
+            if(razerController != null && razerController.Enabled)
             {
 				if(!airborne)
 					if(razerController.GetButton(SixenseButtons.JOYSTICK))
@@ -332,17 +335,17 @@ public class RUISCharacterLocomotion : MonoBehaviour
 				else
 					extraSpeed = 0;
 				
-                if (Mathf.Abs(razerController.JoystickY) > 0.15f)
+                if(Mathf.Abs(razerController.JoystickY) > 0.15f)
 					targetVelocity += new Vector3(0, 0, razerController.JoystickY * (1 + extraSpeed*runAdder));
 
-                if (strafeInsteadTurning)
+                if(strafeInsteadTurning)
                 {
-                    if (Mathf.Abs(razerController.JoystickX) > 0.15f)
+                    if(Mathf.Abs(razerController.JoystickX) > 0.15f)
 						targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed*runAdder), 0, 0);
 				}
                 else
                 {
-                    if (Mathf.Abs(razerController.JoystickX) > 0.075f)
+                    if(Mathf.Abs(razerController.JoystickX) > 0.075f)
                     {
 						turnMagnitude += razerController.JoystickX;
                     }
@@ -418,7 +421,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			}
 		}
 		if(turnWithGestures)
-			turnMagnitude += rotationGestureTurnValue();
+			turnMagnitude += RotationGestureTurnValue();
 		
         try
         {
@@ -434,7 +437,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		if(turnMagnitude != 0)
 			characterController.RotateAroundCharacterPivot(new Vector3(0, turnMagnitude * rotationScaler * Time.fixedDeltaTime, 0));
 
-        if (shouldJump)
+        if(shouldJump)
 		{
 			GetComponent<Rigidbody>().AddForce(
 				new Vector3(0, Mathf.Sqrt((1 + 0.5f*(controlDirection.magnitude + extraSpeed)*jumpSpeedEffect)*jumpStrength*locomotionScale)
@@ -454,13 +457,15 @@ public class RUISCharacterLocomotion : MonoBehaviour
         return jumpGesture.GestureIsTriggered();
     }
     
-    float rotationGestureTurnValue() {
+    float RotationGestureTurnValue() 
+	{
 		float gestureTurnValue = 0;
 		float torsoRotation = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].torso.rotation.eulerAngles.y;
 		if(torsoRotation > 180) torsoRotation = (torsoRotation - 360);
 		
 		float hmdRotation = 0;
-		if(turningGestureType != TurningGestureType.KinectTorsoYaw) {
+		if(turningGestureType != TurningGestureType.KinectTorsoYaw) 
+		{
 			hmdRotation = coordinateSystem.GetHmdOrientationInMasterFrame().eulerAngles.y;
 			if(hmdRotation > 180) hmdRotation = (hmdRotation - 360);
 		}
@@ -468,7 +473,8 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		bool kinect2HeuristicsCheckPass = true;
 		
 		float hand = 0.5f, wrist = 0.5f, elbow = 0.5f, shoulder = 0.5f;
-		if(kinect2Heuristics) {
+		if(kinect2Heuristics) 
+		{
 			if(Mathf.Sign(torsoRotation) == -1)
 				shoulder = skeletonManager.skeletons[characterController.bodyTrackingDeviceID, characterController.kinectPlayerId].leftShoulder.positionConfidence;
 			else 	
@@ -478,7 +484,8 @@ public class RUISCharacterLocomotion : MonoBehaviour
 				kinect2HeuristicsCheckPass = false;		
 		}
 		
-		switch(turningGestureType) {
+		switch(turningGestureType) 
+		{
 			case TurningGestureType.HMDYaw:
 				if(Mathf.Abs(hmdRotation) > rotationTriggerAngle) gestureTurnValue = 1 * Mathf.Sign(hmdRotation);
 				break;

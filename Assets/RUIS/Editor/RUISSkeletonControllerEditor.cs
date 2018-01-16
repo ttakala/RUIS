@@ -167,7 +167,7 @@ public class RUISSkeletonControllerEditor : Editor
 //	public SerializedProperty hipScaleAdjust;
 	public SerializedProperty footScaleAdjust;
 
-	SerializedProperty isIMUMocap;
+	SerializedProperty headsetDragsBody;
 
 	SerializedProperty customRoot;
 	SerializedProperty customTorso;
@@ -316,7 +316,7 @@ public class RUISSkeletonControllerEditor : Editor
 		fistMaking = serializedObject.FindProperty("fistMaking");
 		kinect2Thumbs = serializedObject.FindProperty("kinect2Thumbs");
 
-		isIMUMocap = serializedObject.FindProperty("isIMUMocap");
+		headsetDragsBody = serializedObject.FindProperty("headsetDragsBody");
 
 		customRoot		= serializedObject.FindProperty("customRoot");
 		customTorso  	= serializedObject.FindProperty("customTorso");
@@ -597,7 +597,7 @@ public class RUISSkeletonControllerEditor : Editor
 																	+ "scaled so that their proportions match to that of the tracked user. If this "
 																	+ "option is disabled, then the bone joints are simply translated (if \"Update "
 																	+ "Joint Positions\" is enabled), which will likely result in broken avatars "
-																	+ "especially on users who are smaller than the model size."));
+																	+ "especially on users who are smaller than the initial avatar model rig."));
 
 		if(limbsAreScaled.boolValue)
 		{
@@ -634,18 +634,23 @@ public class RUISSkeletonControllerEditor : Editor
 		GUI.enabled = true;
 
 		EditorGUILayout.PropertyField(headsetCoordinates, new GUIContent("HMD Coordinate Frame", "If you are using the head-mounted display tracking for "
-																		+ "rotating or positioning the avatar head, or for \"IMU Motion Capture\", then "
+																		+ "rotating or positioning the avatar head, or for \"HMD Drags Body\", then "
 																		+ "you need to set this field to the correct HMD coordinate frame that is "
 																		+ "calibrated with the \"Body Tracking Device\" coordinate frame. In most cases this "
-																		+ "option should be set to 'OpenVR' or 'UnityXR'. If \"IMU Motion Capture\" "
+																		+ "option should be set to 'OpenVR' or 'UnityXR'. If \"HMD Drags Body\" "
 																		+ "is enabled, consider setting this field to 'None' so that there are no additional "
 																		+ "offsets in the avatar root."));
 		EditorGUI.indentLevel++;
 
-		EditorGUILayout.PropertyField(isIMUMocap, new GUIContent("IMU Motion Capture", "Is the motion captured with an IMU suit (e.g. Perception "
-			+ "Neuron, Xsens)? Such suits measure relative joint rotations, and can only roughly "
-			+ "estimate joint positions. Enable this option if you are using your IMU suit together "
-			+ "with a HMD or some other device that has its rotation or position tracked."));
+		EditorGUILayout.PropertyField(headsetDragsBody, new GUIContent("HMD Drags Body", "Enable this option if the user is wearing a position tracked "
+																	+ "head-mounted display and their body is tracked with an IMU suit (e.g. Perception "
+																	+ "Neuron, Xsens). Such suits measure relative joint rotations, and can only roughly "
+																	+ "estimate joint positions. This option could also be enabled if the body tracking "
+																	+ "device (e.g. Kinect) has considerably more latency when compared to the HMD "
+																	+ "tracking; in this case the avatar's feet can temporarily disappear under the "
+																	+ "virtual floor when crouching quickly. You can use \"HMD Local Offset\" to adjust "
+																	+ "how the HMD view is positioned with relation to the avatar head model. When this "
+																	+ "option is enabled, it is also good to enable \"HMD Rotates Head\"."));
 
 		EditorGUILayout.PropertyField(hmdRotatesHead, new GUIContent("HMD Rotates Head", "Rotate avatar head using orientation from the connected "
 																	+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice + " coordinate "
@@ -659,16 +664,16 @@ public class RUISSkeletonControllerEditor : Editor
 		GUI.enabled = (hmdMovesHead.boolValue || hmdMovesHead.boolValue);
 		EditorGUILayout.PropertyField(hmdLocalOffset, new GUIContent("HMD Local Offset", "Offset the avatar head in the head-mounted display's local coordinate "
 																+ "system. This is useful for positioning the HMD view with the avatar's eyes, which also "
-																+ "improves the avatar's head positioning with relation to user's neck. If \"IMU Motion "
-																+ "Capture\" option is enabled, then the whole avatar position is offset from the HMD "
+																+ "improves the avatar's head positioning with relation to user's neck. If \"HMD Drags "
+																+ "Body\" option is enabled, then the whole avatar position is offset from the HMD "
 																+ "position; in this case, make sure that \"HMD Root Offset\" is set to zero if you want "
 																+ "the user's head position to match the avatar's head position perfectly."));
 
 		GUI.enabled = true;
 
 		EditorGUILayout.PropertyField(rootOffset, new GUIContent("HMD Root Offset", "This offset is applied only when the \"Body Tracking Device\" is not "
-																+ "available and the avatar follows the head-mounted display position, or if "
-																+ "\"IMU Motion Capture\" is enabled. The offset is useful if your view in those "
+																+ "available and the avatar follows the head-mounted display position."
+																+ "The offset is useful if your view in those "
 																+ "situations appears to be in a wrong place inside the avatar 3D model "));
 
 		EditorGUI.indentLevel--;
@@ -1243,10 +1248,10 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUILayout.Space();
 
 		GUI.enabled = useHierarchicalModel.boolValue;
-		EditorGUILayout.Slider(forearmLengthTweaker, minScale, maxScale, new GUIContent(   "Forearm Scale Adjust", "The forearm length ratio "
+		EditorGUILayout.Slider(forearmLengthTweaker, minScale, maxScale, new GUIContent(   "Forearm Length Adjust", "The forearm length ratio "
 			                                                  			                 + "compared to the real-world value, use this to lengthen or "
 			                                                  			                 + "shorten the forearms. Only used if \"Hierarchical Model\" is enabled"));
-		EditorGUILayout.Slider(shinLengthTweaker, minScale, maxScale, new GUIContent(   "Shin Scale Adjust", "The shin length ratio compared to the "
+		EditorGUILayout.Slider(shinLengthTweaker, minScale, maxScale, new GUIContent(   "Shin Length Adjust", "The shin length ratio compared to the "
 					                                                                + "real-world value, use this to lengthen or shorten the "
 					                                                                + "shins. Only used if \"Hierarchical Model\" is enabled"));
 		EditorGUILayout.Space();
