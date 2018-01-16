@@ -279,6 +279,9 @@ public class RUISSkeletonController : MonoBehaviour
 	public Vector3 hmdLocalOffset = Vector3.zero;
 
 	public bool headsetDragsBody = false;
+	public bool yawCorrectIMU = false;
+	public float yawCorrectAngularVelocity = 2;
+	public KeyCode yawCorrectResetButton = KeyCode.Space;
 
 	public bool followHmdPosition { get; private set; }
 
@@ -457,6 +460,12 @@ public class RUISSkeletonController : MonoBehaviour
 			Debug.LogWarning(typeof(RUISSkeletonController) + " of GameObject " + gameObject.name + " has not been assigned with a \"Pelvis Target\" "
 							 + "Transform. It will automatically set to the Transform of " + root.name + "(\"Target Root\").");
 			torso = root;
+		}
+
+		if(!RUISDisplayManager.IsHmdPresent())
+		{
+			if(headsetDragsBody || yawCorrectIMU || hmdRotatesHead || hmdMovesHead)
+				Debug.LogWarning("Head-mounted display is not detected: Unable to comply with the enabled HMD options of " + typeof(RUISSkeletonController) + ".");
 		}
 
 		hasBeenTracked = false;

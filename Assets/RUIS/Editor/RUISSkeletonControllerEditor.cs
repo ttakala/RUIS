@@ -167,7 +167,10 @@ public class RUISSkeletonControllerEditor : Editor
 //	public SerializedProperty hipScaleAdjust;
 	public SerializedProperty footScaleAdjust;
 
-	SerializedProperty headsetDragsBody;
+	public SerializedProperty headsetDragsBody;
+	public SerializedProperty yawCorrectIMU;
+	public SerializedProperty yawCorrectAngularVelocity;
+	SerializedProperty yawCorrectResetButton;
 
 	SerializedProperty customRoot;
 	SerializedProperty customTorso;
@@ -317,6 +320,9 @@ public class RUISSkeletonControllerEditor : Editor
 		kinect2Thumbs = serializedObject.FindProperty("kinect2Thumbs");
 
 		headsetDragsBody = serializedObject.FindProperty("headsetDragsBody");
+		yawCorrectIMU    = serializedObject.FindProperty("yawCorrectIMU");
+		yawCorrectAngularVelocity = serializedObject.FindProperty("yawCorrectAngularVelocity");
+		yawCorrectResetButton     = serializedObject.FindProperty("yawCorrectResetButton");
 
 		customRoot		= serializedObject.FindProperty("customRoot");
 		customTorso  	= serializedObject.FindProperty("customTorso");
@@ -651,6 +657,28 @@ public class RUISSkeletonControllerEditor : Editor
 																	+ "virtual floor when crouching quickly. You can use \"HMD Local Offset\" to adjust "
 																	+ "how the HMD view is positioned with relation to the avatar head model. When this "
 																	+ "option is enabled, it is also good to enable \"HMD Rotates Head\"."));
+
+		EditorGUI.indentLevel++;
+		EditorGUILayout.PropertyField(yawCorrectIMU, new GUIContent("IMU Yaw Correct", "Enable this option only when using a head-mounted display, and the "
+																	+ "avatar is animated with an IMU suit (e.g. Perception Neuron, Xsens). This will keep the "
+																	+ "avatar's head aligned with the head-mounted display, which effectively applies "
+																	+ "drift correction to the IMU suit yaw drift."));
+
+		EditorGUI.indentLevel++;
+		GUI.enabled = yawCorrectIMU.boolValue;
+		EditorGUILayout.PropertyField(yawCorrectAngularVelocity, new GUIContent("Max Angular Velocity", "The rate at which yaw drift correction is applied "
+																									  + "(degrees per second)."));
+
+		SwitchToNormalFieldColor();
+		EditorGUILayout.PropertyField(yawCorrectResetButton, new GUIContent("Reset Yaw Button", "The button that can be used to immediately apply the drift "
+																	+ "correction, if the head-mounted display and IMU head-tracker were misaligned upon "
+																	+ "running the Awake() of this component (e.g. during loading a scene)."));
+		SwitchToKeepChangesFieldColor();
+
+		GUI.enabled = true;
+		EditorGUI.indentLevel--;
+
+		EditorGUI.indentLevel--;
 
 		EditorGUILayout.PropertyField(hmdRotatesHead, new GUIContent("HMD Rotates Head", "Rotate avatar head using orientation from the connected "
 																	+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice + " coordinate "
