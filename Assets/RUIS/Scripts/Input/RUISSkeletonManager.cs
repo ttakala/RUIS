@@ -187,10 +187,16 @@ public class RUISSkeletonManager : MonoBehaviour
 	public float timeSinceLastKinect2Frame { get; private set; }
 	public float kinect2FrameDeltaT { get; private set; }
 
-	[Tooltip(  "How much is Kinect 2 skeletons' torso position interpolated towards base of the spine, in order to make the torso "
+	[Tooltip(  "How much is Kinect 2 skeletons' torso position is interpolated towards base of the spine, in order to make the torso "
 	         + "position better correspond that of Kinect 1 (so that both Kinects can be used to animate the same skeletons). Default is 0.25.")]
 	[Range(0f, 1f)]
 	public float torsoOffsetKinect2 = 0.25f;
+
+
+	[Tooltip(  "How much is Kinect 2 skeletons' head position interpolated the neck, in order to make the head "
+	         + "position better correspond that of Kinect 1 (so that both Kinects can be used to animate the same skeletons). Default is 0.5.")]
+	[Range(0f, 0.9f)]
+	public float headOffsetKinect2 = 0.5f;
 	private Vector3 tempVector = Vector3.zero;
 
     void Awake()
@@ -373,34 +379,39 @@ public class RUISSkeletonManager : MonoBehaviour
 						}
 
 						// *** OPTIHACK4 this probably should be SpineBase??
-						UpdateKinect2RootData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID);
+						UpdateKinect2RootData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineBase], body.JointOrientations[Kinect.JointType.SpineMid]), playerID);
 
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.Head], body.JointOrientations[Kinect.JointType.Head]), playerID, ref skeletons [kinect2SensorID, playerID].head);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.Neck], body.JointOrientations[Kinect.JointType.Neck]), playerID, ref skeletons [kinect2SensorID, playerID].neck);
 						// *** OPTIHACK4 consider using SpineBase here as well, at least for the position
-						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].torso);
+						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineBase], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].torso);
 
 						// *** OPTIHACK4 This needs to be seriously checked! Is torsoOffsetKinect2 really needed? Does SpineBase have a rotation (that is similar to SpineMid)?
 						// Kinect 2 SpineMid position adjusted to correspond to Kinect 1's torso position (so that hip-torso segment doesn't stretch):
 						// Below gets the SpineBase position with SpineMid orientation (latter of which is discarded because only .position of the JointData is used)
-						tempVector = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawKinect2Location(
-																				GetKinect2JointData(body.Joints[Kinect.JointType.SpineBase], 
-								                    												body.JointOrientations[Kinect.JointType.SpineMid]).position), RUISDevice.Kinect_2);
-						// tempVector = torsoPosition + offset * (spineBasePosition - torsoPosition)
-						// torsoOffsetKinect2 interpolates between SpineMid and SpineBase position
-						tempVector = skeletons [kinect2SensorID, playerID].torso.position + torsoOffsetKinect2 * (tempVector - skeletons[kinect2SensorID, playerID].torso.position);
-						skeletons[kinect2SensorID, playerID].root.position  = tempVector; //  root.rotation was set by  UpdateKinect2RootData() to that of SpineMid
-						skeletons[kinect2SensorID, playerID].torso.position = tempVector; // torso.rotation was set by UpdateKinect2JointData() to that of SpineMid
+//						tempVector = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawKinect2Location(
+//																				GetKinect2JointData(body.Joints[Kinect.JointType.SpineBase], 
+//								                    												body.JointOrientations[Kinect.JointType.SpineMid]).position), RUISDevice.Kinect_2);
+//						// tempVector = torsoPosition + offset * (spineBasePosition - torsoPosition)
+//						// torsoOffsetKinect2 interpolates between SpineMid and SpineBase position
+//						tempVector = skeletons [kinect2SensorID, playerID].torso.position + torsoOffsetKinect2 * (tempVector - skeletons[kinect2SensorID, playerID].torso.position);
+//						skeletons[kinect2SensorID, playerID].root.position  = tempVector; //  root.rotation was set by  UpdateKinect2RootData() to that of SpineMid
+//						skeletons[kinect2SensorID, playerID].torso.position = tempVector; // torso.rotation was set by UpdateKinect2JointData() to that of SpineMid
+
+						skeletons[kinect2SensorID, playerID].head.position =  skeletons[kinect2SensorID, playerID].head.position 
+																			+ headOffsetKinect2 * (skeletons[kinect2SensorID, playerID].neck.position - skeletons[kinect2SensorID, playerID].head.position);
 
 						// *** OPTIHACK4 skeletons [kinect2SensorID, playerID].midSpine <-- change to .chest
-						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].midSpine);
+						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].chest);
+						skeletons[kinect2SensorID, playerID].chest.rotation = skeletons[kinect2SensorID, playerID].neck.rotation * Quaternion.Euler(0, 180, 0);
+
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineShoulder], body.JointOrientations[Kinect.JointType.SpineShoulder]), playerID, ref skeletons [kinect2SensorID, playerID].shoulderSpine);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.ShoulderLeft], body.JointOrientations[Kinect.JointType.ShoulderLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftShoulder);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.ShoulderRight], body.JointOrientations[Kinect.JointType.ShoulderRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightShoulder);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.ElbowRight], body.JointOrientations[Kinect.JointType.ElbowRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightElbow);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.ElbowLeft], body.JointOrientations[Kinect.JointType.ElbowLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftElbow);
-						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.HandRight], body.JointOrientations[Kinect.JointType.HandRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightHand);
-						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.HandLeft], body.JointOrientations[Kinect.JointType.HandLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftHand);
+						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.WristRight], body.JointOrientations[Kinect.JointType.HandRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightHand);
+						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.WristLeft], body.JointOrientations[Kinect.JointType.HandLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftHand);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.HipLeft], body.JointOrientations[Kinect.JointType.HipLeft]), playerID, ref skeletons [kinect2SensorID, playerID].leftHip);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.HipRight], body.JointOrientations[Kinect.JointType.HipRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightHip);
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.HandTipRight], body.JointOrientations[Kinect.JointType.HandTipRight]), playerID, ref skeletons [kinect2SensorID, playerID].rightHandTip);
@@ -438,12 +449,12 @@ public class RUISSkeletonManager : MonoBehaviour
 						// Head // *** OPTIHACK4 change .midSpine to .chest when it has been changed in the above UpdateKinect2JointData() call
 						relativePos =  skeletons[kinect2SensorID, playerID].head.position -  skeletons[kinect2SensorID, playerID].neck.position;
 						skeletons[kinect2SensorID, playerID].head.rotation = Quaternion.LookRotation(relativePos,
-						                                     			skeletons[kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, -90, -90);
+						                                                                             skeletons[kinect2SensorID, playerID].chest.rotation * (-Vector3.right)) * Quaternion.Euler(0, -90, -90);
+
+						skeletons[kinect2SensorID, playerID].neck.rotation = skeletons[kinect2SensorID, playerID].neck.rotation * Quaternion.Euler(0, 180, 0);
 
 						// Torso // *** OPTIHACK4 change .midSpine to .chest when it has been changed in the above UpdateKinect2JointData() call
-						relativePos =  skeletons[kinect2SensorID, playerID].midSpine.position - skeletons[kinect2SensorID, playerID].shoulderSpine.position;
-						skeletons[kinect2SensorID, playerID].torso.rotation  = Quaternion.LookRotation(relativePos, 
-						           			skeletons[kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90); // TODO: Bug when turning right
+						skeletons[kinect2SensorID, playerID].torso.rotation = skeletons[kinect2SensorID, playerID].chest.rotation;
 						
 						// Upper leg
 						skeletons[kinect2SensorID, playerID].leftHip.rotation = skeletons[kinect2SensorID, playerID].leftKnee.rotation * Quaternion.Euler(180, -90, 0);
@@ -452,13 +463,13 @@ public class RUISSkeletonManager : MonoBehaviour
 						// Lower leg // *** OPTIHACK4 change .midSpine to .chest when it has been changed in the above UpdateKinect2JointData() call
 						relativePos = skeletons[kinect2SensorID, playerID].leftAnkle.position - skeletons[kinect2SensorID, playerID].leftKnee.position;
 						skeletons[kinect2SensorID, playerID].leftKnee.rotation = Quaternion.LookRotation(relativePos,
-						                                                                                  skeletons[kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90);
+						                                                                                 skeletons[kinect2SensorID, playerID].chest.rotation * (-Vector3.right)) * Quaternion.Euler(0, 90, -90);
 						//						skeletons [kinect2SensorID, playerID].leftKnee.rotation = skeletons [kinect2SensorID, playerID].leftAnkle.rotation  * Quaternion.Euler(180, -90, 0);
 
 						// *** OPTIHACK4 change .midSpine to .chest when it has been changed in the above UpdateKinect2JointData() call
 						relativePos = skeletons[kinect2SensorID, playerID].rightAnkle.position - skeletons[kinect2SensorID, playerID].rightKnee.position;
 						skeletons[kinect2SensorID, playerID].rightKnee.rotation = Quaternion.LookRotation(relativePos,
-						                                                                                   skeletons[kinect2SensorID, playerID].midSpine.rotation * Vector3.right) * Quaternion.Euler(0, 90, -90);
+						                                                                                  skeletons[kinect2SensorID, playerID].chest.rotation * (-Vector3.right)) * Quaternion.Euler(0, 90, -90);
 						//						skeletons [kinect2SensorID, playerID].rightKnee.rotation = skeletons [kinect2SensorID, playerID].rightAnkle.rotation  * Quaternion.Euler(180, 90, 0);;
 						
 						// Feet / Ankles
@@ -489,8 +500,8 @@ public class RUISSkeletonManager : MonoBehaviour
 						//skeletons [kinect2SensorID, playerID].rightElbow.rotation = skeletons [kinect2SensorID, playerID].rightWrist.rotation  * Quaternion.Euler(0, -180, 90); 
 						
 						// Hands
-						skeletons[kinect2SensorID, playerID].leftHand.rotation *= Quaternion.Euler(0, 180, -90);
-						skeletons[kinect2SensorID, playerID].rightHand.rotation *= Quaternion.Euler(0, 180, 90);
+						skeletons[kinect2SensorID, playerID].leftHand.rotation = skeletons[kinect2SensorID, playerID].leftHand.rotation * Quaternion.Euler(0, 180, -90);
+						skeletons[kinect2SensorID, playerID].rightHand.rotation = skeletons[kinect2SensorID, playerID].rightHand.rotation * Quaternion.Euler(0, 180, 90);
 
 						// Thumbs
 						relativePos = skeletons[kinect2SensorID, playerID].leftThumb.position - skeletons[kinect2SensorID, playerID].leftWrist.position;
@@ -672,8 +683,8 @@ public class RUISSkeletonManager : MonoBehaviour
 	 */
 	private void UpdateKinect2RootData(JointData torso, int player)
 	{
-		Vector3 newRootPosition = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawKinect2Location(torso.position), RUISDevice.Kinect_2);
-		skeletons[kinect2SensorID, player].root.position = newRootPosition;
+		tempVector = coordinateSystem.ConvertLocation(coordinateSystem.ConvertRawKinect2Location(torso.position), RUISDevice.Kinect_2);
+		skeletons[kinect2SensorID, player].root.position = tempVector;
 		skeletons[kinect2SensorID, player].root.positionConfidence = torso.positionConfidence;
 		skeletons[kinect2SensorID, player].root.rotation = coordinateSystem.ConvertRotation(coordinateSystem.ConvertRawKinect2Rotation(torso.rotation), RUISDevice.Kinect_2);
 		skeletons[kinect2SensorID, player].root.rotationConfidence = torso.rotationConfidence;
@@ -738,33 +749,38 @@ public class RUISSkeletonManager : MonoBehaviour
         }
     }
 
+
+	JointData tempJoint = new JointData(Joint.None); // Temporary variable used to pass values, jointID can be none
+	Quaternion tempRotation = Quaternion.identity;
+
 	// TODO: Add method that return joints by ID, assign proper jointID in the first line: ... = new JointData(Joint.None);
 	public JointData GetKinect2JointData(Kinect.Joint jointPosition, Kinect.JointOrientation jointRotation) 
 	{
-		JointData jointData = new JointData(Joint.None); // Temporary variable used to pass values, jointID can be none
-		jointData.rotation = new Quaternion(jointRotation.Orientation.X,jointRotation.Orientation.Y,jointRotation.Orientation.Z,jointRotation.Orientation.W);
-		jointData.position = new Vector3(jointPosition.Position.X, jointPosition.Position.Y, jointPosition.Position.Z);
+		tempVector.Set(jointPosition.Position.X, jointPosition.Position.Y, jointPosition.Position.Z);
+		tempRotation.Set(jointRotation.Orientation.X,jointRotation.Orientation.Y,jointRotation.Orientation.Z,jointRotation.Orientation.W);
+		tempJoint.rotation = tempRotation;
+		tempJoint.position = tempVector;
 
 		if(jointPosition.TrackingState == Kinect.TrackingState.Tracked)  
 		{
-			jointData.positionConfidence = 1.0f;
-			jointData.rotationConfidence = 1.0f;
+			tempJoint.positionConfidence = 1.0f;
+			tempJoint.rotationConfidence = 1.0f;
 		}
 		else if(jointPosition.TrackingState == Kinect.TrackingState.Inferred)  
 		{
-			jointData.positionConfidence = 0.5f;
-			jointData.rotationConfidence = 0.5f;
+			tempJoint.positionConfidence = 0.5f;
+			tempJoint.rotationConfidence = 0.5f;
 		}
 		else if(jointPosition.TrackingState == Kinect.TrackingState.NotTracked)  
 		{
-			jointData.positionConfidence = 0.0f;
-			jointData.rotationConfidence = 0.0f;
+			tempJoint.positionConfidence = 0.0f;
+			tempJoint.rotationConfidence = 0.0f;
 		}
 		else 
 		{
-			jointData.positionConfidence = 0.0f;
-			jointData.rotationConfidence = 0.0f;
+			tempJoint.positionConfidence = 0.0f;
+			tempJoint.rotationConfidence = 0.0f;
 		}
-		return jointData;
+		return tempJoint;
 	}
 }

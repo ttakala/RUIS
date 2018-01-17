@@ -692,7 +692,7 @@ public class RUISSkeletonControllerEditor : Editor
 																+ "system must be calibrated with the HMD position tracking coordinate system! Inaccuracies "
 																+ "in the calibration will make the head-body placement look weird."));
 
-		GUI.enabled = (hmdMovesHead.boolValue || hmdMovesHead.boolValue);
+		GUI.enabled = (hmdMovesHead.boolValue || headsetDragsBody.boolValue);
 		EditorGUILayout.PropertyField(hmdLocalOffset, new GUIContent("HMD Local Offset", "Offset the avatar head in the head-mounted display's local coordinate "
 																+ "system. This is useful for positioning the HMD view with the avatar's eyes, which also "
 																+ "improves the avatar's head positioning with relation to user's neck. If \"HMD Drags "

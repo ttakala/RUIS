@@ -556,6 +556,7 @@ public class RUISSkeletonController : MonoBehaviour
 				leftHip.rotation = FindFixingRotation(leftHip.position, leftFoot.position, -transform.up) * leftHip.rotation;
 
 			Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
+//			Vector3 assumedRootPos = Vector3.Scale((rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4, scaler); 
 			Vector3 assumedRootPos = Vector3.Scale((rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4, scaler); 
 															
 			Vector3 realRootPos = Vector3.Scale(torso.position, scaler);
@@ -563,8 +564,9 @@ public class RUISSkeletonController : MonoBehaviour
 			Vector3 torsoUp = head.position - torso.position;
 			torsoUp.Normalize();
 
-			if(BodyTrackingDeviceID != RUISSkeletonManager.customSensorID) // *** OPTIHACK
-				torsoOffset = Vector3.Dot(realRootPos - assumedRootPos, torsoUp);
+			// *** OPTIHACK5 Kinect1 and Kinect2 could need differing torsoOffset values... testing needed. This probably should be done in RUISSkeletonManager
+//			if(BodyTrackingDeviceID != RUISSkeletonManager.customSensorID) // *** OPTIHACK
+//				torsoOffset = Vector3.Dot(realRootPos - assumedRootPos, torsoUp);
 		}
 
 		// Stores (world) rotation, LocalPosition, and localScale
@@ -1415,46 +1417,46 @@ public class RUISSkeletonController : MonoBehaviour
 					jointOffset = skeleton.rightClavicle.rotation * jointOffset;
 					break;
 				case RUISSkeletonManager.Joint.LeftShoulder:
-					jointOffset = skeleton.leftShoulder.rotation * shoulderOffset;
+					jointOffset = skeleton.chest.rotation * shoulderOffset;
 					break;
 				case RUISSkeletonManager.Joint.RightShoulder:
 					jointOffset.Set(-shoulderOffset.x, shoulderOffset.y, shoulderOffset.z);
-					jointOffset = skeleton.rightShoulder.rotation * jointOffset;
+					jointOffset = skeleton.chest.rotation * jointOffset;
 					break;
 				case RUISSkeletonManager.Joint.LeftElbow:
-					jointOffset = skeleton.leftElbow.rotation * elbowOffset;
+					jointOffset = skeleton.leftShoulder.rotation * elbowOffset;
 					break;
 				case RUISSkeletonManager.Joint.RightElbow:
 					jointOffset.Set(-elbowOffset.x, elbowOffset.y, elbowOffset.z);
-					jointOffset = skeleton.rightElbow.rotation * jointOffset;
+					jointOffset = skeleton.rightShoulder.rotation * jointOffset;
 					break;
 				case RUISSkeletonManager.Joint.LeftHand:
-					jointOffset = skeleton.leftHand.rotation * handOffset;
+					jointOffset = skeleton.leftElbow.rotation * handOffset;
 					break;
 				case RUISSkeletonManager.Joint.RightHand:
 					jointOffset.Set(-handOffset.x, handOffset.y, handOffset.z);
-					jointOffset = skeleton.rightHand.rotation * jointOffset;
+					jointOffset = skeleton.rightElbow.rotation * jointOffset;
 					break;
 				case RUISSkeletonManager.Joint.LeftHip:
-					jointOffset = skeleton.leftHip.rotation * hipOffset;
+					jointOffset = skeleton.torso.rotation * hipOffset;
 					break;
 				case RUISSkeletonManager.Joint.RightHip:
 					jointOffset.Set(-hipOffset.x, hipOffset.y, hipOffset.z);
-					jointOffset = skeleton.rightHip.rotation * jointOffset;
+					jointOffset = skeleton.torso.rotation * jointOffset;
 					break;
 				case RUISSkeletonManager.Joint.LeftKnee:
-					jointOffset = skeleton.leftKnee.rotation * kneeOffset;
+					jointOffset = skeleton.leftHip.rotation * kneeOffset;
 					break;
 				case RUISSkeletonManager.Joint.RightKnee:
 					jointOffset.Set(-kneeOffset.x, kneeOffset.y, kneeOffset.z);
-					jointOffset = skeleton.rightKnee.rotation * jointOffset;
+					jointOffset = skeleton.rightHip.rotation * jointOffset;
 					break;
 				case RUISSkeletonManager.Joint.LeftFoot:
-					jointOffset = skeleton.leftFoot.rotation * footOffset;
+					jointOffset = skeleton.leftKnee.rotation * footOffset;
 					break;
 				case RUISSkeletonManager.Joint.RightFoot:
 					jointOffset.Set(-footOffset.x, footOffset.y, footOffset.z);
-					jointOffset = skeleton.rightFoot.rotation * jointOffset;
+					jointOffset = skeleton.rightKnee.rotation * jointOffset;
 					break;
 				default:
 					jointOffset.Set(0, 0, 0);
