@@ -460,7 +460,11 @@ public class RUISSkeletonControllerEditor : Editor
 		SwitchToKeepChangesFieldColor();
 		EditorGUILayout.PropertyField(keepPlayModeChanges, new GUIContent("Keep PlayMode Changes", "Any changes made in PlayMode will persist "
 														+ "for those variables that are marked with RGB(" + keepPlayModeChangesRGB.r + ", " 
-														+ keepPlayModeChangesRGB.g + ", " + keepPlayModeChangesRGB.b  +  ") when exiting PlayMode."));
+														+ keepPlayModeChangesRGB.g + ", " + keepPlayModeChangesRGB.b  +  ") when exiting PlayMode.\n"
+		                                                + "PlayMode changes will persist only if the GameObject with this script is not deleted! "
+		                                                + "PlayMode changes will NOT persist if made in one scene, and the PlayMode exit occurs in a "
+		                                                + "new scene loaded in run-time, even if that scene is the same where the changes were "
+		                                          		+ "originally made."));
 		if(!EditorApplication.isPlaying)
 			GUI.color = normalGUIColor;
 		
@@ -527,7 +531,6 @@ public class RUISSkeletonControllerEditor : Editor
 															+ "Kinect. Disable this option when using more accurate and responsive mocap systems."));
 		if(filterPosition.boolValue)
 		{
-			// *** OPTIHACK TODO tooltip
 			EditorGUILayout.PropertyField(filterHeadPositionOnly, new GUIContent("Filter Only Head Position", "Smoothen ONLY the head position with a basic "
 																				+ "Kalman filter, and do not smooth other joints. This is a _hacky_ setting "
 																				+ "that adds latency (magnitude controlled by \"Position Smoothness\", try "
@@ -1219,7 +1222,6 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = true;
 
-		// *** OPTIHACK
 		EditorGUILayout.PropertyField(pelvisOffset, new GUIContent("Pelvis Offset",   "Offsets pelvis joint position in its local frame in meters. This "
 						                                                            + "setting has effect only when \"Hierarchical Model\" is enabled."));
 
@@ -1262,7 +1264,6 @@ public class RUISSkeletonControllerEditor : Editor
 																+ "local frame in meters. This offset has no effect if \"Scale Limbs\" is enabled."));
 		GUI.enabled = true;
 
-		// *** OPTIHACK
 		EditorGUILayout.PropertyField(hipOffset, new GUIContent("Hip Offset",	"Offsets hip joint positions in their local frame in meters. WARNING: This "
 																			  + "also offsets the absolute positions of all the leg joints if \"Scale Limbs\" "
 																			  + "is enabled! This setting has effect only when \"Hierarchical Model\" is enabled."));
@@ -1492,7 +1493,6 @@ public static class RUISSkeletonControllerCheckPlayModeChanges
 				if(entry.Key && entry.Value != null)
 				{
 					skeletonController = entry.Key.GetComponent<RUISSkeletonController>();
-					// *** OPTIHACK5 TODO THIS DOESN'T WORK WITH MECANIMBLENDED CHARACTER
 					if(		skeletonController && fieldNameList != null && (fieldNameList.IndexOf("keepPlayModeChanges") >= 0 
 						&& ((bool) entry.Value[fieldNameList.IndexOf("keepPlayModeChanges")])))
 					{

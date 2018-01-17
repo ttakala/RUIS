@@ -1769,6 +1769,14 @@ MonoBehaviour:
   leftFoot: {fileID: 400004}
   leftThumb: {fileID: 400078}
   rightThumb: {fileID: 400040}
+  leftIndexF: {fileID: 0}
+  rightIndexF: {fileID: 0}
+  leftMiddleF: {fileID: 0}
+  rightMiddleF: {fileID: 0}
+  leftRingF: {fileID: 0}
+  rightRingF: {fileID: 0}
+  leftLittleF: {fileID: 0}
+  rightLittleF: {fileID: 0}
   customRoot: {fileID: 0}
   customTorso: {fileID: 0}
   customChest: {fileID: 0}
@@ -1788,8 +1796,18 @@ MonoBehaviour:
   customLeftHip: {fileID: 0}
   customLeftKnee: {fileID: 0}
   customLeftFoot: {fileID: 0}
-  customLeftThumb: {fileID: 0}
   customRightThumb: {fileID: 0}
+  customRightIndexF: {fileID: 0}
+  customRightMiddleF: {fileID: 0}
+  customRightRingF: {fileID: 0}
+  customRightLittleF: {fileID: 0}
+  customLeftThumb: {fileID: 0}
+  customLeftIndexF: {fileID: 0}
+  customLeftMiddleF: {fileID: 0}
+  customLeftRingF: {fileID: 0}
+  customLeftLittleF: {fileID: 0}
+  customHMDSource: {fileID: 0}
+  headsetCoordinates: 3
   pelvisOffset: {x: 0, y: 0, z: 0}
   chestOffset: {x: 0, y: 0, z: 0}
   neckOffset: {x: 0, y: 0, z: 0}
@@ -1812,20 +1830,21 @@ MonoBehaviour:
   hipRotationOffset: {x: 0, y: 0, z: 0}
   kneeRotationOffset: {x: 0, y: 0, z: 0}
   feetRotationOffset: {x: 0, y: 0, z: 0}
+  thumbRotationOffset: {x: 0, y: 0, z: 0}
+  indexFRotationOffset: {x: 0, y: 0, z: 0}
+  middleFRotationOffset: {x: 0, y: 0, z: 0}
+  ringFRotationOffset: {x: 0, y: 0, z: 0}
+  littleFRotationOffset: {x: 0, y: 0, z: 0}
   pelvisScaleAdjust: 1
   chestScaleAdjust: 1
   neckScaleAdjust: 1
   headScaleAdjust: 1
   clavicleScaleAdjust: 1
-  shoulderScaleAdjust: 1
-  elbowScaleAdjust: 1
   handScaleAdjust: 1
-  hipScaleAdjust: 1
-  kneeScaleAdjust: 1
   footScaleAdjust: 1
-  fistCurlFingers: 1
-  externalCurlTrigger: 0
-  trackThumbs: 1
+  externalFistTrigger: 0
+  fistMaking: 1
+  kinect2Thumbs: 0
   trackWrist: 1
   trackAnkle: 1
   rotateWristFromElbow: 1
@@ -1860,13 +1879,17 @@ MonoBehaviour:
   rightLegThickness: 1
   leftLegThickness: 1
   minimumConfidenceToUpdate: 0.5
-  rotationDamping: 360
+  maxAngularVelocity: 360
+  maxFingerAngularVelocity: 720
   handRollAngleMinimum: -180
   handRollAngleMaximum: 180
   hmdRotatesHead: 0
   hmdMovesHead: 0
   hmdLocalOffset: {x: 0, y: 0, z: 0}
-  isIMUMocap: 0
+  headsetDragsBody: 0
+  yawCorrectIMU: 0
+  yawCorrectAngularVelocity: 2
+  yawCorrectResetButton: 32
   filterPosition: 1
   filterHeadPositionOnly: 0
   positionNoiseCovariance: 100
@@ -1874,20 +1897,19 @@ MonoBehaviour:
   filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
-  adjustVerticalHipsPosition: 0
-  neckHeightTweaker: 0
   forearmLengthRatio: 1
   shinLengthRatio: 1
-  clenchedRotationThumbTM: {x: 0.38268346, y: 0, z: 0, w: 0.9238795}
-  clenchedRotationThumbMCP: {x: 0, y: 0, z: -0.21643962, w: 0.976296}
-  clenchedRotationThumbIP: {x: 0, y: 0, z: -0.6427876, w: 0.76604444}
-  clenchedRotationMCP: {x: 0, y: 0, z: -0.38268346, w: 0.9238795}
-  clenchedRotationPIP: {x: 0, y: 0, z: -0.76604444, w: 0.64278764}
-  clenchedRotationDIP: {x: 0, y: 0, z: -0.57357645, w: 0.81915206}
+  clenchedThumbAngleTM: {x: 45, y: 0, z: 0}
+  clenchedThumbAngleMCP: {x: 0, y: 0, z: -25}
+  clenchedThumbAngleIP: {x: 0, y: 0, z: -80}
+  clenchedFingerAngleMCP: {x: 0, y: 0, z: -45}
+  clenchedFingerAnglePIP: {x: 0, y: 0, z: -100}
+  clenchedFingerAngleDIP: {x: 0, y: 0, z: -70}
   leftThumbHasIndependentRotations: 0
   clenchedLeftThumbTM: {x: 0, y: 0, z: 0, w: 0}
   clenchedLeftThumbMCP: {x: 0, y: 0, z: 0, w: 0}
   clenchedLeftThumbIP: {x: 0, y: 0, z: 0, w: 0}
+  keepPlayModeChanges: 1
 --- !u!137 &13708470
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

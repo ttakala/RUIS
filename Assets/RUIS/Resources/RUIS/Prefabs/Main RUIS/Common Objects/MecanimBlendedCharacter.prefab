@@ -66,7 +66,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100008
 GameObject:
   m_ObjectHideFlags: 1
@@ -2262,7 +2262,7 @@ MonoBehaviour:
   customLeftLittleF: {fileID: 0}
   customHMDSource: {fileID: 0}
   headsetCoordinates: 3
-  pelvisOffset: {x: 0, y: 0, z: 0}
+  pelvisOffset: {x: 0, y: 1, z: 0}
   chestOffset: {x: 0, y: 0, z: 0}
   neckOffset: {x: 0, y: 0, z: 0}
   headOffset: {x: 0, y: 0, z: 0}
@@ -2341,6 +2341,9 @@ MonoBehaviour:
   hmdMovesHead: 0
   hmdLocalOffset: {x: 0, y: 0, z: 0}
   headsetDragsBody: 0
+  yawCorrectIMU: 0
+  yawCorrectAngularVelocity: 2
+  yawCorrectResetButton: 32
   filterPosition: 1
   filterHeadPositionOnly: 0
   positionNoiseCovariance: 100
@@ -2350,12 +2353,12 @@ MonoBehaviour:
   thumbZRotationOffset: 45
   forearmLengthRatio: 1
   shinLengthRatio: 1
-  clenchedThumbAngleTM: {x: 0, y: 0, z: 0}
-  clenchedThumbAngleMCP: {x: 0, y: 0, z: 0}
-  clenchedThumbAngleIP: {x: 0, y: 0, z: 0}
-  clenchedFingerAngleMCP: {x: 0, y: 0, z: 0}
-  clenchedFingerAnglePIP: {x: 0, y: 0, z: 0}
-  clenchedFingerAngleDIP: {x: 0, y: 0, z: 0}
+  clenchedThumbAngleTM: {x: 45, y: 0, z: 0}
+  clenchedThumbAngleMCP: {x: 0, y: 0, z: -25}
+  clenchedThumbAngleIP: {x: 0, y: 0, z: -80}
+  clenchedFingerAngleMCP: {x: 0, y: 0, z: -45}
+  clenchedFingerAnglePIP: {x: 0, y: 0, z: -100}
+  clenchedFingerAngleDIP: {x: 0, y: 0, z: -70}
   leftThumbHasIndependentRotations: 0
   clenchedLeftThumbTM: {x: 0, y: 0, z: 0, w: 0}
   clenchedLeftThumbMCP: {x: 0, y: 0, z: 0, w: 0}
