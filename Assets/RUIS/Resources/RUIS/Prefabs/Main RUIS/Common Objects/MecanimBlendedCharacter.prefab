@@ -66,7 +66,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &100008
 GameObject:
   m_ObjectHideFlags: 1
@@ -2262,7 +2262,7 @@ MonoBehaviour:
   customLeftLittleF: {fileID: 0}
   customHMDSource: {fileID: 0}
   headsetCoordinates: 3
-  pelvisOffset: {x: 0, y: 1, z: 0}
+  pelvisOffset: {x: 0, y: 0, z: 0}
   chestOffset: {x: 0, y: 0, z: 0}
   neckOffset: {x: 0, y: 0, z: 0}
   headOffset: {x: 0, y: 0, z: 0}

@@ -275,15 +275,23 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public bool hmdRotatesHead = false;
 	public bool hmdMovesHead = false;
-
+	public bool followHmdPosition { get; private set; }
 	public Vector3 hmdLocalOffset = Vector3.zero;
 
 	public bool headsetDragsBody = false;
 	public bool yawCorrectIMU = false;
 	public float yawCorrectAngularVelocity = 2;
 	public KeyCode yawCorrectResetButton = KeyCode.Space;
-
-	public bool followHmdPosition { get; private set; }
+	KalmanFilter filterDrift;
+	double[] measuredDrift = {0, 0};
+	double[] filteredDrift = {0, 0};
+	float driftNoiseCovariance = 5000;
+	Quaternion correctedRotation = Quaternion.identity;
+	Vector3 driftingForward;
+	Vector3 driftlessForward;
+	Vector3 driftVector;
+	float initCorrectionVelocity = 36000;
+	float currentCorrectionVelocity;
 
 	public Quaternion trackedDeviceYawRotation { get; private set; }
 
@@ -436,6 +444,12 @@ public class RUISSkeletonController : MonoBehaviour
 		for(int i = 0; i < fingerConfidence.GetLength(0); ++i)
 			for(int j = 0; j < fingerConfidence.GetLength(1); ++j)
 				fingerConfidence[i, j] = 1.0f; // It's up to the developer to modify these values between 0 and 1 in real-time
+
+		filterDrift = new KalmanFilter();
+		filterDrift.initialize(2,2);
+		currentCorrectionVelocity = yawCorrectAngularVelocity;
+		if(yawCorrectIMU)
+			StartCoroutine(CorrectImmediately());
 	}
 
 	void Start()
@@ -1519,7 +1533,7 @@ public class RUISSkeletonController : MonoBehaviour
 		else
 		{
 			offsetScale = 1; // OPTIHACK TODO ***
-			jointOffset = skeleton.head.rotation * headOffset;
+			jointOffset = skeleton.neck.rotation * headOffset; // *** OPTIHACK6 changed skeleton.head.rotation to skeleton.neck.rotation <-- check that this works with optitrack
 		}
 		skeleton.head.position			+= offsetScale * (jointOffset);
 
@@ -1562,6 +1576,20 @@ public class RUISSkeletonController : MonoBehaviour
 	// Gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
 	private void UpdateSkeletonPosition()
 	{
+		if(yawCorrectIMU && skeleton.torso.rotationConfidence > minimumConfidenceToUpdate) // *** OPTIHACK5 What is corrected, the rotation of root, torso, or both?
+		{
+			if(customHMDSource)
+			{
+					skeleton.torso.rotation = GetDriftCorrectedPelvisRotation(customHMDSource.rotation, skeleton.torso.rotation) * skeleton.torso.rotation;
+			}
+			else
+			{
+				if(RUISDisplayManager.IsHmdPresent()) // *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+					skeleton.torso.rotation = GetDriftCorrectedPelvisRotation(coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates),
+						                                                      skeleton.torso.rotation) * skeleton.torso.rotation;
+			}
+		}
+
 		if(headsetDragsBody)
 		{
 //			Vector3 headPelvisOffset = motionSuitHead.position - motionSuitPelvis.position + motionSuitPelvis.rotation * pelvisOffset;
@@ -2651,22 +2679,17 @@ public class RUISSkeletonController : MonoBehaviour
 						{
 							if(fingerConfidence[i, j] >= minimumConfidenceToUpdate) // It is up to the developer to modify fingerConfidence[i, j]
 							{
-								if(k == 0) // Proximal phalanges
+								switch(j)
 								{
-									switch(j)
-									{
-									case 4: rotOffset = thumbRotationOffset;   break; // Thumb
-									case 3: rotOffset = indexFRotationOffset;  break; // Index finger
-									case 2: rotOffset = middleFRotationOffset; break; // Middle finger
-									case 1: rotOffset = ringFRotationOffset;   break; // Ring finger
-									case 0: rotOffset = littleFRotationOffset; break; // Little finger
-									default: rotOffset = Vector3.zero; 		   break; // Mutant fingers should not exist
-									}
-									if(i == 1) // Left hand
-										rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
+								case 4: rotOffset = thumbRotationOffset;   break; // Thumb
+								case 3: rotOffset = indexFRotationOffset;  break; // Index finger
+								case 2: rotOffset = middleFRotationOffset; break; // Middle finger
+								case 1: rotOffset = ringFRotationOffset;   break; // Ring finger
+								case 0: rotOffset = littleFRotationOffset; break; // Little finger
+								default: rotOffset = Vector3.zero; 		   break; // Mutant fingers should not exist
 								}
-								else // Middle and distal phalanges
-									rotOffset = Vector3.zero;
+								if(i == 1) // Left hand
+									rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
 								rotationOffset = Quaternion.Euler(rotOffset);
 
 								// At the moment only hierarchical finger phalanx Transforms are supported
@@ -2714,6 +2737,68 @@ public class RUISSkeletonController : MonoBehaviour
 		copyTarget.rotation = copySource.rotation;
 		copyTarget.positionConfidence = copySource.positionConfidence;
 		copyTarget.rotationConfidence = copySource.rotationConfidence;
+	}
+
+	System.Collections.IEnumerator CorrectImmediately()
+	{
+		currentCorrectionVelocity = initCorrectionVelocity;
+		yield return new WaitForSeconds(0.2f);
+		currentCorrectionVelocity = yawCorrectAngularVelocity;
+	}
+
+	Quaternion GetDriftCorrectedPelvisRotation(Quaternion driftlessRotation, Quaternion driftingRotation) 
+	{
+		// drifting rotation transform.rotation = Quaternion.Inverse(parent.rotation) * child.rotation;
+
+		if(Input.GetKeyDown(yawCorrectResetButton))
+			StartCoroutine(CorrectImmediately());
+
+//			if(driftingParent)
+//				driftingRotation = Quaternion.Inverse(driftingParent.rotation) * driftingChild.rotation;
+//			else
+//				driftingRotation = driftingChild.rotation;
+
+//			driftingForward  = driftingRotation * Quaternion.Euler(driftlessToDriftingOffset) * Vector3.forward;
+//			driftlessForward = (driftlessIsLocalRotation ? driftlessTransform.localRotation : driftlessTransform.rotation) * Vector3.forward;
+		driftingForward  = driftingRotation * Vector3.forward;
+
+//			#if UNITY_EDITOR
+//			Debug.DrawRay(driftingChild.position, driftingForward);
+//			Debug.DrawRay(driftingChild.position, 0.5f * (driftingRotation * Quaternion.Euler(driftlessToDriftingOffset) * Vector3.up));
+//			#endif
+
+		// HACK: Project forward vectors to XZ-plane. This is a problem if they are constantly parallel to Y-axis, e.g. HMD user looking directly up or down 
+		driftingForward.Set(driftingForward.x, 0, driftingForward.z);
+		driftlessForward.Set(driftlessForward.x, 0, driftlessForward.z);
+
+		// HACK: If either forward vector is constantly parallel to Y-axis, no drift correction occurs. Occasionally this is OK, as the drift correction occurs gradually.
+		if(driftingForward.magnitude > 0.01f && driftlessForward.magnitude > 0.01f) 
+		{
+
+			// HACK: Vector projection to XZ-plane ensures that the change in the below driftVector is continuous, 
+			//		 as long as rotation change in driftingRotation and driftlessTransform is continuous. Otherwise 
+			//		 more math is needed to ensure the continuity...
+			driftVector = Quaternion.Euler(0, ((Vector3.Cross(driftingForward, driftlessForward).y < 0)?-1:1)
+				                           		* Vector3.Angle(driftingForward, driftlessForward), 0) * Vector3.forward;
+
+			// 2D vector rotated by yaw difference has continuous components
+			measuredDrift[0] = driftVector.x;
+			measuredDrift[1] = driftVector.z;
+
+			// Simple Kalman filtering
+			filterDrift.setR(Time.deltaTime * driftNoiseCovariance);
+			filterDrift.predict();
+			filterDrift.update(measuredDrift);
+			filteredDrift = filterDrift.getState();
+
+			correctedRotation = Quaternion.RotateTowards(correctedRotation, 
+			                                        Quaternion.LookRotation (new Vector3 ((float)filteredDrift [0], 0, (float)filteredDrift [1])), 
+			                                        currentCorrectionVelocity * Time.deltaTime);
+
+//				if(correctionTarget)
+//					correctionTarget.localRotation = filteredRotation;
+		}
+		return correctedRotation;
 	}
 
 	// If memory serves me correctly, this method doesn't work quite right

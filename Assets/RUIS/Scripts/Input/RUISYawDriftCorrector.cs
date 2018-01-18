@@ -120,7 +120,7 @@ public class RUISYawDriftCorrector : MonoBehaviour
 			// HACK: Vector projection to XZ-plane ensures that the change in the below driftVector is continuous, 
 			//		 as long as rotation change in driftingRotation and driftlessTransform is continuous. Otherwise 
 			//		 more math is needed to ensure the continuity...
-			driftVector = Quaternion.Euler(0, -Vector3.Angle(driftingForward, driftlessForward), 0) * Vector3.forward;
+			driftVector = Quaternion.Euler(0, ((Vector3.Cross(driftingForward, driftlessForward).y < 0)?-1:1) *  Vector3.Angle(driftingForward, driftlessForward), 0) * Vector3.forward;
 
 			// 2D vector rotated by yaw difference has continuous components
 			measuredDrift[0] = driftVector.x;
