@@ -195,8 +195,8 @@ public class RUISSkeletonManager : MonoBehaviour
 
 	[Tooltip(  "How much is Kinect 2 skeletons' head position interpolated the neck, in order to make the head "
 	         + "position better correspond that of Kinect 1 (so that both Kinects can be used to animate the same skeletons). Default is 0.5.")]
-	[Range(0f, 0.9f)]
-	public float headOffsetKinect2 = 0.5f;
+	[Range(0f, 0.95f)]
+	public float headOffsetKinect2 = 0.7f;
 	private Vector3 tempVector = Vector3.zero;
 
     void Awake()

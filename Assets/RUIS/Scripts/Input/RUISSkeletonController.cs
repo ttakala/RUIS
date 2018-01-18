@@ -874,6 +874,8 @@ public class RUISSkeletonController : MonoBehaviour
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
 			if(skeleton.isTracking || !hasBeenTracked  /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
 			{
+				ApplyTranslationOffsets(); // *** OPTIHACK5 TODO skeleton.torso.position and rotation values are not used if skeleton.isTracking is false!!!!
+
 				UpdateTransform(ref torso, skeleton.torso, maxAngularChange, pelvisRotationOffset);
 				UpdateTransform(ref chest, skeleton.chest, maxAngularChange, chestRotationOffset); // *** OPTIHACK
 				UpdateTransform(ref neck,  skeleton.neck,  maxAngularChange, neckRotationOffset); // *** OPTIHACK
@@ -1365,103 +1367,106 @@ public class RUISSkeletonController : MonoBehaviour
 			if(jointToGet.positionConfidence < minimumConfidenceToUpdate && hasBeenTracked)
 				return;
 
-			if(heightAffectsOffsets)
-			{
-				if(jointToGet.jointID != RUISSkeletonManager.Joint.Torso) // *** OPTIHACK4
-					offsetScale = transformToUpdate.parent.localScale.x; // *** TODO CHECK IF THIS IS BEST offsetScale or if torsoScale would be better
-																		 //     considering offset invariance between users of different height
-				else
-					offsetScale = 1; //offsetScale = torsoScale; // if uncommented, remove torso.localScale.x multiplier from below switch torso case
-			}
-			else
-				offsetScale = 1;
-				
-			// *** OPTIHACK4 change all skeleton.*.rotations preceding *Offset to *.rotation (e.g. chest.rotation) ? 
-			//		Not that simple... the jointOffsets need to be in the tracking/skeleton frame. 
-			//		Quaternion.Inverse(transform.rotation)*chest.rotation might suffice... Finally add jointoffsets to RUISKinectAndMecanimCombiner
-			switch(jointToGet.jointID) 
-			{
-				case RUISSkeletonManager.Joint.Torso: // *** OPTIHACK still using hacky Kinect1/2 pelvis offset adjustments. TODO: consider switching to use pelvisOffset
-					if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
-						jointOffset =  skeleton.torso.rotation * pelvisOffset * torso.localScale.x - torsoDirection * torsoOffset * torsoScale;
-					else
-						jointOffset =  skeleton.torso.rotation * pelvisOffset;
-					break;
-				case RUISSkeletonManager.Joint.Chest:
-					jointOffset = skeleton.chest.rotation * chestOffset;
-					break;
-				case RUISSkeletonManager.Joint.Neck:
-					jointOffset = skeleton.neck.rotation * neckOffset;
-					offsetScale = 1; // OPTIHACK TODO ***
-					break;
-				case RUISSkeletonManager.Joint.Head:
-					if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
-					{
-						offsetScale = 1; // OPTIHACK *** CHECK THAT WORKS, torso.localScale.x is better
-						// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
-						jointOffset = headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
-																					headsetCoordinates) * hmdLocalOffset; 
-						// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
-					}
-					else
-					{
-						offsetScale = 1; // OPTIHACK TODO ***
-						jointOffset = skeleton.head.rotation * headOffset;
-					}
-					break;
-				case RUISSkeletonManager.Joint.LeftClavicle:
-					jointOffset = skeleton.leftClavicle.rotation * clavicleOffset;
-					break;
-				case RUISSkeletonManager.Joint.RightClavicle:
-					jointOffset.Set(-clavicleOffset.x, clavicleOffset.y, clavicleOffset.z);
-					jointOffset = skeleton.rightClavicle.rotation * jointOffset;
-					break;
-				case RUISSkeletonManager.Joint.LeftShoulder:
-					jointOffset = skeleton.chest.rotation * shoulderOffset;
-					break;
-				case RUISSkeletonManager.Joint.RightShoulder:
-					jointOffset.Set(-shoulderOffset.x, shoulderOffset.y, shoulderOffset.z);
-					jointOffset = skeleton.chest.rotation * jointOffset;
-					break;
-				case RUISSkeletonManager.Joint.LeftElbow:
-					jointOffset = skeleton.leftShoulder.rotation * elbowOffset;
-					break;
-				case RUISSkeletonManager.Joint.RightElbow:
-					jointOffset.Set(-elbowOffset.x, elbowOffset.y, elbowOffset.z);
-					jointOffset = skeleton.rightShoulder.rotation * jointOffset;
-					break;
-				case RUISSkeletonManager.Joint.LeftHand:
-					jointOffset = skeleton.leftElbow.rotation * handOffset;
-					break;
-				case RUISSkeletonManager.Joint.RightHand:
-					jointOffset.Set(-handOffset.x, handOffset.y, handOffset.z);
-					jointOffset = skeleton.rightElbow.rotation * jointOffset;
-					break;
-				case RUISSkeletonManager.Joint.LeftHip:
-					jointOffset = skeleton.torso.rotation * hipOffset;
-					break;
-				case RUISSkeletonManager.Joint.RightHip:
-					jointOffset.Set(-hipOffset.x, hipOffset.y, hipOffset.z);
-					jointOffset = skeleton.torso.rotation * jointOffset;
-					break;
-				case RUISSkeletonManager.Joint.LeftKnee:
-					jointOffset = skeleton.leftHip.rotation * kneeOffset;
-					break;
-				case RUISSkeletonManager.Joint.RightKnee:
-					jointOffset.Set(-kneeOffset.x, kneeOffset.y, kneeOffset.z);
-					jointOffset = skeleton.rightHip.rotation * jointOffset;
-					break;
-				case RUISSkeletonManager.Joint.LeftFoot:
-					jointOffset = skeleton.leftKnee.rotation * footOffset;
-					break;
-				case RUISSkeletonManager.Joint.RightFoot:
-					jointOffset.Set(-footOffset.x, footOffset.y, footOffset.z);
-					jointOffset = skeleton.rightKnee.rotation * jointOffset;
-					break;
-				default:
-					jointOffset.Set(0, 0, 0);
-					break;
-			}
+			// *** OPTIHACK5 remove this and the commented block below
+			jointOffset = Vector3.zero;
+
+//			if(heightAffectsOffsets)
+//			{
+//				if(jointToGet.jointID != RUISSkeletonManager.Joint.Torso) // *** OPTIHACK4
+//					offsetScale = transformToUpdate.parent.localScale.x; // *** TODO CHECK IF THIS IS BEST offsetScale or if torsoScale would be better
+//																		 //     considering offset invariance between users of different height
+//				else
+//					offsetScale = 1; //offsetScale = torsoScale; // if uncommented, remove torso.localScale.x multiplier from below switch torso case
+//			}
+//			else
+//				offsetScale = 1;
+//				
+//			// *** OPTIHACK4 change all skeleton.*.rotations preceding *Offset to *.rotation (e.g. chest.rotation) ? 
+//			//		Not that simple... the jointOffsets need to be in the tracking/skeleton frame. 
+//			//		Quaternion.Inverse(transform.rotation)*chest.rotation might suffice... Finally add jointoffsets to RUISKinectAndMecanimCombiner
+//			switch(jointToGet.jointID) 
+//			{
+//				case RUISSkeletonManager.Joint.Torso: // *** OPTIHACK still using hacky Kinect1/2 pelvis offset adjustments. TODO: consider switching to use pelvisOffset
+//					if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
+//						jointOffset =  skeleton.torso.rotation * pelvisOffset * torso.localScale.x - torsoDirection * torsoOffset * torsoScale;
+//					else
+//						jointOffset =  skeleton.torso.rotation * pelvisOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.Chest:
+//					jointOffset = skeleton.chest.rotation * chestOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.Neck:
+//					jointOffset = skeleton.neck.rotation * neckOffset;
+//					offsetScale = 1; // OPTIHACK TODO ***
+//					break;
+//				case RUISSkeletonManager.Joint.Head:
+//					if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+//					{
+//						offsetScale = 1; // OPTIHACK *** CHECK THAT WORKS, torso.localScale.x is better
+//						// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
+//						jointOffset = headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+//																					headsetCoordinates) * hmdLocalOffset; 
+//						// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
+//					}
+//					else
+//					{
+//						offsetScale = 1; // OPTIHACK TODO ***
+//						jointOffset = skeleton.head.rotation * headOffset;
+//					}
+//					break;
+//				case RUISSkeletonManager.Joint.LeftClavicle:
+//					jointOffset = skeleton.leftClavicle.rotation * clavicleOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.RightClavicle:
+//					jointOffset.Set(-clavicleOffset.x, clavicleOffset.y, clavicleOffset.z);
+//					jointOffset = skeleton.rightClavicle.rotation * jointOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.LeftShoulder:
+//					jointOffset = skeleton.chest.rotation * shoulderOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.RightShoulder:
+//					jointOffset.Set(-shoulderOffset.x, shoulderOffset.y, shoulderOffset.z);
+//					jointOffset = skeleton.chest.rotation * jointOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.LeftElbow:
+//					jointOffset = skeleton.leftShoulder.rotation * elbowOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.RightElbow:
+//					jointOffset.Set(-elbowOffset.x, elbowOffset.y, elbowOffset.z);
+//					jointOffset = skeleton.rightShoulder.rotation * jointOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.LeftHand:
+//					jointOffset = skeleton.leftElbow.rotation * handOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.RightHand:
+//					jointOffset.Set(-handOffset.x, handOffset.y, handOffset.z);
+//					jointOffset = skeleton.rightElbow.rotation * jointOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.LeftHip:
+//					jointOffset = skeleton.torso.rotation * hipOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.RightHip:
+//					jointOffset.Set(-hipOffset.x, hipOffset.y, hipOffset.z);
+//					jointOffset = skeleton.torso.rotation * jointOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.LeftKnee:
+//					jointOffset = skeleton.leftHip.rotation * kneeOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.RightKnee:
+//					jointOffset.Set(-kneeOffset.x, kneeOffset.y, kneeOffset.z);
+//					jointOffset = skeleton.rightHip.rotation * jointOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.LeftFoot:
+//					jointOffset = skeleton.leftKnee.rotation * footOffset;
+//					break;
+//				case RUISSkeletonManager.Joint.RightFoot:
+//					jointOffset.Set(-footOffset.x, footOffset.y, footOffset.z);
+//					jointOffset = skeleton.rightKnee.rotation * jointOffset;
+//					break;
+//				default:
+//					jointOffset.Set(0, 0, 0);
+//					break;
+//			}
 
 			// If skeleton is not tracked, apply jointOffset anyway using initial position
 			if(!hasBeenTracked)
@@ -1479,6 +1484,73 @@ public class RUISSkeletonController : MonoBehaviour
 				transformToUpdate.position = transform.TransformPoint(forcedJointPositions[jointID] + jointOffset * offsetScale - skeletonPosition);
 		}
 //		transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
+	}
+
+	void ApplyTranslationOffsets()
+	{
+		if(heightAffectsOffsets)
+		{
+//			if(jointToGet.jointID != RUISSkeletonManager.Joint.Torso) // *** OPTIHACK4
+//				offsetScale = transformToUpdate.parent.localScale.x; // *** TODO CHECK IF THIS IS BEST offsetScale or if torsoScale would be better
+//     		// considering offset invariance between users of different height
+//				else
+			offsetScale = 1; //offsetScale = torsoScale; // if uncommented, remove torso.localScale.x multiplier from below switch torso case
+		}
+		else
+			offsetScale = 1;
+		// *** OPTIHACK5 start using torsoScale (and set it to sensible values). Get rid of this if-else conditional (torso.localScale.x) and test results
+		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
+			jointOffset =  skeleton.torso.rotation * pelvisOffset * torso.localScale.x;
+		else
+			jointOffset =  skeleton.torso.rotation * pelvisOffset; // * offsetScale
+		skeleton.torso.position			+= offsetScale * (jointOffset);
+
+		skeleton.chest.position			+= offsetScale * (skeleton.chest.rotation * chestOffset);
+		skeleton.neck.position			+= offsetScale * (skeleton.neck.rotation  * neckOffset);
+
+		if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+		{
+			offsetScale = 1; // OPTIHACK *** CHECK THAT WORKS, torso.localScale.x is better
+			// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
+			jointOffset = headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+																		headsetCoordinates) * hmdLocalOffset; 
+			// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
+		}
+		else
+		{
+			offsetScale = 1; // OPTIHACK TODO ***
+			jointOffset = skeleton.head.rotation * headOffset;
+		}
+		skeleton.head.position			+= offsetScale * (jointOffset);
+
+		skeleton.leftClavicle.position	+= offsetScale * (skeleton.chest.rotation 		 * clavicleOffset);
+		skeleton.leftShoulder.position	+= offsetScale * (skeleton.chest.rotation 		 * shoulderOffset);
+		skeleton.leftElbow.position		+= offsetScale * (skeleton.leftShoulder.rotation * elbowOffset);
+		skeleton.leftHand.position		+= offsetScale * (skeleton.leftElbow.rotation 	 * handOffset);
+		skeleton.leftHip.position		+= offsetScale * (skeleton.torso.rotation 		 * hipOffset);
+		skeleton.leftKnee.position		+= offsetScale * (skeleton.leftHip.rotation 	 * kneeOffset);
+		skeleton.leftFoot.position		+= offsetScale * (skeleton.leftKnee.rotation 	 * footOffset);
+
+		jointOffset.Set(-clavicleOffset.x, clavicleOffset.y, clavicleOffset.z);
+		skeleton.rightClavicle.position	+= offsetScale * (skeleton.chest.rotation 		  * jointOffset);
+
+		jointOffset.Set(-shoulderOffset.x, shoulderOffset.y, shoulderOffset.z);
+		skeleton.rightShoulder.position	+= offsetScale * (skeleton.chest.rotation 		  * jointOffset);
+
+		jointOffset.Set(-elbowOffset.x, elbowOffset.y, elbowOffset.z);
+		skeleton.rightElbow.position	+= offsetScale * (skeleton.rightShoulder.rotation * jointOffset);
+
+		jointOffset.Set(-handOffset.x, handOffset.y, handOffset.z);
+		skeleton.rightHand.position		+= offsetScale * (skeleton.rightElbow.rotation 	  * jointOffset);
+
+		jointOffset.Set(-hipOffset.x, hipOffset.y, hipOffset.z);
+		skeleton.rightHip.position		+= offsetScale * (skeleton.torso.rotation 		  * jointOffset);
+
+		jointOffset.Set(-kneeOffset.x, kneeOffset.y, kneeOffset.z);
+		skeleton.rightKnee.position		+= offsetScale * (skeleton.rightHip.rotation 	  * jointOffset);
+
+		jointOffset.Set(-footOffset.x, footOffset.y, footOffset.z);
+		skeleton.rightFoot.position		+= offsetScale * (skeleton.rightKnee.rotation 	  * jointOffset);
 	}
 
 	private Vector3    headsetPosition;
