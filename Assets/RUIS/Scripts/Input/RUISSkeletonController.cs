@@ -238,7 +238,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool switchToAvailableKinect = false;
 
 	private Vector3 skeletonPosition = Vector3.zero;
-	private Vector3 tempPosition = Vector3.zero;
+	private Vector3 tempVector = Vector3.zero;
 	private Quaternion tempRotation = Quaternion.identity;
 
 	private bool hasBeenTracked = false;
@@ -286,7 +286,7 @@ public class RUISSkeletonController : MonoBehaviour
 	double[] measuredDrift = {0, 0};
 	double[] filteredDrift = {0, 0};
 	float driftNoiseCovariance = 5000;
-	Quaternion correctedRotation = Quaternion.identity;
+	Quaternion rotationDrift = Quaternion.identity;
 	Vector3 driftingForward;
 	Vector3 driftlessForward;
 	Vector3 driftVector;
@@ -1148,12 +1148,14 @@ public class RUISSkeletonController : MonoBehaviour
 					{
 //						skeletonPosition = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
 //						skeletonPosition.y = 0;
-						tempPosition = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
-						skeletonPosition.x = tempPosition.x;
-						skeletonPosition.z = tempPosition.z;
+						tempVector = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
+						skeletonPosition.x = tempVector.x;
+						skeletonPosition.z = tempVector.z;
 
 						if(characterController.headRotatesBody)
 							tempRotation = UpdateTransformWithTrackedDevice(ref root, moveYaw);
+						else 
+							tempRotation = Quaternion.identity;
 //							UpdateTransformWithPSMove (ref torso,  moveYaw);
 //							UpdateTransformWithPSMove (ref head, moveYawRotation);
 //							UpdateTransformWithPSMove (ref leftShoulder, moveYawRotation);
@@ -1189,9 +1191,9 @@ public class RUISSkeletonController : MonoBehaviour
 //							skeletonPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
 //							skeletonPosition.y = 0;
 							// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
-							tempPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), headsetCoordinates);
-							skeletonPosition.x = tempPosition.x;
-							skeletonPosition.z = tempPosition.z;
+							tempVector = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), headsetCoordinates);
+							skeletonPosition.x = tempVector.x;
+							skeletonPosition.z = tempVector.z;
 							// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
 							hmdYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates).eulerAngles.y;
 						}
@@ -1200,9 +1202,9 @@ public class RUISSkeletonController : MonoBehaviour
 					{
 //						skeletonPosition = coordinateSystem.GetHmdRawPosition();
 //						skeletonPosition.y = 0;
-						tempPosition = coordinateSystem.GetHmdRawPosition();
-						skeletonPosition.x = tempPosition.x;
-						skeletonPosition.z = tempPosition.z;
+						tempVector = coordinateSystem.GetHmdRawPosition();
+						skeletonPosition.x = tempVector.x;
+						skeletonPosition.z = tempVector.z;
 						hmdYaw = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head).eulerAngles.y;
 					}
 				}
@@ -1211,6 +1213,8 @@ public class RUISSkeletonController : MonoBehaviour
 
 				if(characterController.headRotatesBody)
 					tempRotation = UpdateTransformWithTrackedDevice(ref root, hmdYaw);
+				else
+					tempRotation = Quaternion.identity;
 					
 				if(updateRootPosition) 
 					transform.localPosition = skeletonPosition + tempRotation*rootOffset;	
@@ -1576,18 +1580,44 @@ public class RUISSkeletonController : MonoBehaviour
 	// Gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
 	private void UpdateSkeletonPosition()
 	{
-		if(yawCorrectIMU && skeleton.torso.rotationConfidence > minimumConfidenceToUpdate) // *** OPTIHACK5 What is corrected, the rotation of root, torso, or both?
+		if(yawCorrectIMU)
 		{
-			if(customHMDSource)
+			if(skeleton.torso.rotationConfidence > minimumConfidenceToUpdate)
 			{
-					skeleton.torso.rotation = GetDriftCorrectedPelvisRotation(customHMDSource.rotation, skeleton.torso.rotation) * skeleton.torso.rotation;
+				if(customHMDSource)
+				{
+					// GetYawDriftCorrection() sets rotationDrift and also returns it
+					GetYawDriftCorrection(customHMDSource.rotation, skeleton.torso.rotation);
+				}
+				else
+				{
+					if(RUISDisplayManager.IsHmdPresent()) // *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+						GetYawDriftCorrection(coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+																			   headsetCoordinates), skeleton.torso.rotation);
+				}
 			}
-			else
-			{
-				if(RUISDisplayManager.IsHmdPresent()) // *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
-					skeleton.torso.rotation = GetDriftCorrectedPelvisRotation(coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates),
-						                                                      skeleton.torso.rotation) * skeleton.torso.rotation;
-			}
+			// *** OPTIHACK6 test that this works
+			skeleton.root.rotation 			*= rotationDrift;
+			skeleton.torso.rotation  		*= rotationDrift;
+			skeleton.chest.rotation  		*= rotationDrift;
+			skeleton.neck.rotation  		*= rotationDrift;
+			skeleton.head.rotation  		*= rotationDrift;
+			skeleton.leftClavicle.rotation  *= rotationDrift;
+			skeleton.leftShoulder.rotation  *= rotationDrift;
+			skeleton.leftElbow.rotation  	*= rotationDrift;
+			skeleton.leftHand.rotation  	*= rotationDrift;
+			skeleton.rightClavicle.rotation *= rotationDrift;
+			skeleton.rightShoulder.rotation *= rotationDrift;
+			skeleton.rightElbow.rotation    *= rotationDrift;
+			skeleton.rightHand.rotation  	*= rotationDrift;
+			skeleton.leftHip.rotation  	    *= rotationDrift;
+			skeleton.leftKnee.rotation  	*= rotationDrift;
+			skeleton.leftFoot.rotation  	*= rotationDrift;
+			skeleton.rightHip.rotation  	*= rotationDrift;
+			skeleton.rightKnee.rotation  	*= rotationDrift;
+			skeleton.rightFoot.rotation  	*= rotationDrift;
+			skeleton.leftThumb.rotation  	*= rotationDrift;
+			skeleton.rightThumb.rotation 	*= rotationDrift;
 		}
 
 		if(headsetDragsBody)
@@ -1618,11 +1648,14 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 			
 			headToHeadsetVector = headsetPosition - skeleton.head.position + headsetRotation * hmdLocalOffset;
-			// *** OPTIHACK5 this should actually set torso/pelvis location!!! See the first lines of this method
-//			skeleton.torso.position = headsetPosition - headToPelvisVector + headsetRotation * hmdLocalOffset;
-//			skeleton.root.position  = headsetPosition - pelvisToHeadVector + headsetRotation * hmdLocalOffset;
+		}
+		else
+			headToHeadsetVector = Vector3.zero;
 
-			skeleton.root.position 			+= headToHeadsetVector;
+		// *** if(yawCorrectIMU) modify position by rotating around skeleton.root.position
+		if(headsetDragsBody || yawCorrectIMU)
+		{
+			skeleton.root.position 			+= headToHeadsetVector; // + pivot translate <-- TODO
 			skeleton.torso.position  		+= headToHeadsetVector;
 			skeleton.chest.position  		+= headToHeadsetVector;
 			skeleton.neck.position  		+= headToHeadsetVector;
@@ -2746,7 +2779,13 @@ public class RUISSkeletonController : MonoBehaviour
 		currentCorrectionVelocity = yawCorrectAngularVelocity;
 	}
 
-	Quaternion GetDriftCorrectedPelvisRotation(Quaternion driftlessRotation, Quaternion driftingRotation) 
+	/// <summary>
+	/// Gets the yaw drift correction rotation, if yawCorrectIMU is set to true
+	/// </summary>
+	/// <returns>The yaw drift correction.</returns>
+	/// <param name="driftlessRotation">Driftless rotation.</param>
+	/// <param name="driftingRotation">Drifting rotation.</param>
+	public Quaternion GetYawDriftCorrection(Quaternion driftlessRotation, Quaternion driftingRotation) 
 	{
 		// drifting rotation transform.rotation = Quaternion.Inverse(parent.rotation) * child.rotation;
 
@@ -2791,14 +2830,13 @@ public class RUISSkeletonController : MonoBehaviour
 			filterDrift.update(measuredDrift);
 			filteredDrift = filterDrift.getState();
 
-			correctedRotation = Quaternion.RotateTowards(correctedRotation, 
-			                                        Quaternion.LookRotation (new Vector3 ((float)filteredDrift [0], 0, (float)filteredDrift [1])), 
-			                                        currentCorrectionVelocity * Time.deltaTime);
+			tempVector.Set((float)filteredDrift [0], 0, (float)filteredDrift [1]);
+			rotationDrift = Quaternion.RotateTowards(rotationDrift, Quaternion.LookRotation(tempVector), currentCorrectionVelocity * Time.deltaTime);
 
 //				if(correctionTarget)
 //					correctionTarget.localRotation = filteredRotation;
 		}
-		return correctedRotation;
+		return rotationDrift;
 	}
 
 	// If memory serves me correctly, this method doesn't work quite right
