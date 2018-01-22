@@ -359,6 +359,11 @@ public class RUISSkeletonController : MonoBehaviour
 	private Vector3 prevLeftHip;
 	private Vector3 prevLeftShinScale;
 	private Vector3 prevLeftFootScale;
+
+	private Vector3 prevRightHandDelta;
+	private Vector3 prevRightFootDelta;
+	private Vector3 prevLeftHandDelta;
+	private Vector3 prevLeftFootDelta;
 	
 	//	Ovr.HmdType ovrHmdVersion = Ovr.HmdType.None; //06to08
 
@@ -709,6 +714,10 @@ public class RUISSkeletonController : MonoBehaviour
 		if(leftFoot)
 			prevLeftFootScale = leftFoot.localScale;
 
+		prevRightHandDelta = prevRightHandScale;
+		prevRightFootDelta = prevRightFootScale;
+		prevLeftHandDelta = prevLeftHandScale;
+		prevLeftFootDelta = prevLeftFootScale;
 
 		// Finger clench rotations: these depend on your animation rig
 		// Also see method handleFingersCurling() and its clenchedRotationThumbTM_corrected and clenchedRotationThumbIP_corrected
@@ -1652,30 +1661,30 @@ public class RUISSkeletonController : MonoBehaviour
 		else
 			headToHeadsetVector = Vector3.zero;
 
-		// *** if(yawCorrectIMU) modify position by rotating around skeleton.root.position
 		if(headsetDragsBody || yawCorrectIMU)
 		{
-			skeleton.root.position 			+= headToHeadsetVector; // + pivot translate <-- TODO
-			skeleton.torso.position  		+= headToHeadsetVector;
-			skeleton.chest.position  		+= headToHeadsetVector;
-			skeleton.neck.position  		+= headToHeadsetVector;
-			skeleton.head.position  		+= headToHeadsetVector;
-			skeleton.leftClavicle.position  += headToHeadsetVector;
-			skeleton.leftShoulder.position  += headToHeadsetVector;
-			skeleton.leftElbow.position  	+= headToHeadsetVector;
-			skeleton.leftHand.position  	+= headToHeadsetVector;
-			skeleton.rightClavicle.position += headToHeadsetVector;
-			skeleton.rightShoulder.position += headToHeadsetVector;
-			skeleton.rightElbow.position    += headToHeadsetVector;
-			skeleton.rightHand.position  	+= headToHeadsetVector;
-			skeleton.leftHip.position  	    += headToHeadsetVector;
-			skeleton.leftKnee.position  	+= headToHeadsetVector;
-			skeleton.leftFoot.position  	+= headToHeadsetVector;
-			skeleton.rightHip.position  	+= headToHeadsetVector;
-			skeleton.rightKnee.position  	+= headToHeadsetVector;
-			skeleton.rightFoot.position  	+= headToHeadsetVector;
-			skeleton.leftThumb.position  	+= headToHeadsetVector;
-			skeleton.rightThumb.position 	+= headToHeadsetVector;
+			// Update positions with headToHeadsetVector, rotate around skeleton.root if yawCorrectIMU == true
+			skeleton.root.position += headToHeadsetVector;
+			RotatePositionAroundPivot(ref skeleton.torso.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.chest.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.neck.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.head.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.leftClavicle.position, 	skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.leftShoulder.position, 	skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.leftElbow.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.leftHand.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.rightClavicle.position, 	skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.rightShoulder.position, 	skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.rightElbow.position, 	skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.rightHand.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.leftHip.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.leftKnee.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.leftFoot.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.rightHip.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.rightKnee.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.rightFoot.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.leftThumb.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
+			RotatePositionAroundPivot(ref skeleton.rightThumb.position, 	skeleton.root.position, rotationDrift, headToHeadsetVector);
 		}
 
 		if(filterPosition && !filterHeadPositionOnly)
@@ -1800,7 +1809,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 		cumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeleton.rightShoulder, skeleton.rightElbow,  limbStartScale);
 		cumulativeScale = UpdateBoneScaling(rightElbow,    rightHand,  skeleton.rightElbow,    skeleton.rightHand,  cumulativeScale);
-		UpdateEndBoneScaling(rightHand, handScaleAdjust * Vector3.one, skeleton.rightHand, prevRightHandScale, cumulativeScale);
+		UpdateEndBoneScaling(rightHand, handScaleAdjust * Vector3.one, skeleton.rightHand, prevRightHandDelta, cumulativeScale);
 
 //		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK4 commented this
 			limbStartScale = UpdateUniformBoneScaling(leftClavicle, leftShoulder, skeleton.leftClavicle, skeleton.leftShoulder, 
@@ -1808,15 +1817,15 @@ public class RUISSkeletonController : MonoBehaviour
 
 		cumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeleton.leftShoulder, skeleton.leftElbow,  limbStartScale);
 		cumulativeScale = UpdateBoneScaling(leftElbow,    leftHand,  skeleton.leftElbow,    skeleton.leftHand,  cumulativeScale);
-		UpdateEndBoneScaling(leftHand, handScaleAdjust * Vector3.one, skeleton.leftHand, prevLeftHandScale, cumulativeScale);
+		UpdateEndBoneScaling(leftHand, handScaleAdjust * Vector3.one, skeleton.leftHand, prevLeftHandDelta, cumulativeScale);
 
 		cumulativeScale = UpdateBoneScaling(rightHip,  rightKnee, skeleton.rightHip,  skeleton.rightKnee, cumulatedPelvisScale);
 		cumulativeScale = UpdateBoneScaling(rightKnee, rightFoot, skeleton.rightKnee, skeleton.rightFoot,      cumulativeScale);
-		UpdateEndBoneScaling(rightFoot, footScaleAdjust * Vector3.one, skeleton.rightFoot, prevRightFootScale, cumulativeScale);
+		UpdateEndBoneScaling(rightFoot, footScaleAdjust * Vector3.one, skeleton.rightFoot, prevRightFootDelta, cumulativeScale);
 
 		cumulativeScale = UpdateBoneScaling(leftHip,  leftKnee, skeleton.leftHip,  skeleton.leftKnee, cumulatedPelvisScale);
 		cumulativeScale = UpdateBoneScaling(leftKnee, leftFoot, skeleton.leftKnee, skeleton.leftFoot,      cumulativeScale);
-		UpdateEndBoneScaling(leftFoot, footScaleAdjust * Vector3.one, skeleton.leftFoot, prevLeftFootScale, cumulativeScale);
+		UpdateEndBoneScaling(leftFoot, footScaleAdjust * Vector3.one, skeleton.leftFoot, prevLeftFootDelta, cumulativeScale);
 	}
 
 	private float UpdateUniformBoneScaling( Transform boneToScale, Transform comparisonBone, RUISSkeletonManager.JointData boneToScaleTracker, 
@@ -2174,6 +2183,8 @@ public class RUISSkeletonController : MonoBehaviour
 	private int[] 	axisLabels = new int[3];
 	private float[] axisScales = new float[3];
 	private Vector3 delta = Vector3.zero;
+	private const float minEndBoneScale = 10000f * float.Epsilon; // HACK
+	Vector3 signChanged;
 
 	private void UpdateEndBoneScaling(Transform boneToScale, Vector3 boneScaleTarget, RUISSkeletonManager.JointData joint, Vector3 previousDelta, 
 									  float accumulatedScale)
@@ -2189,40 +2200,54 @@ public class RUISSkeletonController : MonoBehaviour
 			axisLabels[1] = FindClosestGlobalAxis(Quaternion.Inverse(boneToScale.rotation), Vector3.up		); // Y
 			axisLabels[2] = FindClosestGlobalAxis(Quaternion.Inverse(boneToScale.rotation), Vector3.forward	); // Z
 
-
+			// Below only works if all elements of boneScaleTarget have the same value 
 			axisScales[axisLabels[0]] = transform.lossyScale.x * boneScaleTarget.x / boneToScale.lossyScale.x;
 			axisScales[axisLabels[1]] = transform.lossyScale.y * boneScaleTarget.y / boneToScale.lossyScale.y;
 			axisScales[axisLabels[2]] = transform.lossyScale.z * boneScaleTarget.z / boneToScale.lossyScale.z;
 
-			delta.Set(axisScales[axisLabels[0]] - 1, axisScales[axisLabels[1]] - 1, axisScales[axisLabels[2]] - 1);
-			Vector3 signChanged = Vector3.Scale(delta, previousDelta);
-			signChanged.Set((signChanged.x < 0) ? 0.01f : 1, (signChanged.y < 0) ? 0.01f : 1, (signChanged.z < 0) ? 0.01f : 1);
+			delta.Set(axisScales[axisLabels[0]] > 0 ? axisScales[axisLabels[0]] - 1 : 1 - axisScales[axisLabels[0]], 
+					  axisScales[axisLabels[1]] > 0 ? axisScales[axisLabels[1]] - 1 : 1 - axisScales[axisLabels[1]], 
+					  axisScales[axisLabels[2]] > 0 ? axisScales[axisLabels[2]] - 1 : 1 - axisScales[axisLabels[2]] );
+			signChanged = Vector3.Scale(delta, previousDelta);
+			signChanged.Set((signChanged.x < 0) ? 0.01f : 1, (signChanged.y < 0) ? 0.01f : 1, (signChanged.z < 0) ? 0.01f : 1); // HACK
 
 			switch(joint.jointID)
 			{
 				case RUISSkeletonManager.Joint.LeftHand:   
-					prevLeftHandScale = delta;
+					prevLeftHandDelta  = delta;
 					break;
 				case RUISSkeletonManager.Joint.RightHand: 
-					prevRightHandScale = delta;
+					prevRightHandDelta = delta;
 					break;
 				case RUISSkeletonManager.Joint.LeftFoot:  
-					prevLeftFootScale = delta;
+					prevLeftFootDelta  = delta;
 					break;
 				case RUISSkeletonManager.Joint.RightFoot:   
-					prevRightFootScale = delta;
+					prevRightFootDelta = delta;
 					break;
 			}
 
-//			updatedScale.Set(axisScales[axisLabels[0]]*boneToScale.localScale.x, axisScales[axisLabels[1]]*boneToScale.localScale.y, 
-//				axisScales[axisLabels[2]]*boneToScale.localScale.z);
 			float descentSpeed = 10;
-			updatedScale.Set(boneToScale.localScale.x + delta.x * descentSpeed * signChanged.x * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[0]]), 2), 
-			                 boneToScale.localScale.y + delta.y * descentSpeed * signChanged.y * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[1]]), 2), 
-			                 boneToScale.localScale.z + delta.z * descentSpeed * signChanged.z * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[2]]), 2));
-			// *** TODO clamp updatedScale with "metropolitan max"
-			// *** small boneScaleTarget values tend to blow up the updatedScale.. it probably veers into negative numbers. Fix that
 
+			// *** As is, RUISSkeletonController doesn't handle negative body part scales, but handles negative parent scale, if all of the axes are negative
+			tempVector.Set( boneToScale.localScale.x + delta.x * descentSpeed * signChanged.x * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[0]]), 2), 
+							boneToScale.localScale.y + delta.y * descentSpeed * signChanged.y * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[1]]), 2), 
+							boneToScale.localScale.z + delta.z * descentSpeed * signChanged.z * Mathf.Pow(1 - Mathf.Abs(axisScales[axisLabels[2]]), 2) );
+				
+			// *** HACK
+			float maxLossyScale = Mathf.Max(transform.lossyScale.x * boneScaleTarget.x, 
+											Mathf.Max(transform.lossyScale.y * boneScaleTarget.y, transform.lossyScale.z * boneScaleTarget.z));
+			float minLossyScale = Mathf.Min(axisScales[0], Mathf.Min(axisScales[1], axisScales[2]));
+			if(minLossyScale > 0)
+				minLossyScale = 0;
+				
+			updatedScale.Set(Mathf.Clamp(tempVector.x==0? minEndBoneScale : tempVector.x, minLossyScale, maxLossyScale),
+							 Mathf.Clamp(tempVector.y==0? minEndBoneScale : tempVector.y, minLossyScale, maxLossyScale),
+							 Mathf.Clamp(tempVector.z==0? minEndBoneScale : tempVector.z, minLossyScale, maxLossyScale) );
+			updatedScale.Set(float.IsNaN(tempVector.x) ? boneToScale.localScale.x : tempVector.x,
+							 float.IsNaN(tempVector.y) ? boneToScale.localScale.y : tempVector.y,
+							 float.IsNaN(tempVector.z) ? boneToScale.localScale.z : tempVector.z );
+//			print(transform.parent.name + " " + joint.jointID + " " + minLossyScale + " " + maxLossyScale + " " + (tempVector - boneToScale.localScale));
 		}
 		else
 		{
@@ -2837,6 +2862,14 @@ public class RUISSkeletonController : MonoBehaviour
 //					correctionTarget.localRotation = filteredRotation;
 		}
 		return rotationDrift;
+	}
+
+	void RotatePositionAroundPivot(ref Vector3 position, Vector3 pivot, Quaternion rotation, Vector3 offset)
+	{
+		if(yawCorrectIMU)
+			position = pivot + rotation * (position - pivot) + offset;
+		else
+			position += offset;
 	}
 
 	// If memory serves me correctly, this method doesn't work quite right
