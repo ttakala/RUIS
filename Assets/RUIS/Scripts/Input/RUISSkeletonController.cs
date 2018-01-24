@@ -291,7 +291,7 @@ public class RUISSkeletonController : MonoBehaviour
 	Vector3 driftlessForward;
 	Vector3 driftVector;
 	float initCorrectionVelocity = 36000;
-	float currentCorrectionVelocity;
+	float currentCorrectionVelocity = 2;
 
 	public Quaternion trackedDeviceYawRotation { get; private set; }
 
@@ -454,7 +454,7 @@ public class RUISSkeletonController : MonoBehaviour
 		filterDrift.initialize(2,2);
 		currentCorrectionVelocity = yawCorrectAngularVelocity;
 		if(yawCorrectIMU)
-			StartCoroutine(CorrectImmediately());
+			StartCoroutine(CorrectYawImmediately());
 	}
 
 	void Start()
@@ -869,7 +869,6 @@ public class RUISSkeletonController : MonoBehaviour
 			SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1); // *** OPTIHACK make symmetric along X
 			SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
 		}
-
 		// Update skeleton based on data fetched from skeletonManager
 		if(		skeletonManager != null && skeletonManager.skeletons[BodyTrackingDeviceID, playerId] != null
 		    /*&&  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking */)
@@ -1593,10 +1592,12 @@ public class RUISSkeletonController : MonoBehaviour
 		{
 			if(skeleton.torso.rotationConfidence > minimumConfidenceToUpdate)
 			{
+				// *** OPTIHACK the below GetYawDriftCorrection invocations do not work if skeleton.torso.rotation was not updated with a "fresh" value
+				// just before calling this function (right now this only concerns Kinect1/2 which shouldn't be used with yawCorrectIMU
 				if(customHMDSource)
 				{
 					// GetYawDriftCorrection() sets rotationDrift and also returns it
-					GetYawDriftCorrection(customHMDSource.rotation, skeleton.torso.rotation);
+					GetYawDriftCorrection(customHMDSource.rotation, skeleton.torso.rotation); 
 				}
 				else
 				{
@@ -1605,28 +1606,28 @@ public class RUISSkeletonController : MonoBehaviour
 																			   headsetCoordinates), skeleton.torso.rotation);
 				}
 			}
-			// *** OPTIHACK6 test that this works
-			skeleton.root.rotation 			*= rotationDrift;
-			skeleton.torso.rotation  		*= rotationDrift;
-			skeleton.chest.rotation  		*= rotationDrift;
-			skeleton.neck.rotation  		*= rotationDrift;
-			skeleton.head.rotation  		*= rotationDrift;
-			skeleton.leftClavicle.rotation  *= rotationDrift;
-			skeleton.leftShoulder.rotation  *= rotationDrift;
-			skeleton.leftElbow.rotation  	*= rotationDrift;
-			skeleton.leftHand.rotation  	*= rotationDrift;
-			skeleton.rightClavicle.rotation *= rotationDrift;
-			skeleton.rightShoulder.rotation *= rotationDrift;
-			skeleton.rightElbow.rotation    *= rotationDrift;
-			skeleton.rightHand.rotation  	*= rotationDrift;
-			skeleton.leftHip.rotation  	    *= rotationDrift;
-			skeleton.leftKnee.rotation  	*= rotationDrift;
-			skeleton.leftFoot.rotation  	*= rotationDrift;
-			skeleton.rightHip.rotation  	*= rotationDrift;
-			skeleton.rightKnee.rotation  	*= rotationDrift;
-			skeleton.rightFoot.rotation  	*= rotationDrift;
-			skeleton.leftThumb.rotation  	*= rotationDrift;
-			skeleton.rightThumb.rotation 	*= rotationDrift;
+
+			skeleton.root.rotation 			= rotationDrift * skeleton.root.rotation;
+			skeleton.torso.rotation  		= rotationDrift * skeleton.torso.rotation;
+			skeleton.chest.rotation  		= rotationDrift * skeleton.chest.rotation;
+			skeleton.neck.rotation  		= rotationDrift * skeleton.neck.rotation;
+			skeleton.head.rotation  		= rotationDrift * skeleton.head.rotation;
+			skeleton.leftClavicle.rotation  = rotationDrift * skeleton.leftClavicle.rotation;
+			skeleton.leftShoulder.rotation  = rotationDrift * skeleton.leftShoulder.rotation;
+			skeleton.leftElbow.rotation  	= rotationDrift * skeleton.leftElbow.rotation;
+			skeleton.leftHand.rotation  	= rotationDrift * skeleton.leftHand.rotation;
+			skeleton.rightClavicle.rotation = rotationDrift * skeleton.rightClavicle.rotation;
+			skeleton.rightShoulder.rotation = rotationDrift * skeleton.rightShoulder.rotation;
+			skeleton.rightElbow.rotation    = rotationDrift * skeleton.rightElbow.rotation;
+			skeleton.rightHand.rotation  	= rotationDrift * skeleton.rightHand.rotation;
+			skeleton.leftHip.rotation  	    = rotationDrift * skeleton.leftHip.rotation;
+			skeleton.leftKnee.rotation  	= rotationDrift * skeleton.leftKnee.rotation;
+			skeleton.leftFoot.rotation  	= rotationDrift * skeleton.leftFoot.rotation;
+			skeleton.rightHip.rotation  	= rotationDrift * skeleton.rightHip.rotation;
+			skeleton.rightKnee.rotation  	= rotationDrift * skeleton.rightKnee.rotation;
+			skeleton.rightFoot.rotation  	= rotationDrift * skeleton.rightFoot.rotation;
+			skeleton.leftThumb.rotation  	= rotationDrift * skeleton.leftThumb.rotation;
+			skeleton.rightThumb.rotation 	= rotationDrift * skeleton.rightThumb.rotation;
 		}
 
 		if(headsetDragsBody)
@@ -1656,7 +1657,7 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 			}
 			
-			headToHeadsetVector = headsetPosition - skeleton.head.position + headsetRotation * hmdLocalOffset;
+				headToHeadsetVector = headsetPosition - (skeleton.root.position + rotationDrift * (skeleton.head.position - skeleton.root.position)) + headsetRotation * hmdLocalOffset;
 		}
 		else
 			headToHeadsetVector = Vector3.zero;
@@ -1664,7 +1665,6 @@ public class RUISSkeletonController : MonoBehaviour
 		if(headsetDragsBody || yawCorrectIMU)
 		{
 			// Update positions with headToHeadsetVector, rotate around skeleton.root if yawCorrectIMU == true
-			skeleton.root.position += headToHeadsetVector;
 			RotatePositionAroundPivot(ref skeleton.torso.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
 			RotatePositionAroundPivot(ref skeleton.chest.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
 			RotatePositionAroundPivot(ref skeleton.neck.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
@@ -1685,6 +1685,9 @@ public class RUISSkeletonController : MonoBehaviour
 			RotatePositionAroundPivot(ref skeleton.rightFoot.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
 			RotatePositionAroundPivot(ref skeleton.leftThumb.position, 		skeleton.root.position, rotationDrift, headToHeadsetVector);
 			RotatePositionAroundPivot(ref skeleton.rightThumb.position, 	skeleton.root.position, rotationDrift, headToHeadsetVector);
+
+			// skeleton.root.position is last to update because otherwise it is used as a pivot and that would mess up the above calculations
+			RotatePositionAroundPivot(ref skeleton.root.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
 		}
 
 		if(filterPosition && !filterHeadPositionOnly)
@@ -2797,11 +2800,12 @@ public class RUISSkeletonController : MonoBehaviour
 		copyTarget.rotationConfidence = copySource.rotationConfidence;
 	}
 
-	System.Collections.IEnumerator CorrectImmediately()
+	private bool yawCorrectButtonPressed = false;
+	System.Collections.IEnumerator CorrectYawImmediately()
 	{
-		currentCorrectionVelocity = initCorrectionVelocity;
+		yawCorrectButtonPressed = true;
 		yield return new WaitForSeconds(0.2f);
-		currentCorrectionVelocity = yawCorrectAngularVelocity;
+		yawCorrectButtonPressed = false;
 	}
 
 	/// <summary>
@@ -2815,7 +2819,7 @@ public class RUISSkeletonController : MonoBehaviour
 		// drifting rotation transform.rotation = Quaternion.Inverse(parent.rotation) * child.rotation;
 
 		if(Input.GetKeyDown(yawCorrectResetButton))
-			StartCoroutine(CorrectImmediately());
+			StartCoroutine(CorrectYawImmediately());
 
 //			if(driftingParent)
 //				driftingRotation = Quaternion.Inverse(driftingParent.rotation) * driftingChild.rotation;
@@ -2825,6 +2829,7 @@ public class RUISSkeletonController : MonoBehaviour
 //			driftingForward  = driftingRotation * Quaternion.Euler(driftlessToDriftingOffset) * Vector3.forward;
 //			driftlessForward = (driftlessIsLocalRotation ? driftlessTransform.localRotation : driftlessTransform.rotation) * Vector3.forward;
 		driftingForward  = driftingRotation * Vector3.forward;
+		driftlessForward = driftlessRotation * Vector3.forward;
 
 //			#if UNITY_EDITOR
 //			Debug.DrawRay(driftingChild.position, driftingForward);
@@ -2838,12 +2843,16 @@ public class RUISSkeletonController : MonoBehaviour
 		// HACK: If either forward vector is constantly parallel to Y-axis, no drift correction occurs. Occasionally this is OK, as the drift correction occurs gradually.
 		if(driftingForward.magnitude > 0.01f && driftlessForward.magnitude > 0.01f) 
 		{
-
 			// HACK: Vector projection to XZ-plane ensures that the change in the below driftVector is continuous, 
 			//		 as long as rotation change in driftingRotation and driftlessTransform is continuous. Otherwise 
 			//		 more math is needed to ensure the continuity...
 			driftVector = Quaternion.Euler(0, ((Vector3.Cross(driftingForward, driftlessForward).y < 0)?-1:1)
 				                           		* Vector3.Angle(driftingForward, driftlessForward), 0) * Vector3.forward;
+
+			if(yawCorrectButtonPressed)
+				currentCorrectionVelocity = initCorrectionVelocity;
+			else
+				currentCorrectionVelocity = yawCorrectAngularVelocity;
 
 			// 2D vector rotated by yaw difference has continuous components
 			measuredDrift[0] = driftVector.x;
@@ -2857,7 +2866,6 @@ public class RUISSkeletonController : MonoBehaviour
 
 			tempVector.Set((float)filteredDrift [0], 0, (float)filteredDrift [1]);
 			rotationDrift = Quaternion.RotateTowards(rotationDrift, Quaternion.LookRotation(tempVector), currentCorrectionVelocity * Time.deltaTime);
-
 //				if(correctionTarget)
 //					correctionTarget.localRotation = filteredRotation;
 		}
