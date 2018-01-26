@@ -45,7 +45,7 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty updateJointRotations;
 	
 	public SerializedProperty rootSpeedScaling;
-	public SerializedProperty rootOffset;
+//	public SerializedProperty rootOffset;
 	public SerializedProperty hmdRotatesHead;
 	public SerializedProperty hmdMovesHead;
 	public SerializedProperty hmdLocalOffset;
@@ -247,7 +247,7 @@ public class RUISSkeletonControllerEditor : Editor
         updateJointRotations = serializedObject.FindProperty("updateJointRotations");
 		
 		rootSpeedScaling = serializedObject.FindProperty("rootSpeedScaling");
-		rootOffset = serializedObject.FindProperty("rootOffset");
+//		rootOffset = serializedObject.FindProperty("rootOffset");
 		hmdRotatesHead = serializedObject.FindProperty("hmdRotatesHead");
 		hmdMovesHead = serializedObject.FindProperty("hmdMovesHead");
 		hmdLocalOffset = serializedObject.FindProperty("hmdLocalOffset");
@@ -651,15 +651,18 @@ public class RUISSkeletonControllerEditor : Editor
 																		+ "offsets in the avatar root."));
 		EditorGUI.indentLevel++;
 
-		EditorGUILayout.PropertyField(headsetDragsBody, new GUIContent("HMD Drags Body", "Enable this option if the user is wearing a position tracked "
-																	+ "head-mounted display and their body is tracked with an IMU suit (e.g. Perception "
-																	+ "Neuron, Xsens). Such suits measure relative joint rotations, and can only roughly "
-																	+ "estimate joint positions. This option could also be enabled if the body tracking "
-																	+ "device (e.g. Kinect) has considerably more latency when compared to the HMD "
-																	+ "tracking; in this case the avatar's feet can temporarily disappear under the "
-																	+ "virtual floor when crouching quickly. You can use \"HMD Local Offset\" to adjust "
-																	+ "how the HMD view is positioned with relation to the avatar head model. When this "
-																	+ "option is enabled, it is also good to enable \"HMD Rotates Head\"."));
+		EditorGUILayout.PropertyField(headsetDragsBody, new GUIContent("HMD Drags Body", "Moves the whole avatar in real-time so that its head is co-located "
+																	+ "with the tracked position of the head-mounted display. Enable this option if the user is "
+																	+ "wearing a position tracked head-mounted display and their body is tracked with an IMU "
+																	+ "suit (e.g. Perception Neuron, Xsens). Such suits measure relative joint rotations, and "
+																	+ "can only roughly estimate joint positions.\nThis option can also be enabled if the "
+																	+ "coordinate alignment (calibration) between the HMD and the body tracking device (e.g. "
+																	+ "Kinect) is noticeably off, or if the body tracking device has considerably more latency "
+																	+ "when compared to the HMD tracking. In the latter case the avatar's feet can temporarily "
+																	+ "disappear under the virtual floor when crouching quickly, and the avatar will also "
+																	+ "'glide' unnaturally when the user sways their head quickly.\nYou can use \"HMD Local "
+																	+ "Offset\" to adjust how the HMD view is positioned with relation to the avatar head "
+																	+ "model. When this option is enabled, it is also good to enable \"HMD Rotates Head\"."));
 
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(yawCorrectIMU, new GUIContent("IMU Yaw Correct", "Enable this option only when using a head-mounted display, and the "
@@ -702,10 +705,10 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = true;
 
-		EditorGUILayout.PropertyField(rootOffset, new GUIContent("HMD Root Offset", "This offset is applied only when the \"Body Tracking Device\" is not "
-																+ "available and the avatar follows the head-mounted display position."
-																+ "The offset is useful if your view in those "
-																+ "situations appears to be in a wrong place inside the avatar 3D model "));
+//		EditorGUILayout.PropertyField(rootOffset, new GUIContent("HMD Root Offset", "This offset is applied only when the \"Body Tracking Device\" is not "
+//																+ "available and the avatar follows the head-mounted display position. "
+//																+ "The offset is useful if your view in those "
+//																+ "situations appears to be in a wrong place inside the avatar 3D model "));
 
 		EditorGUI.indentLevel--;
 

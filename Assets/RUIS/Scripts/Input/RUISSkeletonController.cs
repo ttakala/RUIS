@@ -843,38 +843,37 @@ public class RUISSkeletonController : MonoBehaviour
 	{
 		deltaTime = Time.deltaTime; //1.0f / vr.hmd_DisplayFrequency;
 
-		// If a custom skeleton tracking source is used, save its data into skeletonManager (which is a little 
-		// topsy turvy) so we can utilize same code as we did with Kinect 1 and 2
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
-		{
-			SetCustomJointData(customRoot, 			ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].root, 		1, 1);
-			SetCustomJointData(customTorso, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, 		1, 1);
-			SetCustomJointData(customChest, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, 		1, 1);
-			SetCustomJointData(customNeck, 			ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck, 		1, 1);
-			SetCustomJointData(customHead, 			ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head, 		1, 1);
-			SetCustomJointData(customLeftClavicle, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle, 1, 1);
-			SetCustomJointData(customLeftShoulder, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftShoulder, 1, 1);
-			SetCustomJointData(customLeftElbow, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow, 	1, 1);
-			SetCustomJointData(customLeftHand, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	1, 1);
-			SetCustomJointData(customLeftThumb, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftThumb, 	1, 1);
-			SetCustomJointData(customLeftHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		1, 1); // *** OPTIHACK make offsets work
-			SetCustomJointData(customLeftKnee, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 	1, 1); // *** OPTIHACK make symmetric along X
-			SetCustomJointData(customLeftFoot, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, 	1, 1);
-			SetCustomJointData(customRightClavicle, ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 1, 1);
-			SetCustomJointData(customRightShoulder, ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, 1, 1);
-			SetCustomJointData(customRightElbow, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, 	 1, 1);
-			SetCustomJointData(customRightHand, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	 1, 1);
-			SetCustomJointData(customRightThumb, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightThumb, 	 1, 1);
-			SetCustomJointData(customRightHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, 	 1, 1);
-			SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1); // *** OPTIHACK make symmetric along X
-			SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
-		}
 		// Update skeleton based on data fetched from skeletonManager
 		if(		skeletonManager != null && skeletonManager.skeletons[BodyTrackingDeviceID, playerId] != null
 		    /*&&  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking */)
 		{
-
-			if(bodyTrackingDevice != BodyTrackingDeviceType.GenericMotionTracker) // Kinect is used; copy the value that has been set by it
+			// If a custom skeleton tracking source is used, save its data into skeletonManager (which is a little 
+			// topsy turvy) so we can utilize same code as we did with Kinect 1 and 2
+			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
+			{
+				SetCustomJointData(customRoot, 			ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].root, 		1, 1);
+				SetCustomJointData(customTorso, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, 		1, 1);
+				SetCustomJointData(customChest, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, 		1, 1);
+				SetCustomJointData(customNeck, 			ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck, 		1, 1);
+				SetCustomJointData(customHead, 			ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head, 		1, 1);
+				SetCustomJointData(customLeftClavicle, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftClavicle, 1, 1);
+				SetCustomJointData(customLeftShoulder, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftShoulder, 1, 1);
+				SetCustomJointData(customLeftElbow, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow, 	1, 1);
+				SetCustomJointData(customLeftHand, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	1, 1);
+				SetCustomJointData(customLeftThumb, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftThumb, 	1, 1);
+				SetCustomJointData(customLeftHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		1, 1); // *** OPTIHACK make offsets work
+				SetCustomJointData(customLeftKnee, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 	1, 1); // *** OPTIHACK make symmetric along X
+				SetCustomJointData(customLeftFoot, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, 	1, 1);
+				SetCustomJointData(customRightClavicle, ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 1, 1);
+				SetCustomJointData(customRightShoulder, ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, 1, 1);
+				SetCustomJointData(customRightElbow, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightElbow, 	 1, 1);
+				SetCustomJointData(customRightHand, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	 1, 1);
+				SetCustomJointData(customRightThumb, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightThumb, 	 1, 1);
+				SetCustomJointData(customRightHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, 	 1, 1);
+				SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1); // *** OPTIHACK make symmetric along X
+				SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
+			}
+			else // Kinect is used; copy the .isTracking value that has been set by it
 				skeleton.isTracking = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking;
 
 			CopySkeletonJointData(skeletonManager.skeletons[BodyTrackingDeviceID, playerId], skeleton);
@@ -1597,13 +1596,13 @@ public class RUISSkeletonController : MonoBehaviour
 				if(customHMDSource)
 				{
 					// GetYawDriftCorrection() sets rotationDrift and also returns it
-					GetYawDriftCorrection(customHMDSource.rotation, skeleton.torso.rotation); 
+					GetYawDriftCorrection(customHMDSource.rotation, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation); 
 				}
 				else
 				{
 					if(RUISDisplayManager.IsHmdPresent()) // *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
 						GetYawDriftCorrection(coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
-																			   headsetCoordinates), skeleton.torso.rotation);
+																headsetCoordinates), skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation);
 				}
 			}
 
@@ -1657,7 +1656,10 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 			}
 			
-				headToHeadsetVector = headsetPosition - (skeleton.root.position + rotationDrift * (skeleton.head.position - skeleton.root.position)) + headsetRotation * hmdLocalOffset;
+			// Assign tempVector with skeleton.head.position that has been pivoted around skeleton.root.position by the angle of rotationDrift
+			tempVector = skeleton.head.position;
+			RotatePositionAroundPivot(ref tempVector, skeleton.root.position, rotationDrift, Vector3.zero);
+			headToHeadsetVector = headsetPosition - tempVector + headsetRotation * hmdLocalOffset;
 		}
 		else
 			headToHeadsetVector = Vector3.zero;
@@ -2864,7 +2866,7 @@ public class RUISSkeletonController : MonoBehaviour
 			filterDrift.update(measuredDrift);
 			filteredDrift = filterDrift.getState();
 
-			tempVector.Set((float)filteredDrift [0], 0, (float)filteredDrift [1]);
+			tempVector.Set((float) filteredDrift[0], 0, (float) filteredDrift[1]);
 			rotationDrift = Quaternion.RotateTowards(rotationDrift, Quaternion.LookRotation(tempVector), currentCorrectionVelocity * Time.deltaTime);
 //				if(correctionTarget)
 //					correctionTarget.localRotation = filteredRotation;
