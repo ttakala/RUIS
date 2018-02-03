@@ -129,9 +129,13 @@ public class RUISSkeletonController : MonoBehaviour
 //	public float shoulderScaleAdjust = 1; // TODO is this needed?
 //	public float elbowScaleAdjust    = 1; // TODO is this needed?
 	public float handScaleAdjust 	 = 1; // left and right separately
+	public float leftHandScaleAdjust  = 1;
+	public float rightHandScaleAdjust = 1;
 //	public float hipScaleAdjust 	 = 1; // TODO is this needed?
 //	public float kneeScaleAdjust     = 1; // TODO is this needed?
 	public float footScaleAdjust 	 = 1; // left and right separately
+	public float leftFootScaleAdjust 	 = 1;
+	public float rightFootScaleAdjust 	 = 1;
 
 	/// <summary>
 	/// If enabled, any finger tracking is overriden and externalLeftStatus and externalRightStatus variables can be used to open and close fist. 
@@ -259,9 +263,17 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public float torsoThickness = 1;
 	public float rightArmThickness = 1;
+	public float rightUpperArmThickness = 1;
+	public float rightForearmThickness 	= 1;
 	public float leftArmThickness = 1;
+	public float leftUpperArmThickness 	= 1;
+	public float leftForearmThickness 	= 1;
 	public float rightLegThickness = 1;
+	public float rightThighThickness 	= 1;
+	public float rightShinThickness 	= 1;
 	public float leftLegThickness = 1;
+	public float leftThighThickness 	= 1;
+	public float leftShinThickness 		= 1;
 
 	public float minimumConfidenceToUpdate = 0.5f;
 	public float maxAngularVelocity = 360.0f;
@@ -347,16 +359,16 @@ public class RUISSkeletonController : MonoBehaviour
 	public float forearmLengthRatio = 1.0f;
 	public float shinLengthRatio = 1.0f;
 
-	private Vector3 prevRightShoulder;
+	private Vector3 prevRightShoulderScale;
 	private Vector3 prevRightForearmScale;
 	private Vector3 prevRightHandScale;
-	private Vector3 prevRightHip;
+	private Vector3 prevRightHipScale;
 	private Vector3 prevRightShinScale;
 	private Vector3 prevRightFootScale;
-	private Vector3 prevLeftShoulder;
+	private Vector3 prevLeftShoulderScale;
 	private Vector3 prevLeftForearmScale;
 	private Vector3 prevLeftHandScale;
-	private Vector3 prevLeftHip;
+	private Vector3 prevLeftHipScale;
 	private Vector3 prevLeftShinScale;
 	private Vector3 prevLeftFootScale;
 
@@ -679,7 +691,7 @@ public class RUISSkeletonController : MonoBehaviour
 		automaticBoneOffsets[RUISSkeletonManager.Joint.RightClavicle] = 0;
 
 		if(rightShoulder)
-			prevRightShoulder = rightShoulder.localScale;
+			prevRightShoulderScale = rightShoulder.localScale;
 
 		if(rightElbow)
 			prevRightForearmScale = rightElbow.localScale;
@@ -688,7 +700,7 @@ public class RUISSkeletonController : MonoBehaviour
 			prevRightHandScale = rightHand.localScale;
 
 		if(rightHip)
-			prevRightHip = rightHip.localScale;
+			prevRightHipScale = rightHip.localScale;
 
 		if(rightKnee)
 			prevRightShinScale = rightKnee.localScale;
@@ -697,7 +709,7 @@ public class RUISSkeletonController : MonoBehaviour
 			prevRightFootScale = rightFoot.localScale;
 
 		if(leftShoulder)
-			prevLeftShoulder = leftShoulder.localScale;
+			prevLeftShoulderScale = leftShoulder.localScale;
 		
 		if(leftElbow)
 			prevLeftForearmScale = leftElbow.localScale;
@@ -706,7 +718,7 @@ public class RUISSkeletonController : MonoBehaviour
 			prevLeftHandScale = leftHand.localScale;
 		
 		if(leftHip)
-			prevLeftHip = leftHip.localScale;
+			prevLeftHipScale = leftHip.localScale;
 
 		if(leftKnee)
 			prevLeftShinScale = leftKnee.localScale;
@@ -1085,32 +1097,35 @@ public class RUISSkeletonController : MonoBehaviour
 						}
 					}
 				}
-				else if(updateJointPositions)
+				else
 				{
-					if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+					if(updateJointPositions)
 					{
-						// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
-						skeleton.head.position = 
-								coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
+						if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+						{
+							// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+							skeleton.head.position = 
+									coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
+						}
+						ForceUpdatePosition(ref torso, 			skeleton.torso, 		10, deltaTime);
+						ForceUpdatePosition(ref chest, 			skeleton.chest, 		11, deltaTime);
+						ForceUpdatePosition(ref neck, 			skeleton.neck, 		 	 5, deltaTime);
+						ForceUpdatePosition(ref head, 			skeleton.head, 		 	 4, deltaTime);
+						ForceUpdatePosition(ref rightClavicle, 	skeleton.rightClavicle,	 8, deltaTime);
+						ForceUpdatePosition(ref leftClavicle, 	skeleton.leftClavicle, 	 9, deltaTime);
+						ForceUpdatePosition(ref rightShoulder, 	skeleton.rightShoulder,	 0, deltaTime);
+						ForceUpdatePosition(ref leftShoulder, 	skeleton.leftShoulder, 	 1, deltaTime);
+						ForceUpdatePosition(ref rightElbow, 	skeleton.rightElbow, 	14, deltaTime);
+						ForceUpdatePosition(ref leftElbow, 		skeleton.leftElbow,  	15, deltaTime);
+						ForceUpdatePosition(ref rightHand, 		skeleton.rightHand, 	12, deltaTime);
+						ForceUpdatePosition(ref leftHand, 		skeleton.leftHand, 		13, deltaTime);
+						ForceUpdatePosition(ref rightHip, 		skeleton.rightHip, 		 2, deltaTime);
+						ForceUpdatePosition(ref leftHip, 		skeleton.leftHip, 		 3, deltaTime);
+						ForceUpdatePosition(ref rightKnee, 		skeleton.rightKnee, 	16, deltaTime);
+						ForceUpdatePosition(ref leftKnee, 		skeleton.leftKnee, 		17, deltaTime);
+						ForceUpdatePosition(ref rightFoot, 		skeleton.rightFoot, 	 6, deltaTime);
+						ForceUpdatePosition(ref leftFoot, 		skeleton.leftFoot, 		 7, deltaTime);
 					}
-					ForceUpdatePosition(ref torso, 			skeleton.torso, 		10, deltaTime);
-					ForceUpdatePosition(ref chest, 			skeleton.chest, 		11, deltaTime);
-					ForceUpdatePosition(ref neck, 			skeleton.neck, 		 	 5, deltaTime);
-					ForceUpdatePosition(ref head, 			skeleton.head, 		 	 4, deltaTime);
-					ForceUpdatePosition(ref rightClavicle, 	skeleton.rightClavicle,	 8, deltaTime);
-					ForceUpdatePosition(ref leftClavicle, 	skeleton.leftClavicle, 	 9, deltaTime);
-					ForceUpdatePosition(ref rightShoulder, 	skeleton.rightShoulder,	 0, deltaTime);
-					ForceUpdatePosition(ref leftShoulder, 	skeleton.leftShoulder, 	 1, deltaTime);
-					ForceUpdatePosition(ref rightElbow, 	skeleton.rightElbow, 	14, deltaTime);
-					ForceUpdatePosition(ref leftElbow, 		skeleton.leftElbow,  	15, deltaTime);
-					ForceUpdatePosition(ref rightHand, 		skeleton.rightHand, 	12, deltaTime);
-					ForceUpdatePosition(ref leftHand, 		skeleton.leftHand, 		13, deltaTime);
-					ForceUpdatePosition(ref rightHip, 		skeleton.rightHip, 		 2, deltaTime);
-					ForceUpdatePosition(ref leftHip, 		skeleton.leftHip, 		 3, deltaTime);
-					ForceUpdatePosition(ref rightKnee, 		skeleton.rightKnee, 	16, deltaTime);
-					ForceUpdatePosition(ref leftKnee, 		skeleton.leftKnee, 		17, deltaTime);
-					ForceUpdatePosition(ref rightFoot, 		skeleton.rightFoot, 	 6, deltaTime);
-					ForceUpdatePosition(ref leftFoot, 		skeleton.leftFoot, 		 7, deltaTime);
 
 					if(leftKnee)
 						leftKnee.localScale  = shinLengthRatio * jointInitialLocalScales[leftKnee];
@@ -1814,7 +1829,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 		cumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeleton.rightShoulder, skeleton.rightElbow,  limbStartScale);
 		cumulativeScale = UpdateBoneScaling(rightElbow,    rightHand,  skeleton.rightElbow,    skeleton.rightHand,  cumulativeScale);
-		UpdateEndBoneScaling(rightHand, handScaleAdjust * Vector3.one, skeleton.rightHand, prevRightHandDelta, cumulativeScale);
+		UpdateEndBoneScaling(rightHand, rightHandScaleAdjust * Vector3.one, skeleton.rightHand, prevRightHandDelta, cumulativeScale);
 
 //		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK4 commented this
 			limbStartScale = UpdateUniformBoneScaling(leftClavicle, leftShoulder, skeleton.leftClavicle, skeleton.leftShoulder, 
@@ -1822,15 +1837,15 @@ public class RUISSkeletonController : MonoBehaviour
 
 		cumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeleton.leftShoulder, skeleton.leftElbow,  limbStartScale);
 		cumulativeScale = UpdateBoneScaling(leftElbow,    leftHand,  skeleton.leftElbow,    skeleton.leftHand,  cumulativeScale);
-		UpdateEndBoneScaling(leftHand, handScaleAdjust * Vector3.one, skeleton.leftHand, prevLeftHandDelta, cumulativeScale);
+		UpdateEndBoneScaling(leftHand, leftHandScaleAdjust * Vector3.one, skeleton.leftHand, prevLeftHandDelta, cumulativeScale);
 
 		cumulativeScale = UpdateBoneScaling(rightHip,  rightKnee, skeleton.rightHip,  skeleton.rightKnee, cumulatedPelvisScale);
 		cumulativeScale = UpdateBoneScaling(rightKnee, rightFoot, skeleton.rightKnee, skeleton.rightFoot,      cumulativeScale);
-		UpdateEndBoneScaling(rightFoot, footScaleAdjust * Vector3.one, skeleton.rightFoot, prevRightFootDelta, cumulativeScale);
+		UpdateEndBoneScaling(rightFoot, rightFootScaleAdjust * Vector3.one, skeleton.rightFoot, prevRightFootDelta, cumulativeScale);
 
 		cumulativeScale = UpdateBoneScaling(leftHip,  leftKnee, skeleton.leftHip,  skeleton.leftKnee, cumulatedPelvisScale);
 		cumulativeScale = UpdateBoneScaling(leftKnee, leftFoot, skeleton.leftKnee, skeleton.leftFoot,      cumulativeScale);
-		UpdateEndBoneScaling(leftFoot, footScaleAdjust * Vector3.one, skeleton.leftFoot, prevLeftFootDelta, cumulativeScale);
+		UpdateEndBoneScaling(leftFoot, leftFootScaleAdjust * Vector3.one, skeleton.leftFoot, prevLeftFootDelta, cumulativeScale);
 	}
 
 	private float UpdateUniformBoneScaling( Transform boneToScale, Transform comparisonBone, RUISSkeletonManager.JointData boneToScaleTracker, 
@@ -1899,7 +1914,7 @@ public class RUISSkeletonController : MonoBehaviour
 		float playerBoneLength = 1;
 		float newScale = 1;
 		float thickness = 1;
-//		float parentBoneThickness = 1;
+		float parentBoneThickness = 1;
 		float extremityTweaker = 1;
 		float skewedScaleTweak = 1;
 		float thicknessU = 1;
@@ -1941,61 +1956,65 @@ public class RUISSkeletonController : MonoBehaviour
 		switch(boneToScaleTracker.jointID)
 		{
 			case RUISSkeletonManager.Joint.LeftHip:
-				thickness = leftLegThickness;
-				thicknessU = leftLegThickness;
-				thicknessV = leftLegThickness;
-				previousScale = prevLeftHip;
+				thickness = leftLegThickness * leftThighThickness;
+				thicknessU = leftLegThickness * leftThighThickness;
+				thicknessV = leftLegThickness * leftThighThickness;
+				previousScale = prevLeftHipScale;
 				isLimbStart = true;
 				break;
 			case RUISSkeletonManager.Joint.RightHip:
-				thickness = rightLegThickness;
-				thicknessU = rightLegThickness;
-				thicknessV = rightLegThickness;
-				previousScale = prevRightHip;
+				thickness = rightLegThickness * rightThighThickness;
+				thicknessU = rightLegThickness * rightThighThickness;
+				thicknessV = rightLegThickness * rightThighThickness;
+				previousScale = prevRightHipScale;
 				isLimbStart = true;
 				break;
 			case RUISSkeletonManager.Joint.LeftShoulder:
-				thickness = leftArmThickness;
-				thicknessU = leftArmThickness;
-				thicknessV = leftArmThickness;
-				previousScale = prevLeftShoulder;
+				thickness = leftArmThickness * leftUpperArmThickness;
+				thicknessU = leftArmThickness * leftUpperArmThickness;
+				thicknessV = leftArmThickness * leftUpperArmThickness;
+				previousScale = prevLeftShoulderScale;
 				isLimbStart = true;
 				break;
 			case RUISSkeletonManager.Joint.RightShoulder:
-				thickness = rightArmThickness;
-				thicknessU = rightArmThickness;
-				thicknessV = rightArmThickness;
-				previousScale = prevRightShoulder;
+				thickness = rightArmThickness * rightUpperArmThickness;
+				thicknessU = rightArmThickness * rightUpperArmThickness;
+				thicknessV = rightArmThickness * rightUpperArmThickness;
+				previousScale = prevRightShoulderScale;
 				isLimbStart = true;
 				break;
 			case RUISSkeletonManager.Joint.LeftKnee:
-				thickness = leftLegThickness;
-				thicknessU = leftLegThickness;
-				thicknessV = leftLegThickness;
+				thickness = leftLegThickness * leftShinThickness;
+				thicknessU = leftLegThickness * leftShinThickness;
+				thicknessV = leftLegThickness * leftShinThickness;
+				parentBoneThickness = leftLegThickness * leftThighThickness;
 				extremityTweaker = shinLengthRatio;
 				previousScale = prevLeftShinScale;
 				isExtremityJoint = true;
 				break;
 			case RUISSkeletonManager.Joint.RightKnee:
-				thickness = rightLegThickness;
-				thicknessU = rightLegThickness;
-				thicknessV = rightLegThickness;
+				thickness = rightLegThickness * rightShinThickness;
+				thicknessU = rightLegThickness * rightShinThickness;
+				thicknessV = rightLegThickness * rightShinThickness;
+				parentBoneThickness = rightLegThickness * rightThighThickness;
 				extremityTweaker = shinLengthRatio;
 				previousScale = prevRightShinScale;
 				isExtremityJoint = true;
 				break;
 			case RUISSkeletonManager.Joint.LeftElbow:
-				thickness = leftArmThickness;
-				thicknessU = leftArmThickness;
-				thicknessV = leftArmThickness;
+				thickness = leftArmThickness * leftForearmThickness;
+				thicknessU = leftArmThickness * leftForearmThickness;
+				thicknessV = leftArmThickness * leftForearmThickness;
+				parentBoneThickness = leftArmThickness * leftUpperArmThickness;
 				extremityTweaker = forearmLengthRatio;
 				previousScale = prevLeftForearmScale;
 				isExtremityJoint = true;
 				break;
 			case RUISSkeletonManager.Joint.RightElbow:
-				thickness = rightArmThickness;
-				thicknessU = rightArmThickness;
-				thicknessV = rightArmThickness;
+				thickness = rightArmThickness * rightForearmThickness;
+				thicknessU = rightArmThickness * rightForearmThickness;
+				thicknessV = rightArmThickness * rightForearmThickness;
+				parentBoneThickness = rightArmThickness * rightUpperArmThickness;
 				extremityTweaker = forearmLengthRatio;
 				previousScale = prevRightForearmScale;
 				isExtremityJoint = true;
@@ -2058,7 +2077,7 @@ public class RUISSkeletonController : MonoBehaviour
 //				float sinAngle = Mathf.Sin(Mathf.Deg2Rad * jointAngle);
 
 
-				if(isEndBone) // Hand / Foot   *** OPTIHACK this is not used at the moment
+				if(isEndBone) // Hand or Foot   *** OPTIHACK this is not used at the moment
 				{
 					int uAxis = FindClosestGlobalAxis(boneToScale.localRotation, u);
 					int vAxis = FindClosestGlobalAxis(boneToScale.localRotation, v);
@@ -2078,12 +2097,12 @@ public class RUISSkeletonController : MonoBehaviour
 //				if(boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightHand)
 //						print(skewedScaleTweak + " " + thicknessU + " " + thicknessV + " " + boneToScale.lossyScale + " " + boneToScale.localScale);
 				}
-				else // Forearm / Lower Leg
+				else // Forearm or Shin
 				{	
 //					skewedScaleTweak = extremityTweaker / (accumulatedScale * cosAngle * cosAngle + thickness * sinAngle * sinAngle);
-					skewedScaleTweak = extremityTweaker * CalculateScale(avatarBoneVector, 			avatarParentBone, thickness, accumulatedScale);
-					thicknessU 		 = thickness 		* CalculateScale(boneToScale.rotation * u,  avatarParentBone, thickness, accumulatedScale);
-					thicknessV 		 = thickness 		* CalculateScale(boneToScale.rotation * v,  avatarParentBone, thickness, accumulatedScale);
+					skewedScaleTweak = extremityTweaker * CalculateScale(avatarBoneVector, 			avatarParentBone, parentBoneThickness, accumulatedScale);
+					thicknessU 		 = thickness 		* CalculateScale(boneToScale.rotation * u,  avatarParentBone, parentBoneThickness, accumulatedScale);
+					thicknessV 		 = thickness 		* CalculateScale(boneToScale.rotation * v,  avatarParentBone, parentBoneThickness, accumulatedScale);
 
 					// Below is a bit of a hack (average of thickness and accumulatedScale). A proper solution would have two thickness axes
 //					thickness = thickness / (0.5f*(thickness + accumulatedScale) * sinAngle * sinAngle + thickness * cosAngle * cosAngle);
@@ -2114,7 +2133,7 @@ public class RUISSkeletonController : MonoBehaviour
 			switch(boneToScaleTracker.jointID)
 			{
 				case RUISSkeletonManager.Joint.LeftHip:
-					prevLeftHip = newScale * Vector3.one;
+					prevLeftHipScale = newScale * Vector3.one;
 					break;
 				case RUISSkeletonManager.Joint.LeftKnee:  
 					prevLeftShinScale = newScale * Vector3.one;
@@ -2123,7 +2142,7 @@ public class RUISSkeletonController : MonoBehaviour
 					prevLeftFootScale = newScale * Vector3.one;
 					break;
 				case RUISSkeletonManager.Joint.LeftShoulder:
-					prevLeftShoulder = newScale * Vector3.one;
+					prevLeftShoulderScale = newScale * Vector3.one;
 					break;
 				case RUISSkeletonManager.Joint.LeftElbow:   
 					prevLeftForearmScale = newScale * Vector3.one;
@@ -2132,7 +2151,7 @@ public class RUISSkeletonController : MonoBehaviour
 					prevLeftHandScale = newScale * Vector3.one;
 					break;
 				case RUISSkeletonManager.Joint.RightShoulder:
-					prevRightShoulder = newScale * Vector3.one;
+					prevRightShoulderScale = newScale * Vector3.one;
 					break;
 				case RUISSkeletonManager.Joint.RightElbow: 
 					prevRightForearmScale = newScale * Vector3.one;
@@ -2141,7 +2160,7 @@ public class RUISSkeletonController : MonoBehaviour
 					prevRightHandScale = newScale * Vector3.one;
 					break;
 				case RUISSkeletonManager.Joint.RightHip:
-					prevRightHip = newScale * Vector3.one;
+					prevRightHipScale = newScale * Vector3.one;
 					break;
 				case RUISSkeletonManager.Joint.RightKnee:   
 					prevRightShinScale = newScale * Vector3.one;
