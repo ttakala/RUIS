@@ -1154,7 +1154,13 @@ public class RUISSkeletonController : MonoBehaviour
 //				transform.localPosition = Vector3.Scale(new Vector3 ((float)pos [0], (float)pos [1], (float)pos [2]), rootSpeedScaling);
 			}
 		}
-		 
+
+		tempVector = transform.TransformPoint(skeleton.leftHand.position - skeleton.leftElbow.position);
+		Debug.DrawLine(leftElbow.position, leftElbow.position + tempVector);
+//		Debug.DrawLine(tempVector, tempVector + 0.1f*Vector3.up);
+		Debug.DrawLine(leftElbow.position, leftHand.position);
+
+		
 		if(characterController)
 		{
 			// If character controller pivot is PS Move
@@ -1257,6 +1263,8 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
+	private Quaternion previousRotation, newRotation, rotationOffset;
+
 	private void UpdateTransform(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, float maxAngularChange, Vector3 rotOffset)
 	{
 		bool useParentRotation = false;
@@ -1323,25 +1331,100 @@ public class RUISSkeletonController : MonoBehaviour
 				break;
 		}
 
-		Quaternion rotationOffset = Quaternion.Euler(rotOffset);
+		rotationOffset = Quaternion.Euler(rotOffset);
 
 		if(updateJointRotations && (jointToGet.rotationConfidence >= minimumConfidenceToUpdate || !hasBeenTracked))
 		{
 			if(useHierarchicalModel)
 			{
-				Quaternion newRotation;
 				if(useParentRotation && transformToUpdate.parent) // *** OPTIHACK4 check that disabling trackWrist & trackAnkle still works
 					newRotation = transformToUpdate.parent.rotation * rotationOffset;
 				else
 					newRotation = transform.rotation * jointToGet.rotation * rotationOffset *
-					                                     (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-				transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularChange);
+					                   (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
+				
+				if(!(scaleBoneLengthOnly && jointToGet.jointID == RUISSkeletonManager.Joint.LeftElbow))
+					transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularChange); // *** original
+				else
+				{
+					previousRotation = transformToUpdate.rotation;
+					transformToUpdate.rotation = 
+						Quaternion.RotateTowards(previousRotation, ScaleCorrectedRotation(ref transformToUpdate, jointToGet, newRotation), maxAngularChange);
+				}
 			}
 			else
 			{	// *** OPTIHACK4  check that this works and rotationOffset multiplication belongs to right side
-				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation,  jointToGet.rotation * rotationOffset, maxAngularChange);
+				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation, jointToGet.rotation * rotationOffset, maxAngularChange);
 			}
 		}
+	}
+
+	Transform childTransform;
+	RUISSkeletonManager.JointData childJoint;
+
+	private Quaternion ScaleCorrectedRotation(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, Quaternion newRotation)
+	{
+		switch(jointToGet.jointID)
+		{
+			case RUISSkeletonManager.Joint.LeftElbow:
+				childTransform = leftHand;
+				childJoint = skeleton.leftHand;
+				break;
+			case RUISSkeletonManager.Joint.LeftHand:
+				childTransform = null;
+				childJoint = skeleton.leftHand;
+				break;
+			case RUISSkeletonManager.Joint.LeftKnee:
+				childTransform = leftFoot;
+				childJoint = skeleton.leftFoot;
+				break;
+			case RUISSkeletonManager.Joint.LeftFoot:
+				childTransform = null;
+				childJoint = skeleton.leftFoot;
+				break;
+			case RUISSkeletonManager.Joint.RightElbow:
+				childTransform = rightHand;
+				childJoint = skeleton.rightHand;
+				break;
+			case RUISSkeletonManager.Joint.RightHand:
+				childTransform = null;
+				childJoint = skeleton.rightHand;
+				break;
+			case RUISSkeletonManager.Joint.RightKnee:
+				childTransform = rightFoot;
+				childJoint = skeleton.rightFoot;
+				break;
+			case RUISSkeletonManager.Joint.RightFoot:
+				childTransform = null;
+				childJoint = skeleton.rightFoot;
+				break;
+			default: return newRotation;
+		}
+		
+		// Inverted localScale
+		tempVector.Set(1/transformToUpdate.parent.localScale.x, 1/transformToUpdate.parent.localScale.y, 1/transformToUpdate.parent.localScale.z);
+		
+		// Calculate intended child bone direction in the transformToUpdate frame, and scale it with the inverted localScale: the result is the scale-corrected 
+		// localRotation direction
+		tempVector = Vector3.Scale(tempVector, 
+								   Quaternion.Inverse(transformToUpdate.parent.rotation) * transform.TransformPoint(childJoint.position - jointToGet.position));
+		
+		// Calculate the rotation difference between the localRotation direction and its scale-corrected version, and use that to multiply newRotation
+		return Quaternion.FromToRotation(transform.TransformPoint(childJoint.position - jointToGet.position), 
+										 transformToUpdate.parent.rotation * tempVector						 ) * newRotation;
+
+		// Below results in flattened lower arm when elbow is rotated by (0, 90, 270), but above is not perfect either
+		// Solution: in bone scaling, set localScales using calculated angles instead of transform angles
+//		return GetScaleCorrectedRotation(newRotation, transformToUpdate.parent.localScale);
+	}
+
+	private Quaternion GetScaleCorrectedRotation(Quaternion rotation, Vector3 parentScale)
+	{
+		Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, rotation, Vector3.one);
+		rotationMatrix.SetRow(0, new Vector4(rotationMatrix.m00 * parentScale.x, rotationMatrix.m01 * parentScale.x, rotationMatrix.m02 * parentScale.x, rotationMatrix.m03));
+		rotationMatrix.SetRow(1, new Vector4(rotationMatrix.m10 * parentScale.y, rotationMatrix.m11 * parentScale.y, rotationMatrix.m12 * parentScale.y, rotationMatrix.m13));
+		rotationMatrix.SetRow(2, new Vector4(rotationMatrix.m20 * parentScale.z, rotationMatrix.m21 * parentScale.z, rotationMatrix.m22 * parentScale.z, rotationMatrix.m23)); 
+		return Quaternion.LookRotation(rotationMatrix.GetColumn(2), rotationMatrix.GetColumn(1));
 	}
 
 	// Here tracked device can mean PS Move or Oculus Rift DK2+
@@ -1360,7 +1443,7 @@ public class RUISSkeletonController : MonoBehaviour
 //                    (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 //                transformToUpdate.rotation = Quaternion.Slerp(transformToUpdate.rotation, newRotation, deltaTime * maxAngularVelocity);
 				yaw = Quaternion.Euler(new Vector3(0, controllerYaw, 0));
-				Quaternion newRotation = transform.rotation * yaw *
+				newRotation = transform.rotation * yaw *
 				                         (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 				transformToUpdate.rotation = newRotation;
 				return yaw;
@@ -1846,6 +1929,7 @@ public class RUISSkeletonController : MonoBehaviour
 		cumulativeScale = UpdateBoneScaling(leftHip,  leftKnee, skeleton.leftHip,  skeleton.leftKnee, cumulatedPelvisScale);
 		cumulativeScale = UpdateBoneScaling(leftKnee, leftFoot, skeleton.leftKnee, skeleton.leftFoot,      cumulativeScale);
 		UpdateEndBoneScaling(leftFoot, leftFootScaleAdjust * Vector3.one, skeleton.leftFoot, prevLeftFootDelta, cumulativeScale);
+
 	}
 
 	private float UpdateUniformBoneScaling( Transform boneToScale, Transform comparisonBone, RUISSkeletonManager.JointData boneToScaleTracker, 
@@ -2062,7 +2146,7 @@ public class RUISSkeletonController : MonoBehaviour
 		{
 			if(isExtremityJoint && boneToScale.parent)
 			{
-				Vector3 avatarParentBone = boneToScale.parent.position - boneToScale.position;
+				Vector3 avatarParentBone = boneToScale.parent.position - boneToScale.position; // *** TODO shouldn't use boneToScale.parent?
 				Vector3 u, v, w; // *** TODO remove w
 				switch(boneLengthAxis)
 				{
@@ -2083,7 +2167,7 @@ public class RUISSkeletonController : MonoBehaviour
 					int vAxis = FindClosestGlobalAxis(boneToScale.localRotation, v);
 					int wAxis = FindClosestGlobalAxis(boneToScale.localRotation, w);
 
-					axisScales[0] = boneToScale.parent.localScale.x;
+					axisScales[0] = boneToScale.parent.localScale.x; // *** TODO shouldn't use boneToScale.parent?
 					axisScales[1] = boneToScale.parent.localScale.y;
 					axisScales[2] = boneToScale.parent.localScale.z;
 
@@ -2099,7 +2183,7 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 				else // Forearm or Shin
 				{	
-//					skewedScaleTweak = extremityTweaker / (accumulatedScale * cosAngle * cosAngle + thickness * sinAngle * sinAngle);
+					// Replace boneToScale.rotation with a rotation that is not scale corrected
 					skewedScaleTweak = extremityTweaker * CalculateScale(avatarBoneVector, 			avatarParentBone, parentBoneThickness, accumulatedScale);
 					thicknessU 		 = thickness 		* CalculateScale(boneToScale.rotation * u,  avatarParentBone, parentBoneThickness, accumulatedScale);
 					thicknessV 		 = thickness 		* CalculateScale(boneToScale.rotation * v,  avatarParentBone, parentBoneThickness, accumulatedScale);
@@ -2742,8 +2826,6 @@ public class RUISSkeletonController : MonoBehaviour
 		if(noSourceFingers || !updateJointRotations)
 			return;
 		
-		Quaternion rotationOffset;
-		Quaternion newRotation;
 		Vector3 rotOffset;
 		float maxAngularDelta = Time.deltaTime * maxFingerAngularVelocity;
 
