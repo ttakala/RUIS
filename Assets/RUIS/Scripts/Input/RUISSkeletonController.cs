@@ -1159,9 +1159,11 @@ public class RUISSkeletonController : MonoBehaviour
 
 		tempVector = transform.TransformPoint(skeleton.leftHand.position - skeleton.leftElbow.position);
 		Debug.DrawLine(leftElbow.position, leftElbow.position + tempVector);
-//		Debug.DrawLine(tempVector, tempVector + 0.1f*Vector3.up);
-			Debug.DrawLine(leftElbow.position + 0.01f * Vector3.up, leftHand.position + 0.01f * Vector3.up, Color.magenta);
+		Debug.DrawLine(leftElbow.position + 0.01f * Vector3.up, leftHand.position + 0.01f * Vector3.up, Color.magenta);
 
+//		tempVector = transform.TransformPoint(skeleton.leftHand.rotation * (-Vector3.right));
+//		Debug.DrawLine(leftElbow.position, leftElbow.position + tempVector);
+//		Debug.DrawLine(leftElbow.position + 0.01f * Vector3.up, leftElbow.position - leftHand.rotation * Vector3.right + 0.01f * Vector3.up, Color.magenta);
 		
 		if(characterController)
 		{
@@ -1345,7 +1347,7 @@ public class RUISSkeletonController : MonoBehaviour
 					newRotation = transform.rotation * jointToGet.rotation * rotationOffset *
 					                   (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
 				
-				intendedRotations[jointToGet.jointID] = newRotation;
+				intendedRotations[jointToGet.jointID] = Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation; // *** OPTIHACK6 don't use .parent
 
 				if(!scaleHierarchicalModelBones || !limbsAreScaled || !scaleBoneLengthOnly)
 					transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularChange); // *** original
@@ -1368,6 +1370,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 	private Quaternion ScaleCorrectedRotation(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, Quaternion newRotation)
 	{
+		bool isEndBone = false;
 		switch(jointToGet.jointID)
 		{
 			case RUISSkeletonManager.Joint.LeftElbow:
@@ -1377,6 +1380,7 @@ public class RUISSkeletonController : MonoBehaviour
 			case RUISSkeletonManager.Joint.LeftHand:
 				childTransform = null;
 				childJoint = skeleton.leftHand;
+				isEndBone = true;
 				break;
 			case RUISSkeletonManager.Joint.LeftKnee:
 				childTransform = leftFoot;
@@ -1385,6 +1389,7 @@ public class RUISSkeletonController : MonoBehaviour
 			case RUISSkeletonManager.Joint.LeftFoot:
 				childTransform = null;
 				childJoint = skeleton.leftFoot;
+				isEndBone = true;
 				break;
 			case RUISSkeletonManager.Joint.RightElbow:
 				childTransform = rightHand;
@@ -1393,6 +1398,7 @@ public class RUISSkeletonController : MonoBehaviour
 			case RUISSkeletonManager.Joint.RightHand:
 				childTransform = null;
 				childJoint = skeleton.rightHand;
+				isEndBone = true;
 				break;
 			case RUISSkeletonManager.Joint.RightKnee:
 				childTransform = rightFoot;
@@ -1401,6 +1407,7 @@ public class RUISSkeletonController : MonoBehaviour
 			case RUISSkeletonManager.Joint.RightFoot:
 				childTransform = null;
 				childJoint = skeleton.rightFoot;
+				isEndBone = true;
 				break;
 			default: return newRotation;
 		}
@@ -1419,21 +1426,24 @@ public class RUISSkeletonController : MonoBehaviour
 
 		// Below results in flattened lower arm when elbow is rotated by (0, 90, 270), but above is not perfect either
 		// Solution: in bone scaling, set localScales using calculated angles instead of transform angles
-			Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, Vector3.one);
-			if(jointToGet.jointID == RUISSkeletonManager.Joint.LeftElbow)
-			{
-				tempVector = transformToUpdate.parent.localScale;
-				print(rotationMatrix.m01 + " " + rotationMatrix.m11 + " " + rotationMatrix.m21 + " " 
-						+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(1)));
-				print(newRotation.eulerAngles + " " + (transformToUpdate.parent.rotation 
-														* GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) 
-														* newRotation, transformToUpdate.parent.localScale)).eulerAngles);
-//				tempVector = Vector3.one;
-				Debug.DrawLine(leftElbow.position, leftElbow.position + transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(2)), Color.blue);
-				Debug.DrawLine(leftElbow.position, leftElbow.position + transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(1)), Color.green);
-				Debug.DrawLine(leftElbow.position, leftElbow.position + transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(0)), Color.red);
-			}
-		return transformToUpdate.parent.rotation 
+		Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, Vector3.one);
+		if(jointToGet.jointID == RUISSkeletonManager.Joint.LeftElbow)
+		{
+			tempVector = transformToUpdate.parent.localScale;
+			Debug.DrawLine(leftElbow.position, leftElbow.position 
+												+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(2)), Color.blue);
+			Debug.DrawLine(leftElbow.position, leftElbow.position 
+												+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(1)), Color.green);
+			Debug.DrawLine(leftElbow.position, leftElbow.position 
+												+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(0)), Color.red);
+		}
+
+		if(isEndBone) // *** OPTIHACK6 don't use .parent and .parent.parent
+			return transformToUpdate.parent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) 
+					* transformToUpdate.parent.parent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.parent.rotation) 
+						* newRotation, transformToUpdate.parent.parent.localScale), transformToUpdate.parent.localScale);
+		else
+			return transformToUpdate.parent.rotation 
 						* GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, transformToUpdate.parent.localScale);
 	}
 
@@ -2222,10 +2232,9 @@ public class RUISSkeletonController : MonoBehaviour
 								tempVector.Set(parentBoneThickness, parentBoneThickness,    accumulatedScale);
 								break;
 						}
-						skewedScaleTweak = (extremityTweaker) / Vector3.Scale(boneToScale.localRotation * w, tempVector).magnitude;
-//						skewedScaleTweak *= (playerBoneLength) / (newScale * skewedScaleTweak);
-						thicknessU = (thickness) / Vector3.Scale(boneToScale.localRotation * u, tempVector).magnitude;
-						thicknessV = (thickness) / Vector3.Scale(boneToScale.localRotation * v, tempVector).magnitude;
+						skewedScaleTweak 	= extremityTweaker 	/ Vector3.Scale(boneToScale.localRotation * w, tempVector).magnitude;
+						thicknessU 			= thickness 		/ Vector3.Scale(boneToScale.localRotation * u, tempVector).magnitude;
+						thicknessV 			= thickness 		/ Vector3.Scale(boneToScale.localRotation * v, tempVector).magnitude;
 					// Below is a bit of a hack (average of thickness and accumulatedScale). A proper solution would have two thickness axes
 //					thickness = thickness / (0.5f*(thickness + accumulatedScale) * sinAngle * sinAngle + thickness * cosAngle * cosAngle);
 				}

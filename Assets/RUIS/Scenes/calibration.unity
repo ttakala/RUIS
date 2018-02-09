@@ -2131,14 +2131,18 @@ MonoBehaviour:
   headScaleAdjust: 1.2
   clavicleScaleAdjust: 1
   handScaleAdjust: 1
+  leftHandScaleAdjust: 1
+  rightHandScaleAdjust: 1
   footScaleAdjust: 1
+  leftFootScaleAdjust: 1
+  rightFootScaleAdjust: 1
   externalFistTrigger: 0
   fistMaking: 1
   kinect2Thumbs: 0
   trackWrist: 1
   trackAnkle: 1
   rotateWristFromElbow: 0
-  independentTorsoSegmentsScaling: 0
+  independentTorsoSegmentsScaling: 1
   heightAffectsOffsets: 0
   neckParentsShoulders: 0
   leftHandStatus: 1
@@ -2158,16 +2162,24 @@ MonoBehaviour:
   updateJointPositions: 1
   updateJointRotations: 1
   useHierarchicalModel: 1
-  scaleHierarchicalModelBones: 0
-  scaleBoneLengthOnly: 0
+  scaleHierarchicalModelBones: 1
+  scaleBoneLengthOnly: 1
   boneLengthAxis: 1
   maxScaleFactor: 0.5
-  limbsAreScaled: 0
+  limbsAreScaled: 1
   torsoThickness: 1
   rightArmThickness: 1
+  rightUpperArmThickness: 1
+  rightForearmThickness: 1
   leftArmThickness: 1
+  leftUpperArmThickness: 1
+  leftForearmThickness: 1
   rightLegThickness: 1
+  rightThighThickness: 1
+  rightShinThickness: 1
   leftLegThickness: 1
+  leftThighThickness: 1
+  leftShinThickness: 1
   minimumConfidenceToUpdate: 0.5
   maxAngularVelocity: 360
   maxFingerAngularVelocity: 720
@@ -6538,6 +6550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   torsoOffsetKinect2: 0.3
+  headOffsetKinect2: 0.7
 --- !u!114 &616115110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14753,7 +14766,11 @@ MonoBehaviour:
   headScaleAdjust: 1.2
   clavicleScaleAdjust: 1
   handScaleAdjust: 1
+  leftHandScaleAdjust: 1
+  rightHandScaleAdjust: 1
   footScaleAdjust: 1
+  leftFootScaleAdjust: 1
+  rightFootScaleAdjust: 1
   externalFistTrigger: 0
   fistMaking: 1
   kinect2Thumbs: 0
@@ -14787,9 +14804,17 @@ MonoBehaviour:
   limbsAreScaled: 1
   torsoThickness: 1
   rightArmThickness: 1
+  rightUpperArmThickness: 1
+  rightForearmThickness: 1
   leftArmThickness: 1
+  leftUpperArmThickness: 1
+  leftForearmThickness: 1
   rightLegThickness: 1
+  rightThighThickness: 1
+  rightShinThickness: 1
   leftLegThickness: 1
+  leftThighThickness: 1
+  leftShinThickness: 1
   minimumConfidenceToUpdate: 0.5
   maxAngularVelocity: 360
   maxFingerAngularVelocity: 720
