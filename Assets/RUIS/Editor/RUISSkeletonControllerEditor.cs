@@ -49,7 +49,9 @@ public class RUISSkeletonControllerEditor : Editor
 //	public SerializedProperty rootOffset;
 	public SerializedProperty hmdRotatesHead;
 	public SerializedProperty hmdMovesHead;
+	public SerializedProperty neckInterpolate;
 	public SerializedProperty hmdLocalOffset;
+	public SerializedProperty neckInterpolateBlend;
 
 	public SerializedProperty scaleHierarchicalModelBones;
 	public SerializedProperty scaleBoneLengthOnly;
@@ -264,7 +266,9 @@ public class RUISSkeletonControllerEditor : Editor
 //		rootOffset = serializedObject.FindProperty("rootOffset");
 		hmdRotatesHead = serializedObject.FindProperty("hmdRotatesHead");
 		hmdMovesHead = serializedObject.FindProperty("hmdMovesHead");
+		neckInterpolate = serializedObject.FindProperty("neckInterpolate");
 		hmdLocalOffset = serializedObject.FindProperty("hmdLocalOffset");
+		neckInterpolateBlend = serializedObject.FindProperty("neckInterpolateBlend");
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
@@ -511,11 +515,10 @@ public class RUISSkeletonControllerEditor : Editor
 				break;
 		}
 
-		EditorGUILayout.PropertyField(minimumConfidenceToUpdate, new GUIContent(  "Min Confidence to Update", "The minimum confidence in joint "
+		EditorGUILayout.Slider(minimumConfidenceToUpdate, 0, 1, new GUIContent("Min Confidence to Update", "The minimum confidence in joint "
 																		+ "positions and rotations needed to update these values. The confidence is either "
 																		+ "0; 0,5; or 1. This setting is only relevant when using Kinect tracking, or when "
 																		+ "using a script that modifies the joint tracking confidence values in real-time."));
-		minimumConfidenceToUpdate.floatValue = Mathf.Clamp01(minimumConfidenceToUpdate.floatValue);
 
 		if(!EditorApplication.isPlaying)
 			GUI.color = keepPlayModeChangesRGB;
@@ -671,10 +674,11 @@ public class RUISSkeletonControllerEditor : Editor
 																	+ "model. When this option is enabled, it is also good to enable \"HMD Rotates Head\"."));
 
 		EditorGUI.indentLevel++;
-		EditorGUILayout.PropertyField(yawCorrectIMU, new GUIContent("IMU Yaw Correct", "Enable this option only when using a head-mounted display, and the "
-																	+ "avatar is animated with an IMU suit (e.g. Perception Neuron, Xsens). This will keep the "
-																	+ "avatar's head aligned with the head-mounted display, which effectively applies "
-																	+ "drift correction to the IMU suit yaw drift."));
+		EditorGUILayout.PropertyField(yawCorrectIMU, new GUIContent(  "IMU Yaw Correct", "Enable this option only when using a head-mounted display, and the "
+																	+ "avatar is animated with an IMU suit (e.g. Perception Neuron, Xsens). This will slowly "
+																	+ "rotate the whole body of the avatar around up-axis so that the avatar's head is aligned "
+																	+ "with the head-mounted display, which effectively applies drift correction to the IMU "
+																	+ "suit yaw drift."));
 
 		EditorGUI.indentLevel++;
 		GUI.enabled = yawCorrectIMU.boolValue;
@@ -693,13 +697,41 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUI.indentLevel--;
 
 		EditorGUILayout.PropertyField(hmdRotatesHead, new GUIContent( "HMD Rotates Head", "Rotate avatar head using orientation from the connected "
-																	+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice + " coordinate "
-																	+ "system must be calibrated or otherwise aligned with the HMD's coordinate system!"));
+																	+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice 
+																	+ " coordinate system " 
+																	+ ((bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)? ("(currently "
+																	+ "set to " + customConversionType.enumDisplayNames[customConversionType.enumValueIndex]
+																	+ " in the below \"Custom Mocap Source Transforms\" section) "):"") + "must be calibrated "
+																	+ "or otherwise aligned with the \"HMD Coordinate Frame\"!" 
+																	+ ((bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)? 
+																	  (" Alternatively the above \"IMU Yaw Correct\" option must be enabled if you are using "
+																	+ "an IMU suit (e.g. Perception Neuron, Xsens) as the body tracking device."):"")));
 
 		EditorGUILayout.PropertyField(hmdMovesHead, new GUIContent("HMD Moves Head", "Make avatar head follow the position tracking of the connected " 
 																+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice + " coordinate "
-																+ "system must be calibrated with the HMD position tracking coordinate system! Inaccuracies "
-																+ "in the calibration will make the head-body placement look weird."));
+																+ "system " + ((bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)? 
+																	("(currently set to " 
+																+ customConversionType.enumDisplayNames[customConversionType.enumValueIndex] + " in the below "
+																+ "\"Custom Mocap Source Transforms\" section) "):"") +  "must be aligned (calibrated) with "
+																+ "the \"HMD Coordinate Frame\"! Inaccuracies in the calibration will make the head-body "
+																+ "placement look weird."));
+
+		EditorGUILayout.PropertyField(neckInterpolate, new GUIContent("Neck Pose Interpolation", "Avatar's neck position will be interpolated between chest "
+																	+ "and head position, while its rotation will point towards the head position. This means "
+																	+ "that any neck pose input from the body tracking device will be ignored completely.\n"
+																	+ "Enabling this option is recommended when \"HMD Moves Head\" is enabled, especially if "
+																	+ "the body tracking device has noticeably more latency than the head-mounted display "
+																	+ "position tracking, or if the coordinate system alignment (calibration) between the two "
+																	+ "two tracking systems is inaccurate. NOTE: The interpolated pose is affected by the "
+																	+ "below \"Neck Offset\" value. Moreover, the interpolated neck position affects chest "
+																	+ "scaling if below \"Scale Body\" and \"Torso Segments\" options are enabled."));
+		if(neckInterpolate.boolValue)
+		{
+			EditorGUI.indentLevel++;
+			EditorGUILayout.Slider(neckInterpolateBlend, 0.01f, 0.99f, new GUIContent("Interpolation Value", "Position of neck will be interpolated from chest "
+																					+ "root (0) to head position (1)."));
+			EditorGUI.indentLevel--;
+		}
 
 		GUI.enabled = (hmdMovesHead.boolValue || headsetDragsBody.boolValue);
 		EditorGUILayout.PropertyField(hmdLocalOffset, new GUIContent("HMD Local Offset", "Offset the avatar head in the head-mounted display's local coordinate "
@@ -947,11 +979,15 @@ public class RUISSkeletonControllerEditor : Editor
 			normalLabelColor = EditorStyles.label.normal.textColor;
 			EditorStyles.label.normal.textColor = customLabelColor;
 
-			EditorGUILayout.PropertyField(customConversionType, new GUIContent("Coordinate Conversion", "The conversion that will be applied to the "
-																		+ "Source Transform poses before copying them to Target Transforms (below). "
-																		+ "The conversions are defined in " + typeof(RUISInputManager)
-																		+ "'s \"Custom 1\" and \"Custom 2\" settings, and also stored in the "
-																		+ "associated 'inputConfig.xml'-file."));
+			EditorGUILayout.PropertyField(customConversionType, new GUIContent("Coordinate Frame and Conversion", "The coordinate frame (coordinate system) "
+																		+ "of the custom body tracking device. If you are NOT using an IMU suit (e.g. "
+																		+ "Perception Neuron, Xsens) as a custom body tracking device, then this coordinate "
+																		+ "frame should be aligned (calibrated) with any other devices that you will use "
+																		+ "simultaneously (e.g. head-mounted display).\nThis setting also defines the "
+																		+ "coordinate conversion that will be applied to the Source Transform poses before "
+																		+ "copying them to Target Transforms (below). The conversions are defined in " 
+																		+ typeof(RUISInputManager) + "'s \"Custom 1\" and \"Custom 2\" settings, and also "
+																		+ "stored in the associated 'inputConfig.xml'-file."));
 
 			EditorGUILayout.PropertyField(customRoot, new GUIContent("Source Root", "REQUIRED: The source Transform for the skeleton hierarchy's root bone. This "
 																	+ "Transform can be same as the below 'Pelvis' source Transform.\nThe source Transforms of "

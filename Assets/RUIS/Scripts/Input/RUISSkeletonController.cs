@@ -287,8 +287,10 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public bool hmdRotatesHead = false;
 	public bool hmdMovesHead = false;
+	public bool neckInterpolate = false;
 	public bool followHmdPosition { get; private set; }
 	public Vector3 hmdLocalOffset = Vector3.zero;
+	public float neckInterpolateBlend = 0.8f;
 
 	public bool headsetDragsBody = false;
 	public bool yawCorrectIMU = false;
@@ -875,8 +877,8 @@ public class RUISSkeletonController : MonoBehaviour
 				SetCustomJointData(customLeftElbow, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftElbow, 	1, 1);
 				SetCustomJointData(customLeftHand, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHand, 	1, 1);
 				SetCustomJointData(customLeftThumb, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftThumb, 	1, 1);
-				SetCustomJointData(customLeftHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		1, 1); // *** OPTIHACK make offsets work
-				SetCustomJointData(customLeftKnee, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 	1, 1); // *** OPTIHACK make symmetric along X
+				SetCustomJointData(customLeftHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftHip, 		1, 1);
+				SetCustomJointData(customLeftKnee, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftKnee, 	1, 1);
 				SetCustomJointData(customLeftFoot, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].leftFoot, 	1, 1);
 				SetCustomJointData(customRightClavicle, ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightClavicle, 1, 1);
 				SetCustomJointData(customRightShoulder, ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightShoulder, 1, 1);
@@ -884,7 +886,7 @@ public class RUISSkeletonController : MonoBehaviour
 				SetCustomJointData(customRightHand, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHand, 	 1, 1);
 				SetCustomJointData(customRightThumb, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightThumb, 	 1, 1);
 				SetCustomJointData(customRightHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, 	 1, 1);
-				SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1); // *** OPTIHACK make symmetric along X
+				SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1);
 				SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
 			}
 			else // Kinect is used; copy the .isTracking value that has been set by it
@@ -904,7 +906,31 @@ public class RUISSkeletonController : MonoBehaviour
 //			else 
 			maxAngularChange = deltaTime * maxAngularVelocity;
 
-			UpdateSkeletonPosition(); // Updates all skeleton.<joint> positions if *** is enabled
+			if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+			{
+				// *** OPTIHACK5 TODO Added ConvertLocation() because it was missing. Any side-effects?? RUISDevice.OpenVR
+				skeleton.head.position = 
+								coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
+				// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+			}
+			if(neckInterpolate)
+			{
+				skeleton.neck.position = Vector3.Lerp(skeleton.chest.position, skeleton.head.position, neckInterpolateBlend);
+				skeleton.neck.rotation = skeleton.chest.rotation * Quaternion.FromToRotation(skeleton.chest.rotation * Vector3.up, 
+																							 skeleton.head.position - skeleton.neck.position);
+			}
+
+			ApplyInertialSuitCorrections(); // Updates all skeleton.<joint> rotations and positions if yawCorrectIMU (or headsetDragsBody) is enabled
+
+			UpdateSkeletonPosition(); // Updates skeletonPosition variable
+
+			// *** OPTIHACK6 check that this new location for this code still works
+			if(hmdRotatesHead && RUISDisplayManager.IsHmdPresent())
+			{
+				// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+				skeleton.head.rotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+																														headsetCoordinates);
+			}
 
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
 			if(skeleton.isTracking || !hasBeenTracked  /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
@@ -932,18 +958,8 @@ public class RUISSkeletonController : MonoBehaviour
 				leftClavicle.localPosition  = clavicleOffset + jointInitialLocalPositions[leftClavicle];
 			if(rightClavicle)
 				rightClavicle.localPosition = clavicleOffset + jointInitialLocalPositions[rightClavicle];
-				
-			if(hmdRotatesHead && RUISDisplayManager.IsHmdPresent() && head)
-			{
-				// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
-				headsetRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates);
 
-				if(useHierarchicalModel)
-					head.rotation = transform.rotation * headsetRotation /*skeleton.head.rotation*/ *
-					(jointInitialRotations.ContainsKey(head) ? jointInitialRotations[head] : Quaternion.identity);
-				else
-					head.localRotation = headsetRotation; //skeleton.head;
-			}
+			// *** OPTIHACK6 hmdRotatesHead was here
 			
 			// Obtained new body tracking data. TODO test that Kinect 1 still works
 			if(skeleton.isTracking || !hasBeenTracked /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
@@ -1035,7 +1051,7 @@ public class RUISSkeletonController : MonoBehaviour
 				if(scaleHierarchicalModelBones)
 				{
 					UpdateBoneScalings();
-
+					
 					torsoRotation = Quaternion.Slerp(torsoRotation, skeleton.torso.rotation, deltaTime * maxAngularVelocity);
 					torsoDirection = torsoRotation * Vector3.down;
 
@@ -1059,14 +1075,6 @@ public class RUISSkeletonController : MonoBehaviour
 //							deltaT = skeletonManager.kinect2FrameDeltaT;
 //						else
 						deltaT = deltaTime;
-
-						if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
-						{
-							// *** OPTIHACK5 TODO Added ConvertLocation() because it was missing. Any side-effects?? RUISDevice.OpenVR
-							skeleton.head.position = 
-								coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
-							// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
-						}
 
 //						if(!independentTorsoSegmentsScaling)
 						{
@@ -1103,12 +1111,6 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					if(updateJointPositions)
 					{
-						if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
-						{
-							// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
-							skeleton.head.position = 
-									coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
-						}
 						ForceUpdatePosition(ref torso, 			skeleton.torso, 		10, deltaTime);
 						ForceUpdatePosition(ref chest, 			skeleton.chest, 		11, deltaTime);
 						ForceUpdatePosition(ref neck, 			skeleton.neck, 		 	 5, deltaTime);
@@ -1663,9 +1665,10 @@ public class RUISSkeletonController : MonoBehaviour
 		skeleton.chest.position			+= offsetScale * (skeleton.chest.rotation * chestOffset);
 		skeleton.neck.position			+= offsetScale * (skeleton.neck.rotation  * neckOffset);
 
+		// *** Consider removing this if-else and apply head offset normally like other joints?
+		//     Currently if hmdMovesHead is enabled, its offset is applied along HMD pose even if hmdRotatesHead is not enabled!
 		if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
-		{
-			offsetScale = 1; // OPTIHACK *** CHECK THAT WORKS, torso.localScale.x is better
+		{	
 			// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
 			jointOffset = headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
 																		headsetCoordinates) * hmdLocalOffset; 
@@ -1673,7 +1676,6 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		else
 		{
-			offsetScale = 1; // OPTIHACK TODO ***
 			jointOffset = skeleton.neck.rotation * headOffset; // *** OPTIHACK6 changed skeleton.head.rotation to skeleton.neck.rotation <-- check that this works with optitrack
 		}
 		skeleton.head.position			+= offsetScale * (jointOffset);
@@ -1714,8 +1716,7 @@ public class RUISSkeletonController : MonoBehaviour
 	private Vector3 headToHeadsetVector;
 //	private Vector3 pelvisToHeadVector;
 
-	// Gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
-	private void UpdateSkeletonPosition()
+	private void ApplyInertialSuitCorrections()
 	{
 		if(yawCorrectIMU)
 		{
@@ -1765,7 +1766,7 @@ public class RUISSkeletonController : MonoBehaviour
 //			motionSuitPelvis.position = HMDCameraEye.position - headPelvisOffset + HMDCameraEye.rotation * eyeOffset;
 
 //			pelvisToHeadVector =  skeleton.head.position - skeleton.torso.position + skeleton.torso.rotation * rootOffset;
-			
+
 			if(customHMDSource)
 			{
 				headsetPosition = customHMDSource.localPosition; // ***
@@ -1785,7 +1786,7 @@ public class RUISSkeletonController : MonoBehaviour
 					headsetRotation = skeleton.head.rotation;
 				}
 			}
-			
+
 			// Assign tempVector with skeleton.head.position that has been pivoted around skeleton.root.position by the angle of rotationDrift
 			tempVector = skeleton.head.position;
 			RotatePositionAroundPivot(ref tempVector, skeleton.root.position, rotationDrift, Vector3.zero);
@@ -1821,7 +1822,11 @@ public class RUISSkeletonController : MonoBehaviour
 			// skeleton.root.position is last to update because otherwise it is used as a pivot and that would mess up the above calculations
 			RotatePositionAroundPivot(ref skeleton.root.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
 		}
+	}
 
+	// Gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
+	private void UpdateSkeletonPosition()
+	{
 		if(filterPosition && !filterHeadPositionOnly)
 		{
 			newRootPosition = skeleton.root.position;
