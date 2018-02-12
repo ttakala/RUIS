@@ -2414,7 +2414,36 @@ public class RUISSkeletonController : MonoBehaviour
 			updatedScale = boneScaleTarget / accumulatedScale;
 		}
 
+		tempVector = boneToScale.parent.localScale;
+		delta = boneToScale.parent.parent.localScale;
+		tempVector.Set(1/boneToScale.parent.localScale.x, 1/boneToScale.parent.localScale.y, 1/boneToScale.parent.localScale.z);
+//		delta.Set(1/boneToScale.parent.parent.localScale.x, 1/boneToScale.parent.parent.localScale.y, 1/boneToScale.parent.parent.localScale.z);
+
+//		tempVector = tempVector / transform.localScale.x;
+//		delta = delta / transform.localScale.x;
+
+		tempVector = Quaternion.Inverse(boneToScale.localRotation) * tempVector;
+		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
+//		tempVector.Set(1/Mathf.Abs(tempVector.x), 1/Mathf.Abs(tempVector.y), 1/Mathf.Abs(tempVector.z));
+		delta = Quaternion.Inverse(boneToScale.localRotation) * delta;
+		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
+		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
+
+//		delta = Quaternion.Inverse(boneToScale.parent.localRotation) * delta;
+//		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
+		tempVector = Vector3.Scale(delta, tempVector);
+
+		tempVector = Quaternion.Inverse(boneToScale.parent.localRotation) * tempVector;
+		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
+//		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
+
+//		boneToScale.localScale = tempVector;
+
+		print(Quaternion.Inverse(boneToScale.localRotation).eulerAngles + " " + Quaternion.Inverse(boneToScale.parent.localRotation).eulerAngles);
+
+
 		boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, updatedScale, 10 * deltaTime); // *** TODO: speed 10 might not be good
+
 //		if(joint.jointID == RUISSkeletonManager.Joint.LeftFoot)
 //			print(axisLabels[0] + " " + axisLabels[1] + " " + axisLabels[2] + " " + updatedScale + " " + boneToScale.lossyScale.x);
 
