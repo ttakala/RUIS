@@ -1727,13 +1727,13 @@ public class RUISSkeletonController : MonoBehaviour
 				if(customHMDSource)
 				{
 					// GetYawDriftCorrection() sets rotationDrift and also returns it
-					GetYawDriftCorrection(customHMDSource.rotation, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation); 
+					GetYawDriftCorrection(customHMDSource.rotation, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation); 
 				}
 				else
 				{
 					if(RUISDisplayManager.IsHmdPresent()) // *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
 						GetYawDriftCorrection(coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
-																headsetCoordinates), skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso.rotation);
+																headsetCoordinates), skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation);
 				}
 			}
 
@@ -1822,6 +1822,15 @@ public class RUISSkeletonController : MonoBehaviour
 			// skeleton.root.position is last to update because otherwise it is used as a pivot and that would mess up the above calculations
 			RotatePositionAroundPivot(ref skeleton.root.position, 			skeleton.root.position, rotationDrift, headToHeadsetVector);
 		}
+
+//		#if UNITY_EDITOR
+//		Debug.DrawRay(skeleton.head.position, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation * Vector3.forward, Color.blue);
+//		Debug.DrawRay(skeleton.head.position, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation * Vector3.up, Color.green);
+//		Debug.DrawRay(skeleton.head.position, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation * Vector3.right, Color.red);
+//		Debug.DrawRay(skeleton.head.position, skeleton.head.rotation * Vector3.forward, Color.cyan);
+//		Debug.DrawRay(skeleton.head.position, skeleton.head.rotation * Vector3.up, Color.yellow);
+//		Debug.DrawRay(skeleton.head.position, skeleton.head.rotation * Vector3.right, Color.magenta);
+//		#endif
 	}
 
 	// Gets the main position of the skeleton inside the world, the rest of the joint positions will be calculated in relation to this one
@@ -2926,19 +2935,24 @@ public class RUISSkeletonController : MonoBehaviour
 							{
 								switch(j)
 								{
-								case 4: rotOffset = thumbRotationOffset;   break; // Thumb
-								case 3: rotOffset = indexFRotationOffset;  break; // Index finger
-								case 2: rotOffset = middleFRotationOffset; break; // Middle finger
-								case 1: rotOffset = ringFRotationOffset;   break; // Ring finger
-								case 0: rotOffset = littleFRotationOffset; break; // Little finger
-								default: rotOffset = Vector3.zero; 		   break; // Mutant fingers should not exist
+									case 4: rotOffset = thumbRotationOffset;   break; // Thumb
+									case 3: rotOffset = indexFRotationOffset;  break; // Index finger
+									case 2: rotOffset = middleFRotationOffset; break; // Middle finger
+									case 1: rotOffset = ringFRotationOffset;   break; // Ring finger
+									case 0: rotOffset = littleFRotationOffset; break; // Little finger
+									default: rotOffset = Vector3.zero; 		   break; // Mutant fingers should not exist
 								}
 								if(i == 1) // Left hand
 									rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
 								rotationOffset = Quaternion.Euler(rotOffset);
 
+								if(yawCorrectIMU)
+									tempRotation = rotationDrift;
+								else
+									tempRotation = Quaternion.identity;
+										
 								// At the moment only hierarchical finger phalanx Transforms are supported
-								newRotation = transform.rotation * fingerSources[i, j, k].rotation * rotationOffset * initialFingerWorldRotations[i, j, k];
+								newRotation = transform.rotation * tempRotation * fingerSources[i, j, k].rotation * rotationOffset * initialFingerWorldRotations[i, j, k];
 								fingerTargets[i, j, k].rotation = Quaternion.RotateTowards(fingerTargets[i, j, k].rotation, newRotation, maxAngularDelta);
 							}
 						}
@@ -3015,16 +3029,11 @@ public class RUISSkeletonController : MonoBehaviour
 		driftingForward  = driftingRotation * Vector3.forward;
 		driftlessForward = driftlessRotation * Vector3.forward;
 
-//			#if UNITY_EDITOR
-//			Debug.DrawRay(driftingChild.position, driftingForward);
-//			Debug.DrawRay(driftingChild.position, 0.5f * (driftingRotation * Quaternion.Euler(driftlessToDriftingOffset) * Vector3.up));
-//			#endif
-
 		// HACK: Project forward vectors to XZ-plane. This is a problem if they are constantly parallel to Y-axis, e.g. HMD user looking directly up or down 
 		driftingForward.Set(driftingForward.x, 0, driftingForward.z);
 		driftlessForward.Set(driftlessForward.x, 0, driftlessForward.z);
 
-		// HACK: If either forward vector is constantly parallel to Y-axis, no drift correction occurs. Occasionally this is OK, as the drift correction occurs gradually.
+		// *** OPTIHACK7 TODO: If either forward vector is constantly parallel to Y-axis, no drift correction occurs or it could be in the wrong direction. fix this 
 		if(driftingForward.magnitude > 0.01f && driftlessForward.magnitude > 0.01f) 
 		{
 			// HACK: Vector projection to XZ-plane ensures that the change in the below driftVector is continuous, 
