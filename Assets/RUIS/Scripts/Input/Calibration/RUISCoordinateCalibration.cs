@@ -292,6 +292,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.OpenVR)
 				 ||	(secondDevice == RUISDevice.Custom_1 && firstDevice == RUISDevice.OpenVR )) 
 		{
+			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_1;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 //			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
 				calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
@@ -301,6 +302,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Custom_2  && secondDevice == RUISDevice.OpenVR)
 				 ||	(secondDevice == RUISDevice.Custom_2 && firstDevice == RUISDevice.OpenVR )) 
 		{
+			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_2;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			//			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
 			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
@@ -310,6 +312,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		else if(	(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.Custom_2)
 				 || (secondDevice == RUISDevice.Custom_1 && firstDevice == RUISDevice.Custom_2 ))
 		{
+			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_1;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			coordinateSystem.rootDevice = RUISDevice.Custom_1;
 			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);

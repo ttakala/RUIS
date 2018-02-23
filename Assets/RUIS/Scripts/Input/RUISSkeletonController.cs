@@ -211,16 +211,31 @@ public class RUISSkeletonController : MonoBehaviour
 					break;
 				case RUISSkeletonManager.customSensorID:
 					bodyTrackingDevice = BodyTrackingDeviceType.GenericMotionTracker;
-					if(inputManager)
+
+					if(Application.isPlaying)
 					{
+						minimumConfidenceToUpdate = 0.5f;
+						kinect2Thumbs = false;
+
+						// When it comes to GenericMotionTracker, it's up to the developer to change isTracking values in realtime
+						if(skeletonManager)
+							skeletonManager.skeletons[this._bodyTrackingDeviceID, playerId].isTracking = true;
+						if(skeleton != null)
+							skeleton.isTracking = true;
 						switch(customConversionType)
 						{
 							case CustomConversionType.Custom_1:
-								deviceConversion = inputManager.customDevice1Conversion;
+								if(inputManager)
+									deviceConversion = inputManager.customDevice1Conversion;
+								else
+									deviceConversion = new RUISCoordinateSystem.DeviceCoordinateConversion();
 								customSourceDevice = RUISDevice.Custom_1;
 								break;
 							case CustomConversionType.Custom_2:
-								deviceConversion = inputManager.customDevice2Conversion;
+								if(inputManager)
+									deviceConversion = inputManager.customDevice2Conversion;
+								else
+									deviceConversion = new RUISCoordinateSystem.DeviceCoordinateConversion();
 								customSourceDevice = RUISDevice.Custom_2;
 								break;
 							case CustomConversionType.None:
@@ -543,13 +558,7 @@ public class RUISSkeletonController : MonoBehaviour
 		// Following substitution ensures that customConversionType, customSourceDevice, and deviceConversion variables will be set in bodyTrackingDeviceID setter
 		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)  // *** OPTIHACK4 moved this here from Awake(), check that everything still works
 		{
-			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
-			minimumConfidenceToUpdate = 0.5f;
-			kinect2Thumbs = false;
-
-			// When it comes to GenericMotionTracker, it's up to the developer to change isTracking values in realtime
-			skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking = true;
-			skeleton.isTracking = true;
+			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID; // This setter sets bunch of values!
 		}
 		else
 			skeleton.isTracking = false;
@@ -906,7 +915,7 @@ public class RUISSkeletonController : MonoBehaviour
 //			else 
 			maxAngularChange = deltaTime * maxAngularVelocity;
 
-			if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
+			if(hmdMovesHead && !headsetDragsBody && RUISDisplayManager.IsHmdPresent())
 			{
 				// *** OPTIHACK5 TODO Added ConvertLocation() because it was missing. Any side-effects?? RUISDevice.OpenVR
 				skeleton.head.position = 
@@ -1524,8 +1533,9 @@ public class RUISSkeletonController : MonoBehaviour
 			if(jointToGet.positionConfidence < minimumConfidenceToUpdate && hasBeenTracked)
 				return;
 
-			// *** OPTIHACK5 remove this and the commented block below
+			// *** OPTIHACK5 remove these and the commented block below
 			jointOffset = Vector3.zero;
+			offsetScale = 0;
 
 //			if(heightAffectsOffsets)
 //			{
@@ -1635,9 +1645,10 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 
 			// *** NOTE the use of transformToUpdate.parent.localScale.x <-- assumes uniform scale from the parent (clavicle/torso)
-			if(jointToGet.jointID == RUISSkeletonManager.Joint.Torso && torso == root)
-				transformToUpdate.position = transform.TransformPoint(jointOffset * offsetScale);
-			else
+			// *** OPTIHACK7 commented if-else here, any adverse effects on Kinect1/2 or other avatar besides muscle dude where torso == root?
+//			if(jointToGet.jointID == RUISSkeletonManager.Joint.Torso && torso == root)
+//				transformToUpdate.position = transform.TransformPoint( torsoOffset);
+//			else
 				transformToUpdate.position = transform.TransformPoint(forcedJointPositions[jointID] + jointOffset * offsetScale - skeletonPosition);
 		}
 //		transformToUpdate.position = transform.TransformPoint(jointToGet.position - skeletonPosition);
@@ -2448,7 +2459,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 //		boneToScale.localScale = tempVector;
 
-		print(Quaternion.Inverse(boneToScale.localRotation).eulerAngles + " " + Quaternion.Inverse(boneToScale.parent.localRotation).eulerAngles);
+//		print(Quaternion.Inverse(boneToScale.localRotation).eulerAngles + " " + Quaternion.Inverse(boneToScale.parent.localRotation).eulerAngles);
 
 
 		boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, updatedScale, 10 * deltaTime); // *** TODO: speed 10 might not be good
