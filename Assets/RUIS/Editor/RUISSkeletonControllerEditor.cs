@@ -621,7 +621,7 @@ public class RUISSkeletonControllerEditor : Editor
 																		+ "can easily be set to 7200 or more, so that very fast motions are not restricted."));
 
 		EditorGUILayout.PropertyField(filterRotations, new GUIContent(  "Filter Rotations",   "Smoothen rotations with a basic Kalman filter. For now this is "
-		                                                              						+ "only done for the arm joints of Kinect 2 tracked skeletons."));
+		                                                              						+ "only done for the arm joints."));
 		if(filterRotations.boolValue)
 		{
 			EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing "

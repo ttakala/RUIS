@@ -349,6 +349,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public float rotationNoiseCovariance = 200;
 	// Offset Z rotation of the thumb. Default value is 45, but it might depend on your avatar rig.
 	public float thumbZRotationOffset = 45;
+	public int customMocapFrameRate = 30;
+	public float customMocapUpdateInterval = 0.033f;
 
 	private Dictionary<Transform, Quaternion> jointInitialRotations;
 	private Dictionary<Transform, Vector3> jointInitialWorldPositions;
@@ -897,6 +899,9 @@ public class RUISSkeletonController : MonoBehaviour
 				SetCustomJointData(customRightHip, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightHip, 	 1, 1);
 				SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1);
 				SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
+
+				if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRotations && skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking)
+					skeletonManager.FilterSkeletonRotations(BodyTrackingDeviceID, playerId, customMocapUpdateInterval);
 			}
 			else // Kinect is used; copy the .isTracking value that has been set by it
 				skeleton.isTracking = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking;
@@ -2524,10 +2529,10 @@ public class RUISSkeletonController : MonoBehaviour
 		if(joint.jointID == RUISSkeletonManager.Joint.LeftHand)
 		{
 
-			print(new Vector3(boneToScale.localScale.x / tempVector.x, boneToScale.localScale.y / tempVector.y, boneToScale.localScale.z / tempVector.z)
-				+ " " + boneToScale.localScale + " " + boneToScale.parent.localScale);
-			print("("+boneToScale.parent.parent.localScale.x + " " + boneToScale.parent.parent.localScale.y + " " + boneToScale.parent.parent.localScale.z + ") ("
-				+ boneToScale.parent.localScale.x + " " + boneToScale.parent.localScale.y + " " + boneToScale.parent.localScale.z + ")");
+//			print(new Vector3(boneToScale.localScale.x / tempVector.x, boneToScale.localScale.y / tempVector.y, boneToScale.localScale.z / tempVector.z)
+//				+ " " + boneToScale.localScale + " " + boneToScale.parent.localScale);
+//			print("("+boneToScale.parent.parent.localScale.x + " " + boneToScale.parent.parent.localScale.y + " " + boneToScale.parent.parent.localScale.z + ") ("
+//				+ boneToScale.parent.localScale.x + " " + boneToScale.parent.localScale.y + " " + boneToScale.parent.localScale.z + ")");
 			Debug.DrawRay(boneToScale.position, boneToScale.localScale.z * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.forward), Color.blue);
 			Debug.DrawRay(boneToScale.position, boneToScale.localScale.y * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.up), Color.green);
 			Debug.DrawRay(boneToScale.position, boneToScale.localScale.x * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.right), Color.red);
