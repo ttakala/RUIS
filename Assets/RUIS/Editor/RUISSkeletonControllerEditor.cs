@@ -82,6 +82,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 	public SerializedProperty filterRotations;
 	public SerializedProperty rotationNoiseCovariance;
+	public SerializedProperty customMocapFrameRate;
 	public SerializedProperty thumbZRotationOffset;
 
     SerializedProperty rootBone;
@@ -293,6 +294,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		filterRotations = serializedObject.FindProperty("filterRotations");
 		rotationNoiseCovariance = serializedObject.FindProperty("rotationNoiseCovariance");
+		customMocapFrameRate = serializedObject.FindProperty("customMocapFrameRate");
 		thumbZRotationOffset = serializedObject.FindProperty("thumbZRotationOffset");
 
 		filterPosition = serializedObject.FindProperty("filterPosition");
@@ -581,6 +583,7 @@ public class RUISSkeletonControllerEditor : Editor
 															+ "Kinect. Disable this option when using more accurate and responsive mocap systems."));
 		if(filterPosition.boolValue)
 		{
+			EditorGUI.indentLevel++;
 			EditorGUILayout.PropertyField(filterHeadPositionOnly, new GUIContent("Filter Only Head Position", "Smoothen ONLY the head position with a basic "
 																				+ "Kalman filter, and do not smooth other joints. This is a _hacky_ setting "
 																				+ "that adds latency (magnitude controlled by \"Position Smoothness\", try "
@@ -597,6 +600,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 			// HACK: fourJointsNoiseCovariance is usually half of positionNoiseCovariance, but never less than 100 units away
 			skeletonController.fourJointsNoiseCovariance = Mathf.Max(0.5f*positionNoiseCovariance.floatValue, positionNoiseCovariance.floatValue - 100);
+			EditorGUI.indentLevel--;
 		}
 					
 		EditorGUI.indentLevel--;
@@ -620,14 +624,25 @@ public class RUISSkeletonControllerEditor : Editor
 																		+ "360 is suitable. For more accurate and responsive mocap systems, this value "
 																		+ "can easily be set to 7200 or more, so that very fast motions are not restricted."));
 
-		EditorGUILayout.PropertyField(filterRotations, new GUIContent(  "Filter Rotations",   "Smoothen rotations with a basic Kalman filter. For now this is "
+		EditorGUILayout.PropertyField(filterRotations, new GUIContent("Filter Rotations",   "Smoothen rotations with a basic Kalman filter. For now this is "
 		                                                              						+ "only done for the arm joints."));
 		if(filterRotations.boolValue)
 		{
+			EditorGUI.indentLevel++;
 			EditorGUILayout.PropertyField(rotationNoiseCovariance, new GUIContent("Rotation Smoothness", "Sets the magnitude of rotation smoothing "
 																+ "(measurement noise variance). Larger values make the rotation smoother, "
 																+ "at the expense of responsiveness. Default value for Kinect is 500. Use smaller "
 																+ "values for more accurate and responsive mocap systems."));
+
+
+			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
+			{
+				EditorGUILayout.PropertyField(customMocapFrameRate, new GUIContent("Updates Per Second", "How many times per second is the Body Tracking "
+																+ "Device providing updates (on average)? This determines the Kalman filter update interval."));
+				customMocapFrameRate.intValue = Mathf.Clamp(customMocapFrameRate.intValue, 1, int.MaxValue);
+				skeletonController.customMocapUpdateInterval = 1.0f / ((float) customMocapFrameRate.intValue);
+			}
+			EditorGUI.indentLevel--;
 		}
 
 		if(   Application.isEditor && skeletonController && skeletonController.skeletonManager 

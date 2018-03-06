@@ -2,15 +2,18 @@
 
 Content    :   Class for Kalman filtering a quaternion
 Authors    :   Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2018 Tuukka Takala. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
 using UnityEngine;
 using System.Collections;
 
-public class KalmanFilteredRotation {
+public class KalmanFilteredRotation 
+{
 
 	private KalmanFilter filterRot;
 	
@@ -24,7 +27,7 @@ public class KalmanFilteredRotation {
 	/// </summary>
 	public float rotationNoiseCovariance = 100;
 	
-	public bool skipIdenticalMeasurements
+	public bool SkipIdenticalMeasurements
 	{
 		get
 		{
@@ -36,7 +39,7 @@ public class KalmanFilteredRotation {
 		}
 	}
 	
-	public int identicalMeasurementsCap
+	public int IdenticalMeasurementsCap
 	{
 		get
 		{
@@ -52,11 +55,19 @@ public class KalmanFilteredRotation {
 	private double[] measurement = {0, 0, 0, 1};
 	private double[] rot = {0, 0, 0, 1};
 	private bool firstRun = true;
-	
+
+	private void SetRDiagonal(double r)
+	{
+//		Debug.Log(filterRot.R.RowCount + " " + filterRot.R.ColumnCount);
+		for(int i = 1; i < 5; ++i)
+			for(int j = 1; j < 5; ++j)
+				filterRot.R[i, j].Re = r;
+	}
+
 	/// <summary>
 	/// Initialize the rotation Kalman filter
 	/// </summary>
-	public KalmanFilteredRotation () 
+	public KalmanFilteredRotation() 
 	{
 		rotationState = Quaternion.identity;
 		filterRot = new KalmanFilter();
@@ -105,6 +116,7 @@ public class KalmanFilteredRotation {
 		measurement[2] = measuredRotation.z;
 		measurement[3] = measuredRotation.w;
 		filterRot.setR(deltaTime * rotationNoiseCovariance);
+//		this.SetRDiagonal(deltaTime * rotationNoiseCovariance);
 	    filterRot.predict();
 	    filterRot.update(measurement);
 		rot = filterRot.getState();

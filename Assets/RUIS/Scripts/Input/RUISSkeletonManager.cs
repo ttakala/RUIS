@@ -2,7 +2,7 @@
 
 Content    :   A class to manage Kinect/OpenNI skeleton data
 Authors    :   Mikael Matveinen, Heikki Heiskanen, Tuukka Takala
-Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. 
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen. 
                All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
                restricted for commercial projects. Contact tmtakala@gmail.com
@@ -235,7 +235,7 @@ public class RUISSkeletonManager : MonoBehaviour
 				for(int k = 0; k < skeletons[x, i].filterRot.Length; ++k)
 				{
 					skeletons[x, i].filterRot[k] = new KalmanFilteredRotation();
-					skeletons[x, i].filterRot[k].skipIdenticalMeasurements = true;
+					skeletons[x, i].filterRot[k].SkipIdenticalMeasurements = true;
 					skeletons[x, i].filterRot[k].rotationNoiseCovariance = skeletons[x, i].rotationNoiseCovariance;
 					skeletons[x, i].previousRotation[k] = Quaternion.identity;
 				}
@@ -268,6 +268,7 @@ public class RUISSkeletonManager : MonoBehaviour
 			covarianceMultiplier = 3;
 		
 		updateAngle = Mathf.Abs(Quaternion.Angle(joint.rotation, skeleton.previousRotation[jointID])); // New measurement vs previous rotation
+		skeleton.previousRotation[jointID] = joint.rotation; // This used to be after the below if-else clauses
 		if(updateAngle < angleThreshold)
 		{
 //			joint.rotation = Quaternion.Slerp (skeleton.previousRotation [jointID], joint.rotation, rotateSpeed * kalmanDeltaTime );
@@ -283,7 +284,7 @@ public class RUISSkeletonManager : MonoBehaviour
 			skeleton.filterRot[jointID].rotationNoiseCovariance = covarianceMultiplier * 0.05f * skeleton.rotationNoiseCovariance;
 			joint.rotation = skeleton.filterRot[jointID].Update(joint.rotation, kalmanDeltaTime);
 		}
-		skeleton.previousRotation[jointID] = joint.rotation;
+//		skeleton.previousRotation[jointID] = joint.rotation;
 	}
 
 	// TODO: More efficient rotation filtering, extend filtering to all joints (now just arms)
@@ -795,7 +796,7 @@ public class RUISSkeletonManager : MonoBehaviour
 		return tempJoint;
 	}
 
-	private void SaveLastMajorJointPoses(Skeleton sourceSkeleton)
+	public void SaveLastMajorJointPoses(Skeleton sourceSkeleton)
 	{
 		lastPelvisPosition 			= sourceSkeleton.torso.position;
 		lastRightShoulderPosition 	= sourceSkeleton.rightShoulder.position;
@@ -810,7 +811,7 @@ public class RUISSkeletonManager : MonoBehaviour
 		lastLeftHipRotation 		= sourceSkeleton.leftHip.rotation;
 	}
 
-	private bool HasNewMocapData(Skeleton sourceSkeleton)
+	public bool HasNewMocapData(Skeleton sourceSkeleton)
 	{
 		return 	
 			   lastPelvisPosition.x != sourceSkeleton.torso.position.x || lastPelvisPosition.y != sourceSkeleton.torso.position.y

@@ -2,8 +2,10 @@
 
 Content    :   Class for simple Kalman filtering
 Authors    :   Tuukka Takala, derived from Peter Abeles' EJML Kalman class
-Copyright  :   Copyright 2013 Tuukka Takala. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2018 Tuukka Takala. All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -33,11 +35,14 @@ using CSML;
  */
 public class KalmanFilter
 {
+	private bool threeByThree = false;
+	private bool fourByFour   = false;
+
     // kinematics description
     private Matrix F;
     private Matrix Q;
     private Matrix H;
-    private Matrix R;
+    public Matrix R;
 
     // sytem state estimate
     private Matrix x;
@@ -63,30 +68,39 @@ public class KalmanFilter
      */
     public void initialize(int dimenX, int dimenZ)
     {
-      F = Matrix.Identity(dimenX);
-      Q = Matrix.Identity(dimenX);
-      H = Matrix.Identity(dimenZ);
-      R = new Matrix(dimenZ,dimenZ);
+		if(dimenX == 3 && dimenZ ==3)
+			threeByThree = true;
+		else
+			threeByThree = false;
+		if(dimenX == 4 && dimenZ == 4)
+			fourByFour = true;
+		else
+			fourByFour = false;
 
-      y = new Matrix(dimenZ,1);
-      u = new Matrix(dimenZ,1);
-      S = new Matrix(dimenZ,dimenZ);
-      S_inv = new Matrix(dimenZ,dimenZ);
-      K = new Matrix(dimenX,dimenZ);
+		F = Matrix.Identity(dimenX);
+		Q = Matrix.Identity(dimenX);
+		H = Matrix.Identity(dimenZ);
+		R = new Matrix(dimenZ,dimenZ);
 
-      x = new Matrix(dimenX,1);
-      P = new Matrix(dimenX,dimenX);
-      
-      P = Matrix.Identity(dimenX);
-		
-      //x.zero(); // Should be zero already
-	  state = new Double[dimenX];
-	  for(int i = 0; i<state.Length; ++i)
-	  		state[i] = 0;
-		
-	  previousMeasurements = new double[dimenZ];
-	  for(int i = 0; i<previousMeasurements.Length; ++i)
-	  		previousMeasurements[i] = 0;
+		y = new Matrix(dimenZ,1);
+		u = new Matrix(dimenZ,1);
+		S = new Matrix(dimenZ,dimenZ);
+		S_inv = new Matrix(dimenZ,dimenZ);
+		K = new Matrix(dimenX,dimenZ);
+
+		x = new Matrix(dimenX,1);
+		P = new Matrix(dimenX,dimenX);
+
+		P = Matrix.Identity(dimenX);
+
+		//x.zero(); // Should be zero already
+		state = new Double[dimenX];
+		for(int i = 0; i<state.Length; ++i)
+			state[i] = 0;
+
+		previousMeasurements = new double[dimenZ];
+		for(int i = 0; i<previousMeasurements.Length; ++i)
+			previousMeasurements[i] = 0;
     }
 
     /**
@@ -147,6 +161,16 @@ public class KalmanFilter
     	R = Matrix.Identity(R.RowCount);
 		R = R * r; //scale(r, S);
     }
+
+	public void setRDiagonal(double r) 
+	{
+		int rows 	= R.RowCount;
+		int columns = R.ColumnCount;
+
+		for(int i = 1; i <= rows; ++i)
+			for(int j = 1; j <= columns; ++j)
+				R[i, j].Re = r;
+	}
 
     public void setR(int row, int col, double r) 
     {
@@ -231,7 +255,8 @@ public class KalmanFilter
 		}
 		K = P*(H.Transpose()*S_inv);
 		K = K.Re();
-			
+		Matrix4x4 m;
+
         // x = x + Ky
         //mult(K,y,a);
         //addEquals(x,a);

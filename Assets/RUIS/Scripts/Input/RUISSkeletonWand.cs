@@ -55,7 +55,7 @@ public class RUISSkeletonWand : RUISWand
     public void Awake()
     {
 		rotationFilter = new KalmanFilteredRotation();
-		rotationFilter.skipIdenticalMeasurements = true;
+		rotationFilter.SkipIdenticalMeasurements = true;
 		rotationFilter.rotationNoiseCovariance = rotationNoiseCovariance;
 		
 		bodyTrackingDeviceID = (int)bodyTrackingDevice;

@@ -842,6 +842,7 @@ public class RUISSkeletonController : MonoBehaviour
 				skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRot[i].rotationNoiseCovariance = rotationNoiseCovariance;
 		}
 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].thumbZRotationOffset = thumbZRotationOffset;
+		customMocapUpdateInterval = 1.0f / ((float) customMocapFrameRate);
 
 		if(neck && leftShoulder && rightShoulder)
 			neckParentsShoulders = leftShoulder.IsChildOf(neck) || rightShoulder.IsChildOf(neck);
@@ -878,6 +879,10 @@ public class RUISSkeletonController : MonoBehaviour
 			// topsy turvy) so we can utilize same code as we did with Kinect 1 and 2
 			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
 			{
+				if(		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRotations 
+					&&  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking)
+					skeletonManager.SaveLastMajorJointPoses(skeletonManager.skeletons[BodyTrackingDeviceID, playerId]);
+
 				SetCustomJointData(customRoot, 			ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].root, 		1, 1);
 				SetCustomJointData(customTorso, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, 		1, 1);
 				SetCustomJointData(customChest, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, 		1, 1);
@@ -900,7 +905,9 @@ public class RUISSkeletonController : MonoBehaviour
 				SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1);
 				SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
 
-				if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRotations && skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking)
+				if(	   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRotations 
+					&& skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking
+					&& skeletonManager.HasNewMocapData(skeletonManager.skeletons[BodyTrackingDeviceID, playerId]))
 					skeletonManager.FilterSkeletonRotations(BodyTrackingDeviceID, playerId, customMocapUpdateInterval);
 			}
 			else // Kinect is used; copy the .isTracking value that has been set by it

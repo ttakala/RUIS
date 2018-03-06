@@ -277,7 +277,7 @@ public class RUISTracker : MonoBehaviour
 //		hydraBaseFilterRot = new KalmanFilter();
 //		hydraBaseFilterRot.initialize(4,4);
 		
-		filterRot.skipIdenticalMeasurements = true;
+		filterRot.SkipIdenticalMeasurements = true;
 		
 		// Yaw Drift Corrector invocations in Awake()
 		filterDrift = new KalmanFilter();
