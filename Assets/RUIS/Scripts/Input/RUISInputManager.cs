@@ -2,7 +2,7 @@
 
 Content    :   Class for managing input devices of RUIS
 Authors    :   Tuukka Takala, Mikael Matveinen, Heikki Heiskanen
-Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen.
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen.
                All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
                restricted for commercial projects. Contact tmtakala@gmail.com

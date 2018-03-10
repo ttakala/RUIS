@@ -56,14 +56,6 @@ public class KalmanFilteredRotation
 	private double[] rot = {0, 0, 0, 1};
 	private bool firstRun = true;
 
-	private void SetRDiagonal(double r)
-	{
-//		Debug.Log(filterRot.R.RowCount + " " + filterRot.R.ColumnCount);
-		for(int i = 1; i < 5; ++i)
-			for(int j = 1; j < 5; ++j)
-				filterRot.R[i, j].Re = r;
-	}
-
 	/// <summary>
 	/// Initialize the rotation Kalman filter
 	/// </summary>
@@ -72,6 +64,7 @@ public class KalmanFilteredRotation
 		rotationState = Quaternion.identity;
 		filterRot = new KalmanFilter();
 		filterRot.initialize(4,4);
+//		filterRot.SetState(rot);
 	}
 	
 	public void Reset()
@@ -94,7 +87,7 @@ public class KalmanFilteredRotation
 		// Do the following measurement sign flip (rotation is still the same) if the last two
 		// measurements appear to have their signs flipped (as often happens around the poles).
 		// This way the Kalman doesn't start to filter the quaternion towards zero.
-		if(Mathf.Abs(measuredRotation.x - lastMeasurement.x) + Mathf.Abs(measuredRotation.y - lastMeasurement.y) + 
+		if( Mathf.Abs(measuredRotation.x - lastMeasurement.x) + Mathf.Abs(measuredRotation.y - lastMeasurement.y) + 
 			Mathf.Abs(measuredRotation.z - lastMeasurement.z) + Mathf.Abs(measuredRotation.w - lastMeasurement.w) > 1.0f)
 		{
 			measuredRotation.x = -measuredRotation.x;

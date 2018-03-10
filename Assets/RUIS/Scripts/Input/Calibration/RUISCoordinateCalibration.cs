@@ -180,7 +180,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 				break;
 				case "Kinect 2 - UnityXR (HMD)": // *** OPTIHACK was: "Kinect 2 - OpenVR (HMD)" // *** HACK TODO hacky see other (HMD)s below
 					firstDevice = RUISDevice.Kinect_2;
-					secondDevice = RUISDevice.OpenVR;
+					secondDevice = RUISDevice.UnityXR;
 					hmdCalibration = true;
 					break;
 				case "PSMove - OpenVR (HMD)": // *** OPTIHACK
@@ -190,7 +190,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 					break;
 				case "Kinect 1 - UnityXR (HMD)": // *** OPTIHACK was: "Kinect 1 - OpenVR (HMD)"
 					firstDevice = RUISDevice.Kinect_1;
-					secondDevice = RUISDevice.OpenVR;
+					secondDevice = RUISDevice.UnityXR;
 					hmdCalibration = true;
 				break;
 				case "Kinect 1 floor data":
@@ -271,26 +271,8 @@ public class RUISCoordinateCalibration : MonoBehaviour
 
     void Start()
     {
-		if(			(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.OpenVR)
-		  		 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.OpenVR )) 
-		{
-			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
-			if(hmdCalibration)
-				calibrationProcess = new RUISKinect2ToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
-			else
-				calibrationProcess = new RUISKinect2ToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
-		}
-		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.OpenVR)
-				||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.OpenVR )) 
-		{
-			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
-//			if(hmdCalibration)
-				calibrationProcess = new RUISKinectToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
-//			else
-//				calibrationProcess = new RUISKinectToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
-		}
-		else if(	(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.OpenVR)
-				 ||	(secondDevice == RUISDevice.Custom_1 && firstDevice == RUISDevice.OpenVR )) 
+		if(		( firstDevice == RUISDevice.Custom_1 && secondDevice == RUISDevice.OpenVR)
+			||	(secondDevice == RUISDevice.Custom_1 &&  firstDevice == RUISDevice.OpenVR))
 		{
 			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_1;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
@@ -299,8 +281,8 @@ public class RUISCoordinateCalibration : MonoBehaviour
 //			else
 //				calibrationProcess = new RUISCustomDeviceToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 		}
-		else if(	(firstDevice == RUISDevice.Custom_2  && secondDevice == RUISDevice.OpenVR)
-				 ||	(secondDevice == RUISDevice.Custom_2 && firstDevice == RUISDevice.OpenVR )) 
+		else if(	( firstDevice == RUISDevice.Custom_2 && secondDevice == RUISDevice.OpenVR)
+				 ||	(secondDevice == RUISDevice.Custom_2 &&  firstDevice == RUISDevice.OpenVR))
 		{
 			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_2;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
@@ -309,49 +291,56 @@ public class RUISCoordinateCalibration : MonoBehaviour
 			//			else
 			//				calibrationProcess = new RUISCustomDeviceToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 		}
-		else if(	(firstDevice == RUISDevice.Custom_1  && secondDevice == RUISDevice.Custom_2)
-				 || (secondDevice == RUISDevice.Custom_1 && firstDevice == RUISDevice.Custom_2 ))
+		else if(	( firstDevice == RUISDevice.Custom_1 && secondDevice == RUISDevice.Custom_2)
+				 || (secondDevice == RUISDevice.Custom_1 &&  firstDevice == RUISDevice.Custom_2))
 		{
 			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_1;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			coordinateSystem.rootDevice = RUISDevice.Custom_1;
 			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
 		}
-		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_2)
-		   		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.Kinect_2 )) 
+		else if(	( firstDevice == RUISDevice.Kinect_1 && secondDevice == RUISDevice.Kinect_2)
+		   		 ||	(secondDevice == RUISDevice.Kinect_1 &&  firstDevice == RUISDevice.Kinect_2)) 
 		{
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
 			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
 			calibrationProcess = new RUISKinect2ToKinectCalibrationProcess(calibrationProcessSettings);
 		}
-		else if(	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.UnityXR)
-		  		 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.UnityXR )) 
-		{
-			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
-			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
-			calibrationProcess = new RUISKinectToPSMoveCalibrationProcess(calibrationProcessSettings);
-		}
-		else if(	(firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.UnityXR)
-		       	 ||	(secondDevice == RUISDevice.Kinect_2 && firstDevice == RUISDevice.UnityXR )) 
+		else if(	(firstDevice  == RUISDevice.Kinect_2 && secondDevice == RUISDevice.OpenVR)
+				||	(secondDevice == RUISDevice.Kinect_2 &&  firstDevice == RUISDevice.OpenVR )) 
 		{
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
-			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
-			calibrationProcess = new RUISKinect2ToPSMoveCalibrationProcess(calibrationProcessSettings);
-		}
-		else if(hmdCalibration &&  (	(firstDevice == RUISDevice.UnityXR  && secondDevice == RUISDevice.OpenVR)
-									||	(secondDevice == RUISDevice.UnityXR && firstDevice == RUISDevice.OpenVR )))
-		{
-			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			coordinateSystem.rootDevice = RUISDevice.OpenVR;
-			calibrationProcess = new RUISPSMoveToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
+			if(hmdCalibration)
+				calibrationProcess = new RUISKinect2ToHmdCalibrationProcess(calibrationProcessSettings);
+			else
+				calibrationProcess = new RUISKinect2ToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
 		}
-		else if(hmdCalibration &&  (	(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.OpenVR)
-									 ||	(secondDevice == RUISDevice.Kinect_1 && firstDevice == RUISDevice.OpenVR ))) 
+		else if(hmdCalibration &&	(	( firstDevice == RUISDevice.Kinect_2  && secondDevice == RUISDevice.UnityXR)
+									 ||	(secondDevice == RUISDevice.Kinect_2  &&  firstDevice == RUISDevice.UnityXR)))
+		{
+			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+			coordinateSystem.rootDevice = RUISDevice.UnityXR;
+			calibrationProcess = new RUISKinect2ToHmdCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(hmdCalibration 
+				&& (   ( firstDevice == RUISDevice.Kinect_1 && (secondDevice == RUISDevice.OpenVR || secondDevice == RUISDevice.UnityXR))
+					|| (secondDevice == RUISDevice.Kinect_1 && ( firstDevice == RUISDevice.OpenVR ||  firstDevice == RUISDevice.UnityXR)))) 
 		{
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
-			coordinateSystem.rootDevice = RUISDevice.OpenVR;
-			calibrationProcess = new RUISKinectToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
+			if(firstDevice == RUISDevice.OpenVR || secondDevice == RUISDevice.OpenVR)
+				coordinateSystem.rootDevice = RUISDevice.OpenVR;
+			else if(firstDevice == RUISDevice.UnityXR || secondDevice == RUISDevice.UnityXR)
+				coordinateSystem.rootDevice = RUISDevice.UnityXR;
+			calibrationProcess = new RUISKinectToHmdCalibrationProcess(calibrationProcessSettings);
 		}
+//		else if(hmdCalibration &&  (	(firstDevice == RUISDevice.UnityXR  && secondDevice == RUISDevice.OpenVR)
+//									||	(secondDevice == RUISDevice.UnityXR && firstDevice == RUISDevice.OpenVR )))
+//		{
+//			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
+//			coordinateSystem.rootDevice = RUISDevice.OpenVR;
+//			calibrationProcess = new RUISPSMoveToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
+//		}
 		else if(firstDevice == RUISDevice.Kinect_1  && secondDevice == RUISDevice.Kinect_1 ) 
 		{
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;

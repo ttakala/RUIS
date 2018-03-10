@@ -1447,6 +1447,7 @@ public class RUISSkeletonController : MonoBehaviour
 //		return Quaternion.FromToRotation(transform.TransformPoint(childJoint.position - jointToGet.position), 
 //										 transformToUpdate.parent.rotation * tempVector						 ) * newRotation;
 
+		// *** OPTIHACK7 TODO: stop using Matrix4x4.TRS(), it gives errors: "Quaternion To Matrix conversion failed because input Quaternion is invalid"
 		// Below results in flattened lower arm when elbow is rotated by (0, 90, 270), but above is not perfect either
 		// Solution: in bone scaling, set localScales using calculated angles instead of transform angles
 		Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, Vector3.one);

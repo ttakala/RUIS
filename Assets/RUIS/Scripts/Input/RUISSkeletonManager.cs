@@ -313,7 +313,7 @@ public class RUISSkeletonManager : MonoBehaviour
 ////		skeletons[sensorID, playerID].root.rotation = skeletons[sensorID, playerID].filterRot[4].Update(measuredRotation, kalmanDeltaTime);
 //							
 							// TODO uncomment
-//		FilterJointRotation(ref skeletons[sensorID, playerID], ref skeletons[sensorID, playerID].torso, 5, kalmanDeltaTime);
+		FilterJointRotation(ref skeletons[sensorID, playerID], ref skeletons[sensorID, playerID].torso, 5, kalmanDeltaTime);
 //
 ////		measuredRotation = skeletons[sensorID, playerID].torso.rotation;
 ////		skeletons[sensorID, playerID].torso.rotation = skeletons[sensorID, playerID].filterRot[5].Update(measuredRotation, kalmanDeltaTime);
