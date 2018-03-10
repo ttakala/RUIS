@@ -69,7 +69,7 @@ public class KalmanFilter
      * default identity matrix values. This must be called 
      * first before any other functions.
      */
-    public void initialize(int dimenX, int dimenZ)
+    public void Initialize(int dimenX, int dimenZ)
     {
 //		if(dimenX == 3 && dimenZ ==3)
 //			threeByThree = true;
@@ -142,21 +142,21 @@ public class KalmanFilter
      * @param Q process noise covariance.
      * @param H measurement projection matrix.
      */
-    public void initialize(Matrix F, Matrix Q, Matrix H) 
+    public void Initialize(Matrix F, Matrix Q, Matrix H) 
     {
 	    int dimenX = F.ColumnCount;
 	    int dimenZ = H.RowCount;
 
-    	initialize(dimenX, dimenZ);
+    	Initialize(dimenX, dimenZ);
     		
         this.F = F;
         this.Q = Q;
         this.H = H;
     }
 
-	public void reset()
+	public void Reset()
 	{
-		initialize(state.Length, y.RowCount);
+		Initialize(state.Length, y.RowCount);
 	}
 	
     /**
@@ -165,7 +165,7 @@ public class KalmanFilter
      * @param x The estimated system state.
      * @param P The covariance of the estimated system state.
      */
-    public void setState(Matrix x, Matrix P) 
+    public void SetState(Matrix x, Matrix P) 
     {
 		this.x = x.Extract(1, x.RowCount, 1, x.ColumnCount); // this.x.set(x);
 		this.P = P.Extract(1, P.RowCount, 1, P.ColumnCount); // this.P.set(P);
@@ -180,23 +180,23 @@ public class KalmanFilter
 		}
 	}
 
-    public void setQ(Matrix Q) 
+    public void SetQ(Matrix Q) 
     {
     	this.Q = Q.Extract(1, Q.RowCount, 1, Q.ColumnCount); // this.Q = Q;
     }
 
-    public void setQ(double q) 
+    public void SetQ(double q) 
     {
     	Q = Matrix.Identity(Q.RowCount);
 		Q = Q * q; // scale(q, Q);
     }
 
-    public void setR(Matrix R) 
+    public void SetR(Matrix R) 
     {
     	this.R = R.Extract(1, R.RowCount, 1, R.ColumnCount); // this.S = R;
     }
 
-    public void setR(double r) 
+    public void SetR(double r) 
     {
 		if(fourByFour)
 		{
@@ -224,7 +224,7 @@ public class KalmanFilter
 		}
     }
 
-	public void setRDiagonal(double r) 
+	public void SetRDiagonal(double r) 
 	{
 		int rows 	= R.RowCount;
 		int columns = R.ColumnCount;
@@ -234,7 +234,7 @@ public class KalmanFilter
 				R[i, j].Re = r;
 	}
 
-    public void setR(int row, int col, double r) 
+    public void SetR(int row, int col, double r) 
     {
 		R[row, col] = new Complex(r);
     	//this.S.set(row, col, r);
@@ -243,7 +243,7 @@ public class KalmanFilter
     /**
      * Predicts the state of the system forward one time step.
      */
-    public void predict() 
+    public void Predict() 
 	{
 		if(fourByFour)
 		{
@@ -275,7 +275,7 @@ public class KalmanFilter
      * @param z Measurement.
      * @param R Measurement covariance.
      */
-    public void update(Matrix z, Matrix R) 
+    public void Update(Matrix z, Matrix R) 
 	{
 		if(skipIdenticalMeasurements)
 		{
@@ -346,7 +346,7 @@ public class KalmanFilter
      *
      * @param z Measurement.
      */
-    public void update(double[] z) 
+    public void Update(double[] z) 
     {
 		
 		if(skipIdenticalMeasurements)
@@ -450,7 +450,7 @@ public class KalmanFilter
      *
      * @return The state.
      */
-    public Double[] getState() 
+    public Double[] GetState() 
     {
 		if(fourByFour)
 		{
@@ -473,7 +473,7 @@ public class KalmanFilter
      *
      * @return The covariance.
      */
-    public Matrix getCovariance() 
+    public Matrix GetCovariance() 
     {
         return P;
     }

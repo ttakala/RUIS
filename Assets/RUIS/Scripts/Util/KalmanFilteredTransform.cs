@@ -36,7 +36,7 @@ public class KalmanFilteredTransform : MonoBehaviour
 	{
 		outputTransform = transform;
 		filterPos = new KalmanFilter();
-		filterPos.initialize(3,3);
+		filterPos.Initialize(3,3);
 	}
 	
 	// Update is called once per frame
@@ -63,10 +63,10 @@ public class KalmanFilteredTransform : MonoBehaviour
 			measuredPos[0] = inputPos.x;
 			measuredPos[1] = inputPos.y;
 			measuredPos[2] = inputPos.z;
-			filterPos.setR(Time.deltaTime * positionNoiseCovariance);
-		    filterPos.predict();
-		    filterPos.update(measuredPos);
-			pos = filterPos.getState();
+			filterPos.SetR(Time.deltaTime * positionNoiseCovariance);
+		    filterPos.Predict();
+		    filterPos.Update(measuredPos);
+			pos = filterPos.GetState();
 			
 //			measuredRot[0] = inputRot.x;
 //			measuredRot[1] = inputRot.y;
@@ -123,10 +123,10 @@ public class KalmanFilteredTransform : MonoBehaviour
 			measuredPos[0] = inputPos.x;
 			measuredPos[1] = inputPos.y;
 			measuredPos[2] = inputPos.z;
-			filterPos.setR(Time.fixedDeltaTime * positionNoiseCovariance);
-		    filterPos.predict();
-		    filterPos.update(measuredPos);
-			pos = filterPos.getState();
+			filterPos.SetR(Time.fixedDeltaTime * positionNoiseCovariance);
+		    filterPos.Predict();
+		    filterPos.Update(measuredPos);
+			pos = filterPos.GetState();
 			
 //			measuredRot[0] = inputRot.x;
 //			measuredRot[1] = inputRot.y;

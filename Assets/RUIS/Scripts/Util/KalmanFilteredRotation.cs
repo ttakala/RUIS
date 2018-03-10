@@ -63,13 +63,13 @@ public class KalmanFilteredRotation
 	{
 		rotationState = Quaternion.identity;
 		filterRot = new KalmanFilter();
-		filterRot.initialize(4,4);
+		filterRot.Initialize(4,4);
 //		filterRot.SetState(rot);
 	}
 	
 	public void Reset()
 	{
-		filterRot.initialize(4,4);
+		filterRot.Initialize(4,4);
 	}
 
 	/// <summary>
@@ -108,11 +108,11 @@ public class KalmanFilteredRotation
 		measurement[1] = measuredRotation.y;
 		measurement[2] = measuredRotation.z;
 		measurement[3] = measuredRotation.w;
-		filterRot.setR(deltaTime * rotationNoiseCovariance);
+		filterRot.SetR(deltaTime * rotationNoiseCovariance);
 //		this.SetRDiagonal(deltaTime * rotationNoiseCovariance);
-	    filterRot.predict();
-	    filterRot.update(measurement);
-		rot = filterRot.getState();
+	    filterRot.Predict();
+	    filterRot.Update(measurement);
+		rot = filterRot.GetState();
 		
 		rotationState = new Quaternion ((float) rot[0], (float) rot[1], 
 										(float) rot[2], (float) rot[3] );

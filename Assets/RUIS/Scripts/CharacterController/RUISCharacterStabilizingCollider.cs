@@ -80,7 +80,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         defaultColliderPosition = transform.localPosition;
 		
 		positionKalman = new KalmanFilter();
-		positionKalman.initialize(3,3);
+		positionKalman.Initialize(3,3);
 		positionKalman.skipIdenticalMeasurements = true;
 	}
 
@@ -174,10 +174,10 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 					measuredPos[0] = torsoPosition.x;
 					measuredPos[1] = torsoPosition.y;
 					measuredPos[2] = torsoPosition.z;
-					positionKalman.setR(Time.fixedDeltaTime * positionSmoothing);
-				    positionKalman.predict();
-				    positionKalman.update(measuredPos);
-					pos = positionKalman.getState();
+					positionKalman.SetR(Time.fixedDeltaTime * positionSmoothing);
+				    positionKalman.Predict();
+				    positionKalman.Update(measuredPos);
+					pos = positionKalman.GetState();
 					torsoPosition.x = (float) pos[0];
 					torsoPosition.y = (float) pos[1];
 					torsoPosition.z = (float) pos[2];
@@ -215,10 +215,10 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 			measuredPos[0] = torsoPosition.x;
 			measuredPos[1] = torsoPosition.y;
 			measuredPos[2] = torsoPosition.z;
-			positionKalman.setR(Time.fixedDeltaTime * positionSmoothing);
-		    positionKalman.predict();
-		    positionKalman.update(measuredPos);
-			pos = positionKalman.getState();
+			positionKalman.SetR(Time.fixedDeltaTime * positionSmoothing);
+		    positionKalman.Predict();
+		    positionKalman.Update(measuredPos);
+			pos = positionKalman.GetState();
 			torsoPosition.x = (float) pos[0];
 			torsoPosition.y = (float) pos[1] - coordinateYOffset;
 			torsoPosition.z = (float) pos[2];

@@ -68,7 +68,7 @@ public class RUISYawDriftCorrector : MonoBehaviour
 	void Awake() 
 	{
 		filterDrift = new KalmanFilter();
-		filterDrift.initialize(2,2);
+		filterDrift.Initialize(2,2);
 
 		currentCorrectionVelocity = driftCorrectionVelocity;
 
@@ -127,10 +127,10 @@ public class RUISYawDriftCorrector : MonoBehaviour
 			measuredDrift[1] = driftVector.z;
 
 			// Simple Kalman filtering
-			filterDrift.setR(Time.deltaTime * driftNoiseCovariance);
-			filterDrift.predict();
-			filterDrift.update(measuredDrift);
-			filteredDrift = filterDrift.getState();
+			filterDrift.SetR(Time.deltaTime * driftNoiseCovariance);
+			filterDrift.Predict();
+			filterDrift.Update(measuredDrift);
+			filteredDrift = filterDrift.GetState();
 
 			filteredRotation = Quaternion.RotateTowards(filteredRotation, 
 														Quaternion.LookRotation (new Vector3 ((float)filteredDrift [0], 0, (float)filteredDrift [1])), 

@@ -86,7 +86,7 @@ public class RUISSelectable : MonoBehaviour {
 			oldCollisionMode = GetComponent<Rigidbody>().collisionDetectionMode;
 			
 		positionKalman = new KalmanFilter();
-		positionKalman.initialize(3,3);
+		positionKalman.Initialize(3,3);
 		positionKalman.skipIdenticalMeasurements = true;
     }
 
@@ -115,10 +115,10 @@ public class RUISSelectable : MonoBehaviour {
 		measuredPos[0] = latestVelocity.x;
 		measuredPos[1] = latestVelocity.y;
 		measuredPos[2] = latestVelocity.z;
-		positionKalman.setR(deltaTime * noiseCovariance);
-		positionKalman.predict();
-		positionKalman.update(measuredPos);
-		pos = positionKalman.getState();
+		positionKalman.SetR(deltaTime * noiseCovariance);
+		positionKalman.Predict();
+		positionKalman.Update(measuredPos);
+		pos = positionKalman.GetState();
 		filteredVelocity.x = (float) pos[0];
 		filteredVelocity.y = (float) pos[1];
 		filteredVelocity.z = (float) pos[2];

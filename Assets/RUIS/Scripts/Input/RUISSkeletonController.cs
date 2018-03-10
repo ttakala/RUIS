@@ -459,12 +459,12 @@ public class RUISSkeletonController : MonoBehaviour
 		intendedRotations		   = new Dictionary<RUISSkeletonManager.Joint, Quaternion>();
 		
 		positionKalman = new KalmanFilter();
-		positionKalman.initialize(3, 3);
+		positionKalman.Initialize(3, 3);
 
 		for(int i = 0; i < fourJointsKalman.Length; ++i)
 		{
 			fourJointsKalman[i] = new KalmanFilter();
-			fourJointsKalman[i].initialize(3, 3);
+			fourJointsKalman[i].Initialize(3, 3);
 		}
 		for(int i = 0; i < forcedJointPositions.Length; ++i)
 			forcedJointPositions[i] = Vector3.zero;
@@ -484,7 +484,7 @@ public class RUISSkeletonController : MonoBehaviour
 				fingerConfidence[i, j] = 1.0f; // It's up to the developer to modify these values between 0 and 1 in real-time
 
 		filterDrift = new KalmanFilter();
-		filterDrift.initialize(2,2);
+		filterDrift.Initialize(2,2);
 		currentCorrectionVelocity = yawCorrectAngularVelocity;
 		if(yawCorrectIMU)
 			StartCoroutine(CorrectYawImmediately());
@@ -1532,10 +1532,10 @@ public class RUISSkeletonController : MonoBehaviour
 				measuredPos[1] = jointToGet.position.y;
 				measuredPos[2] = jointToGet.position.z;
 
-				fourJointsKalman[jointID].setR(deltaT * fourJointsNoiseCovariance);
-				fourJointsKalman[jointID].predict();
-				fourJointsKalman[jointID].update(measuredPos);
-				pos = fourJointsKalman[jointID].getState();
+				fourJointsKalman[jointID].SetR(deltaT * fourJointsNoiseCovariance);
+				fourJointsKalman[jointID].Predict();
+				fourJointsKalman[jointID].Update(measuredPos);
+				pos = fourJointsKalman[jointID].GetState();
 
 				forcedJointPositions[jointID].Set((float)pos[0], (float)pos[1], (float)pos[2]);
 			}
@@ -1867,10 +1867,10 @@ public class RUISSkeletonController : MonoBehaviour
 			measuredPos[0] = newRootPosition.x;
 			measuredPos[1] = newRootPosition.y;
 			measuredPos[2] = newRootPosition.z;
-			positionKalman.setR(deltaTime * positionNoiseCovariance); // HACK doesn't take into account Kinect's own update deltaT
-			positionKalman.predict();
-			positionKalman.update(measuredPos);
-			pos = positionKalman.getState();
+			positionKalman.SetR(deltaTime * positionNoiseCovariance); // HACK doesn't take into account Kinect's own update deltaT
+			positionKalman.Predict();
+			positionKalman.Update(measuredPos);
+			pos = positionKalman.GetState();
 
 			skeletonPosition = new Vector3((float)pos[0], (float)pos[1], (float)pos[2]);
 		}
@@ -3149,10 +3149,10 @@ public class RUISSkeletonController : MonoBehaviour
 			measuredDrift[1] = driftVector.z;
 
 			// Simple Kalman filtering
-			filterDrift.setR(Time.deltaTime * driftNoiseCovariance);
-			filterDrift.predict();
-			filterDrift.update(measuredDrift);
-			filteredDrift = filterDrift.getState();
+			filterDrift.SetR(Time.deltaTime * driftNoiseCovariance);
+			filterDrift.Predict();
+			filterDrift.Update(measuredDrift);
+			filteredDrift = filterDrift.GetState();
 
 			tempVector.Set((float) filteredDrift[0], 0, (float) filteredDrift[1]);
 			rotationDrift = Quaternion.RotateTowards(rotationDrift, Quaternion.LookRotation(tempVector), currentCorrectionVelocity * Time.deltaTime);

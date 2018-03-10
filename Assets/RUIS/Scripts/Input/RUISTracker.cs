@@ -265,14 +265,14 @@ public class RUISTracker : MonoBehaviour
 		rawRotation = Quaternion.identity;
 		
 		filterPos = new KalmanFilter();
-		filterPos.initialize(3,3);
+		filterPos.Initialize(3,3);
 		filterPos.skipIdenticalMeasurements = true;
 //		filterRot = new KalmanFilter();
 //		filterRot.initialize(4,4);
 		
 		// Mobile Razer Hydra base filtering
 		hydraBaseFilterPos = new KalmanFilter();
-		hydraBaseFilterPos.initialize(3,3);
+		hydraBaseFilterPos.Initialize(3,3);
 		hydraBaseFilterPos.skipIdenticalMeasurements = true;
 //		hydraBaseFilterRot = new KalmanFilter();
 //		hydraBaseFilterRot.initialize(4,4);
@@ -281,7 +281,7 @@ public class RUISTracker : MonoBehaviour
 		
 		// Yaw Drift Corrector invocations in Awake()
 		filterDrift = new KalmanFilter();
-		filterDrift.initialize(2,2);
+		filterDrift.Initialize(2,2);
 
 		// OpenVR already feeds some meaningful head-pose when Unity is starting
 		if(headPositionInput != HeadPositionSource.OpenVR)
@@ -883,10 +883,10 @@ public class RUISTracker : MonoBehaviour
 				measuredPos[0] = hydraTempVector.x;
 				measuredPos[1] = hydraTempVector.y;
 				measuredPos[2] = hydraTempVector.z;
-				hydraBaseFilterPos.setR(deltaT * hydraBasePositionCovariance);
-			    hydraBaseFilterPos.predict();
-			    hydraBaseFilterPos.update(measuredPos);
-				filteredPos = hydraBaseFilterPos.getState();
+				hydraBaseFilterPos.SetR(deltaT * hydraBasePositionCovariance);
+			    hydraBaseFilterPos.Predict();
+			    hydraBaseFilterPos.Update(measuredPos);
+				filteredPos = hydraBaseFilterPos.GetState();
 				hydraBasePosition = new Vector3(  (float) filteredPos[0], 
 												  (float) filteredPos[1],
 												  (float) filteredPos[2] );
@@ -988,10 +988,10 @@ public class RUISTracker : MonoBehaviour
 			measuredPos[0] = measuredHeadPosition.x;
 			measuredPos[1] = measuredHeadPosition.y;
 			measuredPos[2] = measuredHeadPosition.z;
-			filterPos.setR(deltaT * positionNoiseCovariance);
-		    filterPos.predict();
-		    filterPos.update(measuredPos);
-			filteredPos = filterPos.getState();
+			filterPos.SetR(deltaT * positionNoiseCovariance);
+		    filterPos.Predict();
+		    filterPos.Update(measuredPos);
+			filteredPos = filterPos.GetState();
 			localPosition = new Vector3((float) filteredPos[0], (float) filteredPos[1], (float) filteredPos[2]);
 			transform.localPosition = localPosition;
         }
@@ -1133,7 +1133,7 @@ public class RUISTracker : MonoBehaviour
 	public void RecenterPose()
 	{
 		if(externalDriftCorrection && compass != CompassSource.PSMove) 
-			filterDrift.reset(); // Reset yaw filter correction to zero
+			filterDrift.Reset(); // Reset yaw filter correction to zero
 		// PS Move always gives correct orientation (if its coord. system calibration matches with other devices)
 
 		if(useHmdRotation)
@@ -1400,10 +1400,10 @@ public class RUISTracker : MonoBehaviour
 				measuredDrift[0] = yawDifferenceDirection.x;
 				measuredDrift[1] = yawDifferenceDirection.z;
 				
-				filterDrift.setR(deltaT * driftNoiseCovariance);
-			    filterDrift.predict();
-			    filterDrift.update(measuredDrift);
-				filteredDrift = filterDrift.getState();
+				filterDrift.SetR(deltaT * driftNoiseCovariance);
+			    filterDrift.Predict();
+			    filterDrift.Update(measuredDrift);
+				filteredDrift = filterDrift.GetState();
 				filteredYawDifference = 
 								Quaternion.LookRotation(new Vector3((float) filteredDrift[0], 0, 
 																	(float) filteredDrift[1])   );
