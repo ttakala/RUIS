@@ -555,6 +555,12 @@ public class RUISKinectToHmdCalibrationProcess : RUISCalibrationProcess
 			kinect1DistanceFromFloor = 0;
 
 		kinect1PitchRotation = Quaternion.Inverse(kinectFloorRotator);
+
+
+		coordinateSystem.SetDistanceFromFloor(kinect1DistanceFromFloor, RUISDevice.Kinect_1);
+		coordinateSystem.SetFloorNormal(kinect1FloorNormal, RUISDevice.Kinect_1);
+
+		Debug.Log("Saved Kinect floor normal " + kinect1FloorNormal + " and floor distance (" + kinect1DistanceFromFloor + ")");
 	}
 	
 	private float ClosestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 

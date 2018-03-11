@@ -149,6 +149,11 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool independentTorsoSegmentsScaling = false;
 	public bool heightAffectsOffsets = false; // TODO
 
+	public bool forceChestPosition = false;
+	public bool forceNeckPosition  = false;
+	public bool forceHeadPosition  = false;
+	public bool forceClaviclePosition  = false;
+
 	public bool neckParentsShoulders = false;
 	
 	public RUISSkeletonManager.Skeleton.handState leftHandStatus = RUISSkeletonManager.Skeleton.handState.open;
@@ -370,6 +375,7 @@ public class RUISSkeletonController : MonoBehaviour
 	private float modelSpineLength = 0;
 	private int customSpineJointCount = 0;
 	private Transform[] trackedSpineJoints = new Transform[4];
+	// *** OPTIHACK6 this is not used for anything yet
 	private RUISSkeletonManager.Joint highestSpineJoint = RUISSkeletonManager.Joint.RightShoulder; // Here RightShoulder refers to shoulders' midpoint
 
 	private float torsoOffset = 0.0f;
@@ -657,20 +663,21 @@ public class RUISSkeletonController : MonoBehaviour
 		SaveInitialDistance(rightShoulder, leftShoulder);
 		SaveInitialDistance(rightHip, leftHip);
 
+		// *** OPTIHACK6 commented those parts of code where neck-head bone contributed to spine length
 		if(chest)
 		{
 			modelSpineLength += SaveInitialDistance(torso, chest); // *** OPTIHACK
 			if(neck)
 				modelSpineLength += SaveInitialDistance(chest, neck); // *** OPTIHACK
 			else if(head)
-				modelSpineLength += SaveInitialDistance(chest, head);
+				/*modelSpineLength += */SaveInitialDistance(chest, head);
 		}
 		if(neck)
 		{
 			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customNeck)
 				highestSpineJoint = RUISSkeletonManager.Joint.Neck;
 			if(head)
-				modelSpineLength += SaveInitialDistance(neck, head); // *** OPTIHACK
+				/*modelSpineLength += */SaveInitialDistance(neck, head); // *** OPTIHACK
 			if(leftClavicle)
 				SaveInitialDistance(neck, leftClavicle);
 			if(rightClavicle)
@@ -683,9 +690,9 @@ public class RUISSkeletonController : MonoBehaviour
 			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customHead)
 				highestSpineJoint = RUISSkeletonManager.Joint.Head;
 			if(!chest && !neck)
-				modelSpineLength += SaveInitialDistance(torso, head);
+				/*modelSpineLength += */SaveInitialDistance(torso, head);
 		}
-		if(bodyTrackingDevice != BodyTrackingDeviceType.GenericMotionTracker || (!chest && !neck && !head))
+		if(bodyTrackingDevice != BodyTrackingDeviceType.GenericMotionTracker || (!neck /*!head*/))
 		{
 			modelSpineLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, 		leftHip)] +
 								jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
@@ -847,7 +854,7 @@ public class RUISSkeletonController : MonoBehaviour
 		if(neck && leftShoulder && rightShoulder)
 			neckParentsShoulders = leftShoulder.IsChildOf(neck) || rightShoulder.IsChildOf(neck);
 
-		// *** OPTIHACK4 following is not true because of trackedSpineJoints: "... you can leave the below Custom Source fields empty."
+		// *** OPTIHACK6 following is not true because of trackedSpineJoints: "... you can leave the below Custom Source fields empty." (add neck estimation)
 		trackedSpineJoints[customSpineJointCount] = customTorso;
 		++customSpineJointCount;
 		if(customChest)
@@ -860,11 +867,12 @@ public class RUISSkeletonController : MonoBehaviour
 			trackedSpineJoints[customSpineJointCount] = customNeck;
 			++customSpineJointCount;
 		}
-		if(customHead)
-		{
-			trackedSpineJoints[customSpineJointCount] = customHead;
-			++customSpineJointCount;
-		}
+		// Lefts not add head joint because it's position can vary so much between different mocap systems (so can neck though)
+//		if(customHead)
+//		{
+//			trackedSpineJoints[customSpineJointCount] = customHead;
+//			++customSpineJointCount;
+//		}
 	}
 
 	void LateUpdate()
@@ -1097,19 +1105,20 @@ public class RUISSkeletonController : MonoBehaviour
 //						else
 						deltaT = deltaTime;
 
-//						if(!independentTorsoSegmentsScaling)
-						{
+						if(forceChestPosition)
 							ForceUpdatePosition(ref chest, 		   skeleton.chest, 	   	   11, deltaT);
+						if(forceNeckPosition)
 							ForceUpdatePosition(ref neck, 		   skeleton.neck, 		    5, deltaT);
+						if(forceHeadPosition)
 							ForceUpdatePosition(ref head, 		   skeleton.head, 		    4, deltaT);
-							if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
-							{
-								if(customRightClavicle)
-									ForceUpdatePosition(ref rightClavicle, skeleton.rightClavicle, 8, deltaT);
-								if(customLeftClavicle)
-									ForceUpdatePosition(ref leftClavicle,  skeleton.leftClavicle,  9, deltaT);
-							}
+						if(forceClaviclePosition && bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
+						{
+							if(customRightClavicle)
+								ForceUpdatePosition(ref rightClavicle, skeleton.rightClavicle, 8, deltaT);
+							if(customLeftClavicle)
+								ForceUpdatePosition(ref leftClavicle,  skeleton.leftClavicle,  9, deltaT);
 						}
+
 						// *** OPTIHACK3 above were added
 						ForceUpdatePosition(ref rightShoulder, 	skeleton.rightShoulder, 0, deltaT);
 						ForceUpdatePosition(ref leftShoulder, 	skeleton.leftShoulder,  1, deltaT);
@@ -2584,6 +2593,7 @@ public class RUISSkeletonController : MonoBehaviour
 		float modelLength = modelSpineLength;
 //		float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
 //				jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2; // *** OPTIHACK was this before
+		// This playerLength calculation was all wrong
 //		float playerLength = (Vector3.Distance(skeleton.rightShoulder.position, skeleton.leftShoulder.position) +
 //		                      Vector3.Distance(skeleton.rightHip.position,      skeleton.leftHip.position     )) / 2;
 //		float playerLength = (Vector3.Distance( rightShoulder.position,  leftShoulder.position) + // *** THIS IS WRONG, SCALING APPLIES ON THESE TRANSFORMS
@@ -2637,8 +2647,9 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		else
 		{
-			lengthSum = (Vector3.Distance( forcedJointPositions[0], forcedJointPositions[1] ) +
-						 Vector3.Distance( forcedJointPositions[2], forcedJointPositions[3] )  ) / 2;
+			// Distance between shoulders' midpoint and hips' midpoint (multiplier 0.5 taken outside), indices ([0], [1], ...) must be correct!
+			lengthSum = 0.5f * Vector3.Distance((forcedJointPositions[0] + forcedJointPositions[1]),
+			             						(forcedJointPositions[2] + forcedJointPositions[3]));
 		}
 
 		return lengthSum;

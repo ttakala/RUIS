@@ -130,6 +130,11 @@ public class RUISKinect2FloorDataCalibrationProcess : RUISCalibrationProcess {
 		if(!calibrationFinnished ) {
 			this.guiTextLowerLocal = "Calibration finished!\n\nDistance from floor: " + kinect2DistanceFromFloor + "\n\nFloor normal: " + kinect2FloorNormal.ToString();
 			coordinateSystem.SaveFloorData(xmlFilename, RUISDevice.Kinect_2, kinect2FloorNormal, kinect2DistanceFromFloor);
+
+			coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, RUISDevice.Kinect_2);
+			coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
+			Debug.Log("Saved Kinect floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
+
 			calibrationFinnished = true;
 		}
 		return RUISCalibrationPhase.ShowResults;

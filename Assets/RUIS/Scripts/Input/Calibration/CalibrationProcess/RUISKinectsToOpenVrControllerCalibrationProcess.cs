@@ -120,11 +120,11 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		kinectSelection = MonoBehaviour.FindObjectOfType(typeof(NIPlayerManagerCOMSelection)) as NIPlayerManagerCOMSelection;
 		settingsManager = MonoBehaviour.FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
 
-		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == RUISDevice.Kinect_2)
-			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
-		else if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == RUISDevice.Kinect_1)
-			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
-		else 
+//		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == RUISDevice.Kinect_2)
+//			coordinateSystem.rootDevice = RUISDevice.Kinect_2;
+//		else if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == RUISDevice.Kinect_1)
+//			coordinateSystem.rootDevice = RUISDevice.Kinect_1;
+//		else 
 			coordinateSystem.rootDevice = RUISDevice.OpenVR;
 
 		vivePrefabContainer = Component.FindObjectOfType<RUISOpenVrPrefabContainer>();
@@ -186,7 +186,10 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		this.kinect2ModelObject = GameObject.Find ("Kinect2Camera");
 
 		// Depth view
-		this.depthView = GameObject.Find ("Kinect2DepthView");
+		if(this.inputDevice2 == RUISDevice.Kinect_1)
+			this.depthView = GameObject.Find("KinectDepthView");
+		else if(this.inputDevice2 == RUISDevice.Kinect_2)
+			this.depthView = GameObject.Find("Kinect2DepthView");
 		
 		this.floorPlane = GameObject.Find ("Floor");
 		
@@ -919,6 +922,8 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 
 		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, inputDevice2);
 		coordinateSystem.SetFloorNormal(kinect2FloorNormal, inputDevice2);
+
+		Debug.Log("Saved Kinect floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
 	}
 
 	private float ClosestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 

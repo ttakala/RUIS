@@ -103,12 +103,12 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess
 		this.depthViewObjects = calibrationSettings.depthViewObjects;
 		this.iconObjects = calibrationSettings.iconObjects;
 		
-		if(GameObject.Find ("PSMoveWand") != null)
-			GameObject.Find ("PSMoveWand").SetActive(false);
+		if(GameObject.Find("PSMoveWand") != null)
+			GameObject.Find("PSMoveWand").SetActive(false);
 		
 		// Models
-		this.kinect1ModelObject = GameObject.Find ("KinectCamera");
-		this.kinect2ModelObject = GameObject.Find ("Kinect2Camera");
+		this.kinect1ModelObject = GameObject.Find("KinectCamera");
+		this.kinect2ModelObject = GameObject.Find("Kinect2Camera");
 		
 		RUISSkeletonController skeletonController = Component.FindObjectOfType<RUISSkeletonController>();
 		Transform rightHand = null;
@@ -119,13 +119,13 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess
 			followTransform.transformToFollow = rightHand;
 		
 		// Depth view
-		this.depthView = GameObject.Find ("KinectDepthView");
-		this.depthView2 = GameObject.Find ("Kinect2DepthView");
+		this.depthView = GameObject.Find("KinectDepthView");
+		this.depthView2 = GameObject.Find("Kinect2DepthView");
 		// Icons
-		this.Kinect1Icon = GameObject.Find ("Kinect Icon");
-		this.Kinect2Icon = GameObject.Find ("Kinect2 Icon");
+		this.Kinect1Icon = GameObject.Find("Kinect Icon");
+		this.Kinect2Icon = GameObject.Find("Kinect2 Icon");
 
-		this.floorPlane = GameObject.Find ("Floor");
+		this.floorPlane = GameObject.Find("Floor");
 
 		if(this.Kinect1Icon && this.Kinect1Icon.GetComponent<GUITexture>())
 			this.Kinect1Icon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
@@ -577,7 +577,9 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess
 		kinectFloorRotator = Quaternion.FromToRotation(kinect1FloorNormal, Vector3.up); 
 		kinect1DistanceFromFloor = closestDistanceFromFloor(kinect1FloorNormal, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
 		kinect1PitchRotation = Quaternion.Inverse (kinectFloorRotator);
-		
+
+		Debug.Log("Saved Kinect 1 floor normal " + kinect1FloorNormal + " and floor distance (" + kinect1DistanceFromFloor + ")");
+		Debug.Log("Saved Kinect 2 floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
 	}
 	
 	public float closestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 

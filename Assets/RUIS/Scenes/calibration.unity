@@ -1549,7 +1549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &182447375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2201,6 +2201,8 @@ MonoBehaviour:
   filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
+  customMocapFrameRate: 30
+  customMocapUpdateInterval: 0.033
   forearmLengthRatio: 1
   shinLengthRatio: 1
   clenchedThumbAngleTM: {x: 45, y: 0, z: 0}
@@ -11133,7 +11135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &986383157
 Transform:
   m_ObjectHideFlags: 0
@@ -14778,6 +14780,8 @@ MonoBehaviour:
   filterRotations: 0
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
+  customMocapFrameRate: 30
+  customMocapUpdateInterval: 0.033
   forearmLengthRatio: 0.9
   shinLengthRatio: 0.7
   clenchedThumbAngleTM: {x: 15, y: 0, z: -30}

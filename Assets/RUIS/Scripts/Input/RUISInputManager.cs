@@ -497,7 +497,7 @@ public class RUISInputManager : MonoBehaviour
 				coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
 				coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor,  RUISDevice.Kinect_2);
 			}
-			Debug.Log ("Updated Kinect 2 floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
+			Debug.Log("Updated Kinect 2 floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
 		}
 	}
 			

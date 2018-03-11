@@ -550,6 +550,8 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 		kinect2PitchRotation = Quaternion.Inverse (kinect2FloorRotator);
 		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, RUISDevice.Kinect_2);
 		coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
+
+		Debug.Log("Saved Kinect floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
 	}
 	
 	private void UpdateBodyData() 
