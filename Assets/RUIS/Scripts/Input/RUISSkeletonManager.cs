@@ -814,7 +814,7 @@ public class RUISSkeletonManager : MonoBehaviour
 	public bool HasNewMocapData(Skeleton sourceSkeleton)
 	{
 		return 	
-			   lastPelvisPosition.x != sourceSkeleton.torso.position.x || lastPelvisPosition.y != sourceSkeleton.torso.position.y
+		   lastPelvisPosition.x != sourceSkeleton.torso.position.x || lastPelvisPosition.y != sourceSkeleton.torso.position.y
 		|| lastPelvisPosition.z != sourceSkeleton.torso.position.z
 
 		|| lastRightShoulderPosition.x != sourceSkeleton.rightShoulder.position.x || lastRightShoulderPosition.y != sourceSkeleton.rightShoulder.position.y

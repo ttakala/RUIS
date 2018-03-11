@@ -17,16 +17,17 @@ using Valve.VR;
 
 public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrationProcess
 {	
-	public string getUpperText() {
+	public string getUpperText() 
+	{
 		return this.guiTextUpperLocal;
 	}
 	
-	public string getLowerText() {
+	public string getLowerText() 
+	{
 		return this.guiTextLowerLocal;
 	}
 
 	public string guiTextUpperLocal, guiTextLowerLocal;
-	public bool useScreen1, useScreen2;
 
 	// Abstract class variables
 	public override string guiTextUpper { get{return getUpperText();} }
@@ -247,7 +248,8 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		this.timeBetweenSamples = 1 / (float)numberOfSamplesPerSecond;
 		
 		// Limit sample rate
-		if(this.timeBetweenSamples < 0.1f) {
+		if(this.timeBetweenSamples < 0.1f)
+		{
 			this.timeBetweenSamples = 0.1f;
 		}
 		
@@ -497,9 +499,9 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 		return RUISCalibrationPhase.ReadyToCalibrate;
 	}
-	
-	
-	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
+
+	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) 
+	{
 		
 		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken.\n\n"
 		                                       + "Keep the " + firstInputName + " right next to the " + secondInputDevice
@@ -523,8 +525,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			return RUISCalibrationPhase.Calibration;
 		}
 	}
-	
-	
+
 	public override RUISCalibrationPhase ShowResultsPhase(float deltaTime) 
 	{
 		if(!calibrationFinished) 
@@ -540,8 +541,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 				GameObject sphere = calibrationSpheres[i];
 //				Vector3 cubePosition =  transformMatrix.MultiplyPoint3x4(samples_Kinect2[i]);
 				Vector3 cubePosition = transformMatrix.inverse.MultiplyPoint3x4(samplesCustom[i]);
-				GameObject cube = MonoBehaviour.Instantiate(calibrationSettings.device1SamplePrefab, cubePosition, Quaternion.identity) 
-																																	as GameObject;
+				GameObject cube = MonoBehaviour.Instantiate(calibrationSettings.device1SamplePrefab, cubePosition, Quaternion.identity) as GameObject;
 				cube.GetComponent<RUISSampleDifferenceVisualizer>().device2SamplePrefab = sphere;
 				
 				
@@ -707,8 +707,8 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		timeSinceLastSample = 0;
 		
 		
-		Vector3 openVrSample = getSample(this.firstInputDevice);
-		Vector3 customSample = getSample(this.secondInputDevice); // Custom_1/2
+		Vector3 openVrSample = GetSample(this.firstInputDevice);
+		Vector3 customSample = GetSample(this.secondInputDevice); // Custom_1/2
 
 		if(firstDeviceError || secondDeviceError)
 		{
@@ -754,7 +754,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	} 
 	
 	
-	private Vector3 getSample(RUISDevice device) 
+	private Vector3 GetSample(RUISDevice device) 
 	{
 		Vector3 sample = new Vector3(0,0,0);
 

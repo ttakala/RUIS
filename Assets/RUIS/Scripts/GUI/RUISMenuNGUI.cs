@@ -15,10 +15,11 @@ using System.Collections.Generic;
 
 // RESTRICTION: THERE SHOULD BE ONLY ONE RUISMenuNGUI INSTANCE WHICH RUISDisplayManager HANDLES
 
-public class RUISMenuNGUI : MonoBehaviour {
-
+public class RUISMenuNGUI : MonoBehaviour 
+{
 	// Menu states
-	public enum RUISMenuStates {
+	public enum RUISMenuStates
+	{
 		selectAndConfigureDevices,
 		keyStoneConfiguration,
 		calibration
@@ -675,28 +676,25 @@ public class RUISMenuNGUI : MonoBehaviour {
 		string currentSelection = this.transform.Find ("NGUIControls/Panel/selectAndConfigureDevices/Buttons/Dropdown - Calibration Devices").GetComponent<UIPopupList>().selection;
 		
 		//dropDownChoices.Add ("Select device(s)");
-		if(inputManager.enableKinect) dropDownChoices.Add ("Kinect 1 floor data");
-		if(inputManager.enableKinect2) dropDownChoices.Add ("Kinect 2 floor data");
+		if(inputManager.enableKinect)  dropDownChoices.Add("Kinect 1 floor data");
+		if(inputManager.enableKinect2) dropDownChoices.Add("Kinect 2 floor data");
 		    
 		// NOTE: The dropDownChoices determine the device pair to be calibrated, and they must follow the format "Device A - Device B". 
 		//       The string must correspond the options in the Awake() method of RUISCoordinateCalibration script
 		if(inputManager.enableKinect 			   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 1 - Kinect2");
-		if(inputManager.enableKinect 			   && inputManager.enablePSMove)  		dropDownChoices.Add("Kinect 1 - PSMove");
-		if(inputManager.enableKinect2 			   && inputManager.enablePSMove)  		dropDownChoices.Add("Kinect 2 - PSMove");
 		if(inputManager.enableCustomDevice1 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 1 - Custom 2");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableCustomDevice1)	dropDownChoices.Add("Custom 1 - OpenVR (controller)");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableCustomDevice2)	dropDownChoices.Add("Custom 2 - OpenVR (controller)");
+		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect) 		dropDownChoices.Add("Kinect 1 - OpenVR (controller)");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - OpenVR (controller)");
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - UnityXR (HMD)"); // *** OPTIHACK was: "Kinect 2 - OpenVR (HMD)"
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  		dropDownChoices.Add("Kinect 1 - UnityXR (HMD)"); // *** OPTIHACK was: "Kinect 1 - OpenVR (HMD)"
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  		dropDownChoices.Add("Kinect 1 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - OpenVR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect)  		dropDownChoices.Add("Kinect 1 - UnityXR (HMD)");
+		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - UnityXR (HMD)");
 //		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - OpenVR (HMD)"); //TODO
 //		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - OpenVR (HMD)"); //TODO
-		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enablePSMove)  		dropDownChoices.Add("PSMove - OpenVR (HMD)");
-//		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableKinect) 		dropDownChoices.Add("Kinect 1 - OpenVR (controller)"); //TODO
-//		if(RUISDisplayManager.enableKinect		   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 1");
-//		if(RUISDisplayManager.enableKinect2		   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - Kinect 2)"); 
-		if(inputManager.enableKinect2 	   		   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 2"); //TODO
-//		if(RUISDisplayManager.enableKinect		   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - Kinect 1)"); //TODO
+//		if(inputManager.enableKinect		   	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 1"); //TODO
+//		if(inputManager.enableKinect2		   	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - Kinect 2"); //TODO
 
 		
 		if(dropDownChoices.Count == 0) 

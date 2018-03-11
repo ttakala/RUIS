@@ -879,10 +879,6 @@ public class RUISSkeletonController : MonoBehaviour
 			// topsy turvy) so we can utilize same code as we did with Kinect 1 and 2
 			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
 			{
-				if(		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRotations 
-					&&  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking)
-					skeletonManager.SaveLastMajorJointPoses(skeletonManager.skeletons[BodyTrackingDeviceID, playerId]);
-
 				SetCustomJointData(customRoot, 			ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].root, 		1, 1);
 				SetCustomJointData(customTorso, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].torso, 		1, 1);
 				SetCustomJointData(customChest, 		ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest, 		1, 1);
@@ -905,10 +901,14 @@ public class RUISSkeletonController : MonoBehaviour
 				SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1);
 				SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
 
+				// Rotations get filtered on every frame if there is fresh data according to HasNewMocapData(), regardless of customMocapUpdateInterval
 				if(	   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRotations 
 					&& skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking
 					&& skeletonManager.HasNewMocapData(skeletonManager.skeletons[BodyTrackingDeviceID, playerId]))
+				{
+					skeletonManager.SaveLastMajorJointPoses(skeletonManager.skeletons[BodyTrackingDeviceID, playerId]);
 					skeletonManager.FilterSkeletonRotations(BodyTrackingDeviceID, playerId, customMocapUpdateInterval);
+				}
 			}
 			else // Kinect is used; copy the .isTracking value that has been set by it
 				skeleton.isTracking = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking;
@@ -1435,32 +1435,31 @@ public class RUISSkeletonController : MonoBehaviour
 			default: return newRotation;
 		}
 		
-		// Inverted localScale
-		tempVector.Set(1/transformToUpdate.parent.localScale.x, 1/transformToUpdate.parent.localScale.y, 1/transformToUpdate.parent.localScale.z);
-		
-		// Calculate intended child bone direction in the transformToUpdate frame, and scale it with the inverted localScale: the result is the scale-corrected 
-		// localRotation direction
-		tempVector = Vector3.Scale(tempVector, 
-								   Quaternion.Inverse(transformToUpdate.parent.rotation) * transform.TransformPoint(childJoint.position - jointToGet.position));
-		
-		// Calculate the rotation difference between the localRotation direction and its scale-corrected version, and use that to multiply newRotation
+//		// Inverted localScale
+//		tempVector.Set(1/transformToUpdate.parent.localScale.x, 1/transformToUpdate.parent.localScale.y, 1/transformToUpdate.parent.localScale.z);
+//		
+//		// Calculate intended child bone direction in the transformToUpdate frame, and scale it with the inverted localScale: the result is the scale-corrected 
+//		// localRotation direction
+//		tempVector = Vector3.Scale(tempVector, 
+//								   Quaternion.Inverse(transformToUpdate.parent.rotation) * transform.TransformPoint(childJoint.position - jointToGet.position));
+//		
+//		// Calculate the rotation difference between the localRotation direction and its scale-corrected version, and use that to multiply newRotation
 //		return Quaternion.FromToRotation(transform.TransformPoint(childJoint.position - jointToGet.position), 
 //										 transformToUpdate.parent.rotation * tempVector						 ) * newRotation;
 
-		// *** OPTIHACK7 TODO: stop using Matrix4x4.TRS(), it gives errors: "Quaternion To Matrix conversion failed because input Quaternion is invalid"
 		// Below results in flattened lower arm when elbow is rotated by (0, 90, 270), but above is not perfect either
 		// Solution: in bone scaling, set localScales using calculated angles instead of transform angles
-		Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, Vector3.one);
-		if(jointToGet.jointID == RUISSkeletonManager.Joint.LeftElbow)
-		{
-			tempVector = transformToUpdate.parent.localScale;
+//		Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, Vector3.one);
+//		if(jointToGet.jointID == RUISSkeletonManager.Joint.LeftElbow)
+//		{
+//			tempVector = transformToUpdate.parent.localScale;
 //			Debug.DrawLine(leftElbow.position, leftElbow.position 
 //												+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(2)), Color.blue);
 //			Debug.DrawLine(leftElbow.position, leftElbow.position 
 //												+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(1)), Color.green);
 //			Debug.DrawLine(leftElbow.position, leftElbow.position 
 //												+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(0)), Color.red);
-		}
+//		}
 
 		if(isEndBone) // *** OPTIHACK6 don't use .parent and .parent.parent
 			return transformToUpdate.parent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) 
@@ -1468,19 +1467,21 @@ public class RUISSkeletonController : MonoBehaviour
 						* newRotation, transformToUpdate.parent.parent.localScale), transformToUpdate.parent.localScale);
 		else
 			return transformToUpdate.parent.rotation 
-						* GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, transformToUpdate.parent.localScale);
+					* GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, transformToUpdate.parent.localScale);
 	}
 
 	private Quaternion GetScaleCorrectedRotation(Quaternion rotation, Vector3 parentScale)
 	{
-		Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, rotation, Vector3.one);
-		tempVector = parentScale;
-		rotationMatrix.SetRow(0, new Vector4(rotationMatrix.m00 * tempVector.x, rotationMatrix.m01 * tempVector.x, rotationMatrix.m02 * tempVector.x, 0));
-		rotationMatrix.SetRow(1, new Vector4(rotationMatrix.m10 * tempVector.y, rotationMatrix.m11 * tempVector.y, rotationMatrix.m12 * tempVector.y, 0));
-		rotationMatrix.SetRow(2, new Vector4(rotationMatrix.m20 * tempVector.z, rotationMatrix.m21 * tempVector.z, rotationMatrix.m22 * tempVector.z, 0)); 
-		rotationMatrix.SetRow(3, Vector4.zero);
+		// Stopped using Matrix4x4.TRS(), it gives errors: "Quaternion To Matrix conversion failed because input Quaternion is invalid"
+//		Matrix4x4 rotationMatrix = Matrix4x4.TRS(Vector3.zero, rotation, Vector3.one);
+//		tempVector = parentScale;
+//		rotationMatrix.SetRow(0, new Vector4(rotationMatrix.m00 * tempVector.x, rotationMatrix.m01 * tempVector.x, rotationMatrix.m02 * tempVector.x, 0));
+//		rotationMatrix.SetRow(1, new Vector4(rotationMatrix.m10 * tempVector.y, rotationMatrix.m11 * tempVector.y, rotationMatrix.m12 * tempVector.y, 0));
+//		rotationMatrix.SetRow(2, new Vector4(rotationMatrix.m20 * tempVector.z, rotationMatrix.m21 * tempVector.z, rotationMatrix.m22 * tempVector.z, 0)); 
+//		rotationMatrix.SetRow(3, Vector4.zero);
+//		return Quaternion.LookRotation(rotationMatrix.GetColumn(2), rotationMatrix.GetColumn(1));
 
-		return Quaternion.LookRotation(rotationMatrix.GetColumn(2), rotationMatrix.GetColumn(1));
+		return Quaternion.LookRotation(Vector3.Scale(rotation * Vector3.forward, parentScale), Vector3.Scale(rotation * Vector3.up, parentScale));
 	}
 
 	// Here tracked device can mean PS Move or Oculus Rift DK2+

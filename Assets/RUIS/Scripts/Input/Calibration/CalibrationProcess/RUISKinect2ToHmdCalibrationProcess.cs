@@ -21,7 +21,6 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 	// Abstract class variables
 	private RUISDevice inputDevice1, inputDevice2;
 	public string guiTextUpperLocal, guiTextLowerLocal;
-	public bool useScreen1, useScreen2;
 
 	public RUISDevice hmdDevice = RUISDevice.OpenVR;
 	
@@ -34,7 +33,7 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 	private float timeSinceLastSample, timeBetweenSamples, timeSinceScriptStart = 0;
 	public RUISCoordinateSystem coordinateSystem;
 	public RUISInputManager inputManager;
-	private bool oculusChecked = false, kinect2Checked = false, calibrationFinnished = false;
+	private bool oculusChecked = false, calibrationFinnished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, oculusDK2CameraObject, 
 	kinect2ModelObject, floorPlane, calibrationSphere, calibrationCube, depthView,
@@ -173,17 +172,20 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 		
 		timeSinceScriptStart += deltaTime;
 		
-		if(timeSinceScriptStart < 3) {
+		if(timeSinceScriptStart < 3) 
+		{
 			this.guiTextLowerLocal = "Calibration of Kinect 2 and " + hmdDevice + ".\n\n Starting up...";
 			return RUISCalibrationPhase.Initial;
 		}
 		
-		if(timeSinceScriptStart < 4) {
+		if(timeSinceScriptStart < 4) 
+		{
 			this.guiTextLowerLocal = "Connecting to " + hmdDevice + ".\n\n Please wait...";
 			return RUISCalibrationPhase.Initial;
 		}
 		
-		if(!oculusChecked && timeSinceScriptStart > 4) {
+		if(!oculusChecked && timeSinceScriptStart > 4) 
+		{
 			oculusChecked = true;
 			
 //			if ((RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.HmdConnected) == 0)  //06to08
@@ -194,35 +196,34 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 			}
 		}	
 		
-		if(timeSinceScriptStart < 5) {
+		if(timeSinceScriptStart < 5) 
+		{
 			this.guiTextLowerLocal = "Connecting to Kinect 2. \n\n Please wait...";
 			return RUISCalibrationPhase.Initial;
 		}
-		
-		if(!kinect2Checked && timeSinceScriptStart > 5) {
-			kinect2Checked = true;	
-			if (!kinect2SourceManager.GetSensor().IsOpen || !kinect2SourceManager.GetSensor().IsAvailable) {
-				this.guiTextLowerLocal = "Connecting to Kinect 2. \n\n Error: Could not connect to Kinect 2.";
-				return RUISCalibrationPhase.Invalid;
-			}
-			else {
-				return RUISCalibrationPhase.Preparation;
-			}
 			
-		}	
-		
-		return RUISCalibrationPhase.Invalid; // Loop should not get this far
+		if(!kinect2SourceManager.GetSensor().IsOpen || !kinect2SourceManager.GetSensor().IsAvailable)
+		{
+			this.guiTextLowerLocal = "Connecting to Kinect 2. \n\n Error: Could not connect to Kinect 2.";
+			return RUISCalibrationPhase.Invalid;
+		}
+		else 
+		{
+			return RUISCalibrationPhase.Preparation;
+		}
 	}
 	
 	
 	public override RUISCalibrationPhase PreparationPhase(float deltaTime) 
 	{
 		this.guiTextLowerLocal = "Step in front of the Kinect. \nHold the head-mounted display in your right hand.";
-		updateBodyData();
+		UpdateBodyData();
 		kinectTrackingID = 0;
 		
-		for(int a = 0; a < trackingIDs.Length; a++) {
-			if(trackingIDs[a].isTracking) {
+		for(int a = 0; a < trackingIDs.Length; a++) 
+		{
+			if(trackingIDs[a].isTracking) 
+			{
 				kinectTrackingID = trackingIDs[a].trackingId;
 //				kinectTrackingIndex = trackingIDs[a].index;
 			}
@@ -230,10 +231,8 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 		
 		if(kinectTrackingID != 0) return RUISCalibrationPhase.ReadyToCalibrate;
 		else return RUISCalibrationPhase.Preparation;
-		
 	}
-	
-	
+
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) 
 	{
 		return RUISCalibrationPhase.Calibration;
@@ -338,8 +337,8 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 		timeSinceLastSample = 0;
 		
 		
-		Vector3 oculusDK2_sample = getSample (this.inputDevice1);
-		Vector3 kinect2_sample = getSample (this.inputDevice2);
+		Vector3 oculusDK2_sample = GetSample (this.inputDevice1);
+		Vector3 kinect2_sample = GetSample (this.inputDevice2);
 		
 		if (kinect2_sample == Vector3.zero || oculusDK2_sample == Vector3.zero) //Data not valid
 		{
@@ -353,11 +352,11 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 	}
 	
 	
-	private Vector3 getSample(RUISDevice device) 
+	private Vector3 GetSample(RUISDevice device) 
 	{
 		Vector3 sample = new Vector3(0,0,0);
 		Vector3 tempSample;
-		updateBodyData();
+		UpdateBodyData();
 		if(device == RUISDevice.Kinect_2) 
 		{
 			Kinect.Body[] data = kinect2SourceManager.GetBodyData();
@@ -382,7 +381,7 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 								sample = tempSample;
 								lastKinect2Sample = sample;
 								device1Error = false;
-								if(!device2Error) this.guiTextUpperLocal = "";
+								this.guiTextUpperLocal = "";
 							}
 							else 
 							{
@@ -392,7 +391,6 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 						}
 					}
 				}
-				
 			}
 			if(!trackedBodyFound && foundBodies > 1) 
 			{
@@ -419,20 +417,17 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 				sample = tempSample;
 				lastOculusDK2Sample = sample;
 				device2Error = false;
-				if(!device1Error) this.guiTextUpperLocal = "";
-				
+				if(!device1Error) 
+					this.guiTextUpperLocal = "";	
 			}
 			else 
 			{
 				device2Error = true;
 //				this.guiTextUpperLocal = "Not enough hand movement.";
 			}
-
 		}
 		
 		return sample;
-		
-		
 	}
 	
 	private void CalculateTransformation()
@@ -448,13 +443,15 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 		oculusDK2Matrix = Matrix.Zeros (samples_OculusDK2.Count, 4);
 		kinect2Matrix = Matrix.Zeros (samples_Kinect2.Count, 3);
 		
-		for (int i = 1; i <= samples_OculusDK2.Count; i++) {
+		for (int i = 1; i <= samples_OculusDK2.Count; i++) 
+		{
 			oculusDK2Matrix [i, 1] = new Complex (samples_OculusDK2 [i - 1].x);
 			oculusDK2Matrix [i, 2] = new Complex (samples_OculusDK2 [i - 1].y);
 			oculusDK2Matrix [i, 3] = new Complex (samples_OculusDK2 [i - 1].z);
 			oculusDK2Matrix [i, 4] = new Complex (1.0f);
 		}
-		for (int i = 1; i <= samples_Kinect2.Count; i++) {
+		for (int i = 1; i <= samples_Kinect2.Count; i++) 
+		{
 			kinect2Matrix [i, 1] = new Complex (samples_Kinect2 [i - 1].x);
 			kinect2Matrix [i, 2] = new Complex (samples_Kinect2 [i - 1].y);
 			kinect2Matrix [i, 3] = new Complex (samples_Kinect2 [i - 1].z);
@@ -555,7 +552,7 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 		coordinateSystem.SetFloorNormal(kinect2FloorNormal, RUISDevice.Kinect_2);
 	}
 	
-	private void updateBodyData() 
+	private void UpdateBodyData() 
 	{
 		
 		bodyData = kinect2SourceManager.GetBodyData();

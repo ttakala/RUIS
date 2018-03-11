@@ -4,20 +4,22 @@ using System.Collections.Generic;
 using CSML;
 using Kinect = Windows.Kinect;
 
-public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
+public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess 
+{
 	
-	public string getUpperText() {
+	public string getUpperText() 
+	{
 		return this.guiTextUpperLocal;
 	}
 	
-	public string getLowerText() {
+	public string getLowerText() 
+	{
 		return this.guiTextLowerLocal;
 	}
 	
 	// Abstract class variables
 	private RUISDevice inputDevice1, inputDevice2;
 	public string guiTextUpperLocal, guiTextLowerLocal;
-	public bool useScreen1, useScreen2;
 	
 	public override string guiTextUpper { get{return getUpperText();} }
 	public override string guiTextLower { get{return getLowerText();} }
@@ -59,7 +61,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	
 	bool device1Error, device2Error;
 	
-	public RUISKinect2ToKinectCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) {
+	public RUISKinect2ToKinectCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) 
+	{
 		
 		this.inputDevice1 = RUISDevice.Kinect_2;
 		this.inputDevice2 = RUISDevice.Kinect_1;
@@ -162,7 +165,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	}
 	
 	
-	public override RUISCalibrationPhase InitialPhase(float deltaTime) {
+	public override RUISCalibrationPhase InitialPhase(float deltaTime) 
+	{
 		
 		timeSinceScriptStart += deltaTime;
 		
@@ -217,7 +221,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	}
 	
 	
-	public override RUISCalibrationPhase PreparationPhase(float deltaTime) {
+	public override RUISCalibrationPhase PreparationPhase(float deltaTime) 
+	{
 		this.guiTextLowerLocal = "Step in front of the camera.";
 		updateBodyData();
 		kinectTrackingID = 0;
@@ -234,12 +239,14 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	}
 	
 	
-	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) {
+	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) 
+	{
 			return RUISCalibrationPhase.Calibration;
 	}
 	
 	
-	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) {
+	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) 
+	{
 		
 		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken. \n\nMake wide, calm motions with your\n"
 		                                       + "right hand. Have both Kinects see it.", 
@@ -316,7 +323,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 			this.floorPlane.transform.position = new Vector3(0, 0, 0);
 	}
 
-	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) {
+	public static Quaternion QuaternionFromMatrix(Matrix4x4 m) 
+	{
 		// Source: http://answers.unity3d.com/questions/11363/converting-matrix4x4-to-quaternion-vector3.html
 		// Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 		Quaternion q = new Quaternion();
@@ -354,7 +362,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 	} 
 	
 	
-	private Vector3 getSample(RUISDevice device) {
+	private Vector3 getSample(RUISDevice device) 
+	{
 		Vector3 sample = new Vector3(0,0,0);
 		Vector3 tempSample;
 		updateBodyData();
@@ -427,8 +436,6 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 			}
 		}
 		return sample;
-		
-		
 	}
 	
 	private void CalculateTransformation()
@@ -595,7 +602,8 @@ public class RUISKinect2ToKinectCalibrationProcess : RUISCalibrationProcess {
 		return closestDistanceFromFloor;
 	}
 	
-	private void updateBodyData() {
+	private void updateBodyData() 
+	{
 		
 		bodyData = kinect2SourceManager.GetBodyData();
 		
