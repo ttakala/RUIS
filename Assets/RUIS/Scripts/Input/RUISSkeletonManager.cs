@@ -370,14 +370,20 @@ public class RUISSkeletonManager : MonoBehaviour
 				SaveLastMajorJointPoses(skeletons[kinect1SensorID, i]); // These will be used in HasNewMocapData()
 
 				UpdateKinectRootData(i);
-				UpdateKinectJointData(OpenNI.SkeletonJoint.Head, i, ref skeletons[kinect1SensorID, i].head);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.Torso, i, ref skeletons[kinect1SensorID, i].torso);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.Waist, i, ref skeletons[kinect1SensorID, i].chest); // *** OPTIHACK7
+				UpdateKinectJointData(OpenNI.SkeletonJoint.Neck, i, ref skeletons[kinect1SensorID, i].neck); // *** OPTIHACK7
+				UpdateKinectJointData(OpenNI.SkeletonJoint.Head, i, ref skeletons[kinect1SensorID, i].head);
+				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftCollar, i, ref skeletons[kinect1SensorID, i].leftClavicle); // *** OPTIHACK7
 				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons[kinect1SensorID, i].leftShoulder);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftElbow, i, ref skeletons[kinect1SensorID, i].leftElbow);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftHand, i, ref skeletons[kinect1SensorID, i].leftHand);
+//				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftWrist, i, ref skeletons[kinect1SensorID, i].leftHand); // *** OPTIHACK7
+				UpdateKinectJointData(OpenNI.SkeletonJoint.RightCollar, i, ref skeletons[kinect1SensorID, i].rightClavicle); // *** OPTIHACK7
 				UpdateKinectJointData(OpenNI.SkeletonJoint.RightShoulder, i, ref skeletons[kinect1SensorID, i].rightShoulder);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.RightElbow, i, ref skeletons[kinect1SensorID, i].rightElbow);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.RightHand, i, ref skeletons[kinect1SensorID, i].rightHand);
+//				UpdateKinectJointData(OpenNI.SkeletonJoint.RightWrist, i, ref skeletons[kinect1SensorID, i].rightHand); // *** OPTIHACK7
 				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftHip, i, ref skeletons[kinect1SensorID, i].leftHip);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftKnee, i, ref skeletons[kinect1SensorID, i].leftKnee);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftFoot, i, ref skeletons[kinect1SensorID, i].leftFoot);

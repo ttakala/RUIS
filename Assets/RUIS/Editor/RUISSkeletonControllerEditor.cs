@@ -61,6 +61,12 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty limbsAreScaled;
 	public SerializedProperty independentTorsoSegmentsScaling;
 	public SerializedProperty heightAffectsOffsets;
+
+	public SerializedProperty forceChestPosition;
+	public SerializedProperty forceNeckPosition;
+	public SerializedProperty forceHeadPosition;
+	public SerializedProperty forceClaviclePosition;
+
 	public SerializedProperty torsoThickness;
 	public SerializedProperty rightArmThickness;
 	public SerializedProperty leftArmThickness;
@@ -277,6 +283,12 @@ public class RUISSkeletonControllerEditor : Editor
 		limbsAreScaled = serializedObject.FindProperty("limbsAreScaled");
 		independentTorsoSegmentsScaling = serializedObject.FindProperty("independentTorsoSegmentsScaling");
 		heightAffectsOffsets = serializedObject.FindProperty("heightAffectsOffsets");
+
+		forceChestPosition = serializedObject.FindProperty("forceChestPosition");
+		forceNeckPosition  = serializedObject.FindProperty("forceNeckPosition");
+		forceHeadPosition  = serializedObject.FindProperty("forceHeadPosition");
+		forceClaviclePosition = serializedObject.FindProperty("forceClaviclePosition");
+
 		torsoThickness = serializedObject.FindProperty("torsoThickness");
 		rightArmThickness 	= serializedObject.FindProperty("rightArmThickness");
 		leftArmThickness 	= serializedObject.FindProperty("leftArmThickness");
@@ -578,6 +590,53 @@ public class RUISSkeletonControllerEditor : Editor
 																			+ "from the combination of tracked rotations and bone lengths."));
 		
 		EditorGUI.indentLevel++;
+
+
+		EditorGUIUtility.labelWidth = ((float) Screen.width) / 2.8f;
+		EditorGUILayout.BeginHorizontal();
+		EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
+
+		EditorGUILayout.PropertyField(forceChestPosition, new GUIContent( "Chest Mocap", "Chest position will be obtained from the \"Body "
+																		+ "Tracking Device\" when this option is enabled (adjusting \"Chest "
+																		+ "Offset\" might be required). If this option is disabled, then the "
+																		+ "Chest position will be determined by the pose and scale of Pelvis. "
+																		+ "Enable this option if \"Torso Thickness\" or \"Pelvis Scale Adjust\" "
+																		+ "is not set to 1.\nNOTE: Chest rotation is applied regardless whether "
+																		+ "this option is enabled or not."));
+		EditorGUILayout.PropertyField(forceClaviclePosition, new GUIContent("Clavicle Mocap", "Clavicle positions will be obtained from the "
+																		+ "\"Body Tracking Device\" when this option is enabled (adjusting "
+																		+ "\"Clavicle Offset\" might be required). If this option is disabled, "
+																		+ "then the Clavicle positions will be determined by the pose and scale "
+																		+ "of <parent> (Chest or Neck). Enable this option if \"Torso "
+																		+ "Thickness\" or \"<parent> Scale Adjust\" is not set to 1.\nNOTE: "
+																		+ "Clavicle rotations are applied regardless whether this option is "
+																		+ "enabled or not."));
+
+		EditorGUILayout.EndVertical();
+
+		EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
+
+		EditorGUILayout.PropertyField(forceNeckPosition, new GUIContent(  "Neck Mocap", "Neck position will be obtained from the \"Body "
+																		+ "Tracking Device\" when this option is enabled (adjusting \"Neck "
+																		+ "Offset\" might be required). If this option is disabled, then the "
+																		+ "Neck position will be determined by the pose and scale of Chest. "
+																		+ "Enable this option if \"Torso Thickness\" or \"Chest Scale Adjust\" "
+																		+ "is not set to 1.\nNOTE: If left disabled, this option can be "
+																		+ "overriden by \"Neck Pose Interpolation\". Neck rotation is applied "
+																		+ "regardless whether this option is enabled or not."));
+		EditorGUILayout.PropertyField(forceHeadPosition, new GUIContent(  "Head Mocap", "Head position will be obtained from the \"Body "
+																		+ "Tracking Device\" when this option is enabled (adjusting \"Head "
+																		+ "Offset\" might be required). If this option is disabled, then the "
+																		+ "Head position will be determined by the pose and scale of Neck. "
+																		+ "Enable this option if \"Torso Thickness\" or \"Neck Scale Adjust\" is "
+																		+ "not set to 1.\nNOTE: If left disabled, this option can be overriden "
+																		+ "by \"HMD Moves Head\". Head rotation is applied regardless whether "
+																		+ "this option is enabled or not."));
+
+		EditorGUILayout.EndVertical();
+		EditorGUILayout.EndHorizontal();
+		EditorGUIUtility.labelWidth = 0;
+
 		EditorGUILayout.PropertyField(filterPosition, new GUIContent(  "Filter Positions",   "Smoothen the root, shoulder, and hip positions with "
 															+ "a basic Kalman filter. Enabling this option is especially important when using "
 															+ "Kinect. Disable this option when using more accurate and responsive mocap systems."));
@@ -637,8 +696,8 @@ public class RUISSkeletonControllerEditor : Editor
 
 			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
 			{
-				EditorGUILayout.PropertyField(customMocapFrameRate, new GUIContent("Updates Per Second", "How many times per second is the Body Tracking "
-																+ "Device providing updates (on average)? This determines the Kalman filter update interval."));
+				EditorGUILayout.PropertyField(customMocapFrameRate, new GUIContent("Updates Per Second", "How many times per second is the \"Body Tracking "
+																+ "\"Device providing updates (on average)? This determines the Kalman filter update interval."));
 				customMocapFrameRate.intValue = Mathf.Clamp(customMocapFrameRate.intValue, 1, int.MaxValue);
 				skeletonController.customMocapUpdateInterval = 1.0f / ((float) customMocapFrameRate.intValue);
 			}
@@ -680,8 +739,8 @@ public class RUISSkeletonControllerEditor : Editor
 																	+ "wearing a position tracked head-mounted display and their body is tracked with an IMU "
 																	+ "suit (e.g. Perception Neuron, Xsens). Such suits measure relative joint rotations, and "
 																	+ "can only roughly estimate joint positions.\nThis option can also be enabled if the "
-																	+ "coordinate alignment (calibration) between the HMD and the body tracking device (e.g. "
-																	+ "Kinect) is noticeably off, or if the body tracking device has considerably more latency "
+																	+ "coordinate alignment (calibration) between the HMD and the \"Body Tracking Device\" (e.g. "
+																	+ "Kinect) is noticeably off, or if the \"Body Tracking Device\" has considerably more latency "
 																	+ "when compared to the HMD tracking. In the latter case the avatar's feet can temporarily "
 																	+ "disappear under the virtual floor when crouching quickly, and the avatar will also "
 																	+ "'glide' unnaturally when the user sways their head quickly.\nYou can use \"HMD Local "
@@ -720,7 +779,7 @@ public class RUISSkeletonControllerEditor : Editor
 																	+ "or otherwise aligned with the \"HMD Coordinate Frame\"!" 
 																	+ ((bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)? 
 																	  (" Alternatively the above \"IMU Yaw Correct\" option must be enabled if you are using "
-																	+ "an IMU suit (e.g. Perception Neuron, Xsens) as the body tracking device."):"")));
+																	+ "an IMU suit (e.g. Perception Neuron, Xsens) as the \"Body Tracking Device\"."):"")));
 
 		EditorGUILayout.PropertyField(hmdMovesHead, new GUIContent("HMD Moves Head", "Make avatar head follow the position tracking of the connected " 
 																+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice + " coordinate "
@@ -733,9 +792,9 @@ public class RUISSkeletonControllerEditor : Editor
 
 		EditorGUILayout.PropertyField(neckInterpolate, new GUIContent("Neck Pose Interpolation", "Avatar's neck position will be interpolated between chest "
 																	+ "and head position, while its rotation will point towards the head position. This means "
-																	+ "that any neck pose input from the body tracking device will be ignored completely.\n"
+																	+ "that any neck pose input from the \"Body Tracking Device\" will be ignored completely.\n"
 																	+ "Enabling this option is recommended when \"HMD Moves Head\" is enabled, especially if "
-																	+ "the body tracking device has noticeably more latency than the head-mounted display "
+																	+ "the \"Body Tracking Device\" has noticeably more latency than the head-mounted display "
 																	+ "position tracking, or if the coordinate system alignment (calibration) between the two "
 																	+ "two tracking systems is inaccurate. NOTE: The interpolated pose is affected by the "
 																	+ "below \"Neck Offset\" value. Moreover, the interpolated neck position affects chest "
@@ -782,7 +841,7 @@ public class RUISSkeletonControllerEditor : Editor
 		GUI.enabled = useHierarchicalModel.boolValue && scaleHierarchicalModelBones.boolValue;
 		EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent( "Max Scale Rate", "The maximum rate of change for the local scale of each "
 																	+ "bone (body segment). This value limits the body proportions' rate of change when the " 
-																	+ "limb and body parth lengths from the body tracking device are not constant. When using "
+																	+ "limb and body parth lengths from the \"Body Tracking Device\" are not constant. When using "
 																	+ "Kinect 0.5 is a good value. You can also make a script that sets this value to 0 when "
 																	+ "the body proportions have \"settled\" according to some criteria. The unit is "
 																	+ "[unitless] per second."));
