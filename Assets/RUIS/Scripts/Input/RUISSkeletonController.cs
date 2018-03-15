@@ -566,7 +566,7 @@ public class RUISSkeletonController : MonoBehaviour
 		// Following substitution ensures that customConversionType, customSourceDevice, and deviceConversion variables will be set in bodyTrackingDeviceID setter
 		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)  // *** OPTIHACK4 moved this here from Awake(), check that everything still works
 		{
-			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID; // This setter sets bunch of values!
+			BodyTrackingDeviceID = RUISSkeletonManager.customSensorID; // This setter sets bunch of values, including skeleton.isTracking
 		}
 		else
 			skeleton.isTracking = false;
@@ -799,8 +799,8 @@ public class RUISSkeletonController : MonoBehaviour
 		if(inputManager)
 		{
 			// *** OPTIHACK4 added this, check that it works: Below if-clause means that if Kinect1/2 was enabled and detected, offsets and scaling works only when the skeleton is tracked
-			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && (inputManager.enableKinect || inputManager.enableKinect2))
-				hasBeenTracked = true;
+//			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && (inputManager.enableKinect || inputManager.enableKinect2))
+//				hasBeenTracked = true;
 
 			if(gameObject.transform.parent != null)
 			{
@@ -909,33 +909,6 @@ public class RUISSkeletonController : MonoBehaviour
 				SetCustomJointData(customRightKnee, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightKnee, 	 1, 1);
 				SetCustomJointData(customRightFoot, 	ref skeletonManager.skeletons[BodyTrackingDeviceID, playerId].rightFoot, 	 1, 1);
 
-				if(RUISDisplayManager.IsHmdPresent())
-				{
-					if(hmdMovesHead)
-						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.positionConfidence = 1;
-					if(hmdRotatesHead)
-						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotationConfidence = 1;
-				}
-				
-				if(neckInterpolate)
-				{
-					// Neck pose interpolation depends on a bunch of poses
-					if(		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.positionConfidence  >= minimumConfidenceToUpdate
-						&&	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest.positionConfidence >= minimumConfidenceToUpdate)
-					{
-						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.positionConfidence = 1;
-						if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest.rotationConfidence >= minimumConfidenceToUpdate)
-							skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.rotationConfidence = 1;
-						else
-							skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.rotationConfidence = 0;
-					}
-					else
-					{
-						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.positionConfidence = 0;
-						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.rotationConfidence = 0;
-					}
-				}
-
 				// Rotations get filtered on every frame if there is fresh data according to HasNewMocapData(), regardless of customMocapUpdateInterval
 				if(	   skeletonManager.skeletons[BodyTrackingDeviceID, playerId].filterRotations 
 					&& skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking
@@ -948,7 +921,45 @@ public class RUISSkeletonController : MonoBehaviour
 			else // Kinect is used; copy the .isTracking value that has been set by it
 				skeleton.isTracking = skeletonManager.skeletons[BodyTrackingDeviceID, playerId].isTracking;
 
-			CopySkeletonJointData(skeletonManager.skeletons[BodyTrackingDeviceID, playerId], skeleton);
+			// If HMD is used as a source for head pose, set head position and rotation confidence accordingly
+			if(RUISDisplayManager.IsHmdPresent())
+			{
+				if(hmdMovesHead)
+					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.positionConfidence = 1;
+				if(hmdRotatesHead)
+					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotationConfidence = 1;
+			}
+			else
+			{
+				if(hmdMovesHead)
+					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.positionConfidence = 0;
+				if(hmdRotatesHead)
+					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotationConfidence = 0;
+			}
+
+			// If interpolation is used as a source for neck pose, set neck position and rotation confidence accordingly 
+			if(neckInterpolate)
+			{
+				// Neck pose interpolation depends on a bunch of poses
+				if(		skeleton.isTracking 
+				   && 	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest.positionConfidence >= minimumConfidenceToUpdate
+				   &&	skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.positionConfidence  >= minimumConfidenceToUpdate)
+				{
+					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.positionConfidence = 1;
+					if(skeletonManager.skeletons[BodyTrackingDeviceID, playerId].chest.rotationConfidence >= minimumConfidenceToUpdate)
+						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.rotationConfidence = 1;
+					else
+						skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.rotationConfidence = 0;
+				}
+				else
+				{
+					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.positionConfidence = 0;
+					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].neck.rotationConfidence = 0;
+				}
+			}
+
+			if(skeleton.isTracking || !hasBeenTracked)
+				CopySkeletonJointData(skeletonManager.skeletons[BodyTrackingDeviceID, playerId], skeleton);
 
 			if(!hasBeenTracked && skeleton.isTracking)
 				hasBeenTracked = true;
@@ -962,6 +973,7 @@ public class RUISSkeletonController : MonoBehaviour
 //			else 
 			maxAngularChange = deltaTime * maxAngularVelocity;
 
+			// Get head position from HMD if that option is enabled
 			if(hmdMovesHead && !headsetDragsBody && RUISDisplayManager.IsHmdPresent())
 			{
 				// *** OPTIHACK5 TODO Added ConvertLocation() because it was missing. Any side-effects?? RUISDevice.OpenVR
@@ -969,8 +981,9 @@ public class RUISSkeletonController : MonoBehaviour
 								coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
 				// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
 			}
-			if(neckInterpolate  &&  skeleton.head.positionConfidence >= minimumConfidenceToUpdate
-								&& skeleton.chest.positionConfidence >= minimumConfidenceToUpdate)
+
+			// Interpolate neck pose if that option is enabled
+			if(neckInterpolate && skeleton.neck.positionConfidence >= minimumConfidenceToUpdate) // skeleton.neck.positionConfidence was calculated above
 			{
 				skeleton.neck.position = Vector3.Lerp(skeleton.chest.position, skeleton.head.position, neckInterpolateBlend);
 				if(skeleton.chest.rotationConfidence >= minimumConfidenceToUpdate)
@@ -980,7 +993,8 @@ public class RUISSkeletonController : MonoBehaviour
 
 			ApplyInertialSuitCorrections(); // Updates all skeleton.<joint> rotations and positions if yawCorrectIMU (or headsetDragsBody) is enabled
 
-			UpdateSkeletonPosition(); // Updates skeletonPosition variable
+			if(skeleton.isTracking || !hasBeenTracked || headsetDragsBody)
+				UpdateSkeletonPosition(); // Updates skeletonPosition variable
 
 			// *** OPTIHACK6 check that this new location for this code still works
 			if(hmdRotatesHead && RUISDisplayManager.IsHmdPresent())
@@ -989,8 +1003,7 @@ public class RUISSkeletonController : MonoBehaviour
 				skeleton.head.rotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
 																														headsetCoordinates);
 			}
-
-			// Obtained new body tracking data. TODO test that Kinect 1 still works
+				
 			if(skeleton.isTracking || !hasBeenTracked  /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
 			{
 				ApplyTranslationOffsets(); // *** OPTIHACK5 TODO skeleton.torso.position and rotation values are not used if skeleton.isTracking is false!!!!
@@ -1000,28 +1013,12 @@ public class RUISSkeletonController : MonoBehaviour
 				UpdateTransform(ref neck,  skeleton.neck,  maxAngularChange, neckRotationOffset);
 				UpdateTransform(ref head,  skeleton.head,  maxAngularChange, headRotationOffset);
 
-				// *** OPTIHACK
-				UpdateTransform(ref leftClavicle,  skeleton.leftClavicle,  maxAngularChange, clavicleRotationOffset); 
-				UpdateTransform(ref rightClavicle, skeleton.rightClavicle, maxAngularChange, clavicleRotationOffset);
-			}
+				if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker)
+				{
+					UpdateTransform(ref leftClavicle, skeleton.leftClavicle, maxAngularChange, clavicleRotationOffset); 
+					UpdateTransform(ref rightClavicle, skeleton.rightClavicle, maxAngularChange, clavicleRotationOffset);
+				}
 
-			// *** OPTIHACK4 these are unnecessary for hierarchicalModels because of the later calls to ForceUpdatePosition( chest/neck/... ) ?
-			if(chest)
-				chest.localPosition = chestOffset + jointInitialLocalPositions[chest];
-			if(neck)
-				neck.localPosition  = neckOffset  + jointInitialLocalPositions[neck];
-			if(head)
-				head.localPosition  = headOffset  + jointInitialLocalPositions[head];
-			if(leftClavicle)
-				leftClavicle.localPosition  = clavicleOffset + jointInitialLocalPositions[leftClavicle];
-			if(rightClavicle)
-				rightClavicle.localPosition = clavicleOffset + jointInitialLocalPositions[rightClavicle];
-
-			// *** OPTIHACK6 hmdRotatesHead was here
-			
-			// Obtained new body tracking data. TODO test that Kinect 1 still works
-			if(skeleton.isTracking || !hasBeenTracked /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
-			{
 				UpdateTransform(ref leftShoulder,	skeleton.leftShoulder, 	maxAngularChange, shoulderRotationOffset);
 				UpdateTransform(ref rightShoulder,	skeleton.rightShoulder, maxAngularChange, shoulderRotationOffset);
 				UpdateTransform(ref rightElbow, 	skeleton.rightElbow, 	maxAngularChange, elbowRotationOffset);
@@ -1050,9 +1047,9 @@ public class RUISSkeletonController : MonoBehaviour
 					if(!trackAnkle)
 					{
 						if(leftFoot && leftKnee) // *** OPTIHACK4 no axis minus in left feetRotationOffset, check that this works
-							leftFoot.localRotation  = leftKnee.localRotation  * Quaternion.Euler(feetRotationOffset);
+							leftFoot.localRotation  = Quaternion.Euler(feetRotationOffset) * leftKnee.localRotation;
 						if(rightFoot && rightKnee)
-							rightFoot.localRotation = rightKnee.localRotation * Quaternion.Euler(feetRotationOffset);
+							rightFoot.localRotation = Quaternion.Euler(feetRotationOffset) * rightKnee.localRotation;
 					}
 					// *** TODO bone scaling
 				}
@@ -1416,7 +1413,7 @@ public class RUISSkeletonController : MonoBehaviour
 		{
 			if(useHierarchicalModel)
 			{
-				if(useParentRotation && transformToUpdate.parent) // *** OPTIHACK4 check that disabling trackWrist & trackAnkle still works
+				if(useParentRotation && transformToUpdate.parent)
 					newRotation = transformToUpdate.parent.rotation * rotationOffset;
 				else
 					newRotation = transform.rotation * jointToGet.rotation * rotationOffset *
@@ -1435,7 +1432,10 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 			else
 			{	// *** OPTIHACK4  check that this works and rotationOffset multiplication belongs to right side
-				transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation, jointToGet.rotation * rotationOffset, maxAngularChange);
+				if(useParentRotation && transformToUpdate.parent)
+					transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation, transformToUpdate.parent.rotation * rotationOffset, maxAngularChange);
+				else
+					transformToUpdate.localRotation = Quaternion.RotateTowards(transformToUpdate.localRotation, jointToGet.rotation * rotationOffset, maxAngularChange);
 			}
 		}
 	}
