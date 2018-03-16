@@ -198,14 +198,8 @@ public class RUISSkeletonManager : MonoBehaviour
 	private Quaternion lastRightHipRotation 		= Quaternion.identity;
 	private Quaternion lastLeftHipRotation 			= Quaternion.identity;
 
-	[Tooltip(  "Since Kinect 1 (the OpenNI version that RUIS uses) does not output chest pose, its position will be interpolated between "
-	         + "pelvis (0) and  neck (1). Default is 0.4.")]
-	[Range(0.05f, 0.95f)]
-	public float chestInterpolateKinect1 = 0.4f;
-
-
-	[Tooltip(  "How much is Kinect 2 skeletons' head position interpolated the neck, in order to make the head "
-	         + "position better correspond that of Kinect 1 (so that both Kinects can be used to animate the same skeletons). Default is 0.5.")]
+	[Tooltip(  "Interpolate Kinect 2 skeletons' head position from the measured head position (0) to the measured neck position (1). This setting can be "
+	         + "used to give better correspondence with Kinect 1 (so that both Kinects can be used to animate the same skeletons). Default value is 0.5.")]
 	[Range(0f, 0.95f)]
 	public float headOffsetKinect2 = 0.7f;
 	private Vector3 tempVector = Vector3.zero;
@@ -369,10 +363,11 @@ public class RUISSkeletonManager : MonoBehaviour
 
 				SaveLastMajorJointPoses(skeletons[kinect1SensorID, i]); // These will be used in HasNewMocapData()
 
-				UpdateKinectRootData(i);
-				UpdateKinectJointData(OpenNI.SkeletonJoint.Torso, i, ref skeletons[kinect1SensorID, i].torso);
+				UpdateKinectRootAndPelvisData(i);
+
+				UpdateKinectJointData(OpenNI.SkeletonJoint.Torso, i, ref skeletons[kinect1SensorID, i].chest); // Kinect 1 "Torso" is at chest level
 //				UpdateKinectJointData(OpenNI.SkeletonJoint.Waist, i, ref skeletons[kinect1SensorID, i].chest); // Waist gives out 0
-				UpdateKinectJointData(OpenNI.SkeletonJoint.Neck, i, ref skeletons[kinect1SensorID, i].neck); // *** OPTIHACK7
+				UpdateKinectJointData(OpenNI.SkeletonJoint.Neck, i, ref skeletons[kinect1SensorID, i].neck);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.Head, i, ref skeletons[kinect1SensorID, i].head);
 //				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftCollar, i, ref skeletons[kinect1SensorID, i].leftClavicle); // LeftCollar gives out 0
 				UpdateKinectJointData(OpenNI.SkeletonJoint.LeftShoulder, i, ref skeletons[kinect1SensorID, i].leftShoulder);
@@ -389,22 +384,20 @@ public class RUISSkeletonManager : MonoBehaviour
 				UpdateKinectJointData(OpenNI.SkeletonJoint.RightKnee, i, ref skeletons[kinect1SensorID, i].rightKnee);
 				UpdateKinectJointData(OpenNI.SkeletonJoint.RightFoot, i, ref skeletons[kinect1SensorID, i].rightFoot);
 
-				// Interpolate chest
-				if(skeletons[kinect1SensorID, i].torso.positionConfidence >= 0.5f && skeletons[kinect1SensorID, i].neck.positionConfidence >= 0.5f)
+				// Calculate the pose of pelvis (between hips)
+				if(skeletons[kinect1SensorID, i].rightHip.positionConfidence >= 0.5f && skeletons[kinect1SensorID, i].leftHip.positionConfidence >= 0.5f)
 				{
-					skeletons[kinect1SensorID, i].chest.position = Vector3.Lerp(skeletons[kinect1SensorID, i].torso.position, 
-					                                                            skeletons[kinect1SensorID, i].neck.position, chestInterpolateKinect1);
+					skeletons[kinect1SensorID, i].torso.position = 0.5f * (   skeletons[kinect1SensorID, i].rightHip.position
+																			+ skeletons[kinect1SensorID, i].leftHip.position );
+					skeletons[kinect1SensorID, i].torso.positionConfidence = Mathf.Min(skeletons[kinect1SensorID, i].rightHip.positionConfidence, 
+					                                                                   skeletons[kinect1SensorID, i].leftHip.positionConfidence);
 				}
-				skeletons[kinect1SensorID, i].chest.positionConfidence = Mathf.Min(skeletons[kinect1SensorID, i].torso.positionConfidence, 
-				                                                                   skeletons[kinect1SensorID, i].neck.positionConfidence  );
-				if(skeletons[kinect1SensorID, i].torso.rotationConfidence >= 0.5f)
-					skeletons[kinect1SensorID, i].chest.rotation = skeletons[kinect1SensorID, i].torso.rotation;
-				skeletons[kinect1SensorID, i].chest.rotationConfidence = skeletons[kinect1SensorID, i].torso.rotationConfidence;
-			
+				else
+					skeletons[kinect1SensorID, i].torso.positionConfidence = 0;
+				
+				skeletons[kinect1SensorID, i].torso.rotation 			= skeletons[kinect1SensorID, i].root.rotation;
+				skeletons[kinect1SensorID, i].torso.rotationConfidence 	= skeletons[kinect1SensorID, i].root.rotationConfidence;
 
-//				if(i == 0)
-//					print(	"neck " + skeletons[kinect1SensorID, i].neck.position + " " + skeletons[kinect1SensorID, i].neck.positionConfidence 
-//					      + " " + skeletons[kinect1SensorID, i].neck.rotation + " " + skeletons[kinect1SensorID, i].neck.rotationConfidence);
 
 				if(skeletons[kinect1SensorID, i].filterRotations && HasNewMocapData(skeletons[kinect1SensorID, i]))
 				{
@@ -677,7 +670,7 @@ public class RUISSkeletonManager : MonoBehaviour
 	/*
 	 * 	Kinect 1 functions
 	 */
-    private void UpdateKinectRootData(int player)
+    private void UpdateKinectRootAndPelvisData(int player)
     {
         OpenNI.SkeletonJointTransformation data;
 
@@ -692,9 +685,10 @@ public class RUISSkeletonManager : MonoBehaviour
 
 		skeletons[kinect1SensorID, player].root.position = newRootPosition;
 		skeletons[kinect1SensorID, player].root.positionConfidence = data.Position.Confidence;
-		skeletons[kinect1SensorID, player].root.rotation = coordinateSystem.ConvertRotation(coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);
 
+		skeletons[kinect1SensorID, player].root.rotation = coordinateSystem.ConvertRotation(coordinateSystem.ConvertRawKinectRotation(data.Orientation), RUISDevice.Kinect_1);
 		skeletons[kinect1SensorID, player].root.rotationConfidence = data.Orientation.Confidence;
+
     }
 
     private void UpdateKinectJointData(OpenNI.SkeletonJoint joint, int player, ref JointData jointData)

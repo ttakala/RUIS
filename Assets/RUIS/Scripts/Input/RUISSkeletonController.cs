@@ -660,10 +660,9 @@ public class RUISSkeletonController : MonoBehaviour
 		SaveInitialDistance(leftHip,   leftKnee);
 		SaveInitialDistance(leftKnee,  leftFoot);
 
-		SaveInitialDistance(rightShoulder, leftShoulder);
-		SaveInitialDistance(rightHip, leftHip);
-
-		// *** OPTIHACK6 commented those parts of code where neck-head bone contributed to spine length
+		// Below if-cluster calculates the model spine lenght as the combined bone lengths from pelvis to neck.
+		// NOTE: Since the exact location of pelvis and neck varies between models, this is not a good method (see below).
+		// Those parts of code where neck-head bone contributed to spine length have been commented
 		if(chest)
 		{
 			modelSpineLength += SaveInitialDistance(torso, chest); // *** OPTIHACK
@@ -692,10 +691,17 @@ public class RUISSkeletonController : MonoBehaviour
 			if(!chest && !neck)
 				/*modelSpineLength += */SaveInitialDistance(torso, head);
 		}
-		if(bodyTrackingDevice != BodyTrackingDeviceType.GenericMotionTracker || (!neck /*!head*/))
+
+		// NOTE: By having the below if-clause commented, the modelSpineLength that was calculated above is overridden: 
+		// Currently the model spine lenght is the distance between shoulder midpoint and hip midpoint
+//		if(bodyTrackingDevice != BodyTrackingDeviceType.GenericMotionTracker || (!neck /*!head*/))
 		{
-			modelSpineLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, 		leftHip)] +
-								jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2;
+
+			Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
+
+			// Calculate the distance between shoulder midpoint and hip midpoint 
+			modelSpineLength = Vector3.Scale(0.5f * (       rightHip.position +      leftHip.position 
+			                                         - rightShoulder.position - leftShoulder.position), scaler).magnitude;
 		}
 			
 		// *** TODO implementation that uses these
@@ -1101,7 +1107,7 @@ public class RUISSkeletonController : MonoBehaviour
 			if(!fistMaking) // Tracked fingers are reflected by the avatar only if fistMaking is set to false
 				UpdateFingerRotations();
 
-			if(useHierarchicalModel) // *** OPTIHACK7 consider adding: && (skeleton.isTracking || !hasBeenTracked))
+			if(useHierarchicalModel && (skeleton.isTracking || !hasBeenTracked))
 			{
 				if(scaleHierarchicalModelBones)
 				{
@@ -1207,7 +1213,7 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 			}
 
-			if(updateRootPosition) // *** OPTIHACK7 consider adding: && (skeleton.isTracking || !hasBeenTracked))
+			if(updateRootPosition && (skeleton.isTracking || !hasBeenTracked))
 			{
 //				Vector3 newRootPosition = skeleton.root.position;
 //				measuredPos [0] = newRootPosition.x;
@@ -2634,6 +2640,7 @@ public class RUISSkeletonController : MonoBehaviour
 		//average hip to shoulder length and compare it to the one found in the model - scale accordingly
 		//we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
 		float modelLength = modelSpineLength;
+		// This modelLength calculation was all wrong
 //		float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
 //				jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2; // *** OPTIHACK was this before
 		// This playerLength calculation was all wrong

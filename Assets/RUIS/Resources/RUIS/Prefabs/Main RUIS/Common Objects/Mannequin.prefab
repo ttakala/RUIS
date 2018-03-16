@@ -556,7 +556,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100010}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.53, z: 0}
+  m_LocalPosition: {x: 0, y: -0.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400038}
@@ -761,7 +761,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100038}
   m_LocalRotation: {x: -0.7071069, y: 0, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 0, y: 0.3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.00011, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400010}
@@ -1715,8 +1715,8 @@ MonoBehaviour:
   externalFistTrigger: 0
   fistMaking: 1
   kinect2Thumbs: 0
-  trackWrist: 1
-  trackAnkle: 1
+  trackWrist: 0
+  trackAnkle: 0
   rotateWristFromElbow: 1
   independentTorsoSegmentsScaling: 0
   heightAffectsOffsets: 0
@@ -1778,7 +1778,7 @@ MonoBehaviour:
   filterHeadPositionOnly: 0
   positionNoiseCovariance: 100
   fourJointsNoiseCovariance: 50
-  filterRotations: 0
+  filterRotations: 1
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
   customMocapFrameRate: 30

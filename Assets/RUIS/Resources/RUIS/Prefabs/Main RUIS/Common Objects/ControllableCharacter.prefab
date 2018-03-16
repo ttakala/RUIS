@@ -1994,18 +1994,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   root: {fileID: 455316}
-  torso: {fileID: 455316}
-  chest: {fileID: 0}
+  torso: {fileID: 455320}
+  chest: {fileID: 455328}
   neck: {fileID: 455350}
   head: {fileID: 455352}
-  rightClavicle: {fileID: 0}
+  rightClavicle: {fileID: 455336}
   rightShoulder: {fileID: 455338}
   rightElbow: {fileID: 455344}
   rightHand: {fileID: 455356}
   rightHip: {fileID: 455324}
   rightKnee: {fileID: 455340}
   rightFoot: {fileID: 455346}
-  leftClavicle: {fileID: 0}
+  leftClavicle: {fileID: 455332}
   leftShoulder: {fileID: 455334}
   leftElbow: {fileID: 455390}
   leftHand: {fileID: 455392}
@@ -2086,7 +2086,11 @@ MonoBehaviour:
   headScaleAdjust: 1
   clavicleScaleAdjust: 1
   handScaleAdjust: 1
+  leftHandScaleAdjust: 1
+  rightHandScaleAdjust: 1
   footScaleAdjust: 1
+  leftFootScaleAdjust: 1
+  rightFootScaleAdjust: 1
   externalFistTrigger: 0
   fistMaking: 1
   kinect2Thumbs: 0
@@ -2095,6 +2099,10 @@ MonoBehaviour:
   rotateWristFromElbow: 0
   independentTorsoSegmentsScaling: 0
   heightAffectsOffsets: 0
+  forceChestPosition: 1
+  forceNeckPosition: 0
+  forceHeadPosition: 1
+  forceClaviclePosition: 0
   neckParentsShoulders: 0
   leftHandStatus: 1
   rightHandStatus: 1
@@ -2110,7 +2118,7 @@ MonoBehaviour:
   updateRootPosition: 1
   rootSpeedScaling: {x: 1, y: 1, z: 1}
   rootOffset: {x: 0, y: 0, z: 0}
-  updateJointPositions: 0
+  updateJointPositions: 1
   updateJointRotations: 1
   useHierarchicalModel: 1
   scaleHierarchicalModelBones: 1
@@ -2120,9 +2128,17 @@ MonoBehaviour:
   limbsAreScaled: 1
   torsoThickness: 1
   rightArmThickness: 1
+  rightUpperArmThickness: 1
+  rightForearmThickness: 1
   leftArmThickness: 1
+  leftUpperArmThickness: 1
+  leftForearmThickness: 1
   rightLegThickness: 1
+  rightThighThickness: 1
+  rightShinThickness: 1
   leftLegThickness: 1
+  leftThighThickness: 1
+  leftShinThickness: 1
   minimumConfidenceToUpdate: 0.5
   maxAngularVelocity: 360
   maxFingerAngularVelocity: 720
@@ -2130,7 +2146,9 @@ MonoBehaviour:
   handRollAngleMaximum: 180
   hmdRotatesHead: 0
   hmdMovesHead: 0
+  neckInterpolate: 0
   hmdLocalOffset: {x: 0, y: 0, z: 0}
+  neckInterpolateBlend: 0.8
   headsetDragsBody: 0
   yawCorrectIMU: 0
   yawCorrectAngularVelocity: 2
@@ -2139,9 +2157,11 @@ MonoBehaviour:
   filterHeadPositionOnly: 0
   positionNoiseCovariance: 100
   fourJointsNoiseCovariance: 50
-  filterRotations: 0
+  filterRotations: 1
   rotationNoiseCovariance: 200
   thumbZRotationOffset: 45
+  customMocapFrameRate: 30
+  customMocapUpdateInterval: 0.033
   forearmLengthRatio: 1
   shinLengthRatio: 1
   clenchedThumbAngleTM: {x: 45, y: 0, z: 0}
