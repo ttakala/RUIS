@@ -2144,6 +2144,10 @@ MonoBehaviour:
   rotateWristFromElbow: 0
   independentTorsoSegmentsScaling: 1
   heightAffectsOffsets: 0
+  forceChestPosition: 0
+  forceNeckPosition: 0
+  forceHeadPosition: 0
+  forceClaviclePosition: 0
   neckParentsShoulders: 0
   leftHandStatus: 1
   rightHandStatus: 1
@@ -3956,6 +3960,10 @@ Prefab:
     - target: {fileID: 11400000, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
       propertyPath: bodyTrackingDevice
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
+      propertyPath: customMocapUpdateInterval
+      value: 0.033333335
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
@@ -6501,7 +6509,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  torsoOffsetKinect2: 0.3
   headOffsetKinect2: 0.7
 --- !u!114 &616115110
 MonoBehaviour:
@@ -14723,6 +14730,10 @@ MonoBehaviour:
   rotateWristFromElbow: 0
   independentTorsoSegmentsScaling: 1
   heightAffectsOffsets: 0
+  forceChestPosition: 0
+  forceNeckPosition: 0
+  forceHeadPosition: 0
+  forceClaviclePosition: 0
   neckParentsShoulders: 0
   leftHandStatus: 1
   rightHandStatus: 1
@@ -21699,7 +21710,7 @@ MonoBehaviour:
   enableRazerHydra: 0
   enableCustomDevice1: 1
   enableCustomDevice2: 0
-  customDevice1Name: Optitrack
+  customDevice1Name: 
   customDevice2Name: 
   customDevice1Conversion:
     unitScale: 1

@@ -176,14 +176,14 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		this.depthViewObjects = calibrationSettings.depthViewObjects;
 		this.iconObjects = calibrationSettings.iconObjects;
 		
-		if(GameObject.Find ("PSMoveWand") != null)
-			GameObject.Find ("PSMoveWand").SetActive(false);
-		if(GameObject.Find ("HmdModel")) // "Was OculusRift"
-			GameObject.Find ("HmdModel").SetActive(false);
+		if(GameObject.Find("PSMoveWand") != null)
+			GameObject.Find("PSMoveWand").SetActive(false);
+		if(GameObject.Find("HmdModel")) // "Was OculusRift"
+			GameObject.Find("HmdModel").SetActive(false);
 		
 		// Models
-		this.viveCameraObject = GameObject.Find ("HmdCamera"); // Was "OculusDK2Camera"
-		this.kinect2ModelObject = GameObject.Find ("Kinect2Camera");
+		this.viveCameraObject = GameObject.Find("HmdCamera"); // Was "OculusDK2Camera"
+		this.kinect2ModelObject = GameObject.Find("Kinect2Camera");
 
 		// Depth view
 		if(this.inputDevice2 == RUISDevice.Kinect_1)
@@ -573,7 +573,7 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		//		kinect2ModelObject.transform.localPosition = new Vector3(0, kinect2DistanceFromFloor, 0);
 
 		kinect2ModelObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, inputDevice2); // Kinect1/2
-		kinect2ModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero,inputDevice2); // Kinect1/2
+		kinect2ModelObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, inputDevice2); // Kinect1/2
 
 		//		viveCameraObject.transform.position = coordinateSystem.ConvertLocation(Vector3.zero, RUISDevice.Vive);
 		//		viveCameraObject.transform.rotation = coordinateSystem.ConvertRotation(Quaternion.identity, RUISDevice.Vive);
@@ -923,7 +923,7 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, inputDevice2);
 		coordinateSystem.SetFloorNormal(kinect2FloorNormal, inputDevice2);
 
-		Debug.Log("Saved Kinect floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
+		Debug.Log("Saved " + inputDevice2 + " floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
 	}
 
 	private float ClosestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 

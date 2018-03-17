@@ -213,7 +213,23 @@ public class RUISCoordinateCalibration : MonoBehaviour
 				case "Custom 2 - OpenVR (controller)":
 					firstDevice  = RUISDevice.OpenVR;
 					secondDevice = RUISDevice.Custom_2;
-				break;
+					break;
+				case "Custom 1 - Kinect 1":
+					firstDevice  = RUISDevice.Custom_1;
+					secondDevice = RUISDevice.Kinect_1;
+					break;
+				case "Custom 2 - Kinect 1":
+					firstDevice  = RUISDevice.Custom_2;
+					secondDevice = RUISDevice.Kinect_1;
+					break;
+				case "Custom 1 - Kinect 2":
+					firstDevice  = RUISDevice.Custom_1;
+					secondDevice = RUISDevice.Kinect_2;
+					break;
+				case "Custom 2 - Kinect 2":
+					firstDevice  = RUISDevice.Custom_2;
+					secondDevice = RUISDevice.Kinect_2;
+					break;
 //				case "Custom 1 - OpenVR (HMD)":
 //					firstDevice  = RUISDevice.OpenVR;
 //					secondDevice = RUISDevice.Custom_1;
@@ -223,7 +239,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 //					firstDevice  = RUISDevice.OpenVR;
 //					secondDevice = RUISDevice.Custom_2;
 //					hmdCalibration = true;
-				break;
+//				break;
 				default:
 					firstDevice  = RUISDevice.None;
 					secondDevice = RUISDevice.None;
@@ -263,7 +279,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 
 		if(!coordinateSystem) 
 		{
-			Debug.LogError ("Component " + typeof(RUISCoordinateSystem) + " not found in the calibration scene, cannot continue!");
+			Debug.LogError("Component " + typeof(RUISCoordinateSystem) + " not found in the calibration scene, cannot continue!");
 			upperText.text = "Component " + typeof(RUISCoordinateSystem) + " not found in\n the calibration scene, cannot continue!";
 			lowerText.text = upperText.text;
 			this.enabled = false;
@@ -278,7 +294,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_1;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 //			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
-				calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
+				calibrationProcess = new RUISCustomDeviceCalibrationProcess(calibrationProcessSettings);
 //			else
 //				calibrationProcess = new RUISCustomDeviceToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 		}
@@ -288,7 +304,7 @@ public class RUISCoordinateCalibration : MonoBehaviour
 			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_2;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
 			//			if(hmdCalibration) // TODO: add RUISCustomDeviceToOpenVrHmdCalibrationProcess
-			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
+			calibrationProcess = new RUISCustomDeviceCalibrationProcess(calibrationProcessSettings);
 			//			else
 			//				calibrationProcess = new RUISCustomDeviceToOpenVrHmdCalibrationProcess(calibrationProcessSettings);
 		}
@@ -297,8 +313,27 @@ public class RUISCoordinateCalibration : MonoBehaviour
 		{
 			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_1;
 			skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.customSensorID;
-			coordinateSystem.rootDevice = RUISDevice.Custom_1;
-			calibrationProcess = new RUISCustomDeviceToOpenVrControllerCalibrationProcess(calibrationProcessSettings);
+			calibrationProcess = new RUISCustomDeviceCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(	( firstDevice == RUISDevice.Custom_1 && (secondDevice == RUISDevice.Kinect_1 || secondDevice == RUISDevice.Kinect_2))
+				 || (secondDevice == RUISDevice.Custom_1 && ( firstDevice == RUISDevice.Kinect_1 ||  firstDevice == RUISDevice.Kinect_2)))
+		{
+			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_1;
+			if(firstDevice == RUISDevice.Kinect_2 || secondDevice == RUISDevice.Kinect_2)
+				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+			else
+				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+			calibrationProcess = new RUISCustomDeviceCalibrationProcess(calibrationProcessSettings);
+		}
+		else if(	( firstDevice == RUISDevice.Custom_2 && (secondDevice == RUISDevice.Kinect_1 || secondDevice == RUISDevice.Kinect_2))
+				 || (secondDevice == RUISDevice.Custom_2 && ( firstDevice == RUISDevice.Kinect_1 ||  firstDevice == RUISDevice.Kinect_2)))
+		{
+			skeletonController.customConversionType = RUISSkeletonController.CustomConversionType.Custom_2;
+			if(firstDevice == RUISDevice.Kinect_2 || secondDevice == RUISDevice.Kinect_2)
+				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect2SensorID;
+			else
+				skeletonController.BodyTrackingDeviceID = RUISSkeletonManager.kinect1SensorID;
+			calibrationProcess = new RUISCustomDeviceCalibrationProcess(calibrationProcessSettings);
 		}
 		else if(	( firstDevice == RUISDevice.Kinect_1 && secondDevice == RUISDevice.Kinect_2)
 		   		 ||	(secondDevice == RUISDevice.Kinect_1 &&  firstDevice == RUISDevice.Kinect_2)) 

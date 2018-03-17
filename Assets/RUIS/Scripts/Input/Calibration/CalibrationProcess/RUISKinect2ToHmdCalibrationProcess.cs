@@ -58,7 +58,7 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 	Vector3 kinect2FloorNormal = Vector3.up;
 //	RUISOVRManager ruisOvrManager;
 
-	bool device1Error, device2Error;
+	bool device1Error; //, device2Error;
 	
 	public RUISKinect2ToHmdCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) 
 	{
@@ -416,13 +416,13 @@ public class RUISKinect2ToHmdCalibrationProcess : RUISCalibrationProcess
 			{
 				sample = tempSample;
 				lastOculusDK2Sample = sample;
-				device2Error = false;
+//				device2Error = false;
 				if(!device1Error) 
 					this.guiTextUpperLocal = "";	
 			}
 			else 
 			{
-				device2Error = true;
+//				device2Error = true;
 //				this.guiTextUpperLocal = "Not enough hand movement.";
 			}
 		}

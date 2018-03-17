@@ -16,7 +16,7 @@ using Kinect = Windows.Kinect;
 using CSML;
 using Valve.VR;
 
-public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrationProcess
+public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 {	
 	public string getUpperText() 
 	{
@@ -61,7 +61,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	private bool openVrChecked = false, calibrationFinished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, 
-	customOriginObject, floorPlane, depthView,
+	customOriginObject, floorPlane, depthView, kinectModelObject,
 	firstDeviceIcon, customIcon, deviceModelObjects, depthViewObjects, iconObjects;
 
 	private NIPlayerManagerCOMSelection kinectSelection;
@@ -73,12 +73,11 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 	private trackedBody[] trackingIDs = null; // Defined in RUISKinect2DepthView
 	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
-	private int kinectTrackingIndex;
 	private ulong kinectTrackingID;
 
-	Quaternion kinect2PitchRotation = Quaternion.identity;
-	float kinect2DistanceFromFloor = 0;
-	Vector3 kinect2FloorNormal = Vector3.up;
+	Quaternion kinectPitchRotation = Quaternion.identity;
+	float kinectDistanceFromFloor = 0;
+	Vector3 kinectFloorNormal = Vector3.up;
 
 	private Vector3 lastCustomSample, lastOpenVrSample;
 	private string xmlFilename;
@@ -96,7 +95,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	RUISCalibrationProcessSettings calibrationSettings;
 
 	// *** TODO: Input conversion (also for floor normal and point)
-	public RUISCustomDeviceToOpenVrControllerCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) 
+	public RUISCustomDeviceCalibrationProcess(RUISCalibrationProcessSettings calibrationSettings) 
 	{
 		inputManager 	 = MonoBehaviour.FindObjectOfType<RUISInputManager>();
 		calibration 	 = MonoBehaviour.FindObjectOfType<RUISCoordinateCalibration>();
@@ -257,14 +256,15 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		if(firstInputDevice == RUISDevice.OpenVR)
 			SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
 
-		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == secondInputDevice) // Custom_1/2
-			calibration.coordinateSystem.rootDevice = secondInputDevice; // Custom_1/2
-		else
-			calibration.coordinateSystem.rootDevice = firstInputDevice; // OpenVR / Kinect_1 / Kinect_2
+//		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == secondInputDevice) // Custom_1/2
+//			calibration.coordinateSystem.rootDevice = secondInputDevice; // Custom_1/2
+//		else
+//			calibration.coordinateSystem.rootDevice = firstInputDevice; // OpenVR / Kinect_1 / Kinect_2
+		calibration.coordinateSystem.rootDevice = firstInputDevice;
 
-		openVrPrefabContainer = MonoBehaviour.FindObjectOfType<RUISOpenVrPrefabContainer>();
 		if(firstInputDevice == RUISDevice.OpenVR)
 		{
+			openVrPrefabContainer = MonoBehaviour.FindObjectOfType<RUISOpenVrPrefabContainer>();
 			if(openVrPrefabContainer)
 			{
 				if(openVrPrefabContainer.openVrCameraRigPrefab)
@@ -327,6 +327,9 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			case RUISDevice.Kinect_2: this.firstDeviceIcon = GameObject.Find("Kinect2 Icon"); break;
 		}
 
+		if(firstInputDevice == RUISDevice.Kinect_1 || firstInputDevice == RUISDevice.Kinect_2)
+			this.kinectModelObject = GameObject.Find("Kinect2Camera");
+
 		this.customIcon = GameObject.Find("Hmd Icon"); // ###
 
 		if(this.firstDeviceIcon && this.firstDeviceIcon.GetComponent<GUITexture>())
@@ -344,6 +347,8 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			this.calibrationResultPhaseObjects.SetActive(false);
 		if(this.depthView)
 			this.depthView.SetActive(true);
+		if(this.kinectModelObject)
+			this.kinectModelObject.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
 
 		if(calibratingKinect)
@@ -413,7 +418,10 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 		if(timeSinceScriptStart < 4)
 		{
-			this.guiTextLowerLocal = "Detected " + firstInputName + ".";
+			if(firstInputDevice == RUISDevice.OpenVR)
+				this.guiTextLowerLocal = "Detected OpenVR.";
+			else
+				this.guiTextLowerLocal = "Detecting " + firstInputName + ".";
 			return RUISCalibrationPhase.Initial;
 		}
 
@@ -465,17 +473,14 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 				missingObjectError = "Error: \"" + RUISDevice.Custom_1 + missingObjectError;
 		}
 			
-		// Execute once only
-		if(customObjectsExist)
-			return RUISCalibrationPhase.Preparation;
-		else
+		// Rest of this method will be executed once only, because the execution will jump to Invalid or Preparation phase
+		if(!customObjectsExist)
 		{
 			this.guiTextLowerLocal = missingObjectError;
 			Debug.LogError(missingObjectError);
 			return RUISCalibrationPhase.Invalid;
 		}
 
-		// Execute once only
 		if(firstInputDevice == RUISDevice.Kinect_1)
 		{
 			bool kinectSetupError = false;
@@ -508,14 +513,6 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 					this.guiTextLowerLocal = "Kinect error: Could not start OpenNI";
 					return RUISCalibrationPhase.Invalid;
 				}
-
-				if(kinectSetupError)
-				{
-					this.guiTextLowerLocal = "Kinect error: Could not start OpenNI";
-					return RUISCalibrationPhase.Invalid;
-				}
-
-				return RUISCalibrationPhase.Preparation;
 			}
 
 			if(kinectSetupError)
@@ -533,11 +530,10 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 				this.guiTextLowerLocal = "Kinect error: Sensor is unavailable.";
 				return RUISCalibrationPhase.Invalid;
 			}
-			else
-			{
-				return RUISCalibrationPhase.Preparation;
-			}
 		}
+
+		if(customObjectsExist)
+			return RUISCalibrationPhase.Preparation;
 		
 		return RUISCalibrationPhase.Invalid; // Loop should not get this far
 	}
@@ -580,7 +576,6 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 				if(trackingIDs[a].isTracking) 
 				{
 					kinectTrackingID = trackingIDs[a].trackingId;
-					kinectTrackingIndex = trackingIDs[a].index;
 				}
 			}
 
@@ -749,41 +744,44 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		PlaceCustomTrackedDevices();
 
 		// Fine tune translation with OpenVR controller
-		if(firstInputDevice == RUISDevice.OpenVR && openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
-			trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
-
-		if(    SteamVR_Controller.Input(openVrControllerIndex).connected )
+		if(firstInputDevice == RUISDevice.OpenVR)
 		{
-			var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(openVrControllerIndex).GetPose().mDeviceToAbsoluteTracking);
+			if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
+				trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-			if(SteamVR_Controller.Input(openVrControllerIndex).hasTracking)
+			if(SteamVR_Controller.Input(openVrControllerIndex).connected)
 			{
-				if(SteamVR_Controller.Input(openVrControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Touchpad))
+				var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(openVrControllerIndex).GetPose().mDeviceToAbsoluteTracking);
+
+				if(SteamVR_Controller.Input(openVrControllerIndex).hasTracking)
 				{
-					controllerPositionAtTuneStart = pose.pos;
-					translateAtTuneStart = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
+					if(SteamVR_Controller.Input(openVrControllerIndex).GetPressDown(EVRButtonId.k_EButton_SteamVR_Touchpad))
+					{
+						controllerPositionAtTuneStart = pose.pos;
+						translateAtTuneStart = new Vector3(transformMatrix[0, 3], transformMatrix[1, 3], transformMatrix[2, 3]);
+					}
+
+					if(SteamVR_Controller.Input(openVrControllerIndex).GetPress(EVRButtonId.k_EButton_SteamVR_Touchpad))
+					{
+						Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
+						Vector3 translate = translateAtTuneStart + rotationQuaternion * (controllerPositionAtTuneStart - pose.pos);
+
+						transformMatrix.SetColumn(3, new Vector4(translate.x, translate.y, translate.z, transformMatrix.m33));
+
+						updateDictionaries(	calibration.coordinateSystem.RUISCalibrationResultsInVector3, 
+											calibration.coordinateSystem.RUISCalibrationResultsInQuaternion,
+											calibration.coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
+											translate, rotationQuaternion, transformMatrix,
+											firstInputDevice, secondInputDevice);
+					}
 				}
 
-				if(SteamVR_Controller.Input(openVrControllerIndex).GetPress(EVRButtonId.k_EButton_SteamVR_Touchpad))
+				if(SteamVR_Controller.Input(openVrControllerIndex).GetPressUp(EVRButtonId.k_EButton_SteamVR_Touchpad))
 				{
-					Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
-					Vector3 translate = translateAtTuneStart + rotationQuaternion * (controllerPositionAtTuneStart - pose.pos);
-
-					transformMatrix.SetColumn(3, new Vector4(translate.x, translate.y, translate.z, transformMatrix.m33));
-
-					updateDictionaries(	calibration.coordinateSystem.RUISCalibrationResultsInVector3, 
-										calibration.coordinateSystem.RUISCalibrationResultsInQuaternion,
-										calibration.coordinateSystem.RUISCalibrationResultsIn4x4Matrix,
-										translate, rotationQuaternion, transformMatrix,
-										firstInputDevice, secondInputDevice);
+					calibration.coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
+					calibration.coordinateSystem.SaveTransformDataToXML(xmlFilename, firstInputDevice, secondInputDevice); 
+	//				calibration.coordinateSystem.SaveFloorData(xmlFilename, inputDevice2, device1FloorNormal, device1DistanceFromFloor);
 				}
-			}
-
-			if(SteamVR_Controller.Input(openVrControllerIndex).GetPressUp(EVRButtonId.k_EButton_SteamVR_Touchpad))
-			{
-				calibration.coordinateSystem.SetDeviceToRootTransforms(transformMatrix);
-				calibration.coordinateSystem.SaveTransformDataToXML(xmlFilename, firstInputDevice, secondInputDevice); 
-//				calibration.coordinateSystem.SaveFloorData(xmlFilename, inputDevice2, device1FloorNormal, device1DistanceFromFloor);
 			}
 		}
 
@@ -845,13 +843,19 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			}
 		}
 
-		// TODO Now this uses distance from floor and "sensor pitch". Set to custom origin of non-rootDevice
+		if(kinectModelObject && (firstInputDevice == RUISDevice.Kinect_1 || firstInputDevice == RUISDevice.Kinect_2))
+		{
+			kinectModelObject.transform.rotation = calibration.coordinateSystem.ConvertRotation(Quaternion.identity, firstInputDevice); 
+			kinectModelObject.transform.position = calibration.coordinateSystem.ConvertLocation(Vector3.zero, firstInputDevice); // Kinect1/2
+		}
+
+		// TODO Now this uses distance from floor and "sensor pitch".
 		if(customOriginObject)
 		{
 			customOriginObject.transform.rotation = 
-										calibration.coordinateSystem.ConvertRotation(Quaternion.identity, calibration.coordinateSystem.rootDevice);
+											calibration.coordinateSystem.ConvertRotation(Quaternion.identity, secondInputDevice); // Custom 1 / 2
 			customOriginObject.transform.position = 
-										calibration.coordinateSystem.ConvertLocation(Vector3.zero, calibration.coordinateSystem.rootDevice);
+											calibration.coordinateSystem.ConvertLocation(Vector3.zero, secondInputDevice); // Custom 1 / 2
 		}
 
 		if(this.floorPlane)
@@ -1110,6 +1114,10 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			UpdateFloorNormalAndDistance(RUISDevice.Custom_1);
 		if(secondInputDevice == RUISDevice.Custom_2)
 			UpdateFloorNormalAndDistance(RUISDevice.Custom_2);
+		if(firstInputDevice == RUISDevice.Kinect_1)
+			UpdateFloorNormalAndDistance(RUISDevice.Kinect_1);
+		if(firstInputDevice == RUISDevice.Kinect_2)
+			UpdateFloorNormalAndDistance(RUISDevice.Kinect_2);
 
 		Quaternion rotationQuaternion = MathUtil.QuaternionFromMatrix(rotationMatrix);
 
@@ -1135,9 +1143,14 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			calibration.coordinateSystem.RUISCalibrationResultsDistanceFromFloor[RUISDevice.Custom_2]  = device2DistanceFromFloor;
 			calibration.coordinateSystem.RUISCalibrationResultsFloorPitchRotation[RUISDevice.Custom_2] = device2PitchRotation;
 		}
+		if(firstInputDevice == RUISDevice.Kinect_1 || firstInputDevice == RUISDevice.Kinect_2)
+		{
+			calibration.coordinateSystem.SaveFloorData(xmlFilename, firstInputDevice, kinectFloorNormal, kinectDistanceFromFloor);
+			calibration.coordinateSystem.RUISCalibrationResultsDistanceFromFloor[firstInputDevice]  = kinectDistanceFromFloor;
+			calibration.coordinateSystem.RUISCalibrationResultsFloorPitchRotation[firstInputDevice] = kinectPitchRotation;
+		}
 	}
-	
-	
+
 	private static Matrix4x4 CreateRotationMatrix(List<Vector3> vectors)
 	{
 		Matrix4x4 result = new Matrix4x4();
@@ -1178,7 +1191,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		{
 			customDeviceFloorPoint = calibration.customDevice2FloorPoint;
 		}
-		if(customDeviceFloorPoint)
+		if(customDeviceFloorPoint && (device == RUISDevice.Custom_1 || device == RUISDevice.Custom_2))
 		{
 			Vector3 newFloorNormal   = customDeviceFloorPoint.up.normalized;
 			Vector3 newFloorPosition = customDeviceFloorPoint.position;
@@ -1225,73 +1238,68 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			}
 		}
 
+		Quaternion kinectFloorRotator = Quaternion.identity;
+		if(device == RUISDevice.Kinect_1)
+		{
+			OpenNI.Plane3D floor;
+
+			try{
+				floor = sceneAnalyzer.Floor;
+			}
+			catch(System.Exception e)
+			{
+				Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
+				return;
+			}
+
+			kinectFloorNormal= new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
+			kinectFloorNormal.Normalize();
+
+			if(kinectFloorNormal.sqrMagnitude < 0.1f)
+				kinectFloorNormal = Vector3.up;
+
+			Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
+			kinectDistanceFromFloor = ClosestDistanceFromFloor(kinectFloorNormal, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
+		}
+
+		if(device == RUISDevice.Kinect_2)
+		{
+			Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFlootClipPlane();
+			kinectFloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
+
+			kinectFloorNormal.Normalize();
+
+			if(kinectFloorNormal.sqrMagnitude < 0.1f)
+				kinectFloorNormal = Vector3.up;
+
+			kinectDistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinectFloorNormal.sqrMagnitude);
+		}
+
+		if(float.IsNaN(kinectDistanceFromFloor))
+			kinectDistanceFromFloor = 0;
+		kinectFloorRotator = Quaternion.FromToRotation(kinectFloorNormal, Vector3.up);
+		kinectPitchRotation = Quaternion.Inverse(kinectFloorRotator);
+
+		if(device == RUISDevice.Kinect_1 || device == RUISDevice.Kinect_2)
+		{
+			calibration.coordinateSystem.SetDistanceFromFloor(kinectDistanceFromFloor, device);
+			calibration.coordinateSystem.SetFloorNormal(kinectFloorNormal, device);
+			Debug.Log("Saved " + device + " floor normal " + kinectFloorNormal + " and floor distance (" + kinectDistanceFromFloor + ")");
+		}
+
 		if(device == RUISDevice.Custom_1)
 		{
 			calibration.coordinateSystem.SetDistanceFromFloor(device1DistanceFromFloor, RUISDevice.Custom_1);
 			calibration.coordinateSystem.SetFloorNormal(device1FloorNormal, RUISDevice.Custom_1);
+			Debug.Log("Saved " + device + " floor normal " + device1FloorNormal + " and floor distance (" + device1DistanceFromFloor + ")");
 		}
 		if(device == RUISDevice.Custom_2)
 		{
 			calibration.coordinateSystem.SetDistanceFromFloor(device2DistanceFromFloor, RUISDevice.Custom_2);
 			calibration.coordinateSystem.SetFloorNormal(device2FloorNormal, RUISDevice.Custom_2);
+			Debug.Log("Saved " + device + " floor normal " + device2FloorNormal + " and floor distance (" + device2DistanceFromFloor + ")");
 		}
 	}
-
-
-//	private void UpdateFloorNormalAndDistance()
-//	{
-//		coordinateSystem.ResetFloorNormal(inputDevice2); // Kinect1/2
-//
-//		if(inputDevice2 == RUISDevice.Kinect_1)
-//		{
-//			OpenNI.Plane3D floor;
-//
-//			try{
-//				floor = sceneAnalyzer.Floor;
-//			}
-//			catch(System.Exception e)
-//			{
-//				Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
-//				return;
-//			}
-//
-//			Quaternion kinectFloorRotator = Quaternion.identity;
-//			kinect2FloorNormal= new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
-//
-//			kinect2FloorNormal.Normalize();
-//
-//			if(kinect2FloorNormal.sqrMagnitude < 0.1f)
-//				kinect2FloorNormal = Vector3.up;
-//
-//			Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
-//			kinect2DistanceFromFloor = ClosestDistanceFromFloor(kinect2FloorNormal, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
-//		}
-//
-//		if(inputDevice2 == RUISDevice.Kinect_2)
-//		{
-//			Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFlootClipPlane();
-//			kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
-//
-//			kinect2FloorNormal.Normalize();
-//
-//			if(kinect2FloorNormal.sqrMagnitude < 0.1f)
-//				kinect2FloorNormal = Vector3.up;
-//
-//			kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
-//		}
-//
-//		if(float.IsNaN(kinect2DistanceFromFloor))
-//			kinect2DistanceFromFloor = 0;
-//
-//		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
-//
-//		kinect2PitchRotation = Quaternion.Inverse(kinect2FloorRotator);
-//
-//		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, inputDevice2);
-//		coordinateSystem.SetFloorNormal(kinect2FloorNormal, inputDevice2);
-//
-//		Debug.Log("Saved Kinect floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
-//	}
 
 	private float ClosestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 
 	{
@@ -1420,7 +1428,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 	}
 
-	~RUISCustomDeviceToOpenVrControllerCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
+	~RUISCustomDeviceCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
 	{
 //		SteamVR_Utils.Event.Remove("device_connected", OnDeviceConnected);
 		if(firstInputDevice == RUISDevice.OpenVR)

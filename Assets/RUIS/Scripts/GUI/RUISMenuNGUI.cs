@@ -682,6 +682,10 @@ public class RUISMenuNGUI : MonoBehaviour
 		// NOTE: The dropDownChoices determine the device pair to be calibrated, and they must follow the format "Device A - Device B". 
 		//       The string must correspond the options in the Awake() method of RUISCoordinateCalibration script
 		if(inputManager.enableKinect 			   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 1 - Kinect2");
+		if(inputManager.enableCustomDevice1 	   && inputManager.enableKinect) 		dropDownChoices.Add("Custom 1 - Kinect 1");
+		if(inputManager.enableCustomDevice2 	   && inputManager.enableKinect) 		dropDownChoices.Add("Custom 2 - Kinect 1");
+		if(inputManager.enableCustomDevice1 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Custom 1 - Kinect 2");
+		if(inputManager.enableCustomDevice2 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Custom 2 - Kinect 2");
 		if(inputManager.enableCustomDevice1 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 1 - Custom 2");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableCustomDevice1)	dropDownChoices.Add("Custom 1 - OpenVR (controller)");
 		if(RUISDisplayManager.IsOpenVrAccessible() && inputManager.enableCustomDevice2)	dropDownChoices.Add("Custom 2 - OpenVR (controller)");
@@ -693,8 +697,6 @@ public class RUISMenuNGUI : MonoBehaviour
 		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableKinect2) 		dropDownChoices.Add("Kinect 2 - UnityXR (HMD)");
 //		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - OpenVR (HMD)"); //TODO
 //		if(RUISDisplayManager.IsHmdPresent() 	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - OpenVR (HMD)"); //TODO
-//		if(inputManager.enableKinect		   	   && inputManager.enableCustomDevice1) dropDownChoices.Add("Custom 1 - Kinect 1"); //TODO
-//		if(inputManager.enableKinect2		   	   && inputManager.enableCustomDevice2) dropDownChoices.Add("Custom 2 - Kinect 2"); //TODO
 
 		
 		if(dropDownChoices.Count == 0) 
