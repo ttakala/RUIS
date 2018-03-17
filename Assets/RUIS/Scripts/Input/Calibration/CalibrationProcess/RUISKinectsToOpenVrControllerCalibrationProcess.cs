@@ -204,7 +204,7 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		{
 			foreach(Texture2D iconTexture in calibration.iconTextures)
 			{
-				if(iconTexture.name == "oculus_camera_icon") // TODO replace with OpenVR controller icon
+				if(iconTexture.name == "psmove_icon") // TODO replace with OpenVR controller icon
 				{
 					if(calibration.firstIcon)
 					{
@@ -422,10 +422,10 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 			UpdateBodyData();
 
 			if(!trackingIDs[kinectTrackingIndex].isTracking)
-			{
 				return RUISCalibrationPhase.Preparation;
-			}
 		}
+		if(inputDevice2 == RUISDevice.Kinect_1 && kinectSelection.GetNumberOfSelectedPlayers() < 1)
+			return RUISCalibrationPhase.Preparation;
 
 		if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
 			trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
@@ -666,9 +666,9 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 	private Vector3 GetSample(RUISDevice device) 
 	{
 		Vector3 sample = new Vector3(0,0,0);
-		UpdateBodyData();
 		if(device == RUISDevice.Kinect_2) 
 		{
+			UpdateBodyData();
 			Kinect.Body[] data = kinect2SourceManager.GetBodyData();
 			bool trackedBodyFound = false;
 			int foundBodies = 0;

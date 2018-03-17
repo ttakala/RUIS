@@ -2367,7 +2367,7 @@ MonoBehaviour:
   positionNoiseCovariance: 100
   fourJointsNoiseCovariance: 50
   filterRotations: 1
-  rotationNoiseCovariance: 200
+  rotationNoiseCovariance: 500
   thumbZRotationOffset: 45
   customMocapFrameRate: 30
   customMocapUpdateInterval: 0.033
@@ -5473,7 +5473,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   origin: {fileID: 0}
-  isValid: 0
 --- !u!114 &114000010517579450
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6778,7 +6777,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   origin: {fileID: 0}
-  isValid: 0
 --- !u!114 &114000013722553714
 MonoBehaviour:
   m_ObjectHideFlags: 1

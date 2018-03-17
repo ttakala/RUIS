@@ -1779,7 +1779,7 @@ MonoBehaviour:
   positionNoiseCovariance: 100
   fourJointsNoiseCovariance: 50
   filterRotations: 1
-  rotationNoiseCovariance: 200
+  rotationNoiseCovariance: 500
   thumbZRotationOffset: 45
   customMocapFrameRate: 30
   customMocapUpdateInterval: 0.033

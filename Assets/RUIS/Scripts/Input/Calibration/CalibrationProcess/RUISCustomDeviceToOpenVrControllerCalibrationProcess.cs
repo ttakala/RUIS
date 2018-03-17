@@ -12,6 +12,7 @@ Licensing  :   LGPL Version 3 license for non-commercial projects. Use
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Kinect = Windows.Kinect;
 using CSML;
 using Valve.VR;
 
@@ -60,9 +61,25 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	private bool openVrChecked = false, calibrationFinished = false;
 	List<GameObject> calibrationSpheres;
 	private GameObject calibrationPhaseObjects, calibrationResultPhaseObjects, 
-	customOriginObject, floorPlane, /*depthView,*/
-	openVrIcon, customIcon, deviceModelObjects, depthViewObjects, iconObjects;
-	
+	customOriginObject, floorPlane, depthView,
+	firstDeviceIcon, customIcon, deviceModelObjects, depthViewObjects, iconObjects;
+
+	private NIPlayerManagerCOMSelection kinectSelection;
+	private OpenNISettingsManager settingsManager;
+	private OpenNI.SceneAnalyzer sceneAnalyzer;
+
+	Kinect2SourceManager kinect2SourceManager;
+	Kinect.Body[] bodyData; 
+
+	private trackedBody[] trackingIDs = null; // Defined in RUISKinect2DepthView
+	private Dictionary<ulong, int> trackingIDtoIndex = new Dictionary<ulong, int>();
+	private int kinectTrackingIndex;
+	private ulong kinectTrackingID;
+
+	Quaternion kinect2PitchRotation = Quaternion.identity;
+	float kinect2DistanceFromFloor = 0;
+	Vector3 kinect2FloorNormal = Vector3.up;
+
 	private Vector3 lastCustomSample, lastOpenVrSample;
 	private string xmlFilename;
 	
@@ -121,10 +138,40 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			calibratingOpenVR = true;
 		}
 
+		bool calibratingKinect = false;
+		if(calibrationSettings.firstDevice == RUISDevice.Kinect_1 || calibrationSettings.secondDevice == RUISDevice.Kinect_1)
+		{
+			firstInputDevice = RUISDevice.Kinect_1;
+			if(calibration.firstIconText)
+			{
+				if(calibration.firstIcon)
+					calibration.firstIcon.gameObject.SetActive(true);
+				calibration.firstIconText.gameObject.SetActive(true);
+				calibration.firstIconText.text = "Kinect 1";
+			}
+			firstInputName = "Kinect 1";
+			this.depthView = GameObject.Find ("KinectDepthView");
+			calibratingKinect = true;
+		}
+		if(calibrationSettings.firstDevice == RUISDevice.Kinect_2 || calibrationSettings.secondDevice == RUISDevice.Kinect_2)
+		{
+			firstInputDevice = RUISDevice.Kinect_2;
+			if(calibration.firstIconText)
+			{
+				if(calibration.firstIcon)
+					calibration.firstIcon.gameObject.SetActive(true);
+				calibration.firstIconText.gameObject.SetActive(true);
+				calibration.firstIconText.text = "Kinect 2";
+			}
+			firstInputName = "Kinect 2";
+			this.depthView = GameObject.Find ("Kinect2DepthView");
+			calibratingKinect = true;
+		}
+
 		if(calibrationSettings.firstDevice == RUISDevice.Custom_1 || calibrationSettings.secondDevice == RUISDevice.Custom_1)
 		{
 			// Note: device1* variables always refer to RUISDevice.Custom_1, whereas first*/second* variables only refer to the calibration "slot"
-			if(calibratingOpenVR)
+			if(calibratingOpenVR || calibratingKinect)
 				secondInputDevice = RUISDevice.Custom_1;
 			else
 				firstInputDevice = RUISDevice.Custom_1;
@@ -164,10 +211,10 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			}
 				
 			// There could be 2 custom-devices
-			if(calibratingOpenVR)
+			if(calibratingOpenVR || calibratingKinect)
 				secondInputName = RUISDevice.Custom_1 + (string.IsNullOrEmpty(deviceName)?"":(" (" + deviceName + ")"));
 			else
-				firstInputName = RUISDevice.Custom_1 + (string.IsNullOrEmpty(deviceName)?"":(" (" + deviceName + ")"));
+				firstInputName  = RUISDevice.Custom_1 + (string.IsNullOrEmpty(deviceName)?"":(" (" + deviceName + ")"));
 		}
 
 		if(calibrationSettings.firstDevice == RUISDevice.Custom_2 || calibrationSettings.secondDevice == RUISDevice.Custom_2)
@@ -207,12 +254,13 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
 		this.numberOfSamplesPerSecond = calibrationSettings.numberOfSamplesPerSecond;
 
-		SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
+		if(firstInputDevice == RUISDevice.OpenVR)
+			SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
 
 		if(RUISCalibrationProcessSettings.originalMasterCoordinateSystem == secondInputDevice) // Custom_1/2
 			calibration.coordinateSystem.rootDevice = secondInputDevice; // Custom_1/2
 		else
-			calibration.coordinateSystem.rootDevice = RUISDevice.OpenVR;
+			calibration.coordinateSystem.rootDevice = firstInputDevice; // OpenVR / Kinect_1 / Kinect_2
 
 		openVrPrefabContainer = MonoBehaviour.FindObjectOfType<RUISOpenVrPrefabContainer>();
 		if(firstInputDevice == RUISDevice.OpenVR)
@@ -245,7 +293,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		}
 
 		this.timeSinceScriptStart = 0;
-		this.timeBetweenSamples = 1 / (float)numberOfSamplesPerSecond;
+		this.timeBetweenSamples = 1.0f / (float) numberOfSamplesPerSecond;
 		
 		// Limit sample rate
 		if(this.timeBetweenSamples < 0.1f)
@@ -263,37 +311,47 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		this.calibrationPhaseObjects = calibrationSettings.calibrationPhaseObjects;
 		this.calibrationResultPhaseObjects = calibrationSettings.calibrationResultPhaseObjects;
 		
-		if(GameObject.Find ("PSMoveWand") != null)
-			GameObject.Find ("PSMoveWand").SetActive(false);
-		if(GameObject.Find ("HmdModel")) // "Was OculusRift"
-			GameObject.Find ("HmdModel").SetActive(false);
+		if(GameObject.Find("PSMoveWand") != null)
+			GameObject.Find("PSMoveWand").SetActive(false);
+		if(GameObject.Find("HmdModel"))
+			GameObject.Find("HmdModel").SetActive(false);
 		
 		// Models
-		this.customOriginObject = GameObject.Find ("Kinect2Camera"); // ### TODO Custom1/2 origin GameObject
-
-		// Depth view
-//		this.depthView = GameObject.Find ("Kinect2DepthView"); // ***
+		this.customOriginObject = GameObject.Find("HmdCamera"); // ### TODO Custom1/2 origin GameObject
 		
 		// Icons
-		this.openVrIcon = GameObject.Find ("Hmd Icon"); // ###
-		this.customIcon = GameObject.Find ("Kinect2 Icon"); // ###
+		switch(firstInputDevice)
+		{
+			case RUISDevice.OpenVR: this.firstDeviceIcon = GameObject.Find("PS Move Icon"); break; // TODO replace with OpenVR controller icon
+			case RUISDevice.Kinect_1: this.firstDeviceIcon = GameObject.Find("Kinect Icon"); break;
+			case RUISDevice.Kinect_2: this.firstDeviceIcon = GameObject.Find("Kinect2 Icon"); break;
+		}
 
-		if(this.openVrIcon && this.openVrIcon.GetComponent<GUITexture>())
-			this.openVrIcon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
+		this.customIcon = GameObject.Find("Hmd Icon"); // ###
+
+		if(this.firstDeviceIcon && this.firstDeviceIcon.GetComponent<GUITexture>())
+			this.firstDeviceIcon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
 		
 		if(this.customOriginObject != null)
 			this.customOriginObject.SetActive(true);
-		if(this.openVrIcon)
-			this.openVrIcon.SetActive(true);
+		if(this.firstDeviceIcon)
+			this.firstDeviceIcon.SetActive(true);
 		if(this.customIcon)
 			this.customIcon.SetActive(true);
 		if(this.calibrationPhaseObjects)
 			this.calibrationPhaseObjects.SetActive(true);
 		if(this.calibrationResultPhaseObjects)
 			this.calibrationResultPhaseObjects.SetActive(false);
-//		if(this.depthView) // ***
-//			this.depthView.SetActive(true);
+		if(this.depthView)
+			this.depthView.SetActive(true);
 		this.xmlFilename = calibrationSettings.xmlFilename;
+
+		if(calibratingKinect)
+		{
+			kinect2SourceManager = MonoBehaviour.FindObjectOfType(typeof(Kinect2SourceManager)) as Kinect2SourceManager;
+			kinectSelection = MonoBehaviour.FindObjectOfType(typeof(NIPlayerManagerCOMSelection)) as NIPlayerManagerCOMSelection;
+			settingsManager = MonoBehaviour.FindObjectOfType(typeof(OpenNISettingsManager)) as OpenNISettingsManager;
+		}
 	}
 	
 	
@@ -368,34 +426,43 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 		lastCustomSample = new Vector3(0, 0, 0);
 		bool customObjectsExist = false;
-		string missingObjectError = " Tracked Pose'\n field in " + typeof(RUISCoordinateCalibration) + "\ncomponent is null!";
+		string missingObjectError = " Tracked Pose\"\n field in " + typeof(RUISCoordinateCalibration) + "\ncomponent is null!";
 
 		// device1* and device2* variables always refer to RUISDevice.Custom_1 and RUISDevice.Custom_2, respectively
 		if(firstInputDevice != RUISDevice.Custom_2 && secondInputDevice == RUISDevice.Custom_1)
 		{
 			if(calibration.customDevice1Tracker)
+			{
 				customObjectsExist = true;
+				lastCustomSample = calibration.customDevice1Tracker.position;
+			}
 			else
-				missingObjectError = "Error: '" + RUISDevice.Custom_1 + missingObjectError;
+				missingObjectError = "Error: \"" + RUISDevice.Custom_1 + missingObjectError;
 		}
 		else if(firstInputDevice != RUISDevice.Custom_1 && secondInputDevice == RUISDevice.Custom_2)
 		{
 			if(calibration.customDevice2Tracker)
+			{
 				customObjectsExist = true;
+				lastCustomSample = calibration.customDevice2Tracker.position;
+			}
 			else
-				missingObjectError = "Error: '" + RUISDevice.Custom_2 + missingObjectError;
+				missingObjectError = "Error: \"" + RUISDevice.Custom_2 + missingObjectError;
 		}
 		else if(firstInputDevice == RUISDevice.Custom_1 && secondInputDevice == RUISDevice.Custom_2)
 		{
 			if(calibration.customDevice1Tracker)
 			{
 				if(calibration.customDevice2Tracker)
+				{
 					customObjectsExist = true;
+					lastCustomSample = calibration.customDevice2Tracker.position;
+				}
 				else
-					missingObjectError = "Error: '" + RUISDevice.Custom_2 + missingObjectError;
+					missingObjectError = "Error: \"" + RUISDevice.Custom_2 + missingObjectError;
 			}
 			else
-				missingObjectError = "Error: '" + RUISDevice.Custom_1 + missingObjectError;
+				missingObjectError = "Error: \"" + RUISDevice.Custom_1 + missingObjectError;
 		}
 			
 		// Execute once only
@@ -405,6 +472,71 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		{
 			this.guiTextLowerLocal = missingObjectError;
 			Debug.LogError(missingObjectError);
+			return RUISCalibrationPhase.Invalid;
+		}
+
+		// Execute once only
+		if(firstInputDevice == RUISDevice.Kinect_1)
+		{
+			bool kinectSetupError = false;
+			if(settingsManager == null) 
+			{
+				this.guiTextLowerLocal = "Kinect error: Missing \nOpenNISettingsManager script";
+				Debug.LogError("Kinect error: Missing OpenNISettingsManager script");
+				return RUISCalibrationPhase.Invalid;
+			}
+			else if(settingsManager.UserGenrator == null) 
+				kinectSetupError = true;
+			else if(!settingsManager.UserGenrator.Valid) 
+				kinectSetupError = true;
+			else 
+			{
+				try
+				{
+					if(settingsManager != null && settingsManager.CurrentContext != null && settingsManager.CurrentContext.BasicContext != null)
+						sceneAnalyzer = new OpenNI.SceneAnalyzer(settingsManager.CurrentContext.BasicContext);
+					else
+						kinectSetupError = true;
+					if(sceneAnalyzer != null)
+						sceneAnalyzer.StartGenerating();
+					else
+						kinectSetupError = true;
+				}
+				catch(System.Exception e)
+				{
+					Debug.LogError(e.Message);
+					this.guiTextLowerLocal = "Kinect error: Could not start OpenNI";
+					return RUISCalibrationPhase.Invalid;
+				}
+
+				if(kinectSetupError)
+				{
+					this.guiTextLowerLocal = "Kinect error: Could not start OpenNI";
+					return RUISCalibrationPhase.Invalid;
+				}
+
+				return RUISCalibrationPhase.Preparation;
+			}
+
+			if(kinectSetupError)
+			{
+				this.guiTextLowerLocal = "Kinect error: Could not start OpenNI";
+				return RUISCalibrationPhase.Invalid;
+			}
+		}
+
+		if(firstInputDevice == RUISDevice.Kinect_2)
+		{
+			if(		kinect2SourceManager.GetSensor() == null || !kinect2SourceManager.GetSensor().IsOpen 
+				|| !kinect2SourceManager.GetSensor().IsAvailable										)
+			{
+				this.guiTextLowerLocal = "Kinect error: Sensor is unavailable.";
+				return RUISCalibrationPhase.Invalid;
+			}
+			else
+			{
+				return RUISCalibrationPhase.Preparation;
+			}
 		}
 		
 		return RUISCalibrationPhase.Invalid; // Loop should not get this far
@@ -413,15 +545,18 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	
 	public override RUISCalibrationPhase PreparationPhase(float deltaTime)
 	{
-		this.guiTextLowerLocal = "Hold " + firstInputName + " and \n" + secondInputName + " together.";
+		if(firstInputDevice == RUISDevice.Kinect_1 || firstInputDevice == RUISDevice.Kinect_2)
+			this.guiTextLowerLocal = "Step in front of Kinect. \nTake " + secondInputName + " into your right hand.";
+		else
+			this.guiTextLowerLocal = "Hold " + firstInputName + " and \n" + secondInputName + " together.";
 
 		PlaceCustomTrackedDevices();
 
-		if(firstInputDevice == RUISDevice.OpenVR && openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
-			trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
-
 		if(firstInputDevice == RUISDevice.OpenVR)
 		{
+			if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
+				trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
+
 			if(trackedOpenVRObjects != null)
 			{
 				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
@@ -430,6 +565,27 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			}
 			else
 				this.guiTextUpperLocal = firstInputName + " not detected.";
+		}
+
+		bool kinectIsReady = false;
+		if(firstInputDevice == RUISDevice.Kinect_1 && kinectSelection.GetNumberOfSelectedPlayers() >= 1)
+			kinectIsReady = true;
+		if(firstInputDevice == RUISDevice.Kinect_2)
+		{
+			UpdateBodyData();
+			kinectTrackingID = 0;
+
+			for(int a = 0; a < trackingIDs.Length; a++) 
+			{
+				if(trackingIDs[a].isTracking) 
+				{
+					kinectTrackingID = trackingIDs[a].trackingId;
+					kinectTrackingIndex = trackingIDs[a].index;
+				}
+			}
+
+			if(kinectTrackingID != 0)
+				kinectIsReady = true;
 		}
 
 		// Has a duration of timeSinceLastSample passed?
@@ -449,7 +605,10 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 				customDeviceTrackerPosition = calibration.customDevice2Tracker.position;
 
 			if(lastCustomSample != customDeviceTrackerPosition)
-				return RUISCalibrationPhase.ReadyToCalibrate;
+			{
+				if((firstInputDevice != RUISDevice.Kinect_1 && firstInputDevice != RUISDevice.Kinect_2) || kinectIsReady)
+					return RUISCalibrationPhase.ReadyToCalibrate;
+			}
 			else if(	firstInputDevice != RUISDevice.OpenVR 
 					|| (	trackedOpenVRObjects != null && trackedOpenVRObjects.Length > 0
 						&& (trackedOpenVRObjects.Length != 1 || trackedOpenVRObjects[0].index != SteamVR_TrackedObject.EIndex.Hmd)))
@@ -465,36 +624,46 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	
 	public override RUISCalibrationPhase ReadyToCalibratePhase(float deltaTime) 
 	{
-		this.guiTextLowerLocal = "Hold " + firstInputName + " and " + secondInputName + " together."
-								+"\nPress the trigger button to start calibrating.";
-
+		if(firstInputDevice == RUISDevice.OpenVR)
+			this.guiTextLowerLocal = "Hold " + firstInputName + " and " + secondInputName + " together."
+									+"\nPress the trigger button to start calibrating.";
+		else // Custom 1 / Custom 2 / Kinect calibration
+		{
+			lastOpenVrSample = new Vector3(0, 0, 0);
+			lastCustomSample = new Vector3(0, 0, 0);
+			return RUISCalibrationPhase.Calibration;
+		}
+			
 		PlaceCustomTrackedDevices();
 
-		if(firstInputDevice == RUISDevice.OpenVR && openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
-			trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
-
-		if(trackedOpenVRObjects != null)
+		if(firstInputDevice == RUISDevice.OpenVR)
 		{
-			foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
+			if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
+				trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
+
+			if(trackedOpenVRObjects != null)
 			{
-//				Debug.Log(trackedOpenVRObject.index + " " + ((int) trackedOpenVRObject.index));
-				if(   SteamVR_Controller.Input((int)trackedOpenVRObject.index).connected
-				   && SteamVR_Controller.Input((int)trackedOpenVRObject.index).GetHairTrigger())
+				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 				{
-					openVrControllerIndex = (int)trackedOpenVRObject.index;
-					openVrControllerTransform = trackedOpenVRObject.transform;
-					lastOpenVrSample = new Vector3(0, 0, 0);
-					lastCustomSample = new Vector3(0, 0, 0);
-					return RUISCalibrationPhase.Calibration;
-				}
+//					Debug.Log(trackedOpenVRObject.index + " " + ((int) trackedOpenVRObject.index));
+					if(   SteamVR_Controller.Input((int)trackedOpenVRObject.index).connected
+					   && SteamVR_Controller.Input((int)trackedOpenVRObject.index).GetHairTrigger())
+					{
+						openVrControllerIndex = (int)trackedOpenVRObject.index;
+						openVrControllerTransform = trackedOpenVRObject.transform;
+						lastOpenVrSample = new Vector3(0, 0, 0);
+						lastCustomSample = new Vector3(0, 0, 0);
+						return RUISCalibrationPhase.Calibration;
+					}
 
-				if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
-					this.guiTextUpperLocal = firstInputName + " not detected.";
+					if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
+						this.guiTextUpperLocal = firstInputName + " not detected.";
+				}
 			}
-		}
-		else
-		{
-			this.guiTextUpperLocal = firstInputName + " not detected.";
+			else
+			{
+				this.guiTextUpperLocal = firstInputName + " not detected.";
+			}
 		}
 
 		return RUISCalibrationPhase.ReadyToCalibrate;
@@ -502,11 +671,16 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 
 	public override RUISCalibrationPhase CalibrationPhase(float deltaTime) 
 	{
-		
-		this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken.\n\n"
-		                                       + "Keep the " + firstInputName + " right next to the " + secondInputDevice
-		                                       + "\ntracking target, and make wide, calm motions with them.\n"
-		                                       + "Have both sensors see them.", numberOfSamplesTaken, numberOfSamplesToTake);
+		if(firstInputDevice == RUISDevice.Kinect_1 || firstInputDevice == RUISDevice.Kinect_2)
+			this.guiTextLowerLocal = string.Format(   "Calibrating... {0}/{1} samples taken.\n\n"
+													+ "Keep the " + secondInputDevice + " in your right\n"
+													+ "hand and make wide, calm motions with it.\n"
+													+ "Have both sensors see it.", numberOfSamplesTaken, numberOfSamplesToTake);
+		else
+			this.guiTextLowerLocal = string.Format(  "Calibrating... {0}/{1} samples taken.\n\n"
+			                                       + "Keep the " + firstInputName + " right next to the " + secondInputDevice
+			                                       + "\ntracking target, and make wide, calm motions with them.\n"
+			                                       + "Have both sensors see them.", numberOfSamplesTaken, numberOfSamplesToTake);
 
 		PlaceCustomTrackedDevices();
 
@@ -517,7 +691,8 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 			timeSinceScriptStart = 0;
 			this.calibrationPhaseObjects.SetActive(false);
 			this.calibrationResultPhaseObjects.SetActive(true);
-//			this.depthView.SetActive(false); // ***
+			if(this.depthView)
+				this.depthView.SetActive(false);
 			return RUISCalibrationPhase.ShowResults;
 		}
 		else 
@@ -710,7 +885,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		Vector3 openVrSample = GetSample(this.firstInputDevice);
 		Vector3 customSample = GetSample(this.secondInputDevice); // Custom_1/2
 
-		if(firstDeviceError || secondDeviceError)
+		if(firstDeviceError)
 		{
 			showMovementAlert = false;
 			return;
@@ -829,7 +1004,62 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 //				this.guiTextUpperLocal = openVRDeviceName + " not detected.";
 //			}
 		}
-		
+		if(device == RUISDevice.Kinect_2) 
+		{
+			UpdateBodyData();
+			Kinect.Body[] data = kinect2SourceManager.GetBodyData();
+			bool trackedBodyFound = false;
+			int foundBodies = 0;
+			foreach(var body in data) 
+			{
+				foundBodies++;
+				if(body.IsTracked)
+				{
+					if(trackingIDtoIndex[body.TrackingId] == 0)
+					{
+						trackedBodyFound = true;
+						if(body.Joints[Kinect.JointType.HandRight].TrackingState == Kinect.TrackingState.Tracked) 
+						{
+							sample = new Vector3(body.Joints[Kinect.JointType.HandRight].Position.X,
+								body.Joints[Kinect.JointType.HandRight].Position.Y,
+								body.Joints[Kinect.JointType.HandRight].Position.Z );
+							sample = calibration.coordinateSystem.ConvertRawKinect2Location(sample);
+							firstDeviceError = false;
+							if(!secondDeviceError)
+								this.guiTextUpperLocal = "";
+						}
+					}
+				}
+			}
+			if(!trackedBodyFound && foundBodies > 1) 
+			{
+				firstDeviceError = true;
+				if(!secondDeviceError)
+					this.guiTextUpperLocal = "Step out of the Kinect's\nview and come back.";
+			}
+		}
+		if(device == RUISDevice.Kinect_1) 
+		{
+			if(kinectSelection.GetNumberOfSelectedPlayers() > 0)
+			{
+				OpenNI.SkeletonJointPosition jointPosition;
+				bool success = kinectSelection.GetPlayer(0).GetSkeletonJointPosition(OpenNI.SkeletonJoint.RightHand, out jointPosition);
+				if(success && jointPosition.Confidence >= 0.5) 
+				{ 
+					sample = calibration.coordinateSystem.ConvertRawKinectLocation(jointPosition.Position);
+				}
+				firstDeviceError = false;
+				if(!secondDeviceError) 
+					this.guiTextUpperLocal = "";
+			}
+			else
+			{
+				if(!secondDeviceError)
+					this.guiTextUpperLocal = "Step in front of Kinect. \nHold " + secondInputName + " in your right hand.";
+				firstDeviceError = true;
+			}
+		}
+
 		return sample;
 	}
 	
@@ -1007,6 +1237,142 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 		}
 	}
 
+
+//	private void UpdateFloorNormalAndDistance()
+//	{
+//		coordinateSystem.ResetFloorNormal(inputDevice2); // Kinect1/2
+//
+//		if(inputDevice2 == RUISDevice.Kinect_1)
+//		{
+//			OpenNI.Plane3D floor;
+//
+//			try{
+//				floor = sceneAnalyzer.Floor;
+//			}
+//			catch(System.Exception e)
+//			{
+//				Debug.LogError(e.TargetSite + ": Failed to get OpenNI.SceneAnalyzer.Floor.");
+//				return;
+//			}
+//
+//			Quaternion kinectFloorRotator = Quaternion.identity;
+//			kinect2FloorNormal= new Vector3(floor.Normal.X, floor.Normal.Y, floor.Normal.Z);
+//
+//			kinect2FloorNormal.Normalize();
+//
+//			if(kinect2FloorNormal.sqrMagnitude < 0.1f)
+//				kinect2FloorNormal = Vector3.up;
+//
+//			Vector3 floorPoint = new Vector3(floor.Point.X, floor.Point.Y, floor.Point.Z);
+//			kinect2DistanceFromFloor = ClosestDistanceFromFloor(kinect2FloorNormal, floorPoint, RUISCoordinateSystem.kinectToUnityScale);
+//		}
+//
+//		if(inputDevice2 == RUISDevice.Kinect_2)
+//		{
+//			Windows.Kinect.Vector4 kinect2FloorPlane = kinect2SourceManager.GetFlootClipPlane();
+//			kinect2FloorNormal = new Vector3(kinect2FloorPlane.X, kinect2FloorPlane.Y, kinect2FloorPlane.Z);
+//
+//			kinect2FloorNormal.Normalize();
+//
+//			if(kinect2FloorNormal.sqrMagnitude < 0.1f)
+//				kinect2FloorNormal = Vector3.up;
+//
+//			kinect2DistanceFromFloor = kinect2FloorPlane.W / Mathf.Sqrt(kinect2FloorNormal.sqrMagnitude);
+//		}
+//
+//		if(float.IsNaN(kinect2DistanceFromFloor))
+//			kinect2DistanceFromFloor = 0;
+//
+//		Quaternion kinect2FloorRotator = Quaternion.FromToRotation(kinect2FloorNormal, Vector3.up); 
+//
+//		kinect2PitchRotation = Quaternion.Inverse(kinect2FloorRotator);
+//
+//		coordinateSystem.SetDistanceFromFloor(kinect2DistanceFromFloor, inputDevice2);
+//		coordinateSystem.SetFloorNormal(kinect2FloorNormal, inputDevice2);
+//
+//		Debug.Log("Saved Kinect floor normal " + kinect2FloorNormal + " and floor distance (" + kinect2DistanceFromFloor + ")");
+//	}
+
+	private float ClosestDistanceFromFloor(Vector3 floorNormal, Vector3 floorPoint, float scaling) 
+	{
+		float closestDistanceFromFloor = 0;
+
+		floorNormal = floorNormal.normalized;
+		Vector3 newFloorPosition = (new Vector3(floorPoint.x, floorPoint.y, floorPoint.z)) * scaling; 
+		//Project the position of the kinect camera onto the floor
+		//http://en.wikipedia.org/wiki/Point_on_plane_closest_to_origin
+		//http://en.wikipedia.org/wiki/Plane_(geometry)
+		float d = floorNormal.x * newFloorPosition.x + floorNormal.y * newFloorPosition.y + floorNormal.z * newFloorPosition.z;
+		Vector3 closestFloorPoint = new Vector3(floorNormal.x, floorNormal.y, floorNormal.z);
+		closestFloorPoint = (closestFloorPoint * d) / closestFloorPoint.sqrMagnitude;
+		//transform the point from Kinect's coordinate system rotation to Unity's rotation
+		closestDistanceFromFloor = closestFloorPoint.magnitude;
+
+		return closestDistanceFromFloor;
+	}
+
+	private void UpdateBodyData() 
+	{
+		bodyData = kinect2SourceManager.GetBodyData();
+
+		if(bodyData != null) 
+		{
+			// Update tracking ID array
+			for(int y = 0; y < trackingIDs.Length; y++) 
+			{
+				trackingIDs[y].isTracking = false; 
+				trackingIDs[y].index = -1;
+			}
+
+			// Check tracking status and assing old indexes
+			var arrayIndex = 0;
+			foreach(var body in bodyData) 
+			{
+				if(body.IsTracked) 
+				{
+					for(int y = 0; y < trackingIDs.Length; y++) 
+					{
+						if(trackingIDs[y].trackingId == body.TrackingId) { // Body found in tracking IDs array
+							trackingIDs[y].isTracking = true;			   // Reset as tracked
+							trackingIDs[y].kinect2ArrayIndex = arrayIndex; // Set current kinect2 array index
+
+							if(trackingIDtoIndex.ContainsKey(body.TrackingId)) { // If key added to trackingIDtoIndex array earlier...
+								trackingIDs[y].index = trackingIDtoIndex[body.TrackingId]; // Set old index
+							}
+						}
+					}
+
+				}
+
+
+				arrayIndex++;
+			}
+
+			// Add new bodies
+			arrayIndex = 0;
+			foreach(var body in bodyData) 
+			{
+				if(body.IsTracked) 
+				{
+					if(!trackingIDtoIndex.ContainsKey(body.TrackingId)) { // A new body
+						for(int y = 0; y < trackingIDs.Length; y++) 
+						{
+							if(!trackingIDs[y].isTracking) {			// Find an array slot that does not have a tracked body
+								trackingIDs[y].index = y;				// Set index to trackingIDs array index
+								trackingIDs[y].trackingId = body.TrackingId;	
+								trackingIDtoIndex[body.TrackingId] = y;		// Add tracking id to trackingIDtoIndex array
+								trackingIDs[y].kinect2ArrayIndex = arrayIndex;
+								trackingIDs[y].isTracking = true;
+								break;
+							}
+						}	
+					}
+				}	
+				arrayIndex++;	
+			}
+		}
+	}
+
 	public Valve.VR.VRControllerState_t controllerState;
 
 	// TODO: Remove
@@ -1057,6 +1423,7 @@ public class RUISCustomDeviceToOpenVrControllerCalibrationProcess : RUISCalibrat
 	~RUISCustomDeviceToOpenVrControllerCalibrationProcess() // HACK TODO does this work in all cases, calibration finish/abort?
 	{
 //		SteamVR_Utils.Event.Remove("device_connected", OnDeviceConnected);
-		SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
+		if(firstInputDevice == RUISDevice.OpenVR)
+			SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
 	}
 }
