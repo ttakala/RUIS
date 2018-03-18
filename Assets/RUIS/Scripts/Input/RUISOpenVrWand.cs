@@ -2,7 +2,7 @@
 
 Content    :   A class to manage the information from a OpenVR controller
 Authors    :   Tuukka Takala
-Copyright  :   Copyright 2016 Tuukka Takala. All Rights reserved.
+Copyright  :   Copyright 2018 Tuukka Takala. All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
                restricted for commercial projects. Contact tmtakala@gmail.com
                for more information.
@@ -13,7 +13,8 @@ using UnityEngine;
 using System.Collections;
 
 
-public class RUISOpenVrWand : RUISWand {
+public class RUISOpenVrWand : RUISWand 
+{
 	public enum SelectionButton
 	{
 		Trigger,
@@ -24,6 +25,7 @@ public class RUISOpenVrWand : RUISWand {
 	}
 
 	[Header("Controller ID can forced in runtime from below 'Steam VR_Tracked Object'")]
+	[Tooltip("OpenVR controller button for selecting GameObjects that have the RUISSelectable component.")]
 	public SelectionButton selectionButton;
 
 	private SteamVR_TrackedObject steamVRTrackedObject;
@@ -33,13 +35,15 @@ public class RUISOpenVrWand : RUISWand {
 
 	protected RUISCoordinateSystem coordinateSystem;
 
+	[Tooltip("Color of the selection ray.")]
 	public Color wandColor = Color.white;
 	public override Color color { get { return wandColor; } }
 
+	[Tooltip("Opacity of the selection ray.")]
 	[Range(0f, 1f)]
 	public float rayColorAlpha = 1;
 
-	public void Awake ()
+	public void Awake()
 	{
 
 		steamVRTrackedObject = GetComponent<SteamVR_TrackedObject>();
@@ -48,10 +52,10 @@ public class RUISOpenVrWand : RUISWand {
 			Debug.LogError("Could not find " + typeof(SteamVR_TrackedObject) + " in gameObject " + name + "! It is required.");
 		}
 
-		if (coordinateSystem == null)
+		if(coordinateSystem == null)
 		{
 			coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
-			if (!coordinateSystem)
+			if(!coordinateSystem)
 			{
 				Debug.LogError("Could not find " + typeof(RUISCoordinateSystem) + " script! It should be located in RUIS->InputManager.");
 			}
@@ -73,48 +77,48 @@ public class RUISOpenVrWand : RUISWand {
 	{
 		switch (selectionButton)
 		{
-		case SelectionButton.Trigger:
-			return triggerButtonWasPressed;
-		case SelectionButton.Menu:
-			return menuButtonWasPressed;
-		case SelectionButton.Pad:
-			return padButtonWasPressed;
-		case SelectionButton.Grip:
-			return gripButtonWasPressed;
-		default:
-			return false;
+			case SelectionButton.Trigger:
+				return TriggerButtonWasPressed;
+			case SelectionButton.Menu:
+				return MenuButtonWasPressed;
+			case SelectionButton.Pad:
+				return PadButtonWasPressed;
+			case SelectionButton.Grip:
+				return GripButtonWasPressed;
+			default:
+				return false;
 		}
 	}
 
 	public override bool SelectionButtonWasReleased()
 	{
-		switch (selectionButton)
+		switch(selectionButton)
 		{
-		case SelectionButton.Trigger:
-			return triggerButtonWasReleased;
-		case SelectionButton.Menu:
-			return menuButtonWasReleased;
-		case SelectionButton.Pad:
-			return padButtonWasReleased;
-		case SelectionButton.Grip:
-			return gripButtonWasReleased;
-		default:
-			return false;
+			case SelectionButton.Trigger:
+				return TriggerButtonWasReleased;
+			case SelectionButton.Menu:
+				return MenuButtonWasReleased;
+			case SelectionButton.Pad:
+				return PadButtonWasReleased;
+			case SelectionButton.Grip:
+				return GripButtonWasReleased;
+			default:
+				return false;
 		}
 	}
 
 	public override bool SelectionButtonIsDown()
 	{
-		switch (selectionButton)
+		switch(selectionButton)
 		{
 			case SelectionButton.Trigger:
-				return triggerButtonDown;
+				return TriggerButtonDown;
 			case SelectionButton.Menu:
-				return menuButtonDown;
+				return MenuButtonDown;
 			case SelectionButton.Pad:
-				return padButtonDown;
+				return PadButtonDown;
 			case SelectionButton.Grip:
-				return gripButtonDown;
+				return GripButtonDown;
 			default:
 				return false;
 		}
@@ -128,21 +132,22 @@ public class RUISOpenVrWand : RUISWand {
 	/// <summary>
 	/// Returns velocity in wand's local coordinate system, unaffected my parent's scale
 	/// </summary>
-	public Vector3 velocity
+	public Vector3 Velocity
 	{
 		get
 		{
-			if(steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None)
+			if(   steamVRTrackedObject && steamVRTrackedObject.isValid && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None
+			   && SteamVR_Controller.Input((int)steamVRTrackedObject.index).valid
+			   && SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected													)
 				return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).velocity, RUISDevice.OpenVR);
-			else
-				return Vector3.zero;
+			return Vector3.zero;
 		}
 	}
 
 	/// <summary>
 	/// Returns angularVelocity in wand's local coordinate system, unaffected my parent's scale
 	/// </summary>
-	public Vector3 angularVelocity
+	public Vector3 AngularVelocity
 	{
 		get
 		{	
@@ -154,7 +159,7 @@ public class RUISOpenVrWand : RUISWand {
 		}
 	}
 
-	private bool getPress(Valve.VR.EVRButtonId buttonId)
+	private bool GetPress(Valve.VR.EVRButtonId buttonId)
 	{
 		if(	   steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None 
 			&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected						)
@@ -163,7 +168,7 @@ public class RUISOpenVrWand : RUISWand {
 		return false;
 	}
 
-	private bool getWasPressed(Valve.VR.EVRButtonId buttonId)
+	private bool GetWasPressed(Valve.VR.EVRButtonId buttonId)
 	{
 		if(	   steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None 
 			&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected						)
@@ -172,7 +177,7 @@ public class RUISOpenVrWand : RUISWand {
 		return false;
 	}
 
-	private bool getWasReleased(Valve.VR.EVRButtonId buttonId)
+	private bool GetWasReleased(Valve.VR.EVRButtonId buttonId)
 	{
 		if(	   steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None 
 			&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected						)
@@ -181,22 +186,22 @@ public class RUISOpenVrWand : RUISWand {
 		return false;
 	}
 
-	public bool gripButtonDown { get { return getPress(Valve.VR.EVRButtonId.k_EButton_Grip); } }
-	public bool menuButtonDown { get { return getPress(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu); } }
-	public bool padButtonDown { get { return getPress(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad); } }
-	public bool triggerButtonDown { get { return getPress(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger); } }
+	public bool GripButtonDown 			{ get { return GetPress(Valve.VR.EVRButtonId.k_EButton_Grip); } }
+	public bool MenuButtonDown 			{ get { return GetPress(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu); } }
+	public bool PadButtonDown 			{ get { return GetPress(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad); } }
+	public bool TriggerButtonDown 		{ get { return GetPress(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger); } }
 
-	public bool gripButtonWasPressed { get { return getWasPressed(Valve.VR.EVRButtonId.k_EButton_Grip); } }
-	public bool menuButtonWasPressed { get { return getWasPressed(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu); } }
-	public bool padButtonWasPressed { get { return getWasPressed(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad); } }
-	public bool triggerButtonWasPressed { get { return getWasPressed(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger); } }
+	public bool GripButtonWasPressed 	{ get { return GetWasPressed(Valve.VR.EVRButtonId.k_EButton_Grip); } }
+	public bool MenuButtonWasPressed 	{ get { return GetWasPressed(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu); } }
+	public bool PadButtonWasPressed 	{ get { return GetWasPressed(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad); } }
+	public bool TriggerButtonWasPressed { get { return GetWasPressed(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger); } }
 
-	public bool gripButtonWasReleased { get { return getWasReleased(Valve.VR.EVRButtonId.k_EButton_Grip); } }
-	public bool menuButtonWasReleased { get { return getWasReleased(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu); } }
-	public bool padButtonWasReleased { get { return getWasReleased(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad); } }
-	public bool triggerButtonWasReleased { get { return getWasReleased(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger); } }
+	public bool GripButtonWasReleased 	{ get { return GetWasReleased(Valve.VR.EVRButtonId.k_EButton_Grip); } }
+	public bool MenuButtonWasReleased 	{ get { return GetWasReleased(Valve.VR.EVRButtonId.k_EButton_ApplicationMenu); } }
+	public bool PadButtonWasReleased 	{ get { return GetWasReleased(Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad); } }
+	public bool TriggerButtonWasReleased{ get { return GetWasReleased(Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger); } }
 
-	public float triggerValue 
+	public float TriggerValue 
 	{ 
 		get 
 		{ 
@@ -211,6 +216,6 @@ public class RUISOpenVrWand : RUISWand {
 	// Returns angularVelocity in wand's local coordinate system
 	public override Vector3 GetAngularVelocity()
 	{
-		return angularVelocity;
+		return AngularVelocity;
 	}
 }

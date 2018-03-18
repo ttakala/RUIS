@@ -19,7 +19,7 @@ public class ResetBall : MonoBehaviour {
 
     void FixedUpdate()
     {
-		if(shouldResetBall || (controller && controller.menuButtonWasPressed)) //controller.moveButtonWasPressed)
+		if(shouldResetBall || (controller && controller.MenuButtonWasPressed)) //controller.moveButtonWasPressed)
         {
             transform.position = ballResetSpot.transform.position;
             transform.rotation = ballResetSpot.transform.rotation;

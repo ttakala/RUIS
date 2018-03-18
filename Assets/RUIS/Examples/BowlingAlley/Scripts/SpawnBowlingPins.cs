@@ -25,7 +25,7 @@ public class SpawnBowlingPins : MonoBehaviour
 
 	void Update() 
 	{
-		if(controller.padButtonWasPressed) // if(controller.triangleButtonWasPressed)
+		if(controller.PadButtonWasPressed) // if(controller.triangleButtonWasPressed)
         {
             if (oldBowlingPins)
             {

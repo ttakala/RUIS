@@ -27,6 +27,8 @@
 			<element name="Kinect_1-Custom_2" type="tns:TransformsFieldsType"/>
 			<element name="Kinect_2-Custom_2" type="tns:TransformsFieldsType"/>
 			<element name="Kinect_2-Kinect_1" type="tns:TransformsFieldsType"/>
+			<element name="UnityXR-Kinect_1" type="tns:TransformsFieldsType"/>
+			<element name="UnityXR-Kinect_2" type="tns:TransformsFieldsType"/>
 		</all>
 	</complexType>
 	

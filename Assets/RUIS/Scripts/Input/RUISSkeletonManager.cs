@@ -198,10 +198,16 @@ public class RUISSkeletonManager : MonoBehaviour
 	private Quaternion lastRightHipRotation 		= Quaternion.identity;
 	private Quaternion lastLeftHipRotation 			= Quaternion.identity;
 
+
+	[Tooltip(  "Interpolate Kinect 1 skeletons' head position from the measured head position (0) to the measured neck position (1). This setting can be "
+	         + "used to give better correspondence with Kinect 2 (so that both Kinects can be used to animate the same skeletons). Default value is 0.5.")]
+	[Range(0f, 0.95f)]
+	public float headOffsetKinect1 = 0.5f;
+
 	[Tooltip(  "Interpolate Kinect 2 skeletons' head position from the measured head position (0) to the measured neck position (1). This setting can be "
 	         + "used to give better correspondence with Kinect 1 (so that both Kinects can be used to animate the same skeletons). Default value is 0.5.")]
 	[Range(0f, 0.95f)]
-	public float headOffsetKinect2 = 0.7f;
+	public float headOffsetKinect2 = 0.5f;
 	private Vector3 tempVector = Vector3.zero;
 
     void Awake()
@@ -398,6 +404,11 @@ public class RUISSkeletonManager : MonoBehaviour
 				skeletons[kinect1SensorID, i].torso.rotation 			= skeletons[kinect1SensorID, i].root.rotation;
 				skeletons[kinect1SensorID, i].torso.rotationConfidence 	= skeletons[kinect1SensorID, i].root.rotationConfidence;
 
+				// Interpolate head position
+				skeletons[kinect1SensorID, i].head.position =  skeletons[kinect1SensorID, i].head.position 
+					+ headOffsetKinect1 * (skeletons[kinect1SensorID, i].neck.position - skeletons[kinect1SensorID, i].head.position);
+				skeletons[kinect1SensorID, i].head.positionConfidence = Mathf.Min(skeletons[kinect1SensorID, i].head.positionConfidence, 
+				                                                                  skeletons[kinect1SensorID, i].neck.positionConfidence );
 
 				if(skeletons[kinect1SensorID, i].filterRotations && HasNewMocapData(skeletons[kinect1SensorID, i]))
 				{
@@ -497,8 +508,11 @@ public class RUISSkeletonManager : MonoBehaviour
 //						skeletons[kinect2SensorID, playerID].root.position  = tempVector; //  root.rotation was set by  UpdateKinect2RootData() to that of SpineMid
 //						skeletons[kinect2SensorID, playerID].torso.position = tempVector; // torso.rotation was set by UpdateKinect2JointData() to that of SpineMid
 
+						// Interpolate head position
 						skeletons[kinect2SensorID, playerID].head.position =  skeletons[kinect2SensorID, playerID].head.position 
 																			+ headOffsetKinect2 * (skeletons[kinect2SensorID, playerID].neck.position - skeletons[kinect2SensorID, playerID].head.position);
+						skeletons[kinect2SensorID, playerID].head.positionConfidence = Mathf.Min(skeletons[kinect2SensorID, playerID].head.positionConfidence, 
+						                                                                         skeletons[kinect2SensorID, playerID].neck.positionConfidence );
 
 						// *** OPTIHACK4 skeletons [kinect2SensorID, playerID].midSpine <-- change to .chest
 						UpdateKinect2JointData(GetKinect2JointData(body.Joints[Kinect.JointType.SpineMid], body.JointOrientations[Kinect.JointType.SpineMid]), playerID, ref skeletons [kinect2SensorID, playerID].chest);

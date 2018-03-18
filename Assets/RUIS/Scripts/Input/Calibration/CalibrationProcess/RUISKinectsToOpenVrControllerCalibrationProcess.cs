@@ -30,7 +30,7 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 	
 	// Abstract class variables
 	private RUISDevice inputDevice1, inputDevice2;
-	public string guiTextUpperLocal, guiTextLowerLocal;
+	public string guiTextUpperLocal = "", guiTextLowerLocal = "";
 
 	public override string guiTextUpper { get{return getUpperText();} }
 	public override string guiTextLower { get{return getLowerText();} }
@@ -388,13 +388,14 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 			}
 		}
 
-		if(trackedOpenVRObjects != null)
+		if(trackedOpenVRObjects != null && trackedOpenVRObjects.Length != 0)
 		{
 			foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 			{
-
 				if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
 					this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
+				else if(this.guiTextUpperLocal.Contains("controller not detected"))
+						this.guiTextUpperLocal = "";
 			}
 		}
 		else
@@ -430,7 +431,7 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
 			trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-		if(trackedOpenVRObjects != null)
+		if(trackedOpenVRObjects != null && trackedOpenVRObjects.Length != 0)
 		{
 			foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 			{
@@ -447,6 +448,8 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 
 				if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
 					this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
+				else if(this.guiTextUpperLocal.Contains("controller not detected"))
+					this.guiTextUpperLocal = "";
 			}
 		}
 		else
@@ -528,7 +531,7 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
 			trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-		if(    SteamVR_Controller.Input(viveControllerIndex).connected )
+		if(SteamVR_Controller.Input(viveControllerIndex).connected )
 		{
 			var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(viveControllerIndex).GetPose().mDeviceToAbsoluteTracking);
 
@@ -726,7 +729,7 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 			if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
 				trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-			if(trackedOpenVRObjects != null)
+			if(trackedOpenVRObjects != null && trackedOpenVRObjects.Length != 0)
 			{
 				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 				{
@@ -753,6 +756,8 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 						device2Error = true;
 						this.guiTextUpperLocal = openVRDeviceName + " controller not detected.";
 					}
+					else if(this.guiTextUpperLocal.Contains("controller not detected"))
+						this.guiTextUpperLocal = "";
 				}
 			}
 			else

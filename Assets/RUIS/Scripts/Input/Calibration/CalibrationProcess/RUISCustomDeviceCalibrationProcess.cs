@@ -28,7 +28,7 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 		return this.guiTextLowerLocal;
 	}
 
-	public string guiTextUpperLocal, guiTextLowerLocal;
+	public string guiTextUpperLocal = "", guiTextLowerLocal = "";
 
 	// Abstract class variables
 	public override string guiTextUpper { get{return getUpperText();} }
@@ -116,22 +116,13 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 		this.iconObjects = calibrationSettings.iconObjects;
 		this.floorPlane = calibrationSettings.floorPlane; //GameObject.Find ("Floor");
 
-		foreach (Transform child in this.deviceModelObjects.transform)
-			child.gameObject.SetActive(false);
-		foreach (Transform child in this.depthViewObjects.transform)
-			child.gameObject.SetActive(false);
-		foreach (Transform child in this.iconObjects.transform)
-			child.gameObject.SetActive(false);
-
+		
 		bool calibratingOpenVR = false;
 		if(calibrationSettings.firstDevice == RUISDevice.OpenVR || calibrationSettings.secondDevice == RUISDevice.OpenVR)
 		{
 			firstInputDevice = RUISDevice.OpenVR;
 			if(calibration.firstIconText)
 			{
-				if(calibration.firstIcon)
-					calibration.firstIcon.gameObject.SetActive(true);
-				calibration.firstIconText.gameObject.SetActive(true);
 				calibration.firstIconText.text = RUISDevice.OpenVR.ToString();
 			}
 			calibratingOpenVR = true;
@@ -143,13 +134,10 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			firstInputDevice = RUISDevice.Kinect_1;
 			if(calibration.firstIconText)
 			{
-				if(calibration.firstIcon)
-					calibration.firstIcon.gameObject.SetActive(true);
-				calibration.firstIconText.gameObject.SetActive(true);
 				calibration.firstIconText.text = "Kinect 1";
 			}
 			firstInputName = "Kinect 1";
-			this.depthView = GameObject.Find ("KinectDepthView");
+			this.depthView = GameObject.Find("KinectDepthView");
 			calibratingKinect = true;
 		}
 		if(calibrationSettings.firstDevice == RUISDevice.Kinect_2 || calibrationSettings.secondDevice == RUISDevice.Kinect_2)
@@ -157,13 +145,10 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			firstInputDevice = RUISDevice.Kinect_2;
 			if(calibration.firstIconText)
 			{
-				if(calibration.firstIcon)
-					calibration.firstIcon.gameObject.SetActive(true);
-				calibration.firstIconText.gameObject.SetActive(true);
 				calibration.firstIconText.text = "Kinect 2";
 			}
 			firstInputName = "Kinect 2";
-			this.depthView = GameObject.Find ("Kinect2DepthView");
+			this.depthView = GameObject.Find("Kinect2DepthView");
 			calibratingKinect = true;
 		}
 
@@ -174,8 +159,6 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 				secondInputDevice = RUISDevice.Custom_1;
 			else
 				firstInputDevice = RUISDevice.Custom_1;
-			if(calibration.customDevice1Object)
-				calibration.customDevice1Object.SetActive(true);
 
 			if(RUISCalibrationProcessSettings.customDevice1Conversion != null)
 				device1Conversion = RUISCalibrationProcessSettings.customDevice1Conversion;
@@ -192,9 +175,6 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			{
 				if(calibration.firstIconText)
 				{
-					if(calibration.firstIcon)
-						calibration.firstIcon.gameObject.SetActive(true);
-					calibration.firstIconText.gameObject.SetActive(true);
 					calibration.firstIconText.text = string.IsNullOrEmpty(deviceName)?RUISDevice.Custom_1.ToString():deviceName;
 				}
 			}
@@ -202,9 +182,6 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			{
 				if(calibration.secondIconText)
 				{
-					if(calibration.secondIcon)
-						calibration.secondIcon.gameObject.SetActive(true);
-					calibration.secondIconText.gameObject.SetActive(true);
 					calibration.secondIconText.text = string.IsNullOrEmpty(deviceName)?RUISDevice.Custom_1.ToString():deviceName;
 				}
 			}
@@ -220,8 +197,6 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 		{
 			// Note: device2* variables always refer to RUISDevice.Custom_2, whereas first*/second* variables only refer to the calibration "slot"
 			secondInputDevice = RUISDevice.Custom_2;
-			if(calibration.customDevice2Object)
-				calibration.customDevice2Object.SetActive(true);
 
 			if(RUISCalibrationProcessSettings.customDevice2Conversion != null)
 				device2Conversion = RUISCalibrationProcessSettings.customDevice2Conversion;
@@ -236,9 +211,6 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 
 			if(calibration.secondIconText)
 			{
-				if(calibration.secondIcon)
-					calibration.secondIcon.gameObject.SetActive(true);
-				calibration.secondIconText.gameObject.SetActive(true);
 				calibration.secondIconText.text = string.IsNullOrEmpty(deviceName)?RUISDevice.Custom_2.ToString():deviceName;
 			}
 
@@ -249,7 +221,7 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			Debug.LogError("Variable calibrationSettings.firstDevice is " + calibrationSettings.firstDevice + ", and " 
 							+ "calibrationSettings.secondDevice is " + calibrationSettings.secondDevice + ". Expected one of them to be " 
 							+ RUISDevice.Custom_1 + " or " + RUISDevice.Custom_2);
-		
+
 		this.numberOfSamplesToTake = calibrationSettings.numberOfSamplesToTake;
 		this.numberOfSamplesPerSecond = calibrationSettings.numberOfSamplesPerSecond;
 
@@ -325,6 +297,7 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			case RUISDevice.OpenVR: this.firstDeviceIcon = GameObject.Find("PS Move Icon"); break; // TODO replace with OpenVR controller icon
 			case RUISDevice.Kinect_1: this.firstDeviceIcon = GameObject.Find("Kinect Icon"); break;
 			case RUISDevice.Kinect_2: this.firstDeviceIcon = GameObject.Find("Kinect2 Icon"); break;
+			case RUISDevice.Custom_1: this.firstDeviceIcon = GameObject.Find("1st Icon Background"); break;
 		}
 
 		if(firstInputDevice == RUISDevice.Kinect_1 || firstInputDevice == RUISDevice.Kinect_2)
@@ -334,13 +307,28 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 
 		if(this.firstDeviceIcon && this.firstDeviceIcon.GetComponent<GUITexture>())
 			this.firstDeviceIcon.GetComponent<GUITexture>().pixelInset = new Rect(5.1f, 10.0f, 70.0f, 70.0f);
-		
+
+		foreach (Transform child in this.deviceModelObjects.transform)
+			child.gameObject.SetActive(false);
+		foreach (Transform child in this.depthViewObjects.transform)
+			child.gameObject.SetActive(false);
+		foreach (Transform child in this.iconObjects.transform)
+			child.gameObject.SetActive(false);
+
+		if((firstInputDevice == RUISDevice.Custom_1 || secondInputDevice == RUISDevice.Custom_1) && calibration.customDevice1Object)
+			calibration.customDevice1Object.SetActive(true);
+		if(secondInputDevice == RUISDevice.Custom_2 && calibration.customDevice2Object)
+			calibration.customDevice2Object.SetActive(true);
 		if(this.customOriginObject != null)
 			this.customOriginObject.SetActive(true);
 		if(this.firstDeviceIcon)
 			this.firstDeviceIcon.SetActive(true);
 		if(this.customIcon)
 			this.customIcon.SetActive(true);
+		if(calibration.firstIconText)
+			calibration.firstIconText.gameObject.SetActive(true);
+		if(calibration.secondIconText)
+			calibration.secondIconText.gameObject.SetActive(true);
 		if(this.calibrationPhaseObjects)
 			this.calibrationPhaseObjects.SetActive(true);
 		if(this.calibrationResultPhaseObjects)
@@ -553,11 +541,13 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
 				trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-			if(trackedOpenVRObjects != null)
+			if(trackedOpenVRObjects != null && trackedOpenVRObjects.Length != 0)
 			{
 				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 					if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
 						this.guiTextUpperLocal = firstInputName + " not detected.";
+					else if(this.guiTextUpperLocal.Contains(" not detected"))
+						this.guiTextUpperLocal = "";
 			}
 			else
 				this.guiTextUpperLocal = firstInputName + " not detected.";
@@ -636,7 +626,7 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
 				trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-			if(trackedOpenVRObjects != null)
+			if(trackedOpenVRObjects != null && trackedOpenVRObjects.Length != 0)
 			{
 				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 				{
@@ -653,6 +643,8 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 
 					if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1)
 						this.guiTextUpperLocal = firstInputName + " not detected.";
+					else if(this.guiTextUpperLocal.Contains(" not detected"))
+						this.guiTextUpperLocal = "";
 				}
 			}
 			else
@@ -958,7 +950,7 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 			if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
 				trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-			if(trackedOpenVRObjects != null)
+			if(trackedOpenVRObjects != null && trackedOpenVRObjects.Length != 0)
 			{
 				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 				{
@@ -971,6 +963,8 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 							sample = trackedOpenVRObject.transform.localPosition;
 							firstDeviceError = false;
 
+							if(this.guiTextUpperLocal.Contains(" not tracked"))
+								this.guiTextUpperLocal = "";
 							break;
 						}
 						else
@@ -980,11 +974,13 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 						}
 					}
 
-					if (trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1) 
+					if(trackedOpenVRObject.index == SteamVR_TrackedObject.EIndex.Hmd && trackedOpenVRObjects.Length == 1) 
 					{
 						firstDeviceError = true;
 						this.guiTextUpperLocal = firstInputName + " not detected.";
 					}
+					else if(this.guiTextUpperLocal.Contains(" not detected"))
+						this.guiTextUpperLocal = "";
 				}
 			}
 			else

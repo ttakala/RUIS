@@ -27,7 +27,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 	float minScale = 0.01f; // Should not be negative!
 	float maxScale = 3.0f;
-	float minThickness = 0.1f; // Should not be negative!
+	float minThickness = 0.3f; // Should not be negative!
 	float maxThickness = 3.0f;
 
 	// Below those SerializedProperty fields that are marked with public can be kept (saved) after exiting play mode, if the SerializedProperty links to a
@@ -60,6 +60,8 @@ public class RUISSkeletonControllerEditor : Editor
 
 	public SerializedProperty limbsAreScaled;
 	public SerializedProperty independentTorsoSegmentsScaling;
+	public SerializedProperty scalingNeck;
+	public SerializedProperty scalingClavicles;
 	public SerializedProperty heightAffectsOffsets;
 
 	public SerializedProperty forceChestPosition;
@@ -282,6 +284,8 @@ public class RUISSkeletonControllerEditor : Editor
 		boneLengthAxis = serializedObject.FindProperty("boneLengthAxis");
 		limbsAreScaled = serializedObject.FindProperty("limbsAreScaled");
 		independentTorsoSegmentsScaling = serializedObject.FindProperty("independentTorsoSegmentsScaling");
+		scalingNeck = serializedObject.FindProperty("scalingNeck");
+		scalingClavicles = serializedObject.FindProperty("scalingClavicles");
 		heightAffectsOffsets = serializedObject.FindProperty("heightAffectsOffsets");
 
 		forceChestPosition = serializedObject.FindProperty("forceChestPosition");
@@ -850,9 +854,24 @@ public class RUISSkeletonControllerEditor : Editor
 																					+ "torso segments (abdomen and chest) to resolve segment proportion " 
 																					+ "differences between the user and avatar model. If you leave this "
 																					+ "disabled, then translations between segments and a single scale "
-																					+ "accross the whole torso are used to resolve the differences. This "
-																					+ "option is effective when you use more accurate mocap systems than "
+																					+ "accross the whole torso are used to resolve the differences. Enabling "
+																					+ "this option is useful when using more accurate mocap systems than "
 																					+ "Kinect."));
+
+		EditorGUI.indentLevel++;
+		GUI.enabled = independentTorsoSegmentsScaling.boolValue && useHierarchicalModel.boolValue && scaleHierarchicalModelBones.boolValue;
+
+		EditorGUILayout.PropertyField(scalingNeck, new GUIContent("Neck Scaling", "Uniformly scale the neck bone in real-time based on the ratio between "
+		                                                        	+ "the detected neck-head distance and the original avatar model neck bone length. "
+		                                                        	+ "Usually it is best to keep this option disabled."));
+		EditorGUILayout.PropertyField(scalingClavicles, new GUIContent("Clavicle Scaling", "Uniformly scale the left and right clavicle bones in real-time "
+		                                                            + "based on the ratio between the detected clavicle-shoulder distance and the original "
+		                                                            + "avatar model clavicle bone length.\nNOTE: This option has no effect when using Kinect, "
+		                                                            + "or if the Left/Right Clavicle Sources are not set in the \"Custom Mocap Source "
+		                                                            + "Transforms\" section. Usually it is best to keep this option disabled."));
+		
+		GUI.enabled = useHierarchicalModel.boolValue && scaleHierarchicalModelBones.boolValue;
+		EditorGUI.indentLevel--;
 
 		EditorGUILayout.Slider(torsoThickness, minThickness, maxThickness, new GUIContent("Torso Thickness", "Uniform scale that gets applied to the torso. "
 																						+ "This does not affect joint positions."));

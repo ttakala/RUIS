@@ -147,6 +147,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool trackAnkle = false;
 	public bool rotateWristFromElbow = true;
 	public bool independentTorsoSegmentsScaling = false;
+	public bool scalingNeck = false;
+	public bool scalingClavicles = false;
 	public bool heightAffectsOffsets = false; // TODO
 
 	public bool forceChestPosition = false;
@@ -930,14 +932,14 @@ public class RUISSkeletonController : MonoBehaviour
 			// If HMD is used as a source for head pose, set head position and rotation confidence accordingly
 			if(RUISDisplayManager.IsHmdPresent())
 			{
-				if(hmdMovesHead)
+				if(hmdMovesHead && !headsetDragsBody)
 					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.positionConfidence = 1;
 				if(hmdRotatesHead)
 					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotationConfidence = 1;
 			}
 			else
 			{
-				if(hmdMovesHead)
+				if(hmdMovesHead && !headsetDragsBody)
 					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.positionConfidence = 0;
 				if(hmdRotatesHead)
 					skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotationConfidence = 0;
@@ -1230,9 +1232,9 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 
-		tempVector = transform.TransformPoint(skeleton.leftHand.position - skeleton.leftElbow.position);
-		Debug.DrawLine(leftElbow.position, leftElbow.position + tempVector);
-		Debug.DrawLine(leftElbow.position + 0.01f * Vector3.up, leftHand.position + 0.01f * Vector3.up, Color.magenta);
+//		tempVector = transform.TransformPoint(skeleton.leftHand.position - skeleton.leftElbow.position);
+//		Debug.DrawLine(leftElbow.position, leftElbow.position + tempVector);
+//		Debug.DrawLine(leftElbow.position + 0.01f * Vector3.up, leftHand.position + 0.01f * Vector3.up, Color.magenta);
 
 //		tempVector = transform.TransformPoint(skeleton.leftHand.rotation * (-Vector3.right));
 //		Debug.DrawLine(leftElbow.position, leftElbow.position + tempVector);
@@ -1519,6 +1521,8 @@ public class RUISSkeletonController : MonoBehaviour
 //												+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(0)), Color.red);
 //		}
 
+		// *** OPTIHACK7 the below scale correction does not work perfectly if parent has extreme non-uniform scaling (regardless if parent/child is 
+		//				upper/lower arm or lower arm/hand): the rotations get "magnified" in some directions still
 		if(isEndBone) // *** OPTIHACK6 don't use .parent and .parent.parent
 			return transformToUpdate.parent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) 
 					* transformToUpdate.parent.parent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.parent.rotation) 
@@ -1753,8 +1757,8 @@ public class RUISSkeletonController : MonoBehaviour
 		if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
 		{	
 			// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
-			jointOffset = headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
-																		headsetCoordinates) * hmdLocalOffset; 
+			jointOffset = skeleton.neck.rotation * headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+																								 headsetCoordinates) * hmdLocalOffset; 
 			// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
 		}
 		else
@@ -1984,7 +1988,7 @@ public class RUISSkeletonController : MonoBehaviour
 	private float cumulativeScale = 1;
 	private float cumulatedPelvisScale = 1;
 	private float limbStartScale = 1;
-	private float neckScale = 1;
+	private float clavicleParentScale = 1;
 	private float torsoMultiplier = 1;
 	private Vector3 elementScale = Vector3.one;
 
@@ -2014,13 +2018,13 @@ public class RUISSkeletonController : MonoBehaviour
 			cumulativeScale = UpdateUniformBoneScaling(chest, neck, skeleton.chest, skeleton.neck, torsoMultiplier * chestScaleAdjust, cumulativeScale);
 			
 			if(!neckParentsShoulders)
-				neckScale = cumulativeScale;
+				clavicleParentScale = cumulativeScale;
 
 			cumulativeScale = UpdateUniformBoneScaling(neck, head, skeleton.neck, skeleton.head, torsoMultiplier * neckScaleAdjust, cumulativeScale);
 			if(neckParentsShoulders)
-				neckScale = cumulativeScale;
+				clavicleParentScale = cumulativeScale;
 
-			if(head && neckScale != 0) // cumulativeScale contains the accumulated scale of head's parent
+			if(head && cumulativeScale != 0) // cumulativeScale contains the accumulated scale of head's parent
 				head.localScale = (headScaleAdjust / cumulativeScale) * Vector3.one; 
 		}
 //		else // *** OPTIHACK4 commented this whole else clause
@@ -2037,7 +2041,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 //		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK4 commented this
 			limbStartScale = UpdateUniformBoneScaling(rightClavicle, rightShoulder, skeleton.rightClavicle, skeleton.rightShoulder, 
-													  torsoMultiplier * clavicleScaleAdjust, neckScale);
+													  torsoMultiplier * clavicleScaleAdjust, clavicleParentScale);
 
 		cumulativeScale = UpdateBoneScaling(rightShoulder, rightElbow, skeleton.rightShoulder, skeleton.rightElbow,  limbStartScale);
 		cumulativeScale = UpdateBoneScaling(rightElbow,    rightHand,  skeleton.rightElbow,    skeleton.rightHand,  cumulativeScale);
@@ -2045,7 +2049,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 //		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK4 commented this
 			limbStartScale = UpdateUniformBoneScaling(leftClavicle, leftShoulder, skeleton.leftClavicle, skeleton.leftShoulder, 
-													  torsoMultiplier * clavicleScaleAdjust, neckScale);
+													  torsoMultiplier * clavicleScaleAdjust, clavicleParentScale);
 
 		cumulativeScale = UpdateBoneScaling(leftShoulder, leftElbow, skeleton.leftShoulder, skeleton.leftElbow,  limbStartScale);
 		cumulativeScale = UpdateBoneScaling(leftElbow,    leftHand,  skeleton.leftElbow,    skeleton.leftHand,  cumulativeScale);
@@ -2061,7 +2065,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 	}
 
-	private float UpdateUniformBoneScaling( Transform boneToScale, Transform comparisonBone, RUISSkeletonManager.JointData boneToScaleTracker, 
+	private float UpdateUniformBoneScaling(Transform boneToScale, Transform comparisonBone, RUISSkeletonManager.JointData boneToScaleTracker, 
 		                                   RUISSkeletonManager.JointData comparisonBoneTracker, float adjustScale, float accumulatedScale		)
 	{
 		if(!boneToScale)
@@ -2071,7 +2075,7 @@ public class RUISSkeletonController : MonoBehaviour
 		float modelBoneLength = 1;
 		float extremityTweaker = 1;
 		float playerBoneLength = 1;
-		bool isMidsectionBone = false;
+		bool isScaledBone = true;
 
 		switch(boneToScaleTracker.jointID)
 		{
@@ -2079,14 +2083,14 @@ public class RUISSkeletonController : MonoBehaviour
 			case RUISSkeletonManager.Joint.RightKnee:  extremityTweaker = shinLengthRatio; break;
 			case RUISSkeletonManager.Joint.LeftElbow:  extremityTweaker = forearmLengthRatio; break;
 			case RUISSkeletonManager.Joint.RightElbow: extremityTweaker = forearmLengthRatio; break;
-			case RUISSkeletonManager.Joint.Torso: 	   isMidsectionBone = true; break;
-			case RUISSkeletonManager.Joint.Chest: 	   isMidsectionBone = true; break;
-			case RUISSkeletonManager.Joint.Neck: 	   isMidsectionBone = true; break;
-			case RUISSkeletonManager.Joint.LeftClavicle:  isMidsectionBone = true; break;
-			case RUISSkeletonManager.Joint.RightClavicle: isMidsectionBone = true; break;
+			case RUISSkeletonManager.Joint.Torso:			isScaledBone = independentTorsoSegmentsScaling; break;
+			case RUISSkeletonManager.Joint.Chest:			isScaledBone = independentTorsoSegmentsScaling; break;
+			case RUISSkeletonManager.Joint.Neck:			isScaledBone = independentTorsoSegmentsScaling && scalingNeck; break;
+			case RUISSkeletonManager.Joint.LeftClavicle:	isScaledBone = independentTorsoSegmentsScaling && scalingClavicles; break;
+			case RUISSkeletonManager.Joint.RightClavicle:	isScaledBone = independentTorsoSegmentsScaling && scalingClavicles; break;
 		}
 
-		if(independentTorsoSegmentsScaling || !isMidsectionBone)
+		if(isScaledBone)
 		{
 			if(comparisonBone)
 			{
@@ -2313,9 +2317,9 @@ public class RUISSkeletonController : MonoBehaviour
 				else // Forearm or Shin
 				{	
 					// Replace boneToScale.rotation with a rotation that is not scale corrected
-					skewedScaleTweak = extremityTweaker * CalculateScale(boneToScale.rotation * w, avatarParentBone, parentBoneThickness, accumulatedScale);
-					thicknessU 		 = thickness 		* CalculateScale(boneToScale.rotation * u, avatarParentBone, parentBoneThickness, accumulatedScale);
-					thicknessV 		 = thickness 		* CalculateScale(boneToScale.rotation * v, avatarParentBone, parentBoneThickness, accumulatedScale);
+//					skewedScaleTweak = extremityTweaker * CalculateScale(boneToScale.rotation * w, avatarParentBone, parentBoneThickness, accumulatedScale);
+//					thicknessU 		 = thickness 		* CalculateScale(boneToScale.rotation * u, avatarParentBone, parentBoneThickness, accumulatedScale);
+//					thicknessV 		 = thickness 		* CalculateScale(boneToScale.rotation * v, avatarParentBone, parentBoneThickness, accumulatedScale);
 					// *** remove these unused code sections above
 
 					switch(boneLengthAxis)
@@ -2529,85 +2533,90 @@ public class RUISSkeletonController : MonoBehaviour
 //		thicknessV 			= thickness 		/ Vector3.Scale(boneToScale.localRotation * v, tempVector).magnitude;
 		//
 
-		if(joint.jointID == RUISSkeletonManager.Joint.LeftHand)
-		{
-			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.z * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.forward), Color.blue);
-			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.y * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.up), Color.green);
-			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.x * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.right), Color.red);
-			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.z * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.forward), Color.blue);
-			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.y * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.up), Color.green);
-			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.x * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.right), Color.red);
-		}
+//		if(joint.jointID == RUISSkeletonManager.Joint.LeftHand)
+//		{
+//			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.z * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.forward), Color.blue);
+//			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.y * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.up), Color.green);
+//			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.x * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.right), Color.red);
+//			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.z * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.forward), Color.blue);
+//			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.y * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.up), Color.green);
+//			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.x * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.right), Color.red);
+//		}
 
-		tempVector = boneToScale.parent.localScale;
-		delta = boneToScale.parent.parent.localScale;
-//		tempVector.Set(1/boneToScale.parent.localScale.x, 1/boneToScale.parent.localScale.y, 1/boneToScale.parent.localScale.z);
-//		delta.Set(1/boneToScale.parent.parent.localScale.x, 1/boneToScale.parent.parent.localScale.y, 1/boneToScale.parent.parent.localScale.z);
-
-//		tempVector = tempVector / transform.localScale.x;
-//		delta = delta / transform.localScale.x;
-
-//		tempVector = (boneToScale.localRotation) * tempVector;
-//		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
-//		tempVector.Set(1/Mathf.Abs(tempVector.x), 1/Mathf.Abs(tempVector.y), 1/Mathf.Abs(tempVector.z));
-		delta = (boneToScale.parent.localRotation) * delta;
-		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
-//		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
-
-		delta = (boneToScale.localRotation) * delta;
-		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
-		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
-		tempVector = Vector3.Scale(delta, tempVector);
-//		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
-
-		tempVector = (boneToScale.localRotation) * tempVector;
-		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
-		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
-//		tempVector = Vector3.Scale(delta, tempVector);
-//		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
-//		tempVector = Vector3.Scale(delta, tempVector);
-
-		delta.Set(	Vector3.Scale(boneToScale.parent.localRotation * Vector3.right, 	boneToScale.parent.parent.localScale).magnitude,
-					Vector3.Scale(boneToScale.parent.localRotation * Vector3.up, 		boneToScale.parent.parent.localScale).magnitude,
-					Vector3.Scale(boneToScale.parent.localRotation * Vector3.forward, 	boneToScale.parent.parent.localScale).magnitude);
-
+// *** COMMENT BLOCK START
+//		tempVector = boneToScale.parent.localScale;
+//		delta = boneToScale.parent.parent.localScale;
+////		tempVector.Set(1/boneToScale.parent.localScale.x, 1/boneToScale.parent.localScale.y, 1/boneToScale.parent.localScale.z);
+////		delta.Set(1/boneToScale.parent.parent.localScale.x, 1/boneToScale.parent.parent.localScale.y, 1/boneToScale.parent.parent.localScale.z);
+//
+////		tempVector = tempVector / transform.localScale.x;
+////		delta = delta / transform.localScale.x;
+//
+////		tempVector = (boneToScale.localRotation) * tempVector;
+////		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
+////		tempVector.Set(1/Mathf.Abs(tempVector.x), 1/Mathf.Abs(tempVector.y), 1/Mathf.Abs(tempVector.z));
 //		delta = (boneToScale.parent.localRotation) * delta;
 //		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
-//		delta = Vector3.Scale(boneToScale.parent.localScale, delta);
-		tempVector.Set( 1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.right), 	Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude,
-						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.up), 		Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude,
-						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.forward),	Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude );
-//		tempVector.Set( 1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.right), 	boneToScale.parent.localScale).magnitude,
-//						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.up), 		boneToScale.parent.localScale).magnitude,
-//						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.forward),	boneToScale.parent.localScale).magnitude );
-
+////		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
+//
+//		delta = (boneToScale.localRotation) * delta;
 //		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
-//		tempVector = Vector3.Scale(delta, tempVector);
-//		delta = Quaternion.Inverse( boneToScale.parent.localRotation) * boneToScale.parent.parent.localScale;
 //		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
-//		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
 //		tempVector = Vector3.Scale(delta, tempVector);
+////		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
+//
+//		tempVector = (boneToScale.localRotation) * tempVector;
 //		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
-//		tempVector = ( 1 / tempVector.magnitude) * tempVector;
-//		boneToScale.localScale = tempVector;
+//		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
+////		tempVector = Vector3.Scale(delta, tempVector);
+////		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
+////		tempVector = Vector3.Scale(delta, tempVector);
+//
+//		delta.Set(	Vector3.Scale(boneToScale.parent.localRotation * Vector3.right, 	boneToScale.parent.parent.localScale).magnitude,
+//					Vector3.Scale(boneToScale.parent.localRotation * Vector3.up, 		boneToScale.parent.parent.localScale).magnitude,
+//					Vector3.Scale(boneToScale.parent.localRotation * Vector3.forward, 	boneToScale.parent.parent.localScale).magnitude);
+//
+////		delta = (boneToScale.parent.localRotation) * delta;
+////		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
+////		delta = Vector3.Scale(boneToScale.parent.localScale, delta);
+//		tempVector.Set( 1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.right), 	Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude,
+//						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.up), 		Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude,
+//						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.forward),	Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude );
+////		tempVector.Set( 1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.right), 	boneToScale.parent.localScale).magnitude,
+////						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.up), 		boneToScale.parent.localScale).magnitude,
+////						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.forward),	boneToScale.parent.localScale).magnitude );
+//
+////		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
+////		tempVector = Vector3.Scale(delta, tempVector);
+////		delta = Quaternion.Inverse( boneToScale.parent.localRotation) * boneToScale.parent.parent.localScale;
+////		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
+////		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
+////		tempVector = Vector3.Scale(delta, tempVector);
+////		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
+////		tempVector = ( 1 / tempVector.magnitude) * tempVector;
+////		boneToScale.localScale = tempVector;
+// *** COMMENT BLOCK END
 
-		boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, updatedScale, 10 * deltaTime); // *** TODO: speed 10 might not be good
+		tempVector = Vector3.MoveTowards(boneToScale.localScale, updatedScale, 10 * deltaTime); // *** TODO: speed 10 might not be good
+		if(!float.IsNaN(tempVector.x) && !float.IsNaN(tempVector.y) && !float.IsNaN(tempVector.z))
+			boneToScale.localScale = tempVector;
 
-		if(joint.jointID == RUISSkeletonManager.Joint.LeftHand)
-		{
-
-//			print(new Vector3(boneToScale.localScale.x / tempVector.x, boneToScale.localScale.y / tempVector.y, boneToScale.localScale.z / tempVector.z)
-//				+ " " + boneToScale.localScale + " " + boneToScale.parent.localScale);
-//			print("("+boneToScale.parent.parent.localScale.x + " " + boneToScale.parent.parent.localScale.y + " " + boneToScale.parent.parent.localScale.z + ") ("
-//				+ boneToScale.parent.localScale.x + " " + boneToScale.parent.localScale.y + " " + boneToScale.parent.localScale.z + ")");
-			Debug.DrawRay(boneToScale.position, boneToScale.localScale.z * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.forward), Color.blue);
-			Debug.DrawRay(boneToScale.position, boneToScale.localScale.y * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.up), Color.green);
-			Debug.DrawRay(boneToScale.position, boneToScale.localScale.x * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.right), Color.red);
-
-			Debug.DrawRay(boneToScale.position + 0.1f*Vector3.up, tempVector.z * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.forward), Color.cyan);
-			Debug.DrawRay(boneToScale.position + 0.1f*Vector3.up, tempVector.y * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.up), Color.yellow);
-			Debug.DrawRay(boneToScale.position + 0.1f*Vector3.up, tempVector.x * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.right), Color.magenta);
-		}
+// *** COMMENT BLOCK START
+//		if(joint.jointID == RUISSkeletonManager.Joint.LeftHand)
+//		{
+//
+////			print(new Vector3(boneToScale.localScale.x / tempVector.x, boneToScale.localScale.y / tempVector.y, boneToScale.localScale.z / tempVector.z)
+////				+ " " + boneToScale.localScale + " " + boneToScale.parent.localScale);
+////			print("("+boneToScale.parent.parent.localScale.x + " " + boneToScale.parent.parent.localScale.y + " " + boneToScale.parent.parent.localScale.z + ") ("
+////				+ boneToScale.parent.localScale.x + " " + boneToScale.parent.localScale.y + " " + boneToScale.parent.localScale.z + ")");
+//			Debug.DrawRay(boneToScale.position, boneToScale.localScale.z * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.forward), Color.blue);
+//			Debug.DrawRay(boneToScale.position, boneToScale.localScale.y * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.up), Color.green);
+//			Debug.DrawRay(boneToScale.position, boneToScale.localScale.x * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.right), Color.red);
+//
+//			Debug.DrawRay(boneToScale.position + 0.1f*Vector3.up, tempVector.z * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.forward), Color.cyan);
+//			Debug.DrawRay(boneToScale.position + 0.1f*Vector3.up, tempVector.y * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.up), Color.yellow);
+//			Debug.DrawRay(boneToScale.position + 0.1f*Vector3.up, tempVector.x * (boneToScale.parent.rotation * boneToScale.localRotation * Vector3.right), Color.magenta);
+//		}
 
 //		if(joint.jointID == RUISSkeletonManager.Joint.LeftFoot)
 //			print(axisLabels[0] + " " + axisLabels[1] + " " + axisLabels[2] + " " + updatedScale + " " + boneToScale.lossyScale.x);
@@ -2690,13 +2699,16 @@ public class RUISSkeletonController : MonoBehaviour
 	public float GetTrackedSpineLength()
 	{
 		float lengthSum = 0;
-		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customSpineJointCount > 1)
+
+		// *** OPTIHACK7 commented below so that spineLength is same for all devices
+//		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customSpineJointCount > 1)
+//		{
+//			for(int i = 1; i < customSpineJointCount; ++i) 
+//				lengthSum += Vector3.Distance(trackedSpineJoints[i - 1].position, trackedSpineJoints[i].position);
+//		}
+//		else
 		{
-			for(int i = 1; i < customSpineJointCount; ++i) 
-				lengthSum += Vector3.Distance(trackedSpineJoints[i - 1].position, trackedSpineJoints[i].position);
-		}
-		else
-		{
+			// *** OPTIHACK7 this is affected by offsets!
 			// Distance between shoulders' midpoint and hips' midpoint (multiplier 0.5 taken outside), indices ([0], [1], ...) must be correct!
 			lengthSum = 0.5f * Vector3.Distance((forcedJointPositions[0] + forcedJointPositions[1]),
 			             						(forcedJointPositions[2] + forcedJointPositions[3]));

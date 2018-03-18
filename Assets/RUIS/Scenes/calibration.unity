@@ -1549,7 +1549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &182447375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2143,10 +2143,12 @@ MonoBehaviour:
   trackAnkle: 1
   rotateWristFromElbow: 0
   independentTorsoSegmentsScaling: 1
+  scalingNeck: 0
+  scalingClavicles: 0
   heightAffectsOffsets: 0
-  forceChestPosition: 0
+  forceChestPosition: 1
   forceNeckPosition: 0
-  forceHeadPosition: 0
+  forceHeadPosition: 1
   forceClaviclePosition: 0
   neckParentsShoulders: 0
   leftHandStatus: 1
@@ -2169,7 +2171,7 @@ MonoBehaviour:
   scaleHierarchicalModelBones: 1
   scaleBoneLengthOnly: 1
   boneLengthAxis: 1
-  maxScaleFactor: 0.5
+  maxScaleFactor: 4
   limbsAreScaled: 1
   torsoThickness: 1
   rightArmThickness: 1
@@ -3965,6 +3967,18 @@ Prefab:
       propertyPath: customMocapUpdateInterval
       value: 0.033333335
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
+      propertyPath: independentTorsoSegmentsScaling
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
+      propertyPath: scaleNeck
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 86a23107ea4b92141b1e3b27393f8f48, type: 2}
   m_IsPrefabParent: 0
@@ -4041,7 +4055,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 389494286}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35b92e740921cf748a5fd5a0139f4024, type: 3}
   m_Name: 
@@ -4061,7 +4075,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 389494286}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42a14338b10ed3b4788748794629934b, type: 3}
   m_Name: 
@@ -6509,6 +6523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c894eaeb3ed54c48b1f7e51059490ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  headOffsetKinect1: 0.5
   headOffsetKinect2: 0.7
 --- !u!114 &616115110
 MonoBehaviour:
@@ -11142,7 +11157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &986383157
 Transform:
   m_ObjectHideFlags: 0
@@ -14729,6 +14744,8 @@ MonoBehaviour:
   trackAnkle: 1
   rotateWristFromElbow: 0
   independentTorsoSegmentsScaling: 1
+  scalingNeck: 0
+  scalingClavicles: 0
   heightAffectsOffsets: 0
   forceChestPosition: 0
   forceNeckPosition: 0
@@ -19927,7 +19944,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1666478601}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35b92e740921cf748a5fd5a0139f4024, type: 3}
   m_Name: 
@@ -19947,7 +19964,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1666478601}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42a14338b10ed3b4788748794629934b, type: 3}
   m_Name: 
@@ -21701,7 +21718,7 @@ MonoBehaviour:
   moveWand1: 0
   moveWand2: 0
   moveWand3: 0
-  enableKinect: 0
+  enableKinect: 1
   maxNumberOfKinectPlayers: 1
   kinectFloorDetection: 0
   kinectDriftCorrectionPreferred: 0
@@ -21806,8 +21823,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectionType: 1
-  LocalAddress: 130.233.193.113
-  ServerAddress: 130.233.193.63
+  LocalAddress: 130.233.193.50
+  ServerAddress: 130.233.193.96
   ServerCommandPort: 1510
   ServerDataPort: 1511
   BoneNamingConvention: 0
@@ -22228,6 +22245,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1841482431}
   - component: {fileID: 1841482432}
+  - component: {fileID: 1841482434}
+  - component: {fileID: 1841482433}
   m_Layer: 0
   m_Name: Custom 2 Pose
   m_TagString: Untagged
@@ -22259,6 +22278,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b23c20ea5749372428112cf9f24594da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1841482433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1841482430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e4333d6a371d44fb14102a7859424b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1394734219}
+--- !u!114 &1841482434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1841482430}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77bc200897df4f4483b478b598b0c51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StreamingClient: {fileID: 1821699089}
+  RigidBodyId: 131085
 --- !u!1 &1843478445
 GameObject:
   m_ObjectHideFlags: 0
