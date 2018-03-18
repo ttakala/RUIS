@@ -117,7 +117,7 @@ public class RUISTracker : MonoBehaviour
     public int rotationPSMoveID = 0;
 	private RUISPSMoveWand posePSMove;
 	
-	private Vector3	sensitivity = new Vector3( 0.001f, 0.001f, 0.001f );
+//	private Vector3	sensitivity = new Vector3( 0.001f, 0.001f, 0.001f );
 	public SixenseHands	positionRazerID = SixenseHands.LEFT;
 	public SixenseHands	rotationRazerID = SixenseHands.LEFT;
 	SixenseInput.Controller poseRazer;
@@ -442,18 +442,18 @@ public class RUISTracker : MonoBehaviour
 			     || (externalDriftCorrection && compass == CompassSource.PSMove)))
 			Debug.LogError("RUISInputManager script is missing from this scene!");
 		
-		if(inputManager && !inputManager.enablePSMove)
-		{
-			if(headPositionInput == HeadPositionSource.PSMove)
-				Debug.LogError(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use PS Move for position "
-								 +	"tracking, but you have not enabled it from InputManager.");
-			if(headRotationInput == HeadRotationSource.PSMove)
-				Debug.LogError(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use PS Move for rotation "
-								 +	"tracking, but you have not enabled it from InputManager.");
-			if(externalDriftCorrection && compass == CompassSource.PSMove)
-				Debug.LogError(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use PS Move for yaw drift "
-								 +	"correction, but you have not enabled it from InputManager.");
-		}
+//		if(inputManager && !inputManager.enablePSMove)
+//		{
+//			if(headPositionInput == HeadPositionSource.PSMove)
+//				Debug.LogError(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use PS Move for position "
+//								 +	"tracking, but you have not enabled it from InputManager.");
+//			if(headRotationInput == HeadRotationSource.PSMove)
+//				Debug.LogError(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use PS Move for rotation "
+//								 +	"tracking, but you have not enabled it from InputManager.");
+//			if(externalDriftCorrection && compass == CompassSource.PSMove)
+//				Debug.LogError(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use PS Move for yaw drift "
+//								 +	"correction, but you have not enabled it from InputManager.");
+//		}
 			
         if (!skeletonManager)
             skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
@@ -466,21 +466,21 @@ public class RUISTracker : MonoBehaviour
 			Debug.LogError("RUISSkeletonManager script is missing from this scene!");
 		}
 		
-		if(inputManager && !inputManager.enableRazerHydra)
-		{
-			if(headPositionInput == HeadPositionSource.RazerHydra)
-				Debug.LogWarning(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use Razer Hydra for "
-								+	"position tracking, but you have disabled Razer Hydra from RUIS "
-								+	"InputManager.");
-			if(headRotationInput == HeadRotationSource.RazerHydra)
-				Debug.LogWarning(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use Razer Hydra for "
-								+	"rotation tracking, but you have disabled Razer Hydra from RUIS "
-								+	"InputManager.");
-			if(externalDriftCorrection && compass == CompassSource.RazerHydra)
-				Debug.LogWarning(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use Razer Hydra for "
-								+	"yaw drift correction, but you have disabled Razer Hydra from RUIS "
-								+	"InputManager.");
-		}
+//		if(inputManager && !inputManager.enableRazerHydra)
+//		{
+//			if(headPositionInput == HeadPositionSource.RazerHydra)
+//				Debug.LogWarning(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use Razer Hydra for "
+//								+	"position tracking, but you have disabled Razer Hydra from RUIS "
+//								+	"InputManager.");
+//			if(headRotationInput == HeadRotationSource.RazerHydra)
+//				Debug.LogWarning(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use Razer Hydra for "
+//								+	"rotation tracking, but you have disabled Razer Hydra from RUIS "
+//								+	"InputManager.");
+//			if(externalDriftCorrection && compass == CompassSource.RazerHydra)
+//				Debug.LogWarning(	"Your " + typeof(RUISTracker) + " settings indicate that you want to use Razer Hydra for "
+//								+	"yaw drift correction, but you have disabled Razer Hydra from RUIS "
+//								+	"InputManager.");
+//		}
 		
 		if(headPositionInput == HeadPositionSource.InputTransform && !positionInput)
 			Debug.LogError("Position tracker's Input Transform is none, you need to set it in Unity inspector!");
@@ -692,45 +692,45 @@ public class RUISTracker : MonoBehaviour
 			return;
 		
 		// Reset view if necessary
-		bool checkRazer = false;
-		bool checkPSMove = false;
+//		bool checkRazer = false;
+//		bool checkPSMove = false;
 		
 		// Reset view: Is PS Move used for tracking?
-		if (inputManager)
-        {
-			if(headPositionInput == HeadPositionSource.PSMove)
-			{
-				posePSMove = inputManager.GetMoveWand(positionPSMoveID);
-				checkPSMove = true;
-			}
-			else if(compass == CompassSource.PSMove)
-			{
-				posePSMove = inputManager.GetMoveWand(compassPSMoveID);
-				checkPSMove = true;
-			}
-			else if(headRotationInput == HeadRotationSource.PSMove)
-			{
-				posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
-				checkPSMove = true;
-			}
-		}
+//		if (inputManager)
+//        {
+//			if(headPositionInput == HeadPositionSource.PSMove)
+//			{
+//				posePSMove = inputManager.GetMoveWand(positionPSMoveID);
+//				checkPSMove = true;
+//			}
+//			else if(compass == CompassSource.PSMove)
+//			{
+//				posePSMove = inputManager.GetMoveWand(compassPSMoveID);
+//				checkPSMove = true;
+//			}
+//			else if(headRotationInput == HeadRotationSource.PSMove)
+//			{
+//				posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
+//				checkPSMove = true;
+//			}
+//		}
 		
 		// Reset view: Is Razer Hydra used for tracking?
-		if(headPositionInput == HeadPositionSource.RazerHydra)
-		{
-			poseRazer = SixenseInput.GetController(positionRazerID);
-			checkRazer = true;
-		}
-		else if(compass == CompassSource.RazerHydra)
-		{
-			poseRazer = SixenseInput.GetController(compassRazerID);
-			checkRazer = true;
-		}
-		else if(headRotationInput == HeadRotationSource.RazerHydra)
-		{
-			poseRazer = SixenseInput.GetController(rotationRazerID);
-			checkRazer = true;
-		}
+//		if(headPositionInput == HeadPositionSource.RazerHydra)
+//		{
+//			poseRazer = SixenseInput.GetController(positionRazerID);
+//			checkRazer = true;
+//		}
+//		else if(compass == CompassSource.RazerHydra)
+//		{
+//			poseRazer = SixenseInput.GetController(compassRazerID);
+//			checkRazer = true;
+//		}
+//		else if(headRotationInput == HeadRotationSource.RazerHydra)
+//		{
+//			poseRazer = SixenseInput.GetController(rotationRazerID);
+//			checkRazer = true;
+//		}
 
 		// *** HACK TODO: RecenterPose() is not meaningful anymore without Oculus DK1/DK2
 		// Reset view: Check if reset view button was pressed
@@ -941,35 +941,35 @@ public class RUISTracker : MonoBehaviour
 											* Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect)) * positionOffsetKinect;
 		        }
 			      break;
-			case HeadPositionSource.PSMove:
-		        if (inputManager)
-		        {
-					posePSMove = inputManager.GetMoveWand(positionPSMoveID);
-					if(posePSMove)
-					{
-						filterPosition = filterPositionPSMove;
-						positionNoiseCovariance = positionNoiseCovariancePSMove;
-						measuredHeadPosition = posePSMove.localPosition 
-										- posePSMove.localRotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove)) 
-																										* positionOffsetPSMove;
-					}
-				}
-				break;
-			case HeadPositionSource.RazerHydra:
-				poseRazer = SixenseInput.GetController(positionRazerID);
-				if(poseRazer != null && poseRazer.Enabled)
-				{
-					filterPosition = filterPositionHydra;
-					positionNoiseCovariance = positionNoiseCovarianceHydra;
-					measuredHeadPosition = new Vector3( poseRazer.Position.x * sensitivity.x,
-														poseRazer.Position.y * sensitivity.y,
-														poseRazer.Position.z * sensitivity.z  ) 
-											- poseRazer.Rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetHydra))
-																										* positionOffsetHydra;
-					if(isRazerBaseMobile)
-						measuredHeadPosition = hydraBasePosition + hydraBaseRotation*measuredHeadPosition;
-				}
-				break;
+//			case HeadPositionSource.PSMove:
+//		        if (inputManager)
+//		        {
+//					posePSMove = inputManager.GetMoveWand(positionPSMoveID);
+//					if(posePSMove)
+//					{
+//						filterPosition = filterPositionPSMove;
+//						positionNoiseCovariance = positionNoiseCovariancePSMove;
+//						measuredHeadPosition = posePSMove.localPosition 
+//										- posePSMove.localRotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove)) 
+//																										* positionOffsetPSMove;
+//					}
+//				}
+//				break;
+//			case HeadPositionSource.RazerHydra:
+//				poseRazer = SixenseInput.GetController(positionRazerID);
+//				if(poseRazer != null && poseRazer.Enabled)
+//				{
+//					filterPosition = filterPositionHydra;
+//					positionNoiseCovariance = positionNoiseCovarianceHydra;
+//					measuredHeadPosition = new Vector3( poseRazer.Position.x * sensitivity.x,
+//														poseRazer.Position.y * sensitivity.y,
+//														poseRazer.Position.z * sensitivity.z  ) 
+//											- poseRazer.Rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetHydra))
+//																										* positionOffsetHydra;
+//					if(isRazerBaseMobile)
+//						measuredHeadPosition = hydraBasePosition + hydraBaseRotation*measuredHeadPosition;
+//				}
+//				break;
 			case HeadPositionSource.InputTransform:
 				if(positionInput)
 				{
@@ -1041,29 +1041,29 @@ public class RUISTracker : MonoBehaviour
 							measuredHeadRotation = jointData.rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetKinect));
 			        }
 					break;
-				case HeadRotationSource.PSMove:
-			        if (inputManager)
-			        {
-						posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
-						if(posePSMove)
-						{
-							filterRotation = filterRotationPSMove;
-							rotationNoiseCovariance = rotationNoiseCovariancePSMove;
-							measuredHeadRotation = posePSMove.localRotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove));
-						}
-					}
-					break;
-				case HeadRotationSource.RazerHydra:
-					poseRazer = SixenseInput.GetController(rotationRazerID);
-					if(poseRazer  != null && poseRazer.Enabled)
-					{
-						filterRotation = filterRotationHydra;
-						rotationNoiseCovariance = rotationNoiseCovarianceHydra;
-						measuredHeadRotation = poseRazer.Rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetHydra));
-						if(isRazerBaseMobile)
-							measuredHeadRotation = hydraBaseRotation * measuredHeadRotation;
-					}
-					break;
+//				case HeadRotationSource.PSMove:
+//			        if (inputManager)
+//			        {
+//						posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
+//						if(posePSMove)
+//						{
+//							filterRotation = filterRotationPSMove;
+//							rotationNoiseCovariance = rotationNoiseCovariancePSMove;
+//							measuredHeadRotation = posePSMove.localRotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetPSMove));
+//						}
+//					}
+//					break;
+//				case HeadRotationSource.RazerHydra:
+//					poseRazer = SixenseInput.GetController(rotationRazerID);
+//					if(poseRazer  != null && poseRazer.Enabled)
+//					{
+//						filterRotation = filterRotationHydra;
+//						rotationNoiseCovariance = rotationNoiseCovarianceHydra;
+//						measuredHeadRotation = poseRazer.Rotation * Quaternion.Inverse(Quaternion.Euler(rotationOffsetHydra));
+//						if(isRazerBaseMobile)
+//							measuredHeadRotation = hydraBaseRotation * measuredHeadRotation;
+//					}
+//					break;
 				case HeadRotationSource.OpenVR:
 					measuredHeadRotation = coordinateSystem.GetHmdOrientationInMasterFrame();
 					filterRotation = false;
@@ -1173,25 +1173,25 @@ public class RUISTracker : MonoBehaviour
 					}
 		        }
 				break;
-			case HeadRotationSource.PSMove:
-		        if (inputManager)
-		        {
-					posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
-					if(posePSMove)
-					{
-						rotationOffsetPSMove = posePSMove.localRotation.eulerAngles;
-						return rotationOffsetPSMove;
-					}
-				}
-				break;
-			case HeadRotationSource.RazerHydra:
-				poseRazer = SixenseInput.GetController(rotationRazerID);
-				if(poseRazer != null && poseRazer.Enabled)
-				{
-					rotationOffsetHydra = poseRazer.Rotation.eulerAngles;
-					return rotationOffsetHydra;
-				}
-				break;
+//			case HeadRotationSource.PSMove:
+//		        if (inputManager)
+//		        {
+//					posePSMove = inputManager.GetMoveWand(rotationPSMoveID);
+//					if(posePSMove)
+//					{
+//						rotationOffsetPSMove = posePSMove.localRotation.eulerAngles;
+//						return rotationOffsetPSMove;
+//					}
+//				}
+//				break;
+//			case HeadRotationSource.RazerHydra:
+//				poseRazer = SixenseInput.GetController(rotationRazerID);
+//				if(poseRazer != null && poseRazer.Enabled)
+//				{
+//					rotationOffsetHydra = poseRazer.Rotation.eulerAngles;
+//					return rotationOffsetHydra;
+//				}
+//				break;
 		}
 		return Vector3.zero;
 	}
@@ -1299,36 +1299,36 @@ public class RUISTracker : MonoBehaviour
 		            }
 				}
 				break;
-			
-			case CompassSource.PSMove:
-		        if (inputManager)
-		        {
-					compassPSMove = inputManager.GetMoveWand(compassPSMoveID);
-					if(compassPSMove)
-					{
-						driftCorrectionRate = driftCorrectionRatePSMove;
-						updateDifferenceKalman( (compassPSMove.localRotation 
-													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetPSMove))).eulerAngles, 
-												driftingEuler, deltaT 				 );
-					}
-				}
-				break;
-			
-			case CompassSource.RazerHydra:
-				compassRazer = SixenseInput.GetController(compassRazerID);
-				if(compassRazer != null && compassRazer.Enabled)
-				{
-					driftCorrectionRate = driftCorrectionRateHydra;
-					if(isRazerBaseMobile)
-						updateDifferenceKalman((hydraBaseRotation * compassRazer.Rotation 
-													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetHydra))).eulerAngles,
-												driftingEuler, deltaT 				 				 	);
-					else
-						updateDifferenceKalman( (compassRazer.Rotation 
-													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetHydra))).eulerAngles,
-												driftingEuler, deltaT 				 );
-				}
-				break;
+//			
+//			case CompassSource.PSMove:
+//		        if (inputManager)
+//		        {
+//					compassPSMove = inputManager.GetMoveWand(compassPSMoveID);
+//					if(compassPSMove)
+//					{
+//						driftCorrectionRate = driftCorrectionRatePSMove;
+//						updateDifferenceKalman( (compassPSMove.localRotation 
+//													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetPSMove))).eulerAngles, 
+//												driftingEuler, deltaT 				 );
+//					}
+//				}
+//				break;
+//			
+//			case CompassSource.RazerHydra:
+//				compassRazer = SixenseInput.GetController(compassRazerID);
+//				if(compassRazer != null && compassRazer.Enabled)
+//				{
+//					driftCorrectionRate = driftCorrectionRateHydra;
+//					if(isRazerBaseMobile)
+//						updateDifferenceKalman((hydraBaseRotation * compassRazer.Rotation 
+//													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetHydra))).eulerAngles,
+//												driftingEuler, deltaT 				 				 	);
+//					else
+//						updateDifferenceKalman( (compassRazer.Rotation 
+//													* Quaternion.Inverse(Quaternion.Euler(compassRotationOffsetHydra))).eulerAngles,
+//												driftingEuler, deltaT 				 );
+//				}
+//				break;
 			
 			case CompassSource.InputTransform:
 				if(compassTransform != null)

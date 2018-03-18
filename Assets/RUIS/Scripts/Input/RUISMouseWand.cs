@@ -57,21 +57,20 @@ public class RUISMouseWand : RUISWand {
 					deviceNames += "Kinect 2";
 					otherDevices = true;
 				}
-				if(inputManager.enableRazerHydra)
-				{
-					if(deviceNames.Length > 0)
-						deviceNames += ", ";
-					deviceNames += "Razer Hydra";
-					otherDevices = true;
-				}
-						
-				if(inputManager.enablePSMove)
-				{
-					if(deviceNames.Length > 0)
-						deviceNames += ", ";
-					deviceNames += "PS Move";
-					otherDevices = true;
-				}
+//				if(inputManager.enableRazerHydra)
+//				{
+//					if(deviceNames.Length > 0)
+//						deviceNames += ", ";
+//					deviceNames += "Razer Hydra";
+//					otherDevices = true;
+//				}
+//				if(inputManager.enablePSMove)
+//				{
+//					if(deviceNames.Length > 0)
+//						deviceNames += ", ";
+//					deviceNames += "PS Move";
+//					otherDevices = true;
+//				}
 
 				try
 				{

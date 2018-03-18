@@ -2,7 +2,8 @@
 
 Content    :   The main class used for coordinate system transforms between different input systems and Unity
 Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen.
+               All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
                restricted for commercial projects. Contact tmtakala@gmail.com
                for more information.
@@ -117,7 +118,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 					needToSwitch = true;
 				break;
 			case RUISDevice.UnityXR:
-				if(!inputManager.enablePSMove)
+				if(!RUISDisplayManager.IsHmdPresent())
 					needToSwitch = true;
 				break;
 			case RUISDevice.OpenVR: // If OpenVR can't accessed AND a HMD can't be detected
@@ -146,13 +147,13 @@ public class RUISCoordinateSystem : MonoBehaviour
 					{}
 				}
 
-				if(RUISDisplayManager.IsHmdPositionTrackable())
+				if(RUISDisplayManager.IsOpenVrAccessible() && RUISDisplayManager.IsHmdPositionTrackable())
 					rootDevice = RUISDevice.OpenVR;
 				else if(inputManager.enableKinect2 && kinect2FoundBySystem)
 					rootDevice = RUISDevice.Kinect_2;
 				else if(inputManager.enableKinect)
 					rootDevice = RUISDevice.Kinect_1;
-				else if(inputManager.enablePSMove)
+				else if(RUISDisplayManager.IsHmdPositionTrackable()) // *** TODO this is already above, distinguish these two cases
 					rootDevice = RUISDevice.UnityXR;
 
 				if(rootDevice != previousDevice)
@@ -185,7 +186,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		calibrationMatrixElement.AppendChild(groupElementFloorData);
 		
 		
-		XmlElement transformWrapperElement = xmlDoc.CreateElement("PS_Move-Kinect_1");
+		XmlElement transformWrapperElement = xmlDoc.CreateElement("OpenVR-Kinect_2");
 		groupElementTransforms.AppendChild(transformWrapperElement);
 		
 		XmlElement translateElement = xmlDoc.CreateElement("translate");
@@ -210,7 +211,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		
 		
 		
-		XmlElement floorDataWrapperElement = xmlDoc.CreateElement("Kinect_1");
+		XmlElement floorDataWrapperElement = xmlDoc.CreateElement("Kinect_2");
 		groupElementFloorData.AppendChild(floorDataWrapperElement);
 		
 		XmlElement kinectFloorNormalElement = xmlDoc.CreateElement("floorNormal");

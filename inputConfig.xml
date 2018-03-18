@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ns2:RUISInputManager xmlns:ns2="http://ruisystem.net/RUISInputManager">
   <!--Boolean values always with a lower case, e.g. "true" or "false"-->
-  <PSMoveSettings>
-    <enabled value="false" />
-    <ip value="127.0.0.1" />
-    <port value="7899" />
-    <autoConnect value="true" />
-    <enableInGameCalibration value="false" />
-    <maxControllers value="4" />
-  </PSMoveSettings>
   <KinectSettings>
     <enabled value="false" />
     <maxPlayers value="1" />
@@ -18,14 +10,11 @@
     <enabled value="true" />
     <floorDetection value="true" />
   </Kinect2Settings>
-  <RazerSettings>
-    <enabled value="false" />
-  </RazerSettings>
   <Custom1Settings>
     <enabled value="false" />
     <name value="" />
-    <positionConversion unitScale="1" xNegate="true" yNegate="false" zNegate="true" />
-    <rotationConversion invert="false" xNegate="true" yNegate="false" zNegate="true" wNegate="false" />
+    <positionConversion unitScale="1" xNegate="false" yNegate="false" zNegate="false" />
+    <rotationConversion invert="false" xNegate="false" yNegate="false" zNegate="false" wNegate="false" />
   </Custom1Settings>
   <Custom2Settings>
     <enabled value="false" />

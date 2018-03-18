@@ -23,19 +23,19 @@ public class RUISInputManagerEditor : Editor {
 
     SerializedProperty loadFromTextFileInEditor;
 
-    SerializedProperty psMoveEnabled;
-    SerializedProperty connectToMoveOnStartup;
-    SerializedProperty psMoveIp;
-    SerializedProperty psMovePort;
-    SerializedProperty inGameMoveCalibration;
-    SerializedProperty amountOfPSMoveControllers;
+//    SerializedProperty psMoveEnabled;
+//    SerializedProperty connectToMoveOnStartup;
+//    SerializedProperty psMoveIp;
+//    SerializedProperty psMovePort;
+//    SerializedProperty inGameMoveCalibration;
+//    SerializedProperty amountOfPSMoveControllers;
 	
-	SerializedProperty delayedWandActivation;
-	SerializedProperty delayTime;
-	SerializedProperty moveWand0;
-	SerializedProperty moveWand1;
-	SerializedProperty moveWand2;
-	SerializedProperty moveWand3;
+//	SerializedProperty delayedWandActivation;
+//	SerializedProperty delayTime;
+//	SerializedProperty moveWand0;
+//	SerializedProperty moveWand1;
+//	SerializedProperty moveWand2;
+//	SerializedProperty moveWand3;
 	
     SerializedProperty kinectEnabled;
     SerializedProperty maxNumberOfKinectPlayers;
@@ -44,7 +44,7 @@ public class RUISInputManagerEditor : Editor {
 	SerializedProperty kinect2Enabled;
 	SerializedProperty kinect2FloorDetectionOnSceneStart;
 
-	SerializedProperty enableRazerHydra;
+//	SerializedProperty enableRazerHydra;
 
 	SerializedProperty enableCustomDevice1;
 	SerializedProperty enableCustomDevice2;
@@ -66,20 +66,21 @@ public class RUISInputManagerEditor : Editor {
         xmlSchema = serializedObject.FindProperty("xmlSchema");
         filename = serializedObject.FindProperty("filename");
 
-        psMoveEnabled = serializedObject.FindProperty("enablePSMove");
-        loadFromTextFileInEditor = serializedObject.FindProperty("loadFromTextFileInEditor");
-        connectToMoveOnStartup = serializedObject.FindProperty("connectToPSMoveOnStartup");
-        psMoveIp = serializedObject.FindProperty("PSMoveIP");
-        psMovePort = serializedObject.FindProperty("PSMovePort");
-        inGameMoveCalibration = serializedObject.FindProperty("enableMoveCalibrationDuringPlay");
-        amountOfPSMoveControllers = serializedObject.FindProperty("amountOfPSMoveControllers");
+		loadFromTextFileInEditor = serializedObject.FindProperty("loadFromTextFileInEditor");
 
-		delayedWandActivation = serializedObject.FindProperty("delayedWandActivation");
-		delayTime = serializedObject.FindProperty("delayTime");
-		moveWand0 = serializedObject.FindProperty("moveWand0");
-		moveWand1 = serializedObject.FindProperty("moveWand1");
-		moveWand2 = serializedObject.FindProperty("moveWand2");
-		moveWand3 = serializedObject.FindProperty("moveWand3");
+//        psMoveEnabled = serializedObject.FindProperty("enablePSMove");
+//        connectToMoveOnStartup = serializedObject.FindProperty("connectToPSMoveOnStartup");
+//        psMoveIp = serializedObject.FindProperty("PSMoveIP");
+//        psMovePort = serializedObject.FindProperty("PSMovePort");
+//        inGameMoveCalibration = serializedObject.FindProperty("enableMoveCalibrationDuringPlay");
+//        amountOfPSMoveControllers = serializedObject.FindProperty("amountOfPSMoveControllers");
+
+//		delayedWandActivation = serializedObject.FindProperty("delayedWandActivation");
+//		delayTime = serializedObject.FindProperty("delayTime");
+//		moveWand0 = serializedObject.FindProperty("moveWand0");
+//		moveWand1 = serializedObject.FindProperty("moveWand1");
+//		moveWand2 = serializedObject.FindProperty("moveWand2");
+//		moveWand3 = serializedObject.FindProperty("moveWand3");
 		
         kinectEnabled = serializedObject.FindProperty("enableKinect");
         maxNumberOfKinectPlayers = serializedObject.FindProperty("maxNumberOfKinectPlayers");
@@ -88,7 +89,7 @@ public class RUISInputManagerEditor : Editor {
 		kinect2Enabled = serializedObject.FindProperty("enableKinect2");
 		kinect2FloorDetectionOnSceneStart = serializedObject.FindProperty("kinect2FloorDetection");
 
-		enableRazerHydra = serializedObject.FindProperty("enableRazerHydra");
+//		enableRazerHydra = serializedObject.FindProperty("enableRazerHydra");
 
 		enableCustomDevice1 = serializedObject.FindProperty("enableCustomDevice1");
 		enableCustomDevice2 = serializedObject.FindProperty("enableCustomDevice2");

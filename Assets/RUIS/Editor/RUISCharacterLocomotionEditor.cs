@@ -23,13 +23,15 @@ public class RUISCharacterLocomotionEditor : Editor {
     SerializedProperty speed;
 	SerializedProperty runAdder;
     SerializedProperty maxVelocityChange;
+	SerializedProperty joystickTurning;
 
-    SerializedProperty usePSNavigationController;
-    SerializedProperty PSNaviControllerID;
-	SerializedProperty strafeInsteadTurning;
+//	SerializedProperty usePSNavigationController;
+//	SerializedProperty PSNaviControllerID;
+
+//	SerializedProperty strafeInsteadTurning;
 	
-	SerializedProperty useRazerHydra;
-	SerializedProperty razerHydraID;
+//	SerializedProperty useRazerHydra;
+//	SerializedProperty razerHydraID;
 
 //	SerializedProperty useOpenVrController;
 
@@ -45,20 +47,21 @@ public class RUISCharacterLocomotionEditor : Editor {
 	SerializedProperty kinect2Heuristics;
 	
     public void OnEnable()
-    {
+	{
         turnRightKey = serializedObject.FindProperty("turnRightKey");
         turnLeftKey = serializedObject.FindProperty("turnLeftKey");
         rotationScaler = serializedObject.FindProperty("rotationScaler");
         speed = serializedObject.FindProperty("speed");
 		runAdder = serializedObject.FindProperty("runAdder");
-        maxVelocityChange = serializedObject.FindProperty("maxVelocityChange");
+		maxVelocityChange = serializedObject.FindProperty("maxVelocityChange");
+		joystickTurning = serializedObject.FindProperty("joystickTurning");
 //		useOpenVrController = serializedObject.FindProperty("useOpenVrController");
-        usePSNavigationController = serializedObject.FindProperty("usePSNavigationController");
-        PSNaviControllerID = serializedObject.FindProperty("PSNaviControllerID");
-        strafeInsteadTurning = serializedObject.FindProperty("strafeInsteadTurning");
+//      usePSNavigationController = serializedObject.FindProperty("usePSNavigationController");
+//      PSNaviControllerID = serializedObject.FindProperty("PSNaviControllerID");
+//        strafeInsteadTurning = serializedObject.FindProperty("strafeInsteadTurning");
         jumpStrength = serializedObject.FindProperty("jumpStrength");
-		useRazerHydra = serializedObject.FindProperty("useRazerHydra");
-		razerHydraID = serializedObject.FindProperty("razerHydraID");
+//		useRazerHydra = serializedObject.FindProperty("useRazerHydra");
+//		razerHydraID = serializedObject.FindProperty("razerHydraID");
 		jumpSpeedEffect = serializedObject.FindProperty("jumpSpeedEffect");
 		aerialAcceleration = serializedObject.FindProperty("aerialAcceleration");
 		aerialMobility = serializedObject.FindProperty("aerialMobility");
@@ -94,6 +97,8 @@ public class RUISCharacterLocomotionEditor : Editor {
 		if(aerialMobility.floatValue < 0)
 			aerialMobility.floatValue = 0;
 
+		EditorGUILayout.PropertyField(joystickTurning, new GUIContent("Joystick Turning", "If enabled, 4th Joystick axis (one of the OpenVR touchpads) will cause "
+		                                                              					+ "smooth turning. Disabling this option is recommended."));
         EditorGUILayout.PropertyField(turnRightKey, new GUIContent("Turn Right Key", "Which key is used to rotate the character to rigth"));
         EditorGUILayout.PropertyField(turnLeftKey, new GUIContent("Turn Left Key", "Which key is used to rotate the character to left"));
 		EditorGUILayout.PropertyField(rotationScaler, new GUIContent(  "Rotation Speed", "How fast is the character rotates (degrees/s) when pressing 'Turn Keys' "
@@ -126,36 +131,37 @@ public class RUISCharacterLocomotionEditor : Editor {
 
 //		EditorGUILayout.PropertyField(useOpenVrController, new GUIContent("Use OpenVR Controller", "Enable locomotion controls with an OpenVR controller (e.g. Vive)"));
 
-        EditorGUILayout.PropertyField(useRazerHydra, new GUIContent("Use Razer Hydra", "Enable locomotion controls with a Razer Hydra controller"));
+//        EditorGUILayout.PropertyField(useRazerHydra, new GUIContent("Use Razer Hydra", "Enable locomotion controls with a Razer Hydra controller"));
+//		
+//		if(useRazerHydra.boolValue)
+//		{
+//	        EditorGUI.indentLevel += 2;
+//			
+//	        EditorGUILayout.PropertyField(razerHydraID, new GUIContent("Controller ID", "LEFT or RIGHT"));
+//			EditorGUILayout.PropertyField(strafeInsteadTurning, new GUIContent(  "Strafe, Don't Turn", "If enabled, then the analog stick's horizontal axis makes "
+//			                                                                   + "the character strafe (sidestep) instead of turning."));
+//	        
+//	        EditorGUI.indentLevel -= 2;
+//		}
+//		
+//		EditorGUILayout.PropertyField(usePSNavigationController, new GUIContent("Use PS Navi Controller", "Enable locomotion controls with a PS Navigation controller"));
+//		
+//		if(usePSNavigationController.boolValue)
+//		{
+//	        EditorGUI.indentLevel += 2;
+//			
+//			PSNaviControllerID.intValue = Mathf.Clamp(PSNaviControllerID.intValue, 1, 7);
+//	        EditorGUILayout.PropertyField(PSNaviControllerID, new GUIContent(  "Controller ID", "Between 1 and 7. Press and hold the PlayStation button to see "
+//			                                                                 + "Controller Settings and change the ID from PlayStation."));
+//			EditorGUILayout.PropertyField(strafeInsteadTurning, new GUIContent(  "Strafe, Don't Turn", "If enabled, then the analog stick's horizontal axis makes "
+//			                                                                   + "the character strafe (sidestep) instead of turning."));
+//	        
+//	        EditorGUI.indentLevel -= 2;
+//		}
 		
-		if(useRazerHydra.boolValue)
+		EditorGUILayout.PropertyField(turnWithGestures, new GUIContent(  "Turn With Gestures", "This is experimental stuff that never got polished. It might not work."));
+		if(turnWithGestures.boolValue)
 		{
-	        EditorGUI.indentLevel += 2;
-			
-	        EditorGUILayout.PropertyField(razerHydraID, new GUIContent("Controller ID", "LEFT or RIGHT"));
-			EditorGUILayout.PropertyField(strafeInsteadTurning, new GUIContent(  "Strafe, Don't Turn", "If enabled, then the analog stick's horizontal axis makes "
-			                                                                   + "the character strafe (sidestep) instead of turning."));
-	        
-	        EditorGUI.indentLevel -= 2;
-		}
-		
-		EditorGUILayout.PropertyField(usePSNavigationController, new GUIContent("Use PS Navi Controller", "Enable locomotion controls with a PS Navigation controller"));
-		
-		if(usePSNavigationController.boolValue)
-		{
-	        EditorGUI.indentLevel += 2;
-			
-			PSNaviControllerID.intValue = Mathf.Clamp(PSNaviControllerID.intValue, 1, 7);
-	        EditorGUILayout.PropertyField(PSNaviControllerID, new GUIContent(  "Controller ID", "Between 1 and 7. Press and hold the PlayStation button to see "
-			                                                                 + "Controller Settings and change the ID from PlayStation."));
-			EditorGUILayout.PropertyField(strafeInsteadTurning, new GUIContent(  "Strafe, Don't Turn", "If enabled, then the analog stick's horizontal axis makes "
-			                                                                   + "the character strafe (sidestep) instead of turning."));
-	        
-	        EditorGUI.indentLevel -= 2;
-		}
-		
-		EditorGUILayout.PropertyField(turnWithGestures, new GUIContent(  "Turn With Gestures", ""));
-		if(turnWithGestures.boolValue) {
 			EditorGUI.indentLevel += 2;
 			EditorGUILayout.PropertyField(turningGestureType, new GUIContent(  "Turning Gesture Type", ""));
 			EditorGUILayout.PropertyField(rotationTriggerAngle, new GUIContent(  "Rotation Trigger Angle", ""));

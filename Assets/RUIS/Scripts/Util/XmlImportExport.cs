@@ -11,13 +11,13 @@ public class XmlImportExport {
 			return false;
 		}
 		
-		XmlNode psMoveNode = xmlDoc.GetElementsByTagName("PSMoveSettings").Item(0);
-		inputManager.enablePSMove = bool.Parse(psMoveNode.SelectSingleNode("enabled").Attributes["value"].Value);
-		inputManager.PSMoveIP = psMoveNode.SelectSingleNode("ip").Attributes["value"].Value;
-		inputManager.PSMovePort = int.Parse(psMoveNode.SelectSingleNode("port").Attributes["value"].Value);
-		inputManager.connectToPSMoveOnStartup = bool.Parse(psMoveNode.SelectSingleNode("autoConnect").Attributes["value"].Value);
-		inputManager.enableMoveCalibrationDuringPlay = bool.Parse(psMoveNode.SelectSingleNode("enableInGameCalibration").Attributes["value"].Value);
-		inputManager.amountOfPSMoveControllers = int.Parse(psMoveNode.SelectSingleNode("maxControllers").Attributes["value"].Value);
+//		XmlNode psMoveNode = xmlDoc.GetElementsByTagName("PSMoveSettings").Item(0);
+//		inputManager.enablePSMove = bool.Parse(psMoveNode.SelectSingleNode("enabled").Attributes["value"].Value);
+//		inputManager.PSMoveIP = psMoveNode.SelectSingleNode("ip").Attributes["value"].Value;
+//		inputManager.PSMovePort = int.Parse(psMoveNode.SelectSingleNode("port").Attributes["value"].Value);
+//		inputManager.connectToPSMoveOnStartup = bool.Parse(psMoveNode.SelectSingleNode("autoConnect").Attributes["value"].Value);
+//		inputManager.enableMoveCalibrationDuringPlay = bool.Parse(psMoveNode.SelectSingleNode("enableInGameCalibration").Attributes["value"].Value);
+//		inputManager.amountOfPSMoveControllers = int.Parse(psMoveNode.SelectSingleNode("maxControllers").Attributes["value"].Value);
 		
 		XmlNode kinectNode = xmlDoc.GetElementsByTagName("KinectSettings").Item(0);
 		inputManager.enableKinect = bool.Parse(kinectNode.SelectSingleNode("enabled").Attributes["value"].Value);
@@ -28,8 +28,8 @@ public class XmlImportExport {
 		XmlNode kinect2Node = xmlDoc.GetElementsByTagName("Kinect2Settings").Item(0);
 		inputManager.enableKinect2 = bool.Parse(kinect2Node.SelectSingleNode("enabled").Attributes["value"].Value);
 		
-		XmlNode razerNode = xmlDoc.GetElementsByTagName("RazerSettings").Item(0);
-		inputManager.enableRazerHydra = bool.Parse(razerNode.SelectSingleNode("enabled").Attributes["value"].Value);
+//		XmlNode razerNode = xmlDoc.GetElementsByTagName("RazerSettings").Item(0);
+//		inputManager.enableRazerHydra = bool.Parse(razerNode.SelectSingleNode("enabled").Attributes["value"].Value);
 
 		// CustomDevice1
 		XmlNode custom1Node = xmlDoc.GetElementsByTagName("Custom1Settings").Item(0);
@@ -132,32 +132,32 @@ public class XmlImportExport {
 		XmlComment booleanComment = xmlDoc.CreateComment("Boolean values always with a lower case, e.g. \"true\" or \"false\"");
 		inputManagerRootElement.AppendChild(booleanComment);
 
-		XmlElement psMoveSettingsElement = xmlDoc.CreateElement("PSMoveSettings");
-		inputManagerRootElement.AppendChild(psMoveSettingsElement);
-
-		XmlElement psMoveEnabledElement = xmlDoc.CreateElement("enabled");
-		psMoveEnabledElement.SetAttribute("value", inputManager.enablePSMove.ToString().ToLowerInvariant());
-		psMoveSettingsElement.AppendChild(psMoveEnabledElement);
-		
-		XmlElement psMoveIPElement = xmlDoc.CreateElement("ip");
-		psMoveIPElement.SetAttribute("value", inputManager.PSMoveIP.ToString());
-		psMoveSettingsElement.AppendChild(psMoveIPElement);
-		
-		XmlElement psMovePortElement = xmlDoc.CreateElement("port");
-		psMovePortElement.SetAttribute("value", inputManager.PSMovePort.ToString());
-		psMoveSettingsElement.AppendChild(psMovePortElement);
-		
-		XmlElement psMoveAutoConnectElement = xmlDoc.CreateElement("autoConnect");
-		psMoveAutoConnectElement.SetAttribute("value", inputManager.connectToPSMoveOnStartup.ToString().ToLowerInvariant());
-		psMoveSettingsElement.AppendChild(psMoveAutoConnectElement);
-		
-		XmlElement psMoveEnableInGameCalibration = xmlDoc.CreateElement("enableInGameCalibration");
-		psMoveEnableInGameCalibration.SetAttribute("value", inputManager.enableMoveCalibrationDuringPlay.ToString().ToLowerInvariant());
-		psMoveSettingsElement.AppendChild(psMoveEnableInGameCalibration);
-		
-		XmlElement psMoveMaxControllersElement = xmlDoc.CreateElement("maxControllers");
-		psMoveMaxControllersElement.SetAttribute("value", inputManager.amountOfPSMoveControllers.ToString());
-		psMoveSettingsElement.AppendChild(psMoveMaxControllersElement);
+//		XmlElement psMoveSettingsElement = xmlDoc.CreateElement("PSMoveSettings");
+//		inputManagerRootElement.AppendChild(psMoveSettingsElement);
+//
+//		XmlElement psMoveEnabledElement = xmlDoc.CreateElement("enabled");
+//		psMoveEnabledElement.SetAttribute("value", inputManager.enablePSMove.ToString().ToLowerInvariant());
+//		psMoveSettingsElement.AppendChild(psMoveEnabledElement);
+//		
+//		XmlElement psMoveIPElement = xmlDoc.CreateElement("ip");
+//		psMoveIPElement.SetAttribute("value", inputManager.PSMoveIP.ToString());
+//		psMoveSettingsElement.AppendChild(psMoveIPElement);
+//		
+//		XmlElement psMovePortElement = xmlDoc.CreateElement("port");
+//		psMovePortElement.SetAttribute("value", inputManager.PSMovePort.ToString());
+//		psMoveSettingsElement.AppendChild(psMovePortElement);
+//		
+//		XmlElement psMoveAutoConnectElement = xmlDoc.CreateElement("autoConnect");
+//		psMoveAutoConnectElement.SetAttribute("value", inputManager.connectToPSMoveOnStartup.ToString().ToLowerInvariant());
+//		psMoveSettingsElement.AppendChild(psMoveAutoConnectElement);
+//		
+//		XmlElement psMoveEnableInGameCalibration = xmlDoc.CreateElement("enableInGameCalibration");
+//		psMoveEnableInGameCalibration.SetAttribute("value", inputManager.enableMoveCalibrationDuringPlay.ToString().ToLowerInvariant());
+//		psMoveSettingsElement.AppendChild(psMoveEnableInGameCalibration);
+//		
+//		XmlElement psMoveMaxControllersElement = xmlDoc.CreateElement("maxControllers");
+//		psMoveMaxControllersElement.SetAttribute("value", inputManager.amountOfPSMoveControllers.ToString());
+//		psMoveSettingsElement.AppendChild(psMoveMaxControllersElement);
 		
 		
 		
@@ -191,12 +191,12 @@ public class XmlImportExport {
 		kinect2FloorDetectionElement.SetAttribute("value", inputManager.kinect2FloorDetection.ToString().ToLowerInvariant());
 		kinect2SettingsElement.AppendChild(kinect2FloorDetectionElement);
 		
-		XmlElement razerSettingsElement = xmlDoc.CreateElement("RazerSettings");
-		inputManagerRootElement.AppendChild(razerSettingsElement);
-		
-		XmlElement razerEnabledElement = xmlDoc.CreateElement("enabled");
-		razerEnabledElement.SetAttribute("value", inputManager.enableRazerHydra.ToString().ToLowerInvariant());
-		razerSettingsElement.AppendChild(razerEnabledElement);
+//		XmlElement razerSettingsElement = xmlDoc.CreateElement("RazerSettings");
+//		inputManagerRootElement.AppendChild(razerSettingsElement);
+//		
+//		XmlElement razerEnabledElement = xmlDoc.CreateElement("enabled");
+//		razerEnabledElement.SetAttribute("value", inputManager.enableRazerHydra.ToString().ToLowerInvariant());
+//		razerSettingsElement.AppendChild(razerEnabledElement);
 
 		// CustomDevice1
 		XmlElement custom1SettingsElement = xmlDoc.CreateElement("Custom1Settings");

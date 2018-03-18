@@ -2,8 +2,11 @@
 
 Content    :   Inspector behaviour for RUISCharacterController script
 Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Mikael Matveinen, Tuukka Takala. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2018 Mikael Matveinen, Tuukka Takala.
+               All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -15,18 +18,18 @@ using System.Collections;
 [CanEditMultipleObjects]
 public class RUISCharacterControllerEditor : Editor
 {
-	int maxPSMoveControllers = 4;
+//	int maxPSMoveControllers = 4;
 	SerializedProperty characterPivotType;
-	SerializedProperty useHmdPositionalTracking;
-	SerializedProperty headRotatesBody;
-	SerializedProperty headPointsWalkingDirection;
-	SerializedProperty moveControllerId;
+//	SerializedProperty useHmdPositionalTracking;
+//	SerializedProperty headRotatesBody;
+//	SerializedProperty headPointsWalkingDirection;
+//	SerializedProperty moveControllerId;
 	SerializedProperty ignorePitchAndRoll;
 	SerializedProperty groundLayers;
 	SerializedProperty groundedErrorTweaker;
 	SerializedProperty dynamicFriction;
 	SerializedProperty dynamicMaterial;
-	SerializedProperty psmoveOffset;
+//	SerializedProperty psmoveOffset;
 	SerializedProperty feetAlsoAffectGrounding;
 
 	RUISCharacterController characterController;
@@ -34,16 +37,16 @@ public class RUISCharacterControllerEditor : Editor
 	public void OnEnable()
 	{
 		characterPivotType = serializedObject.FindProperty("characterPivotType");
-		useHmdPositionalTracking = serializedObject.FindProperty("useHmdPositionalTracking");
-		headRotatesBody = serializedObject.FindProperty("headRotatesBody");
-		headPointsWalkingDirection = serializedObject.FindProperty("headPointsWalkingDirection");
-		moveControllerId = serializedObject.FindProperty("moveControllerId");
+//		useHmdPositionalTracking = serializedObject.FindProperty("useHmdPositionalTracking");
+//		headRotatesBody = serializedObject.FindProperty("headRotatesBody");
+//		headPointsWalkingDirection = serializedObject.FindProperty("headPointsWalkingDirection");
+//		moveControllerId = serializedObject.FindProperty("moveControllerId");
 		ignorePitchAndRoll = serializedObject.FindProperty("ignorePitchAndRoll");
 		groundLayers = serializedObject.FindProperty("groundLayers");
 		groundedErrorTweaker = serializedObject.FindProperty("groundedErrorTweaker");
 		dynamicFriction = serializedObject.FindProperty("dynamicFriction");
 		dynamicMaterial = serializedObject.FindProperty("dynamicMaterial");
-		psmoveOffset = serializedObject.FindProperty("psmoveOffset");
+//		psmoveOffset = serializedObject.FindProperty("psmoveOffset");
 		feetAlsoAffectGrounding = serializedObject.FindProperty("feetAlsoAffectGrounding");
 		
 		characterController = target as RUISCharacterController;
@@ -56,7 +59,7 @@ public class RUISCharacterControllerEditor : Editor
 		EditorGUILayout.PropertyField(characterPivotType, new GUIContent(  "Character Pivot Type", "Rotation pivot for the character, in other words, "
 		                                                                 + "what is the rotation center for the character when turning with the "
 		                                                                 + typeof(RUISCharacterLocomotion).Name + " script. Pivot orientation also defines "
-		                                                                 + "the Forward movement direction. Currently 'Kinect Head' is NOT recommended."));
+		                                                                 + "the Forward movement direction. Currently 'Skeleton Head' is NOT recommended."));
 		RUISSkeletonController.BodyTrackingDeviceType bodyTrackingDevice = RUISSkeletonController.BodyTrackingDeviceType.Kinect1;
 		int kinectPlayerId = 0;
 		if(characterController)
@@ -69,64 +72,64 @@ public class RUISCharacterControllerEditor : Editor
 			}
 		}
 
-	        EditorGUI.indentLevel += 2;
-	        switch (characterPivotType.enumValueIndex)
-	        {
-			
+        EditorGUI.indentLevel += 2;
+        switch (characterPivotType.enumValueIndex)
+        {
+		
 			case (int)RUISCharacterController.CharacterPivotType.SkeletonHead:
 				
-			EditorGUILayout.LabelField(new GUIContent(bodyTrackingDevice.ToString() + " Skeleton ID " + kinectPlayerId,  
-			                                          "You can change this value from " + typeof(RUISSkeletonController).ToString() 
+				EditorGUILayout.LabelField(new GUIContent(bodyTrackingDevice.ToString() + " Skeleton ID " + kinectPlayerId,  
+				                                        "You can change this Skeleton ID from " + typeof(RUISSkeletonController).ToString() 
 			                                          + " script that is in one of the child objects."));
 				break;
 			case (int)RUISCharacterController.CharacterPivotType.SkeletonPelvis:
-				EditorGUILayout.LabelField(new GUIContent(bodyTrackingDevice.ToString() + " Skeleton ID " + kinectPlayerId, "You can change this value from " 
+				EditorGUILayout.LabelField(new GUIContent(bodyTrackingDevice.ToString() + " Skeleton ID " + kinectPlayerId, "You can change this Skeleton ID from " 
 	                          							  + typeof(RUISSkeletonController).ToString() + " script that is in one of the child objects."));
 				break;
-			case (int)RUISCharacterController.CharacterPivotType.MoveController:
-			{
-				moveControllerId.intValue = Mathf.Clamp(moveControllerId.intValue, 0, maxPSMoveControllers - 1);
-				EditorGUILayout.PropertyField(moveControllerId, new GUIContent("PS Move ID", "Between 0 and 3"));
-				EditorGUILayout.PropertyField(psmoveOffset, new GUIContent(	  "Position Offset (meters)", "PS Move controller's position in "
-												+ "the tracked pivot's local coordinate system. Set these values "
-												+ "according to the controller's offset from the tracked pivot's "
-												+ "origin (torso center point etc.)."));
-                		break;
-			}
+//			case (int)RUISCharacterController.CharacterPivotType.MoveController:
+//			{
+//				moveControllerId.intValue = Mathf.Clamp(moveControllerId.intValue, 0, maxPSMoveControllers - 1);
+//				EditorGUILayout.PropertyField(moveControllerId, new GUIContent("PS Move ID", "Between 0 and 3"));
+//				EditorGUILayout.PropertyField(psmoveOffset, new GUIContent(	  "Position Offset (meters)", "PS Move controller's position in "
+//												+ "the tracked pivot's local coordinate system. Set these values "
+//												+ "according to the controller's offset from the tracked pivot's "
+//												+ "origin (torso center point etc.)."));
+//                break;
+//			}
 
-        	}
+    	}
 
 		
-		EditorGUILayout.PropertyField(useHmdPositionalTracking, new GUIContent(  "HMD Is Pivot", "Use head-mounted display's tracked position as the "
-	                                                                           + "character pivot position, [not implemented yet: and fall back to the above defined pivot only "
-																			   + "in situations where HMD is not seen by its camera]. Leave this option disabled if you "
-	                                                                           + "do not know what you are doing! NOTE: The above defined pivot device (Kinect/PS Move) must "
-																			   + "have its coordinate system calibrated with OpenVR (e.g. Vive) using the RUIS device calibration."));
+//		EditorGUILayout.PropertyField(useHmdPositionalTracking, new GUIContent(  "HMD Is Pivot", "Use head-mounted display's tracked position as the "
+//	                                                                           + "character pivot position, [not implemented yet: and fall back to the above defined pivot only "
+//																			   + "in situations where HMD is not seen by its camera]. Leave this option disabled if you "
+//	                                                                           + "do not know what you are doing! NOTE: The above defined pivot device (Kinect/PS Move) must "
+//																			   + "have its coordinate system calibrated with OpenVR (e.g. Vive) using the RUIS device calibration."));
 
-		EditorGUILayout.PropertyField(headRotatesBody, new GUIContent(  "Head Rotates Body", "Set the model of the avatar to have the same rotation as the tracked head. "
-		                                                              + "This only has effect when both Kinects are disabled from " + typeof(RUISInputManager) + " or "
-		                                                              + "PS Move is set as the Character Pivot."));
+//		EditorGUILayout.PropertyField(headRotatesBody, new GUIContent(  "Head Rotates Body", "Set the model of the avatar to have the same rotation as the tracked head. "
+//		                                                              + "This only has effect when both Kinects are disabled from " + typeof(RUISInputManager) + " or "
+//		                                                              + "PS Move is set as the Character Pivot."));
+//
+//		EditorGUILayout.PropertyField(headPointsWalkingDirection, new GUIContent(  "Head Points Walking Direction", "Let the tracked head forward direction to determine "
+//		                                                                         + "the walk forward direction for character locomotion controls. This only has effect "
+//		                                                                         + "when both Kinects are disabled from " + typeof(RUISInputManager) + " or "
+//		                                                                         + "PS Move is set as the Character Pivot."));
 
-		EditorGUILayout.PropertyField(headPointsWalkingDirection, new GUIContent(  "Head Points Walking Direction", "Let the tracked head forward direction to determine "
-		                                                                         + "the walk forward direction for character locomotion controls. This only has effect "
-		                                                                         + "when both Kinects are disabled from " + typeof(RUISInputManager) + " or "
-		                                                                         + "PS Move is set as the Character Pivot."));
+        EditorGUI.indentLevel -= 2;
 
-	        EditorGUI.indentLevel -= 2;
+        EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent(  "Ignore Pitch and Roll", "Should the pitch and roll values of the pivot "
+									 + "rotation be taken into account when transforming directions into character "
+	                                                                 + "coordinates? In most cases this should be enabled."));
 
-	        EditorGUILayout.PropertyField(ignorePitchAndRoll, new GUIContent(  "Ignore Pitch and Roll", "Should the pitch and roll values of the pivot "
-										 + "rotation be taken into account when transforming directions into character "
-		                                                                 + "coordinates? In most cases this should be enabled."));
+    	EditorGUILayout.PropertyField(groundLayers, new GUIContent(  "Ground Layers", "The layers to take into account when checking whether the character is grounded "
+								   + "(and able to jump)."));
 
-        	EditorGUILayout.PropertyField(groundLayers, new GUIContent(  "Ground Layers", "The layers to take into account when checking whether the character is grounded "
-									   + "(and able to jump)."));
-
-        	EditorGUILayout.PropertyField(groundedErrorTweaker, new GUIContent(  "Ground Distance Tweaker", "This value (in meters) can be adjusted to allow for some "
-		                                                                   + "leniency in the checks whether the character is grounded. Should be above zero."));
-		
-        	EditorGUILayout.PropertyField(dynamicFriction, new GUIContent(  "Dynamic Friction", "Enable this if you want the character collider to switch "
-									      + "to a different Physics Material whenever the character is not grounded. We "
-									      + "recommend that you enable this."));
+    	EditorGUILayout.PropertyField(groundedErrorTweaker, new GUIContent(  "Ground Distance Tweaker", "This value (in meters) can be adjusted to allow for some "
+	                                                                   + "leniency in the checks whether the character is grounded. Should be above zero."));
+	
+    	EditorGUILayout.PropertyField(dynamicFriction, new GUIContent(  "Dynamic Friction", "Enable this if you want the character collider to switch "
+								      + "to a different Physics Material whenever the character is not grounded. We "
+								      + "recommend that you enable this."));
 		
 		if(dynamicFriction.boolValue)
 		{
@@ -137,12 +140,12 @@ public class RUISCharacterControllerEditor : Editor
 			EditorGUI.indentLevel -= 2;
 		}
 		
-        	EditorGUILayout.PropertyField(feetAlsoAffectGrounding, new GUIContent(  "Feet Affect Grounding", "When this option is disabled, the "
-										      + "avatar is grounded (and able to jump) only if its Stabilizing Collider is "
-										      + "standing on a collider from Ground Layers. By enabling this option, "
-										      + "the avatar will also be grounded when at least one of its feet is "
-										      + "standing on a non-kinematic Rigidbody from Ground Layers. We recommend "
-									  	      + "that you enable this."  ));
-        	serializedObject.ApplyModifiedProperties();
+    	EditorGUILayout.PropertyField(feetAlsoAffectGrounding, new GUIContent(  "Feet Affect Grounding", "When this option is disabled, the "
+									      + "avatar is grounded (and able to jump) only if its Stabilizing Collider is "
+									      + "standing on a collider from Ground Layers. By enabling this option, "
+									      + "the avatar will also be grounded when at least one of its feet is "
+									      + "standing on a non-kinematic Rigidbody from Ground Layers. We recommend "
+								  	      + "that you enable this."  ));
+    	serializedObject.ApplyModifiedProperties();
 	}
 }

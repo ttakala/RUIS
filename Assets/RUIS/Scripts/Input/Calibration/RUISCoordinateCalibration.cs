@@ -2,7 +2,8 @@
 
 Content    :   Handles the calibration procedure between PS Move and Kinect
 Authors    :   Tuukka Takala, Mikael Matveinen
-Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen. All Rights reserved.
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen.
+               All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
                restricted for commercial projects. Contact tmtakala@gmail.com
                for more information.
@@ -74,13 +75,13 @@ public class RUISCalibrationProcessSettings
 	static public bool isCalibrating = false;
 	static public string devicePair;
 	static public int previousSceneId;
-	static public bool enablePSMove;
+//	static public bool enablePSMove;
 	static public bool enableKinect;
 	static public bool enableKinect2;
 //	static public bool jumpGestureEnabled;
-	static public bool enableRazerHydra;
-	static public string PSMoveIP;
-	static public int PSMovePort;
+//	static public bool enableRazerHydra;
+//	static public string PSMoveIP;
+//	static public int PSMovePort;
 	static public float yawOffset;
 	static public Vector3 positionOffset;
 	static public RUISDevice originalMasterCoordinateSystem;

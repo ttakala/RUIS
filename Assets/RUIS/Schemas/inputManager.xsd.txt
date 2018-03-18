@@ -7,10 +7,8 @@
 	
 	<complexType name="RUISInputManagerType">
 		<sequence>
-			<element name="PSMoveSettings" type="tns:PSMoveSettingsType" maxOccurs="1"/>
 			<element name="KinectSettings" type="tns:KinectSettingsType" maxOccurs="1"/>
 			<element name="Kinect2Settings" type="tns:Kinect2SettingsType" maxOccurs="1"/>
-			<element name="RazerSettings" type="tns:RazerSettingsType" maxOccurs="1"/>
 			<element name="Custom1Settings" type="tns:CustomSettingsType" maxOccurs="1"/>
 			<element name="Custom2Settings" type="tns:CustomSettingsType" maxOccurs="1"/>
 			<element name="CoordinateSystemSettings" type="tns:CoordinateSystemSettingsType" maxOccurs="1"/>
@@ -54,17 +52,6 @@
 		<attribute name="wNegate" type="boolean" use="required" />
 	</complexType>
 
-	<complexType name="PSMoveSettingsType" >
-		<sequence>
-			<element name="enabled" type="tns:BooleanType"/>
-			<element name="ip" type="tns:StringType"/>
-			<element name="port" type="tns:IntType"/>
-			<element name="autoConnect" type="tns:BooleanType"/>
-			<element name="enableInGameCalibration" type="tns:BooleanType"/>
-			<element name="maxControllers" type="tns:IntType"/>
-		</sequence>
-	</complexType>
-
 	<complexType name="KinectSettingsType" >
 		<sequence>
 			<element name="enabled" type="tns:BooleanType"/>
@@ -86,12 +73,6 @@
 			<element name="name" type="tns:StringType"/>
 			<element name="positionConversion" type="tns:PositionConversionType"/>
 			<element name="rotationConversion" type="tns:RotationConversionType"/>
-		</sequence>
-	</complexType>
-
-	<complexType name="RazerSettingsType">
-		<sequence>
-			<element name="enabled" type="tns:BooleanType"/>
 		</sequence>
 	</complexType>
 

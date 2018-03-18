@@ -1,9 +1,12 @@
 /*****************************************************************************
 
 Content    :   Class for locomotion of Kinect controlled character
-Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Authors    :   Mikael Matveinen, Tuukka Takala, Heikki Heiskanen
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen, Heikki Heiskanen.
+               All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -30,10 +33,11 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	public float runAdder = 1.0f;
     public float maxVelocityChange = 20.0f;
 
-	PSMoveWrapper moveWrapper;
-    public bool usePSNavigationController = true;
-    public int PSNaviControllerID = 1;
-	public bool strafeInsteadTurning = false;
+//	PSMoveWrapper moveWrapper;
+//    public bool usePSNavigationController = true;
+//    public int PSNaviControllerID = 1;
+	public bool joystickTurning = false;
+//	public bool strafeInsteadTurning = false;
 
     public float jumpStrength = 10f;
 	public float jumpSpeedEffect = 0;
@@ -66,9 +70,9 @@ public class RUISCharacterLocomotion : MonoBehaviour
     public bool jump { get; private set; }
 
 
-	public bool useRazerHydra = true;
-	public SixenseHands razerHydraID = SixenseHands.RIGHT;
-	SixenseInput.Controller razerController;
+//	public bool useRazerHydra = true;
+//	public SixenseHands razerHydraID = SixenseHands.RIGHT;
+//	SixenseInput.Controller razerController;
 
 
 	public bool useOpenVrController = true;
@@ -94,7 +98,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
         characterController = GetComponent<RUISCharacterController>();
         jumpGesture = GetComponentInChildren<RUISJumpGestureRecognizer>();
 
-        moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
+//        moveWrapper = FindObjectOfType(typeof(PSMoveWrapper)) as PSMoveWrapper;
 		bimanualSwingingRecognizer = FindObjectOfType(typeof(RUISBimanualSwingingRecognizer)) as RUISBimanualSwingingRecognizer; // TODO: Shouldn't probably check whole scene
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
 		skeletonManager =  FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
@@ -108,15 +112,18 @@ public class RUISCharacterLocomotion : MonoBehaviour
 			Debug.LogWarning("'Sprint' not defined in Unity Input settings");
         }
 
-        try
-        {
-            Input.GetAxis("Turn");
-        }
-        catch(UnityException)
-        {
-			Debug.LogWarning("'Turn' not defined in Unity Input settings");
-        }
-		
+		if(joystickTurning)
+		{
+			try
+			{
+				Input.GetAxis("Turn");
+			}
+			catch(UnityException)
+			{
+				Debug.LogWarning("'Turn' not defined in Unity Input settings");
+			}
+		}
+
 		try
 		{
 			Input.GetAxis("Jump");
@@ -129,23 +136,7 @@ public class RUISCharacterLocomotion : MonoBehaviour
 	
 	void Start()
 	{
-		RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
-		
-		if(useRazerHydra && inputManager && !inputManager.enableRazerHydra)
-		{
-			useRazerHydra = false;
-//			Debug.LogWarning(	"Your settings indicate that you want to use Razer Hydra for "
-//							 +	"character locomotion controls, but you have disabled Razer "
-//							 +	"Hydra from " + typeof(RUISInputManager));
-		}
-
-		if(usePSNavigationController && inputManager && !inputManager.enablePSMove)
-		{
-			usePSNavigationController = false;
-//			Debug.LogWarning(	"Your settings indicate that you want to use PS Navigation "
-//							 +	"controller for character locomotion controls, but you have "
-//							 +	"disabled PS Move from RUIS InputManager.");
-		}
+//		RUISInputManager inputManager = FindObjectOfType(typeof(RUISInputManager)) as RUISInputManager;
 
 		if(useOpenVrController && !RUISDisplayManager.IsOpenVrAccessible())
 		{
@@ -165,30 +156,30 @@ public class RUISCharacterLocomotion : MonoBehaviour
             shouldJump = true;
         }
 		
-		if(useRazerHydra)
-		{
-			razerController = SixenseInput.GetController(razerHydraID);
-			if(razerController != null && razerController.Enabled)
-			{
-				if(razerController.GetButtonDown(SixenseButtons.BUMPER))
-					shouldJump = true;
-			}
-		}
-		
-		// Check if jumping with PS Move Navigation controller
-		if(usePSNavigationController && moveWrapper && moveWrapper.isConnected)
-        {
-            if(PSNaviControllerID <= moveWrapper.navConnected.Length && PSNaviControllerID >= 1)
-            {
-                if(moveWrapper.navConnected[PSNaviControllerID-1])
-                {
-                    if(moveWrapper.WasPressed(PSNaviControllerID-1, "NavL1"))
-					{
-                    	shouldJump = true;
-					}
-                }
-            }
-		}
+//		if(useRazerHydra)
+//		{
+//			razerController = SixenseInput.GetController(razerHydraID);
+//			if(razerController != null && razerController.Enabled)
+//			{
+//				if(razerController.GetButtonDown(SixenseButtons.BUMPER))
+//					shouldJump = true;
+//			}
+//		}
+//		
+//		// Check if jumping with PS Move Navigation controller
+//		if(usePSNavigationController && moveWrapper && moveWrapper.isConnected)
+//        {
+//            if(PSNaviControllerID <= moveWrapper.navConnected.Length && PSNaviControllerID >= 1)
+//            {
+//                if(moveWrapper.navConnected[PSNaviControllerID-1])
+//                {
+//                    if(moveWrapper.WasPressed(PSNaviControllerID-1, "NavL1"))
+//					{
+//                    	shouldJump = true;
+//					}
+//                }
+//            }
+//		}
 
 //		if(useOpenVrController)
 //		{
@@ -263,51 +254,51 @@ public class RUISCharacterLocomotion : MonoBehaviour
         catch(UnityException) { }
 
         // Check if moving with PS Move Navigation controller
-        if(PSNaviControllerID < 1)
-        {
-            Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
-                            + " which is incorrect value: It must be positive!");
-        }
-        else if(usePSNavigationController && moveWrapper && moveWrapper.isConnected)
-        {
-            if(PSNaviControllerID <= moveWrapper.navConnected.Length)
-            {
-                if(moveWrapper.navConnected[PSNaviControllerID-1])
-                {
-					int horiz = moveWrapper.valueNavAnalogX[PSNaviControllerID-1];
-					int verti = moveWrapper.valueNavAnalogY[PSNaviControllerID-1];
-					if(!airborne)
-						extraSpeed = ((float)moveWrapper.valueNavL2[PSNaviControllerID-1]) / 255f;
-					else
-						extraSpeed = 0;
-                    if(Mathf.Abs(verti) > 20)
-						targetVelocity += new Vector3(0, 0, -((float)verti) / 128f * (1 + extraSpeed*runAdder));
-
-                    if(strafeInsteadTurning)
-                    {
-                        if(Mathf.Abs(horiz) > 20)
-							targetVelocity += new Vector3(((float)horiz) / 128f * (1 + extraSpeed*runAdder), 0, 0);
-                    }
-                    else
-                    {
-                        if(Mathf.Abs(horiz) > 10)
-                        {
-							turnMagnitude += ((float)horiz) / 128f;
-                        }
-                    }
-					
-					if(moveWrapper.isNavButtonCross[PSNaviControllerID-1])
-						turnMagnitude -= 1;
-					if(moveWrapper.isNavButtonCircle[PSNaviControllerID-1])
-						turnMagnitude += 1;
-                }
-            }
-            else
-            {
-                Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
-                                + " which is too big value: It must be below 8.");
-            }
-        }
+//        if(PSNaviControllerID < 1)
+//        {
+//            Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
+//                            + " which is incorrect value: It must be positive!");
+//        }
+//        else if(usePSNavigationController && moveWrapper && moveWrapper.isConnected)
+//        {
+//            if(PSNaviControllerID <= moveWrapper.navConnected.Length)
+//            {
+//                if(moveWrapper.navConnected[PSNaviControllerID-1])
+//                {
+//					int horiz = moveWrapper.valueNavAnalogX[PSNaviControllerID-1];
+//					int verti = moveWrapper.valueNavAnalogY[PSNaviControllerID-1];
+//					if(!airborne)
+//						extraSpeed = ((float)moveWrapper.valueNavL2[PSNaviControllerID-1]) / 255f;
+//					else
+//						extraSpeed = 0;
+//                    if(Mathf.Abs(verti) > 20)
+//						targetVelocity += new Vector3(0, 0, -((float)verti) / 128f * (1 + extraSpeed*runAdder));
+//
+//                    if(strafeInsteadTurning)
+//                    {
+//                        if(Mathf.Abs(horiz) > 20)
+//							targetVelocity += new Vector3(((float)horiz) / 128f * (1 + extraSpeed*runAdder), 0, 0);
+//                    }
+//                    else
+//                    {
+//                        if(Mathf.Abs(horiz) > 10)
+//                        {
+//							turnMagnitude += ((float)horiz) / 128f;
+//                        }
+//                    }
+//					
+//					if(moveWrapper.isNavButtonCross[PSNaviControllerID-1])
+//						turnMagnitude -= 1;
+//					if(moveWrapper.isNavButtonCircle[PSNaviControllerID-1])
+//						turnMagnitude += 1;
+//                }
+//            }
+//            else
+//            {
+//                Debug.LogError("PSNaviControllerID was set to " + PSNaviControllerID
+//                                + " which is too big value: It must be below 8.");
+//            }
+//        }
 
 //		if(useOpenVrController)
 //		{
@@ -324,39 +315,39 @@ public class RUISCharacterLocomotion : MonoBehaviour
 //			}
 //		}
 
-        if(useRazerHydra) // Check if moving with Razer Hydra controller
-        {
-            razerController = SixenseInput.GetController(razerHydraID);
-            if(razerController != null && razerController.Enabled)
-            {
-				if(!airborne)
-					if(razerController.GetButton(SixenseButtons.JOYSTICK))
-		                extraSpeed = 1; //razerController.Trigger;
-				else
-					extraSpeed = 0;
-				
-                if(Mathf.Abs(razerController.JoystickY) > 0.15f)
-					targetVelocity += new Vector3(0, 0, razerController.JoystickY * (1 + extraSpeed*runAdder));
-
-                if(strafeInsteadTurning)
-                {
-                    if(Mathf.Abs(razerController.JoystickX) > 0.15f)
-						targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed*runAdder), 0, 0);
-				}
-                else
-                {
-                    if(Mathf.Abs(razerController.JoystickX) > 0.075f)
-                    {
-						turnMagnitude += razerController.JoystickX;
-                    }
-                }
-				
-				if(razerController.GetButton(SixenseButtons.THREE))
-					turnMagnitude -= 1;
-				if(razerController.GetButton(SixenseButtons.FOUR))
-					turnMagnitude += 1;
-            }
-        }
+//        if(useRazerHydra) // Check if moving with Razer Hydra controller
+//        {
+//            razerController = SixenseInput.GetController(razerHydraID);
+//            if(razerController != null && razerController.Enabled)
+//            {
+//				if(!airborne)
+//					if(razerController.GetButton(SixenseButtons.JOYSTICK))
+//		                extraSpeed = 1; //razerController.Trigger;
+//				else
+//					extraSpeed = 0;
+//				
+//                if(Mathf.Abs(razerController.JoystickY) > 0.15f)
+//					targetVelocity += new Vector3(0, 0, razerController.JoystickY * (1 + extraSpeed*runAdder));
+//
+//                if(strafeInsteadTurning)
+//                {
+//                    if(Mathf.Abs(razerController.JoystickX) > 0.15f)
+//						targetVelocity += new Vector3(razerController.JoystickX * (1 + extraSpeed*runAdder), 0, 0);
+//				}
+//                else
+//                {
+//                    if(Mathf.Abs(razerController.JoystickX) > 0.075f)
+//                    {
+//						turnMagnitude += razerController.JoystickX;
+//                    }
+//                }
+//				
+//				if(razerController.GetButton(SixenseButtons.THREE))
+//					turnMagnitude -= 1;
+//				if(razerController.GetButton(SixenseButtons.FOUR))
+//					turnMagnitude += 1;
+//            }
+//        }
 
 		// controlDirection is a unit vector that shows the direction where the joystick is pressed
 		controlDirection = Vector3.ClampMagnitude(targetVelocity, 1);
@@ -422,12 +413,18 @@ public class RUISCharacterLocomotion : MonoBehaviour
 		}
 		if(turnWithGestures)
 			turnMagnitude += RotationGestureTurnValue();
-		
-        try
-        {
-			turnMagnitude += Input.GetAxis("Turn");
-        }
-        catch (UnityException) { }
+
+
+		if(joystickTurning)
+		{
+			try
+			{
+				turnMagnitude += Input.GetAxis("Turn");
+			}
+			catch(UnityException)
+			{
+			}
+		}
 
 		if(Input.GetKey(turnLeftKey))
             turnMagnitude -= 1;

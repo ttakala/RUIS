@@ -35,15 +35,15 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 	         + "and PS Move is enabled in RUISInputManager, and the chosen RUISTracker is a PS Move controller, "
 	         + "then force the Character Pivot to that PS Move.")]
 	public bool changePivotIfNoKinect = true;
-	[Tooltip(  "If the chosen RUISTracker is Razer Hydra, this offset will be applied to its parent, "
-	         + "and to the below 'Razer Wand Parent' gameobject. You can ue this to offset the Razer "
-	         + "Hydra coordinate system.")]
-	public Vector3 onlyRazerOffset = Vector3.zero;
+//	[Tooltip(  "If the chosen RUISTracker is Razer Hydra, this offset will be applied to its parent, "
+//	         + "and to the below 'Razer Wand Parent' gameobject. You can ue this to offset the Razer "
+//	         + "Hydra coordinate system.")]
+//	public Vector3 onlyRazerOffset = Vector3.zero;
 	//	public Vector3 onlyMouseOffset = Vector3.zero;
-	[Tooltip(  "If the chosen RUISTracker is Razer Hydra, this Transform will receive the above "
-	         + "'Only Razer Offset' translation. Place the RazerHydraWand(s) under that gameobject, "
-	         + "if the 'Only Razer Offset' is non-zero.")]
-	public Transform razerWandParent;
+//	[Tooltip(  "If the chosen RUISTracker is Razer Hydra, this Transform will receive the above "
+//	         + "'Only Razer Offset' translation. Place the RazerHydraWand(s) under that gameobject, "
+//	         + "if the 'Only Razer Offset' is non-zero.")]
+//	public Transform razerWandParent;
 	
 //	Ovr.HmdType ovrHmdVersion; //06to08
 	
@@ -56,8 +56,8 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 
 		bool kinect2 = false;
 		bool kinect = false;
-		bool psmove = false;
-		bool razer = false;
+//		bool psmove = false;
+//		bool razer = false;
 
 //		bool isRiftConnected = false;
 //		{
@@ -82,8 +82,8 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			
 			kinect2 = inputManager.enableKinect2;
 			kinect  = inputManager.enableKinect;
-			psmove  = inputManager.enablePSMove;
-			razer   = inputManager.enableRazerHydra;
+//			psmove  = inputManager.enablePSMove;
+//			razer   = inputManager.enableRazerHydra;
 			
 			int trackerCount = 0;
 			RUISTracker closestMatch = null;
@@ -144,35 +144,35 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					{
 						foundTrackerScore = 7;
 					}
-					else if(psmove && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.PSMove)
-					{
-						foundTrackerScore = 6;
-					}
-					else if(	razer && trackerScript.isRazerBaseMobile // Legacy: Mobile Hydra Base (custom tracker) 
-							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
-							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.InputTransform	)
-					{
-						foundTrackerScore = 5;
-					}
+//					else if(psmove && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.PSMove)
+//					{
+//						foundTrackerScore = 6;
+//					}
+//					else if(	razer && trackerScript.isRazerBaseMobile // Legacy: Mobile Hydra Base (custom tracker) 
+//							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
+//							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.InputTransform	)
+//					{
+//						foundTrackerScore = 5;
+//					}
 					else if(kinect2 && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect2)
 					{
 						foundTrackerScore = 4;
 					}
-					else if(	kinect && razer && trackerScript.isRazerBaseMobile // Legacy: Mobile Hydra Base (Kinect) 
-							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
-							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.Kinect1			)
-					{
-						foundTrackerScore = 3;
-					}
+//					else if(	kinect && razer && trackerScript.isRazerBaseMobile // Legacy: Mobile Hydra Base (Kinect) 
+//							&&	trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
+//							&&	trackerScript.mobileRazerBase == RUISTracker.RazerHydraBase.Kinect1			)
+//					{
+//						foundTrackerScore = 3;
+//					}
 					else if(kinect && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.Kinect1)
 					{
 						foundTrackerScore = 2;
 					}
-					else if(	razer && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra // Plain ol' Razer Hydra
-							&&	!trackerScript.isRazerBaseMobile															)
-					{
-						foundTrackerScore = 1;
-					}
+//					else if(	razer && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra // Plain ol' Razer Hydra
+//							&&	!trackerScript.isRazerBaseMobile															)
+//					{
+//						foundTrackerScore = 1;
+//					}
 						
 					// Assign new best head tracker candidate if it is better than the previously found
 					if(currentMatchScore < foundTrackerScore)
@@ -261,20 +261,20 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 				
 				ruisCamera = closestMatch.gameObject.GetComponentInChildren<RUISCamera>();
 				
-				if(	changePivotIfNoKinect && psmove && !kinect && !kinect2
-				    &&  closestMatch.headPositionInput == RUISTracker.HeadPositionSource.PSMove )
-				{
-					RUISCharacterController characterController = gameObject.GetComponentInChildren<RUISCharacterController>();
-					if(    characterController != null 
-					    && characterController.characterPivotType != RUISCharacterController.CharacterPivotType.MoveController )
-					{
-						characterController.characterPivotType = RUISCharacterController.CharacterPivotType.MoveController;
-						characterController.moveControllerId = closestMatch.positionPSMoveID;
-						Debug.Log(  "PS Move enabled and Kinect disabled. Setting " + characterController.name 
-								  + "'s Character Pivot as PS Move controller #" + closestMatch.positionPSMoveID
-								  + ". PS Move position offset for this pivot is " + characterController.psmoveOffset);
-					}
-				}
+//				if(	changePivotIfNoKinect && psmove && !kinect && !kinect2
+//				    &&  closestMatch.headPositionInput == RUISTracker.HeadPositionSource.PSMove )
+//				{
+//					RUISCharacterController characterController = gameObject.GetComponentInChildren<RUISCharacterController>();
+//					if(    characterController != null 
+//					    && characterController.characterPivotType != RUISCharacterController.CharacterPivotType.MoveController )
+//					{
+//						characterController.characterPivotType = RUISCharacterController.CharacterPivotType.MoveController;
+//						characterController.moveControllerId = closestMatch.positionPSMoveID;
+//						Debug.Log(  "PS Move enabled and Kinect disabled. Setting " + characterController.name 
+//								  + "'s Character Pivot as PS Move controller #" + closestMatch.positionPSMoveID
+//								  + ". PS Move position offset for this pivot is " + characterController.psmoveOffset);
+//					}
+//				}
 			}
 			
 			
@@ -321,29 +321,29 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 			
 			// If we are using Razer with a static base for head tracking, then apply onlyRazerOffset
 			// on the parent objects of the Razer head tracker and the hand-held Razer
-			if(		closestMatch != null && razer 
-				&&	closestMatch.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
-				&&	!closestMatch.isRazerBaseMobile													)
-			{
-				// The parent object of the Razer head tracker must not have RUISCharacterConroller,
-				// because that script will modify the object's position
-				if(		closestMatch.transform.parent != null 
-					&&	closestMatch.transform.parent.GetComponent<RUISCharacterController>() == null
-					&& (onlyRazerOffset.x != 0 || onlyRazerOffset.y != 0 || onlyRazerOffset.z != 0)  )
-				{
-					string razerWandOffsetInfo = "";
-					closestMatch.transform.parent.localPosition += onlyRazerOffset;
-					if(razerWandParent != null)
-					{
-						razerWandParent.localPosition += onlyRazerOffset;
-						razerWandOffsetInfo =  " and " + razerWandParent.gameObject.name + " (parent of hand-held Razer "
-											 + "Hydra)";
-					}
-					Debug.Log(  "Applying offset of " + onlyRazerOffset + " to " 
-							   + closestMatch.transform.parent.gameObject.name + " (parent of Razer Hydra head tracker)"
-							   + razerWandOffsetInfo + "." );
-				}
-			}
+//			if(		closestMatch != null && razer 
+//				&&	closestMatch.headPositionInput == RUISTracker.HeadPositionSource.RazerHydra
+//				&&	!closestMatch.isRazerBaseMobile													)
+//			{
+//				// The parent object of the Razer head tracker must not have RUISCharacterConroller,
+//				// because that script will modify the object's position
+//				if(		closestMatch.transform.parent != null 
+//					&&	closestMatch.transform.parent.GetComponent<RUISCharacterController>() == null
+//					&& (onlyRazerOffset.x != 0 || onlyRazerOffset.y != 0 || onlyRazerOffset.z != 0)  )
+//				{
+//					string razerWandOffsetInfo = "";
+//					closestMatch.transform.parent.localPosition += onlyRazerOffset;
+//					if(razerWandParent != null)
+//					{
+//						razerWandParent.localPosition += onlyRazerOffset;
+//						razerWandOffsetInfo =  " and " + razerWandParent.gameObject.name + " (parent of hand-held Razer "
+//											 + "Hydra)";
+//					}
+//					Debug.Log(  "Applying offset of " + onlyRazerOffset + " to " 
+//							   + closestMatch.transform.parent.gameObject.name + " (parent of Razer Hydra head tracker)"
+//							   + razerWandOffsetInfo + "." );
+//				}
+//			}
 			
 			// If no Razer, Kinect, or PS Move is available, then apply onlyMouseOffset
 			// on the parent object of the head tracker that is left enabled
@@ -372,30 +372,30 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 					switch(closestMatch.headPositionInput)
 					{
 						case RUISTracker.HeadPositionSource.Kinect1:
-							if(!psmove && kinect)
+							if(/*!psmove && */ kinect)
 							{
 								closestMatch.externalDriftCorrection = true;
 								closestMatch.compass = RUISTracker.CompassSource.Kinect1;
 							}
 							break;
 						
-						case RUISTracker.HeadPositionSource.RazerHydra:
-							if(!psmove && kinect && razer)
-							{
-								if(closestMatch.isRazerBaseMobile)
-								{
-									closestMatch.externalDriftCorrection = true;
-									closestMatch.compass = RUISTracker.CompassSource.Kinect1;
-								}
-							}
-							break;
+//						case RUISTracker.HeadPositionSource.RazerHydra:
+//							if(!psmove && kinect && razer)
+//							{
+//								if(closestMatch.isRazerBaseMobile)
+//								{
+//									closestMatch.externalDriftCorrection = true;
+//									closestMatch.compass = RUISTracker.CompassSource.Kinect1;
+//								}
+//							}
+//							break;
 					}
 				}
 				else
 				{
 					// Preference is NOT to use Kinect for drift correction
-					if(		closestMatch.headPositionInput == RUISTracker.HeadPositionSource.Kinect1
-						&&  !psmove && kinect															)
+					if(	  closestMatch.headPositionInput == RUISTracker.HeadPositionSource.Kinect1
+					   && kinect /* && !psmove */													)
 						closestMatch.externalDriftCorrection = false;
 				}
 			}

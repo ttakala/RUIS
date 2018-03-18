@@ -225,10 +225,8 @@ public class RUISSkeletonController : MonoBehaviour
 						kinect2Thumbs = false;
 
 						// When it comes to GenericMotionTracker, it's up to the developer to change isTracking values in realtime
-						if(skeletonManager)
-							skeletonManager.skeletons[this._bodyTrackingDeviceID, playerId].isTracking = true;
-						if(skeleton != null)
-							skeleton.isTracking = true;
+						StartCoroutine(DelayedCustomTrackingStart(customTrackingDelay));
+
 						switch(customConversionType)
 						{
 							case CustomConversionType.Custom_1:
@@ -259,6 +257,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public CustomConversionType customConversionType = CustomConversionType.None;
 	private RUISCoordinateSystem.DeviceCoordinateConversion deviceConversion;
 	private RUISDevice customSourceDevice = RUISDevice.None;
+	public float customTrackingDelay = 1;
 
 	public int playerId = 0;
 	public bool switchToAvailableKinect = false;
@@ -333,11 +332,11 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public bool followMoveController { get; private set; }
 
-	private int followMoveID = 0;
-	private RUISPSMoveWand psmove;
+//	private int followMoveID = 0;
+//	private RUISPSMoveWand psmove;
 
-	private Vector3 torsoDirection = Vector3.down;
-	private Quaternion torsoRotation = Quaternion.identity;
+//	private Vector3 torsoDirection = Vector3.down;
+//	private Quaternion torsoRotation = Quaternion.identity;
 
 	private float deltaTime = 0.03f;
 
@@ -370,7 +369,7 @@ public class RUISSkeletonController : MonoBehaviour
 	private Dictionary<RUISSkeletonManager.Joint, Quaternion> intendedRotations;
 
 	private Vector3 initialLocalPosition = Vector3.zero;
-	private Vector3 initialWorldPosition = Vector3.zero;
+//	private Vector3 initialWorldPosition = Vector3.zero;
 	private Vector3 initialLossyScale = Vector3.one;
 	private Quaternion initialWorldRotation = Quaternion.identity;
 
@@ -378,9 +377,9 @@ public class RUISSkeletonController : MonoBehaviour
 	private int customSpineJointCount = 0;
 	private Transform[] trackedSpineJoints = new Transform[4];
 	// *** OPTIHACK6 this is not used for anything yet
-	private RUISSkeletonManager.Joint highestSpineJoint = RUISSkeletonManager.Joint.RightShoulder; // Here RightShoulder refers to shoulders' midpoint
+//	private RUISSkeletonManager.Joint highestSpineJoint = RUISSkeletonManager.Joint.RightShoulder; // Here RightShoulder refers to shoulders' midpoint
 
-	private float torsoOffset = 0.0f;
+//	private float torsoOffset = 0.0f;
 
 	private float torsoScale = 1.0f;
 
@@ -609,11 +608,10 @@ public class RUISSkeletonController : MonoBehaviour
 			if(leftHip && leftFoot)
 				leftHip.rotation = FindFixingRotation(leftHip.position, leftFoot.position, -transform.up) * leftHip.rotation;
 
-			Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
+//			Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
 //			Vector3 assumedRootPos = Vector3.Scale((rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4, scaler); 
-			Vector3 assumedRootPos = Vector3.Scale((rightShoulder.position + leftShoulder.position + leftHip.position + rightHip.position) / 4, scaler); 
 															
-			Vector3 realRootPos = Vector3.Scale(torso.position, scaler);
+//			Vector3 realRootPos = Vector3.Scale(torso.position, scaler);
 
 			Vector3 torsoUp = head.position - torso.position;
 			torsoUp.Normalize();
@@ -675,8 +673,8 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		if(neck)
 		{
-			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customNeck)
-				highestSpineJoint = RUISSkeletonManager.Joint.Neck;
+//			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customNeck)
+//				highestSpineJoint = RUISSkeletonManager.Joint.Neck;
 			if(head)
 				/*modelSpineLength += */SaveInitialDistance(neck, head); // *** OPTIHACK
 			if(leftClavicle)
@@ -688,8 +686,8 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		if(head)
 		{
-			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customHead)
-				highestSpineJoint = RUISSkeletonManager.Joint.Head;
+//			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customHead)
+//				highestSpineJoint = RUISSkeletonManager.Joint.Head;
 			if(!chest && !neck)
 				/*modelSpineLength += */SaveInitialDistance(torso, head);
 		}
@@ -810,41 +808,41 @@ public class RUISSkeletonController : MonoBehaviour
 //			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && (inputManager.enableKinect || inputManager.enableKinect2))
 //				hasBeenTracked = true;
 
-			if(gameObject.transform.parent != null)
-			{
-				characterController = gameObject.transform.parent.GetComponent<RUISCharacterController>();
-				if(characterController != null)
-				{
-					if(characterController.characterPivotType == RUISCharacterController.CharacterPivotType.MoveController
-					   &&	inputManager.enablePSMove)
-					{
-						followMoveController = true;
-						followMoveID = characterController.moveControllerId;
-//						if(		 gameObject.GetComponent<RUISKinectAndMecanimCombiner>() == null 
-//							||	!gameObject.GetComponent<RUISKinectAndMecanimCombiner>().enabled )
-						Debug.LogWarning("Using PS Move controller #" + characterController.moveControllerId + " as a source "
-						+	"for avatar root position of " + gameObject.name + ", because PS Move is enabled"
-						+	"and the PS Move controller has been assigned as a "
-						+	"Character Pivot in " + gameObject.name + "'s parent GameObject");
-					}
-
-					if(   !inputManager.enableKinect && !inputManager.enableKinect2 && !followMoveController
-					   && bodyTrackingDevice != BodyTrackingDeviceType.GenericMotionTracker)
-					{
-						if(RUISDisplayManager.IsHmdPresent())
-						{
-							followHmdPosition = true;
-							Debug.LogWarning("Using " + RUISDisplayManager.GetHmdModel() + " as a Character Pivot for " + gameObject.name
-							+ ", because Kinects are disabled and " + RUISDisplayManager.GetHmdModel() + " was detected.");
-						}
-					}
-				}
-			}
+//			if(gameObject.transform.parent != null)
+//			{
+//				characterController = gameObject.transform.parent.GetComponent<RUISCharacterController>();
+//				if(characterController != null)
+//				{
+//					if(characterController.characterPivotType == RUISCharacterController.CharacterPivotType.MoveController
+//					   &&	inputManager.enablePSMove)
+//					{
+//						followMoveController = true;
+//						followMoveID = characterController.moveControllerId;
+////						if(		 gameObject.GetComponent<RUISKinectAndMecanimCombiner>() == null 
+////							||	!gameObject.GetComponent<RUISKinectAndMecanimCombiner>().enabled )
+//						Debug.LogWarning("Using PS Move controller #" + characterController.moveControllerId + " as a source "
+//						+	"for avatar root position of " + gameObject.name + ", because PS Move is enabled"
+//						+	"and the PS Move controller has been assigned as a "
+//						+	"Character Pivot in " + gameObject.name + "'s parent GameObject");
+//					}
+//
+//					if(   !inputManager.enableKinect && !inputManager.enableKinect2 && !followMoveController
+//					   && bodyTrackingDevice != BodyTrackingDeviceType.GenericMotionTracker)
+//					{
+//						if(RUISDisplayManager.IsHmdPresent())
+//						{
+//							followHmdPosition = true;
+//							Debug.LogWarning("Using " + RUISDisplayManager.GetHmdModel() + " as a Character Pivot for " + gameObject.name
+//							+ ", because Kinects are disabled and " + RUISDisplayManager.GetHmdModel() + " was detected.");
+//						}
+//					}
+//				}
+//			}
 		}
 
 		skeletonPosition = transform.localPosition;
 		initialLocalPosition = transform.localPosition;
-		initialWorldPosition = transform.position;
+//		initialWorldPosition = transform.position;
 		initialWorldRotation = transform.rotation;
 		initialLossyScale = transform.lossyScale;
 
@@ -1115,8 +1113,8 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					UpdateBoneScalings();
 					
-					torsoRotation = Quaternion.Slerp(torsoRotation, skeleton.torso.rotation, deltaTime * maxAngularVelocity);
-					torsoDirection = torsoRotation * Vector3.down;
+//					torsoRotation = Quaternion.Slerp(torsoRotation, skeleton.torso.rotation, deltaTime * maxAngularVelocity);
+//					torsoDirection = torsoRotation * Vector3.down;
 
 					ForceUpdatePosition(ref torso, skeleton.torso, 10, deltaTime);
 					// *** OPTIHACK TODO commented below and moved it to the above ForceUpdatePosition() with modifications, check that everything works!
@@ -1240,93 +1238,68 @@ public class RUISSkeletonController : MonoBehaviour
 //		Debug.DrawLine(leftElbow.position, leftElbow.position + tempVector);
 //		Debug.DrawLine(leftElbow.position + 0.01f * Vector3.up, leftElbow.position - leftHand.rotation * Vector3.right + 0.01f * Vector3.up, Color.magenta);
 		
-		if(characterController)
-		{
-			// If character controller pivot is PS Move
-			if(followMoveController && inputManager)
-			{
-				psmove = inputManager.GetMoveWand(followMoveID);
-				if(psmove)
-				{
-					float moveYaw = psmove.localRotation.eulerAngles.y;
-					trackedDeviceYawRotation = Quaternion.Euler(0, moveYaw, 0);
-
-					if(!skeletonManager || !skeleton.isTracking)
-					{
-//						skeletonPosition = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
-//						skeletonPosition.y = 0;
-						tempVector = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
-						skeletonPosition.x = tempVector.x;
-						skeletonPosition.z = tempVector.z;
-
-						if(characterController.headRotatesBody)
-							tempRotation = UpdateTransformWithTrackedDevice(ref root, moveYaw);
-						else 
-							tempRotation = Quaternion.identity;
-//							UpdateTransformWithPSMove (ref torso,  moveYaw);
-//							UpdateTransformWithPSMove (ref head, moveYawRotation);
-//							UpdateTransformWithPSMove (ref leftShoulder, moveYawRotation);
-//							UpdateTransformWithPSMove (ref leftElbow, moveYawRotation);
-//							UpdateTransformWithPSMove (ref leftHand, moveYawRotation);
-//							UpdateTransformWithPSMove (ref rightShoulder, moveYawRotation);
-//							UpdateTransformWithPSMove (ref rightElbow, moveYawRotation);
-//							UpdateTransformWithPSMove (ref rightHand, moveYawRotation);
-//							UpdateTransformWithPSMove (ref leftHip, moveYawRotation);
-//							UpdateTransformWithPSMove (ref leftKnee, moveYawRotation);
-//							UpdateTransformWithPSMove (ref leftFoot, moveYawRotation);
-//							UpdateTransformWithPSMove (ref rightHip, moveYawRotation);
-//							UpdateTransformWithPSMove (ref rightKnee, moveYawRotation);
-//							UpdateTransformWithPSMove (ref rightFoot, moveYawRotation);
-
-						if(updateRootPosition)
-							transform.localPosition = skeletonPosition + tempRotation*rootOffset;
-					}
-				}
-			}
-
-			if(followHmdPosition)
-			{
-				float hmdYaw = 0;
-				if(coordinateSystem)
-				{
-					if(coordinateSystem.applyToRootCoordinates)
-					{
-//						if(ovrHmdVersion == Ovr.HmdType.DK1 || ovrHmdVersion == Ovr.HmdType.DKHD) //06to08
-//							oculusYaw = coordinateSystem.GetOculusRiftOrientationRaw().eulerAngles.y;
-//						else //06to08
-						{
-//							skeletonPosition = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
-//							skeletonPosition.y = 0;
-							// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
-							tempVector = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), headsetCoordinates);
-							skeletonPosition.x = tempVector.x;
-							skeletonPosition.z = tempVector.z;
-							// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
-							hmdYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates).eulerAngles.y;
-						}
-					}
-					else
-					{
-//						skeletonPosition = coordinateSystem.GetHmdRawPosition();
-//						skeletonPosition.y = 0;
-						tempVector = coordinateSystem.GetHmdRawPosition();
-						skeletonPosition.x = tempVector.x;
-						skeletonPosition.z = tempVector.z;
-						hmdYaw = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head).eulerAngles.y;
-					}
-				}
-
-				trackedDeviceYawRotation = Quaternion.Euler(0, hmdYaw, 0);
-
-				if(characterController.headRotatesBody)
-					tempRotation = UpdateTransformWithTrackedDevice(ref root, hmdYaw);
-				else
-					tempRotation = Quaternion.identity;
-					
-				if(updateRootPosition) 
-					transform.localPosition = skeletonPosition + tempRotation*rootOffset;	
-			}
-		}
+//		if(characterController)
+//		{
+//			// If character controller pivot is PS Move
+//			if(followMoveController && inputManager)
+//			{
+//				psmove = inputManager.GetMoveWand(followMoveID);
+//				if(psmove)
+//				{
+//					float moveYaw = psmove.localRotation.eulerAngles.y;
+//					trackedDeviceYawRotation = Quaternion.Euler(0, moveYaw, 0);
+//
+//					if(!skeletonManager || !skeleton.isTracking)
+//					{
+//						tempVector = psmove.localPosition - trackedDeviceYawRotation * characterController.psmoveOffset;
+//						skeletonPosition.x = tempVector.x;
+//						skeletonPosition.z = tempVector.z;
+//
+//						if(characterController.headRotatesBody)
+//							tempRotation = UpdateTransformWithTrackedDevice(ref root, moveYaw);
+//						else 
+//							tempRotation = Quaternion.identity;
+//
+//						if(updateRootPosition)
+//							transform.localPosition = skeletonPosition + tempRotation*rootOffset;
+//					}
+//				}
+//			}
+//
+//			if(followHmdPosition)
+//			{
+//				float hmdYaw = 0;
+//				if(coordinateSystem)
+//				{
+//					if(coordinateSystem.applyToRootCoordinates)
+//					{
+//						// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
+//						tempVector = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), headsetCoordinates);
+//						skeletonPosition.x = tempVector.x;
+//						skeletonPosition.z = tempVector.z;
+//						// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
+//						hmdYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates).eulerAngles.y;
+//					}
+//					else
+//					{
+//						tempVector = coordinateSystem.GetHmdRawPosition();
+//						skeletonPosition.x = tempVector.x;
+//						skeletonPosition.z = tempVector.z;
+//						hmdYaw = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head).eulerAngles.y;
+//					}
+//				}
+//
+//				trackedDeviceYawRotation = Quaternion.Euler(0, hmdYaw, 0);
+//
+//				if(characterController.headRotatesBody)
+//					tempRotation = UpdateTransformWithTrackedDevice(ref root, hmdYaw);
+//				else
+//					tempRotation = Quaternion.identity;
+//					
+//				if(updateRootPosition) 
+//					transform.localPosition = skeletonPosition + tempRotation*rootOffset;	
+//			}
+//		}
 	}
 
 	private void SetCustomJointData(Transform sourceTransform, ref RUISSkeletonManager.JointData jointToSet, float posConfidence, float rotConfidence)
@@ -1448,8 +1421,8 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
-	Transform childTransform;
-	RUISSkeletonManager.JointData childJoint;
+//	Transform childTransform;
+//	RUISSkeletonManager.JointData childJoint;
 
 	private Quaternion ScaleCorrectedRotation(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, Quaternion newRotation)
 	{
@@ -1457,39 +1430,39 @@ public class RUISSkeletonController : MonoBehaviour
 		switch(jointToGet.jointID)
 		{
 			case RUISSkeletonManager.Joint.LeftElbow:
-				childTransform = leftHand;
-				childJoint = skeleton.leftHand;
+//				childTransform = leftHand;
+//				childJoint = skeleton.leftHand;
 				break;
 			case RUISSkeletonManager.Joint.LeftHand:
-				childTransform = null;
-				childJoint = skeleton.leftHand;
+//				childTransform = null;
+//				childJoint = skeleton.leftHand;
 				isEndBone = true;
 				break;
 			case RUISSkeletonManager.Joint.LeftKnee:
-				childTransform = leftFoot;
-				childJoint = skeleton.leftFoot;
+//				childTransform = leftFoot;
+//				childJoint = skeleton.leftFoot;
 				break;
 			case RUISSkeletonManager.Joint.LeftFoot:
-				childTransform = null;
-				childJoint = skeleton.leftFoot;
+//				childTransform = null;
+//				childJoint = skeleton.leftFoot;
 				isEndBone = true;
 				break;
 			case RUISSkeletonManager.Joint.RightElbow:
-				childTransform = rightHand;
-				childJoint = skeleton.rightHand;
+//				childTransform = rightHand;
+//				childJoint = skeleton.rightHand;
 				break;
 			case RUISSkeletonManager.Joint.RightHand:
-				childTransform = null;
-				childJoint = skeleton.rightHand;
+//				childTransform = null;
+//				childJoint = skeleton.rightHand;
 				isEndBone = true;
 				break;
 			case RUISSkeletonManager.Joint.RightKnee:
-				childTransform = rightFoot;
-				childJoint = skeleton.rightFoot;
+//				childTransform = rightFoot;
+//				childJoint = skeleton.rightFoot;
 				break;
 			case RUISSkeletonManager.Joint.RightFoot:
-				childTransform = null;
-				childJoint = skeleton.rightFoot;
+//				childTransform = null;
+//				childJoint = skeleton.rightFoot;
 				isEndBone = true;
 				break;
 			default: return newRotation;
@@ -1990,7 +1963,7 @@ public class RUISSkeletonController : MonoBehaviour
 	private float limbStartScale = 1;
 	private float clavicleParentScale = 1;
 	private float torsoMultiplier = 1;
-	private Vector3 elementScale = Vector3.one;
+//	private Vector3 elementScale = Vector3.one;
 
 	private void UpdateBoneScalings()
 	{
@@ -2140,7 +2113,7 @@ public class RUISSkeletonController : MonoBehaviour
 		bool isExtremityJoint = false;
 		bool isEndBone = false;
 		Vector3 previousScale = Vector3.one;
-		Vector3 avatarBoneVector;
+//		Vector3 avatarBoneVector;
 
 		if(comparisonBone)
 		{
@@ -2157,18 +2130,18 @@ public class RUISSkeletonController : MonoBehaviour
 			if(hasBeenTracked)
 				newScale = playerBoneLength / modelBoneLength; //playerBoneLength / modelBoneLength / accumulatedScale;
 
-			avatarBoneVector = boneToScale.position - comparisonBone.position;
+//			avatarBoneVector = boneToScale.position - comparisonBone.position;
 		}
-		else
-		{
-			switch(boneLengthAxis) // *** OPTIHACK4 check that works
-			{
-				case RUISAxis.X: avatarBoneVector = boneToScale.rotation * Vector3.right; 	break;
-				case RUISAxis.Y: avatarBoneVector = boneToScale.rotation * Vector3.up;		break;
-				case RUISAxis.Z: avatarBoneVector = boneToScale.rotation * Vector3.forward; break;
-				default: avatarBoneVector = boneToScale.rotation * Vector3.forward; break;
-			}
-		}
+//		else
+//		{
+//			switch(boneLengthAxis) // *** OPTIHACK4 check that works
+//			{
+//				case RUISAxis.X: avatarBoneVector = boneToScale.rotation * Vector3.right; 	break;
+//				case RUISAxis.Y: avatarBoneVector = boneToScale.rotation * Vector3.up;		break;
+//				case RUISAxis.Z: avatarBoneVector = boneToScale.rotation * Vector3.forward; break;
+//				default: avatarBoneVector = boneToScale.rotation * Vector3.forward; break;
+//			}
+//		}
 		
 		switch(boneToScaleTracker.jointID)
 		{
@@ -2296,9 +2269,9 @@ public class RUISSkeletonController : MonoBehaviour
 
 				if(isEndBone) // Hand or Foot   *** OPTIHACK this is not used at the moment
 				{
-					int uAxis = FindClosestGlobalAxis(boneToScale.localRotation, u);
-					int vAxis = FindClosestGlobalAxis(boneToScale.localRotation, v);
-					int wAxis = FindClosestGlobalAxis(boneToScale.localRotation, w);
+//					int uAxis = FindClosestGlobalAxis(boneToScale.localRotation, u);
+//					int vAxis = FindClosestGlobalAxis(boneToScale.localRotation, v);
+//					int wAxis = FindClosestGlobalAxis(boneToScale.localRotation, w);
 
 					axisScales[0] = boneToScale.parent.localScale.x; // *** TODO shouldn't use boneToScale.parent?
 					axisScales[1] = boneToScale.parent.localScale.y;
@@ -3175,6 +3148,15 @@ public class RUISSkeletonController : MonoBehaviour
 		yawCorrectButtonPressed = true;
 		yield return new WaitForSeconds(0.2f);
 		yawCorrectButtonPressed = false;
+	}
+
+	System.Collections.IEnumerator DelayedCustomTrackingStart(float delay)
+	{
+		yield return new WaitForSeconds(delay);
+		if(skeletonManager)
+			skeletonManager.skeletons[this._bodyTrackingDeviceID, playerId].isTracking = true;
+		if(skeleton != null)
+			skeleton.isTracking = true;
 	}
 
 	/// <summary>

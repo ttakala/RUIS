@@ -63,7 +63,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
         }
     }
 
-	void Awake () 
+	void Awake() 
 	{
         skeletonManager = FindObjectOfType(typeof(RUISSkeletonManager)) as RUISSkeletonManager;
 		
@@ -104,7 +104,7 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 
 	}
 	
-	void FixedUpdate () 
+	void FixedUpdate() 
 	{
 //		if(characterController != null && characterController.useOculusPositionalTracking /*&& UnityEditorInternal.InternalEditorUtility.HasPro()*/) 
 //		{
@@ -134,12 +134,12 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 		// Tuukka:
 		// Original skeletonController has been destroyed because the GameObject which had
 		// it has been split in three parts: Kinect, Mecanim, Blended. Lets fetch the new one.
-		if (!combinerChildrenInstantiated && kinectAndMecanimCombinerExists)
+		if(!combinerChildrenInstantiated && kinectAndMecanimCombinerExists)
 		{
-			if (gameObject.transform.parent != null)
+			if(gameObject.transform.parent != null)
 			{
 				RUISKinectAndMecanimCombiner combiner =  gameObject.transform.parent.GetComponentInChildren<RUISKinectAndMecanimCombiner>();
-				if (combiner && combiner.isChildrenInstantiated())
+				if(combiner && combiner.isChildrenInstantiated())
 				{
 					skeletonController = combiner.skeletonController;
 					
@@ -155,14 +155,13 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 			}
 		}
 
-		if (!skeletonManager || !skeletonManager.skeletons [bodyTrackingDeviceID, playerId].isTracking) 
+		if(!skeletonManager || !skeletonManager.skeletons[bodyTrackingDeviceID, playerId].isTracking) 
 		{
-			
             colliderHeight = defaultColliderHeight;
 
-			if (combinerChildrenInstantiated || !kinectAndMecanimCombinerExists)
+			if(combinerChildrenInstantiated || !kinectAndMecanimCombinerExists)
             {
-				if (skeletonController && (skeletonController.followHmdPosition || skeletonController.followMoveController ))
+				if(skeletonController && (skeletonController.followHmdPosition || skeletonController.followMoveController ))
                 {
 					// TODO *** Check that this works with other models. Before with grandma model torsoPos value was:
                     //torsoPos = skeletonController.transform.localPosition + defaultColliderHeight * Vector3.up;
@@ -208,7 +207,9 @@ public class RUISCharacterStabilizingCollider : MonoBehaviour
 
 			// Apply root scaling 
 			if(skeletonController)
+			{
 				torsoPosition = Vector3.Scale(skeletonController.skeleton.torso.position, skeletonController.rootSpeedScaling);
+			}
 			else
 				torsoPosition = skeletonManager.skeletons[bodyTrackingDeviceID, playerId].torso.position;
 			

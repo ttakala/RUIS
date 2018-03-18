@@ -30,22 +30,22 @@ public class RUISInputManager : MonoBehaviour
 
     public bool loadFromTextFileInEditor = false;
 
-    public bool enablePSMove = false;
-    public string PSMoveIP = "127.0.0.1";
-    public int PSMovePort = 7899;
-    public bool connectToPSMoveOnStartup = true;
-    public PSMoveWrapper psMoveWrapper;
-    public int amountOfPSMoveControllers = 4;
-    public bool enableMoveCalibrationDuringPlay = false;
+//    public bool enablePSMove = false;
+//    public string PSMoveIP = "127.0.0.1";
+//    public int PSMovePort = 7899;
+//    public bool connectToPSMoveOnStartup = true;
+//    public PSMoveWrapper psMoveWrapper;
+//    public int amountOfPSMoveControllers = 4;
+//    public bool enableMoveCalibrationDuringPlay = false;
 	
-	public bool delayedWandActivation = false;
-	public float delayTime = 5;
-	bool[] wandDelayed; // Following creates IndexOutOfRangeException: = new bool[4] {false, false, true, false};
-	List<GameObject> disabledWands;
-	public bool moveWand0 = false;
-	public bool moveWand1 = false;
-	public bool moveWand2 = false;
-	public bool moveWand3 = false;
+//	public bool delayedWandActivation = false;
+//	public float delayTime = 5;
+//	bool[] wandDelayed; // Following creates IndexOutOfRangeException: = new bool[4] {false, false, true, false};
+//	List<GameObject> disabledWands;
+//	public bool moveWand0 = false;
+//	public bool moveWand1 = false;
+//	public bool moveWand2 = false;
+//	public bool moveWand3 = false;
 	
 	public bool enableKinect = false;
     public int maxNumberOfKinectPlayers = 2;
@@ -55,8 +55,8 @@ public class RUISInputManager : MonoBehaviour
 	public bool enableKinect2 = false;
 	public bool kinect2FloorDetection = true;
 	
-	public bool enableRazerHydra = false;
-	private SixenseInput sixense = null;
+//	public bool enableRazerHydra = false;
+//	private SixenseInput sixense = null;
 
 	public bool enableCustomDevice1 = false;
 	public bool enableCustomDevice2 = false;
@@ -72,7 +72,7 @@ public class RUISInputManager : MonoBehaviour
     public OpenNI.SceneAnalyzer sceneAnalyzer = null;
 	//private bool usingExistingSceneAnalyzer = false;
 	
-    public RUISPSMoveWand[] moveControllers;
+//    public RUISPSMoveWand[] moveControllers;
 
 //	public bool jumpGestureEnabled = false;
 
@@ -92,26 +92,26 @@ public class RUISInputManager : MonoBehaviour
     	// Check if we are in calibration scene
 		if(RUISCalibrationProcessSettings.isCalibrating) 
 		{		
-			this.enablePSMove 		 = RUISCalibrationProcessSettings.enablePSMove;
+//			this.enablePSMove 		 = RUISCalibrationProcessSettings.enablePSMove;
 			this.enableKinect 		 = RUISCalibrationProcessSettings.enableKinect;
 			this.enableKinect2 		 = RUISCalibrationProcessSettings.enableKinect2;
-			this.enableRazerHydra 	 = RUISCalibrationProcessSettings.enableRazerHydra;
+//			this.enableRazerHydra 	 = RUISCalibrationProcessSettings.enableRazerHydra;
 			this.enableCustomDevice1 = RUISCalibrationProcessSettings.enableCustomDevice1;
 			this.enableCustomDevice2 = RUISCalibrationProcessSettings.enableCustomDevice2;
 			this.customDevice1Name 		 = RUISCalibrationProcessSettings.customDevice1Name;
 			this.customDevice2Name 		 = RUISCalibrationProcessSettings.customDevice2Name;
 			this.customDevice1Conversion = RUISCalibrationProcessSettings.customDevice1Conversion;
 			this.customDevice2Conversion = RUISCalibrationProcessSettings.customDevice2Conversion;
-			this.PSMoveIP 	= RUISCalibrationProcessSettings.PSMoveIP;
-			this.PSMovePort = RUISCalibrationProcessSettings.PSMovePort;
+//			this.PSMoveIP 	= RUISCalibrationProcessSettings.PSMoveIP;
+//			this.PSMovePort = RUISCalibrationProcessSettings.PSMovePort;
 //			this.jumpGestureEnabled = RUISCalibrationProcessSettings.jumpGestureEnabled;
 //			this.kinectDriftCorrectionPreferred = ruisNGUIMenu.originalKinectDriftCorrection;
 
 			RUISCalibrationProcessSettings.isCalibrating = false;
 		}
     	
-		wandDelayed = new bool[4] {moveWand0, moveWand1, moveWand2, moveWand3};
-		disabledWands = new List<GameObject>();
+//		wandDelayed = new bool[4] {moveWand0, moveWand1, moveWand2, moveWand3};
+//		disabledWands = new List<GameObject>();
 
 
         if (!enableKinect)
@@ -124,82 +124,81 @@ public class RUISInputManager : MonoBehaviour
             GetComponentInChildren<NIPlayerManagerCOMSelection>().m_MaxNumberOfPlayers = maxNumberOfKinectPlayers;
         }
 		
-        psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
-        if (enablePSMove)
-        {
-
-            if (psMoveWrapper && connectToPSMoveOnStartup)
-            {
-                StartCoroutine("CheckForMoveConnection");
-
-                psMoveWrapper.Connect(PSMoveIP, PSMovePort);
-
-                psMoveWrapper.enableDefaultInGameCalibrate = enableMoveCalibrationDuringPlay;
-				
-				if(delayedWandActivation)
-				{	
-					string names = "";
-					foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
-			        {
-			            if(		moveController != null && moveController.controllerId < 4 
-							&&	moveController.controllerId >= 0 && wandDelayed[moveController.controllerId] )
-						{
-							// Make sure that the found RUISPSMoveWand is not under InputManager->MoveControllers GameObject
-							if(		moveController.gameObject.transform.parent == null
-								||	moveController.gameObject.transform.parent.parent == null
-								||	(	moveController.gameObject.transform.parent.GetComponent<RUISInputManager>() == null
-									 &&	moveController.gameObject.transform.parent.parent.GetComponent<RUISInputManager>() == null))
-							{
-								moveController.gameObject.SetActive(false);
-								disabledWands.Add(moveController.gameObject);
-								if(names.Length > 0)
-									names += ", ";
-								names += moveController.gameObject.name;
-							}
-						}
-			        }
-					if(disabledWands.Count > 0)
-					{
-						Debug.Log(	  "DELAYED CONTROLLER ACTIVATION INITIALIZATION: Following objects are disabled: " 
-									+ names + ". If their input devices are found, they will be re-activated in "
-									+ delayTime + " seconds, as configured in RUISInputManager.");
-						StartCoroutine("DelayedWandActivation");
-					}
-				}
-            }
-        }
-        else
-        {
-			Debug.Log("PS Move is disabled from RUISInputManager.");
-            //psMoveWrapper.gameObject.SetActiveRecursively(false);
-        }
+//        psMoveWrapper = GetComponentInChildren<PSMoveWrapper>();
+//        if (enablePSMove)
+//        {
+//
+//            if (psMoveWrapper && connectToPSMoveOnStartup)
+//            {
+//                StartCoroutine("CheckForMoveConnection");
+//
+//                psMoveWrapper.Connect(PSMoveIP, PSMovePort);
+//
+//                psMoveWrapper.enableDefaultInGameCalibrate = enableMoveCalibrationDuringPlay;
+//				
+//				if(delayedWandActivation)
+//				{	
+//					string names = "";
+//					foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
+//			        {
+//			            if(		moveController != null && moveController.controllerId < 4 
+//							&&	moveController.controllerId >= 0 && wandDelayed[moveController.controllerId] )
+//						{
+//							// Make sure that the found RUISPSMoveWand is not under InputManager->MoveControllers GameObject
+//							if(		moveController.gameObject.transform.parent == null
+//								||	moveController.gameObject.transform.parent.parent == null
+//								||	(	moveController.gameObject.transform.parent.GetComponent<RUISInputManager>() == null
+//									 &&	moveController.gameObject.transform.parent.parent.GetComponent<RUISInputManager>() == null))
+//							{
+//								moveController.gameObject.SetActive(false);
+//								disabledWands.Add(moveController.gameObject);
+//								if(names.Length > 0)
+//									names += ", ";
+//								names += moveController.gameObject.name;
+//							}
+//						}
+//			        }
+//					if(disabledWands.Count > 0)
+//					{
+//						Debug.Log(	  "DELAYED CONTROLLER ACTIVATION INITIALIZATION: Following objects are disabled: " 
+//									+ names + ". If their input devices are found, they will be re-activated in "
+//									+ delayTime + " seconds, as configured in RUISInputManager.");
+//						StartCoroutine("DelayedWandActivation");
+//					}
+//				}
+//            }
+//        }
+//        else
+//        {
+//			Debug.Log("PS Move is disabled from RUISInputManager.");
+//            //psMoveWrapper.gameObject.SetActiveRecursively(false);
+//        }
 		
 		
-		sixense = FindObjectOfType(typeof(SixenseInput)) as SixenseInput;
-		if(enableRazerHydra)
-		{
-			if(sixense == null)
-				Debug.LogError(		"Could not connect with Razer Hydra! Your RUIS InputManager settings indicate "
-								+ 	"that you want to use Razer Hydra, but this scene does not have a gameobject "
-								+	"with SixenseInput script, which is required. Add SixenseInput prefab "
-								+	"into the scene.");
-			// IsBaseConnected() seems to crash Unity at least when called here
-//			else if(!SixenseInput.IsBaseConnected(0)) // TODO: *** Apparently there can be multiple bases
-//				Debug.LogError(		"Could not connect with Razer Hydra! Check the USB connection.");
-		}
-		else
-		{
-			if(sixense != null)
-			{
-				sixense.gameObject.SetActive(false);
-				Debug.Log(	"Razer Hydra is disabled from RUISInputManager. Disabling object " + sixense.name
-						  + " that has the SixenseInput script.");
-			}
-		}
+//		sixense = FindObjectOfType(typeof(SixenseInput)) as SixenseInput;
+//		if(enableRazerHydra)
+//		{
+//			if(sixense == null)
+//				Debug.LogError(		"Could not connect with Razer Hydra! Your RUIS InputManager settings indicate "
+//								+ 	"that you want to use Razer Hydra, but this scene does not have a gameobject "
+//								+	"with SixenseInput script, which is required. Add SixenseInput prefab "
+//								+	"into the scene.");
+//			// IsBaseConnected() seems to crash Unity at least when called here
+////			else if(!SixenseInput.IsBaseConnected(0)) // TODO: *** Apparently there can be multiple bases
+////				Debug.LogError(		"Could not connect with Razer Hydra! Check the USB connection.");
+//		}
+//		else
+//		{
+//			if(sixense != null)
+//			{
+//				sixense.gameObject.SetActive(false);
+//				Debug.Log(	"Razer Hydra is disabled from RUISInputManager. Disabling object " + sixense.name
+//						  + " that has the SixenseInput script.");
+//			}
+//		}
 		
-        DisableUnneededMoveWands();
-		
-		DisableUnneededRazerHydraWands();
+//        DisableUnneededMoveWands();
+//		DisableUnneededRazerHydraWands();
         
     }
 
@@ -261,22 +260,22 @@ public class RUISInputManager : MonoBehaviour
 		if((enableKinect && kinectFloorDetection) || (enableKinect2 && kinect2FloorDetection))
 			StartFloorDetection();
 		
-		if (enablePSMove)
-        {
-            RUISPSMoveWand[] controllers = GetComponentsInChildren<RUISPSMoveWand>();
-            moveControllers = new RUISPSMoveWand[controllers.Length];
-            foreach (RUISPSMoveWand controller in controllers)
-            {
-                moveControllers[controller.controllerId] = controller;
-            }
-        }
+//		if (enablePSMove)
+//        {
+//            RUISPSMoveWand[] controllers = GetComponentsInChildren<RUISPSMoveWand>();
+//            moveControllers = new RUISPSMoveWand[controllers.Length];
+//            foreach (RUISPSMoveWand controller in controllers)
+//            {
+//                moveControllers[controller.controllerId] = controller;
+//            }
+//        }
     }
 
-    public void OnApplicationQuit()
-    {
-        if(enablePSMove && psMoveWrapper && psMoveWrapper.isConnected)
-            psMoveWrapper.Disconnect(false);
-    }
+//    public void OnApplicationQuit()
+//    {
+//        if(enablePSMove && psMoveWrapper && psMoveWrapper.isConnected)
+//            psMoveWrapper.Disconnect(false);
+//    }
 	
 	// Doesn't seem to matter whether floor normal and point is constantly improved or just once in the beginning
 //	void Update()
@@ -332,48 +331,48 @@ public class RUISInputManager : MonoBehaviour
         return XmlImportExport.ExportInputManager(this, filename);
     }
 
-    private IEnumerator CheckForMoveConnection()
-    {
-        yield return new WaitForSeconds(5.0f);
-        if (!psMoveWrapper.isConnected)
-        {
-            Debug.LogError("Could not connect to PS Move server at: " + PSMoveIP + ":" + PSMovePort);
-        }
-    }
+//    private IEnumerator CheckForMoveConnection()
+//    {
+//        yield return new WaitForSeconds(5.0f);
+//        if (!psMoveWrapper.isConnected)
+//        {
+//            Debug.LogError("Could not connect to PS Move server at: " + PSMoveIP + ":" + PSMovePort);
+//        }
+//    }
 	
-    private IEnumerator DelayedWandActivation()
-    {
-        yield return new WaitForSeconds(delayTime);
-        if (enablePSMove && psMoveWrapper.isConnected)
-        {
-			string activated = "";
-			string leftDisabled = "";
-	        foreach (GameObject moveWand in disabledWands)
-	        {
-				RUISPSMoveWand moveWandScript = moveWand.GetComponent<RUISPSMoveWand>();
-				if(psMoveWrapper.moveConnected[moveWandScript.controllerId])
-				{
-					moveWand.SetActive(true);
-					if(activated.Length > 0)
-						activated += ", ";
-					activated += moveWand.name;
-				}
-				else
-				{
-					if(leftDisabled.Length > 0)
-						leftDisabled += ", ";
-					leftDisabled += moveWand.name;
-				}
-	        }
-			string report = "DELAYED CONTROLLER ACTIVATION REPORT: ";
-			if(activated.Length > 0)
-				report += "Following GameObjects were re-activated: " + activated + ". ";
-			if(leftDisabled.Length > 0)
-				report += "Following GameObjects will stay inactive because the controllers associated to them "
-						  + "are not connected: " + leftDisabled + ".";
-			Debug.Log(report);
-		}
-    }
+//    private IEnumerator DelayedWandActivation()
+//    {
+//        yield return new WaitForSeconds(delayTime);
+//        if (enablePSMove && psMoveWrapper.isConnected)
+//        {
+//			string activated = "";
+//			string leftDisabled = "";
+//	        foreach (GameObject moveWand in disabledWands)
+//	        {
+//				RUISPSMoveWand moveWandScript = moveWand.GetComponent<RUISPSMoveWand>();
+//				if(psMoveWrapper.moveConnected[moveWandScript.controllerId])
+//				{
+//					moveWand.SetActive(true);
+//					if(activated.Length > 0)
+//						activated += ", ";
+//					activated += moveWand.name;
+//				}
+//				else
+//				{
+//					if(leftDisabled.Length > 0)
+//						leftDisabled += ", ";
+//					leftDisabled += moveWand.name;
+//				}
+//	        }
+//			string report = "DELAYED CONTROLLER ACTIVATION REPORT: ";
+//			if(activated.Length > 0)
+//				report += "Following GameObjects were re-activated: " + activated + ". ";
+//			if(leftDisabled.Length > 0)
+//				report += "Following GameObjects will stay inactive because the controllers associated to them "
+//						  + "are not connected: " + leftDisabled + ".";
+//			Debug.Log(report);
+//		}
+//    }
 	
     private IEnumerator attemptUpdatingFloorNormal()
     {
@@ -501,56 +500,56 @@ public class RUISInputManager : MonoBehaviour
 		}
 	}
 			
-	private void DisableUnneededMoveWands()
-    {
-        List<RUISPSMoveWand> childWands = new List<RUISPSMoveWand>(GetComponentsInChildren<RUISPSMoveWand>());
-
-        foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
-        {
-            if (!childWands.Contains(moveController) && (!enablePSMove || !psMoveWrapper.isConnected || moveController.controllerId >= amountOfPSMoveControllers))
-            {
-                Debug.LogWarning("Disabling PS Move wand: " + moveController.name, moveController);
-                moveController.enabled = false;
-                RUISWandSelector wandSelector = moveController.GetComponent<RUISWandSelector>();
-                if (wandSelector)
-                {
-                    wandSelector.enabled = false;
-                    LineRenderer lineRenderer = wandSelector.GetComponent<LineRenderer>();
-                    if (lineRenderer)
-                    {
-                        lineRenderer.enabled = false;
-                    }
-                }
-				moveController.gameObject.SetActive(false);
-            }
-        }
-    }
+//	private void DisableUnneededMoveWands()
+//    {
+//        List<RUISPSMoveWand> childWands = new List<RUISPSMoveWand>(GetComponentsInChildren<RUISPSMoveWand>());
+//
+//        foreach (RUISPSMoveWand moveController in FindObjectsOfType(typeof(RUISPSMoveWand)) as RUISPSMoveWand[])
+//        {
+//            if (!childWands.Contains(moveController) && (!enablePSMove || !psMoveWrapper.isConnected || moveController.controllerId >= amountOfPSMoveControllers))
+//            {
+//                Debug.LogWarning("Disabling PS Move wand: " + moveController.name, moveController);
+//                moveController.enabled = false;
+//                RUISWandSelector wandSelector = moveController.GetComponent<RUISWandSelector>();
+//                if (wandSelector)
+//                {
+//                    wandSelector.enabled = false;
+//                    LineRenderer lineRenderer = wandSelector.GetComponent<LineRenderer>();
+//                    if (lineRenderer)
+//                    {
+//                        lineRenderer.enabled = false;
+//                    }
+//                }
+//				moveController.gameObject.SetActive(false);
+//            }
+//        }
+//    }
 	
-	private void DisableUnneededRazerHydraWands()
-    {
-        foreach (RUISRazerWand hydraWand in FindObjectsOfType(typeof(RUISRazerWand)) as RUISRazerWand[])
-        {
-            if (!enableRazerHydra)
-            {
-                Debug.LogWarning("Disabling Razer Hydra wand: " + hydraWand.name);
-				hydraWand.gameObject.SetActive(false);
-            }
-        }
-    }
+//	private void DisableUnneededRazerHydraWands()
+//    {
+//        foreach (RUISRazerWand hydraWand in FindObjectsOfType(typeof(RUISRazerWand)) as RUISRazerWand[])
+//        {
+//            if (!enableRazerHydra)
+//            {
+//                Debug.LogWarning("Disabling Razer Hydra wand: " + hydraWand.name);
+//				hydraWand.gameObject.SetActive(false);
+//            }
+//        }
+//    }
 
-    public RUISPSMoveWand GetMoveWand(int i)
-    {
-		if(psMoveWrapper && psMoveWrapper.isConnected)
-		{
-	        if (i < 0 || i >= amountOfPSMoveControllers || i >= moveControllers.Length)
-	        {
-				Debug.LogError("RUISPSMoveWand with ID " + i + " was not found in RUISInputManager");
-	            return null;
-	        }
-
-        	return moveControllers[i];
-		}
-		else
-			return null;
-    }
+//    public RUISPSMoveWand GetMoveWand(int i)
+//    {
+//		if(psMoveWrapper && psMoveWrapper.isConnected)
+//		{
+//	        if (i < 0 || i >= amountOfPSMoveControllers || i >= moveControllers.Length)
+//	        {
+//				Debug.LogError("RUISPSMoveWand with ID " + i + " was not found in RUISInputManager");
+//	            return null;
+//	        }
+//
+//        	return moveControllers[i];
+//		}
+//		else
+//			return null;
+//    }
 }

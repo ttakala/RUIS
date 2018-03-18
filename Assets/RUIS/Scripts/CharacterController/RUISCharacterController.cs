@@ -2,8 +2,11 @@
 
 Content    :   A Script to handle controlling a rigidbody character using Kinect and some traditional input method
 Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2016 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen.
+               All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -16,15 +19,15 @@ public class RUISCharacterController : MonoBehaviour
 	public enum CharacterPivotType
 	{
 		SkeletonHead,
-		SkeletonPelvis,
-		MoveController
+		SkeletonPelvis /*,
+		MoveController*/
 	}
 
 	public CharacterPivotType characterPivotType = CharacterPivotType.SkeletonPelvis;
 
-	public bool useHmdPositionalTracking = false;
-	public bool headRotatesBody = true;
-	public bool headPointsWalkingDirection = false;
+//	public bool useHmdPositionalTracking = false;
+//	public bool headRotatesBody = true;
+//	public bool headPointsWalkingDirection = false;
 
 	public int kinectPlayerId;
 	public int bodyTrackingDeviceID;
@@ -156,10 +159,10 @@ public class RUISCharacterController : MonoBehaviour
 			+ "object '" + skeletonController.gameObject.name + "). Make sure that these two values are "
 			+ "the same.");
 
-		if(useHmdPositionalTracking && !RUISDisplayManager.IsHmdPositionTrackable())
-		{
-			Debug.LogError("Position tracked head-mounted display is not found, can't use it as a character pivot!");
-		}
+//		if(useHmdPositionalTracking && !RUISDisplayManager.IsHmdPositionTrackable())
+//		{
+//			Debug.LogError("Position tracked head-mounted display is not found, can't use it as a character pivot!");
+//		}
 
 //		try
 //		{
@@ -323,37 +326,37 @@ public class RUISCharacterController : MonoBehaviour
 
 		switch(characterPivotType)
 		{
-		case CharacterPivotType.SkeletonHead:
-			if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
-			    || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
-				break;
-			if(skeletonController)
-				characterForward = skeletonController.skeleton.head.rotation * Vector3.forward;
-			else if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-				characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.rotation * Vector3.forward;
-			break;
-		case CharacterPivotType.SkeletonPelvis:
-			if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
-			    || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
-				break;
-			if(skeletonController)
-				characterForward = skeletonController.skeleton.torso.rotation * Vector3.forward;
-			else if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
-				characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.rotation * Vector3.forward;
-			break;
-		case CharacterPivotType.MoveController:
-			{
-				if(!inputManager.enablePSMove || !headPointsWalkingDirection)
+			case CharacterPivotType.SkeletonHead:
+				if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
+				    || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
 					break;
-				RUISPSMoveWand psmove = inputManager.GetMoveWand(moveControllerId);
-				if(psmove != null)
-					characterForward = psmove.localRotation * Vector3.forward;
-			}
-			break;
+				if(skeletonController)
+					characterForward = skeletonController.skeleton.head.rotation * Vector3.forward;
+				else if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+					characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].head.rotation * Vector3.forward;
+				break;
+			case CharacterPivotType.SkeletonPelvis:
+				if((bodyTrackingDeviceID == RUISSkeletonManager.kinect2SensorID && !inputManager.enableKinect2)
+				    || (bodyTrackingDeviceID == RUISSkeletonManager.kinect1SensorID && !inputManager.enableKinect))
+					break;
+				if(skeletonController)
+					characterForward = skeletonController.skeleton.torso.rotation * Vector3.forward;
+				else if(skeletonManager != null && skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId] != null)
+					characterForward = skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.rotation * Vector3.forward;
+				break;
+//			case CharacterPivotType.MoveController:
+//				{
+//					if(!inputManager.enablePSMove || !headPointsWalkingDirection)
+//						break;
+//					RUISPSMoveWand psmove = inputManager.GetMoveWand(moveControllerId);
+//					if(psmove != null)
+//						characterForward = psmove.localRotation * Vector3.forward;
+//				}
+//				break;
 		}
 
-		if(skeletonManager != null && (skeletonController.followHmdPosition || skeletonController.followMoveController) && headPointsWalkingDirection)
-			characterForward = skeletonController.trackedDeviceYawRotation * Vector3.forward;
+//		if(skeletonManager != null && (skeletonController.followHmdPosition || skeletonController.followMoveController) && headPointsWalkingDirection)
+//			characterForward = skeletonController.trackedDeviceYawRotation * Vector3.forward;
 
 		if(ignorePitchAndRoll)
 		{
@@ -369,18 +372,18 @@ public class RUISCharacterController : MonoBehaviour
 
 	private Vector3 GetPivotPositionInTrackerCoordinates()
 	{
-		if(useHmdPositionalTracking && RUISDisplayManager.IsHmdPositionTrackable() && coordinateSystem)
-		{
-			if(coordinateSystem.applyToRootCoordinates)
-			{
-				return coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
-			}
-			else
-			{
-				return coordinateSystem.GetHmdRawPosition(); 
-			}
-		}
-		else
+//		if(useHmdPositionalTracking && RUISDisplayManager.IsHmdPositionTrackable() && coordinateSystem)
+//		{
+//			if(coordinateSystem.applyToRootCoordinates)
+//			{
+//				return coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), RUISDevice.OpenVR);
+//			}
+//			else
+//			{
+//				return coordinateSystem.GetHmdRawPosition(); 
+//			}
+//		}
+//		else
 		{
 			switch(characterPivotType)
 			{
@@ -408,15 +411,15 @@ public class RUISCharacterController : MonoBehaviour
 						return skeletonManager.skeletons[bodyTrackingDeviceID, kinectPlayerId].torso.position;
 					break;
 				}
-				case CharacterPivotType.MoveController:
-				{
-					if(!inputManager.enablePSMove)
-						break;
-
-					if(inputManager.GetMoveWand(moveControllerId))
-						return inputManager.GetMoveWand(moveControllerId).handlePosition;
-					break;
-				}
+//				case CharacterPivotType.MoveController:
+//				{
+//					if(!inputManager.enablePSMove)
+//						break;
+//
+//					if(inputManager.GetMoveWand(moveControllerId))
+//						return inputManager.GetMoveWand(moveControllerId).handlePosition;
+//					break;
+//				}
 			}
 		}
 

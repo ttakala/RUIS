@@ -2,8 +2,11 @@
 
 Content    :   Functionality to combine skeleton input from Kinect with a Mecanim Animator controlled avatar
 Authors    :   Mikael Matveinen, Tuukka Takala
-Copyright  :   Copyright 2013 Tuukka Takala, Mikael Matveinen. All Rights reserved.
-Licensing  :   RUIS is distributed under the LGPL Version 3 license.
+Copyright  :   Copyright 2018 Tuukka Takala, Mikael Matveinen.
+               All Rights reserved.
+Licensing  :   LGPL Version 3 license for non-commercial projects. Use
+               restricted for commercial projects. Contact tmtakala@gmail.com
+               for more information.
 
 ******************************************************************************/
 
@@ -155,6 +158,9 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
                 Destroy(meshRenderer);
             }
 
+			int trackingDeviceIndex = RUISSkeletonManager.kinect2SensorID;
+			if(skeletonController)
+				trackingDeviceIndex = skeletonController.BodyTrackingDeviceID;
 
             Destroy(GetComponent<RUISSkeletonController>());
             Destroy(GetComponent<Animator>());
@@ -165,6 +171,8 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 
 			if(!skeletonController)
 				Debug.LogError("Script " + typeof(RUISSkeletonController) + " is not found by " + this.GetType().Name + "!");
+			else
+				skeletonController.BodyTrackingDeviceID = trackingDeviceIndex;
 
             torsoIsRoot = skeletonController.root == skeletonController.torso;
 
@@ -391,10 +399,10 @@ public class RUISKinectAndMecanimCombiner : MonoBehaviour {
 		if(   skeletonController.characterController 
 		   && (skeletonController.followMoveController || skeletonController.followHmdPosition))
 		{
-			headRotatesBodyAndWalking =  skeletonController.characterController.headRotatesBody &&  skeletonController.characterController.headPointsWalkingDirection;
-			headRotatesWalking        = !skeletonController.characterController.headRotatesBody &&  skeletonController.characterController.headPointsWalkingDirection;
-			headRotatesBody           =  skeletonController.characterController.headRotatesBody && !skeletonController.characterController.headPointsWalkingDirection;
-			headRotates               = !skeletonController.characterController.headRotatesBody && !skeletonController.characterController.headPointsWalkingDirection;
+//			headRotatesBodyAndWalking =  skeletonController.characterController.headRotatesBody &&  skeletonController.characterController.headPointsWalkingDirection;
+//			headRotatesWalking        = !skeletonController.characterController.headRotatesBody &&  skeletonController.characterController.headPointsWalkingDirection;
+//			headRotatesBody           =  skeletonController.characterController.headRotatesBody && !skeletonController.characterController.headPointsWalkingDirection;
+//			headRotates               = !skeletonController.characterController.headRotatesBody && !skeletonController.characterController.headPointsWalkingDirection;
 		}
 
         //then apply the yaw to turn the limb to the same general direction as the torso

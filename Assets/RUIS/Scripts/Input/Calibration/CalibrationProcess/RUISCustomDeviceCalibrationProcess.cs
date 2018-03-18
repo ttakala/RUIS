@@ -2,7 +2,8 @@
 
 Content    :   Handles the calibration procedure between Custom_1/2 and OpenVR devices
 Authors    :   Tuukka Takala
-Copyright  :   Copyright 2018 Tuukka Takala. All Rights reserved.
+Copyright  :   Copyright 2018 Tuukka Takala.
+               All Rights reserved.
 Licensing  :   LGPL Version 3 license for non-commercial projects. Use
                restricted for commercial projects. Contact tmtakala@gmail.com
                for more information.
