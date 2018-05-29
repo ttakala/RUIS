@@ -31,11 +31,19 @@ public class RUISSkeletonManager : MonoBehaviour
         LeftElbow,
 		LeftHand,
 		LeftThumb, // *** OPTIHACK
+		LeftIndexFinger,
+		LeftMiddleFinger,
+		LeftRingFinger,
+		LeftLittleFinger,
 		RightClavicle, // *** OPTIHACK
         RightShoulder,
         RightElbow,
         RightHand,
 		RightThumb, // *** OPTIHACK
+		RightIndexFinger,
+		RightMiddleFinger,
+		RightRingFinger,
+		RightLittleFinger,
         LeftHip,
         LeftKnee,
         LeftFoot,

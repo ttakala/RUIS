@@ -56,6 +56,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public Transform leftLittleF;
 	public Transform rightLittleF;
 
+	public Transform customParent;
+
 	// Transform sources for custom motion tracking
 	public Transform customRoot;
 	public Transform customTorso; // pelvis // previously: torso

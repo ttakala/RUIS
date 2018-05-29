@@ -198,6 +198,8 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty yawCorrectAngularVelocity;
 	SerializedProperty yawCorrectResetButton;
 
+	SerializedProperty customParent;
+
 	SerializedProperty customRoot;
 	SerializedProperty customTorso;
 	SerializedProperty customChest;
@@ -246,7 +248,8 @@ public class RUISSkeletonControllerEditor : Editor
 	RUISSkeletonController skeletonController;
 	Animator animator;
 	string missedBones = "";
-	string obtainedTransforms = "";
+	string obtainedTargetTransforms = "";
+	string obtainedSourceTransforms = "";
 
 	static bool showLocalOffsets;
 	static bool showTargetFingers;
@@ -369,6 +372,8 @@ public class RUISSkeletonControllerEditor : Editor
 		yawCorrectIMU    = serializedObject.FindProperty("yawCorrectIMU");
 		yawCorrectAngularVelocity = serializedObject.FindProperty("yawCorrectAngularVelocity");
 		yawCorrectResetButton     = serializedObject.FindProperty("yawCorrectResetButton");
+
+		customParent	= serializedObject.FindProperty("customParent");
 
 		customRoot		= serializedObject.FindProperty("customRoot");
 		customTorso  	= serializedObject.FindProperty("customTorso");
@@ -676,7 +681,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = updateJointRotations.boolValue;
 		EditorGUILayout.PropertyField(maxAngularVelocity, new GUIContent( "Max Joint Angular Velocity", "Maximum angular velocity for all joints (except "
-																		+ "fingers). This value can be used for damping avatar bone movement (smaller values). "
+																		+ "fingers). This value can be used for damping avatar joint movement (smaller values). "
 																		+ "The values are in degrees. For Kinect and similar devices, a value of 360 is "
 																		+ "suitable. For more accurate and responsive mocap systems, this value can easily "
 																		+ "be set to 7200 or more, so that very fast motions are not restricted."));
@@ -702,7 +707,7 @@ public class RUISSkeletonControllerEditor : Editor
 			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
 			{
 				EditorGUILayout.PropertyField(customMocapFrameRate, new GUIContent("Updates Per Second", "How many times per second is the \"Body Tracking "
-																+ "\"Device providing updates (on average)? This determines the Kalman filter update interval."));
+																+ "Device\" providing updates (on average)? This determines the Kalman filter update interval."));
 				customMocapFrameRate.intValue = Mathf.Clamp(customMocapFrameRate.intValue, 1, int.MaxValue);
 				skeletonController.customMocapUpdateInterval = 1.0f / ((float) customMocapFrameRate.intValue);
 			}
@@ -767,7 +772,8 @@ public class RUISSkeletonControllerEditor : Editor
 		SwitchToNormalFieldColor();
 		EditorGUILayout.PropertyField(yawCorrectResetButton, new GUIContent("Reset Yaw Button", "The button that can be used to immediately apply the drift "
 																	+ "correction, if the head-mounted display and IMU head-tracker were misaligned upon "
-																	+ "running the Awake() of this component (e.g. during loading a scene)."));
+																	+ "running the Awake() of this component (e.g. during loading a scene). Pressing this "
+																	+ "button only has effect when the Game window is active."));
 		SwitchToKeepChangesFieldColor();
 
 		GUI.enabled = true;
@@ -1040,15 +1046,15 @@ public class RUISSkeletonControllerEditor : Editor
 
 			EditorGUILayout.Space();
 			EditorGUILayout.PropertyField(thumbRotationOffset,   new GUIContent("Thumb (Rot)", "Offsets the thumb CMC joint (thumb root) rotation in the "
-				+ "local hand coordinate frame (Euler angles)."));
+																						+ "local hand coordinate frame (Euler angles)."));
 			EditorGUILayout.PropertyField(indexFRotationOffset,  new GUIContent("Index Finger (Rot)", "Offsets the index finger MCP joint (finger root) "
-				+ "rotation in the local hand coordinate frame (Euler angles)."));
+																						+ "rotation in the local hand coordinate frame (Euler angles)."));
 			EditorGUILayout.PropertyField(middleFRotationOffset, new GUIContent("Middle Finger (Rot)", "Offsets the middle finger MCP joint (finger root) "
-				+ "rotation in the local hand coordinate frame (Euler angles)."));
+																						+ "rotation in the local hand coordinate frame (Euler angles)."));
 			EditorGUILayout.PropertyField(ringFRotationOffset,   new GUIContent("Ring Finger (Rot)", "Offsets the ring finger MCP joint (finger root) "
-				+ "rotation in the local hand coordinate frame (Euler angles)."));
+																						+ "rotation in the local hand coordinate frame (Euler angles)."));
 			EditorGUILayout.PropertyField(littleFRotationOffset, new GUIContent("Little Finger (Rot)", "Offsets the little finger MCP joint (finger root) "
-				+ "rotation in the local hand coordinate frame (Euler angles)."));
+																						+ "rotation in the local hand coordinate frame (Euler angles)."));
 
 			EditorGUI.indentLevel -= 1;
 		}
@@ -1074,14 +1080,218 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorStyles.label.normal.textColor = customLabelColor;
 
 			EditorGUILayout.PropertyField(customConversionType, new GUIContent("Coordinate Frame and Conversion", "The coordinate frame (coordinate system) "
-																		+ "of the custom body tracking device. If you are NOT using an IMU suit (e.g. "
-																		+ "Perception Neuron, Xsens) as a custom body tracking device, then this coordinate "
-																		+ "frame should be aligned (calibrated) with any other devices that you will use "
-																		+ "simultaneously (e.g. head-mounted display).\nThis setting also defines the "
-																		+ "coordinate conversion that will be applied to the Source Transform poses before "
-																		+ "copying them to Target Transforms (below). The conversions are defined in " 
-																		+ typeof(RUISInputManager) + "'s \"Custom 1\" and \"Custom 2\" settings, and also "
-																		+ "stored in the associated 'inputConfig.xml'-file."));
+																	+ "of the custom body tracking device. If you are NOT using an IMU suit (e.g. "
+																	+ "Perception Neuron, Xsens) as a custom body tracking device, then this coordinate "
+																	+ "frame should be aligned (calibrated) with any other devices that you will use "
+																	+ "simultaneously (e.g. head-mounted display).\nThis setting also defines the "
+																	+ "coordinate conversion that will be applied to the Source Transform poses before "
+																	+ "copying them to Target Transforms (further below). The conversions are defined in " 
+																	+ typeof(RUISInputManager) + "'s \"Custom 1\" and \"Custom 2\" settings, and also "
+																	+ "stored in the associated 'inputConfig.xml'-file."));
+
+			EditorGUILayout.Space();
+
+			EditorGUILayout.PropertyField(customParent, new GUIContent("Parent Transform", "Optional: This Transform should be parent to the intended "
+				 													+ "\"Custom Mocap Source Transforms\" that will get their position and rotation from "
+																	+ "the mocap system. When the Parent Transform is assigned, you can press the below "
+																	+ "\"Obtain Sources by Name\" button."));
+
+			GUI.enabled = customParent.objectReferenceValue != null;
+			if(GUILayout.Button(new GUIContent("Obtain Sources by Name", "Attempt to automatically obtain the below (blue) Source Transforms from the "
+																	+ "above Parent Transform's child Transforms, by matching the child names with " 
+																	+ "the Source Transform field labels: joint name synonyms are recognized, letter case "
+																	+ "does not matter, and left and right joints should be denoted with a handedness "
+																	+ "prefix \"left\", \"l_\", \"l-\", or \"right\", \"r_\", \"r-\", respectively. "
+																	+ "WARNING: Make sure that the obtained Transforms are correct!")))
+			{
+				if(skeletonController && customParent.objectReferenceValue)
+				{
+					List<string>[] sourceReport = new List<string>[3];
+					sourceReport[0] = new List<string>(); // found customSources (individual names)
+					sourceReport[1] = new List<string>(); // not found customSources (individual names)
+					sourceReport[2] = new List<string>(); // multiple candidates (full sentences)
+					List<Transform> alreadyAssigned = new List<Transform>();
+
+					RUISSkeletonControllerCustomSources.ExtractSkeletonNamePrefix((Transform) customParent.objectReferenceValue);
+
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.Root, null, 
+																			null, alreadyAssigned, new string[] {"references"}, ref sourceReport, customRoot);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.Torso, null, 
+																			null, alreadyAssigned, null, ref sourceReport, customTorso);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.Chest, null, 
+																			null, alreadyAssigned, null, ref sourceReport, customChest);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.Neck, null, 
+																			null, alreadyAssigned, null, ref sourceReport, customNeck);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.Head, null, 
+																			null, alreadyAssigned, null, ref sourceReport, customHead);
+
+					if(RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftClavicle, null, 
+																			   RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, null, ref sourceReport, customLeftClavicle))
+						RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftShoulder, "arm", 
+																				RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned,
+																				RUISSkeletonControllerCustomSources.foreArmVariations, ref sourceReport, customLeftShoulder);
+					else
+					{
+						// Check for evidence that clavicles are named as shoulders
+						if(RUISSkeletonControllerCustomSources.TripletExists((Transform) customParent.objectReferenceValue, RUISSkeletonControllerCustomSources.armTripletNames, 
+																			 RUISSkeletonControllerCustomSources.armTripletExcludeNames											))
+						{
+							RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftClavicle, "shoulder",
+																					RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, null, ref sourceReport, customLeftClavicle);
+							if(sourceReport.Length > 1)  // There has now been two attempts to find LeftClavicle: remove one of the "not found" reports
+								sourceReport[1].Remove(RUISSkeletonManager.Joint.LeftClavicle.ToString());
+						}	
+						RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftShoulder, "arm", 
+																				RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned,
+																				new string[] {"shoulder", "forearm", "fore_arm", "fore-arm", "fore arm", "lowerarm", "lower_arm", "lower-arm",
+																							  "lower arm", "lowarm", "low_arm", "low-arm", "low arm"}, ref sourceReport, customLeftShoulder);
+					}
+
+					if(RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightClavicle, null, 
+																			   RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, null, ref sourceReport, customRightClavicle))
+						RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightShoulder, "arm", 
+																				RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned,
+																				RUISSkeletonControllerCustomSources.foreArmVariations, ref sourceReport, customRightShoulder);
+					else
+					{
+						// Check for evidence that clavicles are named as shoulders
+						if(RUISSkeletonControllerCustomSources.TripletExists((Transform) customParent.objectReferenceValue, RUISSkeletonControllerCustomSources.armTripletNames, 
+																			 RUISSkeletonControllerCustomSources.armTripletExcludeNames											))
+						{
+							RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightClavicle, "shoulder",
+																					RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, null, ref sourceReport, customRightClavicle);
+							if(sourceReport.Length > 1) // There has now been two attempts to find RightClavicle: remove one of the "not found" reports
+								sourceReport[1].Remove(RUISSkeletonManager.Joint.RightClavicle.ToString());
+						}
+						RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightShoulder, "arm", 
+																				RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned,
+																				new string[] {"shoulder", "forearm", "fore_arm", "fore-arm", "fore arm", "lowerarm", "lower_arm", "lower-arm",
+																							  "lower arm", "lowarm", "low_arm", "low-arm", "low arm"}, ref sourceReport, customRightShoulder);
+					}
+
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftElbow, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, null, ref sourceReport, customLeftElbow);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightElbow, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, null, ref sourceReport, customRightElbow);
+					
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftHand, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, null, ref sourceReport, customLeftHand);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightHand, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, null, ref sourceReport, customRightHand);
+
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftHip, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, new string[] {"hips"}, ref sourceReport, customLeftHip);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightHip, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, new string[] {"hips"}, ref sourceReport, customRightHip);
+
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftKnee, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned,
+																			RUISSkeletonControllerCustomSources.upperLegVariations, ref sourceReport, customLeftKnee);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightKnee, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.upperLegVariations, ref sourceReport, customRightKnee);
+
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftFoot, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, null, ref sourceReport, customLeftFoot);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightFoot, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, null, ref sourceReport, customRightFoot);
+					
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftThumb, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, null, ref sourceReport, customLeftThumb);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightThumb, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, null, ref sourceReport, customRightThumb);
+					
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftIndexFinger, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.neuronExceptions, ref sourceReport, customLeftIndexF);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightIndexFinger, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.neuronExceptions, ref sourceReport, customRightIndexF);
+					
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftMiddleFinger, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.neuronExceptions, ref sourceReport, customLeftMiddleF);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightMiddleFinger, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.neuronExceptions, ref sourceReport, customRightMiddleF);
+					
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftRingFinger, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.neuronExceptions, ref sourceReport, customLeftRingF);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightRingFinger, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.neuronExceptions, ref sourceReport, customRightRingF);
+					
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.LeftLittleFinger, null, 
+																			RUISSkeletonControllerCustomSources.leftStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.neuronExceptions, ref sourceReport, customLeftLittleF);
+					RUISSkeletonControllerCustomSources.FindSourceTransform((Transform) customParent.objectReferenceValue, RUISSkeletonManager.Joint.RightLittleFinger, null, 
+																			RUISSkeletonControllerCustomSources.rightStrings, alreadyAssigned, 
+																			RUISSkeletonControllerCustomSources.neuronExceptions, ref sourceReport, customRightLittleF);
+		
+					if(sourceReport.Length > 0)
+					{
+						string fullSourceReport = "Obtained by name " + sourceReport[0].Count;
+						if(sourceReport.Length > 1)
+							fullSourceReport = fullSourceReport + " out of " + (sourceReport[0].Count + sourceReport[1].Count);
+						fullSourceReport = fullSourceReport + " Custom Mocap Source Transforms";
+						if(sourceReport.Length > 2 && sourceReport[2].Count > 0)
+							fullSourceReport = fullSourceReport + ", where " + sourceReport[2].Count + " had multiple candidates";
+
+						obtainedSourceTransforms =    fullSourceReport + " (see Console for details). Please check that they are correct by clicking the below "
+													+ "Source Transform fields.";
+						obtainedSourceTransforms = obtainedSourceTransforms.Replace(" by name", "");
+
+						fullSourceReport = fullSourceReport + ". Details are listed below.\n";
+
+						if(RUISSkeletonControllerCustomSources.SkeletonNamePrefix != "")
+							fullSourceReport = 	  fullSourceReport + "--Detected the prefix \"" + RUISSkeletonControllerCustomSources.SkeletonNamePrefix 
+												+ "\" for the Custom Mocap Source Transform names.\n";
+					
+						for(int i = 0; i < sourceReport.Length; ++i)
+						{
+							if(sourceReport[i].Count > 0)
+							{
+								string appendedNames = "";
+								string delimiter = ", ";
+								if(i == 2)
+									delimiter = "\n";
+								foreach(string notFoundName in sourceReport[i])
+								{
+									if(appendedNames.Length == 0)
+										appendedNames += notFoundName;
+									else 
+										appendedNames += delimiter + notFoundName;
+								}
+								switch(i)
+								{
+									case 0:
+										fullSourceReport = fullSourceReport + "--Custom Mocap Source Transforms that WERE found:    ( " + appendedNames + " )\n";
+										break;
+									case 1:
+										fullSourceReport = fullSourceReport + "--Custom Mocap Source Transforms that were NOT found:    ( " + appendedNames + " )\n";
+										break;
+									case 2:
+										fullSourceReport = fullSourceReport + "--Custom Mocap Source Transforms with multiple candidates:\n" + appendedNames + "\n";
+										break;
+								}
+							}
+						}
+						Debug.LogWarning(fullSourceReport);
+					}
+				}
+			}
+
+			if(!string.IsNullOrEmpty(obtainedSourceTransforms))
+			{
+				GUI.enabled = false;
+				EditorStyles.textField.wordWrap = true;
+				EditorGUILayout.TextArea(obtainedSourceTransforms);
+			}
+
+			GUI.enabled = true;
+
+			EditorGUILayout.Space();
 
 			EditorGUILayout.PropertyField(customRoot, new GUIContent("Source Root", "REQUIRED: The source Transform for the skeleton hierarchy's root bone. This "
 																	+ "Transform can be same as the below 'Pelvis' source Transform.\nThe source Transforms of "
@@ -1114,7 +1324,7 @@ public class RUISSkeletonControllerEditor : Editor
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.PropertyField(customLeftElbow, 	  	new GUIContent("Left Elbow",	"Optional: The source Transform with tracked pose of the left elbow (forearm). "
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
-			EditorGUILayout.PropertyField(customLeftHand, 		new GUIContent("Left Hand", 	"Optional: The source Transform with tracked pose of the  left wrist (hand). "
+			EditorGUILayout.PropertyField(customLeftHand, 		new GUIContent("Left Hand", 	"Optional: The source Transform with tracked pose of the  left hand (wrist). "
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.EndVertical();
 
@@ -1125,7 +1335,7 @@ public class RUISSkeletonControllerEditor : Editor
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.PropertyField(customRightElbow,    new GUIContent("Right Elbow", 	"Optional: The source Transform with tracked pose of the right elbow (forearm). "
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
-			EditorGUILayout.PropertyField(customRightHand,	   new GUIContent("Right Hand",	    "Optional: The source Transform with tracked pose of the right wrist (hand). "
+			EditorGUILayout.PropertyField(customRightHand,	   new GUIContent("Right Hand",	    "Optional: The source Transform with tracked pose of the right hand (wrist). "
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
@@ -1141,7 +1351,7 @@ public class RUISSkeletonControllerEditor : Editor
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.PropertyField(customLeftKnee, new GUIContent("Left Knee", "Optional: The source Transform with tracked pose of the left knee (shin). "
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
-			EditorGUILayout.PropertyField(customLeftFoot, new GUIContent("Left Foot", "Optional: The source Transform with tracked pose of the left ankle (foot). "
+			EditorGUILayout.PropertyField(customLeftFoot, new GUIContent("Left Foot", "Optional: The source Transform with tracked pose of the left foot (ankle). "
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
@@ -1149,7 +1359,7 @@ public class RUISSkeletonControllerEditor : Editor
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.PropertyField(customRightKnee, new GUIContent("Right Knee", "Optional: The source Transform with tracked pose of the right knee (shin). "
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
-			EditorGUILayout.PropertyField(customRightFoot, new GUIContent("Right Foot", "Optional: The source Transform with tracked pose of the right ankle (foot). "
+			EditorGUILayout.PropertyField(customRightFoot, new GUIContent("Right Foot", "Optional: The source Transform with tracked pose of the right foot (ankle). "
 														+ "Its world frame location and rotation will be utilized, so be mindful about parent Transforms."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
@@ -1163,28 +1373,28 @@ public class RUISSkeletonControllerEditor : Editor
 				EditorGUIUtility.labelWidth = Screen.width / 6;
 				EditorGUILayout.BeginHorizontal();
 				EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
-				EditorGUILayout.PropertyField(customLeftThumb, new GUIContent ("Left Thumb CMC", "The source Transform for the 'root' of left thumb, also known as carpometacarpal (CMC) "
-					+ "joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
-				EditorGUILayout.PropertyField(customLeftIndexF,  new GUIContent ("Left Index Finger MCP",	"The source Transform for the 'root' of left index finger, also known as "
-					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-				EditorGUILayout.PropertyField(customLeftMiddleF, new GUIContent ("Left Middle Finger MCP", "The source Transform for the 'root' of left middle finger, also known as "
-					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-				EditorGUILayout.PropertyField(customLeftRingF,   new GUIContent ("Left Ring Finger MCP", "The source Transform for the 'root' of left ring finger, also known as "
-					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-				EditorGUILayout.PropertyField(customLeftLittleF, new GUIContent ("Left Little Finger MCP", "The source Transform for the 'root' of left little finger, also known as "
-					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftThumb, new GUIContent ("Left Thumb CMC", "Optional: The source Transform for the 'root' of left thumb, also known "
+					+ "as carpometacarpal (CMC) joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftIndexF,  new GUIContent ("Left Index Finger MCP",	"Optional: The source Transform for the 'root' of left index finger, "
+					+ "also known as metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftMiddleF, new GUIContent ("Left Middle Finger MCP", "Optional: The source Transform for the 'root' of left middle finger, "
+					+ "also known as metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftRingF,   new GUIContent ("Left Ring Finger MCP", "Optional: The source Transform for the 'root' of left ring finger, "
+					+ "also known as metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customLeftLittleF, new GUIContent ("Left Little Finger MCP", "Optional: The source Transform for the 'root' of left little finger, "
+					+ "also known as metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
 				EditorGUILayout.EndVertical();
 				EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
-				EditorGUILayout.PropertyField(customRightThumb, new GUIContent ("Right Thumb CMC", "The source Transform for the 'root' of right thumb, also known as carpometacarpal (CMC) "
-					+ "joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
-				EditorGUILayout.PropertyField(customRightIndexF,  new GUIContent ("Right Index Finger MCP", "The source Transform for the 'root' of right index finger, also known as "
-					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-				EditorGUILayout.PropertyField(customRightMiddleF, new GUIContent ("Right Middle Finger MCP", "The source Transform for the 'root' of right middle finger, also known as "
-					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-				EditorGUILayout.PropertyField(customRightRingF,   new GUIContent ("Right Ring Finger MCP", "The source Transform for the 'root' of right ring finger, also known as "
-					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-				EditorGUILayout.PropertyField(customRightLittleF, new GUIContent ("Right Little Finger MCP", "The source Transform for the 'root' of right little finger, also known as "
-					+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightThumb, new GUIContent ("Right Thumb CMC", "Optional: The source Transform for the 'root' of right thumb, also known "
+					+ "as carpometacarpal (CMC) joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightIndexF,  new GUIContent ("Right Index Finger MCP", "Optional: The source Transform for the 'root' of right index finger, "
+					+ "also known as metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightMiddleF, new GUIContent ("Right Middle Finger MCP", "Optional: The source Transform for the 'root' of right middle finger, "
+					+ "also known as metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightRingF,   new GUIContent ("Right Ring Finger MCP", "Optional: The source Transform for the 'root' of right ring finger, "
+					+ "also known as metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
+				EditorGUILayout.PropertyField(customRightLittleF, new GUIContent ("Right Little Finger MCP", "Optional: The source Transform for the 'root' of right little finger, "
+					+ "also known as metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
 				EditorGUILayout.EndVertical();
 				EditorGUILayout.EndHorizontal();
 				EditorGUIUtility.labelWidth = 0;
@@ -1204,7 +1414,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		if(GUILayout.Button(new GUIContent("Obtain Targets from Animator", "Attempt to automatically obtain below Target Transforms "
 											+ "from an Animator component, if such a component can be found from this GameObject "
-											+ "or its children. WARNING: Make sure that the Transforms are correct!")))
+											+ "or its children. WARNING: Make sure that the obtained Transforms are correct!")))
 		{
 			if(skeletonController)
 			{
@@ -1319,59 +1529,58 @@ public class RUISSkeletonControllerEditor : Editor
 					if(!rightLittleF.objectReferenceValue)
 						missedBones += "Right Little Finger CMC, ";
 
-					EditorStyles.textField.wordWrap = true;
 					if(!string.IsNullOrEmpty(missedBones))
 					{
 						missedBones = missedBones.Substring(0, missedBones.Length - 2);
 						Debug.LogWarning("Obtained some Target Transforms from Animator component of '" + animator.gameObject.name 
 										+ "' GameObject. The following Transforms were NOT obtained: " + missedBones + ". Please check that the "
-										+ "automatically obtained Transforms correspond to the semantic labels by clicking the below Target "
+										+ "automatically obtained Transforms correspond to the semantic labels by clicking the Target "
 										+ "Transform fields.");
 
-						obtainedTransforms =   "Obtained some Target Transforms but not all. Please check that they correspond to the semantic "
-											 + "labels by clicking the below target Transform fields.";
+						obtainedTargetTransforms =   "Obtained some Target Transforms but not all (see Console for details). Please check that they "
+												   + "correspond to the semantic labels by clicking the below Target Transform fields.";
 					}
 					else
 					{
 						Debug.LogWarning("Obtained all Target Transforms from Animator component of '" + animator.gameObject.name 
 							+ "' GameObject. Please check that the automatically obtained Transforms correspond to the semantic labels by clicking "
-							+ "the below Target Transform fields.");
+							+ "the Target Transform fields.");
 
-						obtainedTransforms =   "Obtained Target Transforms. Please check that they correspond to the semantic labels by clicking "
-											 + "the below target Transform fields.";
+						obtainedTargetTransforms =   "Obtained all Target Transforms. Please check that they correspond to the semantic labels by "
+												   + "clicking the below Target Transform fields.";
 					}
 				}
 				else
 				{
 					EditorUtility.DisplayDialog("Failed to obtain Targets", "Could not find an Animator component in this GameObject " 
 												+ "or its children. You must assign the Avatar Target Transforms manually.", "OK");
-					obtainedTransforms = "";
+					obtainedTargetTransforms = "";
 				}
 			}
 			
 		}
 
-		if(!string.IsNullOrEmpty(obtainedTransforms))
+		if(!string.IsNullOrEmpty(obtainedTargetTransforms))
 		{
 			GUI.enabled = false;
-			EditorGUILayout.TextArea(obtainedTransforms);
+			EditorStyles.textField.wordWrap = true;
+			EditorGUILayout.TextArea(obtainedTargetTransforms);
 			GUI.enabled = true;
 		}
 
 		EditorGUILayout.Space();
 
-		EditorGUILayout.PropertyField(rootBone, new GUIContent("Target Root", "The target Transform that is the animated avatar's root bone in "
+		EditorGUILayout.PropertyField(rootBone, new GUIContent("Target Root", "REQUIRED: The target Transform that is the animated avatar's root bone in "
 																			+ "the skeleton hierarchy. The target Transforms of this section will "
 																			+ "be moved by " + mocapSource));
 		EditorGUILayout.Space();
 
         EditorGUILayout.LabelField("Torso and Head Targets", EditorStyles.boldLabel);
-		EditorGUILayout.PropertyField(torsoBone, 	new GUIContent("Pelvis", 		"The pelvis bone, has to be parent or grandparent of all the "
-																				  + "other bones except root bone. Can be same as root bone."));
-		EditorGUILayout.PropertyField(chestBone, 	new GUIContent("Chest", 		"The chest bone, has to be child or grandchild of pelvis. "
-																				  + "Can be 'None'."));
-		EditorGUILayout.PropertyField(neckBone, 	new GUIContent("Neck", 			"The neck bone, has to be child or grandchild of chest."));
-		EditorGUILayout.PropertyField(headBone, 	new GUIContent("Head", 			"The head bone, has to be child or grandchild of neck."));
+		EditorGUILayout.PropertyField(torsoBone, 	new GUIContent("Pelvis", 		"REQUIRED: The pelvis joint, has to be parent or grandparent of all the "
+																				  + "other joints except root. Can be same as root."));
+		EditorGUILayout.PropertyField(chestBone, 	new GUIContent("Chest", 		"Optional: The chest joint, has to be child or grandchild of pelvis."));
+		EditorGUILayout.PropertyField(neckBone, 	new GUIContent("Neck", 			"Optional: The neck joint, has to be child or grandchild of chest."));
+		EditorGUILayout.PropertyField(headBone, 	new GUIContent("Head", 			"REQUIRED: The head joint, has to be child or grandchild of neck."));
 
 		EditorGUILayout.Space();
 		
@@ -1379,24 +1588,24 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUIUtility.labelWidth = Screen.width / 6;
 		EditorGUILayout.BeginHorizontal();
 		EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
-		EditorGUILayout.PropertyField(leftClavicle, 	 new GUIContent("Left Clavicle",   "The left clavicle bone, "
-		                                                                       			 + "has to be child of neck."));
-		EditorGUILayout.PropertyField(leftShoulderBone,  new GUIContent("Left Shoulder",   "The left shoulder bone (upper arm), "
-																						 + "has to be child or grandchild of neck."));
-		EditorGUILayout.PropertyField(leftElbowBone, 	 new GUIContent("Left Elbow", 	   "The left elbow bone (forearm), "
+		EditorGUILayout.PropertyField(leftClavicle, 	 new GUIContent("Left Clavicle",   "Optional: The left clavicle joint, "
+		                                                                       			 + "has to be child or grandchild of neck or chest."));
+		EditorGUILayout.PropertyField(leftShoulderBone,  new GUIContent("Left Shoulder",   "REQUIRED: The left shoulder joint (upper arm), "
+																						 + "has to be child or grandchild of left clavicle, neck, or chest."));
+		EditorGUILayout.PropertyField(leftElbowBone, 	 new GUIContent("Left Elbow", 	   "Optional: The left elbow joint (forearm), "
 																						 + "has to be child of left shoulder."));
-		EditorGUILayout.PropertyField(leftHandBone, 	 new GUIContent("Left Hand", 	   "The left wrist bone (hand), "
+		EditorGUILayout.PropertyField(leftHandBone, 	 new GUIContent("Left Hand", 	   "Optional: The left hand joint (wrist), "
 																						 + "has to be child of left elbow."));
 
 		EditorGUILayout.EndVertical();
 		EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
-		EditorGUILayout.PropertyField(rightClavicle, 	 new GUIContent("Right Clavicle",   "The right clavicle bone, "
-		                                                            					  + "has to be child of neck."));
-		EditorGUILayout.PropertyField(rightShoulderBone, new GUIContent("Right Shoulder",	"The right shoulder bone (upper arm), "
-																						  + "has to be child or grandchild of neck."));
-		EditorGUILayout.PropertyField(rightElbowBone, 	 new GUIContent("Right Elbow",		"The right elbow bone (forearm), "
+		EditorGUILayout.PropertyField(rightClavicle, 	 new GUIContent("Right Clavicle",   "Optional: The right clavicle joint, "
+																						  + "has to be child or grandchild of neck or chest."));
+		EditorGUILayout.PropertyField(rightShoulderBone, new GUIContent("Right Shoulder",	"REQUIRED: The right shoulder joint (upper arm), "
+																						  + "has to be child or grandchild of right clavicle, neck, or chest."));
+		EditorGUILayout.PropertyField(rightElbowBone, 	 new GUIContent("Right Elbow",		"Optional: The right elbow joint (forearm), "
 																						  + "has to be child of right shoulder."));
-		EditorGUILayout.PropertyField(rightHandBone,	 new GUIContent("Right Hand",		"The right wrist bone (hand), "
+		EditorGUILayout.PropertyField(rightHandBone,	 new GUIContent("Right Hand",		"Optional: The right hand joint (wrist), "
 																						  + "has to be child of right elbow."));
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
@@ -1405,7 +1614,8 @@ public class RUISSkeletonControllerEditor : Editor
 //		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
 		{	
 			SwitchToKeepChangesFieldColor();
-			EditorGUILayout.PropertyField(trackWrist, new GUIContent("Track Wrist Rotation", "Track the rotation of the hand bone"));
+			EditorGUILayout.PropertyField(trackWrist, new GUIContent("Track Hand Rotation", "Track the rotation of the hand (wrist). You might want to "
+												+ "disable this when using Kinect 2 or some other mocap system with poor hand (wrist) rotation tracking."));
 			SwitchToNormalFieldColor();
 		}
 
@@ -1419,16 +1629,16 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUIUtility.labelWidth = Screen.width / 6;
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
-		EditorGUILayout.PropertyField(leftHipBone,   new GUIContent("Left Hip",	   "The left hip bone (thigh), "
+		EditorGUILayout.PropertyField(leftHipBone,   new GUIContent("Left Hip",	   "REQUIRED: The left hip joint (thigh), "
 																				 + "has to be child or grandchild of pelvis."));
-		EditorGUILayout.PropertyField(leftKneeBone,  new GUIContent("Left Knee",   "The left knee bone (shin), has to be child of left hip."));
-		EditorGUILayout.PropertyField(leftFootBone,  new GUIContent("Left Foot",   "The left ankle bone (foot), has to be child of left knee."));
+		EditorGUILayout.PropertyField(leftKneeBone,  new GUIContent("Left Knee",   "Optional: The left knee joint (shin), has to be child of left hip."));
+		EditorGUILayout.PropertyField(leftFootBone,  new GUIContent("Left Foot",   "Optional: The left foot joint (ankle), has to be child of left knee."));
         EditorGUILayout.EndVertical();
         EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
-		EditorGUILayout.PropertyField(rightHipBone,  new GUIContent("Right Hip", 	"The right hip bone (thigh), "
+		EditorGUILayout.PropertyField(rightHipBone,  new GUIContent("Right Hip", 	"REQUIRED: The right hip joint (thigh), "
 																				  + "has to be child or grandchild of pelvis."));
-		EditorGUILayout.PropertyField(rightKneeBone, new GUIContent("Right Knee", 	"The right knee bone (shin), has to be child of right hip."));
-		EditorGUILayout.PropertyField(rightFootBone, new GUIContent("Right Foot", 	"The right ankle bone (foot), has to be child of right knee."));
+		EditorGUILayout.PropertyField(rightKneeBone, new GUIContent("Right Knee", 	"Optional: The right knee joint (shin), has to be child of right hip."));
+		EditorGUILayout.PropertyField(rightFootBone, new GUIContent("Right Foot", 	"Optional: The right foot joint (ankle), has to be child of right knee."));
         EditorGUILayout.EndVertical();
         EditorGUILayout.EndHorizontal();
 		EditorGUIUtility.labelWidth = 0;
@@ -1436,7 +1646,8 @@ public class RUISSkeletonControllerEditor : Editor
 //		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.kinect2SensorID || bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
 		{
 			SwitchToKeepChangesFieldColor();
-			EditorGUILayout.PropertyField(trackAnkle, new GUIContent("Track Ankle Rotation", "Track the rotation of the ankle bone"));
+			EditorGUILayout.PropertyField(trackAnkle, new GUIContent("Track Foot Rotation", "Track the rotation of the foot (ankle). You might want to "
+												+ "disable this when using Kinect 2 or some other mocap system with poor foot (ankle) rotation tracking."));
 			SwitchToNormalFieldColor();
 		}
 
@@ -1448,27 +1659,27 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUIUtility.labelWidth = Screen.width / 6;
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(leftThumb,   new GUIContent ("Left Thumb CMC", "The 'root' of left thumb, also known as carpometacarpal (CMC) "
+			EditorGUILayout.PropertyField(leftThumb,   new GUIContent ("Left Thumb CMC", "Optional: The 'root' of left thumb, also known as carpometacarpal (CMC) "
 																+ "joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
-			EditorGUILayout.PropertyField(leftIndexF,  new GUIContent ("Left Index Finger MCP",	"The 'root' of left index finger, also known as "
+			EditorGUILayout.PropertyField(leftIndexF,  new GUIContent ("Left Index Finger MCP",	"Optional: The 'root' of left index finger, also known as "
 									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-			EditorGUILayout.PropertyField(leftMiddleF, new GUIContent ("Left Middle Finger MCP", "The 'root' of left middle finger, also known as "
+			EditorGUILayout.PropertyField(leftMiddleF, new GUIContent ("Left Middle Finger MCP", "Optional: The 'root' of left middle finger, also known as "
 									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-			EditorGUILayout.PropertyField(leftRingF,   new GUIContent ("Left Ring Finger MCP", "The 'root' of left ring finger, also known as "
+			EditorGUILayout.PropertyField(leftRingF,   new GUIContent ("Left Ring Finger MCP", "Optional: The 'root' of left ring finger, also known as "
 									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-			EditorGUILayout.PropertyField(leftLittleF, new GUIContent ("Left Little Finger MCP", "The 'root' of left little finger, also known as "
+			EditorGUILayout.PropertyField(leftLittleF, new GUIContent ("Left Little Finger MCP", "Optional: The 'root' of left little finger, also known as "
 									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.BeginVertical(GUILayout.Width (Screen.width / 2 - 23));
-			EditorGUILayout.PropertyField(rightThumb,   new GUIContent ("Right Thumb CMC", "The 'root' of right thumb, also known as carpometacarpal (CMC) "
+			EditorGUILayout.PropertyField(rightThumb,   new GUIContent ("Right Thumb CMC", "Optional: The 'root' of right thumb, also known as carpometacarpal (CMC) "
 																+ "joint. The remaining MCP and IP joints of the thumb will be assigned automatically."));
-			EditorGUILayout.PropertyField(rightIndexF,  new GUIContent ("Right Index Finger MCP", "The 'root' of right index finger, also known as "
+			EditorGUILayout.PropertyField(rightIndexF,  new GUIContent ("Right Index Finger MCP", "Optional: The 'root' of right index finger, also known as "
 									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-			EditorGUILayout.PropertyField(rightMiddleF, new GUIContent ("Right Middle Finger MCP", "The 'root' of right middle finger, also known as "
+			EditorGUILayout.PropertyField(rightMiddleF, new GUIContent ("Right Middle Finger MCP", "Optional: The 'root' of right middle finger, also known as "
 									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-			EditorGUILayout.PropertyField(rightRingF,   new GUIContent ("Right Ring Finger MCP", "The 'root' of right ring finger, also known as "
+			EditorGUILayout.PropertyField(rightRingF,   new GUIContent ("Right Ring Finger MCP", "Optional: The 'root' of right ring finger, also known as "
 									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
-			EditorGUILayout.PropertyField(rightLittleF, new GUIContent ("Right Little Finger MCP", "The 'root' of right little finger, also known as "
+			EditorGUILayout.PropertyField(rightLittleF, new GUIContent ("Right Little Finger MCP", "Optional: The 'root' of right little finger, also known as "
 									+ "metacarpophalangeal (MCP) joint. The remaining PIP and DIP joints of the finger will be assigned automatically."));
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
@@ -1613,6 +1824,380 @@ public class RUISSkeletonControllerEditor : Editor
 
 
 #if UNITY_EDITOR
+[InitializeOnLoad]
+public static class RUISSkeletonControllerCustomSources
+{
+	static Dictionary<RUISSkeletonManager.Joint, string[]> properSourceNames;
+	public static string[] leftStrings  = {"left", "l_", "l-", " l "};
+	public static string[] rightStrings = {"right", "r_", "r-", " r "};
+
+	public static string SkeletonNamePrefix { get; private set; }
+
+	public static List<string>[] armTripletNames = new List<string>[3];
+	public static List<string>[] armTripletExcludeNames = new List<string>[3];
+
+	public static string[] foreArmVariations = new string[] {"forearm", "fore_arm", "fore-arm", "fore arm", "lowarm", "low_arm", 
+															 "low-arm", "low arm", "lowerarm", "lower_arm", "lower-arm", "lower arm"};
+	public static string[] upperLegVariations = new string[] {"upleg", "up_leg", "up-leg", "up leg", "upperleg", "upper_leg", "upper-leg", "upper leg"};
+
+	public static string[] neuronExceptions = {"_rightinhand", "_leftinhand"};
+
+
+	static RUISSkeletonControllerCustomSources()
+	{
+		// tripletNames[0] (clavicle alternatives), tripletNames[1] (shoulder alternatives), tripletNames[2] (elbow alternatives)
+		armTripletNames[0] = new List<string>(new string[] {"shoulder"});
+		armTripletNames[1] = new List<string>(new string[] {"arm", "uparm", "up_arm", "up-arm", "up arm", "upperarm", "upper_arm", "upper-arm", "upper arm"});
+		armTripletNames[2] = new List<string>(new string[] {"elbow"}); // When modifying this, note that it is assigned to properSourceNames (LeftElbow) below!
+		armTripletNames[2].AddRange(foreArmVariations);
+
+		// Unwanted substrings to the above alternatives. These are only for the shoulder alternative "arm", to exclude the below cases with "arm"
+		armTripletExcludeNames[0] = new List<string>(new string[] {""});
+		armTripletExcludeNames[1] = new List<string>(foreArmVariations);
+		armTripletExcludeNames[2] = new List<string>(new string[] {""});
+
+		properSourceNames = new Dictionary<RUISSkeletonManager.Joint, string[]>();
+		properSourceNames.Add(RUISSkeletonManager.Joint.Root,  new string[] {"root", "reference"}); // not references
+		properSourceNames.Add(RUISSkeletonManager.Joint.Torso, new string[] {"pelvis", "hips"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.Chest, new string[] {"chest", "spine1"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.Neck,  new string[] {"neck"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.Head,  new string[] {"head"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftClavicle, new string[] {"clavicle"}); // Perception Neuron: shoulder
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftShoulder, new string[] {"shoulder",  "uparm", "up_arm", "up-arm", "up arm",
+																					"upperarm", "upper_arm", "upper-arm", "upper arm"  }); // Perception Neuron: arm
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftElbow, armTripletNames[2].ToArray());
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftHand,  new string[] {"hand", "wrist"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftHip,   new string[] {"hip", "thigh", "upleg", "up_leg", "up-leg", "up leg", "upperleg", 
+																				 "upper_leg", "upper-leg", "upper leg"								 }); // not hips
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftKnee,  new string[] {"knee", "shin", "calf", "lowerleg", "lower_leg", "lower leg", "leg"}); // not above
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftFoot,  new string[] {"foot", "ankle"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftThumb, new string[] {"thumb"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftIndexFinger,  new string[] {"index"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftMiddleFinger, new string[] {"middle"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftRingFinger,   new string[] {"ring"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftLittleFinger, new string[] {"little", "pinky"});
+	}
+
+	public static string CommonPrefix(string a, string b)
+	{
+		if (a == null || b == null)
+			return "";
+
+		int min = Math.Min(a.Length, b.Length);
+		string prefix = "";
+		for(int i = 0; i < min && a[i] == b[i]; ++i)
+			prefix = prefix + a[i];
+
+		return prefix;
+	}
+
+	public static void ExtractSkeletonNamePrefix(Transform parent)
+	{
+		List<string> acceptedNames = new List<string>();
+		Dictionary<string, uint> histogram = new Dictionary<string, uint>();
+
+		if(parent == null)
+		{
+			SkeletonNamePrefix = "";
+			return;
+		}
+
+		foreach(RUISSkeletonManager.Joint joint in properSourceNames.Keys)
+		{
+			if(properSourceNames.ContainsKey(joint) && properSourceNames[joint] != null)
+				acceptedNames.AddRange(new List<string>(properSourceNames[joint]));
+		}
+
+		Transform[] allChildren = parent.GetComponentsInChildren<Transform>();
+		int transformCount = allChildren.Length;
+		foreach(Transform child in allChildren) 
+		{
+			foreach(string acceptedName in acceptedNames)
+			{
+				int startIndex = child.name.IndexOf(acceptedName, StringComparison.OrdinalIgnoreCase);
+				if(startIndex > 0)
+				{
+					string prefix = child.name.Substring(0, startIndex);
+					if(histogram.ContainsKey(prefix))
+						histogram[prefix]++;
+					else
+						histogram[prefix] = 1;
+					break;
+				}
+			}
+		}
+
+		List<KeyValuePair<string, uint>> sortedHistogram = new List<KeyValuePair<string, uint>>(histogram);
+		sortedHistogram.Sort((firstPair, nextPair) => { return nextPair.Value.CompareTo(firstPair.Value); } );
+
+//		foreach(KeyValuePair<string, uint> pair in sortedHistogram)
+//			Debug.Log(pair.Key + " occurred " + pair.Value + " times");
+
+		if(sortedHistogram.Count <= 0 || sortedHistogram[0].Value < 5)
+		{
+			SkeletonNamePrefix = "";
+			return;
+		}
+
+		string firstCandidate = sortedHistogram[0].Key;
+		int handednessIndex = firstCandidate.IndexOf("right", StringComparison.OrdinalIgnoreCase);
+		if(handednessIndex < 0)
+			handednessIndex = firstCandidate.IndexOf("left", StringComparison.OrdinalIgnoreCase);
+		if(handednessIndex == 0)
+		{
+			SkeletonNamePrefix = "";
+			return;
+		}
+		if(handednessIndex > 0)
+			firstCandidate = firstCandidate.Substring(0, handednessIndex);
+			
+		if(sortedHistogram.Count > 1 && sortedHistogram[1].Value >= 5)
+		{
+			SkeletonNamePrefix = CommonPrefix(firstCandidate, sortedHistogram[1].Key);
+			if(SkeletonNamePrefix == "")
+				SkeletonNamePrefix = firstCandidate;
+		}
+		else
+			SkeletonNamePrefix = firstCandidate;
+
+		if(		SkeletonNamePrefix != null && SkeletonNamePrefix.Length == 1 
+			&& (SkeletonNamePrefix.ToLower()[0] == 'r' || SkeletonNamePrefix.ToLower()[0] == 'l'))
+			SkeletonNamePrefix = "";
+
+		return;
+	}
+		
+	public static bool TripletExists(Transform parent, List<string>[] names, List<string>[] notContaining)
+	{
+
+		if(parent == null || names == null || names.Length < 3)
+		{
+			return false;
+		}
+
+		Transform[] allChildren = parent.GetComponentsInChildren<Transform>();
+		if(allChildren == null)
+			return false;
+
+		for(int i = 0; i < 3; ++i)
+		{
+			if(names[i] == null)
+				return false;
+
+			bool foundMatch = false;
+			foreach(Transform child in allChildren) 
+			{
+				string childName = null;
+				if(child)
+				{
+					childName = child.name;
+					if(!string.IsNullOrEmpty(SkeletonNamePrefix) && childName.StartsWith(SkeletonNamePrefix))
+						childName.Remove(0, SkeletonNamePrefix.Length);
+				}
+				else
+					continue;
+				
+				foreach(string acceptedName in names[i])
+				{
+					if(acceptedName == null)
+						continue;
+					if(childName.IndexOf(acceptedName, StringComparison.OrdinalIgnoreCase) >= 0)
+					{
+						bool unwantedSubstring = false;
+						if(notContaining != null && notContaining.Length > i && notContaining[i] != null)
+						{
+							foreach(string unwanted in notContaining[i])
+							{
+								if(unwanted == "")
+									continue;
+								if(childName.IndexOf(unwanted, StringComparison.OrdinalIgnoreCase) >= 0)
+								{
+									unwantedSubstring = true;
+									break;
+								}
+							}
+							if(unwantedSubstring)
+								continue;
+						}
+						foundMatch = true;
+						break;
+					}
+				}
+				if(foundMatch)
+					break;
+			}
+			if(!foundMatch)
+				return false;
+		}
+
+		return true;
+	}
+
+	public static bool FindSourceTransform( Transform parent, RUISSkeletonManager.Joint joint, string additionalMatch, string[] handedness,
+											List<Transform> alreadyAssigned, string[] notContaining, ref List<string>[] sourceReport, SerializedProperty sourceTransform)
+	{
+		// properSourceNames contains names only for left joints
+		RUISSkeletonManager.Joint handedJoint = joint;
+		switch(joint)
+		{
+			case RUISSkeletonManager.Joint.RightClavicle: 	handedJoint = RUISSkeletonManager.Joint.LeftClavicle; 	break;
+			case RUISSkeletonManager.Joint.RightShoulder:	handedJoint = RUISSkeletonManager.Joint.LeftShoulder; 	break;
+			case RUISSkeletonManager.Joint.RightElbow: 		handedJoint = RUISSkeletonManager.Joint.LeftElbow; 		break;
+			case RUISSkeletonManager.Joint.RightHand: 		handedJoint = RUISSkeletonManager.Joint.LeftHand; 		break;
+			case RUISSkeletonManager.Joint.RightHip: 		handedJoint = RUISSkeletonManager.Joint.LeftHip; 		break;
+			case RUISSkeletonManager.Joint.RightKnee: 		handedJoint = RUISSkeletonManager.Joint.LeftKnee; 		break;
+			case RUISSkeletonManager.Joint.RightFoot: 		handedJoint = RUISSkeletonManager.Joint.LeftFoot; 		break;
+			case RUISSkeletonManager.Joint.RightThumb: 		handedJoint = RUISSkeletonManager.Joint.LeftThumb; 		break;
+			case RUISSkeletonManager.Joint.RightIndexFinger:	handedJoint = RUISSkeletonManager.Joint.LeftIndexFinger;	break;
+			case RUISSkeletonManager.Joint.RightMiddleFinger:	handedJoint = RUISSkeletonManager.Joint.LeftMiddleFinger;	break;
+			case RUISSkeletonManager.Joint.RightRingFinger:		handedJoint = RUISSkeletonManager.Joint.LeftRingFinger;		break;
+			case RUISSkeletonManager.Joint.RightLittleFinger:	handedJoint = RUISSkeletonManager.Joint.LeftLittleFinger;	break;
+		}
+
+		if(properSourceNames.ContainsKey(handedJoint))
+		{
+			List<Transform> candidates = new List<Transform>();
+			List<string> acceptedNames = null;
+			if(parent != null && properSourceNames.ContainsKey(handedJoint) && properSourceNames[handedJoint] != null)
+				acceptedNames = new List<string>(properSourceNames[handedJoint]);
+			else
+			{
+				if(sourceReport.Length > 1) // Did not find Custom Source for this joint
+					sourceReport[1].Add(joint.ToString());
+				return false;
+			}
+
+			if(additionalMatch != null)
+				acceptedNames.Add(additionalMatch);
+
+			Transform[] allChildren = parent.GetComponentsInChildren<Transform>();
+			foreach(Transform child in allChildren) 
+			{
+				string childName = null;
+				if(child)
+				{
+					childName = child.name;
+					if(!string.IsNullOrEmpty(SkeletonNamePrefix) && childName.StartsWith(SkeletonNamePrefix))
+						childName.Remove(0, SkeletonNamePrefix.Length);
+				}
+				else
+					continue;
+
+				bool unwantedSubstring = false;
+				if(notContaining != null)
+				{
+					foreach(string unwanted in notContaining)
+					{
+						if(childName.IndexOf(unwanted, StringComparison.OrdinalIgnoreCase) >= 0)
+						{
+							unwantedSubstring = true;
+							break;
+						}
+					}
+					if(unwantedSubstring)
+						continue;
+				}
+
+				bool foundMatch = false;
+				int substringIndex = -1;
+				foreach(string acceptedName in acceptedNames)
+				{
+					substringIndex = childName.IndexOf(acceptedName, StringComparison.OrdinalIgnoreCase);
+					if(substringIndex >= 0)
+					{
+						foundMatch = true;
+						break;
+					}
+				}
+				if(foundMatch)
+				{
+					if(handedness == null)
+						candidates.Add(child);
+					else
+					{
+						if(substringIndex > 0)
+						{
+							string leftOrRight = "";
+							foreach(string prefix in handedness)
+							{
+								if(prefix.IndexOf("left", StringComparison.OrdinalIgnoreCase) >= 0)
+									leftOrRight = "left";
+								else if(prefix.IndexOf("right", StringComparison.OrdinalIgnoreCase) >= 0)
+									leftOrRight = "right";
+								
+								if(childName.Substring(0, substringIndex).IndexOf(prefix, StringComparison.OrdinalIgnoreCase) >= 0)
+								{
+									candidates.Add(child);
+									break;
+								}
+							}
+
+							// Hack to check whether the matched joint name substring is preceded by an L or R prefix: [L/R]JointName
+							if(leftOrRight == "left"  && substringIndex > 0 && childName[substringIndex - 1] == 'L')
+								candidates.Add(child);
+							if(leftOrRight == "right" && substringIndex > 0 && childName[substringIndex - 1] == 'R')
+								candidates.Add(child);
+						}
+					}
+				}
+			}
+				
+			Transform unassignedCandidate = null;
+			if(candidates.Count > 1)
+			{
+				string candidateNames = "";
+				foreach(Transform candidate in candidates)
+				{
+					if(candidateNames.Length == 0)
+						candidateNames += candidate.name;
+					else 
+						candidateNames += ", " + candidate.name;
+				}
+
+				if(sourceReport.Length > 2 && candidateNames != "") // Multiple candidates
+					sourceReport[2].Add("----" + joint.ToString() + ":    { " + candidateNames + " }");
+			}
+			if(candidates.Count >= 1)
+			{
+				if(alreadyAssigned != null)
+				{
+					for(int i = 0; i < candidates.Count; ++i)
+					{
+						bool accepted = true;
+						foreach(Transform assigned in alreadyAssigned)
+						{
+							if(candidates[i] == assigned && assigned != null)
+								accepted = false;
+						}
+						if(accepted && candidates[i] != null)
+						{
+							unassignedCandidate = candidates[i];
+							break;
+						}
+					}
+				}
+				else if(candidates[0] != null)
+					unassignedCandidate = candidates[0];
+				if(unassignedCandidate != null)
+				{
+					if(sourceReport.Length > 0) // Found Custom Source for this joint
+						sourceReport[0].Add(joint.ToString());
+					sourceTransform.objectReferenceValue = unassignedCandidate;
+					if(alreadyAssigned != null)
+						alreadyAssigned.Add(unassignedCandidate);
+					return true;
+				}
+			}
+			else
+			{
+				if(sourceReport.Length > 1) // Did not find Custom Source for this joint
+					sourceReport[1].Add(joint.ToString());
+			}
+		}
+		return false;
+	}
+}
+
 [InitializeOnLoad]
 public static class RUISSkeletonControllerCheckPlayModeChanges
 {

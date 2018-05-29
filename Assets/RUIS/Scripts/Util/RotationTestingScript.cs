@@ -52,7 +52,6 @@ public class RotationTestingScript : MonoBehaviour
     {
 		if(Input.GetButtonDown("Fire1") /* psMoveWrapper.WasReleased(controllerId, PSMoveWrapper.CROSS) */)
         {
-			print("aa");
             flipSignsId++;
             if (flipSignsId >= 16)
             {
