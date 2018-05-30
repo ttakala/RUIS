@@ -153,9 +153,9 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool scalingClavicles = false;
 	public bool heightAffectsOffsets = false; // TODO
 
-	public bool forceChestPosition = false;
+	public bool forceChestPosition = true;
 	public bool forceNeckPosition  = false;
-	public bool forceHeadPosition  = false;
+	public bool forceHeadPosition  = true;
 	public bool forceClaviclePosition  = false;
 
 	public bool neckParentsShoulders = false;
@@ -281,7 +281,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool scaleHierarchicalModelBones = true;
 	public bool scaleBoneLengthOnly = false;
 	public RUISAxis boneLengthAxis = RUISAxis.X;
-	public float maxScaleFactor = 0.01f;
+	public float maxScaleFactor = 0.5f; // *** Set to 0.01 when decoupling of thickness & scale adjust is done
 	public bool limbsAreScaled = true;
 
 	public float torsoThickness = 1;

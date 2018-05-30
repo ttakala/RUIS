@@ -241,6 +241,8 @@ public class RUISSkeletonControllerEditor : Editor
 	GUIStyle coloredBoldItalicStyle = new GUIStyle();
 	Color normalLabelColor;
 	Color normalGUIColor;
+	bool normalLabelColorWasSaved = false;
+
 	GUIStyle boldItalicStyle = new GUIStyle();
 	GUIStyle boldFoldoutStyle = null;
 	GUIStyle coloredBoldFoldoutStyle = null;
@@ -262,7 +264,7 @@ public class RUISSkeletonControllerEditor : Editor
 		coloredBoldItalicStyle.fontStyle = FontStyle.BoldAndItalic;
 		coloredBoldItalicStyle.normal.textColor = customLabelColor;
 		boldItalicStyle.fontStyle = FontStyle.BoldAndItalic;
-		
+
 		keepPlayModeChanges = serializedObject.FindProperty("keepPlayModeChanges");
 
 		bodyTrackingDevice = serializedObject.FindProperty("bodyTrackingDevice");
@@ -478,7 +480,7 @@ public class RUISSkeletonControllerEditor : Editor
     {
         serializedObject.Update();
 
-		normalGUIColor = GUI.color;	
+		normalGUIColor = GUI.color;
 
 		if(EditorStyles.foldout != null)
 		{
@@ -1073,10 +1075,15 @@ public class RUISSkeletonControllerEditor : Editor
 		{
 			RUISEditorUtility.HorizontalRuler();
 
+			if(!normalLabelColorWasSaved)
+			{
+				normalLabelColor = EditorStyles.label.normal.textColor;
+				normalLabelColorWasSaved = true;
+			}
+
 			SwitchToNormalFieldColor();
 			EditorGUILayout.LabelField("  Custom Mocap Source Transforms", coloredBoldItalicStyle);
 
-			normalLabelColor = EditorStyles.label.normal.textColor;
 			EditorStyles.label.normal.textColor = customLabelColor;
 
 			EditorGUILayout.PropertyField(customConversionType, new GUIContent("Coordinate Frame and Conversion", "The coordinate frame (coordinate system) "
@@ -1400,7 +1407,8 @@ public class RUISSkeletonControllerEditor : Editor
 				EditorGUIUtility.labelWidth = 0;
 			}
 
-			EditorStyles.label.normal.textColor = normalLabelColor;
+			if(normalLabelColorWasSaved)
+				EditorStyles.label.normal.textColor = normalLabelColor;
 		}
 
 		RUISEditorUtility.HorizontalRuler();
@@ -1775,6 +1783,10 @@ public class RUISSkeletonControllerEditor : Editor
 	#if UNITY_EDITOR
 	public void OnDisable()
 	{
+		if(normalLabelColorWasSaved)
+			EditorStyles.label.normal.textColor = normalLabelColor;
+		GUI.color = normalGUIColor;
+
 		RUISSkeletonControllerCheckPlayModeChanges.SaveFieldNames(this);
 		if(EditorApplication.isPlaying)
 		{
