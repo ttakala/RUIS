@@ -233,9 +233,33 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty customLeftLittleF;
 
 //	SerializedProperty customHMDSource;
-	SerializedProperty headsetCoordinates;
+	public SerializedProperty headsetCoordinates;
 
 	SerializedProperty customConversionType;
+
+	public SerializedProperty avatarCollider;
+	public SerializedProperty colliderRadius;
+	public SerializedProperty colliderLengthOffset;
+	public SerializedProperty pelvisDepthMult;
+	public SerializedProperty pelvisWidthMult;
+	public SerializedProperty pelvisLengthMult;
+	public SerializedProperty chestDepthMult;
+	public SerializedProperty chestWidthMult;
+	public SerializedProperty chestLengthMult;
+	public SerializedProperty neckRadiusMult;
+	public SerializedProperty headDepthMult;
+	public SerializedProperty headWidthMult;
+	public SerializedProperty headLengthMult;
+	public SerializedProperty shoulderRadiusMult;
+	public SerializedProperty elbowRadiusMult;
+	public SerializedProperty handDepthMult;
+	public SerializedProperty handWidthMult;
+	public SerializedProperty handLengthMult;
+	public SerializedProperty thighRadiusMult;
+	public SerializedProperty shinRadiusMult;
+	public SerializedProperty footDepthMult;
+	public SerializedProperty footWidthMult;
+	public SerializedProperty footLengthMult;
 
 	GUIStyle coloredBoldStyle = new GUIStyle();
 	GUIStyle coloredBoldItalicStyle = new GUIStyle();
@@ -256,6 +280,7 @@ public class RUISSkeletonControllerEditor : Editor
 	static bool showLocalOffsets;
 	static bool showTargetFingers;
 	static bool showSourceFingers;
+	static bool showColliderAdjustments;
 
 	public void OnEnable()
 	{
@@ -467,6 +492,30 @@ public class RUISSkeletonControllerEditor : Editor
 		leftFootScaleAdjust		= serializedObject.FindProperty("leftFootScaleAdjust");
 		rightFootScaleAdjust	= serializedObject.FindProperty("rightFootScaleAdjust");
 
+		avatarCollider		 = serializedObject.FindProperty("avatarCollider");
+		colliderRadius		 = serializedObject.FindProperty("colliderRadius");
+		colliderLengthOffset = serializedObject.FindProperty("colliderLengthOffset");
+		pelvisDepthMult 		= serializedObject.FindProperty("pelvisDepthMult");
+		pelvisWidthMult 		= serializedObject.FindProperty("pelvisWidthMult");
+		pelvisLengthMult 		= serializedObject.FindProperty("pelvisLengthMult");
+		chestDepthMult 			= serializedObject.FindProperty("chestDepthMult");
+		chestWidthMult 			= serializedObject.FindProperty("chestWidthMult");
+		chestLengthMult 		= serializedObject.FindProperty("chestLengthMult");
+		neckRadiusMult 			= serializedObject.FindProperty("neckRadiusMult");
+		headDepthMult 			= serializedObject.FindProperty("headDepthMult");
+		headWidthMult 			= serializedObject.FindProperty("headWidthMult");
+		headLengthMult 			= serializedObject.FindProperty("headLengthMult");
+		shoulderRadiusMult 		= serializedObject.FindProperty("shoulderRadiusMult");
+		elbowRadiusMult 		= serializedObject.FindProperty("elbowRadiusMult");
+		handDepthMult 			= serializedObject.FindProperty("handDepthMult");
+		handWidthMult 			= serializedObject.FindProperty("handWidthMult");
+		handLengthMult 			= serializedObject.FindProperty("handLengthMult");
+		thighRadiusMult 		= serializedObject.FindProperty("thighRadiusMult");
+		shinRadiusMult 			= serializedObject.FindProperty("shinRadiusMult");
+		footDepthMult 			= serializedObject.FindProperty("footDepthMult");
+		footWidthMult 			= serializedObject.FindProperty("footWidthMult");
+		footLengthMult 			= serializedObject.FindProperty("footLengthMult");
+
 		skeletonController = target as RUISSkeletonController;
 
 		#if UNITY_EDITOR
@@ -575,7 +624,7 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent( "Bone Length Axis", "Determines the axis that points the bone direction in each " 
 																	+ "joint transform of the animation rig. This value depends on your rig. You can "
-																	+ "discover the correct axis by examining the animation rig hierarchy, by looking"
+																	+ "discover the correct axis by examining the animation rig hierarchy, by looking "
 																	+ "at the directional axis between parent joints and their child joints in local "
 																	+ "coordinate system. IMPORTANT: Disable the below \"Length Only\" scaling option "
 																	+ "if the same localScale axis is not consistently used in all the joints of the "
@@ -706,13 +755,12 @@ public class RUISSkeletonControllerEditor : Editor
 																+ "values for more accurate and responsive mocap systems."));
 
 
-			if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID) 
-			{
-				EditorGUILayout.PropertyField(customMocapFrameRate, new GUIContent("Updates Per Second", "How many times per second is the \"Body Tracking "
-																+ "Device\" providing updates (on average)? This determines the Kalman filter update interval."));
-				customMocapFrameRate.intValue = Mathf.Clamp(customMocapFrameRate.intValue, 1, int.MaxValue);
-				skeletonController.customMocapUpdateInterval = 1.0f / ((float) customMocapFrameRate.intValue);
-			}
+			EditorGUILayout.PropertyField(customMocapFrameRate, new GUIContent("Updates Per Second", "How many times per second is the \"Body Tracking "
+																	+ "Device\" providing updates (on average)? This determines the Kalman filter update " 
+																	+ "interval. For Kinect the value should be 30."));
+			customMocapFrameRate.intValue = Mathf.Clamp(customMocapFrameRate.intValue, 1, int.MaxValue);
+			skeletonController.customMocapUpdateInterval = 1.0f / ((float) customMocapFrameRate.intValue);
+
 			EditorGUI.indentLevel--;
 		}
 
@@ -1748,6 +1796,115 @@ public class RUISSkeletonControllerEditor : Editor
 			}
 
 			EditorGUI.indentLevel--;
+		}
+
+		RUISEditorUtility.HorizontalRuler();
+
+		if(GUILayout.Button(new GUIContent("Add Colliders To Body Parts", "")))
+		{
+			if(skeletonController)
+			{
+				if(			   !torsoBone.objectReferenceValue || 		   !headBone.objectReferenceValue 
+					||  !leftShoulderBone.objectReferenceValue || !rightShoulderBone.objectReferenceValue)
+					EditorUtility.DisplayDialog(  "Unable to create Colliders", "Failed to add Colliders to body segments, because One of the following "
+												+ "\"Avatar Target Transforms\" is not assigned: Pelvis, Head, Left Shoulder, and Right Shoulder.", "OK");
+				else
+					skeletonController.AddCollidersToBodySegments((RUISSkeletonController.AvatarColliderType) avatarCollider.enumValueIndex, 
+																  colliderRadius.floatValue, colliderLengthOffset.floatValue, false			);
+			}
+		}
+
+		EditorGUILayout.Space();
+		EditorGUILayout.PropertyField(avatarCollider, new GUIContent("Base Collider Type", "The Collider type that is used for all body segments."));
+		EditorGUILayout.PropertyField(colliderRadius, new GUIContent("Base Radius", "This acts as the base radius for Capsule Colliders, and as a base "
+															+ "width and depth for Box Colliders (with the exception of Pelvis and Chest widths, which "
+															+ "are calculated from the Shoulder and Hip widths). These base values can be adjusted by "
+															+ "modifying the multpliers within the below \"Collider Size Adjustments\" section."));
+		EditorGUILayout.PropertyField(colliderLengthOffset, new GUIContent("Base Length Offset", ""));
+
+		EditorGUILayout.Space();
+
+		showColliderAdjustments = EditorGUILayout.Foldout(showColliderAdjustments, "Collider Size Adjustments", true, boldFoldoutStyle);
+		if(showColliderAdjustments)
+		{
+			EditorGUIUtility.labelWidth = Screen.width / 3.4f;
+			EditorGUIUtility.fieldWidth = Screen.width / 10f;
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
+			EditorGUILayout.PropertyField(pelvisWidthMult, 	  new GUIContent("Pelvis Width", 	 "Pelvis (abdomen) Box Collider's width / Capsule "
+																				+ "Collider's radius multiplier."));
+			EditorGUILayout.PropertyField(pelvisDepthMult, 	  new GUIContent("Pelvis Depth", 	 "Pelvis (abdomen) Box Collider's depth multiplier. "
+																				+ "This setting only has effect if Pelvis has a Box Collider."));
+			EditorGUILayout.PropertyField(pelvisLengthMult,   new GUIContent("Pelvis Length", 	 "Pelvis (abdomen) Collider's length multiplier. "));
+			EditorGUILayout.EndVertical();
+
+			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
+
+			EditorGUILayout.PropertyField(chestWidthMult, 	  new GUIContent("Chest Width", 	 "Chest Box Collider's width / Capsule Collider's radius "
+																				+ "multiplier."));
+			EditorGUILayout.PropertyField(chestDepthMult, 	  new GUIContent("Chest Depth", 	 "Chest Box Collider's depth multiplier. This setting "
+																				+ "only has effect if Chest has a Box Collider."));
+
+			EditorGUILayout.PropertyField(chestLengthMult,	  new GUIContent("Chest Length", 	 "Chest Collider's length multiplier. "));
+			EditorGUILayout.EndVertical();
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.Space();
+			EditorGUILayout.BeginHorizontal();
+
+			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 6));
+			EditorGUILayout.Space(); // HACK to force "content" on this column, otherwise the column width is collapsed
+			EditorGUILayout.EndVertical();
+
+			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
+			EditorGUILayout.PropertyField(neckRadiusMult, 	  new GUIContent("Neck Radius", 	 "Neck Capsule Collider's radius multiplier, which also "
+																				+ "acts as a width and depth multiplier if Box Collider is used instead."));
+
+			EditorGUILayout.Space();
+			EditorGUILayout.PropertyField(headWidthMult, 	  new GUIContent("Head Width", 		 "Head Box Collider's width / Capsule Collider's radius "
+																				+ "multiplier."));
+			EditorGUILayout.PropertyField(headDepthMult, 	  new GUIContent("Head Depth", 		 "Head Box Collider's depth multiplier. This setting "
+																				+ "only has effect if Head has a Box Collider."));
+			EditorGUILayout.PropertyField(headLengthMult, 	  new GUIContent("Head Length", 	 "Head Collider's length multiplier."));
+
+			EditorGUILayout.EndVertical();
+
+			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 6));
+			EditorGUILayout.Space(); // HACK to force "content" on this column, otherwise the column width is collapsed
+			EditorGUILayout.EndVertical();
+
+			EditorGUILayout.EndHorizontal();
+			EditorGUILayout.Space();
+
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
+			EditorGUILayout.PropertyField(shoulderRadiusMult, new GUIContent("Upper Arm Radius", "Upper Arm Capsule Collider's radius multiplier, which also "
+																				+ "acts as a width and depth multiplier if Box Collider is used instead."));
+			EditorGUILayout.PropertyField(elbowRadiusMult, 	  new GUIContent("Forearm Radius",	 "Forearm Capsule Collider's radius multiplier, which also "
+																			 	+ "acts as a width and depth multiplier if Box Collider is used instead."));
+			EditorGUILayout.PropertyField(handWidthMult, 	  new GUIContent("Hand Width", 		 "Hand (palm) Box Collider's width / Capsule Collider's "
+																				+ "radius multiplier.."));
+			EditorGUILayout.PropertyField(handDepthMult, 	  new GUIContent("Hand Depth", 		 "Hand (palm) Box Collider's depth multiplier. This "
+																				+ "setting only has effect if Hand has a Box Collider."));
+			EditorGUILayout.PropertyField(handLengthMult, 	  new GUIContent("Hand Length", 	 "Hand (palm) Collider's length multiplier."));
+			EditorGUILayout.EndVertical();
+
+			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
+			EditorGUILayout.PropertyField(thighRadiusMult, 	  new GUIContent("Thigh Radius", 	 "Thigh Capsule Collider's radius multiplier, which also "
+																				+ "acts as a width and depth multiplier if Box Collider is used instead."));
+			EditorGUILayout.PropertyField(shinRadiusMult, 	  new GUIContent("Shin Radius", 	 "Shin Capsule Collider's radius multiplier, which also "
+																				+ "acts as a width and depth multiplier if Box Collider is used instead."));
+			EditorGUILayout.PropertyField(footWidthMult, 	  new GUIContent("Foot Width", 		 "Foot Box Collider's width / Capsule Collider's radius "
+																				+ "multiplier."));
+			EditorGUILayout.PropertyField(footDepthMult, 	  new GUIContent("Foot Depth", 		 "Foot Box Collider's depth multiplier. This setting "
+																				+ "only has effect if Foot has a Box Collider."));
+			EditorGUILayout.PropertyField(footLengthMult, 	  new GUIContent("Foot Length", 	 "Foot Collider's length multiplier."));
+
+			EditorGUILayout.EndVertical();
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUIUtility.fieldWidth = 0;
+			EditorGUIUtility.labelWidth = 0;
 		}
 
 		EditorGUILayout.Space();

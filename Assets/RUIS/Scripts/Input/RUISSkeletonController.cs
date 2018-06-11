@@ -189,6 +189,12 @@ public class RUISSkeletonController : MonoBehaviour
 		Custom_2
 	}
 
+	public enum AvatarColliderType
+	{
+		CapsuleCollider,
+		BoxCollider
+	}
+
 	/// <summary>Never set/substitute this variable. Set bodyTrackingDeviceID variable instead.</summary>
 	public BodyTrackingDeviceType bodyTrackingDevice = BodyTrackingDeviceType.Kinect2;
 
@@ -441,6 +447,10 @@ public class RUISSkeletonController : MonoBehaviour
 	public Quaternion clenchedLeftThumbTM;
 	public Quaternion clenchedLeftThumbMCP;
 	public Quaternion clenchedLeftThumbIP;
+
+	public AvatarColliderType avatarCollider = AvatarColliderType.CapsuleCollider;
+	public float colliderRadius = 0.05f;
+	public float colliderLengthOffset = 0;
 
 	public bool keepPlayModeChanges = true; // This is only for the custom inspector to use
 
@@ -2619,6 +2629,22 @@ public class RUISSkeletonController : MonoBehaviour
 			return axisID;
 	}
 
+	private int FindClosestLocalAxis(Transform pose, Vector3 globalAxis)
+	{
+		int axisID = 0;
+		float maxDot = Mathf.Abs(Vector3.Dot(pose.right, globalAxis));
+		float maxCandidate = Mathf.Abs(Vector3.Dot(pose.up, globalAxis));
+		if(maxCandidate > maxDot)
+		{
+			axisID = 1;
+			maxDot = maxCandidate;
+		}
+		maxCandidate = Mathf.Abs(Vector3.Dot(pose.forward, globalAxis));
+		if(maxCandidate > maxDot)
+			axisID = 2;
+		return axisID;
+	}
+
 	private float UpdateTorsoScale()
 	{
 		//average hip to shoulder length and compare it to the one found in the model - scale accordingly
@@ -3228,8 +3254,233 @@ public class RUISSkeletonController : MonoBehaviour
 			position += offset;
 	}
 
+	public float pelvisDepthMult 	= 2.0f;
+	public float pelvisWidthMult 	= 1.2f;
+	public float pelvisLengthMult 	= 0.1f;
+	public float chestDepthMult 	= 2.0f;
+	public float chestWidthMult 	= 1.0f;
+	public float chestLengthMult 	= 0.0f;
+	public float neckRadiusMult 	= 1.0f;
+	public float headDepthMult 		= 2.0f;
+	public float headWidthMult 		= 1.5f;
+	public float headLengthMult 	= 0.0f;
+	public float shoulderRadiusMult = 1.1f;
+	public float elbowRadiusMult 	= 1.0f;
+	public float handDepthMult 		= 0.5f;
+	public float handWidthMult 		= 1.2f;
+	public float handLengthMult 	= 0.0f;
+	public float thighRadiusMult 	= 1.5f;
+	public float shinRadiusMult 	= 1.0f;
+	public float footDepthMult 		= 0.7f;
+	public float footWidthMult 		= 1.2f;
+	public float footLengthMult 	= 0.0f;
+
+	/// <summary>
+	/// Adds colliders to body segments in Edit or Play Mode. The avatar should be in T- or A-pose.
+	/// </summary>
+	/// <param name="colliderType">Collider type</param>
+	/// <param name="span">Body segment radius</param>
+	/// <param name="lengthOffset">Length offset</param>
+	/// <param name="fingerColliders">Finger colliders</param>
+	public void AddCollidersToBodySegments(AvatarColliderType colliderType, float span, float lengthOffset, bool fingerColliders)
+	{
+		if(!torso || !head || !leftShoulder || !rightShoulder)
+		{
+			Debug.LogError(   "One of the following \"Avatar Target Transforms\" is not assigned: Pelvis, Head, Left Shoulder, and Right Shoulder. "
+							+ "Unable to add Colliders to body segments!");
+			return;
+		}
+
+		Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
+		Vector3 depthAxis = Vector3.Cross(head.position - torso.position, rightShoulder.position - leftShoulder.position);
+		float shoulderWidth = Vector3.Distance(Vector3.Scale(rightShoulder.position, scaler), Vector3.Scale(leftShoulder.position, scaler));
+		Vector3 handAxis, footAxis, headAxis;
+		Vector3 shoulderAxis = rightShoulder.position - leftShoulder.position;
+
+		float pelvisWidth = 0.8f * shoulderWidth;
+		if(leftHip && rightHip)
+			pelvisWidth = Vector3.Distance(Vector3.Scale(rightHip.position, scaler), Vector3.Scale(leftHip.position, scaler));
+
+		CreateCollider(torso, 		chest, colliderType, depthAxis, 0.5f * pelvisWidthMult *  pelvisWidth, pelvisDepthMult * span, pelvisLengthMult);
+		CreateCollider(chest, 		neck,  colliderType, depthAxis, 0.5f * chestWidthMult * shoulderWidth,  chestDepthMult * span, chestLengthMult);
+		CreateCollider(neck, 		head,  colliderType, depthAxis, 				neckRadiusMult * span,	neckRadiusMult * span, lengthOffset);
+
+		CreateCollider(rightShoulder, 	rightElbow, colliderType, depthAxis, shoulderRadiusMult * span, shoulderRadiusMult * span, lengthOffset);
+		CreateCollider(rightElbow,   	rightHand, 	colliderType, depthAxis,    elbowRadiusMult * span,    elbowRadiusMult * span, lengthOffset);
+		CreateCollider(leftShoulder, 	leftElbow, 	colliderType, depthAxis, shoulderRadiusMult * span, shoulderRadiusMult * span, lengthOffset);
+		CreateCollider(leftElbow, 		leftHand, 	colliderType, depthAxis,    elbowRadiusMult * span,    elbowRadiusMult * span, lengthOffset);
+
+		CreateCollider(rightHip,  		rightKnee, 	colliderType, depthAxis,    thighRadiusMult * span,    thighRadiusMult * span, lengthOffset);
+		CreateCollider(rightKnee, 		rightFoot, 	colliderType, depthAxis,     shinRadiusMult * span,     shinRadiusMult * span, lengthOffset);
+		CreateCollider(leftHip,   		leftKnee, 	colliderType, depthAxis,    thighRadiusMult * span,    thighRadiusMult * span, lengthOffset);
+		CreateCollider(leftKnee,  		leftFoot, 	colliderType, depthAxis,     shinRadiusMult * span,     shinRadiusMult * span, lengthOffset);
+
+		if(neck)
+			headAxis = 0.3f * (head.position - torso.position).magnitude * (head.position - neck.position).normalized;
+		else
+			headAxis = 0.3f * (head.position - torso.position);
+		CreateCollider(head, null, colliderType, depthAxis, headWidthMult * span, headDepthMult * span, headLengthMult, headAxis);
+
+		if(rightFoot && rightFoot.childCount > 0)
+			footAxis = (rightFoot.GetChild(0).position - rightFoot.position);
+		else // If foot doesn't have child transforms, optional lengthDirection will get direction from depthAxis and length from 0.5 * shoulderWidth
+			footAxis = 0.5f * shoulderWidth * depthAxis.normalized;
+		CreateCollider(rightFoot, null,	colliderType, Vector3.Cross(footAxis, shoulderAxis), footWidthMult * span, footDepthMult * span, footLengthMult, footAxis);
+
+		if(leftFoot && leftFoot.childCount > 0)
+			footAxis =  (leftFoot.GetChild(0).position  - leftFoot.position);
+		else
+			footAxis = 0.5f * shoulderWidth * depthAxis.normalized;
+		CreateCollider(leftFoot,  null, colliderType, Vector3.Cross(footAxis, shoulderAxis), footWidthMult * span, footDepthMult * span, footLengthMult, footAxis);
+
+		if(rightHand && rightElbow)
+		{
+			if(rightMiddleF)
+				handAxis = (rightMiddleF.position - rightHand.position).magnitude * (rightHand.position - rightElbow.position).normalized;
+			else
+				handAxis = 0.3f * (rightHand.position - rightElbow.position);
+			CreateCollider(rightHand, null, colliderType, Vector3.Cross(handAxis, depthAxis), handWidthMult * span, handDepthMult * span, handLengthMult, handAxis);
+		}
+		else
+			Debug.LogWarning("Could not create Collider for Right Hand: Either Right Elbow or Right Hand Target Transform is not assigned.");
+
+		if(leftHand && leftElbow)
+		{
+			if(leftMiddleF)
+				handAxis = (leftMiddleF.position - leftHand.position).magnitude * (leftHand.position - leftElbow.position).normalized;
+			else
+				handAxis = 0.3f * (leftHand.position - leftElbow.position);
+			CreateCollider(leftHand, null, colliderType, Vector3.Cross(handAxis, depthAxis), handWidthMult * span, handDepthMult * span, handLengthMult, handAxis);
+		}
+		else
+			Debug.LogWarning("Could not create Collider for Left Hand: Either Left Elbow or Left Hand Target Transform is not assigned.");
+	}
+
+	private void CreateCollider(Transform startJoint, Transform endJoint, AvatarColliderType colliderType, Vector3 depthDirection, 
+								float width, float depth, float lengthOffset, Vector3 lengthDirection = default(Vector3)			)
+	{
+		if(!startJoint)
+			return;
+
+		Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
+		Vector3 lengthAxis = startJoint.right;
+		Vector3 boneCenter = Vector3.zero;
+		Vector3 boundingBox = Vector3.one;
+		int lengthAxisId = 0; 
+		int depthAxisId  = 1; 
+		int widthAxisId  = 2; 
+		float boneLength = 0.5f;
+
+		if(endJoint)
+		{
+			boneLength = Vector3.Distance(Vector3.Scale(startJoint.position, scaler), Vector3.Scale(endJoint.position, scaler)) + lengthOffset;
+			lengthAxis = endJoint.position - startJoint.position;
+			boneCenter = 0.5f * (endJoint.position + startJoint.position);
+		}
+		else
+		{
+			lengthAxis = lengthDirection;
+			boneLength = Vector3.Scale(lengthDirection, scaler).magnitude + lengthOffset;
+			boneCenter = startJoint.position + 0.5f * lengthAxis;
+		}
+
+		lengthAxisId = FindClosestLocalAxis(startJoint, lengthAxis);
+		depthAxisId  = FindClosestLocalAxis(startJoint, depthDirection);
+
+		if(depthAxisId == lengthAxisId)
+			depthAxisId = (lengthAxisId + 1) % 3;
+
+		while(widthAxisId == depthAxisId || widthAxisId == lengthAxisId)
+			widthAxisId = (widthAxisId + 1) % 3;
+
+		boundingBox[lengthAxisId] = boneLength;
+		boundingBox[depthAxisId]  = 2 * depth;
+		boundingBox[widthAxisId]  = 2 * width;
+
+		Collider collider = null;
+		Collider[] allColliders = startJoint.GetComponents<Collider>();
+		List<Collider> destroyColliders = new List<Collider>();
+		if(allColliders != null)
+		{
+			// Remove all existing capsule and box colliders, save for one
+			foreach(Collider candidateCollider in allColliders)
+			{
+				switch(colliderType)
+				{
+					case AvatarColliderType.BoxCollider:
+						if(candidateCollider)
+						{
+							if(candidateCollider as CapsuleCollider != null)
+								destroyColliders.Add(candidateCollider);
+							else if(candidateCollider as BoxCollider != null)
+							{
+								if(collider)
+									destroyColliders.Add(candidateCollider);
+								else
+									collider = candidateCollider;
+							}
+						}
+						break;
+					case AvatarColliderType.CapsuleCollider:
+						if(candidateCollider)
+						{
+							if(candidateCollider as BoxCollider != null)
+								destroyColliders.Add(candidateCollider);
+							else if(candidateCollider as CapsuleCollider != null)
+							{
+								if(collider)
+									destroyColliders.Add(candidateCollider);
+								else
+									collider = candidateCollider;
+							}
+						}
+						break;
+				}
+			}
+			foreach(Collider destroyCollider in destroyColliders)
+			{
+				if(Application.isEditor)
+					DestroyImmediate(destroyCollider);
+				else
+					Destroy(destroyCollider);
+			}
+		}
+			
+		// Adjust parameters
+		switch(colliderType)
+		{
+			case AvatarColliderType.BoxCollider:
+				if(!collider)
+					collider = startJoint.gameObject.AddComponent<BoxCollider>();
+				BoxCollider box = collider as BoxCollider;
+				box.center = startJoint.InverseTransformPoint(boneCenter); 
+				// Below doesn't take into account cumulative parent scales
+				Vector3 boxSize = Vector3.Scale(boundingBox, 
+												new Vector3(1f/startJoint.localScale.x, 1f/startJoint.localScale.y, 1f/startJoint.localScale.z));
+				boxSize.Set(Mathf.Max(Mathf.Abs(boxSize.x), float.Epsilon), Mathf.Max(Mathf.Abs(boxSize.y), float.Epsilon), 
+							Mathf.Max(Mathf.Abs(boxSize.z), float.Epsilon));
+				box.size = boxSize;
+				break;
+			case AvatarColliderType.CapsuleCollider:
+				if(!collider)
+					collider = startJoint.gameObject.AddComponent<CapsuleCollider>();
+				CapsuleCollider capsule = collider as CapsuleCollider;
+				capsule.direction = lengthAxisId;
+				capsule.height = boneLength; // Doesn't take into account cumulative parent scales	
+				capsule.center = startJoint.InverseTransformPoint(boneCenter);
+				// Below doesn't take into account cumulative parent scales	
+				if(lengthAxisId == 0)
+					capsule.radius = Mathf.Max(Mathf.Abs(width / startJoint.localScale.y), float.Epsilon);
+				else
+					capsule.radius = Mathf.Max(Mathf.Abs(width / startJoint.localScale.x), float.Epsilon);
+				break;
+		}
+
+		return;
+	}
+
 	// If memory serves me correctly, this method doesn't work quite right
-	private Quaternion limitZRotation(Quaternion inputRotation, float rollMinimum, float rollMaximum)
+	private Quaternion LimitZRotation(Quaternion inputRotation, float rollMinimum, float rollMaximum)
 	{
 		/**
 		 * Argument inputRotation's roll angle (rotation around Z axis) is clamped between [rollMinimum, rollMaximum].
