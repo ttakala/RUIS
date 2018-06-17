@@ -240,6 +240,14 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty avatarCollider;
 	public SerializedProperty colliderRadius;
 	public SerializedProperty colliderLengthOffset;
+	public SerializedProperty createFingerColliders;
+	public SerializedProperty pelvisHasBoxCollider;
+	public SerializedProperty chestHasBoxCollider;
+	public SerializedProperty headHasBoxCollider;
+	public SerializedProperty handHasBoxCollider;
+	public SerializedProperty footHasBoxCollider;
+	public SerializedProperty fingerHasBoxCollider;
+
 	public SerializedProperty pelvisDepthMult;
 	public SerializedProperty pelvisWidthMult;
 	public SerializedProperty pelvisLengthMult;
@@ -255,6 +263,12 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty handDepthMult;
 	public SerializedProperty handWidthMult;
 	public SerializedProperty handLengthMult;
+	public SerializedProperty fingerRadiusMult;
+	public SerializedProperty fingerLengthMult;
+	public SerializedProperty fingerTaperValue;
+	public SerializedProperty thumbRadiusMult;
+	public SerializedProperty thumbLengthMult;
+	public SerializedProperty thumbTaperValue;
 	public SerializedProperty thighRadiusMult;
 	public SerializedProperty shinRadiusMult;
 	public SerializedProperty footDepthMult;
@@ -267,7 +281,8 @@ public class RUISSkeletonControllerEditor : Editor
 	Color normalGUIColor;
 	bool normalLabelColorWasSaved = false;
 
-	GUIStyle boldItalicStyle = new GUIStyle();
+	GUIStyle boldItalicStyle  = new GUIStyle();
+	GUIStyle italicStyle      = new GUIStyle();
 	GUIStyle boldFoldoutStyle = null;
 	GUIStyle coloredBoldFoldoutStyle = null;
 
@@ -289,6 +304,8 @@ public class RUISSkeletonControllerEditor : Editor
 		coloredBoldItalicStyle.fontStyle = FontStyle.BoldAndItalic;
 		coloredBoldItalicStyle.normal.textColor = customLabelColor;
 		boldItalicStyle.fontStyle = FontStyle.BoldAndItalic;
+		italicStyle.fontStyle = FontStyle.Italic;
+		italicStyle.alignment = TextAnchor.MiddleCenter;
 
 		keepPlayModeChanges = serializedObject.FindProperty("keepPlayModeChanges");
 
@@ -492,9 +509,17 @@ public class RUISSkeletonControllerEditor : Editor
 		leftFootScaleAdjust		= serializedObject.FindProperty("leftFootScaleAdjust");
 		rightFootScaleAdjust	= serializedObject.FindProperty("rightFootScaleAdjust");
 
-		avatarCollider		 = serializedObject.FindProperty("avatarCollider");
-		colliderRadius		 = serializedObject.FindProperty("colliderRadius");
-		colliderLengthOffset = serializedObject.FindProperty("colliderLengthOffset");
+		avatarCollider		  = serializedObject.FindProperty("avatarCollider");
+		colliderRadius		  = serializedObject.FindProperty("colliderRadius");
+		colliderLengthOffset  = serializedObject.FindProperty("colliderLengthOffset");
+		createFingerColliders = serializedObject.FindProperty("createFingerColliders");
+		pelvisHasBoxCollider  = serializedObject.FindProperty("pelvisHasBoxCollider");
+		chestHasBoxCollider   = serializedObject.FindProperty("chestHasBoxCollider");
+		headHasBoxCollider    = serializedObject.FindProperty("headHasBoxCollider");
+		handHasBoxCollider    = serializedObject.FindProperty("handHasBoxCollider");
+		footHasBoxCollider    = serializedObject.FindProperty("footHasBoxCollider");
+		fingerHasBoxCollider  = serializedObject.FindProperty("fingerHasBoxCollider");
+
 		pelvisDepthMult 		= serializedObject.FindProperty("pelvisDepthMult");
 		pelvisWidthMult 		= serializedObject.FindProperty("pelvisWidthMult");
 		pelvisLengthMult 		= serializedObject.FindProperty("pelvisLengthMult");
@@ -510,6 +535,12 @@ public class RUISSkeletonControllerEditor : Editor
 		handDepthMult 			= serializedObject.FindProperty("handDepthMult");
 		handWidthMult 			= serializedObject.FindProperty("handWidthMult");
 		handLengthMult 			= serializedObject.FindProperty("handLengthMult");
+		fingerRadiusMult		= serializedObject.FindProperty("fingerRadiusMult");
+		fingerLengthMult		= serializedObject.FindProperty("fingerLengthMult");
+		fingerTaperValue		= serializedObject.FindProperty("fingerTaperValue");
+		thumbRadiusMult		    = serializedObject.FindProperty("thumbRadiusMult");
+		thumbLengthMult		    = serializedObject.FindProperty("thumbLengthMult");
+		thumbTaperValue		    = serializedObject.FindProperty("thumbTaperValue");
 		thighRadiusMult 		= serializedObject.FindProperty("thighRadiusMult");
 		shinRadiusMult 			= serializedObject.FindProperty("shinRadiusMult");
 		footDepthMult 			= serializedObject.FindProperty("footDepthMult");
@@ -1809,26 +1840,76 @@ public class RUISSkeletonControllerEditor : Editor
 					EditorUtility.DisplayDialog(  "Unable to create Colliders", "Failed to add Colliders to body segments, because One of the following "
 												+ "\"Avatar Target Transforms\" is not assigned: Pelvis, Head, Left Shoulder, and Right Shoulder.", "OK");
 				else
+				{
+					Undo.RegisterFullObjectHierarchyUndo(skeletonController.gameObject, "Add Colliders To Body Parts undo");
 					skeletonController.AddCollidersToBodySegments((RUISSkeletonController.AvatarColliderType) avatarCollider.enumValueIndex, 
-																  colliderRadius.floatValue, colliderLengthOffset.floatValue, false			);
+																  colliderRadius.floatValue, colliderLengthOffset.floatValue, 
+																  createFingerColliders.boolValue, pelvisHasBoxCollider.boolValue, 
+																  chestHasBoxCollider.boolValue, headHasBoxCollider.boolValue, 
+																  handHasBoxCollider.boolValue, footHasBoxCollider.boolValue,
+																  fingerHasBoxCollider.boolValue											);
+				}
 			}
 		}
 
 		EditorGUILayout.Space();
 		EditorGUILayout.PropertyField(avatarCollider, new GUIContent("Base Collider Type", "The Collider type that is used for all body segments."));
-		EditorGUILayout.PropertyField(colliderRadius, new GUIContent("Base Radius", "This acts as the base radius for Capsule Colliders, and as a base "
-															+ "width and depth for Box Colliders (with the exception of Pelvis and Chest widths, which "
-															+ "are calculated from the Shoulder and Hip widths). These base values can be adjusted by "
-															+ "modifying the multpliers within the below \"Collider Size Adjustments\" section."));
-		EditorGUILayout.PropertyField(colliderLengthOffset, new GUIContent("Base Length Offset", ""));
+		EditorGUILayout.PropertyField(colliderRadius, new GUIContent("Base Radius", "Value in meters that acts as a common radius for Capsule "
+															+ "Colliders, and as a common width and depth for Box Colliders (with the exception of "
+															+ "Pelvis and Chest widths, which are calculated from the Shoulder and Hip distances). "
+															+ "These common dimensions can be adjusted for each body segment by modifying the " 
+															+ "multipliers within the below \"Collider Dimension Multipliers\" -section.\n\nModifying "
+															+ "this value does not automatically adjust the dimensions of existing Colliders; "
+															+ "you need to click the \"Add Colliders To Body Parts\" to see the effects."));
+		EditorGUILayout.PropertyField(colliderLengthOffset, new GUIContent("Base Length Offset", "Length offset (meters) that extends the length of "
+															+ "Colliders for Neck, Upper Arm, Forearm, Thigh, and Shin. This value can be negative."
+															+ "\nThe length of other body segment Colliders can be adjusted by modifying the "
+															+ "multipliers within the below \"Collider Dimension Multipliers\" -section.\n\nModifying "
+															+ "this value does not automatically adjust the dimensions of existing Colliders; "
+															+ "you need to click the \"Add Colliders To Body Parts\" to see the effects."));
+		EditorGUILayout.PropertyField(createFingerColliders, new GUIContent("Create Finger Colliders", "If enabled, then Colliders will be created for "
+															+ "Finger Target Transforms when pressing the \"Add Colliders To Body Parts\" -button."));
+
+		EditorGUILayout.Space();
+		EditorGUILayout.LabelField("Override Base Colliders", italicStyle);
+
+		EditorGUIUtility.labelWidth = Screen.width / 2.8f;
+		EditorGUILayout.BeginHorizontal();
+		EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 3));
+		EditorGUILayout.PropertyField(pelvisHasBoxCollider, new GUIContent("Pelvis Box Collider",  "Force Pelvis (abdomen) to have a Box Collider, "
+																								 + "overriding the \"Base Collider Type\" setting."));
+		EditorGUILayout.PropertyField(chestHasBoxCollider,  new GUIContent("Chest Box Collider",   "Force Chest to have a Box Collider, "
+																								 + "overriding the \"Base Collider Type\" setting."));
+		EditorGUILayout.PropertyField(headHasBoxCollider,   new GUIContent("Head Box Collider",    "Force Head to have a Box Collider, "
+																								 + "overriding the \"Base Collider Type\" setting."));
+
+		EditorGUILayout.EndVertical();
+
+		EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 3));
+		EditorGUILayout.PropertyField(handHasBoxCollider,   new GUIContent("Hand Box Colliders",   "Force Hands (palms) to have a Box Colliders, "
+																								 + "overriding the \"Base Collider Type\" setting."));
+		EditorGUILayout.PropertyField(footHasBoxCollider,   new GUIContent("Foot Box Colliders",   "Force Feet to have a Box Colliders, "
+																								 + "overriding the \"Base Collider Type\" setting."));
+		EditorGUILayout.PropertyField(fingerHasBoxCollider, new GUIContent("Finger Box Colliders", "Force Fingers (including Thumbs) to have a "
+																								 + "Box Colliders, overriding the \"Base Collider "
+																								 + "Type\" setting."));
+		
+		EditorGUILayout.EndVertical();
+		EditorGUILayout.EndHorizontal();
+		EditorGUIUtility.labelWidth = 0;
 
 		EditorGUILayout.Space();
 
-		showColliderAdjustments = EditorGUILayout.Foldout(showColliderAdjustments, "Collider Size Adjustments", true, boldFoldoutStyle);
+		showColliderAdjustments = EditorGUILayout.Foldout(showColliderAdjustments, "Collider Dimension Multipliers", true, boldFoldoutStyle);
 		if(showColliderAdjustments)
 		{
-			EditorGUIUtility.labelWidth = Screen.width / 3.4f;
-			EditorGUIUtility.fieldWidth = Screen.width / 10f;
+			GUI.enabled = false;
+			EditorStyles.textField.wordWrap = true;
+			EditorGUILayout.TextArea("Changing these values does not automatically modify the existing Colliders. Click the the \"Add Colliders To "
+								   + "Body Parts\" -button to see the changes.");
+			GUI.enabled = true;
+			EditorGUIUtility.labelWidth = Screen.width / 3.6f;
+			EditorGUIUtility.fieldWidth = Screen.width / 9.7f;
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
 			EditorGUILayout.PropertyField(pelvisWidthMult, 	  new GUIContent("Pelvis Width", 	 "Pelvis (abdomen) Box Collider's width / Capsule "
@@ -1887,6 +1968,17 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.PropertyField(handDepthMult, 	  new GUIContent("Hand Depth", 		 "Hand (palm) Box Collider's depth multiplier. This "
 																				+ "setting only has effect if Hand has a Box Collider."));
 			EditorGUILayout.PropertyField(handLengthMult, 	  new GUIContent("Hand Length", 	 "Hand (palm) Collider's length multiplier."));
+
+			EditorGUILayout.Space();
+			EditorGUILayout.PropertyField(fingerRadiusMult,   new GUIContent("Finger Radius",	 "Finger Capsule Colliders' radius multiplier, which also "
+																				+ "acts as a width and depth multiplier if Box Collider is used instead. "
+																				+ "Affects all fingers except thumbs."));
+			EditorGUILayout.PropertyField(fingerLengthMult,   new GUIContent("Finger Length", 	 "Finger Colliders' length multiplier. Affects all fingers "
+																				+ "except thumbs."));
+			EditorGUILayout.PropertyField(fingerTaperValue,   new GUIContent("Finger Taper", 	 "Finger Colliders' taper factor, which is used to "
+																				+ "multiply the radius of subsequent finger phalanges. A value of 1 or "
+																				+ "slightly below is recommended. Affects all fingers except thumbs."));
+
 			EditorGUILayout.EndVertical();
 
 			EditorGUILayout.BeginVertical(GUILayout.Width(Screen.width / 2 - 23));
@@ -1900,6 +1992,14 @@ public class RUISSkeletonControllerEditor : Editor
 																				+ "only has effect if Foot has a Box Collider."));
 			EditorGUILayout.PropertyField(footLengthMult, 	  new GUIContent("Foot Length", 	 "Foot Collider's length multiplier."));
 
+			EditorGUILayout.Space();
+			EditorGUILayout.PropertyField(thumbRadiusMult,   new GUIContent("Thumb Radius",		 "Thumb Capsule Colliders' radius multiplier, which also "
+																				+ "acts as a width and depth multiplier if Box Collider is used instead."));
+			EditorGUILayout.PropertyField(thumbLengthMult,   new GUIContent("Thumb Length", 	 "Thumb Colliders' length multiplier."));
+			EditorGUILayout.PropertyField(thumbTaperValue,   new GUIContent("Thumb Taper",		 "Thumb Colliders' taper factor, which is used to "
+																				+ "multiply the radius of subsequent thumb phalanges. A value of 1 or "
+																				+ "slightly below is recommended."));
+			
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
 

@@ -449,8 +449,15 @@ public class RUISSkeletonController : MonoBehaviour
 	public Quaternion clenchedLeftThumbIP;
 
 	public AvatarColliderType avatarCollider = AvatarColliderType.CapsuleCollider;
-	public float colliderRadius = 0.05f;
+	public float colliderRadius = 0.04f;
 	public float colliderLengthOffset = 0;
+	public bool createFingerColliders = true;
+	public bool pelvisHasBoxCollider  = true;
+	public bool chestHasBoxCollider   = true;
+	public bool headHasBoxCollider    = true;
+	public bool handHasBoxCollider    = true;
+	public bool footHasBoxCollider    = true;
+	public bool fingerHasBoxCollider  = true;
 
 	public bool keepPlayModeChanges = true; // This is only for the custom inspector to use
 
@@ -3256,33 +3263,46 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public float pelvisDepthMult 	= 2.0f;
 	public float pelvisWidthMult 	= 1.2f;
-	public float pelvisLengthMult 	= 0.1f;
+	public float pelvisLengthMult 	= 1.0f;
 	public float chestDepthMult 	= 2.0f;
 	public float chestWidthMult 	= 1.0f;
-	public float chestLengthMult 	= 0.0f;
+	public float chestLengthMult 	= 1.0f;
 	public float neckRadiusMult 	= 1.0f;
 	public float headDepthMult 		= 2.0f;
 	public float headWidthMult 		= 1.5f;
-	public float headLengthMult 	= 0.0f;
+	public float headLengthMult 	= 1.0f;
 	public float shoulderRadiusMult = 1.1f;
 	public float elbowRadiusMult 	= 1.0f;
 	public float handDepthMult 		= 0.5f;
-	public float handWidthMult 		= 1.2f;
-	public float handLengthMult 	= 0.0f;
+	public float handWidthMult 		= 1.0f;
+	public float handLengthMult 	= 1.0f;
+	public float fingerRadiusMult   = 1.0f;
+	public float fingerLengthMult   = 1.2f;
+	public float fingerTaperValue   = 0.9f;
+	public float thumbRadiusMult    = 1.5f;
+	public float thumbLengthMult    = 1.2f;
+	public float thumbTaperValue    = 0.7f;
 	public float thighRadiusMult 	= 1.5f;
 	public float shinRadiusMult 	= 1.0f;
 	public float footDepthMult 		= 0.7f;
 	public float footWidthMult 		= 1.2f;
-	public float footLengthMult 	= 0.0f;
+	public float footLengthMult 	= 1.0f;
 
 	/// <summary>
 	/// Adds colliders to body segments in Edit or Play Mode. The avatar should be in T- or A-pose.
 	/// </summary>
 	/// <param name="colliderType">Collider type</param>
-	/// <param name="span">Body segment radius</param>
-	/// <param name="lengthOffset">Length offset</param>
-	/// <param name="fingerColliders">Finger colliders</param>
-	public void AddCollidersToBodySegments(AvatarColliderType colliderType, float span, float lengthOffset, bool fingerColliders)
+	/// <param name="span">Body segment radius (meters)</param>
+	/// <param name="lengthOffset">Length offset (meters) that extends Neck, Upper Arm, Forearm, Thigh, and Shin Colliders.</param>
+	/// <param name="fingerColliders">Create finger colliders if true</param>
+	/// <param name="pelvisHasBox">If true, colliderType is overriden, and Pelvis will have Box Collider. Default value is false.</param>
+	/// <param name="chestHasBox">If true, colliderType is overriden, and Chest will have Box Collider. Default value is false.</param>
+	/// <param name="headHasBox">If true, colliderType is overriden, and Head will have Box Collider. Default value is false.</param>
+	/// <param name="handHasBox">If true, colliderType is overriden, and Hands will have Box Colliders. Default value is false.</param>
+	/// <param name="footHasBox">If true, colliderType is overriden, and Feet will have Box Colliders. Default value is false.</param>
+	public void AddCollidersToBodySegments( AvatarColliderType colliderType, float span, float lengthOffset, bool fingerColliders, 
+											bool pelvisHasBox = default(bool), bool chestHasBox = default(bool), bool headHasBox = default(bool), 
+											bool handHasBox = default(bool), bool footHasBox = default(bool), bool fingerHasBox = default(bool)   )
 	{
 		if(!torso || !head || !leftShoulder || !rightShoulder)
 		{
@@ -3290,6 +3310,12 @@ public class RUISSkeletonController : MonoBehaviour
 							+ "Unable to add Colliders to body segments!");
 			return;
 		}
+		AvatarColliderType pelvisType = pelvisHasBox? AvatarColliderType.BoxCollider : colliderType;
+		AvatarColliderType chestType  =  chestHasBox? AvatarColliderType.BoxCollider : colliderType;
+		AvatarColliderType headType   =   headHasBox? AvatarColliderType.BoxCollider : colliderType;
+		AvatarColliderType handType   =   handHasBox? AvatarColliderType.BoxCollider : colliderType;
+		AvatarColliderType footType   =   footHasBox? AvatarColliderType.BoxCollider : colliderType;
+		AvatarColliderType fingerType = fingerHasBox? AvatarColliderType.BoxCollider : colliderType;
 
 		Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
 		Vector3 depthAxis = Vector3.Cross(head.position - torso.position, rightShoulder.position - leftShoulder.position);
@@ -3301,63 +3327,116 @@ public class RUISSkeletonController : MonoBehaviour
 		if(leftHip && rightHip)
 			pelvisWidth = Vector3.Distance(Vector3.Scale(rightHip.position, scaler), Vector3.Scale(leftHip.position, scaler));
 
-		CreateCollider(torso, 		chest, colliderType, depthAxis, 0.5f * pelvisWidthMult *  pelvisWidth, pelvisDepthMult * span, pelvisLengthMult);
-		CreateCollider(chest, 		neck,  colliderType, depthAxis, 0.5f * chestWidthMult * shoulderWidth,  chestDepthMult * span, chestLengthMult);
-		CreateCollider(neck, 		head,  colliderType, depthAxis, 				neckRadiusMult * span,	neckRadiusMult * span, lengthOffset);
+		CreateCollider(torso, 		chest,   pelvisType, depthAxis, 0.5f * pelvisWidthMult *  pelvisWidth, pelvisDepthMult * span, 0, pelvisLengthMult);
+		CreateCollider(chest, 		 neck,    chestType, depthAxis, 0.5f * chestWidthMult * shoulderWidth,  chestDepthMult * span, 0, chestLengthMult );
+		CreateCollider(neck, 		 head, colliderType, depthAxis, 		   neckRadiusMult * span, 	    neckRadiusMult * span, lengthOffset, 1    );
 
-		CreateCollider(rightShoulder, 	rightElbow, colliderType, depthAxis, shoulderRadiusMult * span, shoulderRadiusMult * span, lengthOffset);
-		CreateCollider(rightElbow,   	rightHand, 	colliderType, depthAxis,    elbowRadiusMult * span,    elbowRadiusMult * span, lengthOffset);
-		CreateCollider(leftShoulder, 	leftElbow, 	colliderType, depthAxis, shoulderRadiusMult * span, shoulderRadiusMult * span, lengthOffset);
-		CreateCollider(leftElbow, 		leftHand, 	colliderType, depthAxis,    elbowRadiusMult * span,    elbowRadiusMult * span, lengthOffset);
+		CreateCollider(rightShoulder, rightElbow, colliderType, depthAxis, shoulderRadiusMult * span, shoulderRadiusMult * span, lengthOffset, 1);
+		CreateCollider(rightElbow,     rightHand, colliderType, depthAxis,    elbowRadiusMult * span,    elbowRadiusMult * span, lengthOffset, 1);
+		CreateCollider(leftShoulder,   leftElbow, colliderType, depthAxis, shoulderRadiusMult * span, shoulderRadiusMult * span, lengthOffset, 1);
+		CreateCollider(leftElbow, 		leftHand, colliderType, depthAxis,    elbowRadiusMult * span,    elbowRadiusMult * span, lengthOffset, 1);
 
-		CreateCollider(rightHip,  		rightKnee, 	colliderType, depthAxis,    thighRadiusMult * span,    thighRadiusMult * span, lengthOffset);
-		CreateCollider(rightKnee, 		rightFoot, 	colliderType, depthAxis,     shinRadiusMult * span,     shinRadiusMult * span, lengthOffset);
-		CreateCollider(leftHip,   		leftKnee, 	colliderType, depthAxis,    thighRadiusMult * span,    thighRadiusMult * span, lengthOffset);
-		CreateCollider(leftKnee,  		leftFoot, 	colliderType, depthAxis,     shinRadiusMult * span,     shinRadiusMult * span, lengthOffset);
+		CreateCollider(rightHip,  	   rightKnee, colliderType, depthAxis,    thighRadiusMult * span,    thighRadiusMult * span, lengthOffset, 1);
+		CreateCollider(rightKnee, 	   rightFoot, colliderType, depthAxis,     shinRadiusMult * span,     shinRadiusMult * span, lengthOffset, 1);
+		CreateCollider(leftHip,   		leftKnee, colliderType, depthAxis,    thighRadiusMult * span,    thighRadiusMult * span, lengthOffset, 1);
+		CreateCollider(leftKnee,  		leftFoot, colliderType, depthAxis,     shinRadiusMult * span,     shinRadiusMult * span, lengthOffset, 1);
 
 		if(neck)
 			headAxis = 0.3f * (head.position - torso.position).magnitude * (head.position - neck.position).normalized;
 		else
 			headAxis = 0.3f * (head.position - torso.position);
-		CreateCollider(head, null, colliderType, depthAxis, headWidthMult * span, headDepthMult * span, headLengthMult, headAxis);
+		CreateCollider(head, null, headType, depthAxis, headWidthMult * span, headDepthMult * span, 0, headLengthMult, headAxis);
+
 
 		if(rightFoot && rightFoot.childCount > 0)
 			footAxis = (rightFoot.GetChild(0).position - rightFoot.position);
 		else // If foot doesn't have child transforms, optional lengthDirection will get direction from depthAxis and length from 0.5 * shoulderWidth
 			footAxis = 0.5f * shoulderWidth * depthAxis.normalized;
-		CreateCollider(rightFoot, null,	colliderType, Vector3.Cross(footAxis, shoulderAxis), footWidthMult * span, footDepthMult * span, footLengthMult, footAxis);
+		CreateCollider(rightFoot, null,	footType, Vector3.Cross(footAxis, shoulderAxis), footWidthMult * span, footDepthMult * span, 0, footLengthMult, footAxis);
 
 		if(leftFoot && leftFoot.childCount > 0)
 			footAxis =  (leftFoot.GetChild(0).position  - leftFoot.position);
 		else
 			footAxis = 0.5f * shoulderWidth * depthAxis.normalized;
-		CreateCollider(leftFoot,  null, colliderType, Vector3.Cross(footAxis, shoulderAxis), footWidthMult * span, footDepthMult * span, footLengthMult, footAxis);
+		CreateCollider(leftFoot,  null, footType, Vector3.Cross(footAxis, shoulderAxis), footWidthMult * span, footDepthMult * span, 0, footLengthMult, footAxis);
 
+
+		handAxis = 0.1f * Vector3.right; // Default right hand length axis
 		if(rightHand && rightElbow)
 		{
 			if(rightMiddleF)
 				handAxis = (rightMiddleF.position - rightHand.position).magnitude * (rightHand.position - rightElbow.position).normalized;
 			else
 				handAxis = 0.3f * (rightHand.position - rightElbow.position);
-			CreateCollider(rightHand, null, colliderType, Vector3.Cross(handAxis, depthAxis), handWidthMult * span, handDepthMult * span, handLengthMult, handAxis);
+			CreateCollider(rightHand, null, handType, Vector3.Cross(handAxis, depthAxis), handWidthMult * span, handDepthMult * span, 0, handLengthMult, handAxis);
 		}
 		else
 			Debug.LogWarning("Could not create Collider for Right Hand: Either Right Elbow or Right Hand Target Transform is not assigned.");
 
+		Vector3 thumbLengthAxis;
+		float thumbRadius  =  thumbRadiusMult * 0.24f * handWidthMult * span;
+		float fingerRadius = fingerRadiusMult * 0.24f * handWidthMult * span;
+
+		// Assign colliders to finger phalanges of right hand
+		if(fingerColliders)
+		{
+			thumbLengthAxis = handAxis.magnitude * Vector3.Cross(depthAxis, handAxis).normalized;
+			if(rightThumb)
+				IterateFingerColliders(2, rightThumb,   fingerType,  thumbRadius,  thumbLengthMult, depthAxis, thumbLengthAxis, thumbTaperValue);
+			if(rightIndexF)
+				IterateFingerColliders(2, rightIndexF,  fingerType, fingerRadius, fingerLengthMult, depthAxis, handAxis, fingerTaperValue);
+			if(rightMiddleF)
+				IterateFingerColliders(2, rightMiddleF, fingerType, fingerRadius, fingerLengthMult, depthAxis, handAxis, fingerTaperValue);
+			if(rightRingF)
+				IterateFingerColliders(2, rightRingF,   fingerType, fingerRadius, fingerLengthMult, depthAxis, handAxis, fingerTaperValue);
+			if(rightLittleF)
+				IterateFingerColliders(2, rightLittleF, fingerType, fingerRadius, fingerLengthMult, depthAxis, handAxis, fingerTaperValue);
+		}
+
+
+		handAxis = -0.1f * Vector3.right; // Default left hand length axis
 		if(leftHand && leftElbow)
 		{
 			if(leftMiddleF)
 				handAxis = (leftMiddleF.position - leftHand.position).magnitude * (leftHand.position - leftElbow.position).normalized;
 			else
 				handAxis = 0.3f * (leftHand.position - leftElbow.position);
-			CreateCollider(leftHand, null, colliderType, Vector3.Cross(handAxis, depthAxis), handWidthMult * span, handDepthMult * span, handLengthMult, handAxis);
+			CreateCollider(leftHand, null, handType, Vector3.Cross(handAxis, depthAxis), handWidthMult * span, handDepthMult * span, 0, handLengthMult, handAxis);
 		}
 		else
 			Debug.LogWarning("Could not create Collider for Left Hand: Either Left Elbow or Left Hand Target Transform is not assigned.");
+
+		// Assign colliders to finger phalanges of left hand
+		if(fingerColliders)
+		{
+			thumbLengthAxis = handAxis.magnitude * Vector3.Cross(handAxis, depthAxis).normalized;
+			if(leftThumb)
+				IterateFingerColliders(2, leftThumb,   fingerType,  thumbRadius,  thumbLengthMult, depthAxis, thumbLengthAxis, thumbTaperValue);
+			if(leftIndexF)
+				IterateFingerColliders(2, leftIndexF,  fingerType, fingerRadius, fingerLengthMult, depthAxis, handAxis, fingerTaperValue);
+			if(leftMiddleF)
+				IterateFingerColliders(2, leftMiddleF, fingerType, fingerRadius, fingerLengthMult, depthAxis, handAxis, fingerTaperValue);
+			if(leftRingF)
+				IterateFingerColliders(2, leftRingF,   fingerType, fingerRadius, fingerLengthMult, depthAxis, handAxis, fingerTaperValue);
+			if(leftLittleF)
+				IterateFingerColliders(2, leftLittleF, fingerType, fingerRadius, fingerLengthMult, depthAxis, handAxis, fingerTaperValue);
+		}
 	}
 
-	private void CreateCollider(Transform startJoint, Transform endJoint, AvatarColliderType colliderType, Vector3 depthDirection, 
-								float width, float depth, float lengthOffset, Vector3 lengthDirection = default(Vector3)			)
+	/// <summary>
+	/// Creates a Collider for the startJoint Transform.
+	/// </summary>
+	/// <param name="startJoint">Bone start joint.</param>
+	/// <param name="endJoint">Bone end joint, can be null.</param>
+	/// <param name="colliderType">Collider type.</param>
+	/// <param name="depthDirection">Depth direction.</param>
+	/// <param name="width">Width (meters)</param>
+	/// <param name="depth">Depth (meters)</param>
+	/// <param name="lengthOffset">Length offset (meters)</param>
+	/// <param name="lengthMultiplier">Length multiplier.</param>
+	/// <param name="lengthVector">Bone direction and length if endJoint is null, default value is (0,0,0).</param>
+	public void CreateCollider( Transform startJoint, Transform endJoint, AvatarColliderType colliderType, Vector3 depthDirection, 
+								float width, float depth, float lengthOffset, float lengthMultiplier, Vector3 lengthVector = default(Vector3))
 	{
 		if(!startJoint)
 			return;
@@ -3373,14 +3452,15 @@ public class RUISSkeletonController : MonoBehaviour
 
 		if(endJoint)
 		{
-			boneLength = Vector3.Distance(Vector3.Scale(startJoint.position, scaler), Vector3.Scale(endJoint.position, scaler)) + lengthOffset;
+			boneLength = lengthMultiplier * Vector3.Distance(Vector3.Scale(startJoint.position, scaler), Vector3.Scale(endJoint.position, scaler)) 
+							+ lengthOffset;
 			lengthAxis = endJoint.position - startJoint.position;
 			boneCenter = 0.5f * (endJoint.position + startJoint.position);
 		}
 		else
 		{
-			lengthAxis = lengthDirection;
-			boneLength = Vector3.Scale(lengthDirection, scaler).magnitude + lengthOffset;
+			lengthAxis = lengthVector;
+			boneLength = lengthMultiplier * Vector3.Scale(lengthVector, scaler).magnitude + lengthOffset;
 			boneCenter = startJoint.position + 0.5f * lengthAxis;
 		}
 
@@ -3445,13 +3525,19 @@ public class RUISSkeletonController : MonoBehaviour
 					Destroy(destroyCollider);
 			}
 		}
-			
+
 		// Adjust parameters
 		switch(colliderType)
 		{
 			case AvatarColliderType.BoxCollider:
 				if(!collider)
+				{
+#if UNITY_EDITOR
+					collider = UnityEditor.Undo.AddComponent<BoxCollider>(startJoint.gameObject);
+#elif
 					collider = startJoint.gameObject.AddComponent<BoxCollider>();
+#endif
+				}
 				BoxCollider box = collider as BoxCollider;
 				box.center = startJoint.InverseTransformPoint(boneCenter); 
 				// Below doesn't take into account cumulative parent scales
@@ -3463,7 +3549,13 @@ public class RUISSkeletonController : MonoBehaviour
 				break;
 			case AvatarColliderType.CapsuleCollider:
 				if(!collider)
+				{
+#if UNITY_EDITOR
+					collider = UnityEditor.Undo.AddComponent<CapsuleCollider>(startJoint.gameObject);
+#elif
 					collider = startJoint.gameObject.AddComponent<CapsuleCollider>();
+#endif
+				}
 				CapsuleCollider capsule = collider as CapsuleCollider;
 				capsule.direction = lengthAxisId;
 				capsule.height = boneLength; // Doesn't take into account cumulative parent scales	
@@ -3479,6 +3571,28 @@ public class RUISSkeletonController : MonoBehaviour
 		return;
 	}
 
+
+	public void IterateFingerColliders(int iteration, Transform startJoint, AvatarColliderType colliderType, float radius, 
+									   float lengthMultiplier, Vector3 depthDirection, Vector3 lengthVector, float taperValue)
+	{
+		Vector3 newLengthDirection;
+		if(startJoint.childCount > 0)
+		{
+			Transform endJoint = startJoint.GetChild(0);
+			newLengthDirection = lengthVector.magnitude * (endJoint.position - startJoint.position).normalized;
+			CreateCollider(startJoint, endJoint, colliderType, depthDirection, radius, radius, 0, lengthMultiplier);
+			if(iteration > 0)
+				IterateFingerColliders(	iteration - 1, endJoint, colliderType, taperValue * radius, lengthMultiplier, 
+										depthDirection, newLengthDirection, taperValue								 );
+		}
+		else
+		{
+			// Phalanx Collider length if endJoint is not found: firstly 1.0 (iteration==2), secondly 0.5 (iteration==1), thirdly 0.25 (iteration==0)
+			newLengthDirection = Mathf.Min(1f, Mathf.Pow(2, iteration - 2)) * lengthVector;
+			CreateCollider(startJoint, null, colliderType, depthDirection, radius, radius, 0, lengthMultiplier, newLengthDirection);
+		}
+	}
+		
 	// If memory serves me correctly, this method doesn't work quite right
 	private Quaternion LimitZRotation(Quaternion inputRotation, float rollMinimum, float rollMaximum)
 	{
