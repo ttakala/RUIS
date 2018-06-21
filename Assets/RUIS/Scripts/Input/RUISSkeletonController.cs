@@ -3306,8 +3306,19 @@ public class RUISSkeletonController : MonoBehaviour
 	{
 		if(!torso || !head || !leftShoulder || !rightShoulder)
 		{
-			Debug.LogError(   "One of the following \"Avatar Target Transforms\" is not assigned: Pelvis, Head, Left Shoulder, and Right Shoulder. "
-							+ "Unable to add Colliders to body segments!");
+			string missingBones = "";
+			if(!torso)
+				missingBones += "Pelvis, ";
+			if(!head)
+				missingBones += "Head, ";
+			if(!leftShoulder)
+				missingBones += "Left Shoulder, ";
+			if(!rightShoulder)
+				missingBones += "Right Shoulder, ";
+			if(missingBones.Length > 2)
+				missingBones = missingBones.Substring(0, missingBones.Length - 2);
+			Debug.LogError(   "Failed to add Colliders to body segments, because the following "
+							+ "\"Avatar Target Transforms\" are not assigned: " + missingBones + ".");
 			return;
 		}
 		AvatarColliderType pelvisType = pelvisHasBox? AvatarColliderType.BoxCollider : colliderType;
@@ -3319,13 +3330,28 @@ public class RUISSkeletonController : MonoBehaviour
 
 		Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
 		Vector3 depthAxis = Vector3.Cross(head.position - torso.position, rightShoulder.position - leftShoulder.position);
-		float shoulderWidth = Vector3.Distance(Vector3.Scale(rightShoulder.position, scaler), Vector3.Scale(leftShoulder.position, scaler));
+
+		float shoulderWidth = Vector3.Distance(rightShoulder.position, leftShoulder.position);
+		if(chest)
+		{
+			shoulderWidth = chest.transform.TransformVector(Vector3.Scale(
+								chest.transform.InverseTransformVector(rightShoulder.position - leftShoulder.position), 
+								new Vector3(1/chest.transform.lossyScale.x, 1/chest.transform.lossyScale.y, 1/chest.transform.lossyScale.z))).magnitude;
+		}
 		Vector3 handAxis, footAxis, headAxis;
 		Vector3 shoulderAxis = rightShoulder.position - leftShoulder.position;
 
 		float pelvisWidth = 0.8f * shoulderWidth;
 		if(leftHip && rightHip)
-			pelvisWidth = Vector3.Distance(Vector3.Scale(rightHip.position, scaler), Vector3.Scale(leftHip.position, scaler));
+		{
+			pelvisWidth = Vector3.Distance(rightHip.position, leftHip.position);
+			if(torso)
+			{
+				pelvisWidth = torso.transform.TransformVector(Vector3.Scale(torso.transform.InverseTransformVector(rightHip.position - leftHip.position), 
+								new Vector3(1/torso.transform.lossyScale.x, 1/torso.transform.lossyScale.y, 1/torso.transform.lossyScale.z))).magnitude;
+			}
+				
+		}
 
 		CreateCollider(torso, 		chest,   pelvisType, depthAxis, 0.5f * pelvisWidthMult *  pelvisWidth, pelvisDepthMult * span, 0, pelvisLengthMult);
 		CreateCollider(chest, 		 neck,    chestType, depthAxis, 0.5f * chestWidthMult * shoulderWidth,  chestDepthMult * span, 0, chestLengthMult );
@@ -3441,7 +3467,6 @@ public class RUISSkeletonController : MonoBehaviour
 		if(!startJoint)
 			return;
 
-		Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
 		Vector3 lengthAxis = startJoint.right;
 		Vector3 boneCenter = Vector3.zero;
 		Vector3 boundingBox = Vector3.one;
@@ -3450,19 +3475,31 @@ public class RUISSkeletonController : MonoBehaviour
 		int widthAxisId  = 2; 
 		float boneLength = 0.5f;
 
+		Vector3 scaler = new Vector3(1 / transform.lossyScale.x, 1 / transform.lossyScale.y, 1 / transform.lossyScale.z);
+//		Vector3 cumulativeScale = new Vector3(	transform.lossyScale.x / startJoint.lossyScale.x, transform.lossyScale.y / startJoint.lossyScale.y, 
+//												transform.lossyScale.z / startJoint.lossyScale.z													);
+//		Vector3 startInvLossyScale = new Vector3(1 / startJoint.lossyScale.x, 1 / startJoint.lossyScale.y, 1 / startJoint.lossyScale.z);
+		
 		if(endJoint)
 		{
-			boneLength = lengthMultiplier * Vector3.Distance(Vector3.Scale(startJoint.position, scaler), Vector3.Scale(endJoint.position, scaler)) 
-							+ lengthOffset;
-			lengthAxis = endJoint.position - startJoint.position;
+//			boneLength = lengthMultiplier * Vector3.Scale(transform.InverseTransformVector(endJoint.position - startJoint.position), scaler).magnitude 
+//				+ lengthOffset;
+			boneLength = lengthMultiplier * (endJoint.position - startJoint.position).magnitude + lengthOffset;
 			boneCenter = 0.5f * (endJoint.position + startJoint.position);
+			lengthAxis = endJoint.position - startJoint.position;
 		}
 		else
 		{
+//			boneLength = lengthMultiplier * Vector3.Scale(transform.InverseTransformVector(lengthVector), scaler).magnitude + lengthOffset;
+			boneLength = lengthMultiplier * lengthVector.magnitude + lengthOffset;
+			boneCenter = startJoint.position + 0.5f * lengthVector;
 			lengthAxis = lengthVector;
-			boneLength = lengthMultiplier * Vector3.Scale(lengthVector, scaler).magnitude + lengthOffset;
-			boneCenter = startJoint.position + 0.5f * lengthAxis;
 		}
+
+//		Vector3 widthAxis  = Vector3.Cross(lengthAxis, depthDirection);
+
+		// Apply scaling that affects the lengthAxis direction if they are non-uniform
+		lengthAxis = transform.TransformVector(Vector3.Scale(transform.InverseTransformVector(lengthAxis), scaler));
 
 		lengthAxisId = FindClosestLocalAxis(startJoint, lengthAxis);
 		depthAxisId  = FindClosestLocalAxis(startJoint, depthDirection);
@@ -3473,9 +3510,9 @@ public class RUISSkeletonController : MonoBehaviour
 		while(widthAxisId == depthAxisId || widthAxisId == lengthAxisId)
 			widthAxisId = (widthAxisId + 1) % 3;
 
-		boundingBox[lengthAxisId] = boneLength;
-		boundingBox[depthAxisId]  = 2 * depth;
-		boundingBox[widthAxisId]  = 2 * width;
+		boundingBox[lengthAxisId] = boneLength / startJoint.lossyScale[lengthAxisId];
+		boundingBox[depthAxisId]  = 2 * depth; // / startJoint.lossyScale[depthAxisId];
+		boundingBox[widthAxisId]  = 2 * width; // / startJoint.lossyScale[widthAxisId];
 
 		Collider collider = null;
 		Collider[] allColliders = startJoint.GetComponents<Collider>();
@@ -3526,6 +3563,17 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 
+		// Calculate Box Collider size / Capsule Collider radius in localScale
+		// Below doesn't take into account cumulative parent scales
+		//Vector3 boxSize = Vector3.Scale(boundingBox, 
+		//								  new Vector3(1f/startJoint.localScale.x, 1f/startJoint.localScale.y, 1f/startJoint.localScale.z));
+		Vector3 boxSize = boundingBox;
+//		Vector3 inverseScale = startJoint.InverseTransformVector(Vector3.one);
+//		inverseScale.Set(1f/inverseScale.x, 1f/inverseScale.y, 1f/inverseScale.z);
+		boxSize.Set(Mathf.Max(Mathf.Abs(boxSize.x), float.Epsilon), Mathf.Max(Mathf.Abs(boxSize.y), float.Epsilon), 
+					Mathf.Max(Mathf.Abs(boxSize.z), float.Epsilon));
+//		boxSize = Vector3.Scale(inverseScale, boxSize); // This should take into account cumulative parent scales
+
 		// Adjust parameters
 		switch(colliderType)
 		{
@@ -3540,11 +3588,6 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 				BoxCollider box = collider as BoxCollider;
 				box.center = startJoint.InverseTransformPoint(boneCenter); 
-				// Below doesn't take into account cumulative parent scales
-				Vector3 boxSize = Vector3.Scale(boundingBox, 
-												new Vector3(1f/startJoint.localScale.x, 1f/startJoint.localScale.y, 1f/startJoint.localScale.z));
-				boxSize.Set(Mathf.Max(Mathf.Abs(boxSize.x), float.Epsilon), Mathf.Max(Mathf.Abs(boxSize.y), float.Epsilon), 
-							Mathf.Max(Mathf.Abs(boxSize.z), float.Epsilon));
 				box.size = boxSize;
 				break;
 			case AvatarColliderType.CapsuleCollider:
@@ -3558,20 +3601,31 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 				CapsuleCollider capsule = collider as CapsuleCollider;
 				capsule.direction = lengthAxisId;
-				capsule.height = boneLength; // Doesn't take into account cumulative parent scales	
+				capsule.height = boxSize[lengthAxisId]; //boneLength; // Doesn't take into account cumulative parent scales	
 				capsule.center = startJoint.InverseTransformPoint(boneCenter);
+				capsule.radius = 0.25f * (boxSize[depthAxisId] + boxSize[widthAxisId]); // boundingBox had 2 * width and 2 * depth, take average
 				// Below doesn't take into account cumulative parent scales	
-				if(lengthAxisId == 0)
-					capsule.radius = Mathf.Max(Mathf.Abs(width / startJoint.localScale.y), float.Epsilon);
-				else
-					capsule.radius = Mathf.Max(Mathf.Abs(width / startJoint.localScale.x), float.Epsilon);
+				//				if(lengthAxisId == 0)
+				//					capsule.radius = Mathf.Max(Mathf.Abs(width / startJoint.localScale.y), float.Epsilon);
+				//				else
+				//					capsule.radius = Mathf.Max(Mathf.Abs(width / startJoint.localScale.x), float.Epsilon);
 				break;
 		}
 
 		return;
 	}
 
-
+	/// <summary>
+	/// Creates Colliders for a finger when argument startJoint points to the finger root Transform
+	/// </summary>
+	/// <param name="iteration">Iteration, this value should be 2 (number of phalanges - 1) when startJoint points to the finger root.</param>
+	/// <param name="startJoint">Start joint.</param>
+	/// <param name="colliderType">Collider type.</param>
+	/// <param name="radius">Radius.</param>
+	/// <param name="lengthMultiplier">Length multiplier.</param>
+	/// <param name="depthDirection">Depth direction.</param>
+	/// <param name="lengthVector">Length vector.</param>
+	/// <param name="taperValue">Taper value; Collider radius multiplier for each successive finger phalanx iteration</param>
 	public void IterateFingerColliders(int iteration, Transform startJoint, AvatarColliderType colliderType, float radius, 
 									   float lengthMultiplier, Vector3 depthDirection, Vector3 lengthVector, float taperValue)
 	{

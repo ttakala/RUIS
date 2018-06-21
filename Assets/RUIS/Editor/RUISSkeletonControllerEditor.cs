@@ -1837,8 +1837,21 @@ public class RUISSkeletonControllerEditor : Editor
 			{
 				if(			   !torsoBone.objectReferenceValue || 		   !headBone.objectReferenceValue 
 					||  !leftShoulderBone.objectReferenceValue || !rightShoulderBone.objectReferenceValue)
-					EditorUtility.DisplayDialog(  "Unable to create Colliders", "Failed to add Colliders to body segments, because One of the following "
-												+ "\"Avatar Target Transforms\" is not assigned: Pelvis, Head, Left Shoulder, and Right Shoulder.", "OK");
+				{
+					string missingBones = "";
+					if(!torsoBone.objectReferenceValue)
+						missingBones += "Pelvis, ";
+					if(!headBone.objectReferenceValue)
+						missingBones += "Head, ";
+					if(!leftShoulderBone.objectReferenceValue)
+						missingBones += "Left Shoulder, ";
+					if(!rightShoulderBone.objectReferenceValue)
+						missingBones += "Right Shoulder, ";
+					if(missingBones.Length > 2)
+						missingBones = missingBones.Substring(0, missingBones.Length - 2);
+					EditorUtility.DisplayDialog(  "Unable to create Colliders", "Failed to add Colliders to body segments, because the following "
+												+ "\"Avatar Target Transforms\" are not assigned: " + missingBones + ".", "OK");
+				}
 				else
 				{
 					Undo.RegisterFullObjectHierarchyUndo(skeletonController.gameObject, "Add Colliders To Body Parts undo");
@@ -1972,7 +1985,8 @@ public class RUISSkeletonControllerEditor : Editor
 			EditorGUILayout.Space();
 			EditorGUILayout.PropertyField(fingerRadiusMult,   new GUIContent("Finger Radius",	 "Finger Capsule Colliders' radius multiplier, which also "
 																				+ "acts as a width and depth multiplier if Box Collider is used instead. "
-																				+ "Affects all fingers except thumbs."));
+																				+ "The base finger radius is hand width multiplied by 0.24. Affects all "
+																				+ "fingers except thumbs."));
 			EditorGUILayout.PropertyField(fingerLengthMult,   new GUIContent("Finger Length", 	 "Finger Colliders' length multiplier. Affects all fingers "
 																				+ "except thumbs."));
 			EditorGUILayout.PropertyField(fingerTaperValue,   new GUIContent("Finger Taper", 	 "Finger Colliders' taper factor, which is used to "
@@ -1994,7 +2008,8 @@ public class RUISSkeletonControllerEditor : Editor
 
 			EditorGUILayout.Space();
 			EditorGUILayout.PropertyField(thumbRadiusMult,   new GUIContent("Thumb Radius",		 "Thumb Capsule Colliders' radius multiplier, which also "
-																				+ "acts as a width and depth multiplier if Box Collider is used instead."));
+																				+ "acts as a width and depth multiplier if Box Collider is used instead. "
+																				+ "The base thumb radius is hand width multiplied by 0.24."));
 			EditorGUILayout.PropertyField(thumbLengthMult,   new GUIContent("Thumb Length", 	 "Thumb Colliders' length multiplier."));
 			EditorGUILayout.PropertyField(thumbTaperValue,   new GUIContent("Thumb Taper",		 "Thumb Colliders' taper factor, which is used to "
 																				+ "multiply the radius of subsequent thumb phalanges. A value of 1 or "
