@@ -464,6 +464,18 @@ public class RUISSkeletonController : MonoBehaviour
 
 	public bool keepPlayModeChanges = true; // This is only for the custom inspector to use
 
+	#if UNITY_EDITOR
+	void Reset()
+	{
+		string consoleReport = "";
+		string shortReport  = "";
+		if(AutoAssignJointTargetsFromAvatar(out shortReport, out consoleReport))
+			Debug.Log(consoleReport);
+		else
+			Debug.LogWarning(consoleReport);
+	}
+	#endif
+
 	void Awake()
 	{
 		coordinateSystem = FindObjectOfType(typeof(RUISCoordinateSystem)) as RUISCoordinateSystem;
@@ -3408,6 +3420,156 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 
+	public bool AutoAssignJointTargetsFromAvatar(out string shortReport, out string longReport)
+	{
+		shortReport = "";
+		longReport  = "";
+		string missedBones = "";
+		Animator animator = GetComponentInChildren<Animator>();
+		if(animator)
+		{
+			root 			= animator.GetBoneTransform(HumanBodyBones.LastBone); //
+			torso 			= animator.GetBoneTransform(HumanBodyBones.Hips);
+			chest 			= animator.GetBoneTransform(HumanBodyBones.Spine);
+			neck 			= animator.GetBoneTransform(HumanBodyBones.Neck); //
+			head 			= animator.GetBoneTransform(HumanBodyBones.Head);
+			leftClavicle 	= animator.GetBoneTransform(HumanBodyBones.LeftShoulder);
+			leftShoulder 	= animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+			leftElbow 		= animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
+			leftHand 		= animator.GetBoneTransform(HumanBodyBones.LeftHand);
+			rightClavicle 	= animator.GetBoneTransform(HumanBodyBones.RightShoulder);
+			rightShoulder 	= animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
+			rightElbow 		= animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
+			rightHand 		= animator.GetBoneTransform(HumanBodyBones.RightHand);
+			leftHip 		= animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
+			leftKnee 		= animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
+			leftFoot 		= animator.GetBoneTransform(HumanBodyBones.LeftFoot);
+			rightHip 		= animator.GetBoneTransform(HumanBodyBones.RightUpperLeg);
+			rightKnee 		= animator.GetBoneTransform(HumanBodyBones.RightLowerLeg);
+			rightFoot 		= animator.GetBoneTransform(HumanBodyBones.RightFoot);
+			leftThumb 		= animator.GetBoneTransform(HumanBodyBones.LeftThumbProximal);
+			leftIndexF		= animator.GetBoneTransform(HumanBodyBones.LeftIndexProximal);
+			leftMiddleF		= animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
+			leftRingF		= animator.GetBoneTransform(HumanBodyBones.LeftRingProximal);
+			leftLittleF		= animator.GetBoneTransform(HumanBodyBones.LeftLittleProximal);
+			rightThumb		= animator.GetBoneTransform(HumanBodyBones.RightThumbProximal);
+			rightIndexF		= animator.GetBoneTransform(HumanBodyBones.RightIndexProximal);
+			rightMiddleF	= animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal);
+			rightRingF		= animator.GetBoneTransform(HumanBodyBones.RightRingProximal);
+			rightLittleF	= animator.GetBoneTransform(HumanBodyBones.RightLittleProximal);
+
+
+			if(		root && ((Transform) root).IsChildOf(animator.transform)
+				&& 	animator.transform != ((Transform) root))
+			{
+				// Iterate until rootBone is direct child of animator.transform
+				Transform child = (Transform) root;
+				for(int i=0; i<100; ++i)
+				{
+					if(!child.parent)
+						continue;
+					if(child.parent == animator.transform)
+					{
+						root = child;
+						break;
+					}
+					if(i==99)
+					{
+						root = null;
+						break;
+					}
+					child = child.parent;
+				}
+			}
+
+			if(!neck && head)
+				neck = ((Transform) head).parent;
+
+			if(!root)
+				missedBones += "Root, ";
+			if(!torso)
+				missedBones += "Pelvis, ";
+			if(!chest)
+				missedBones += "Chest, ";
+			if(!neck)
+				missedBones += "Neck, ";
+			if(!head)
+				missedBones += "Head, ";
+			if(!leftClavicle)
+				missedBones += "Left Clavicle, ";
+			if(!leftShoulder)
+				missedBones += "Left Shoulder, ";
+			if(!leftElbow)
+				missedBones += "Left Elbow, ";
+			if(!leftHand)
+				missedBones += "Left Hand, ";
+			if(!rightClavicle)
+				missedBones += "Right Clavicle, ";
+			if(!rightShoulder)
+				missedBones += "Right Shoulder, ";
+			if(!rightElbow)
+				missedBones += "Right Elbow, ";
+			if(!rightHand)
+				missedBones += "Right Hand, ";
+			if(!leftHip)
+				missedBones += "Left Hip, ";
+			if(!leftKnee)
+				missedBones += "Left Knee, ";
+			if(!leftFoot)
+				missedBones += "Left Foot, ";
+			if(!leftThumb)
+				missedBones += "Left Thumb, ";
+			if(!leftIndexF)
+				missedBones += "Left Index Finger CMC, ";
+			if(!leftMiddleF)
+				missedBones += "Left Middle Finger CMC, ";
+			if(!leftRingF)
+				missedBones += "Left Ring Finger CMC, ";
+			if(!leftLittleF)
+				missedBones += "Left Little Finger CMC, ";
+			if(!rightThumb)
+				missedBones += "Right Thumb, ";
+			if(!rightIndexF)
+				missedBones += "Right Index Finger CMC, ";
+			if(!rightMiddleF)
+				missedBones += "Right Middle Finger CMC, ";
+			if(!rightRingF)
+				missedBones += "Right Ring Finger CMC, ";
+			if(!rightLittleF)
+				missedBones += "Right Little Finger CMC, ";
+
+			if(!string.IsNullOrEmpty(missedBones))
+			{
+				if(missedBones.Length > 1)
+					missedBones = missedBones.Substring(0, missedBones.Length - 2);
+				longReport =  typeof(RUISSkeletonController) + " obtained some Avatar Target Transforms from Animator component of '"  
+							+ animator.gameObject.name + "' GameObject. The following Transforms were NOT obtained: " + missedBones
+							+ ". Please check that the automatically obtained Transforms correspond to the Target labels by "
+							+ "clicking the Target Transform fields. All previously assigned Target Transforms were replaced.";
+
+				shortReport =   "Obtained some Target Transforms but not all (see Console for details). Please check that they "
+							  + "correspond to the Target labels by clicking the below Target Transform fields.";
+			}
+			else
+			{
+				longReport =  typeof(RUISSkeletonController) + " obtained all Avatar Target Transforms from Animator component of '"
+							+ animator.gameObject.name + "' GameObject. Please check that the automatically obtained Transforms "
+							+ "correspond to the Target labels by clicking the Target Transform fields.";
+
+				shortReport =   "Obtained all Target Transforms. Please check that they correspond to the Target labels by "
+							  + "clicking the below Target Transform fields.";
+			}
+			return true;
+		}
+		else
+		{
+			longReport =  typeof(RUISSkeletonController) + " failed to obtain Avatar Target Transforms: Could not find an Animator " 
+						+ "component in " + name + " or its children. You must assign the Target Transforms manually.";
+			shortReport = "Failed to obtain Avatar Target Transforms";
+		}
+		return false;
+	}
+
 	public float pelvisDepthMult 	= 2.0f;
 	public float pelvisWidthMult 	= 1.2f;
 	public float pelvisLengthMult 	= 1.0f;
@@ -3794,7 +3956,7 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 	}
 		
-	// If memory serves me correctly, this method doesn't work quite right
+	// TODO: REMOVE: If memory serves me correctly, this method doesn't work quite right
 	private Quaternion LimitZRotation(Quaternion inputRotation, float rollMinimum, float rollMaximum)
 	{
 		/**

@@ -288,7 +288,6 @@ public class RUISSkeletonControllerEditor : Editor
 
 	RUISSkeletonController skeletonController;
 	Animator animator;
-	string missedBones = "";
 	string obtainedTargetTransforms = "";
 	string obtainedSourceTransforms = "";
 
@@ -1498,156 +1497,24 @@ public class RUISSkeletonControllerEditor : Editor
 		SwitchToNormalFieldColor();
 		EditorGUILayout.LabelField("  Avatar Target Transforms", boldItalicStyle);
 
-		string mocapSource = "Kinect.";
-		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
-			mocapSource = "the above \"Custom Mocap Source Transforms\".";
-
 		if(GUILayout.Button(new GUIContent("Obtain Targets from Animator", "Attempt to automatically obtain below Target Transforms "
 											+ "from an Animator component, if such a component can be found from this GameObject "
-											+ "or its children. WARNING: Make sure that the obtained Transforms are correct!")))
+											+ "or its children. WARNING: Make sure that the obtained Transforms are correct!\n"
+											+ "All previously assigned Target Transforms will be replaced!")))
 		{
 			if(skeletonController)
 			{
-				animator = skeletonController.GetComponentInChildren<Animator>();
-				if(animator)
-				{
-					rootBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.LastBone); //
-					torsoBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.Hips);
-					chestBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.Spine);
-					neckBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.Neck); //
-					headBone.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.Head);
-					leftClavicle.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftShoulder);
-					leftShoulderBone.objectReferenceValue 	= animator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
-					leftElbowBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftLowerArm);
-					leftHandBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftHand);
-					rightClavicle.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightShoulder);
-					rightShoulderBone.objectReferenceValue 	= animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
-					rightElbowBone.objectReferenceValue 	= animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
-					rightHandBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightHand);
-					leftHipBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
-					leftKneeBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg);
-					leftFootBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.LeftFoot);
-					rightHipBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightUpperLeg);
-					rightKneeBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightLowerLeg);
-					rightFootBone.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightFoot);
-					leftThumb.objectReferenceValue 			= animator.GetBoneTransform(HumanBodyBones.LeftThumbProximal);
-					leftIndexF.objectReferenceValue			= animator.GetBoneTransform(HumanBodyBones.LeftIndexProximal);
-					leftMiddleF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
-					leftRingF.objectReferenceValue			= animator.GetBoneTransform(HumanBodyBones.LeftRingProximal);
-					leftLittleF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.LeftLittleProximal);
-					rightThumb.objectReferenceValue 		= animator.GetBoneTransform(HumanBodyBones.RightThumbProximal);
-					rightIndexF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.RightIndexProximal);
-					rightMiddleF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.RightMiddleProximal);
-					rightRingF.objectReferenceValue			= animator.GetBoneTransform(HumanBodyBones.RightRingProximal);
-					rightLittleF.objectReferenceValue		= animator.GetBoneTransform(HumanBodyBones.RightLittleProximal);
-
-
-					if(		rootBone.objectReferenceValue && ((Transform) rootBone.objectReferenceValue).IsChildOf(animator.transform)
-						&& 	animator.transform != ((Transform) rootBone.objectReferenceValue))
-					{
-						// Iterate until rootBone is direct child of animator.transform
-						Transform child = (Transform) rootBone.objectReferenceValue;
-						for(int i=0; i<100; ++i)
-						{
-							if(child.parent == animator.transform)
-							{
-								rootBone.objectReferenceValue = child;
-								break;
-							}
-							if(i==99)
-							{
-								rootBone.objectReferenceValue = null;
-								break;
-							}
-							child = child.parent;
-						}
-					}
-
-					if(!neckBone.objectReferenceValue && headBone.objectReferenceValue)
-						neckBone.objectReferenceValue = ((Transform) headBone.objectReferenceValue).parent;
-
-					if(!rootBone.objectReferenceValue)
-						missedBones += "Root, ";
-					if(!torsoBone.objectReferenceValue)
-						missedBones += "Pelvis, ";
-					if(!chestBone.objectReferenceValue)
-						missedBones += "Chest, ";
-					if(!neckBone.objectReferenceValue)
-						missedBones += "Neck, ";
-					if(!headBone.objectReferenceValue)
-						missedBones += "Head, ";
-					if(!leftClavicle.objectReferenceValue)
-						missedBones += "Left Clavicle, ";
-					if(!leftShoulderBone.objectReferenceValue)
-						missedBones += "Left Shoulder, ";
-					if(!leftElbowBone.objectReferenceValue)
-						missedBones += "Left Elbow, ";
-					if(!leftHandBone.objectReferenceValue)
-						missedBones += "Left Hand, ";
-					if(!rightClavicle.objectReferenceValue)
-						missedBones += "Right Clavicle, ";
-					if(!rightShoulderBone.objectReferenceValue)
-						missedBones += "Right Shoulder, ";
-					if(!rightElbowBone.objectReferenceValue)
-						missedBones += "Right Elbow, ";
-					if(!rightHandBone.objectReferenceValue)
-						missedBones += "Right Hand, ";
-					if(!leftHipBone.objectReferenceValue)
-						missedBones += "Left Hip, ";
-					if(!leftKneeBone.objectReferenceValue)
-						missedBones += "Left Knee, ";
-					if(!leftFootBone.objectReferenceValue)
-						missedBones += "Left Foot, ";
-					if(!leftThumb.objectReferenceValue)
-						missedBones += "Left Thumb, ";
-					if(!leftIndexF.objectReferenceValue)
-						missedBones += "Left Index Finger CMC, ";
-					if(!leftMiddleF.objectReferenceValue)
-						missedBones += "Left Middle Finger CMC, ";
-					if(!leftRingF.objectReferenceValue)
-						missedBones += "Left Ring Finger CMC, ";
-					if(!leftLittleF.objectReferenceValue)
-						missedBones += "Left Little Finger CMC, ";
-					if(!rightThumb.objectReferenceValue)
-						missedBones += "Right Thumb, ";
-					if(!rightIndexF.objectReferenceValue)
-						missedBones += "Right Index Finger CMC, ";
-					if(!rightMiddleF.objectReferenceValue)
-						missedBones += "Right Middle Finger CMC, ";
-					if(!rightRingF.objectReferenceValue)
-						missedBones += "Right Ring Finger CMC, ";
-					if(!rightLittleF.objectReferenceValue)
-						missedBones += "Right Little Finger CMC, ";
-
-					if(!string.IsNullOrEmpty(missedBones))
-					{
-						missedBones = missedBones.Substring(0, missedBones.Length - 2);
-						Debug.LogWarning("Obtained some Target Transforms from Animator component of '" + animator.gameObject.name 
-										+ "' GameObject. The following Transforms were NOT obtained: " + missedBones + ". Please check that the "
-										+ "automatically obtained Transforms correspond to the semantic labels by clicking the Target "
-										+ "Transform fields.");
-
-						obtainedTargetTransforms =   "Obtained some Target Transforms but not all (see Console for details). Please check that they "
-												   + "correspond to the semantic labels by clicking the below Target Transform fields.";
-					}
-					else
-					{
-						Debug.LogWarning("Obtained all Target Transforms from Animator component of '" + animator.gameObject.name 
-							+ "' GameObject. Please check that the automatically obtained Transforms correspond to the semantic labels by clicking "
-							+ "the Target Transform fields.");
-
-						obtainedTargetTransforms =   "Obtained all Target Transforms. Please check that they correspond to the semantic labels by "
-												   + "clicking the below Target Transform fields.";
-					}
-				}
+				string consoleReport = "";
+				Undo.RegisterFullObjectHierarchyUndo(skeletonController.gameObject, "Obtain Avatar Target Transforms from Animator");
+				if(skeletonController.AutoAssignJointTargetsFromAvatar(out obtainedTargetTransforms, out consoleReport))
+					Debug.LogWarning(consoleReport);
 				else
 				{
-					EditorUtility.DisplayDialog("Failed to obtain Targets", "Could not find an Animator component in this GameObject " 
-												+ "or its children. You must assign the Avatar Target Transforms manually.", "OK");
 					obtainedTargetTransforms = "";
+					EditorUtility.DisplayDialog("Failed to obtain Avatar Target Transforms", "Could not find an Animator component " 
+								+ "in this GameObject or its children. You must assign the Avatar Target Transforms manually.", "OK");
 				}
 			}
-			
 		}
 
 		if(!string.IsNullOrEmpty(obtainedTargetTransforms))
@@ -1660,6 +1527,10 @@ public class RUISSkeletonControllerEditor : Editor
 
 		EditorGUILayout.Space();
 
+		string mocapSource = "Kinect.";
+		if(bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)
+			mocapSource = "the above \"Custom Mocap Source Transforms\".";
+		
 		EditorGUILayout.PropertyField(rootBone, new GUIContent("Target Root", "REQUIRED: The target Transform that is the animated avatar's root bone in "
 																			+ "the skeleton hierarchy. The target Transforms of this section will "
 																			+ "be moved by " + mocapSource));
