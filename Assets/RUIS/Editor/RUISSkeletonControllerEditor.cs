@@ -57,7 +57,7 @@ public class RUISSkeletonControllerEditor : Editor
 	public SerializedProperty scaleHierarchicalModelBones;
 	public SerializedProperty scaleBoneLengthOnly;
 
-	public SerializedProperty boneLengthAxis;
+//	public SerializedProperty boneLengthAxis;
 
 	public SerializedProperty limbsAreScaled;
 	public SerializedProperty independentTorsoSegmentsScaling;
@@ -329,7 +329,7 @@ public class RUISSkeletonControllerEditor : Editor
 
 		scaleHierarchicalModelBones = serializedObject.FindProperty("scaleHierarchicalModelBones");
 		scaleBoneLengthOnly = serializedObject.FindProperty("scaleBoneLengthOnly");
-		boneLengthAxis = serializedObject.FindProperty("boneLengthAxis");
+//		boneLengthAxis = serializedObject.FindProperty("torsoBoneLengthAxis");
 		limbsAreScaled = serializedObject.FindProperty("limbsAreScaled");
 		independentTorsoSegmentsScaling = serializedObject.FindProperty("independentTorsoSegmentsScaling");
 		scalingNeck = serializedObject.FindProperty("scalingNeck");
@@ -650,8 +650,9 @@ public class RUISSkeletonControllerEditor : Editor
 																		+ "enabled."));
 
 		SwitchToKeepChangesFieldColor();
-		GUI.enabled = useHierarchicalModel.boolValue;
 
+		/*
+		GUI.enabled = useHierarchicalModel.boolValue;
 		EditorGUI.indentLevel++;
 		EditorGUILayout.PropertyField(boneLengthAxis, new GUIContent( "Bone Length Axis", "Determines the axis that points the bone direction in each " 
 																	+ "joint transform of the animation rig. This value depends on your rig. You can "
@@ -660,9 +661,11 @@ public class RUISSkeletonControllerEditor : Editor
 																	+ "coordinate system. IMPORTANT: Disable the below \"Length Only\" scaling option "
 																	+ "if the same localScale axis is not consistently used in all the joints of the "
 																	+ "animation rig."));
-
 		EditorGUI.indentLevel--;
 		GUI.enabled = true;
+		*/
+
+		EditorGUILayout.Space();
 
 		EditorGUILayout.PropertyField(updateRootPosition, new GUIContent(  "Update Root Position", "Update the position of this GameObject according "
 		                                                                 + "to the skeleton root position"));

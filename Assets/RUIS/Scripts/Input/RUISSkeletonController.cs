@@ -286,7 +286,10 @@ public class RUISSkeletonController : MonoBehaviour
 	public bool useHierarchicalModel = true;
 	public bool scaleHierarchicalModelBones = true;
 	public bool scaleBoneLengthOnly = false;
-	public RUISAxis boneLengthAxis = RUISAxis.X;
+	public RUISAxis torsoBoneLengthAxis  = RUISAxis.X;
+	public RUISAxis armBoneLengthAxis    = RUISAxis.X;
+	public RUISAxis legBoneLengthAxis    = RUISAxis.X;
+	public RUISAxis fingerBoneLengthAxis = RUISAxis.X;
 	public float maxScaleFactor = 0.5f; // *** Set to 0.01 when decoupling of thickness & scale adjust is done
 	public bool limbsAreScaled = true;
 
@@ -678,6 +681,10 @@ public class RUISSkeletonController : MonoBehaviour
 		SaveInitialDistance(rightKnee, rightFoot);
 		SaveInitialDistance(leftHip,   leftKnee);
 		SaveInitialDistance(leftKnee,  leftFoot);
+
+
+		// Find bone length axes for torso, arms, legs, and fingers
+		SetAndReportLengthAxes(errorInsteadOfWarning: true, calledInReset: false);
 
 		// Below if-cluster calculates the model spine lenght as the combined bone lengths from pelvis to neck.
 		// NOTE: Since the exact location of pelvis and neck varies between models, this is not a good method (see below).
@@ -1373,7 +1380,7 @@ public class RUISSkeletonController : MonoBehaviour
 				if(!trackWrist)
 				{
 					useParentRotation = true;
-					switch(boneLengthAxis)
+					switch(armBoneLengthAxis)
 					{
 						case RUISAxis.X: rotOffset.Set(-rotOffset.x, -rotOffset.y,  rotOffset.z); break; // HACK do these work with all rigs?
 						case RUISAxis.Y: rotOffset.Set( rotOffset.x, -rotOffset.y, -rotOffset.z); break;
@@ -1387,7 +1394,7 @@ public class RUISSkeletonController : MonoBehaviour
 				if(!trackAnkle)
 				{
 					useParentRotation = true;
-					switch(boneLengthAxis)
+					switch(legBoneLengthAxis)
 					{
 						case RUISAxis.X: rotOffset.Set(-rotOffset.x, -rotOffset.y,  rotOffset.z); break; // HACK do these work with all rigs?
 						case RUISAxis.Y: rotOffset.Set( rotOffset.x, -rotOffset.y, -rotOffset.z); break;
@@ -2104,7 +2111,7 @@ public class RUISSkeletonController : MonoBehaviour
 		boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, adjustScale * extremityTweaker * (newScale / accumulatedScale) * Vector3.one,
 			 										 maxScaleFactor * deltaTime);
 
-		switch(boneLengthAxis)
+		switch(torsoBoneLengthAxis)
 		{
 			case RUISAxis.X: return accumulatedScale * boneToScale.localScale.x;
 			case RUISAxis.Y: return accumulatedScale * boneToScale.localScale.y;
@@ -2132,6 +2139,7 @@ public class RUISSkeletonController : MonoBehaviour
 		bool isExtremityJoint = false;
 		bool isEndBone = false;
 		Vector3 previousScale = Vector3.one;
+		RUISAxis lengthAxis = armBoneLengthAxis;
 //		Vector3 avatarBoneVector;
 
 		if(comparisonBone)
@@ -2170,6 +2178,7 @@ public class RUISSkeletonController : MonoBehaviour
 				thicknessV = leftLegThickness * leftThighThickness;
 				previousScale = prevLeftHipScale;
 				isLimbStart = true;
+				lengthAxis = legBoneLengthAxis;
 				break;
 			case RUISSkeletonManager.Joint.RightHip:
 				thickness = rightLegThickness * rightThighThickness;
@@ -2177,6 +2186,7 @@ public class RUISSkeletonController : MonoBehaviour
 				thicknessV = rightLegThickness * rightThighThickness;
 				previousScale = prevRightHipScale;
 				isLimbStart = true;
+				lengthAxis = legBoneLengthAxis;
 				break;
 			case RUISSkeletonManager.Joint.LeftShoulder:
 				thickness = leftArmThickness * leftUpperArmThickness;
@@ -2200,6 +2210,7 @@ public class RUISSkeletonController : MonoBehaviour
 				extremityTweaker = shinLengthRatio;
 				previousScale = prevLeftShinScale;
 				isExtremityJoint = true;
+				lengthAxis = legBoneLengthAxis;
 				break;
 			case RUISSkeletonManager.Joint.RightKnee:
 				thickness = rightLegThickness * rightShinThickness;
@@ -2209,6 +2220,7 @@ public class RUISSkeletonController : MonoBehaviour
 				extremityTweaker = shinLengthRatio;
 				previousScale = prevRightShinScale;
 				isExtremityJoint = true;
+				lengthAxis = legBoneLengthAxis;
 				break;
 			case RUISSkeletonManager.Joint.LeftElbow:
 				thickness = leftArmThickness * leftForearmThickness;
@@ -2253,6 +2265,7 @@ public class RUISSkeletonController : MonoBehaviour
 				extremityTweaker = shinLengthRatio;
 				previousScale = prevLeftFootScale;
 				isExtremityJoint = true;
+				lengthAxis = legBoneLengthAxis;
 				isEndBone = true;
 				break;
 			case RUISSkeletonManager.Joint.RightFoot:
@@ -2262,6 +2275,7 @@ public class RUISSkeletonController : MonoBehaviour
 				extremityTweaker = shinLengthRatio;
 				previousScale = prevRightFootScale;
 				isExtremityJoint = true;
+				lengthAxis = legBoneLengthAxis;
 				isEndBone = true;
 				break;
 		}
@@ -2273,7 +2287,7 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 				Vector3 avatarParentBone = boneToScale.parent.position - boneToScale.position; // *** TODO shouldn't use boneToScale.parent?
 				Vector3 u, v, w; // *** TODO remove w
-				switch(boneLengthAxis)
+				switch(lengthAxis)
 				{
 					case RUISAxis.X: u = Vector3.up;      v = Vector3.forward; w = Vector3.right;   break;
 					case RUISAxis.Y: u = Vector3.forward; v = Vector3.right;   w = Vector3.up;      break;
@@ -2314,7 +2328,7 @@ public class RUISSkeletonController : MonoBehaviour
 //					thicknessV 		 = thickness 		* CalculateScale(boneToScale.rotation * v, avatarParentBone, parentBoneThickness, accumulatedScale);
 					// *** remove these unused code sections above
 
-					switch(boneLengthAxis)
+					switch(lengthAxis)
 					{
 						case RUISAxis.X:
 							tempVector.Set(   accumulatedScale, parentBoneThickness, parentBoneThickness);
@@ -2343,7 +2357,7 @@ public class RUISSkeletonController : MonoBehaviour
 				thicknessV /= accumulatedScale;
 			}
 
-			switch(boneLengthAxis) // Calculating untweaked scales
+			switch(lengthAxis) // Calculating untweaked scales
 			{
 				case RUISAxis.X:
 					boneToScale.localScale = new Vector3(skewedScaleTweak * Mathf.MoveTowards(previousScale.x, newScale, maxScaleFactor * deltaTime), thicknessU, thicknessV);
@@ -2413,7 +2427,7 @@ public class RUISSkeletonController : MonoBehaviour
 //			if(boneToScaleTracker.jointID == RUISSkeletonManager.Joint.RightElbow)
 //				print(skewedScaleTweak + " " + thicknessU + " " + thicknessV + " " + newScale + " " + boneToScale.localScale);
 
-		switch(boneLengthAxis)
+		switch(lengthAxis)
 		{
 			case RUISAxis.X: return accumulatedScale * boneToScale.localScale.x;
 			case RUISAxis.Y: return accumulatedScale * boneToScale.localScale.y;
@@ -2780,7 +2794,7 @@ public class RUISSkeletonController : MonoBehaviour
 				inv = 1;
 			}
 			// Thumb rotation correction: these depend on your animation rig
-			switch(boneLengthAxis)
+			switch(fingerBoneLengthAxis)
 			{
 				case RUISAxis.X:
 					clenchedRotationThumbTM_corrected  = Quaternion.Euler( clenchedThumbAngleTM.x * inv,  clenchedThumbAngleTM.y * inv,  clenchedThumbAngleTM.z)
@@ -3259,6 +3273,139 @@ public class RUISSkeletonController : MonoBehaviour
 			position = pivot + rotation * (position - pivot) + offset;
 		else
 			position += offset;
+	}
+
+	int GetLengthAxis(Transform startJoint, Transform endJoint)
+	{
+		if(startJoint && endJoint)
+			return FindClosestLocalAxis(startJoint, endJoint.position - startJoint.position);
+		return -1;
+	}
+
+	int CommonLengthAxis(List<KeyValuePair<RUISSkeletonManager.Joint, int>> candidateList, string bodySegmentGroupName, out string errorMessage)
+	{
+		errorMessage = "";
+		if(candidateList != null && candidateList.Count > 0)
+		{
+			candidateList.RemoveAll(item => item.Value == -1);
+			string axes = "";
+			bool notConsistent = false;
+			int lengthAxis = candidateList[0].Value;
+			foreach(KeyValuePair<RUISSkeletonManager.Joint, int> candidate in candidateList)
+			{
+				if(candidate.Value != lengthAxis)
+					notConsistent = true;
+				axes += candidate.Key.ToString() + " (" + ((candidate.Value==0)?"X":((candidate.Value==1)?"Y":"Z")) + "-axis), ";
+			}
+			if(axes.Length > 1)
+				axes = axes.Substring(0, axes.Length - 2);
+//			Debug.LogError(axes);
+			if(notConsistent)
+				errorMessage = bodySegmentGroupName + " bones have inconsistent length axes: " + axes + ".\n";
+			else
+				return lengthAxis;
+		}
+		return -1;
+	}
+
+	void SetAndReportLengthAxes(bool errorInsteadOfWarning, bool calledInReset)
+	{
+		System.Action<string> reportingMethod = Debug.LogWarning;
+		if(errorInsteadOfWarning)
+			reportingMethod = Debug.LogError;
+		int commonLengthAxis = -1;
+		string consistencyError = "";
+		string reactToErrorAdvice = "\"Length Only\"-option in " + typeof(RUISSkeletonController) + ". Alternatively, you can make the avatar bone "
+					+ "length axes consistent by modifying their pivot orientations in a 3D animation software and re-importing the avatar to Unity.";
+		if(calledInReset)
+			reactToErrorAdvice = name + ": Do not enable the " + reactToErrorAdvice;
+		else
+			reactToErrorAdvice = name + ": Disable the " + reactToErrorAdvice;
+		List<KeyValuePair<RUISSkeletonManager.Joint, int>> boneGroup = new List<KeyValuePair<RUISSkeletonManager.Joint, int>>();
+
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.Torso, GetLengthAxis(torso, chest)));
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.Chest, GetLengthAxis(chest, neck)));
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.Neck, 	GetLengthAxis(neck, head)));
+		commonLengthAxis = CommonLengthAxis(boneGroup, "Torso", out consistencyError);
+
+		if(commonLengthAxis < 0)
+		{
+//			if(consistencyError.Length > 0)
+//			{
+//				reportingMethod(consistencyError + reactToErrorAdvice); // At the moment torso bone length consistency doesn't matter
+//			}
+		}
+		else
+			torsoBoneLengthAxis = (commonLengthAxis==0)?RUISAxis.X:((commonLengthAxis==1)?RUISAxis.Y:RUISAxis.Z);
+		boneGroup.Clear();
+		consistencyError = "";
+
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightShoulder, GetLengthAxis(rightShoulder, rightElbow)));
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftShoulder, 	GetLengthAxis(leftShoulder, leftElbow)));
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightElbow, 	GetLengthAxis(rightElbow, rightHand)));
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftElbow, 	GetLengthAxis(leftElbow, leftHand)));
+		commonLengthAxis = CommonLengthAxis(boneGroup, "Arm", out consistencyError);
+
+		if(commonLengthAxis < 0)
+		{
+			if(consistencyError.Length > 0)
+				reportingMethod(consistencyError + reactToErrorAdvice);
+		}
+		else
+			armBoneLengthAxis = (commonLengthAxis==0)?RUISAxis.X:((commonLengthAxis==1)?RUISAxis.Y:RUISAxis.Z);
+		boneGroup.Clear();
+		consistencyError = "";
+
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightHip,  GetLengthAxis(rightHip, rightKnee)));
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftHip, 	GetLengthAxis(leftHip, leftKnee)));
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightKnee, GetLengthAxis(rightKnee, rightFoot)));
+		boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftKnee, 	GetLengthAxis(leftKnee, leftFoot)));
+		commonLengthAxis = CommonLengthAxis(boneGroup, "Leg", out consistencyError);
+
+		if(commonLengthAxis < 0)
+		{
+			if(consistencyError.Length > 0)
+				reportingMethod(consistencyError + reactToErrorAdvice);
+		}
+		else
+			legBoneLengthAxis = (commonLengthAxis==0)?RUISAxis.X:((commonLengthAxis==1)?RUISAxis.Y:RUISAxis.Z);
+		boneGroup.Clear();
+		consistencyError = "";
+
+		// Finger bone axis consistency is relevant if fistMaking == true
+		if(fistMaking)
+		{
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightLittleFinger, GetLengthAxis(rightLittleF, fingerTargets[0, 0, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftLittleFinger, 	GetLengthAxis(leftLittleF, 	fingerTargets[1, 0, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightRingFinger,  	GetLengthAxis(rightRingF, 	fingerTargets[0, 1, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftRingFinger, 	GetLengthAxis(leftRingF, 	fingerTargets[1, 1, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightMiddleFinger, GetLengthAxis(rightMiddleF, fingerTargets[0, 2, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftMiddleFinger, 	GetLengthAxis(leftMiddleF, 	fingerTargets[1, 2, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightIndexFinger,  GetLengthAxis(rightIndexF, 	fingerTargets[0, 3, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftIndexFinger, 	GetLengthAxis(leftIndexF, 	fingerTargets[1, 3, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.RightThumb, 		GetLengthAxis(rightThumb, 	fingerTargets[0, 4, 1])));
+			boneGroup.Add(new KeyValuePair<RUISSkeletonManager.Joint, int>(RUISSkeletonManager.Joint.LeftThumb, 		GetLengthAxis(leftThumb, 	fingerTargets[1, 4, 1])));
+			commonLengthAxis = CommonLengthAxis(boneGroup, "Finger", out consistencyError);
+
+			if(commonLengthAxis < 0)
+			{
+				if(consistencyError.Length > 0)
+				{
+					reactToErrorAdvice =  "\"Fist Clench Animation\"-option in \"Finger Targets\"-section of " + typeof(RUISSkeletonController)
+										+ ". Alternatively, you can make the avatar finger bone length axes consistent by modifying their "
+										+ "pivot orientations in a 3D animation software and re-importing the avatar to Unity.";
+					if(calledInReset)
+						reactToErrorAdvice = name + ": Do not enable the " + reactToErrorAdvice;
+					else
+						reactToErrorAdvice = name + ": Disable the " + reactToErrorAdvice;
+					reportingMethod(consistencyError + reactToErrorAdvice);
+				}
+			}
+			else
+				fingerBoneLengthAxis = (commonLengthAxis==0)?RUISAxis.X:((commonLengthAxis==1)?RUISAxis.Y:RUISAxis.Z);
+			boneGroup.Clear();
+			consistencyError = "";
+		}
 	}
 
 	public float pelvisDepthMult 	= 2.0f;
