@@ -60,6 +60,7 @@ public class RUISSkeletonManager : MonoBehaviour
         public float positionConfidence = 0.0f;
         public float rotationConfidence = 0.0f;
 		public Joint jointID = Joint.None;
+		public float boneScale = 1; // playerLength / modelLength
 
 		public JointData(Joint jointID)
 		{

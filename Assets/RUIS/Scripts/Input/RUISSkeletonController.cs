@@ -2116,12 +2116,16 @@ public class RUISSkeletonController : MonoBehaviour
 					playerBoneLength = trackedBoneLengths[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)];
 						
 				if(hasBeenTracked)
+				{
 					newScale = playerBoneLength / modelBoneLength;
+					boneToScaleTracker.boneScale = Mathf.MoveTowards(boneToScaleTracker.boneScale, newScale, maxScaleFactor * deltaTime); //
+				}
 			}
 		}
 
-		boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, adjustScale * extremityTweaker * (newScale / accumulatedScale) * Vector3.one,
-			 										 maxScaleFactor * deltaTime);
+		boneToScale.localScale = adjustScale * extremityTweaker * (boneToScaleTracker.boneScale / accumulatedScale) * Vector3.one;
+//		boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, adjustScale * extremityTweaker * (newScale / accumulatedScale) * Vector3.one,
+//			 										 maxScaleFactor * deltaTime);
 
 		switch(torsoBoneLengthAxis)
 		{
@@ -2167,7 +2171,10 @@ public class RUISSkeletonController : MonoBehaviour
 				playerBoneLength = trackedBoneLengths[new KeyValuePair<Transform, Transform>(boneToScale, comparisonBone)];
 
 			if(hasBeenTracked)
-				newScale = playerBoneLength / modelBoneLength; //playerBoneLength / modelBoneLength / accumulatedScale;
+			{
+				newScale = playerBoneLength / modelBoneLength;
+				boneToScaleTracker.boneScale = Mathf.MoveTowards(boneToScaleTracker.boneScale, newScale, maxScaleFactor * deltaTime);
+			}
 
 //			avatarBoneVector = boneToScale.position - comparisonBone.position;
 		}
@@ -2372,6 +2379,16 @@ public class RUISSkeletonController : MonoBehaviour
 			switch(lengthAxis) // Calculating untweaked scales
 			{
 				case RUISAxis.X:
+					boneToScale.localScale = new Vector3(skewedScaleTweak * boneToScaleTracker.boneScale, thicknessU, thicknessV);
+					break;
+				case RUISAxis.Y:
+					boneToScale.localScale = new Vector3(thicknessV, skewedScaleTweak * boneToScaleTracker.boneScale, thicknessU);
+					break;
+				case RUISAxis.Z:
+					boneToScale.localScale = new Vector3(thicknessU, thicknessV, skewedScaleTweak * boneToScaleTracker.boneScale);
+					break;
+				/*
+				case RUISAxis.X:
 					boneToScale.localScale = new Vector3(skewedScaleTweak * Mathf.MoveTowards(previousScale.x, newScale, maxScaleFactor * deltaTime), thicknessU, thicknessV);
 					break;
 				case RUISAxis.Y:
@@ -2380,6 +2397,7 @@ public class RUISSkeletonController : MonoBehaviour
 				case RUISAxis.Z:
 					boneToScale.localScale = new Vector3(thicknessU, thicknessV, skewedScaleTweak * Mathf.MoveTowards(previousScale.z, newScale, maxScaleFactor * deltaTime));
 					break;
+				*/
 			}
 
 			// Save untweaked scales
@@ -2427,12 +2445,25 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		else
 		{
+			float initialBoneScale = 1;
+
+			switch(lengthAxis)
+			{
+				case RUISAxis.X: initialBoneScale = jointInitialLocalScales[boneToScale].x; break;
+				case RUISAxis.Y: initialBoneScale = jointInitialLocalScales[boneToScale].y; break;
+				case RUISAxis.Z: initialBoneScale = jointInitialLocalScales[boneToScale].z; break;
+			}
+
 			if(limbsAreScaled)
-				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
-															 (newScale / accumulatedScale) * Vector3.one, maxScaleFactor * deltaTime);
+				boneToScale.localScale = extremityTweaker * (boneToScaleTracker.boneScale / accumulatedScale) * Vector3.one;
 			else if(isLimbStart)
-				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
-															 (1 / accumulatedScale) * Vector3.one, maxScaleFactor * deltaTime);
+				boneToScale.localScale = extremityTweaker * (initialBoneScale / accumulatedScale) * Vector3.one;
+//			if(limbsAreScaled)
+//				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
+//															 (newScale / accumulatedScale) * Vector3.one, maxScaleFactor * deltaTime);
+//			else if(isLimbStart) // *** OPTIHACK8 below assumes that starting localScale is 1, which might not be the case
+//				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
+//															 (1 / accumulatedScale) * Vector3.one, maxScaleFactor * deltaTime);
 		}
 
 
@@ -2682,25 +2713,14 @@ public class RUISSkeletonController : MonoBehaviour
 	{
 		//average hip to shoulder length and compare it to the one found in the model - scale accordingly
 		//we can assume hips and shoulders are set quite correctly, while we cannot be sure about the spine positions
-		float modelLength = modelSpineLength;
-		// This modelLength calculation was all wrong
-//		float modelLength = (jointInitialDistances[new KeyValuePair<Transform, Transform>(rightHip, leftHip)] +
-//				jointInitialDistances[new KeyValuePair<Transform, Transform>(rightShoulder, leftShoulder)]) / 2; // *** OPTIHACK was this before
-		// This playerLength calculation was all wrong
-//		float playerLength = (Vector3.Distance(skeleton.rightShoulder.position, skeleton.leftShoulder.position) +
-//		                      Vector3.Distance(skeleton.rightHip.position,      skeleton.leftHip.position     )) / 2;
-//		float playerLength = (Vector3.Distance( rightShoulder.position,  leftShoulder.position) + // *** THIS IS WRONG, SCALING APPLIES ON THESE TRANSFORMS
-//		                      Vector3.Distance(      rightHip.position,       leftHip.position)  ) / 2;
-//		float playerLength = (Vector3.Distance(forcedJointPositions[0], forcedJointPositions[1]) +
-//		                      Vector3.Distance(skeleton.rightHip.position, skeleton.leftHip.position)) / 2; // *** OPTIHACK was this before
-		float playerLength = GetTrackedSpineLength(); // For Kinect 1/2 this is same as below:
-//		float playerLength = (Vector3.Distance( forcedJointPositions[0], forcedJointPositions[1]) +
-//		                      Vector3.Distance( forcedJointPositions[2], forcedJointPositions[3])  ) / 2;
+		float modelLength = modelSpineLength; // The most stable metric (?): distance between (model) shoulder midpoint and (model) hip midpoint
+
+		float playerLength = GetTrackedSpineLength(); // Should be same metric as above, but with player/user measurements
 		
 		float newScale = Mathf.Abs(playerLength / modelLength); // * (scaleBoneLengthOnly ? torsoThickness : 1);
 
 		// *** HACK: Here we halve the maxScaleFactor because the torso is bigger than the limbs
-		torsoScale = Mathf.Lerp(torsoScale, newScale, 0.5f * maxScaleFactor * deltaTime);
+		torsoScale = Mathf.MoveTowards(torsoScale, newScale, 0.5f * maxScaleFactor * deltaTime);
 
 		// *** OPTIHACK3 from below uncommented part used to be: torso.localScale = torsoThickness * torsoScale * Vector3.one;
 //		if(scaleBoneLengthOnly)

@@ -933,12 +933,12 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUI.indentLevel++;
 
 		GUI.enabled = useHierarchicalModel.boolValue && scaleHierarchicalModelBones.boolValue;
-		EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent( "Max Scale Rate", "The maximum rate of change for the local scale of each "
-																	+ "bone (body segment). This value limits the body proportions' rate of change when the " 
-																	+ "limb and body parth lengths from the \"Body Tracking Device\" are not constant. When using "
-																	+ "Kinect 0.5 is a good value. You can also make a script that sets this value to 0 when "
-																	+ "the body proportions have \"settled\" according to some criteria. The unit is "
-																	+ "[unitless] per second."));
+		EditorGUILayout.PropertyField(maxScaleFactor, new GUIContent( "Max Scale Rate", "The maximum rate of change for the local scale of each bone (body "
+																	+ "segment). This value limits the body proportions' rate of change when the body " 
+																	+ "segment lengths detected by the \"Body Tracking Device\" are not constant. With "
+																	+ "noisy bone length detection (e.g. Kinect), a smaller value like 0.1 is good.\nYou can "
+																	+ "also make a script that sets this value to 0 when the body proportions have \"settled\" "
+																	+ "according to some criteria. The unit is [unitless] per second."));
 
 		EditorGUILayout.PropertyField(independentTorsoSegmentsScaling, new GUIContent("Torso Segments", "Apply uniform scaling to individual "
 																					+ "torso segments (abdomen and chest) to resolve segment proportion " 
