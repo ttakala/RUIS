@@ -29,7 +29,7 @@ public class RUISSkeletonControllerEditor : Editor
 	float minScale = 0.01f; // Should not be negative!
 	float maxScale = 3.0f;
 	float minThickness = 0.3f; // Should not be negative!
-	float maxThickness = 3.0f;
+	float maxThickness = 3.0f; // Was 3, 9 for debugging
 
 	// Below those SerializedProperty fields that are marked with public can be kept (saved) after exiting play mode, if the SerializedProperty links to a
 	// float, integer, boolean, Vector3, or Enum (other data types can be added)
