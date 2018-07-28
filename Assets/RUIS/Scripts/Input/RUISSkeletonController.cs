@@ -373,11 +373,14 @@ public class RUISSkeletonController : MonoBehaviour
 	private Dictionary<Transform, Vector3> jointInitialWorldPositions;
 	private Dictionary<Transform, Vector3> jointInitialLocalPositions;
 	private Dictionary<Transform, Vector3> jointInitialLocalScales;
+	// parentJoint[] relationships do not necessarily reflect factual rig Transform hierarchy, instead they are more
+	// "ought to be" relationships. Currently parentJoint[] is only used for hands, elbows, knees, and feet.
+	private Dictionary<Transform, Transform> parentJoint;
 	private Dictionary<KeyValuePair<Transform, Transform>, float> jointInitialDistances;
 	private Dictionary<KeyValuePair<Transform, Transform>, float> trackedBoneLengths;
 	private Dictionary<RUISSkeletonManager.Joint, float> automaticBoneScales;
 	private Dictionary<RUISSkeletonManager.Joint, float> automaticBoneOffsets;
-	private Dictionary<RUISSkeletonManager.Joint, Quaternion> intendedRotations;
+//	private Dictionary<RUISSkeletonManager.Joint, Quaternion> intendedRotations;
 
 	private Vector3 initialLocalPosition = Vector3.zero;
 //	private Vector3 initialWorldPosition = Vector3.zero;
@@ -493,11 +496,12 @@ public class RUISSkeletonController : MonoBehaviour
 		jointInitialWorldPositions = new Dictionary<Transform, Vector3>();
 		jointInitialLocalPositions = new Dictionary<Transform, Vector3>();
 		jointInitialLocalScales    = new Dictionary<Transform, Vector3>();
+		parentJoint				   = new Dictionary<Transform, Transform>();
 		jointInitialDistances 	   = new Dictionary<KeyValuePair<Transform, Transform>, float>();
 		trackedBoneLengths				   = new Dictionary<KeyValuePair<Transform, Transform>, float>();
 		automaticBoneScales 	   = new Dictionary<RUISSkeletonManager.Joint, float>();
 		automaticBoneOffsets 	   = new Dictionary<RUISSkeletonManager.Joint, float>();
-		intendedRotations		   = new Dictionary<RUISSkeletonManager.Joint, Quaternion>();
+//		intendedRotations		   = new Dictionary<RUISSkeletonManager.Joint, Quaternion>();
 		
 		positionKalman = new KalmanFilter();
 		positionKalman.Initialize(3, 3);
@@ -654,18 +658,21 @@ public class RUISSkeletonController : MonoBehaviour
 //			if(BodyTrackingDeviceID != RUISSkeletonManager.customSensorID) // *** OPTIHACK
 //				torsoOffset = Vector3.Dot(realRootPos - assumedRootPos, torsoUp);
 		}
+			
+		if(neck && leftShoulder && rightShoulder)
+			neckParentsShoulders = leftShoulder.IsChildOf(neck) || rightShoulder.IsChildOf(neck);
 
-		// Stores (world) rotation, LocalPosition, and localScale
+		// Stores (world) rotation, LocalPosition, localScale, and "ideal" joint parent
 		SaveInitialTransform(root);
 		SaveInitialTransform(head);
-		SaveInitialTransform(neck); // *** OPTIHACK
-		SaveInitialTransform(chest); // *** OPTIHACK
+		SaveInitialTransform(neck);
+		SaveInitialTransform(chest);
 		SaveInitialTransform(torso);
-		SaveInitialTransform(rightClavicle); // *** OPTIHACK
+		SaveInitialTransform(rightClavicle);
 		SaveInitialTransform(rightShoulder);
 		SaveInitialTransform(rightElbow);
 		SaveInitialTransform(rightHand);
-		SaveInitialTransform(leftClavicle); // *** OPTIHACK
+		SaveInitialTransform(leftClavicle);
 		SaveInitialTransform(leftShoulder);
 		SaveInitialTransform(leftElbow);
 		SaveInitialTransform(leftHand);
@@ -677,7 +684,15 @@ public class RUISSkeletonController : MonoBehaviour
 		SaveInitialTransform(leftFoot);
 
 		SaveInitialTransform(leftThumb);
+		SaveInitialTransform(leftIndexF);
+		SaveInitialTransform(leftMiddleF);
+		SaveInitialTransform(leftRingF);
+		SaveInitialTransform(leftLittleF);
 		SaveInitialTransform(rightThumb);
+		SaveInitialTransform(rightIndexF);
+		SaveInitialTransform(rightMiddleF);
+		SaveInitialTransform(rightRingF);
+		SaveInitialTransform(rightLittleF);
 
 		FindAndInitializeFingers(fingerTargets, isTargetFingers: true );
 		FindAndInitializeFingers(fingerSources, isTargetFingers: false);
@@ -894,9 +909,6 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		skeletonManager.skeletons[BodyTrackingDeviceID, playerId].thumbZRotationOffset = thumbZRotationOffset;
 		customMocapUpdateInterval = 1.0f / ((float) customMocapFrameRate);
-
-		if(neck && leftShoulder && rightShoulder)
-			neckParentsShoulders = leftShoulder.IsChildOf(neck) || rightShoulder.IsChildOf(neck);
 
 		// *** OPTIHACK6 following is not true because of trackedSpineJoints: "... you can leave the below Custom Source fields empty." (add neck estimation)
 		trackedSpineJoints[customSpineJointCount] = customTorso;
@@ -1437,8 +1449,11 @@ public class RUISSkeletonController : MonoBehaviour
 				else
 					newRotation = transform.rotation * jointToGet.rotation * rotationOffset *
 					                   (jointInitialRotations.ContainsKey(transformToUpdate) ? jointInitialRotations[transformToUpdate] : Quaternion.identity);
-				
-				intendedRotations[jointToGet.jointID] = Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation; // *** OPTIHACK6 don't use .parent
+
+//				if(transformToUpdate.parent)
+//					intendedRotations[jointToGet.jointID] = Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation;
+//				else
+//					intendedRotations[jointToGet.jointID] = newRotation;
 
 				if(!scaleHierarchicalModelBones || !limbsAreScaled || !scaleBoneLengthOnly)
 					transformToUpdate.rotation = Quaternion.RotateTowards(transformToUpdate.rotation, newRotation, maxAngularChange); // *** original
@@ -1532,15 +1547,30 @@ public class RUISSkeletonController : MonoBehaviour
 //												+ transformToUpdate.parent.rotation * Vector3.Scale(tempVector, rotationMatrix.GetColumn(0)), Color.red);
 //		}
 
+		Transform jointParent = parentJoint[transformToUpdate];
+		if(!jointParent)
+		{
+			jointParent = transformToUpdate.parent;
+			if(!jointParent)
+				return newRotation;
+		}
+
 		// *** OPTIHACK7 the below scale correction does not work perfectly if parent has extreme non-uniform scaling (regardless if parent/child is 
 		//				upper/lower arm or lower arm/hand): the rotations get "magnified" in some directions still
-		if(isEndBone) // *** OPTIHACK6 don't use .parent and .parent.parent
-			return transformToUpdate.parent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) 
-					* transformToUpdate.parent.parent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.parent.rotation) 
-						* newRotation, transformToUpdate.parent.parent.localScale), transformToUpdate.parent.localScale);
+		if(isEndBone)
+		{
+			Transform jointGrandParent = parentJoint[jointParent];
+			if(!jointGrandParent)
+			{
+				jointGrandParent = jointParent.parent;
+				if(!jointGrandParent)
+					return newRotation;
+			}
+			return jointParent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(jointParent.rotation) * jointGrandParent.rotation 
+				* GetScaleCorrectedRotation(Quaternion.Inverse(jointGrandParent.rotation) * newRotation, jointGrandParent.localScale), jointParent.localScale);
+		}
 		else
-			return transformToUpdate.parent.rotation 
-					* GetScaleCorrectedRotation(Quaternion.Inverse(transformToUpdate.parent.rotation) * newRotation, transformToUpdate.parent.localScale);
+			return jointParent.rotation * GetScaleCorrectedRotation(Quaternion.Inverse(jointParent.rotation) * newRotation, jointParent.localScale);
 	}
 
 	private Quaternion GetScaleCorrectedRotation(Quaternion rotation, Vector3 parentScale)
@@ -1966,7 +1996,7 @@ public class RUISSkeletonController : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Saves the initial _world_ rotation, localPosition, and localScale
+	/// Saves the initial _world_ rotation, localPosition, localScale, and "ideal" joint parent
 	/// </summary>
 	/// <param name="bodyPart">Body part</param>
 	private void SaveInitialTransform(Transform bodyPart)
@@ -1977,6 +2007,78 @@ public class RUISSkeletonController : MonoBehaviour
 			jointInitialWorldPositions[bodyPart] = bodyPart.position;
 			jointInitialLocalScales[bodyPart]    = bodyPart.localScale;
 			jointInitialLocalPositions[bodyPart] = bodyPart.localPosition;
+
+			// Below parentJoint[] relationships do not necessarily reflect factual rig Transform hierarchy, instead they are more
+			// "ought to be" relationships. Currently parentJoint[] is only used for hands, elbows, knees, and feet.
+			if(bodyPart ==  root)
+				parentJoint[root]  = null;
+			if(bodyPart ==  torso)
+				parentJoint[torso] = root;
+			if(bodyPart ==  chest)
+				parentJoint[chest] = torso;
+			if(bodyPart ==  neck)
+				parentJoint[neck]  = chest;
+			if(bodyPart ==  head)
+				parentJoint[head]  = neck;
+			if(bodyPart ==  rightClavicle)
+			{
+				if(neckParentsShoulders)
+					parentJoint[rightClavicle] = neck; 
+				else
+					parentJoint[rightClavicle] = chest;
+			}
+			if(bodyPart ==  rightShoulder)
+				parentJoint[rightShoulder] 	= rightClavicle;
+			if(bodyPart ==  rightElbow)
+				parentJoint[rightElbow] 	= rightShoulder;
+			if(bodyPart ==  rightHand)
+				parentJoint[rightHand] 		= rightElbow;
+			if(bodyPart ==  leftClavicle)
+			{
+				if(neckParentsShoulders)
+					parentJoint[leftClavicle]  = neck; 
+				else
+					parentJoint[leftClavicle]  = chest; 
+			}
+			if(bodyPart ==  leftShoulder)
+				parentJoint[leftShoulder] 	= leftClavicle;
+			if(bodyPart ==  leftElbow)
+				parentJoint[leftElbow] 		= leftShoulder;
+			if(bodyPart ==  leftHand)
+				parentJoint[leftHand] 		= leftElbow;
+			if(bodyPart ==  rightHip)
+				parentJoint[rightHip] 		= torso;
+			if(bodyPart ==  rightKnee)
+				parentJoint[rightKnee] 		= rightHip;
+			if(bodyPart ==  rightFoot)
+				parentJoint[rightFoot] 		= rightKnee;
+			if(bodyPart ==  leftHip)
+				parentJoint[leftHip] 		= torso;
+			if(bodyPart ==  leftKnee)
+				parentJoint[leftKnee] 		= leftHip;
+			if(bodyPart ==  leftFoot)
+				parentJoint[leftFoot] 		= leftKnee;
+
+			if(bodyPart ==  leftThumb)
+				parentJoint[leftThumb] 		= leftHand;
+			if(bodyPart ==  leftIndexF)
+				parentJoint[leftIndexF] 	= leftHand;
+			if(bodyPart ==  leftMiddleF)
+				parentJoint[leftMiddleF] 	= leftHand;
+			if(bodyPart ==  leftRingF)
+				parentJoint[leftRingF] 		= leftHand;
+			if(bodyPart ==  leftLittleF)
+				parentJoint[leftLittleF] 	= leftHand;
+			if(bodyPart ==  rightThumb)
+				parentJoint[rightThumb] 	= rightHand;
+			if(bodyPart ==  rightIndexF)
+				parentJoint[rightIndexF] 	= rightHand;
+			if(bodyPart ==  rightMiddleF)
+				parentJoint[rightMiddleF] 	= rightHand;
+			if(bodyPart ==  rightRingF)
+				parentJoint[rightRingF] 	= rightHand;
+			if(bodyPart ==  rightLittleF)
+				parentJoint[rightLittleF] 	= rightHand;
 		}
 	}
 
@@ -2315,9 +2417,8 @@ public class RUISSkeletonController : MonoBehaviour
 
 		if(scaleBoneLengthOnly && limbsAreScaled)
 		{
-			if(isLimbMiddle && boneToScale.parent)
+			if(isLimbMiddle)
 			{
-				Vector3 avatarParentBone = boneToScale.parent.position - boneToScale.position; // *** TODO shouldn't use boneToScale.parent?
 				Vector3 u, v, w; // *** TODO remove w
 				switch(lengthAxis)
 				{
@@ -2328,6 +2429,7 @@ public class RUISSkeletonController : MonoBehaviour
 				}
 
 				// Forearm or Shin
+//				Vector3 avatarParentBone = jointParent.position - boneToScale.position;
 				// Replace boneToScale.rotation with a rotation that is not scale corrected
 //				skewedScaleTweak = extremityTweaker * CalculateScale(boneToScale.rotation * w, avatarParentBone, parentBoneThickness, accumulatedScale);
 //				thicknessU 		 = thickness 		* CalculateScale(boneToScale.rotation * u, avatarParentBone, parentBoneThickness, accumulatedScale);
@@ -3008,7 +3110,7 @@ public class RUISSkeletonController : MonoBehaviour
 					}
 					foreach(Transform middlePhalanx in fingerArray[i, j, 0].GetComponentsInChildren<Transform>(true))
 					{
-						if(middlePhalanx.parent.gameObject == fingerArray[i, j, 0].gameObject)
+						if(middlePhalanx.parent && middlePhalanx.parent.gameObject == fingerArray[i, j, 0].gameObject)
 						{
 							// Middle phalanx (2nd one from the hand)
 							if(isTargetFingers)
@@ -3022,7 +3124,7 @@ public class RUISSkeletonController : MonoBehaviour
 							fingerArray[i, j, 1] = middlePhalanx;
 							foreach(Transform distalPhalanx in middlePhalanx.GetComponentsInChildren<Transform>(true))
 							{
-								if(distalPhalanx.parent.gameObject == middlePhalanx.gameObject)
+								if(distalPhalanx.parent && distalPhalanx.parent.gameObject == middlePhalanx.gameObject)
 								{
 									// Distal phalanx (3rd one from the hand)
 									if(isTargetFingers)
@@ -3089,14 +3191,14 @@ public class RUISSkeletonController : MonoBehaviour
 						fingerArray[i, fingerIndex, 0] = finger;
 						foreach(Transform middlePhalanx in finger.GetComponentsInChildren<Transform>())
 						{
-							if(middlePhalanx.parent.gameObject == finger.gameObject && ContainsFingerSubstring(middlePhalanx.name))
+							if(middlePhalanx.parent && middlePhalanx.parent.gameObject == finger.gameObject && ContainsFingerSubstring(middlePhalanx.name))
 							{
 								// Middle phalanx (2nd one from the hand)
 								initialFingerLocalRotations[i, fingerIndex, 1] = middlePhalanx.localRotation;
 								fingerArray[i, fingerIndex, 1] = middlePhalanx;
 								foreach(Transform distalPhalanx in finger.GetComponentsInChildren<Transform>())
 								{
-									if(distalPhalanx.parent.gameObject == middlePhalanx.gameObject && ContainsFingerSubstring(distalPhalanx.name))
+									if(distalPhalanx.parent && distalPhalanx.parent.gameObject == middlePhalanx.gameObject && ContainsFingerSubstring(distalPhalanx.name))
 									{
 										// Distal phalanx (3rd one from the hand)
 										initialFingerLocalRotations[i, fingerIndex, 2] = distalPhalanx.localRotation;
