@@ -449,7 +449,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public Vector3 clenchedFingerAnglePIP;
 	public Vector3 clenchedFingerAngleDIP;
 
-	public bool leftThumbHasIndependentRotations = false; // *** OPTITRACK5 remove this
+	public bool leftThumbHasIndependentRotations = false; // *** OPTIHACK5 remove this
 	public Quaternion clenchedLeftThumbTM;
 	public Quaternion clenchedLeftThumbMCP;
 	public Quaternion clenchedLeftThumbIP;
@@ -718,9 +718,9 @@ public class RUISSkeletonController : MonoBehaviour
 		// Those parts of code where neck-head bone contributed to spine length have been commented
 		if(chest)
 		{
-			modelSpineLength += SaveInitialDistance(torso, chest); // *** OPTIHACK
+			modelSpineLength += SaveInitialDistance(torso, chest);
 			if(neck)
-				modelSpineLength += SaveInitialDistance(chest, neck); // *** OPTIHACK
+				modelSpineLength += SaveInitialDistance(chest, neck);
 			else if(head)
 				/*modelSpineLength += */SaveInitialDistance(chest, head);
 		}
@@ -729,13 +729,13 @@ public class RUISSkeletonController : MonoBehaviour
 //			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && customNeck)
 //				highestSpineJoint = RUISSkeletonManager.Joint.Neck;
 			if(head)
-				/*modelSpineLength += */SaveInitialDistance(neck, head); // *** OPTIHACK
+				/*modelSpineLength += */SaveInitialDistance(neck, head);
 			if(leftClavicle)
 				SaveInitialDistance(neck, leftClavicle);
 			if(rightClavicle)
 				SaveInitialDistance(neck, rightClavicle);
 			if(!chest)
-				modelSpineLength += SaveInitialDistance(torso, neck); // *** OPTIHACK
+				modelSpineLength += SaveInitialDistance(torso, neck);
 		}
 		if(head)
 		{
@@ -857,7 +857,7 @@ public class RUISSkeletonController : MonoBehaviour
 
 		if(inputManager)
 		{
-			// *** OPTIHACK4 added this, check that it works: Below if-clause means that if Kinect1/2 was enabled and detected, offsets and scaling works only when the skeleton is tracked
+			// *** OPTIHACK8 added this, check that it works: Below if-clause means that if Kinect1/2 was enabled and detected, offsets and scaling works only when the skeleton is tracked
 //			if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker && (inputManager.enableKinect || inputManager.enableKinect2))
 //				hasBeenTracked = true;
 
@@ -1035,7 +1035,7 @@ public class RUISSkeletonController : MonoBehaviour
 				// *** OPTIHACK5 TODO Added ConvertLocation() because it was missing. Any side-effects?? RUISDevice.OpenVR
 				skeleton.head.position = 
 								coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
-				// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+				// *** OPTIHACK8 TODO CustomHMDSource and coordinate conversion case...
 			}
 
 			// Interpolate neck pose if that option is enabled
@@ -1055,14 +1055,14 @@ public class RUISSkeletonController : MonoBehaviour
 			// *** OPTIHACK6 check that this new location for this code still works
 			if(hmdRotatesHead && RUISDisplayManager.IsHmdPresent())
 			{
-				// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+				// *** OPTIHACK8 TODO CustomHMDSource and coordinate conversion case...
 				skeleton.head.rotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
 																														headsetCoordinates);
 			}
 				
 			if(skeleton.isTracking || !hasBeenTracked  /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
 			{
-				ApplyTranslationOffsets(); // *** OPTIHACK5 TODO skeleton.torso.position and rotation values are not used if skeleton.isTracking is false!!!!
+				ApplyTranslationOffsets(); // *** OPTIHACK8 TODO skeleton.torso.position and rotation values are not used if skeleton.isTracking is false!!!!
 
 				UpdateTransform(ref torso, skeleton.torso, maxAngularChange, pelvisRotationOffset);
 				UpdateTransform(ref chest, skeleton.chest, maxAngularChange, chestRotationOffset);
@@ -1314,40 +1314,6 @@ public class RUISSkeletonController : MonoBehaviour
 //							transform.localPosition = skeletonPosition + tempRotation*rootOffset;
 //					}
 //				}
-//			}
-//
-//			if(followHmdPosition)
-//			{
-//				float hmdYaw = 0;
-//				if(coordinateSystem)
-//				{
-//					if(coordinateSystem.applyToRootCoordinates)
-//					{
-//						// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
-//						tempVector = coordinateSystem.ConvertLocation(coordinateSystem.GetHmdRawPosition(), headsetCoordinates);
-//						skeletonPosition.x = tempVector.x;
-//						skeletonPosition.z = tempVector.z;
-//						// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
-//						hmdYaw = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates).eulerAngles.y;
-//					}
-//					else
-//					{
-//						tempVector = coordinateSystem.GetHmdRawPosition();
-//						skeletonPosition.x = tempVector.x;
-//						skeletonPosition.z = tempVector.z;
-//						hmdYaw = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head).eulerAngles.y;
-//					}
-//				}
-//
-//				trackedDeviceYawRotation = Quaternion.Euler(0, hmdYaw, 0);
-//
-//				if(characterController.headRotatesBody)
-//					tempRotation = UpdateTransformWithTrackedDevice(ref root, hmdYaw);
-//				else
-//					tempRotation = Quaternion.identity;
-//					
-//				if(updateRootPosition) 
-//					transform.localPosition = skeletonPosition + tempRotation*rootOffset;	
 //			}
 //		}
 	}
@@ -1619,7 +1585,7 @@ public class RUISSkeletonController : MonoBehaviour
 	}
 
 	float offsetScale;
-	private Vector3 jointOffset = Vector3.zero; // *** OPTIHACK
+	private Vector3 jointOffset = Vector3.zero;
 
 	private void ForceUpdatePosition(ref Transform transformToUpdate, RUISSkeletonManager.JointData jointToGet, int jointID, float deltaT)
 	{
@@ -1783,7 +1749,7 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		else
 			offsetScale = 1;
-		// *** OPTIHACK5 start using torsoScale (and set it to sensible values). Get rid of this if-else conditional (torso.localScale.x) and test results
+		// *** OPTIHACK8 start using torsoScale (and set it to sensible values). Get rid of this if-else conditional (torso.localScale.x) and test results
 		if(bodyTrackingDevice == BodyTrackingDeviceType.Kinect2 || bodyTrackingDevice == BodyTrackingDeviceType.Kinect1)
 			jointOffset =  skeleton.torso.rotation * pelvisOffset * torso.localScale.x;
 		else
@@ -2110,43 +2076,41 @@ public class RUISSkeletonController : MonoBehaviour
 		if(!ConfidenceGoodEnoughForScaling() && hasBeenTracked)
 			return;
 
-//		if(bodyTrackingDevice == BodyTrackingDeviceType.GenericMotionTracker) // *** OPTIHACK4 commented this
+		if(independentTorsoSegmentsScaling)
 		{
-			if(independentTorsoSegmentsScaling)
-			{
-				torsoMultiplier = torsoThickness;
-			}
-			else
-			{
-				if(skeleton.isTracking)
-					torsoScale = UpdateTorsoScale(); // *** OPTIHACK3
-				torsoMultiplier = torsoScale * torsoThickness;
-			}
-				
-			cumulativeScale = UpdateUniformBoneScaling(torso, chest, skeleton.torso, skeleton.chest, torsoMultiplier * pelvisScaleAdjust, 1);
-
-			cumulatedPelvisScale = cumulativeScale;
-//			torsoScale = cumulativeScale; // *** OPTIHACK3 was this
-
-			cumulativeScale = UpdateUniformBoneScaling(chest, neck, skeleton.chest, skeleton.neck, torsoMultiplier * chestScaleAdjust, cumulativeScale);
-			
-			if(!neckParentsShoulders)
-				clavicleParentScale = cumulativeScale;
-
-			cumulativeScale = UpdateUniformBoneScaling(neck, head, skeleton.neck, skeleton.head, torsoMultiplier * neckScaleAdjust, cumulativeScale);
-			if(neckParentsShoulders)
-				clavicleParentScale = cumulativeScale;
-
-			if(head && cumulativeScale != 0) // cumulativeScale contains the accumulated scale of head's parent
-				head.localScale = (headScaleAdjust / cumulativeScale) * Vector3.one; 
+			torsoMultiplier = torsoThickness;
 		}
+		else
+		{
+			if(skeleton.isTracking)
+				torsoScale = UpdateTorsoScale(); // *** OPTIHACK3
+			torsoMultiplier = torsoScale * torsoThickness;
+		}
+			
+		cumulativeScale = UpdateUniformBoneScaling(torso, chest, skeleton.torso, skeleton.chest, torsoMultiplier * pelvisScaleAdjust, 1);
+
+		cumulatedPelvisScale = cumulativeScale;
+//		torsoScale = cumulativeScale; // *** OPTIHACK3 was this
+
+		cumulativeScale = UpdateUniformBoneScaling(chest, neck, skeleton.chest, skeleton.neck, torsoMultiplier * chestScaleAdjust, cumulativeScale);
+		
+		if(!neckParentsShoulders)
+			clavicleParentScale = cumulativeScale;
+
+		cumulativeScale = UpdateUniformBoneScaling(neck, head, skeleton.neck, skeleton.head, torsoMultiplier * neckScaleAdjust, cumulativeScale);
+		if(neckParentsShoulders)
+			clavicleParentScale = cumulativeScale;
+
+		if(head && cumulativeScale != 0) // cumulativeScale contains the accumulated scale of head's parent
+			head.localScale = (headScaleAdjust / cumulativeScale) * Vector3.one; 
+
 //		else // *** OPTIHACK4 commented this whole else clause
 //		{
 //			// *** TODO torsoScale is now assigned below and INSIDE the method. Get rid of hip/neck tweaks and reconsider how torsoScale is assigned
 //			if(skeleton.isTracking)
 //				torsoScale = UpdateTorsoScale();
 //			torsoMultiplier = torsoScale * torsoThickness;
-//			torso.localScale = torsoMultiplier * Vector3.one; // *** OPTIHACK3
+//			torso.localScale = torsoMultiplier * Vector3.one;
 //			limbStartScale = torsoScale; 
 //			if(head && neckScale != 0)
 //				head.localScale = (headScaleAdjust/torsoScale) * Vector3.one;

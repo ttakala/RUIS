@@ -219,7 +219,7 @@ public class RUISInputManager : MonoBehaviour
 				Debug.LogError("Could not start OpenNI! Check your Kinect connection. Disabling Kinect in RUISInputManager.");
 				if(GetComponentInChildren<RUISKinectDisabler>())
 	                GetComponentInChildren<RUISKinectDisabler>().KinectNotAvailable();
-				enableKinect = false; // *** OPTITRACK4 added this line, check that everything still works (calibration etc.)
+				enableKinect = false; // *** OPTIHACK8 added this line, check that everything still works (calibration etc.)
             }
         }
 
