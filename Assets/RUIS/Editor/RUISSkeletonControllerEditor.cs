@@ -232,7 +232,8 @@ public class RUISSkeletonControllerEditor : Editor
 	SerializedProperty customLeftRingF;
 	SerializedProperty customLeftLittleF;
 
-//	SerializedProperty customHMDSource;
+	public SerializedProperty useCustomHeadsetSource;
+	SerializedProperty customHeadsetSource;
 	public SerializedProperty headsetCoordinates;
 
 	SerializedProperty customConversionType;
@@ -452,7 +453,8 @@ public class RUISSkeletonControllerEditor : Editor
 		customLeftRingF		= serializedObject.FindProperty("customLeftRingF");
 		customLeftLittleF	= serializedObject.FindProperty("customLeftLittleF");
 
-//		customHMDSource		= serializedObject.FindProperty("customHMDSource");
+		useCustomHeadsetSource  = serializedObject.FindProperty("useCustomHeadsetSource");
+		customHeadsetSource		= serializedObject.FindProperty("customHeadsetSource");
 		headsetCoordinates	= serializedObject.FindProperty("headsetCoordinates");
 
 		customConversionType = serializedObject.FindProperty("customConversionType");
@@ -671,10 +673,11 @@ public class RUISSkeletonControllerEditor : Editor
 
 		GUI.enabled = updateRootPosition.boolValue;
 		EditorGUI.indentLevel++;
-		EditorGUILayout.PropertyField(rootSpeedScaling, new GUIContent(  "Root Speed Scaling", "Multiply skeleton root position, making the avatar move "
-		                                                               + "larger distances than mocap tracking area allows. This is not propagated to "
-		                                                               + "Skeleton Wands or other devices (e.g. head trackers) even if they are calibrated "
-		                                                               + "with mocap system's coordinate frame. Default and recommended value is (1,1,1)."));
+		EditorGUILayout.PropertyField(rootSpeedScaling, new GUIContent(   "Root Speed Scaling", "Multiply skeleton root position, making the avatar move "
+		                                                                + "larger distances than mocap tracking area allows. This is not propagated to "
+																		+ "Skeleton Wands or other devices (e.g. head trackers) even if they are aligned "
+																		+ "(calibrated) with \"Body Tracking Device\"'s coordinate frame. Default and "
+																		+ "recommended value is (1,1,1)."));
 		EditorGUI.indentLevel--;
 
 		GUI.enabled = true;
@@ -814,29 +817,41 @@ public class RUISSkeletonControllerEditor : Editor
 //		if(!scaleHierarchicalModelBones.boolValue)
 //			scaleBoneLengthOnly.boolValue = false;
 
-//		EditorGUILayout.PropertyField(customHMDSource, new GUIContent("Custom HMD", "Leave this field empty if you want to use head-mounted displays that are "
-//											+ "natively supported by Unity (e.g. Oculus Rift, Vive, OpenVR headsets...). If you are using any other HMDs with "
-//											+ "tracking, link this field to the Transform whose position and rotation is controlled by the HMD tracking."));
-
-		EditorGUILayout.PropertyField(headsetCoordinates, new GUIContent("HMD Coordinate Frame", "If you are using the head-mounted display tracking for "
-																		+ "rotating or positioning the avatar head, or for \"HMD Drags Body\", then "
-																		+ "you need to set this field to the correct HMD coordinate frame that is "
-																		+ "calibrated with the \"Body Tracking Device\" coordinate frame. In most cases this "
-																		+ "option should be set to 'OpenVR' or 'UnityXR'. If \"HMD Drags Body\" "
-																		+ "is enabled, consider setting this field to 'None' so that there are no additional "
-																		+ "offsets in the avatar root."));
+		EditorGUILayout.PropertyField(headsetCoordinates, new GUIContent("HMD Coordinate Frame", "If any of the options in the below \"HMD\"-subsection (e.g. \"HMD "
+																		+ "Drags Body\", \"HMD Rotates Head\", ...) are enabled, then this setting will affect all "
+																		+ "of them: you need to set this field to the correct HMD coordinate frame that is aligned "
+																		+ "(calibrated) with the \"Body Tracking Device\" coordinate frame.\n\nIn most cases this "
+																		+ "option should be set to 'OpenVR' or 'UnityXR'. If \"HMD Drags Body\" is enabled, which "
+																		+ "is common with IMU mocap systems like Perception Neuron, then consider setting this "
+																		+ "field to 'None' so that there are no additional offsets in the avatar root."));
 		EditorGUI.indentLevel++;
 
+		EditorGUILayout.PropertyField(useCustomHeadsetSource, new GUIContent("Custom HMD Input", "If enabled, you can provide a \"Custom HMD Input\" Transform, "
+																	+ "that will be used to provide the HMD/head pose (position and rotation) for all the purposes "
+																	+ "of this \"HMD\"-subsection.\nNormally you should keep this option disabled, in which case "
+																	+ "the HMD pose will be obtained via UnityEngine.XR.InputTracking, which supports most common "
+																	+ "headsets (e.g. Oculus Rift, Vive, OpenVR headsets...)."));
+
+		if(useCustomHeadsetSource.boolValue)
+		{
+			EditorGUI.indentLevel++;
+			EditorGUILayout.PropertyField(customHeadsetSource, new GUIContent("Custom Input Transform", "The head pose source Transform that will be used for the "
+																	+ "purposes of this \"HMD\"-subsection. Link this field to the Transform whose position and "
+																	+ "rotation is controlled by the head tracker that provides better pose tracking than your "
+																	+ "\"Body Tracking Device\". If you have no such tracker or are not using a position tracked "
+																	+ "HMD, then disable all the options in this \"HMD\"-subsection ."));
+			EditorGUI.indentLevel--;
+		}
 		EditorGUILayout.PropertyField(headsetDragsBody, new GUIContent("HMD Drags Body", "Moves the whole avatar in real-time so that its head is co-located "
-																	+ "with the tracked position of the head-mounted display. Enable this option if the user is "
+																	+ "with the position of the head-mounted display. Enable this option if the user is "
 																	+ "wearing a position tracked head-mounted display and their body is tracked with an IMU "
 																	+ "suit (e.g. Perception Neuron, Xsens). Such suits measure relative joint rotations, and "
-																	+ "can only roughly estimate joint positions.\nThis option can also be enabled if the "
+																	+ "can only roughly estimate joint positions.\n\nThis option can also be enabled if the "
 																	+ "coordinate alignment (calibration) between the HMD and the \"Body Tracking Device\" (e.g. "
 																	+ "Kinect) is noticeably off, or if the \"Body Tracking Device\" has considerably more latency "
 																	+ "when compared to the HMD tracking. In the latter case the avatar's feet can temporarily "
 																	+ "disappear under the virtual floor when crouching quickly, and the avatar will also "
-																	+ "'glide' unnaturally when the user sways their head quickly.\nYou can use \"HMD Local "
+																	+ "'glide' unnaturally when the user sways their head quickly.\n\nYou can use \"HMD Local "
 																	+ "Offset\" to adjust how the HMD view is positioned with relation to the avatar head "
 																	+ "model. When this option is enabled, it is also good to enable \"HMD Rotates Head\"."));
 
@@ -865,24 +880,26 @@ public class RUISSkeletonControllerEditor : Editor
 		EditorGUI.indentLevel--;
 
 		EditorGUILayout.PropertyField(hmdRotatesHead, new GUIContent( "HMD Rotates Head", "Rotate avatar head using orientation from the connected "
-																	+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice 
-																	+ " coordinate system " 
+																	+ "head-mounted display. NOTE: If enabled, the " + skeletonController.bodyTrackingDevice 
+																	+ " coordinate frame " 
 																	+ ((bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)? ("(currently "
 																	+ "set to " + customConversionType.enumDisplayNames[customConversionType.enumValueIndex]
 																	+ " in the below \"Custom Mocap Source Transforms\" section) "):"") + "must be calibrated "
-																	+ "or otherwise aligned with the \"HMD Coordinate Frame\"!" 
+																	+ "or otherwise aligned with the chosen \"HMD Coordinate Frame\" (" 
+																	+ headsetCoordinates.enumDisplayNames[headsetCoordinates.enumValueIndex] + ")!" 
 																	+ ((bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)? 
 																	  (" Alternatively the above \"IMU Yaw Correct\" option must be enabled if you are using "
 																	+ "an IMU suit (e.g. Perception Neuron, Xsens) as the \"Body Tracking Device\"."):"")));
 
 		EditorGUILayout.PropertyField(hmdMovesHead, new GUIContent("HMD Moves Head", "Make avatar head follow the position tracking of the connected " 
-																+ "head-mounted display. NOTE: The " + skeletonController.bodyTrackingDevice + " coordinate "
-																+ "system " + ((bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)? 
-																	("(currently set to " 
-																+ customConversionType.enumDisplayNames[customConversionType.enumValueIndex] + " in the below "
-																+ "\"Custom Mocap Source Transforms\" section) "):"") +  "must be aligned (calibrated) with "
-																+ "the \"HMD Coordinate Frame\"! Inaccuracies in the calibration will make the head-body "
-																+ "placement look weird."));
+																+ "head-mounted display. NOTE: If enabled, the " + skeletonController.bodyTrackingDevice
+																+ " coordinate frame " 
+																+ ((bodyTrackingDevice.enumValueIndex == RUISSkeletonManager.customSensorID)? ("(currently set " 
+																+ "to " + customConversionType.enumDisplayNames[customConversionType.enumValueIndex] + " in "
+																+ "the below \"Custom Mocap Source Transforms\" section) "):"") +  "must be aligned "
+																+ "(calibrated) with the chosen \"HMD Coordinate Frame\" (" 
+																+ headsetCoordinates.enumDisplayNames[headsetCoordinates.enumValueIndex] + ")! Inaccuracies "
+																+ "in the calibration will make the head-body placement look weird."));
 
 		EditorGUILayout.PropertyField(neckInterpolate, new GUIContent("Neck Pose Interpolation", "Avatar's neck position will be interpolated between chest "
 																	+ "and head position, while its rotation will point towards the head position. This means "
@@ -906,11 +923,11 @@ public class RUISSkeletonControllerEditor : Editor
 																+ "system. This is useful for positioning the HMD view with the avatar's eyes, which also "
 																+ "improves the avatar's head positioning with relation to user's neck. If \"HMD Drags "
 																+ "Body\" option is enabled, then the whole avatar position is offset from the HMD "
-																+ "position; in this case, make sure that \"HMD Root Offset\" is set to zero if you want "
-																+ "the user's head position to match the avatar's head position perfectly."));
+																+ "position."));
 
 		GUI.enabled = true;
 
+// HMD Local Offset: "in this case, make sure that "HMD Root Offset" is set to zero if you want the user's head position to match the avatar's head position perfectly."
 //		EditorGUILayout.PropertyField(rootOffset, new GUIContent("HMD Root Offset", "This offset is applied only when the \"Body Tracking Device\" is not "
 //																+ "available and the avatar follows the head-mounted display position. "
 //																+ "The offset is useful if your view in those "

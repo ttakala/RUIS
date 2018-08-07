@@ -90,7 +90,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public Transform customLeftRingF;
 	public Transform customLeftLittleF;
 
-	public Transform customHMDSource;
+	public bool useCustomHeadsetSource = false;
+	public Transform customHeadsetSource;
 	public RUISDevice headsetCoordinates = RUISDevice.OpenVR; 
 
 	public Vector3 pelvisOffset   = Vector3.zero;
@@ -548,7 +549,7 @@ public class RUISSkeletonController : MonoBehaviour
 		if(!root)
 		{
 			Debug.LogError(typeof(RUISSkeletonController) + " of GameObject " + gameObject.name + " has not been assigned with a \"Target Root\" "
-				+ "Transform. The script will be disabled.");
+							+ "Transform. The script will be disabled.");
 			this.enabled = false;
 		}
 
@@ -565,6 +566,10 @@ public class RUISSkeletonController : MonoBehaviour
 				Debug.LogWarning("Head-mounted display is not detected: Unable to comply with the enabled HMD options of " + typeof(RUISSkeletonController) + ".");
 		}
 
+		if(useCustomHeadsetSource && !customHeadsetSource)
+			Debug.LogWarning(typeof(RUISSkeletonController) + " of GameObject " + gameObject.name + " has \"Custom HMD Input\" enabled, but \"Custom Input Transform\" "
+							+ "is left to none!");
+		
 		hasBeenTracked = false;
 
 		if(inputManager) // *** OPTIHACK4 moved this here from Awake(), check that everything still works
@@ -1030,12 +1035,14 @@ public class RUISSkeletonController : MonoBehaviour
 			maxAngularChange = deltaTime * maxAngularVelocity;
 
 			// Get head position from HMD if that option is enabled
-			if(hmdMovesHead && !headsetDragsBody && RUISDisplayManager.IsHmdPresent())
+			if(hmdMovesHead && !headsetDragsBody)
 			{
 				// *** OPTIHACK5 TODO Added ConvertLocation() because it was missing. Any side-effects?? RUISDevice.OpenVR
-				skeleton.head.position = 
-								coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
-				// *** OPTIHACK8 TODO CustomHMDSource and coordinate conversion case...
+				if(useCustomHeadsetSource && customHeadsetSource) // *** OPTIHACK8 TODO test this
+					skeleton.head.position = coordinateSystem.ConvertLocation(customHeadsetSource.position, headsetCoordinates);
+				else if(RUISDisplayManager.IsHmdPresent())
+					skeleton.head.position = 
+						coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
 			}
 
 			// Interpolate neck pose if that option is enabled
@@ -1053,11 +1060,13 @@ public class RUISSkeletonController : MonoBehaviour
 				UpdateSkeletonPosition(); // Updates skeletonPosition variable
 
 			// *** OPTIHACK6 check that this new location for this code still works
-			if(hmdRotatesHead && RUISDisplayManager.IsHmdPresent())
+			if(hmdRotatesHead)
 			{
-				// *** OPTIHACK8 TODO CustomHMDSource and coordinate conversion case...
-				skeleton.head.rotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
-																														headsetCoordinates);
+				if(useCustomHeadsetSource && customHeadsetSource) // *** OPTIHACK8 TODO test this
+					skeleton.head.rotation = coordinateSystem.ConvertRotation(customHeadsetSource.rotation, headsetCoordinates);
+				else if(RUISDisplayManager.IsHmdPresent())
+					skeleton.head.rotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+																															headsetCoordinates);
 			}
 				
 			if(skeleton.isTracking || !hasBeenTracked  /* && bodyTrackingDeviceID != RUISSkeletonManager.kinect2SensorID || skeletonManager.isNewKinect2Frame */)
@@ -1761,12 +1770,13 @@ public class RUISSkeletonController : MonoBehaviour
 
 		// *** OPTIHACK6 Consider removing this if-else and apply head offset normally like other joints?
 		//     Currently if hmdMovesHead is enabled, its offset is applied along HMD pose even if hmdRotatesHead is not enabled!
-		if(hmdMovesHead && RUISDisplayManager.IsHmdPresent())
-		{	
-			// *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
-			jointOffset = skeleton.neck.rotation * headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
-																								 headsetCoordinates) * hmdLocalOffset; 
-			// *** OPTIHACK5 CustomHMDSource and coordinate conversion case...
+		if(hmdMovesHead)
+		{
+			if(useCustomHeadsetSource && customHeadsetSource) // *** OPTIHACK8 TODO test this
+				jointOffset = skeleton.neck.rotation * headOffset + coordinateSystem.ConvertRotation(customHeadsetSource.rotation, headsetCoordinates) * hmdLocalOffset; 
+			else if(RUISDisplayManager.IsHmdPresent()) // *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
+				jointOffset = skeleton.neck.rotation * headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+																									 headsetCoordinates) * hmdLocalOffset;
 		}
 		else
 		{
@@ -1818,14 +1828,16 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 				// *** OPTIHACK the below GetYawDriftCorrection invocations do not work if skeleton.torso.rotation was not updated with a "fresh" value
 				// just before calling this function (right now this only concerns Kinect1/2 which shouldn't be used with yawCorrectIMU
-				if(customHMDSource)
+				if(useCustomHeadsetSource && customHeadsetSource)
 				{
-					// GetYawDriftCorrection() sets rotationDrift and also returns it
-					GetYawDriftCorrection(customHMDSource.rotation, skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation); 
+					// *** OPTIHACK8 TODO test this
+					GetYawDriftCorrection(coordinateSystem.ConvertRotation(customHeadsetSource.rotation, headsetCoordinates), 
+										  skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation); 
 				}
 				else
 				{
-					if(RUISDisplayManager.IsHmdPresent()) // *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
+					// GetYawDriftCorrection() sets rotationDrift and also returns it
+					if(RUISDisplayManager.IsHmdPresent()) 
 						GetYawDriftCorrection(coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
 																headsetCoordinates), skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation);
 				}
@@ -1861,16 +1873,16 @@ public class RUISSkeletonController : MonoBehaviour
 
 //			pelvisToHeadVector =  skeleton.head.position - skeleton.torso.position + skeleton.torso.rotation * rootOffset;
 
-			if(customHMDSource)
+			if(useCustomHeadsetSource && customHeadsetSource)
 			{
-				headsetPosition = customHMDSource.localPosition; // ***
-				headsetRotation = customHMDSource.localRotation; // ***
+				// *** OPTIHACK8 TODO test this
+				headsetPosition = coordinateSystem.ConvertLocation(customHeadsetSource.position, headsetCoordinates);
+				headsetRotation = coordinateSystem.ConvertRotation(customHeadsetSource.rotation, headsetCoordinates);
 			}
 			else
 			{
 				if(RUISDisplayManager.IsHmdPresent())
 				{
-					// *** OPTIHACK5 TODO CustomHMDSource and coordinate conversion case...
 					headsetPosition = coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
 					headsetRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates);
 				}
