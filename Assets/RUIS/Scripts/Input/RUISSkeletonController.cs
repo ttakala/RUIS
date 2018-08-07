@@ -2549,6 +2549,8 @@ public class RUISSkeletonController : MonoBehaviour
 		if(!boneToScale)
 			return;
 				
+		boneScaleTarget = Vector3.Scale(boneScaleTarget, jointInitialLocalScales[boneToScale]);
+
 		Vector3 updatedScale = Vector3.one;
 
 		if(scaleBoneLengthOnly && limbsAreScaled)
@@ -2605,6 +2607,15 @@ public class RUISSkeletonController : MonoBehaviour
 			updatedScale.Set(float.IsNaN(tempVector.x) ? boneToScale.localScale.x : tempVector.x,
 							 float.IsNaN(tempVector.y) ? boneToScale.localScale.y : tempVector.y,
 							 float.IsNaN(tempVector.z) ? boneToScale.localScale.z : tempVector.z );
+
+			// *** OPTIHACK8 added below 2 statements
+//			if(boneToScale == leftHand) // testing purpose only
+			{
+				tempVector.Set(	boneToScale.localScale.x / boneToScale.lossyScale.x, 
+								boneToScale.localScale.y / boneToScale.lossyScale.y, 
+								boneToScale.localScale.z / boneToScale.lossyScale.z );
+				updatedScale = transform.lossyScale.y * Vector3.Scale(boneScaleTarget, tempVector); // lossyScale.y is a somewhat arbitrary choice for avatar's overall scale
+			}
 //			print(transform.parent.name + " " + joint.jointID + " " + minLossyScale + " " + maxLossyScale + " " + (tempVector - boneToScale.localScale));
 		}
 		else
@@ -2612,92 +2623,11 @@ public class RUISSkeletonController : MonoBehaviour
 			updatedScale = boneScaleTarget / accumulatedScale;
 		}
 
-
-		//
-//		switch(boneLengthAxis)
-//		{
-//		case RUISAxis.X:
-//			tempVector.Set(   accumulatedScale, parentBoneThickness, parentBoneThickness);
-//			break;
-//		case RUISAxis.Y:
-//			tempVector.Set(parentBoneThickness,    accumulatedScale, parentBoneThickness);
-//			break;
-//		case RUISAxis.Z:
-//			tempVector.Set(parentBoneThickness, parentBoneThickness,    accumulatedScale);
-//			break;
-//		}
-//		skewedScaleTweak 	= extremityTweaker 	/ Vector3.Scale(boneToScale.localRotation * w, tempVector).magnitude;
-//		thicknessU 			= thickness 		/ Vector3.Scale(boneToScale.localRotation * u, tempVector).magnitude;
-//		thicknessV 			= thickness 		/ Vector3.Scale(boneToScale.localRotation * v, tempVector).magnitude;
-		//
-
-//		if(joint.jointID == RUISSkeletonManager.Joint.LeftHand)
-//		{
-//			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.z * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.forward), Color.blue);
-//			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.y * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.up), Color.green);
-//			Debug.DrawRay(boneToScale.parent.position, boneToScale.parent.localScale.x * (boneToScale.parent.parent.rotation * boneToScale.parent.localRotation * Vector3.right), Color.red);
-//			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.z * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.forward), Color.blue);
-//			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.y * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.up), Color.green);
-//			Debug.DrawRay(boneToScale.parent.parent.position, boneToScale.parent.parent.localScale.x * (boneToScale.parent.parent.parent.rotation * boneToScale.parent.parent.localRotation * Vector3.right), Color.red);
-//		}
-
-// *** COMMENT BLOCK START
-//		tempVector = boneToScale.parent.localScale;
-//		delta = boneToScale.parent.parent.localScale;
-////		tempVector.Set(1/boneToScale.parent.localScale.x, 1/boneToScale.parent.localScale.y, 1/boneToScale.parent.localScale.z);
-////		delta.Set(1/boneToScale.parent.parent.localScale.x, 1/boneToScale.parent.parent.localScale.y, 1/boneToScale.parent.parent.localScale.z);
-//
-////		tempVector = tempVector / transform.localScale.x;
-////		delta = delta / transform.localScale.x;
-//
-////		tempVector = (boneToScale.localRotation) * tempVector;
-////		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
-////		tempVector.Set(1/Mathf.Abs(tempVector.x), 1/Mathf.Abs(tempVector.y), 1/Mathf.Abs(tempVector.z));
-//		delta = (boneToScale.parent.localRotation) * delta;
-//		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
-////		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
-//
-//		delta = (boneToScale.localRotation) * delta;
-//		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
-//		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
-//		tempVector = Vector3.Scale(delta, tempVector);
-////		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
-//
-//		tempVector = (boneToScale.localRotation) * tempVector;
-//		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
-//		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
-////		tempVector = Vector3.Scale(delta, tempVector);
-////		tempVector.Set(1/tempVector.x, 1/tempVector.y, 1/tempVector.z);
-////		tempVector = Vector3.Scale(delta, tempVector);
-//
-//		delta.Set(	Vector3.Scale(boneToScale.parent.localRotation * Vector3.right, 	boneToScale.parent.parent.localScale).magnitude,
-//					Vector3.Scale(boneToScale.parent.localRotation * Vector3.up, 		boneToScale.parent.parent.localScale).magnitude,
-//					Vector3.Scale(boneToScale.parent.localRotation * Vector3.forward, 	boneToScale.parent.parent.localScale).magnitude);
-//
-////		delta = (boneToScale.parent.localRotation) * delta;
-////		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
-////		delta = Vector3.Scale(boneToScale.parent.localScale, delta);
-//		tempVector.Set( 1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.right), 	Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude,
-//						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.up), 		Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude,
-//						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.forward),	Vector3.Scale(boneToScale.parent.localScale, delta)).magnitude );
-////		tempVector.Set( 1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.right), 	boneToScale.parent.localScale).magnitude,
-////						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.up), 		boneToScale.parent.localScale).magnitude,
-////						1 / Vector3.Scale(  (boneToScale.localRotation * Vector3.forward),	boneToScale.parent.localScale).magnitude );
-//
-////		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
-////		tempVector = Vector3.Scale(delta, tempVector);
-////		delta = Quaternion.Inverse( boneToScale.parent.localRotation) * boneToScale.parent.parent.localScale;
-////		delta.Set(Mathf.Abs(delta.x), Mathf.Abs(delta.y), Mathf.Abs(delta.z));
-////		delta.Set(1/Mathf.Abs(delta.x), 1/Mathf.Abs(delta.y), 1/Mathf.Abs(delta.z));
-////		tempVector = Vector3.Scale(delta, tempVector);
-////		tempVector.Set(Mathf.Abs(tempVector.x), Mathf.Abs(tempVector.y), Mathf.Abs(tempVector.z));
-////		tempVector = ( 1 / tempVector.magnitude) * tempVector;
-////		boneToScale.localScale = tempVector;
-// *** COMMENT BLOCK END
-
-		tempVector = Vector3.MoveTowards(boneToScale.localScale, updatedScale, 10 * deltaTime); // *** TODO: speed 10 might not be good
-		if(!float.IsNaN(tempVector.x) && !float.IsNaN(tempVector.y) && !float.IsNaN(tempVector.z))
-			boneToScale.localScale = tempVector;
+		// *** OPTIHACK8 commented below line
+//		if(boneToScale != leftHand) // testing purpose only
+//			updatedScale = Vector3.MoveTowards(boneToScale.localScale, updatedScale, 10 * deltaTime); // *** TODO: speed 10 might not be good
+		if(!float.IsNaN(updatedScale.x) && !float.IsNaN(updatedScale.y) && !float.IsNaN(updatedScale.z))
+			boneToScale.localScale = updatedScale;
 
 // *** COMMENT BLOCK START
 //		if(joint.jointID == RUISSkeletonManager.Joint.LeftHand)
