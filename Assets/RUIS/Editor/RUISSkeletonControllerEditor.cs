@@ -2037,11 +2037,11 @@ public static class RUISSkeletonControllerCustomSources
 		properSourceNames.Add(RUISSkeletonManager.Joint.Chest, new string[] {"chest", "spine1"});
 		properSourceNames.Add(RUISSkeletonManager.Joint.Neck,  new string[] {"neck"});
 		properSourceNames.Add(RUISSkeletonManager.Joint.Head,  new string[] {"head"});
-		properSourceNames.Add(RUISSkeletonManager.Joint.LeftClavicle, new string[] {"clavicle"}); // Perception Neuron: shoulder
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftClavicle, new string[] {"clavicle", "collar"}); // Perception Neuron: shoulder
 		properSourceNames.Add(RUISSkeletonManager.Joint.LeftShoulder, new string[] {"shoulder",  "uparm", "up_arm", "up-arm", "up arm",
 																					"upperarm", "upper_arm", "upper-arm", "upper arm"  }); // Perception Neuron: arm
 		properSourceNames.Add(RUISSkeletonManager.Joint.LeftElbow, armTripletNames[2].ToArray());
-		properSourceNames.Add(RUISSkeletonManager.Joint.LeftHand,  new string[] {"hand", "wrist"});
+		properSourceNames.Add(RUISSkeletonManager.Joint.LeftHand,  new string[] {"hand", "wrist", "carpus"});
 		properSourceNames.Add(RUISSkeletonManager.Joint.LeftHip,   new string[] {"hip", "thigh", "upleg", "up_leg", "up-leg", "up leg", "upperleg", 
 																				 "upper_leg", "upper-leg", "upper leg"								 }); // not hips
 		properSourceNames.Add(RUISSkeletonManager.Joint.LeftKnee,  new string[] {"knee", "shin", "calf", "lowerleg", "lower_leg", "lower leg", "leg"}); // not above
