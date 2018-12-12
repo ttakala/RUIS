@@ -23,12 +23,12 @@ TagManager:
   - Hands
   - Terrain
   - StereoRender_Ignore
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - layerRight
+  - layerLeft
+  - layerBothBelow
+  - layerRightAbove
+  - layerLeftAbove
+  - layerBothAbove
   - 
   - 
   - 
