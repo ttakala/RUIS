@@ -450,6 +450,8 @@ public class RUISSkeletonController : MonoBehaviour
 	public Vector3 clenchedFingerAnglePIP;
 	public Vector3 clenchedFingerAngleDIP;
 
+
+	public bool useLocalFingerRotation = false; // *** OPTIHACK7 remove this
 	public bool leftThumbHasIndependentRotations = false; // *** OPTIHACK5 remove this
 	public Quaternion clenchedLeftThumbTM;
 	public Quaternion clenchedLeftThumbMCP;
@@ -3162,6 +3164,17 @@ public class RUISSkeletonController : MonoBehaviour
 									rotOffset.Set(rotOffset.x, -rotOffset.y, -rotOffset.z);
 								rotationOffset = Quaternion.Euler(rotOffset);
 
+								// *** OPTIHACK5 TODO HACK remove
+								if(leftThumbHasIndependentRotations && i == 1 && j == 4) // Left thumb
+								{
+									if(k == 0)
+										rotationOffset = clenchedLeftThumbTM * rotationOffset;
+									if(k == 1)
+										rotationOffset = clenchedLeftThumbMCP  * rotationOffset;
+									if(k == 2)
+										rotationOffset = clenchedLeftThumbIP  * rotationOffset;
+								}
+
 								if(yawCorrectIMU)
 									tempRotation = rotationDrift;
 								else
@@ -3169,6 +3182,18 @@ public class RUISSkeletonController : MonoBehaviour
 										
 								// At the moment only hierarchical finger phalanx Transforms are supported
 								newRotation = transform.rotation * tempRotation * fingerSources[i, j, k].rotation * rotationOffset * initialFingerWorldRotations[i, j, k];
+
+								// *** OPTIHACK5 TODO HACK remove
+								if(useLocalFingerRotation)
+								{
+									if (k == 0)
+										newRotation = (i == 0 ? rightHand.rotation : leftHand.rotation);
+									else
+										newRotation = fingerTargets [i, j, k - 1].rotation;
+
+									newRotation = newRotation * fingerSources[i, j, k].localRotation * rotationOffset * initialFingerLocalRotations[i, j, k];
+								}
+
 								fingerTargets[i, j, k].rotation = Quaternion.RotateTowards(fingerTargets[i, j, k].rotation, newRotation, maxAngularDelta);
 							}
 						}
