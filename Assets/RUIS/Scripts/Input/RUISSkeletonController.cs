@@ -2864,12 +2864,13 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					if(j != 4) // Fingers that are not thumbs
 					{
+						// *** OPTIHACK5 HACK TODO REMOVE THIS CHANGE: Z-axes were multiplied with * inv
 						if(fingerTargets[i, j, 0])
-							fingerTargets[i, j, 0].localRotation = Quaternion.Slerp(fingerTargets[i, j, 0].localRotation, Quaternion.Euler(clenchedFingerAngleMCP), deltaTime * rotationSpeed);
+							fingerTargets[i, j, 0].localRotation = Quaternion.Slerp(fingerTargets[i, j, 0].localRotation, Quaternion.Euler(clenchedFingerAngleMCP* inv), deltaTime * rotationSpeed);
 						if(fingerTargets[i, j, 1])
-							fingerTargets[i, j, 1].localRotation = Quaternion.Slerp(fingerTargets[i, j, 1].localRotation, Quaternion.Euler(clenchedFingerAnglePIP), deltaTime * rotationSpeed);
+							fingerTargets[i, j, 1].localRotation = Quaternion.Slerp(fingerTargets[i, j, 1].localRotation, Quaternion.Euler(clenchedFingerAnglePIP* inv), deltaTime * rotationSpeed);
 						if(fingerTargets[i, j, 2])
-							fingerTargets[i, j, 2].localRotation = Quaternion.Slerp(fingerTargets[i, j, 2].localRotation, Quaternion.Euler(clenchedFingerAngleDIP), deltaTime * rotationSpeed);
+							fingerTargets[i, j, 2].localRotation = Quaternion.Slerp(fingerTargets[i, j, 2].localRotation, Quaternion.Euler(clenchedFingerAngleDIP* inv), deltaTime * rotationSpeed);
 					}
 					else if(!kinect2Thumbs) // Thumbs (if separate thumb  tracking is not enabled)
 					{
