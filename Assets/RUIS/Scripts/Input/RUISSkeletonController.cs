@@ -3189,7 +3189,15 @@ public class RUISSkeletonController : MonoBehaviour
 									if (k == 0)
 										newRotation = (i == 0 ? rightHand.rotation : leftHand.rotation);
 									else
-										newRotation = fingerTargets [i, j, k - 1].rotation;
+										newRotation = fingerTargets[i, j, k - 1].rotation;
+
+									if(j == 4 && k == 2) // *** OPTIHACK6 TODO HACK remove
+									{
+										tempVector = fingerSources[i, j, k - 1].localRotation.eulerAngles;
+//										if(i == 0) // Right hand
+//											tempVector.Set(-tempVector.x, tempVector.y, tempVector.z);
+										fingerSources[i, j, k].localRotation = Quaternion.Euler(tempVector);
+									}
 
 									newRotation = newRotation * fingerSources[i, j, k].localRotation * rotationOffset * initialFingerLocalRotations[i, j, k];
 								}
