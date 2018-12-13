@@ -357,10 +357,10 @@ public class RUISSkeletonController : MonoBehaviour
 	private KalmanFilter positionKalman;
 	private double[] measuredPos = { 0, 0, 0 };
 	private double[] pos = { 0, 0, 0 };
-	public float positionNoiseCovariance = 100;
+	public float positionNoiseCovariance = 10;
 
 	private KalmanFilter[] fourJointsKalman = new KalmanFilter[5];
-	public float fourJointsNoiseCovariance = 50;
+	public float fourJointsNoiseCovariance = 10;
 	private Vector3[] forcedJointPositions = new Vector3[18];
 	
 	public bool filterRotations = false;
