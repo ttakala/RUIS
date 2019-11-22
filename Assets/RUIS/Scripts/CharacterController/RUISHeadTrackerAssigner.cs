@@ -140,7 +140,7 @@ public class RUISHeadTrackerAssigner : MonoBehaviour {
 //					} catch{}
 
 					// Give score to found head trackers
-					if(RUISDisplayManager.IsHmdPresent() && UnityEngine.VR.VRSettings.enabled && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OpenVR)
+					if(RUISDisplayManager.IsHmdPresent() && UnityEngine.XR.XRSettings.enabled && trackerScript.headPositionInput == RUISTracker.HeadPositionSource.OpenVR)
 					{
 						foundTrackerScore = 7;
 					}

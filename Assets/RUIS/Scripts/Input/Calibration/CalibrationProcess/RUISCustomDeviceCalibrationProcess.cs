@@ -632,8 +632,8 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 				foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 				{
 //					Debug.Log(trackedOpenVRObject.index + " " + ((int) trackedOpenVRObject.index));
-					if(   SteamVR_Controller.Input((int)trackedOpenVRObject.index).connected
-					   && SteamVR_Controller.Input((int)trackedOpenVRObject.index).GetHairTrigger())
+					if(false /*   SteamVR_Controller.Input((int)trackedOpenVRObject.index).connected			// *** UPDATED TO STEAMVR2.5
+						&& SteamVR_Controller.Input((int)trackedOpenVRObject.index).GetHairTrigger() */)		// *** UPDATED TO STEAMVR2.5
 					{
 						openVrControllerIndex = (int)trackedOpenVRObject.index;
 						openVrControllerTransform = trackedOpenVRObject.transform;
@@ -739,10 +739,12 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 		// Fine tune translation with OpenVR controller
 		if(firstInputDevice == RUISDevice.OpenVR)
 		{
+			// *** UPDATED TO STEAMVR2.5 this whole block is commented
+			/*
 			if(openVrPrefabContainer && openVrPrefabContainer.instantiatedOpenVrCameraRig)
 				trackedOpenVRObjects = openVrPrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
 
-			if(SteamVR_Controller.Input(openVrControllerIndex).connected)
+			if(SteamVR_Controller.Input(openVrControllerIndex).connected) 
 			{
 				var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(openVrControllerIndex).GetPose().mDeviceToAbsoluteTracking);
 
@@ -776,6 +778,7 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 	//				calibration.coordinateSystem.SaveFloorData(xmlFilename, inputDevice2, device1FloorNormal, device1DistanceFromFloor);
 				}
 			}
+			*/
 		}
 
 		return RUISCalibrationPhase.ShowResults;
@@ -957,9 +960,9 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 				{
 					if(openVrControllerIndex == (int)trackedOpenVRObject.index)
 					{
-						if(   SteamVR_Controller.Input(openVrControllerIndex).connected
-						   && SteamVR_Controller.Input(openVrControllerIndex).valid
-						   && SteamVR_Controller.Input(openVrControllerIndex).hasTracking)
+						if( false /*   SteamVR_Controller.Input(openVrControllerIndex).connected	// *** UPDATED TO STEAMVR2.5
+							&& SteamVR_Controller.Input(openVrControllerIndex).valid				// *** UPDATED TO STEAMVR2.5
+							&& SteamVR_Controller.Input(openVrControllerIndex).hasTracking */)		// *** UPDATED TO STEAMVR2.5
 						{
 							sample = trackedOpenVRObject.transform.localPosition;
 							firstDeviceError = false;
@@ -1416,12 +1419,6 @@ public class RUISCustomDeviceCalibrationProcess : RUISCalibrationProcess
 //					StartCoroutine(FindControllers());
 //			}
 //		}
-
-		if(SteamVR_Controller.Input(openVrControllerIndex).valid)
-		{
-
-
-		}
 
 	}
 

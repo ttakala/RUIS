@@ -152,7 +152,7 @@ public class RUIS3dGuiCursor : MonoBehaviour {
 
 			if(rayCamera)
 			{
-				if(UnityEngine.VR.VRSettings.enabled && rayCamera.stereoTargetEye != StereoTargetEyeMask.None) // if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isHmdDisplay)
+				if(UnityEngine.XR.XRSettings.enabled && rayCamera.stereoTargetEye != StereoTargetEyeMask.None) // if(ruisCamera.associatedDisplay != null && ruisCamera.associatedDisplay.isHmdDisplay)
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
 					ray = RUISDisplayManager.HMDScreenPointToRay(mouseInputCoordinates, rayCamera);

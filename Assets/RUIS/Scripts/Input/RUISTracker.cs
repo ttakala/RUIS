@@ -384,7 +384,7 @@ public class RUISTracker : MonoBehaviour
 		if(headPositionInput == HeadPositionSource.OpenVR || headRotationInput == HeadRotationSource.OpenVR)
 		{
 			// If we are just using OpenVR controllers, or if there is any HMD detected
-			if(RUISDisplayManager.IsOpenVrAccessible() || (RUISDisplayManager.IsHmdPresent() && UnityEngine.VR.VRSettings.enabled))
+			if(RUISDisplayManager.IsOpenVrAccessible() || (RUISDisplayManager.IsHmdPresent() && UnityEngine.XR.XRSettings.enabled))
 			{
 				// *** TODO HACK Pos/rot values for RUISTracker should be set separately. In HMD use (Rift/Vive) RUISTracker acts as a TrackingSpace offset
 				if(coordinateSystem && coordinateSystem.applyToRootCoordinates)

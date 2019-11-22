@@ -79,7 +79,9 @@ public class RUISMouseWand : RUISWand {
 					{
 						for(int i=0; i < Valve.VR.OpenVR.k_unMaxTrackedDeviceCount; ++i)
 						{
-							SteamVR_Controller.Device device = SteamVR_Controller.Input(i);
+							// *** UPDATED TO STEAMVR2.5 this whole block has been commented
+							/*
+							SteamVR_Controller.Device device = SteamVR_Controller.Input(i); 
 							if(device != null && device.connected && device.valid && system.GetTrackedDeviceClass(device.index) == Valve.VR.ETrackedDeviceClass.Controller)
 							{
 								if(deviceNames.Length > 0)
@@ -88,6 +90,7 @@ public class RUISMouseWand : RUISWand {
 								otherDevices = true;
 								break;
 							}
+							*/
 						}
 					}
 				} catch{}

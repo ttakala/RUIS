@@ -180,7 +180,7 @@ public class RUISCamera : MonoBehaviour
 		bool isDifferentLeftMask = false;
 		bool isDifferentRightMask = false;
 
-		isHmdCamera = 	UnityEngine.VR.VRSettings.enabled && !this.isStereo && this.centerCamera
+		isHmdCamera = 	UnityEngine.XR.XRSettings.enabled && !this.isStereo && this.centerCamera
 					 && this.centerCamera.stereoTargetEye != StereoTargetEyeMask.None;
 
 		// Is this a VR RUISCamera?

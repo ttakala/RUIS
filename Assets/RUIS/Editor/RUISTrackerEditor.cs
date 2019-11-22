@@ -206,7 +206,7 @@ public class RUISTrackerEditor : Editor
 
 				EditorStyles.textField.wordWrap = true;
 				EditorGUILayout.TextArea(  "The transform of this GameObject will be set to a constant value where any child GameObjects with "
-										 + typeof(SteamVR_TrackedObject) + " component will conform to RUIS Coordinate System if \"Use Master "
+										 + typeof(Valve.VR.SteamVR_TrackedObject) + " component will conform to RUIS Coordinate System if \"Use Master " // *** UPDATED TO STEAMVR2.5
 										 + "Coordinate System\" is enabled." , GUILayout.Height(120));
 //				EditorGUILayout.PropertyField(positionOffsetOpenVR, new GUIContent("Position Offset (meters)", "Adds an position offset to OpenVR device's "
 //				                                                                   + "tracked position."));

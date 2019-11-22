@@ -28,7 +28,7 @@ public class RUISOpenVrWand : RUISWand
 	[Tooltip("OpenVR controller button for selecting GameObjects that have the RUISSelectable component.")]
 	public SelectionButton selectionButton;
 
-	private SteamVR_TrackedObject steamVRTrackedObject;
+	private Valve.VR.SteamVR_TrackedObject steamVRTrackedObject;
 
 	private Vector3 positionUpdate;
 	private Vector3 rotationUpdate;
@@ -46,10 +46,10 @@ public class RUISOpenVrWand : RUISWand
 	public void Awake()
 	{
 
-		steamVRTrackedObject = GetComponent<SteamVR_TrackedObject>();
+		steamVRTrackedObject = GetComponent<Valve.VR.SteamVR_TrackedObject>(); // *** UPDATED TO STEAMVR2.5
 		if (steamVRTrackedObject == null)
 		{
-			Debug.LogError("Could not find " + typeof(SteamVR_TrackedObject) + " in gameObject " + name + "! It is required.");
+			Debug.LogError("Could not find " + typeof(Valve.VR.SteamVR_TrackedObject) + " in gameObject " + name + "! It is required.");
 		}
 
 		if(coordinateSystem == null)
@@ -67,9 +67,9 @@ public class RUISOpenVrWand : RUISWand
 	/// </summary>
 	public void Rumble(float duration)
 	{
-		if(	   steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None 
-			&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected						)
-			SteamVR_Controller.Input((int)steamVRTrackedObject.index).TriggerHapticPulse((ushort)(duration));
+		if(	   steamVRTrackedObject && steamVRTrackedObject.index != Valve.VR.SteamVR_TrackedObject.EIndex.None 
+			/*&& Valve.VR.SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected					*/	) 		// *** UPDATED TO STEAMVR2.5
+		{} //Valve.VR.SteamVR_Controller.Input((int)steamVRTrackedObject.index).TriggerHapticPulse((ushort)(duration)   );	// *** UPDATED TO STEAMVR2.5
 	}
 
 
@@ -136,10 +136,10 @@ public class RUISOpenVrWand : RUISWand
 	{
 		get
 		{
-			if(   steamVRTrackedObject && steamVRTrackedObject.isValid && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None
-			   && SteamVR_Controller.Input((int)steamVRTrackedObject.index).valid
-			   && SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected													)
-				return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).velocity, RUISDevice.OpenVR);
+			if(   steamVRTrackedObject && steamVRTrackedObject.isValid && steamVRTrackedObject.index != Valve.VR.SteamVR_TrackedObject.EIndex.None
+				/* && SteamVR_Controller.Input((int)steamVRTrackedObject.index).valid 													  // *** UPDATED TO STEAMVR2.5
+				&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected	*/												) // *** UPDATED TO STEAMVR2.5
+			{}//	return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).velocity, RUISDevice.OpenVR); // *** UPDATED TO STEAMVR2.5
 			return Vector3.zero;
 		}
 	}
@@ -151,37 +151,37 @@ public class RUISOpenVrWand : RUISWand
 	{
 		get
 		{	
-			if(   steamVRTrackedObject && steamVRTrackedObject.isValid && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None
-				&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).valid
-				&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected														)
-				return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).angularVelocity, RUISDevice.OpenVR);
+			if(   steamVRTrackedObject && steamVRTrackedObject.isValid && steamVRTrackedObject.index != Valve.VR.SteamVR_TrackedObject.EIndex.None
+				/* && SteamVR_Controller.Input((int)steamVRTrackedObject.index).valid																// *** UPDATED TO STEAMVR2.5
+				&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected	*/													)		// *** UPDATED TO STEAMVR2.5
+			{}//	return coordinateSystem.ConvertVelocity(SteamVR_Controller.Input((int)steamVRTrackedObject.index).angularVelocity, RUISDevice.OpenVR); // *** UPDATED TO STEAMVR2.5
 			return Vector3.zero;
 		}
 	}
 
 	private bool GetPress(Valve.VR.EVRButtonId buttonId)
 	{
-		if(	   steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None 
-			&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected						)
-			return SteamVR_Controller.Input((int)steamVRTrackedObject.index).GetPress(buttonId);
+		if(	   steamVRTrackedObject && steamVRTrackedObject.index != Valve.VR.SteamVR_TrackedObject.EIndex.None 
+			/* && SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected	*/					)	// *** UPDATED TO STEAMVR2.5
+		{}//	return SteamVR_Controller.Input((int)steamVRTrackedObject.index).GetPress(buttonId); 			// *** UPDATED TO STEAMVR2.5
 		
 		return false;
 	}
 
 	private bool GetWasPressed(Valve.VR.EVRButtonId buttonId)
 	{
-		if(	   steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None 
-			&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected						)
-			return SteamVR_Controller.Input((int)steamVRTrackedObject.index).GetPressDown(buttonId);
+		if(	   steamVRTrackedObject && steamVRTrackedObject.index != Valve.VR.SteamVR_TrackedObject.EIndex.None 
+			/* && SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected	*/					)	// *** UPDATED TO STEAMVR2.5
+		{}//	return SteamVR_Controller.Input((int)steamVRTrackedObject.index).GetPressDown(buttonId); 		// *** UPDATED TO STEAMVR2.5
 
 		return false;
 	}
 
 	private bool GetWasReleased(Valve.VR.EVRButtonId buttonId)
 	{
-		if(	   steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None 
-			&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected						)
-			return SteamVR_Controller.Input((int)steamVRTrackedObject.index).GetPressUp(buttonId);
+		if(	   steamVRTrackedObject && steamVRTrackedObject.index != Valve.VR.SteamVR_TrackedObject.EIndex.None 
+			/* && SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected	*/					)	// *** UPDATED TO STEAMVR2.5
+		{}//	return SteamVR_Controller.Input((int)steamVRTrackedObject.index).GetPressUp(buttonId);			// *** UPDATED TO STEAMVR2.5
 
 		return false;
 	}
@@ -205,9 +205,9 @@ public class RUISOpenVrWand : RUISWand
 	{ 
 		get 
 		{ 
-			if(	   steamVRTrackedObject && steamVRTrackedObject.index != SteamVR_TrackedObject.EIndex.None 
-				&& SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected						)
-				return SteamVR_Controller.Input((int)steamVRTrackedObject.index).GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis1).x;
+			if(	   steamVRTrackedObject && steamVRTrackedObject.index != Valve.VR.SteamVR_TrackedObject.EIndex.None 
+				/* && SteamVR_Controller.Input((int)steamVRTrackedObject.index).connected	*/						)					// *** UPDATED TO STEAMVR2.5
+			{}//	return SteamVR_Controller.Input((int)steamVRTrackedObject.index).GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis1).x;	// *** UPDATED TO STEAMVR2.5
 
 			return 0;
 		}

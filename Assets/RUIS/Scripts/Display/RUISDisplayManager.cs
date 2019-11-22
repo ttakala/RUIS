@@ -98,7 +98,7 @@ public class RUISDisplayManager : MonoBehaviour
 			}
 		}
 
-		UnityEngine.VR.VRSettings.showDeviceView = hmdMirrorMode;
+		UnityEngine.XR.XRSettings.showDeviceView = hmdMirrorMode;
 	}
 	
 	void Update()
@@ -132,7 +132,7 @@ public class RUISDisplayManager : MonoBehaviour
 
 	public bool HasNonHmdDisplay()
 	{
-		if(!UnityEngine.VR.VRSettings.enabled || !RUISDisplayManager.IsHmdPresent())
+		if(!UnityEngine.XR.XRSettings.enabled || !RUISDisplayManager.IsHmdPresent())
 			return true;
 		
 		foreach(RUISDisplay display in displays)
@@ -177,7 +177,7 @@ public class RUISDisplayManager : MonoBehaviour
 		float xOffset = 0;
 		float yOffset = 0;
 		float windowAspect = (float) Screen.width/Screen.height;
-		float eyeTextureAspect = (float) UnityEngine.VR.VRSettings.eyeTextureWidth / UnityEngine.VR.VRSettings.eyeTextureHeight;
+		float eyeTextureAspect = (float) UnityEngine.XR.XRSettings.eyeTextureWidth / UnityEngine.XR.XRSettings.eyeTextureHeight;
 		if(windowAspect < eyeTextureAspect)
 		{
 			widthFactor = windowAspect / eyeTextureAspect;
@@ -210,7 +210,7 @@ public class RUISDisplayManager : MonoBehaviour
 			
 			if(camera)
 			{   
-				if(UnityEngine.VR.VRSettings.enabled && camera.stereoTargetEye != StereoTargetEyeMask.None) // if(display.isHmdDisplay)
+				if(UnityEngine.XR.XRSettings.enabled && camera.stereoTargetEye != StereoTargetEyeMask.None) // if(display.isHmdDisplay)
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
 					return HMDScreenPointToRay(screenPoint, camera);
@@ -442,7 +442,7 @@ public class RUISDisplayManager : MonoBehaviour
 			return wasHmdPresent;
 
 		// If Unity thinks yes, then we will go with that
-		if(UnityEngine.VR.VRDevice.isPresent)
+		if(UnityEngine.XR.XRDevice.isPresent)
 		{
 			++hmdCheckCount;
 			wasHmdPresent = true;
@@ -489,7 +489,7 @@ public class RUISDisplayManager : MonoBehaviour
 		{
 			bool isOpenVrHmdPresent = Valve.VR.OpenVR.IsHmdPresent();
 			isOpenVrAccessible = isOpenVrHmdPresent; // This redundant assignment is to avoid a compiler warning about isOpenVrHmdPresent
-			isOpenVrAccessible = UnityEngine.VR.VRSettings.enabled;
+			isOpenVrAccessible = UnityEngine.XR.XRSettings.enabled;
 		}
 		catch
 		{
@@ -512,14 +512,14 @@ public class RUISDisplayManager : MonoBehaviour
 		if(!RUISDisplayManager.IsHmdPresent())
 			return "no_HMD";
 		
-		string hmdModel = UnityEngine.VR.VRDevice.model;
+		string hmdModel = UnityEngine.XR.XRDevice.model;
 
 		// Lets ask OpenVR if Unity does not recognice the HMD name
 		if(hmdModel == null || hmdModel == "")
 		{
 			#if UNITY_EDITOR
-			if(SteamVR.instance != null)
-				return SteamVR.instance.hmd_ModelNumber;
+			if(Valve.VR.SteamVR.instance != null)
+				return Valve.VR.SteamVR.instance.hmd_ModelNumber;
 			#else
 			if(isSteamVrAccessible)
 			{

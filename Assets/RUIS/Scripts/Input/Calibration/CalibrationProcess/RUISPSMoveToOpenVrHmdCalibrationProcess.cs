@@ -329,7 +329,7 @@ public class RUISPSMoveToOpenVrHmdCalibrationProcess : RUISCalibrationProcess {
 //			tempSample = coordinateSystem.ConvertRawOculusDK2Location(tempSample);  //06to08  notice that the conversion happens after negation
 
 			// HACK TODO tempSample components might need negation or other hackery
-			tempSample = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head);
+			tempSample = UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.Head);
 
 			if(    (Vector3.Distance(tempSample, lastOculusDK2Sample) > 0.1) 
 				&& RUISDisplayManager.IsHmdPresent()) //(RUISOVRManager.ovrHmd.GetTrackingState().StatusFlags & (uint)StatusBits.PositionTracked) != 0)   //06to08

@@ -1044,7 +1044,7 @@ public class RUISSkeletonController : MonoBehaviour
 					skeleton.head.position = coordinateSystem.ConvertLocation(customHeadsetSource.position, headsetCoordinates);
 				else if(RUISDisplayManager.IsHmdPresent())
 					skeleton.head.position = 
-						coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
+						coordinateSystem.ConvertLocation(UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.Head), headsetCoordinates);
 			}
 
 			// Interpolate neck pose if that option is enabled
@@ -1067,7 +1067,7 @@ public class RUISSkeletonController : MonoBehaviour
 				if(useCustomHeadsetSource && customHeadsetSource) // *** OPTIHACK8 TODO test this
 					skeleton.head.rotation = coordinateSystem.ConvertRotation(customHeadsetSource.rotation, headsetCoordinates);
 				else if(RUISDisplayManager.IsHmdPresent())
-					skeleton.head.rotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+					skeleton.head.rotation = coordinateSystem.ConvertRotation(UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head), 
 																															headsetCoordinates);
 			}
 				
@@ -1777,7 +1777,7 @@ public class RUISSkeletonController : MonoBehaviour
 			if(useCustomHeadsetSource && customHeadsetSource) // *** OPTIHACK8 TODO test this
 				jointOffset = skeleton.neck.rotation * headOffset + coordinateSystem.ConvertRotation(customHeadsetSource.rotation, headsetCoordinates) * hmdLocalOffset; 
 			else if(RUISDisplayManager.IsHmdPresent()) // *** OPTIHACK TODO this isn't right!  Quaternion.Inverse( coordinateSystem.ConvertRotation(...
-				jointOffset = skeleton.neck.rotation * headOffset + coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+				jointOffset = skeleton.neck.rotation * headOffset + coordinateSystem.ConvertRotation(UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head), 
 																									 headsetCoordinates) * hmdLocalOffset;
 		}
 		else
@@ -1840,7 +1840,7 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 					// GetYawDriftCorrection() sets rotationDrift and also returns it
 					if(RUISDisplayManager.IsHmdPresent()) 
-						GetYawDriftCorrection(coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), 
+						GetYawDriftCorrection(coordinateSystem.ConvertRotation(UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head), 
 																headsetCoordinates), skeletonManager.skeletons[BodyTrackingDeviceID, playerId].head.rotation);
 				}
 			}
@@ -1885,8 +1885,8 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 				if(RUISDisplayManager.IsHmdPresent())
 				{
-					headsetPosition = coordinateSystem.ConvertLocation(UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head), headsetCoordinates);
-					headsetRotation = coordinateSystem.ConvertRotation(UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head), headsetCoordinates);
+					headsetPosition = coordinateSystem.ConvertLocation(UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.Head), headsetCoordinates);
+					headsetRotation = coordinateSystem.ConvertRotation(UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head), headsetCoordinates);
 				}
 				else // If HMD is not present, then the practical effects should limit to only applying headToPelvisVector and hmdLocalOffset
 				{
@@ -2212,7 +2212,8 @@ public class RUISSkeletonController : MonoBehaviour
 			}
 		}
 
-		boneToScale.localScale = adjustScale * extremityTweaker * (boneToScaleTracker.boneScale / accumulatedScale) * jointInitialLocalScales[boneToScale];
+		if(accumulatedScale != 0)
+			boneToScale.localScale = adjustScale * extremityTweaker * (boneToScaleTracker.boneScale / accumulatedScale) * jointInitialLocalScales[boneToScale];
 //		boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, adjustScale * extremityTweaker * (newScale / accumulatedScale) * Vector3.one,
 //			 										 maxScaleFactor * deltaTime);
 
@@ -2516,16 +2517,19 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		else
 		{
-			if(limbsAreScaled)
-				boneToScale.localScale = extremityTweaker * (boneToScaleTracker.boneScale / accumulatedScale) * Vector3.one;
-			else if(isLimbStart)
-				boneToScale.localScale = extremityTweaker * (initialBoneScale / accumulatedScale) * Vector3.one;
-//			if(limbsAreScaled)
-//				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
-//															 (newScale / accumulatedScale) * Vector3.one, maxScaleFactor * deltaTime);
-//			else if(isLimbStart) // *** OPTIHACK8 below assumes that starting localScale is 1, which might not be the case
-//				boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
-//															 (1 / accumulatedScale) * Vector3.one, maxScaleFactor * deltaTime);
+			if(accumulatedScale != 0)
+			{
+				if(limbsAreScaled)
+					boneToScale.localScale = extremityTweaker * (boneToScaleTracker.boneScale / accumulatedScale) * Vector3.one;
+				else if(isLimbStart)
+					boneToScale.localScale = extremityTweaker * (initialBoneScale / accumulatedScale) * Vector3.one;
+//				if(limbsAreScaled)
+//					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
+//																 (newScale / accumulatedScale) * Vector3.one, maxScaleFactor * deltaTime);
+//				else if(isLimbStart) // *** OPTIHACK8 below assumes that starting localScale is 1, which might not be the case
+//					boneToScale.localScale = Vector3.MoveTowards(boneToScale.localScale, extremityTweaker * 
+//																(1 / accumulatedScale) * Vector3.one, maxScaleFactor * deltaTime);
+			}
 		}
 
 
@@ -2634,7 +2638,8 @@ public class RUISSkeletonController : MonoBehaviour
 		}
 		else
 		{
-			updatedScale = boneScaleTarget / accumulatedScale;
+			if(accumulatedScale != 0)
+				updatedScale = boneScaleTarget / accumulatedScale;
 		}
 
 		// *** OPTIHACK8 commented below line

@@ -642,7 +642,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 		//		}
 		//		else
 		//			return Vector3.zero;
-		return UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); //06to08
+		return UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.Head); //06to08
 	}
 
 	/// <summary>
@@ -658,7 +658,7 @@ public class RUISCoordinateSystem : MonoBehaviour
 //			return Quaternion.identity;
 
 		// HACK TODO check that this works
-		return UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
+		return UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head); // HACK TODO if this doesn't work for major HMDs, add wrapper
 	}
 
 	/// <summary>

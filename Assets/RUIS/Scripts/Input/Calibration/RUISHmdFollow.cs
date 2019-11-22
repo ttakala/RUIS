@@ -29,11 +29,11 @@ public class RUISHmdFollow : MonoBehaviour
 
 			// HACK TODO if this doesn't work for major HMDs, add wrapper (also for rotation)
 			// HACK TODO tempSample components might need negation or other hackery
-			tempSample = UnityEngine.VR.InputTracking.GetLocalPosition(UnityEngine.VR.VRNode.Head); //06to08
+			tempSample = UnityEngine.XR.InputTracking.GetLocalPosition(UnityEngine.XR.XRNode.Head); //06to08
 
 			Vector3 convertedLocation = coordinateSystem.ConvertLocation(tempSample, RUISDevice.OpenVR); 
 			this.transform.localPosition = convertedLocation;
-			this.transform.localRotation = UnityEngine.VR.InputTracking.GetLocalRotation(UnityEngine.VR.VRNode.Head); // HACK TODO check that this works
+			this.transform.localRotation = UnityEngine.XR.InputTracking.GetLocalRotation(UnityEngine.XR.XRNode.Head); // HACK TODO check that this works
 
 //			if(OVRManager.capiHmd != null)
 //			{

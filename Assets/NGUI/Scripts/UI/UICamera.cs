@@ -503,7 +503,7 @@ public class UICamera : MonoBehaviour
 			Ray ray;
 //			if(ruisCamera != null && ruisCamera.associatedDisplay != null) 
 			{
-				if(UnityEngine.VR.VRSettings.enabled && currentCamera.stereoTargetEye != StereoTargetEyeMask.None) // if(ruisCamera.associatedDisplay.isHmdDisplay)
+				if(UnityEngine.XR.XRSettings.enabled && currentCamera.stereoTargetEye != StereoTargetEyeMask.None) // if(ruisCamera.associatedDisplay.isHmdDisplay)
 				{
 					// *** TODO remove this hack when Camera.ScreenPointToRay() works again
 					ray = RUISDisplayManager.HMDScreenPointToRay(inPos, currentCamera);

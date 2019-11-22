@@ -437,8 +437,8 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 			foreach(SteamVR_TrackedObject trackedOpenVRObject in trackedOpenVRObjects)
 			{
 //				Debug.Log(trackedOpenVRObject.index + " " + ((int) trackedOpenVRObject.index));
-				if(   SteamVR_Controller.Input((int)trackedOpenVRObject.index).connected
-				   && SteamVR_Controller.Input((int)trackedOpenVRObject.index).GetHairTrigger())
+				if(   false /* SteamVR_Controller.Input((int)trackedOpenVRObject.index).connected		// *** UPDATED TO STEAMVR2.5
+					&& SteamVR_Controller.Input((int)trackedOpenVRObject.index).GetHairTrigger() */)	// *** UPDATED TO STEAMVR2.5
 				{
 					viveControllerIndex = (int)trackedOpenVRObject.index;
 					viveControllerTransform = trackedOpenVRObject.transform;
@@ -531,7 +531,9 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 		// Fine tune translation with Vive controller
 		if(vivePrefabContainer && vivePrefabContainer.instantiatedOpenVrCameraRig)
 			trackedOpenVRObjects = vivePrefabContainer.instantiatedOpenVrCameraRig.GetComponentsInChildren<SteamVR_TrackedObject>();
-
+		
+		// *** UPDATED TO STEAMVR2.5 this whole block has been commented
+		/*
 		if(SteamVR_Controller.Input(viveControllerIndex).connected )
 		{
 			var pose = new SteamVR_Utils.RigidTransform(SteamVR_Controller.Input(viveControllerIndex).GetPose().mDeviceToAbsoluteTracking);
@@ -566,6 +568,7 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 				coordinateSystem.SaveFloorData(xmlFilename, inputDevice2, kinect2FloorNormal, kinect2DistanceFromFloor);
 			}
 		}
+		*/
 
 		return RUISCalibrationPhase.ShowResults;
 	}
@@ -736,9 +739,9 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 				{
 					if(viveControllerIndex == (int)trackedOpenVRObject.index)
 					{
-						if(   SteamVR_Controller.Input(viveControllerIndex).connected
-						   && SteamVR_Controller.Input(viveControllerIndex).valid
-						   && SteamVR_Controller.Input(viveControllerIndex).hasTracking)
+						if(   false /* SteamVR_Controller.Input(viveControllerIndex).connected	// *** UPDATED TO STEAMVR2.5
+							&& SteamVR_Controller.Input(viveControllerIndex).valid				// *** UPDATED TO STEAMVR2.5
+							&& SteamVR_Controller.Input(viveControllerIndex).hasTracking */)	// *** UPDATED TO STEAMVR2.5
 						{
 							sample = trackedOpenVRObject.transform.localPosition;
 							device2Error = false;
@@ -1049,12 +1052,6 @@ public class RUISKinectsToOpenVrControllerCalibrationProcess : RUISCalibrationPr
 //					StartCoroutine(FindControllers());
 //			}
 //		}
-
-		if(SteamVR_Controller.Input(htcViveControllerIndex).valid)
-		{
-
-
-		}
 
 	}
 
