@@ -36,10 +36,12 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		private Vector3 bodyToLimbStartOffset = Vector3.zero;
 
 		private bool isRightLimb = true;
+		private bool isArm = false;
 		private bool finishedCalibrating = false;
 
-		private Vector3 lastLimbStartSample 	= Vector3.zero;
-		private Vector3 lastLimbExtremitySample = Vector3.zero;
+		private Vector3 lastLimbStartDirection = Vector3.up;
+		private Vector3 lastLimbExtremityDirection = Vector3.up;
+		private Vector3 lastVectorBetweenTrackers = Vector3.zero;
 
 		private int collectedUpperLimbSamples = 0;
 		private int collectedExtremitySamples = 0;
@@ -82,7 +84,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 			samplesHDot = new float[sampleCount, 6];
 			samplesDotProduct = new float[sampleCount];
-			samplesLowerLimbLength = new List<float>(sampleCount);
+			samplesLowerLimbLength = new List<float>(new float[sampleCount]);
 
 			sampleTarget = sampleCount;
 
@@ -96,22 +98,40 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		{
 			if(finishedCalibrating || !limbBaseTracker.trackerChild || !upperLimbTracker.trackerChild || !extremityTracker.trackerChild)
 				return; // How to handle immobile tracker Transforms?
-			
-			if(collectedUpperLimbSamples < samplesR.Length && (lastLimbStartSample - upperLimbTracker.trackerChild.parent.position).magnitude > 0.05f) // Success conditions
+
+			// Here condition for saving a new upper limb sample is that the upperLimb direction angle has changed sufficiently from the previously saved sample
+			if(collectedUpperLimbSamples < samplesR.Length && Vector3.Angle(lastLimbStartDirection, Quaternion.Inverse(limbBaseTracker.trackerChild.rotation) 
+																									* (upperLimbTracker.trackerChild.rotation * Vector3.right)) > 15f) // Success conditions
 			{
 				samplesR[collectedUpperLimbSamples] =  limbBaseTracker.trackerChild.rotation;
 				samplesUStart[collectedUpperLimbSamples] = upperLimbTracker.trackerChild.rotation;
 
 				samplesDeltaPos[collectedUpperLimbSamples] = upperLimbTracker.trackerChild.parent.position - limbBaseTracker.trackerChild.parent.position; // Note parent: p_s - p_c
 
-				lastLimbStartSample = upperLimbTracker.trackerChild.parent.position;
+				lastLimbStartDirection  = Quaternion.Inverse(samplesR[collectedUpperLimbSamples]) * (samplesUStart[collectedUpperLimbSamples] * Vector3.right); // ***
 
 				print("Collected UpperLimbSample " + collectedUpperLimbSamples);
 
 				++collectedUpperLimbSamples;
 			}
 
-			if(collectedExtremitySamples < samplesH.Length && (lastLimbExtremitySample - extremityTracker.trackerChild.parent.position).magnitude > 0.05f) // *** Success conditions
+			// For half of the extremity samples the condition for saving a new sample is that the elbow / knee joint has rotated sufficiently
+			bool passExtremityCondition = Vector3.Angle(lastVectorBetweenTrackers, Quaternion.Inverse(upperLimbTracker.trackerChild.rotation) 
+																					* (extremityTracker.trackerChild.parent.position - upperLimbTracker.trackerChild.parent.position)) > 10f;
+			if(collectedExtremitySamples > sampleTarget / 2) 
+			{
+				// For the second half of the extremity samples the condition for saving a new sample is that the extremity direction has changed sufficiently from the previously saved sample
+				passExtremityCondition = Vector3.Angle(lastLimbExtremityDirection, Quaternion.Inverse(upperLimbTracker.trackerChild.rotation) 
+																					* (extremityTracker.trackerChild.rotation * (isArm ? Vector3.right : Vector3.down))) > 10f;
+			}
+
+			// An additional condition for every other extremity sample candidate is that the wrist / ankle joint rotation is sufficiently deviated from zero (arccos 0.15 ~= 9 degrees)
+			if (collectedExtremitySamples % 2 == 0)
+				passExtremityCondition = passExtremityCondition && Mathf.Abs(Vector3.Dot( upperLimbTracker.trackerChild.rotation * Vector3.up, 
+																						 (extremityTracker.trackerChild.rotation * (isArm ? Vector3.right : Vector3.down)))) > 0.15f; // ***
+			
+			// Passed conditions for saving a new exremity sample?
+			if(collectedExtremitySamples < samplesH.Length && passExtremityCondition)
 			{
 				samplesH[collectedExtremitySamples] = extremityTracker.trackerChild.rotation;
 				samplesUExtremity[collectedExtremitySamples] = upperLimbTracker.trackerChild.rotation;
@@ -135,7 +155,10 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 				samplesDotProduct[collectedExtremitySamples] = -Vector3.Dot(tempVector, samplesExtremityPos[collectedExtremitySamples] - samplesLimbStartPos[collectedExtremitySamples]);
 
-				lastLimbExtremitySample = samplesExtremityPos[collectedExtremitySamples];
+				lastVectorBetweenTrackers = Quaternion.Inverse(samplesUExtremity[collectedExtremitySamples]) * (samplesExtremityPos[collectedExtremitySamples] - samplesLimbStartPos[collectedExtremitySamples]); // ***
+
+				lastLimbExtremityDirection = Quaternion.Inverse(samplesUExtremity[collectedExtremitySamples]) * (extremityTracker.trackerChild.rotation * (isArm ? Vector3.right : Vector3.down)); // ***
+					
 
 				print("Collected ExtremitySample " + collectedExtremitySamples);
 
@@ -146,7 +169,6 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 			{
 				finishedCalibrating = true;
 				CalculateTransformation();
-				print("done aa");
 				upperLimbTracker.trackerChild.localPosition = limbStartJointOffset; // ***
 				extremityTracker.trackerChild.localPosition = limbEndJointOffset;   // ***
 			}
@@ -263,6 +285,11 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		public void SetAsLeftLimb()
 		{
 			isRightLimb = false;
+		}
+
+		public void SetAsArm()
+		{
+			isArm = true;
 		}
 
 	}
@@ -405,7 +432,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				vectorX = 0.5f * (rightHand.trackerChild.parent.position + leftHand.trackerChild.parent.position); // Note parent: Hand middlepoint
 				vectorY = vectorX - 2 * Vector3.down; // Two meters below hand middlepoint
 				// Note parent:
-				chest.trackerChild.localPosition = -chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
+				chest.trackerChild.localPosition  = -chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
 				// Note parent:
 				pelvis.trackerChild.localPosition = -pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
 
@@ -435,8 +462,10 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	void Awake()
 	{
 		// This might not be the best way to do this
-		leftArm.SetAsLeftLimb();
+		leftArm.SetAsLeftLimb(); // Default is right limb
 		leftLeg.SetAsLeftLimb();
+		leftArm.SetAsArm();
+		rightArm.SetAsArm();     // Default is NOT arm
 	}
 
 	// Use this for initialization
