@@ -7,7 +7,7 @@ using CSML;
 
 public class RUISFullBodyCalibrator : MonoBehaviour
 {
-	public int calibrationSampleCount = 40;
+	public int calibrationSamples = 40;
 
 	[Serializable]
 	public class TrackerPose
@@ -22,22 +22,28 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	{
 		public float upperLimbBoneLength = 0.5f;
 		public float lowerLimbBoneLength = 0.5f;
+
 		[Tooltip("Vector from upper arm / thigh tracker to shoulder / hip joint in local coordinates.")]
-		public Vector3 limbStartJointOffset = Vector3.zero;
+		public Vector3 limbStartJointOffset  = Vector3.zero; // s
 		[Tooltip("Vector from upper arm / thigh tracker to elbow / knee joint in local coordinates.")]
-		public Vector3 limbMiddleJointOffset = Vector3.zero;
+		public Vector3 limbMiddleJointOffset = Vector3.zero; // r
 		[Tooltip("Vector from hand / foot tracker to wrist / ankle joint in local coordinates.")]
-		public Vector3 limbEndJointOffset = Vector3.zero;
+		public Vector3 limbEndJointOffset    = Vector3.zero; // w
+
+		private Vector3 baseTrackerToStartJoint  = Vector3.zero; // c
 
 		// Vector from chest / pelvis tracker to shoulder / hip joint in local coordinates
 		private Vector3 bodyToLimbStartOffset = Vector3.zero;
 
 		private bool isRightLimb = true;
+		private bool finishedCalibrating = false;
 
 		private Vector3 lastLimbStartSample 	= Vector3.zero;
 		private Vector3 lastLimbExtremitySample = Vector3.zero;
 
-		private int collectedSamplesCount = 0;
+		private int collectedUpperLimbSamples = 0;
+		private int collectedExtremitySamples = 0;
+		private int sampleTarget = 40;
 
 		private Matrix RUMatrix;
 		private Matrix deltaPos; // p_s - p_c
@@ -46,7 +52,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		private Matrix dotProduct; // e dot (p_h - p_s)
 
 		Quaternion[] samplesR;
-		Quaternion[] samplesU;
+		Quaternion[] samplesUStart;
+		Quaternion[] samplesUExtremity;
 		Quaternion[] samplesH;
 
 		Vector3[] samplesLimbStartPos; // p_s
@@ -56,55 +63,102 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		float[,] samplesHDot;
 		float[] samplesDotProduct;
 
+		List<float> samplesLowerLimbLength;
+
+		Quaternion tempRotation = Quaternion.identity;
+		Vector3 tempVector = Vector3.zero;
+		Matrix4x4 tempMatrix = Matrix4x4.identity;
+
 		public void InitializeLimbCalibration(int sampleCount)
 		{
-			Quaternion[] samplesR = new Quaternion[sampleCount];
-			Quaternion[] samplesU = new Quaternion[sampleCount];
-			Quaternion[] samplesH = new Quaternion[sampleCount];
+			samplesR 			= new Quaternion[sampleCount];
+			samplesUStart 		= new Quaternion[sampleCount];
+			samplesUExtremity 	= new Quaternion[sampleCount];
+			samplesH 			= new Quaternion[sampleCount];
 
-			Vector3[] samplesLimbStartPos 	= new Vector3[sampleCount]; // p_s
-			Vector3[] samplesExtremityPos 	= new Vector3[sampleCount]; // p_h
-			Vector3[] samplesDeltaPos 		= new Vector3[sampleCount]; // p_s - p_c
+			samplesLimbStartPos = new Vector3[sampleCount]; // p_s
+			samplesExtremityPos = new Vector3[sampleCount]; // p_h
+			samplesDeltaPos 	= new Vector3[sampleCount]; // p_s - p_c
 
-			float[,] samplesHDot = new float[sampleCount, 6];
-			float[] samplesDotProduct = new float[sampleCount];
+			samplesHDot = new float[sampleCount, 6];
+			samplesDotProduct = new float[sampleCount];
+			samplesLowerLimbLength = new List<float>(sampleCount);
 
-			collectedSamplesCount = 0;
+			sampleTarget = sampleCount;
+
+			collectedUpperLimbSamples = 0;
+			collectedExtremitySamples = 0;
+
+			finishedCalibrating = false;
 		}
 
 		public void TrySavingSample(TrackerPose limbBaseTracker, TrackerPose upperLimbTracker, TrackerPose extremityTracker)
 		{
-			if(!limbBaseTracker.trackerChild || !upperLimbTracker.trackerChild || !extremityTracker.trackerChild)
+			if(finishedCalibrating || !limbBaseTracker.trackerChild || !upperLimbTracker.trackerChild || !extremityTracker.trackerChild)
 				return; // How to handle immobile tracker Transforms?
 			
-			if(collectedSamplesCount < samplesR.Length && false) // Success conditions
+			if(collectedUpperLimbSamples < samplesR.Length && (lastLimbStartSample - upperLimbTracker.trackerChild.parent.position).magnitude > 0.05f) // Success conditions
 			{
-				samplesR[collectedSamplesCount] =  limbBaseTracker.trackerChild.rotation;
-				samplesU[collectedSamplesCount] = upperLimbTracker.trackerChild.rotation;
-				samplesH[collectedSamplesCount] = extremityTracker.trackerChild.rotation;
+				samplesR[collectedUpperLimbSamples] =  limbBaseTracker.trackerChild.rotation;
+				samplesUStart[collectedUpperLimbSamples] = upperLimbTracker.trackerChild.rotation;
 
-				samplesLimbStartPos[collectedSamplesCount] = upperLimbTracker.trackerChild.parent.position; // Note parent
-				samplesExtremityPos[collectedSamplesCount] = extremityTracker.trackerChild.parent.position; // Note parent
-				samplesDeltaPos[collectedSamplesCount] =  upperLimbTracker.trackerChild.parent.position - limbBaseTracker.trackerChild.parent.position; // Note parent: p_s - p_c
+				samplesDeltaPos[collectedUpperLimbSamples] = upperLimbTracker.trackerChild.parent.position - limbBaseTracker.trackerChild.parent.position; // Note parent: p_s - p_c
 
-				//samplesHDot[collectedSamplesCount][0] = ;
-				//samplesHDot[collectedSamplesCount][1] = ;
-				//samplesHDot[collectedSamplesCount][2] = ;
-				//samplesHDot[collectedSamplesCount][3] = ;
-				//samplesHDot[collectedSamplesCount][4] = ;
-				//samplesHDot[collectedSamplesCount][5] = ;
-				//samplesDotProduct[collectedSamplesCount] = ;
+				lastLimbStartSample = upperLimbTracker.trackerChild.parent.position;
 
-				++collectedSamplesCount;
+				print("Collected UpperLimbSample " + collectedUpperLimbSamples);
+
+				++collectedUpperLimbSamples;
 			}
+
+			if(collectedExtremitySamples < samplesH.Length && (lastLimbExtremitySample - extremityTracker.trackerChild.parent.position).magnitude > 0.05f) // *** Success conditions
+			{
+				samplesH[collectedExtremitySamples] = extremityTracker.trackerChild.rotation;
+				samplesUExtremity[collectedExtremitySamples] = upperLimbTracker.trackerChild.rotation;
+
+				samplesLimbStartPos[collectedExtremitySamples] = upperLimbTracker.trackerChild.parent.position; // p_s  Note parent
+				samplesExtremityPos[collectedExtremitySamples] = extremityTracker.trackerChild.parent.position; // p_h  Note parent
+
+				tempVector = samplesUExtremity[collectedExtremitySamples] * Vector3.up; // S * e_r (elbow / knee rotation axis) ***
+
+				tempMatrix = Matrix4x4.Rotate(samplesH[collectedExtremitySamples]); // H
+
+				samplesHDot[collectedExtremitySamples, 0] =  Vector3.Dot((Vector3) tempMatrix.GetColumn(0), tempVector);
+				samplesHDot[collectedExtremitySamples, 1] =  Vector3.Dot((Vector3) tempMatrix.GetColumn(1), tempVector);
+				samplesHDot[collectedExtremitySamples, 2] =  Vector3.Dot((Vector3) tempMatrix.GetColumn(2), tempVector);
+
+				tempMatrix = Matrix4x4.Rotate(samplesUExtremity[collectedExtremitySamples]); // U
+
+				samplesHDot[collectedExtremitySamples, 3] = -Vector3.Dot((Vector3) tempMatrix.GetColumn(0), tempVector);
+				samplesHDot[collectedExtremitySamples, 4] = -Vector3.Dot((Vector3) tempMatrix.GetColumn(1), tempVector);
+				samplesHDot[collectedExtremitySamples, 5] = -Vector3.Dot((Vector3) tempMatrix.GetColumn(2), tempVector);
+
+				samplesDotProduct[collectedExtremitySamples] = -Vector3.Dot(tempVector, samplesExtremityPos[collectedExtremitySamples] - samplesLimbStartPos[collectedExtremitySamples]);
+
+				lastLimbExtremitySample = samplesExtremityPos[collectedExtremitySamples];
+
+				print("Collected ExtremitySample " + collectedExtremitySamples);
+
+				++collectedExtremitySamples;
+			}
+
+			if((collectedUpperLimbSamples == sampleTarget) && (collectedExtremitySamples == sampleTarget))
+			{
+				finishedCalibrating = true;
+				CalculateTransformation();
+				print("done aa");
+				upperLimbTracker.trackerChild.localPosition = limbStartJointOffset; // ***
+				extremityTracker.trackerChild.localPosition = limbEndJointOffset;   // ***
+			}
+		}
+
+		public bool FinishedCalibrating()
+		{
+			return finishedCalibrating;
 		}
 
 		private void CalculateTransformation()
 		{
-			Quaternion tempRotation = Quaternion.identity;
-			Vector3 tempVector = Vector3.zero;
-			Matrix4x4 tempMatrix = Matrix4x4.identity;
-
 			RUMatrix = Matrix.Zeros(3 * samplesR.Length, 6);
 			deltaPos = Matrix.Zeros(3 * samplesR.Length, 1);
 
@@ -113,7 +167,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 			for(int i = 1; i <= samplesDeltaPos.Length; i++) 
 			{
-				tempMatrix = Matrix4x4.Rotate(samplesR[i - 1]);
+				tempMatrix = Matrix4x4.Rotate(samplesR[i - 1]); // R
 				RUMatrix[3*i - 2, 1] = new Complex(tempMatrix.m00);
 				RUMatrix[3*i - 2, 2] = new Complex(tempMatrix.m01);
 				RUMatrix[3*i - 2, 3] = new Complex(tempMatrix.m02);
@@ -124,16 +178,16 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				RUMatrix[3*i,	  2] = new Complex(tempMatrix.m21);
 				RUMatrix[3*i,	  3] = new Complex(tempMatrix.m22);
 
-				tempMatrix = Matrix4x4.Rotate(samplesU[i - 1]);
-				RUMatrix[3*i - 2, 4] = new Complex(tempMatrix.m00);
-				RUMatrix[3*i - 2, 5] = new Complex(tempMatrix.m01);
-				RUMatrix[3*i - 2, 6] = new Complex(tempMatrix.m02);
-				RUMatrix[3*i - 1, 4] = new Complex(tempMatrix.m10);
-				RUMatrix[3*i - 1, 5] = new Complex(tempMatrix.m11);
-				RUMatrix[3*i - 1, 6] = new Complex(tempMatrix.m12);
-				RUMatrix[3*i,	  4] = new Complex(tempMatrix.m20);
-				RUMatrix[3*i,	  5] = new Complex(tempMatrix.m21);
-				RUMatrix[3*i,	  6] = new Complex(tempMatrix.m22);
+				tempMatrix = Matrix4x4.Rotate(samplesUStart[i - 1]); // U
+				RUMatrix[3*i - 2, 4] = new Complex(-tempMatrix.m00);
+				RUMatrix[3*i - 2, 5] = new Complex(-tempMatrix.m01);
+				RUMatrix[3*i - 2, 6] = new Complex(-tempMatrix.m02);
+				RUMatrix[3*i - 1, 4] = new Complex(-tempMatrix.m10);
+				RUMatrix[3*i - 1, 5] = new Complex(-tempMatrix.m11);
+				RUMatrix[3*i - 1, 6] = new Complex(-tempMatrix.m12);
+				RUMatrix[3*i,	  4] = new Complex(-tempMatrix.m20);
+				RUMatrix[3*i,	  5] = new Complex(-tempMatrix.m21);
+				RUMatrix[3*i,	  6] = new Complex(-tempMatrix.m22);
 
 				deltaPos[3*i - 2, 1] = new Complex(samplesDeltaPos[i-1].x);
 				deltaPos[3*i - 1, 1] = new Complex(samplesDeltaPos[i-1].y);
@@ -158,16 +212,20 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 			Matrix error = RUMatrix * transformMatrixSolution - deltaPos;
 
-			transformMatrixSolution = transformMatrixSolution.Transpose();
+			//transformMatrixSolution = transformMatrixSolution.Transpose();
 
-			Debug.Log(transformMatrixSolution);
+			// c
+			baseTrackerToStartJoint.x = (float) transformMatrixSolution[1, 1].Re;
+			baseTrackerToStartJoint.y = (float) transformMatrixSolution[2, 1].Re;
+			baseTrackerToStartJoint.z = (float) transformMatrixSolution[3, 1].Re;
+
+			// s
+			limbStartJointOffset.x = (float) transformMatrixSolution[4, 1].Re;
+			limbStartJointOffset.y = (float) transformMatrixSolution[5, 1].Re;
+			limbStartJointOffset.z = (float) transformMatrixSolution[6, 1].Re;
+
+			Debug.Log("baseTrackerToStartJoint: " + baseTrackerToStartJoint + " limbStartJointOffset: " + limbStartJointOffset);
 			Debug.Log(error);
-
-			// Do something with transformMatrixSolution
-
-			List<Vector3> orthogonalVectors = MathUtil.Orthonormalize(MathUtil.ExtractRotationVectors(MathUtil.MatrixToMatrix4x4(transformMatrixSolution)));
-			//rotationMatrix = CreateRotationMatrix(orthogonalVectors);
-			//Debug.Log(rotationMatrix);
 
 			//perform a matrix solve Ax = B. We have to get transposes and inverses because openVrMatrix isn't square
 			//the solution is the same with (A^T)Ax = (A^T)B -> x = ((A^T)A)'(A^T)B
@@ -175,14 +233,31 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 			error = HUMatrix * transformMatrixSolution - dotProduct;
 
-			transformMatrixSolution = transformMatrixSolution.Transpose();
+			//transformMatrixSolution = transformMatrixSolution.Transpose();
 
-			Debug.Log(transformMatrixSolution);
+			// w
+			limbEndJointOffset.x = (float) transformMatrixSolution[1, 1].Re;
+			limbEndJointOffset.y = (float) transformMatrixSolution[2, 1].Re;
+			limbEndJointOffset.z = (float) transformMatrixSolution[3, 1].Re;
+
+			// r
+			limbMiddleJointOffset.x = (float) transformMatrixSolution[4, 1].Re;
+			limbMiddleJointOffset.y = (float) transformMatrixSolution[5, 1].Re;
+			limbMiddleJointOffset.z = (float) transformMatrixSolution[6, 1].Re;
+
+			Debug.Log("limbEndJointOffset: " + limbEndJointOffset + " limbMiddleJointOffset: " + limbMiddleJointOffset);
 			Debug.Log(error);
 
-			// Do something with transformMatrixSolution
+			upperLimbBoneLength = (limbMiddleJointOffset - limbStartJointOffset).magnitude;
 
-			collectedSamplesCount = 0;
+			for(int i = 0; i < samplesLowerLimbLength.Count; i++)
+			{
+				// H * w + p_h - U * r - p_s
+				samplesLowerLimbLength[i] = (samplesH[i] * limbEndJointOffset + samplesExtremityPos[i] - samplesUExtremity[i] * limbMiddleJointOffset - samplesLimbStartPos[i]).magnitude;
+			}
+
+			samplesLowerLimbLength.Sort();
+			lowerLimbBoneLength = samplesLowerLimbLength[samplesLowerLimbLength.Count/2]; // Median  *** argument out of range
 		}
 
 		public void SetAsLeftLimb()
@@ -330,16 +405,17 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				vectorX = 0.5f * (rightHand.trackerChild.parent.position + leftHand.trackerChild.parent.position); // Note parent: Hand middlepoint
 				vectorY = vectorX - 2 * Vector3.down; // Two meters below hand middlepoint
 				// Note parent:
-				chest.trackerChild.localPosition 	= -chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
+				chest.trackerChild.localPosition = -chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
 				// Note parent:
-				pelvis.trackerChild.localPosition 	= -pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
+				pelvis.trackerChild.localPosition = -pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
 
-				Debug.Log("Make a Crane-pose, and press down Menu buttons on both controllers at the same time to enter to the next calibration phase.");
+				rightArm.InitializeLimbCalibration(calibrationSamples);
+				leftArm.InitializeLimbCalibration(calibrationSamples);
 				break;
-			case CalibrationState.StorePose:
-				calibrationState = CalibrationState.NotCalibrating;
-				Debug.Log("Finished Vive Tracker Full Body Calibration, and saved rotation and position offsets to tracker child Transforms.");
-				break;
+//			case CalibrationState.StorePose:
+//				calibrationState = CalibrationState.NotCalibrating;
+//				Debug.Log("Finished Vive Tracker Full Body Calibration, and saved rotation and position offsets to tracker child Transforms.");
+//				break;
 		}
 	}
 
@@ -415,10 +491,30 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if(calibrationState == CalibrationState.StorePose)
+		{
+			rightArm.TrySavingSample(chest, rightShoulder, rightHand);
+			leftArm.TrySavingSample( chest,  leftShoulder,  leftHand);
+
+			if(rightArm.FinishedCalibrating() && leftArm.FinishedCalibrating())
+			{
+
+				Debug.Log("Collected enough data for arm calibration. If the results look good for you, press down Joystick (" + rightStartButton.GetShortName() 
+					+ ") buttons on both controllers at the same time to enter to leg calibration phase.");
+			}
+
+//			rightLeg.TrySavingSample(pelvis, rightHip, rightFoot);
+//			leftLeg.TrySavingSample( pelvis,  leftHip,  leftFoot);
+		}
+
 		DebugDrawTrackedLimb(rightArm, 	rightShoulder, 	rightElbow, rightHand, 	isLeg: false, 	isRightLimb: true);
 		DebugDrawTrackedLimb(leftArm, 	leftShoulder, 	leftElbow, 	leftHand, 	isLeg: false, 	isRightLimb: false);
 		DebugDrawTrackedLimb(rightLeg, 	rightHip, 		rightKnee, 	rightFoot, 	isLeg: true, 	isRightLimb: true);
 		DebugDrawTrackedLimb(leftLeg, 	leftHip, 		leftKnee, 	leftHand, 	isLeg: true, 	isRightLimb: false);
+
+		// ***
+		Debug.DrawLine(leftShoulder.trackerChild.position + 0.05f * Vector3.one, leftShoulder.trackerChild.position
+			+ 0.05f * Vector3.one + 0.3f * (leftShoulder.trackerChild.rotation * Vector3.up), Color.white);
 
 		DebugDrawTrackerPose(pelvis);
 		DebugDrawTrackerPose(chest);
