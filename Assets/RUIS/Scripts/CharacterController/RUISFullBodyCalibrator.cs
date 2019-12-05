@@ -9,6 +9,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 {
 	public int calibrationSamples = 40;
 
+	private Vector3 perpendicularVector = Vector3.zero;
+
 	[Serializable]
 	public class TrackerPose
 	{
@@ -20,8 +22,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	[Serializable]
 	public class Limb
 	{
-		public float upperLimbBoneLength = 0.5f;
-		public float lowerLimbBoneLength = 0.5f;
+		public float upperLimbBoneLength = 0.35f;
+		public float lowerLimbBoneLength = 0.35f;
 
 		[Tooltip("Vector from upper arm / thigh tracker to shoulder / hip joint in local coordinates.")]
 		public Vector3 limbStartJointOffset  = Vector3.zero; // s
@@ -110,7 +112,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 				lastLimbStartDirection  = Quaternion.Inverse(samplesR[collectedUpperLimbSamples]) * (samplesUStart[collectedUpperLimbSamples] * Vector3.right); // ***
 
-				print("Collected UpperLimbSample " + collectedUpperLimbSamples);
+				if(!isRightLimb)
+					print((isRightLimb ? "Right " : "Left ") + (isArm ? "arm: " : "leg: ") + "Collected UpperLimbSample " + collectedUpperLimbSamples);
 
 				++collectedUpperLimbSamples;
 			}
@@ -157,10 +160,10 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 				lastVectorBetweenTrackers = Quaternion.Inverse(samplesUExtremity[collectedExtremitySamples]) * (samplesExtremityPos[collectedExtremitySamples] - samplesLimbStartPos[collectedExtremitySamples]); // ***
 
-				lastLimbExtremityDirection = Quaternion.Inverse(samplesUExtremity[collectedExtremitySamples]) * (extremityTracker.trackerChild.rotation * (isArm ? Vector3.right : Vector3.down)); // ***
-					
+				lastLimbExtremityDirection = Quaternion.Inverse(samplesUExtremity[collectedExtremitySamples]) * (samplesH[collectedExtremitySamples] * (isArm ? Vector3.right : Vector3.down)); // ***
 
-				print("Collected ExtremitySample " + collectedExtremitySamples);
+				if(!isRightLimb)
+					print((isRightLimb ? "Right " : "Left ") + (isArm ? "arm: " : "leg: ") + "Collected ExtremitySample " + collectedExtremitySamples);
 
 				++collectedExtremitySamples;
 			}
@@ -414,7 +417,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				SetTrackerRotationsFromTPose(head, Quaternion.identity);
 				SetTrackerRotationsFromTPose(rightShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back));
 				SetTrackerRotationsFromTPose(leftShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back));
-				SetTrackerRotationsFromTPose(rightHand, Quaternion.LookRotation(Vector3.right, Vector3.back));
+				SetTrackerRotationsFromTPose(rightHand, Quaternion.LookRotation(Vector3.left, Vector3.back));
 				SetTrackerRotationsFromTPose(leftHand, Quaternion.LookRotation(Vector3.right, Vector3.back));
 				SetTrackerRotationsFromTPose(rightHip, Quaternion.identity);
 				SetTrackerRotationsFromTPose(leftHip, Quaternion.identity);
@@ -432,9 +435,19 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				vectorX = 0.5f * (rightHand.trackerChild.parent.position + leftHand.trackerChild.parent.position); // Note parent: Hand middlepoint
 				vectorY = vectorX - 2 * Vector3.down; // Two meters below hand middlepoint
 				// Note parent:
-				chest.trackerChild.localPosition  = -chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
+				chest.trackerChild.localPosition = -chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
 				// Note parent:
 				pelvis.trackerChild.localPosition = -pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
+
+				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightArm.limbStartJointOffset;
+				leftShoulder.trackerChild.localPosition = leftShoulder.trackerChild.localRotation * leftArm.limbStartJointOffset;
+				rightHand.trackerChild.localPosition = rightArm.limbEndJointOffset; // *** Why different??? Using controllers not Vive Trackers...
+				leftHand.trackerChild.localPosition  = leftArm.limbEndJointOffset;  // *** Why different???
+
+				rightHip.trackerChild.localPosition = rightHip.trackerChild.localRotation * rightLeg.limbStartJointOffset;
+				leftHip.trackerChild.localPosition  = leftHip.trackerChild.localRotation * leftLeg.limbStartJointOffset;
+				rightFoot.trackerChild.localPosition = rightFoot.trackerChild.localRotation * rightLeg.limbEndJointOffset;
+				leftFoot.trackerChild.localPosition  = leftFoot.trackerChild.localRotation * leftLeg.limbEndJointOffset;
 
 				rightArm.InitializeLimbCalibration(calibrationSamples);
 				leftArm.InitializeLimbCalibration(calibrationSamples);
@@ -446,11 +459,12 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		}
 	}
 
-	void SetTrackerRotationsFromTPose(TrackerPose tracker, Quaternion offset)
+	void SetTrackerRotationsFromTPose(TrackerPose tracker, Quaternion rotationOffset)
 	{
 		// Note parent:
-		tracker.trackerChild.localRotation = Quaternion.Inverse(tracker.trackerChild.parent.rotation) * offset;
+		tracker.trackerChild.localRotation = Quaternion.Inverse(tracker.trackerChild.parent.rotation) * rotationOffset;
 		// tracker.trackerChild.localRotation = tracker.trackerChild.parent.rotation.inverse * bodyOrientation;
+//		tracker.trackerChild.localPosition = positionOffset; // ***
 	}
 
 	Vector3 ProjectPointToLineSegment(Vector3 p, Vector3 a, Vector3 b)
@@ -522,15 +536,19 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	{
 		if(calibrationState == CalibrationState.StorePose)
 		{
-			rightArm.TrySavingSample(chest, rightShoulder, rightHand);
-			leftArm.TrySavingSample( chest,  leftShoulder,  leftHand);
-
 			if(rightArm.FinishedCalibrating() && leftArm.FinishedCalibrating())
 			{
-
-				Debug.Log("Collected enough data for arm calibration. If the results look good for you, press down Joystick (" + rightStartButton.GetShortName() 
-					+ ") buttons on both controllers at the same time to enter to leg calibration phase.");
+				// Announce once... ***
+				Debug.Log("Collected enough data for arm calibration. If the results look good for you, press down Joystick (" + rightStartButton.GetShortName()
+				+ ") buttons on both controllers at the same time to enter to leg calibration phase.");
 			}
+			else
+			{
+				// ***
+//				rightArm.TrySavingSample(chest, rightShoulder, rightHand);
+//				leftArm.TrySavingSample( chest,  leftShoulder,  leftHand);
+			}
+				
 
 //			rightLeg.TrySavingSample(pelvis, rightHip, rightFoot);
 //			leftLeg.TrySavingSample( pelvis,  leftHip,  leftFoot);
@@ -563,5 +581,119 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		DebugDrawTrackerPose(leftKnee);
 		DebugDrawTrackerPose(rightFoot);
 		DebugDrawTrackerPose(leftFoot);
+	}
+
+	void LateUpdate()
+	{
+		if(pelvis.inferPose && pelvis.trackerChild)
+		{
+			
+		}
+		if(chest.inferPose && chest.trackerChild)
+		{
+
+		}
+		if(neck.inferPose && neck.trackerChild)
+		{
+
+		}
+		if(head.inferPose && head.trackerChild)
+		{
+
+		}
+		if(rightClavicle.inferPose && rightClavicle.trackerChild)
+		{
+
+		}
+		if(leftClavicle.inferPose && leftClavicle.trackerChild)
+		{
+
+		}
+		if(rightShoulder.inferPose && rightShoulder.trackerChild)
+		{
+
+		}
+		if(leftShoulder.inferPose && leftShoulder.trackerChild)
+		{
+
+		}
+//		if(rightHand.inferPose && rightHand.trackerChild) // Inferring hand poses from other joints is impossible
+//		{
+//		}
+//		if(leftHand.inferPose && leftHand.trackerChild)
+//		{
+//		}
+		if(rightElbow.inferPose && rightElbow.trackerChild)
+		{
+			if(rightShoulder.trackerChild)
+			{
+				rightElbow.trackerChild.position = rightShoulder.trackerChild.position + rightArm.upperLimbBoneLength * (rightShoulder.trackerChild.rotation * Vector3.right);
+				if(rightHand.trackerChild)
+				{
+					// Vector perpendicular to forearm and parallel to the wrist main rotation axis 
+					perpendicularVector = rightHand.trackerChild.rotation * Vector3.forward - ProjectPointToLineSegment(rightHand.trackerChild.rotation * Vector3.forward, Vector3.zero, 
+																													(rightElbow.trackerChild.position - rightHand.trackerChild.position).normalized);
+					rightElbow.trackerChild.rotation = Quaternion.LookRotation(perpendicularVector, Vector3.Cross(rightElbow.trackerChild.position - rightHand.trackerChild.position, perpendicularVector));
+				}
+			}
+		}
+		if(leftElbow.inferPose && leftElbow.trackerChild)
+		{
+			if(leftShoulder.trackerChild)
+			{
+				leftElbow.trackerChild.position = leftShoulder.trackerChild.position + leftArm.upperLimbBoneLength * (leftShoulder.trackerChild.rotation * Vector3.left);
+				if(leftHand.trackerChild)
+				{
+					// Vector perpendicular to forearm and parallel to the wrist main rotation axis 
+					perpendicularVector = leftHand.trackerChild.rotation * Vector3.forward - ProjectPointToLineSegment(leftHand.trackerChild.rotation * Vector3.forward, Vector3.zero, 
+																														(leftElbow.trackerChild.position - leftHand.trackerChild.position).normalized);
+					leftElbow.trackerChild.rotation = Quaternion.LookRotation(perpendicularVector, Vector3.Cross(leftHand.trackerChild.position - leftElbow.trackerChild.position, perpendicularVector));
+				}
+			}
+		}
+		if(rightHip.inferPose && rightHip.trackerChild)
+		{
+
+		}
+		if(leftHip.inferPose && leftHip.trackerChild)
+		{
+
+		}
+//		if(rightFoot.inferPose && rightFoot.trackerChild) // Inferring foot poses from other joints is impossible
+//		{
+//		}
+//		if(leftFoot.inferPose && leftFoot.trackerChild)
+//		{
+//		}
+		if(rightKnee.inferPose && rightKnee.trackerChild)
+		{
+			if(rightHip.trackerChild)
+			{
+				rightKnee.trackerChild.position = rightHip.trackerChild.position + rightLeg.upperLimbBoneLength * (rightHip.trackerChild.rotation * Vector3.down);
+				if(rightFoot.trackerChild)
+				{
+					// Vector perpendicular to lower leg and parallel to the ankle main rotation axis 
+					perpendicularVector = rightFoot.trackerChild.rotation * Vector3.left - ProjectPointToLineSegment(rightFoot.trackerChild.rotation * Vector3.left, Vector3.zero, 
+						(rightKnee.trackerChild.position - rightFoot.trackerChild.position).normalized);
+					rightKnee.trackerChild.rotation = Quaternion.LookRotation(Vector3.Cross(rightKnee.trackerChild.position - rightFoot.trackerChild.position, perpendicularVector), 
+																			  rightKnee.trackerChild.position - rightFoot.trackerChild.position);
+				}
+			}
+		}
+		if(leftKnee.inferPose && leftKnee.trackerChild)
+		{
+			if(leftHip.trackerChild)
+			{
+				leftKnee.trackerChild.position = leftHip.trackerChild.position + leftLeg.upperLimbBoneLength * (leftHip.trackerChild.rotation * Vector3.down);
+				if(leftFoot.trackerChild)
+				{
+					// Vector perpendicular to lower leg and parallel to the ankle main rotation axis 
+					perpendicularVector = leftFoot.trackerChild.rotation * Vector3.left - ProjectPointToLineSegment(leftFoot.trackerChild.rotation * Vector3.left, Vector3.zero, 
+						(leftKnee.trackerChild.position - leftFoot.trackerChild.position).normalized);
+					leftKnee.trackerChild.rotation = Quaternion.LookRotation(Vector3.Cross(leftKnee.trackerChild.position - leftFoot.trackerChild.position, perpendicularVector), 
+																			 leftKnee.trackerChild.position - leftFoot.trackerChild.position);
+				}
+			}
+		}
 	}
 }
