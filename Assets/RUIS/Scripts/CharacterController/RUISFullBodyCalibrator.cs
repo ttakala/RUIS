@@ -102,7 +102,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				return; // How to handle immobile tracker Transforms?
 
 			// Here condition for saving a new upper limb sample is that the upperLimb direction angle has changed sufficiently from the previously saved sample
-			if(collectedUpperLimbSamples < samplesR.Length && Vector3.Angle(lastLimbStartDirection, Quaternion.Inverse(limbBaseTracker.trackerChild.rotation) 
+			if(collectedUpperLimbSamples < sampleTarget && Vector3.Angle(lastLimbStartDirection, Quaternion.Inverse(limbBaseTracker.trackerChild.rotation) 
 																									* (upperLimbTracker.trackerChild.rotation * Vector3.right)) > 15f) // Success conditions
 			{
 				samplesR[collectedUpperLimbSamples] =  limbBaseTracker.trackerChild.rotation;
@@ -112,8 +112,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 				lastLimbStartDirection  = Quaternion.Inverse(samplesR[collectedUpperLimbSamples]) * (samplesUStart[collectedUpperLimbSamples] * Vector3.right); // ***
 
-				if(!isRightLimb)
-					print((isRightLimb ? "Right " : "Left ") + (isArm ? "arm: " : "leg: ") + "Collected UpperLimbSample " + collectedUpperLimbSamples);
+//				if(!isRightLimb)
+//					print((isRightLimb ? "Right " : "Left ") + (isArm ? "arm: " : "leg: ") + "Collected UpperLimbSample " + collectedUpperLimbSamples);
 
 				++collectedUpperLimbSamples;
 			}
@@ -129,12 +129,16 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 			}
 
 			// An additional condition for every other extremity sample candidate is that the wrist / ankle joint rotation is sufficiently deviated from zero (arccos 0.15 ~= 9 degrees)
-			if (collectedExtremitySamples % 2 == 0)
+			if(collectedExtremitySamples % 2 == 0)
 				passExtremityCondition = passExtremityCondition && Mathf.Abs(Vector3.Dot( upperLimbTracker.trackerChild.rotation * Vector3.up, 
 																						 (extremityTracker.trackerChild.rotation * (isArm ? Vector3.right : Vector3.down)))) > 0.15f; // ***
-			
+
+			// An additional condition for a new sample candidate is that elbow / knee must be bent more than 37 degrees (arccos 0.8 ~= 37 degrees)
+			tempVector = upperLimbTracker.trackerChild.rotation * (isArm ? Vector3.right : Vector3.down);
+			passExtremityCondition = passExtremityCondition && Mathf.Abs(Vector3.Dot(tempVector, (extremityTracker.trackerChild.parent.position - upperLimbTracker.trackerChild.parent.position).normalized)) < 0.8f;
+
 			// Passed conditions for saving a new exremity sample?
-			if(collectedExtremitySamples < samplesH.Length && passExtremityCondition)
+			if(collectedExtremitySamples < sampleTarget && passExtremityCondition)
 			{
 				samplesH[collectedExtremitySamples] = extremityTracker.trackerChild.rotation;
 				samplesUExtremity[collectedExtremitySamples] = upperLimbTracker.trackerChild.rotation;
@@ -163,7 +167,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				lastLimbExtremityDirection = Quaternion.Inverse(samplesUExtremity[collectedExtremitySamples]) * (samplesH[collectedExtremitySamples] * (isArm ? Vector3.right : Vector3.down)); // ***
 
 				if(!isRightLimb)
-					print((isRightLimb ? "Right " : "Left ") + (isArm ? "arm: " : "leg: ") + "Collected ExtremitySample " + collectedExtremitySamples);
+					print((isRightLimb ? "Right " : "Left ") + (isArm ? "arm: " : "leg: ") + "Collected ExtremitySample " + collectedExtremitySamples + " collectedUpperLimbSamples at: " + collectedUpperLimbSamples);
 
 				++collectedExtremitySamples;
 			}
@@ -173,7 +177,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				finishedCalibrating = true;
 				CalculateTransformation();
 				upperLimbTracker.trackerChild.localPosition = limbStartJointOffset; // ***
-				extremityTracker.trackerChild.localPosition = limbEndJointOffset;   // ***
+				extremityTracker.trackerChild.localPosition = limbEndJointOffset; //extremityTracker.trackerChild.InverseTransformPoint(extremityTracker.trackerChild.parent.position - limbEndJointOffset);   // ***
 			}
 		}
 
@@ -184,13 +188,13 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 		private void CalculateTransformation()
 		{
-			RUMatrix = Matrix.Zeros(3 * samplesR.Length, 6);
-			deltaPos = Matrix.Zeros(3 * samplesR.Length, 1);
+			RUMatrix = Matrix.Zeros(3 * samplesDeltaPos.Length, 6);
+			deltaPos = Matrix.Zeros(3 * samplesDeltaPos.Length, 1);
 
-			HUMatrix 	= Matrix.Zeros(samplesH.Length, 6);
-			dotProduct 	= Matrix.Zeros(samplesH.Length, 1);
+			HUMatrix 	= Matrix.Zeros(samplesDotProduct.Length, 6);
+			dotProduct 	= Matrix.Zeros(samplesDotProduct.Length, 1);
 
-			for(int i = 1; i <= samplesDeltaPos.Length; i++) 
+			for(int i = 1; i <= sampleTarget; i++) 
 			{
 				tempMatrix = Matrix4x4.Rotate(samplesR[i - 1]); // R
 				RUMatrix[3*i - 2, 1] = new Complex(tempMatrix.m00);
@@ -219,7 +223,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				deltaPos[3*i,     1] = new Complex(samplesDeltaPos[i-1].z);
 			}
 
-			for(int i = 1; i <= samplesDotProduct.Length; i++) 
+			for(int i = 1; i <= sampleTarget; i++) 
 			{
 				HUMatrix[i, 1] = new Complex(samplesHDot[i - 1, 0]);
 				HUMatrix[i, 2] = new Complex(samplesHDot[i - 1, 1]);
@@ -231,13 +235,11 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				dotProduct[i, 1] = new Complex(samplesDotProduct[i - 1]);
 			}
 
-			//perform a matrix solve Ax = B. We have to get transposes and inverses because openVrMatrix isn't square
+			//perform a matrix solve Ax = B with a pseudoinverse (transposes and inverses)
 			//the solution is the same with (A^T)Ax = (A^T)B -> x = ((A^T)A)'(A^T)B
 			Matrix transformMatrixSolution = (RUMatrix.Transpose() * RUMatrix).Inverse() * RUMatrix.Transpose() * deltaPos;
 
 			Matrix error = RUMatrix * transformMatrixSolution - deltaPos;
-
-			//transformMatrixSolution = transformMatrixSolution.Transpose();
 
 			// c
 			baseTrackerToStartJoint.x = (float) transformMatrixSolution[1, 1].Re;
@@ -252,13 +254,11 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 			Debug.Log("baseTrackerToStartJoint: " + baseTrackerToStartJoint + " limbStartJointOffset: " + limbStartJointOffset);
 			Debug.Log(error);
 
-			//perform a matrix solve Ax = B. We have to get transposes and inverses because openVrMatrix isn't square
+			//perform a matrix solve Ax = B with a pseudoinverse (transposes and inverses)
 			//the solution is the same with (A^T)Ax = (A^T)B -> x = ((A^T)A)'(A^T)B
 			transformMatrixSolution = (HUMatrix.Transpose() * HUMatrix).Inverse() * HUMatrix.Transpose() * dotProduct;
 
 			error = HUMatrix * transformMatrixSolution - dotProduct;
-
-			//transformMatrixSolution = transformMatrixSolution.Transpose();
 
 			// w
 			limbEndJointOffset.x = (float) transformMatrixSolution[1, 1].Re;
@@ -275,14 +275,15 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 			upperLimbBoneLength = (limbMiddleJointOffset - limbStartJointOffset).magnitude;
 
-			for(int i = 0; i < samplesLowerLimbLength.Count; i++)
+			for(int i = 0; i < sampleTarget; i++)
 			{
 				// H * w + p_h - U * r - p_s
 				samplesLowerLimbLength[i] = (samplesH[i] * limbEndJointOffset + samplesExtremityPos[i] - samplesUExtremity[i] * limbMiddleJointOffset - samplesLimbStartPos[i]).magnitude;
 			}
 
 			samplesLowerLimbLength.Sort();
-			lowerLimbBoneLength = samplesLowerLimbLength[samplesLowerLimbLength.Count/2]; // Median  *** argument out of range
+			lowerLimbBoneLength = samplesLowerLimbLength[sampleTarget/2]; // Median  *** argument out of range
+			print("lowerLimbBoneLength: " + lowerLimbBoneLength + " upperLimbBoneLength: " + upperLimbBoneLength);
 		}
 
 		public void SetAsLeftLimb()
@@ -545,8 +546,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 			else
 			{
 				// ***
-//				rightArm.TrySavingSample(chest, rightShoulder, rightHand);
-//				leftArm.TrySavingSample( chest,  leftShoulder,  leftHand);
+				rightArm.TrySavingSample(chest, rightShoulder, rightHand);
+				leftArm.TrySavingSample( chest,  leftShoulder,  leftHand);
 			}
 				
 
@@ -562,6 +563,11 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		// ***
 		Debug.DrawLine(leftShoulder.trackerChild.position + 0.05f * Vector3.one, leftShoulder.trackerChild.position
 			+ 0.05f * Vector3.one + 0.3f * (leftShoulder.trackerChild.rotation * Vector3.up), Color.white);
+
+		// Vector perpendicular to forearm and parallel to the wrist main rotation axis 
+		perpendicularVector = leftHand.trackerChild.rotation * Vector3.forward - ProjectPointToLineSegment(leftHand.trackerChild.rotation * Vector3.forward, Vector3.zero, 
+			(leftElbow.trackerChild.position - leftHand.trackerChild.position).normalized);
+		Debug.DrawLine(leftHand.trackerChild.position, leftHand.trackerChild.position + 0.3f * perpendicularVector.normalized, Color.black);
 
 		DebugDrawTrackerPose(pelvis);
 		DebugDrawTrackerPose(chest);
