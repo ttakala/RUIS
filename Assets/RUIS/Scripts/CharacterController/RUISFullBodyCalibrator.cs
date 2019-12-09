@@ -348,6 +348,12 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	Vector3 vectorY = Vector3.zero;
 	Quaternion firstPoseBodyRotation = Quaternion.identity;
 
+	private Vector3 rightClavicleInitialOffset = new Vector3( 0.1f, 0.1f, 0);
+	private Vector3  leftClavicleInitialOffset = new Vector3(-0.1f, 0.1f, 0);
+
+	private Vector3 rightClavicleShoulderInitialVector = new Vector3( 0.2f, 0.15f, 0);
+	private Vector3  leftClavicleShoulderInitialVector = new Vector3(-0.2f, 0.15f, 0);
+
 	public void TriggerUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
 	{
 		if(fromSource == rightController)
@@ -443,16 +449,30 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightArm.limbStartJointOffset;
 				leftShoulder.trackerChild.localPosition = leftShoulder.trackerChild.localRotation * leftArm.limbStartJointOffset;
 				rightHand.trackerChild.localPosition = rightArm.limbEndJointOffset; // *** Why different??? Using controllers not Vive Trackers...
-				leftHand.trackerChild.localPosition  = leftArm.limbEndJointOffset;  // *** Why different???
+				leftHand.trackerChild.localPosition = leftArm.limbEndJointOffset;  // *** Why different???
 
 				rightHip.trackerChild.localPosition = rightHip.trackerChild.localRotation * rightLeg.limbStartJointOffset;
-				leftHip.trackerChild.localPosition  = leftHip.trackerChild.localRotation * leftLeg.limbStartJointOffset;
+				leftHip.trackerChild.localPosition = leftHip.trackerChild.localRotation * leftLeg.limbStartJointOffset;
 				rightFoot.trackerChild.localPosition = rightFoot.trackerChild.localRotation * rightLeg.limbEndJointOffset;
-				leftFoot.trackerChild.localPosition  = leftFoot.trackerChild.localRotation * leftLeg.limbEndJointOffset;
+				leftFoot.trackerChild.localPosition = leftFoot.trackerChild.localRotation * leftLeg.limbEndJointOffset;
 
 				rightArm.InitializeLimbCalibration(calibrationSamples);
 				leftArm.InitializeLimbCalibration(calibrationSamples);
-				
+
+				// Estimate for middlepoint between clavicles in chest coordinates at the instant of pose calibration
+				Vector3 clavicleInitialMidpoint = Quaternion.Inverse(chest.trackerChild.rotation) * (0.7f * (0.5f * (rightShoulder.trackerChild.position + leftShoulder.trackerChild.position) - chest.trackerChild.position));
+
+				// Estimate for middlepoint between clavicles in world coordinates at the instant of pose calibration
+				perpendicularVector = chest.trackerChild.rotation * clavicleInitialMidpoint + chest.trackerChild.position;
+
+				// Clavicle positions in chest coordinates at the instant of pose calibration
+				rightClavicleInitialOffset = clavicleInitialMidpoint + Quaternion.Inverse(chest.trackerChild.rotation) * (0.2f * (rightShoulder.trackerChild.position - perpendicularVector));
+				leftClavicleInitialOffset = clavicleInitialMidpoint + Quaternion.Inverse(chest.trackerChild.rotation) * (0.2f * (leftShoulder.trackerChild.position - perpendicularVector));
+
+				// Vector from clavicle position to shoulder in chest coordinates at the instant of pose calibration
+				rightClavicleShoulderInitialVector = Quaternion.Inverse(chest.trackerChild.rotation) * (rightShoulder.trackerChild.position - chest.trackerChild.position) - rightClavicleInitialOffset;
+				leftClavicleShoulderInitialVector  = Quaternion.Inverse(chest.trackerChild.rotation) *  (leftShoulder.trackerChild.position - chest.trackerChild.position) - leftClavicleInitialOffset;
+
 				calibrationState = CalibrationState.NotCalibrating; // ***
 				break;
 //			case CalibrationState.StorePose:
@@ -593,6 +613,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 	void LateUpdate()
 	{
+		// *** TODO martial arts update: implement avatar scaling effects on below infered positions
 		if(pelvis.inferPose && pelvis.trackerChild)
 		{
 			
@@ -609,18 +630,6 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		{
 
 		}
-		if(rightClavicle.inferPose && rightClavicle.trackerChild)
-		{
-			// *** Need a better hack than this. Distance from chest should be proportional to size of the tracked person
-			rightClavicle.trackerChild.position = 0.15f * chest.trackerChild.up + 0.1f * chest.trackerChild.right;
-			if(Mathf.Abs(Vector3.Dot(chest.trackerChild.up, (rightShoulder.trackerChild.position - rightClavicle.trackerChild.position).normalized) < 0.95)
-				rightClavicle.trackerChild.rotation = Quaternion.LookRotation(chest.trackerChild.forward, rightShoulder.trackerChild.position - rightClavicle.trackerChild.position, chest.trackerChild.up);
-			
-		}
-		if(leftClavicle.inferPose && leftClavicle.trackerChild)
-		{
-
-		}
 		if(rightShoulder.inferPose && rightShoulder.trackerChild)
 		{
 
@@ -628,6 +637,18 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		if(leftShoulder.inferPose && leftShoulder.trackerChild)
 		{
 
+		}
+		if(rightClavicle.inferPose && rightClavicle.trackerChild)
+		{
+			rightClavicle.trackerChild.position = chest.trackerChild.position + chest.trackerChild.rotation * rightClavicleInitialOffset;
+			rightClavicle.trackerChild.rotation = chest.trackerChild.rotation * Quaternion.FromToRotation(rightClavicleShoulderInitialVector, 
+																							Quaternion.Inverse(chest.trackerChild.rotation) * (rightShoulder.trackerChild.position - rightClavicle.trackerChild.position));
+		}
+		if(leftClavicle.inferPose && leftClavicle.trackerChild)
+		{
+			leftClavicle.trackerChild.position = chest.trackerChild.position + chest.trackerChild.rotation * leftClavicleInitialOffset;
+			leftClavicle.trackerChild.rotation = chest.trackerChild.rotation * Quaternion.FromToRotation(leftClavicleShoulderInitialVector, 
+																							Quaternion.Inverse(chest.trackerChild.rotation) * (leftShoulder.trackerChild.position - leftClavicle.trackerChild.position));
 		}
 //		if(rightHand.inferPose && rightHand.trackerChild) // Inferring hand poses from other joints is impossible
 //		{
