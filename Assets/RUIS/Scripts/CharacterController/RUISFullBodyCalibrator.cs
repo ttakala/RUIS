@@ -452,6 +452,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 				rightArm.InitializeLimbCalibration(calibrationSamples);
 				leftArm.InitializeLimbCalibration(calibrationSamples);
+				
+				calibrationState = CalibrationState.NotCalibrating; // ***
 				break;
 //			case CalibrationState.StorePose:
 //				calibrationState = CalibrationState.NotCalibrating;
@@ -535,25 +537,25 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if(calibrationState == CalibrationState.StorePose)
-		{
-			if(rightArm.FinishedCalibrating() && leftArm.FinishedCalibrating())
-			{
-				// Announce once... ***
-				Debug.Log("Collected enough data for arm calibration. If the results look good for you, press down Joystick (" + rightStartButton.GetShortName()
-				+ ") buttons on both controllers at the same time to enter to leg calibration phase.");
-			}
-			else
-			{
-				// ***
-				rightArm.TrySavingSample(chest, rightShoulder, rightHand);
-				leftArm.TrySavingSample( chest,  leftShoulder,  leftHand);
-			}
+		// if(calibrationState == CalibrationState.StorePose)
+		// {
+			// if(rightArm.FinishedCalibrating() && leftArm.FinishedCalibrating())
+			// {
+				// // Announce once... ***
+				// Debug.Log("Collected enough data for arm calibration. If the results look good for you, press down Joystick (" + rightStartButton.GetShortName()
+				// + ") buttons on both controllers at the same time to enter to leg calibration phase.");
+			// }
+			// else
+			// {
+				// // ***
+				// rightArm.TrySavingSample(chest, rightShoulder, rightHand);
+				// leftArm.TrySavingSample( chest,  leftShoulder,  leftHand);
+			// }
 				
 
-//			rightLeg.TrySavingSample(pelvis, rightHip, rightFoot);
-//			leftLeg.TrySavingSample( pelvis,  leftHip,  leftFoot);
-		}
+// //			rightLeg.TrySavingSample(pelvis, rightHip, rightFoot);
+// //			leftLeg.TrySavingSample( pelvis,  leftHip,  leftFoot);
+		// }
 
 		DebugDrawTrackedLimb(rightArm, 	rightShoulder, 	rightElbow, rightHand, 	isLeg: false, 	isRightLimb: true);
 		DebugDrawTrackedLimb(leftArm, 	leftShoulder, 	leftElbow, 	leftHand, 	isLeg: false, 	isRightLimb: false);
@@ -609,7 +611,11 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		}
 		if(rightClavicle.inferPose && rightClavicle.trackerChild)
 		{
-
+			// *** Need a better hack than this. Distance from chest should be proportional to size of the tracked person
+			rightClavicle.trackerChild.position = 0.15f * chest.trackerChild.up + 0.1f * chest.trackerChild.right;
+			if(Mathf.Abs(Vector3.Dot(chest.trackerChild.up, (rightShoulder.trackerChild.position - rightClavicle.trackerChild.position).normalized) < 0.95)
+				rightClavicle.trackerChild.rotation = Quaternion.LookRotation(chest.trackerChild.forward, rightShoulder.trackerChild.position - rightClavicle.trackerChild.position, chest.trackerChild.up);
+			
 		}
 		if(leftClavicle.inferPose && leftClavicle.trackerChild)
 		{
