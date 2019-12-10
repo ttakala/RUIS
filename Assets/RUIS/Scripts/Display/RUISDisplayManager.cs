@@ -13,6 +13,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
+
 //using Ovr;
 
 public class RUISDisplayManager : MonoBehaviour
@@ -523,8 +524,8 @@ public class RUISDisplayManager : MonoBehaviour
 			#else
 			if(isSteamVrAccessible)
 			{
-				if(SteamVR.instance != null)
-					return SteamVR.instance.hmd_ModelNumber;
+			if(Valve.VR.SteamVR.instance != null)
+				return Valve.VR.SteamVR.instance.hmd_ModelNumber;
 			}
 			else
 			{
@@ -532,8 +533,8 @@ public class RUISDisplayManager : MonoBehaviour
 				{
 					try
 					{
-						if(SteamVR.instance != null)
-							hmdModel = SteamVR.instance.hmd_ModelNumber;
+						if(Valve.VR.SteamVR.instance != null)
+						hmdModel = Valve.VR.SteamVR.instance.hmd_ModelNumber;
 						isSteamVrAccessible = true;
 					} 
 					catch

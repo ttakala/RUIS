@@ -3941,7 +3941,7 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 #if UNITY_EDITOR
 					collider = UnityEditor.Undo.AddComponent<BoxCollider>(startJoint.gameObject);
-#elif
+#else
 					collider = startJoint.gameObject.AddComponent<BoxCollider>();
 #endif
 				}
@@ -3954,7 +3954,7 @@ public class RUISSkeletonController : MonoBehaviour
 				{
 #if UNITY_EDITOR
 					collider = UnityEditor.Undo.AddComponent<CapsuleCollider>(startJoint.gameObject);
-#elif
+#else
 					collider = startJoint.gameObject.AddComponent<CapsuleCollider>();
 #endif
 				}
