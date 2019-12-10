@@ -9,6 +9,11 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 {
 	public int calibrationSamples = 40;
 
+	public RUISSkeletonController skeletonController;
+
+	public bool doneCalibrating = false;
+	private Transform characterTransform;
+
 	private Vector3 perpendicularVector = Vector3.zero;
 
 	[Serializable]
@@ -390,29 +395,29 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	{
 		switch(calibrationState)
 		{
-			case CalibrationState.NotCalibrating:
-				bool failedRequirements = false;
-				if(!rightHand.trackerChild)
-				{
-					Debug.LogError(rightHand.trackerChild.name + "rightHand.trackerChild must be assigned!");
-					failedRequirements = true;
-				}
-				if(!leftHand.trackerChild)
-				{
-					Debug.LogError(rightHand.trackerChild.name + "leftHand.trackerChild must be assigned!");
-					failedRequirements = true;
-				}
-				// TODO: same null check for all the required inputs
-
-				if(!failedRequirements)
-				{
-					calibrationState = CalibrationState.GetReady;
-					Debug.Log("Started Vive Tracker Full Body Calibration. Make a hands up pose with elbows and shoulders on the same horizontal line, forearms "
-						+ "pointing straight up, palms facing forward, legs straight, and toes pointing forward. Then press down Joystick (" + rightStartButton.GetShortName()
-						+ ") buttons on both controllers at the same time to enter to the next calibration phase.");
-				}
-				break;
-			case CalibrationState.GetReady:
+			case CalibrationState.NotCalibrating: // *** TODO: uncomment below section
+//				bool failedRequirements = false;
+//				if(!rightHand.trackerChild)
+//				{
+//					Debug.LogError(rightHand.trackerChild.name + "rightHand.trackerChild must be assigned!");
+//					failedRequirements = true;
+//				}
+//				if(!leftHand.trackerChild)
+//				{
+//					Debug.LogError(rightHand.trackerChild.name + "leftHand.trackerChild must be assigned!");
+//					failedRequirements = true;
+//				}
+//				// TODO: same null check for all the required inputs
+//
+//				if(!failedRequirements)
+//				{
+//					calibrationState = CalibrationState.GetReady;
+//					Debug.Log("Started Vive Tracker Full Body Calibration. Make a hands up pose with elbows and shoulders on the same horizontal line, forearms "
+//						+ "pointing straight up, palms facing forward, legs straight, and toes pointing forward. Then press down Joystick (" + rightStartButton.GetShortName()
+//						+ ") buttons on both controllers at the same time to enter to the next calibration phase.");
+//				}
+//				break;
+//			case CalibrationState.GetReady:
 				calibrationState = CalibrationState.StorePose;
 
 				vectorX = (rightHand.trackerChild.parent.position - leftHand.trackerChild.parent.position).normalized; // Note parent: Left to right normalized vector
@@ -422,8 +427,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				SetTrackerRotationsFromTPose(pelvis, Quaternion.identity);
 				SetTrackerRotationsFromTPose(chest, Quaternion.identity);
 				SetTrackerRotationsFromTPose(head, Quaternion.identity);
-				SetTrackerRotationsFromTPose(rightShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back));
-				SetTrackerRotationsFromTPose(leftShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back));
+				SetTrackerRotationsFromTPose(rightShoulder, Quaternion.identity); // *** Is correct???
+				SetTrackerRotationsFromTPose(leftShoulder, Quaternion.identity);  // *** Is correct???
 				SetTrackerRotationsFromTPose(rightHand, Quaternion.LookRotation(Vector3.left, Vector3.back));
 				SetTrackerRotationsFromTPose(leftHand, Quaternion.LookRotation(Vector3.right, Vector3.back));
 				SetTrackerRotationsFromTPose(rightHip, Quaternion.identity);
@@ -442,9 +447,9 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				vectorX = 0.5f * (rightHand.trackerChild.parent.position + leftHand.trackerChild.parent.position); // Note parent: Hand middlepoint
 				vectorY = vectorX - 2 * Vector3.down; // Two meters below hand middlepoint
 				// Note parent:
-				chest.trackerChild.localPosition = -chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
+				chest.trackerChild.localPosition = chest.trackerChild.localRotation * chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
 				// Note parent:
-				pelvis.trackerChild.localPosition = -pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
+				pelvis.trackerChild.localPosition = pelvis.trackerChild.localRotation * pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
 
 				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightArm.limbStartJointOffset;
 				leftShoulder.trackerChild.localPosition = leftShoulder.trackerChild.localRotation * leftArm.limbStartJointOffset;
@@ -471,16 +476,57 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 				// Vector from clavicle position to shoulder in chest coordinates at the instant of pose calibration
 				rightClavicleShoulderInitialVector = Quaternion.Inverse(chest.trackerChild.rotation) * (rightShoulder.trackerChild.position - chest.trackerChild.position) - rightClavicleInitialOffset;
-				leftClavicleShoulderInitialVector  = Quaternion.Inverse(chest.trackerChild.rotation) *  (leftShoulder.trackerChild.position - chest.trackerChild.position) - leftClavicleInitialOffset;
+				leftClavicleShoulderInitialVector = Quaternion.Inverse(chest.trackerChild.rotation) * (leftShoulder.trackerChild.position - chest.trackerChild.position) - leftClavicleInitialOffset;
 
-				calibrationState = CalibrationState.NotCalibrating; // ***
+
+				doneCalibrating = true; // *** TODO: Make better recalibration signaling
+
+				calibrationState = CalibrationState.StorePose; // ***
 				break;
-//			case CalibrationState.StorePose:
-//				calibrationState = CalibrationState.NotCalibrating;
+			case CalibrationState.StorePose:
+				doneCalibrating = false; // *** TODO: Make better recalibration signaling
+				calibrationState = CalibrationState.NotCalibrating;
 //				Debug.Log("Finished Vive Tracker Full Body Calibration, and saved rotation and position offsets to tracker child Transforms.");
-//				break;
+				break;
 		}
 	}
+
+//	IEnumerator FreezeAvatarBodySegmentLengths() 
+//	{
+//		yield return new WaitForSeconds(5f);
+//		if(characterTransform)
+//		{
+//			skeletonController = characterTransform.GetComponentInChildren<RUISSkeletonController>();
+//			if(skeletonController)
+//			{
+//				skeletonController.maxScaleFactor = 0;
+//				CopyScale(pelvis, 	skeletonController.torso);
+//				CopyScale(chest, 	skeletonController.chest);
+//				CopyScale(neck, 	skeletonController.neck);
+//				CopyScale(head, 	skeletonController.head);
+//				CopyScale(rightClavicle, 	skeletonController.rightClavicle);
+//				CopyScale(rightShoulder, 	skeletonController.rightShoulder);
+//				CopyScale(rightElbow, 		skeletonController.rightElbow);
+//				CopyScale(rightHand, 		skeletonController.rightHand);
+//				CopyScale(rightHip, 		skeletonController.rightHip);
+//				CopyScale(rightKnee, 		skeletonController.rightKnee);
+//				CopyScale(rightFoot, 		skeletonController.rightFoot);
+//				CopyScale(leftClavicle, skeletonController.leftClavicle);
+//				CopyScale(leftShoulder, skeletonController.leftShoulder);
+//				CopyScale(leftElbow, 	skeletonController.leftElbow);
+//				CopyScale(leftHand, 	skeletonController.leftHand);
+//				CopyScale(leftHip, 		skeletonController.leftHip);
+//				CopyScale(leftKnee, 	skeletonController.leftKnee);
+//				CopyScale(leftFoot, 	skeletonController.leftFoot);
+//			}
+//		}
+//	}
+//
+//	void CopyScale(TrackerPose tracker, Transform source)
+//	{
+//		if(tracker.targetJoint && source)
+//			tracker.targetJoint.localScale = source.localScale;
+//	}
 
 	void SetTrackerRotationsFromTPose(TrackerPose tracker, Quaternion rotationOffset)
 	{
@@ -498,6 +544,9 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 	void Awake()
 	{
+		if(skeletonController && skeletonController.transform.parent)
+			characterTransform = skeletonController.transform.parent;
+
 		// This might not be the best way to do this
 		leftArm.SetAsLeftLimb(); // Default is right limb
 		leftLeg.SetAsLeftLimb();
