@@ -421,14 +421,14 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				calibrationState = CalibrationState.StorePose;
 
 				vectorX = (rightHand.trackerChild.parent.position - leftHand.trackerChild.parent.position).normalized; // Note parent: Left to right normalized vector
-				vectorY = Vector3.Cross(vectorX, Vector3.down); // Forward vector
+				vectorY = Vector3.Cross(Vector3.down, vectorX); // Forward vector
 				firstPoseBodyRotation = Quaternion.LookRotation(vectorY, Vector3.up);
 
 				SetTrackerRotationsFromTPose(pelvis, Quaternion.identity);
 				SetTrackerRotationsFromTPose(chest, Quaternion.identity);
 				SetTrackerRotationsFromTPose(head, Quaternion.identity);
-				SetTrackerRotationsFromTPose(rightShoulder, Quaternion.identity); // *** Is correct???
-				SetTrackerRotationsFromTPose(leftShoulder, Quaternion.identity);  // *** Is correct???
+				SetTrackerRotationsFromTPose(rightShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back)); // *** Is correct???
+				SetTrackerRotationsFromTPose(leftShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back));  // *** Is correct???
 				SetTrackerRotationsFromTPose(rightHand, Quaternion.LookRotation(Vector3.left, Vector3.back));
 				SetTrackerRotationsFromTPose(leftHand, Quaternion.LookRotation(Vector3.right, Vector3.back));
 				SetTrackerRotationsFromTPose(rightHip, Quaternion.identity);
@@ -531,7 +531,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	void SetTrackerRotationsFromTPose(TrackerPose tracker, Quaternion rotationOffset)
 	{
 		// Note parent:
-		tracker.trackerChild.localRotation = Quaternion.Inverse(tracker.trackerChild.parent.rotation) * rotationOffset;
+		tracker.trackerChild.localRotation = Quaternion.Inverse(tracker.trackerChild.parent.rotation) * rotationOffset * firstPoseBodyRotation;
 		// tracker.trackerChild.localRotation = tracker.trackerChild.parent.rotation.inverse * bodyOrientation;
 //		tracker.trackerChild.localPosition = positionOffset; // ***
 	}
