@@ -520,11 +520,13 @@ public class RUISDisplayManager : MonoBehaviour
 			#if UNITY_EDITOR
 			if(Valve.VR.SteamVR.instance != null)
 				return Valve.VR.SteamVR.instance.hmd_ModelNumber;
-			#else
+#else
 			if(isSteamVrAccessible)
 			{
-				if(SteamVR.instance != null)
-					return SteamVR.instance.hmd_ModelNumber;
+				//if(SteamVR.instance != null)
+				//	return SteamVR.instance.hmd_ModelNumber;
+                if(Valve.VR.SteamVR.instance != null)
+				return Valve.VR.SteamVR.instance.hmd_ModelNumber;
 			}
 			else
 			{
@@ -542,10 +544,10 @@ public class RUISDisplayManager : MonoBehaviour
 					}
 				}
 			}
-			#endif
+#endif
 
-		}
-		else
+        }
+        else
 			return hmdModel;
 
 		if(hmdModel == null || hmdModel == "")
