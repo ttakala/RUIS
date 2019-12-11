@@ -424,17 +424,17 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				vectorY = Vector3.Cross(Vector3.down, vectorX); // Forward vector
 				firstPoseBodyRotation = Quaternion.LookRotation(vectorY, Vector3.up);
 
-				SetTrackerRotationsFromTPose(pelvis, Quaternion.identity);
-				SetTrackerRotationsFromTPose(chest, Quaternion.identity);
-				SetTrackerRotationsFromTPose(head, Quaternion.identity);
-				SetTrackerRotationsFromTPose(rightShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back)); // *** Is correct???
-				SetTrackerRotationsFromTPose(leftShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back));  // *** Is correct???
-				SetTrackerRotationsFromTPose(rightHand, Quaternion.LookRotation(Vector3.left, Vector3.back));
-				SetTrackerRotationsFromTPose(leftHand, Quaternion.LookRotation(Vector3.right, Vector3.back));
-				SetTrackerRotationsFromTPose(rightHip, Quaternion.identity);
-				SetTrackerRotationsFromTPose(leftHip, Quaternion.identity);
-				SetTrackerRotationsFromTPose(rightFoot, Quaternion.identity);
-				SetTrackerRotationsFromTPose(leftFoot, Quaternion.identity);
+				SetTrackerRotationsFromTPose(pelvis, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(chest, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(head, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(rightShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back) * firstPoseBodyRotation); // *** Is correct???
+				SetTrackerRotationsFromTPose(leftShoulder,  Quaternion.LookRotation(Vector3.up, Vector3.back) * firstPoseBodyRotation);  // *** Is correct???
+				SetTrackerRotationsFromTPose(rightHand, Quaternion.LookRotation(Vector3.left,  Vector3.back) * firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(leftHand,  Quaternion.LookRotation(Vector3.right, Vector3.back) * firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(rightHip, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(leftHip, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(rightFoot, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(leftFoot, firstPoseBodyRotation);
 
 				SetTrackerRotationsFromTPose(neck, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(rightClavicle, firstPoseBodyRotation);
@@ -451,6 +451,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				// Note parent:
 				pelvis.trackerChild.localPosition = pelvis.trackerChild.localRotation * pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
 
+		//?? rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * Quaternion.Inverse(firstPoseBodyRotation) * rightArm.limbStartJointOffset;
 				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightArm.limbStartJointOffset;
 				leftShoulder.trackerChild.localPosition = leftShoulder.trackerChild.localRotation * leftArm.limbStartJointOffset;
 				rightHand.trackerChild.localPosition = rightArm.limbEndJointOffset; // *** Why different??? Using controllers not Vive Trackers...
@@ -531,7 +532,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	void SetTrackerRotationsFromTPose(TrackerPose tracker, Quaternion rotationOffset)
 	{
 		// Note parent:
-		tracker.trackerChild.localRotation = Quaternion.Inverse(tracker.trackerChild.parent.rotation) * rotationOffset * firstPoseBodyRotation;
+		tracker.trackerChild.localRotation = Quaternion.Inverse(tracker.trackerChild.parent.rotation) * rotationOffset;
 		// tracker.trackerChild.localRotation = tracker.trackerChild.parent.rotation.inverse * bodyOrientation;
 //		tracker.trackerChild.localPosition = positionOffset; // ***
 	}
