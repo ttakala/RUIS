@@ -534,8 +534,10 @@ public class RUISDisplayManager : MonoBehaviour
 				{
 					try
 					{
-						if(SteamVR.instance != null)
-							hmdModel = SteamVR.instance.hmd_ModelNumber;
+						//if(SteamVR.instance != null)
+						//	hmdModel = SteamVR.instance.hmd_ModelNumber;
+                          if(Valve.VR.SteamVR.instance != null)
+            				return Valve.VR.SteamVR.instance.hmd_ModelNumber;
 						isSteamVrAccessible = true;
 					} 
 					catch
