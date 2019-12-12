@@ -420,6 +420,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 //			case CalibrationState.GetReady:
 				calibrationState = CalibrationState.StorePose;
 
+				Quaternion rotationDeltaFromTPoseShoulder = Quaternion.Euler(-90, 0, 0);
+
 				vectorX = (rightHand.trackerChild.parent.position - leftHand.trackerChild.parent.position).normalized; // Note parent: Left to right normalized vector
 				vectorY = Vector3.Cross(Vector3.down, vectorX); // Forward vector
 				firstPoseBodyRotation = Quaternion.LookRotation(vectorY, Vector3.up);
@@ -427,10 +429,10 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				SetTrackerRotationsFromTPose(pelvis, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(chest, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(head, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(rightShoulder, Quaternion.LookRotation(Vector3.up, Vector3.back) * firstPoseBodyRotation); // *** Is correct???
-				SetTrackerRotationsFromTPose(leftShoulder,  Quaternion.LookRotation(Vector3.up, Vector3.back) * firstPoseBodyRotation);  // *** Is correct???
-				SetTrackerRotationsFromTPose(rightHand, Quaternion.LookRotation(Vector3.left,  Vector3.back) * firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(leftHand,  Quaternion.LookRotation(Vector3.right, Vector3.back) * firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(rightShoulder, firstPoseBodyRotation); // *** Is correct???
+				SetTrackerRotationsFromTPose(leftShoulder,  firstPoseBodyRotation);  // *** Is correct???
+				SetTrackerRotationsFromTPose(rightHand, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(leftHand,  firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(rightHip, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(leftHip, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(rightFoot, firstPoseBodyRotation);
@@ -444,7 +446,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				SetTrackerRotationsFromTPose(rightKnee, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(leftKnee, firstPoseBodyRotation);
 
-				vectorX = 0.5f * (rightHand.trackerChild.parent.position + leftHand.trackerChild.parent.position); // Note parent: Hand middlepoint
+				vectorX = 0.5f * (rightShoulder.trackerChild.parent.position + leftShoulder.trackerChild.parent.position); // Note parent: Hand middlepoint
 				vectorY = vectorX - 2 * Vector3.down; // Two meters below hand middlepoint
 				// Note parent:
 				chest.trackerChild.localPosition = chest.trackerChild.localRotation * chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
@@ -452,13 +454,13 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				pelvis.trackerChild.localPosition = pelvis.trackerChild.localRotation * pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
 
 		//?? rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * Quaternion.Inverse(firstPoseBodyRotation) * rightArm.limbStartJointOffset;
-				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightArm.limbStartJointOffset;
-				leftShoulder.trackerChild.localPosition = leftShoulder.trackerChild.localRotation * leftArm.limbStartJointOffset;
+				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightShoulder.trackerChild.InverseTransformPoint(rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset);
+				leftShoulder.trackerChild.localPosition  =  leftShoulder.trackerChild.localRotation *  leftShoulder.trackerChild.InverseTransformPoint( leftShoulder.trackerChild.parent.position +  leftShoulder.trackerChild.rotation *  leftArm.limbStartJointOffset);
 				rightHand.trackerChild.localPosition = rightArm.limbEndJointOffset; // *** Why different??? Using controllers not Vive Trackers...
 				leftHand.trackerChild.localPosition = leftArm.limbEndJointOffset;  // *** Why different???
 
-				rightHip.trackerChild.localPosition = rightHip.trackerChild.localRotation * rightLeg.limbStartJointOffset;
-				leftHip.trackerChild.localPosition = leftHip.trackerChild.localRotation * leftLeg.limbStartJointOffset;
+				rightHip.trackerChild.localPosition = rightHip.trackerChild.localRotation * rightHip.trackerChild.InverseTransformPoint(rightHip.trackerChild.parent.position + rightHip.trackerChild.rotation * rightLeg.limbStartJointOffset);
+				leftHip.trackerChild.localPosition  =  leftHip.trackerChild.localRotation * leftHip.trackerChild.InverseTransformPoint( leftHip.trackerChild.parent.position  +  leftHip.trackerChild.rotation *  leftLeg.limbStartJointOffset);
 				rightFoot.trackerChild.localPosition = rightFoot.trackerChild.localRotation * rightLeg.limbEndJointOffset;
 				leftFoot.trackerChild.localPosition = leftFoot.trackerChild.localRotation * leftLeg.limbEndJointOffset;
 
@@ -724,7 +726,9 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		{
 			if(leftShoulder.trackerChild)
 			{
+//				perpendicularVector.Set(0, leftShoulder.trackerChild.localPosition.y, leftShoulder.trackerChild.localPosition.z);
 				leftElbow.trackerChild.position = leftShoulder.trackerChild.position + leftArm.upperLimbBoneLength * (leftShoulder.trackerChild.rotation * Vector3.left);
+//				leftElbow.trackerChild.position = leftShoulder.trackerChild.position + leftArm.upperLimbBoneLength * ((leftShoulder.trackerChild.parent.position + leftShoulder.trackerChild.rotation * perpendicularVector) - leftShoulder.trackerChild.position).normalized;
 				if(leftHand.trackerChild)
 				{
 					// Vector perpendicular to forearm and parallel to the wrist main rotation axis 
