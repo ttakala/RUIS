@@ -9,6 +9,11 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 {
 	public int calibrationSamples = 40;
 
+	public bool pelvisFromChest = false;
+	public float pelvisFromChestLocationBlend = 0.5f;
+	float pelvisChestInitialDistance = 0.5f;
+	public Transform inferedPelvis;
+
 	public RUISSkeletonController skeletonController;
 
 	public bool doneCalibrating = false;
@@ -459,6 +464,9 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				// Note parent:
 				pelvis.trackerChild.localPosition = pelvis.trackerChild.localRotation * pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
 
+
+				pelvisChestInitialDistance = (pelvis.trackerChild.position - chest.trackerChild.position).magnitude;
+
 		//?? rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * Quaternion.Inverse(firstPoseBodyRotation) * rightArm.limbStartJointOffset;
 				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightShoulder.trackerChild.InverseTransformPoint(rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset);
 				leftShoulder.trackerChild.localPosition  = leftShoulder.trackerChild.localRotation *  leftShoulder.trackerChild.InverseTransformPoint( leftShoulder.trackerChild.parent.position +  leftShoulder.trackerChild.rotation *  leftArm.limbStartJointOffset);
@@ -671,11 +679,17 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 	void LateUpdate()
 	{
-		fixedRightShoulder.rotation = rightShoulder.trackerChild.rotation;
-		fixedRightShoulder.position = rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset;
+		if(pelvisFromChest)
+		{
+			inferedPelvis.rotation = pelvis.trackerChild.rotation;
+			inferedPelvis.position = chest.trackerChild.position + pelvisFromChestLocationBlend * pelvisChestInitialDistance * (chest.trackerChild.rotation * Vector3.down);
+		}
 
-		fixedLeftShoulder.rotation = leftShoulder.trackerChild.rotation;
-		fixedLeftShoulder.position = leftShoulder.trackerChild.parent.position + leftShoulder.trackerChild.rotation * leftArm.limbStartJointOffset;
+//		fixedRightShoulder.rotation = rightShoulder.trackerChild.rotation;
+//		fixedRightShoulder.position = rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset;
+//
+//		fixedLeftShoulder.rotation = leftShoulder.trackerChild.rotation;
+//		fixedLeftShoulder.position = leftShoulder.trackerChild.parent.position + leftShoulder.trackerChild.rotation * leftArm.limbStartJointOffset;
 
 		// *** TODO martial arts update: implement avatar scaling effects on below infered positions
 		if(pelvis.inferPose && pelvis.trackerChild)
