@@ -16,6 +16,9 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 	private Vector3 perpendicularVector = Vector3.zero;
 
+	public Transform fixedRightShoulder;
+	public Transform fixedLeftShoulder;
+
 	[Serializable]
 	public class TrackerPose
 	{
@@ -329,14 +332,15 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	public TrackerPose rightFoot;
 	public TrackerPose leftFoot;
 
-	enum CalibrationState
+	public enum CalibrationState
 	{
 		NotCalibrating,
 		GetReady,
 		StorePose
 	};
 
-	CalibrationState calibrationState = CalibrationState.NotCalibrating;
+	[HideInInspector]
+	public CalibrationState calibrationState = CalibrationState.NotCalibrating;
 
 	// Reference to the actions
 	public SteamVR_Action_Boolean rightStartButton;
@@ -421,6 +425,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				calibrationState = CalibrationState.StorePose;
 
 				Quaternion rotationDeltaFromTPoseShoulder = Quaternion.Euler(-90, 0, 0);
+				Quaternion rotationDeltaFromTPoseRightHand = Quaternion.Euler(0, -90, 0);
+				Quaternion rotationDeltaFromTPoseLeftHand  = Quaternion.Euler(0,  90, 0);
 
 				vectorX = (rightHand.trackerChild.parent.position - leftHand.trackerChild.parent.position).normalized; // Note parent: Left to right normalized vector
 				vectorY = Vector3.Cross(Vector3.down, vectorX); // Forward vector
@@ -431,8 +437,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				SetTrackerRotationsFromTPose(head, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(rightShoulder, firstPoseBodyRotation); // *** Is correct???
 				SetTrackerRotationsFromTPose(leftShoulder,  firstPoseBodyRotation);  // *** Is correct???
-				SetTrackerRotationsFromTPose(rightHand, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(leftHand,  firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose(rightHand, firstPoseBodyRotation * rotationDeltaFromTPoseRightHand);
+				SetTrackerRotationsFromTPose(leftHand,  firstPoseBodyRotation * rotationDeltaFromTPoseLeftHand);
 				SetTrackerRotationsFromTPose(rightHip, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(leftHip, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(rightFoot, firstPoseBodyRotation);
@@ -455,12 +461,12 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 		//?? rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * Quaternion.Inverse(firstPoseBodyRotation) * rightArm.limbStartJointOffset;
 				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightShoulder.trackerChild.InverseTransformPoint(rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset);
-				leftShoulder.trackerChild.localPosition  =  leftShoulder.trackerChild.localRotation *  leftShoulder.trackerChild.InverseTransformPoint( leftShoulder.trackerChild.parent.position +  leftShoulder.trackerChild.rotation *  leftArm.limbStartJointOffset);
+				leftShoulder.trackerChild.localPosition  = leftShoulder.trackerChild.localRotation *  leftShoulder.trackerChild.InverseTransformPoint( leftShoulder.trackerChild.parent.position +  leftShoulder.trackerChild.rotation *  leftArm.limbStartJointOffset);
 				rightHand.trackerChild.localPosition = rightArm.limbEndJointOffset; // *** Why different??? Using controllers not Vive Trackers...
 				leftHand.trackerChild.localPosition = leftArm.limbEndJointOffset;  // *** Why different???
 
 				rightHip.trackerChild.localPosition = rightHip.trackerChild.localRotation * rightHip.trackerChild.InverseTransformPoint(rightHip.trackerChild.parent.position + rightHip.trackerChild.rotation * rightLeg.limbStartJointOffset);
-				leftHip.trackerChild.localPosition  =  leftHip.trackerChild.localRotation * leftHip.trackerChild.InverseTransformPoint( leftHip.trackerChild.parent.position  +  leftHip.trackerChild.rotation *  leftLeg.limbStartJointOffset);
+				leftHip.trackerChild.localPosition  = leftHip.trackerChild.localRotation * leftHip.trackerChild.InverseTransformPoint( leftHip.trackerChild.parent.position  +  leftHip.trackerChild.rotation *  leftLeg.limbStartJointOffset);
 				rightFoot.trackerChild.localPosition = rightFoot.trackerChild.localRotation * rightLeg.limbEndJointOffset;
 				leftFoot.trackerChild.localPosition = leftFoot.trackerChild.localRotation * leftLeg.limbEndJointOffset;
 
@@ -536,7 +542,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		// Note parent:
 		tracker.trackerChild.localRotation = Quaternion.Inverse(tracker.trackerChild.parent.rotation) * rotationOffset;
 		// tracker.trackerChild.localRotation = tracker.trackerChild.parent.rotation.inverse * bodyOrientation;
-//		tracker.trackerChild.localPosition = positionOffset; // ***
+		tracker.trackerChild.localPosition = Vector3.zero; // ***
 	}
 
 	Vector3 ProjectPointToLineSegment(Vector3 p, Vector3 a, Vector3 b)
@@ -665,6 +671,12 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 	void LateUpdate()
 	{
+		fixedRightShoulder.rotation = rightShoulder.trackerChild.rotation;
+		fixedRightShoulder.position = rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset;
+
+		fixedLeftShoulder.rotation = leftShoulder.trackerChild.rotation;
+		fixedLeftShoulder.position = leftShoulder.trackerChild.parent.position + leftShoulder.trackerChild.rotation * leftArm.limbStartJointOffset;
+
 		// *** TODO martial arts update: implement avatar scaling effects on below infered positions
 		if(pelvis.inferPose && pelvis.trackerChild)
 		{

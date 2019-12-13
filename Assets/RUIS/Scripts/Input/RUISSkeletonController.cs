@@ -450,7 +450,7 @@ public class RUISSkeletonController : MonoBehaviour
 	public Vector3 clenchedFingerAnglePIP;
 	public Vector3 clenchedFingerAngleDIP;
 
-
+	public bool useWorldFingerRotation = false;
 	public bool useLocalFingerRotation = false; // *** OPTIHACK7 remove this
 	public bool leftThumbHasIndependentRotations = false; // *** OPTIHACK5 remove this
 	public Quaternion clenchedLeftThumbTM;
@@ -3174,11 +3174,11 @@ public class RUISSkeletonController : MonoBehaviour
 								if(leftThumbHasIndependentRotations && i == 1 && j == 4) // Left thumb
 								{
 									if(k == 0)
-										rotationOffset = clenchedLeftThumbTM * rotationOffset;
+										rotationOffset = clenchedLeftThumbTM;
 									if(k == 1)
-										rotationOffset = clenchedLeftThumbMCP  * rotationOffset;
+										rotationOffset = clenchedLeftThumbMCP;
 									if(k == 2)
-										rotationOffset = clenchedLeftThumbIP  * rotationOffset;
+										rotationOffset = clenchedLeftThumbIP;
 								}
 
 								if(yawCorrectIMU)
@@ -3186,6 +3186,13 @@ public class RUISSkeletonController : MonoBehaviour
 								else
 									tempRotation = Quaternion.identity;
 										
+								// *** HACK TODO martial arts
+								if(useWorldFingerRotation)
+								{
+									fingerTargets[i, j, k].rotation = fingerSources[i, j, k].rotation * rotationOffset;
+									continue;
+								}
+
 								// At the moment only hierarchical finger phalanx Transforms are supported
 								newRotation = transform.rotation * tempRotation * fingerSources[i, j, k].rotation * rotationOffset * initialFingerWorldRotations[i, j, k];
 
