@@ -10,9 +10,31 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	public int calibrationSamples = 40;
 
 	public bool pelvisFromChest = false;
+	[Range(0,1)]
 	public float pelvisFromChestLocationBlend = 0.5f;
-	float pelvisChestInitialDistance = 0.5f;
+	float pelvisChestInitialDistance = 0.3f;
 	public Transform inferedPelvis;
+
+	public bool constrainShoulders = false;
+	public bool constrainHips = false;
+
+	public float shoulderMaxDeviation = 0.07f;
+	public float hipMaxDeviation = 0.07f;
+
+	[Range(0,1)]
+	public float shoulderChestBlend = 0.5f;
+	[Range(0,1)]
+	public float hipPelvisBlend = 0.5f;
+
+	public Transform fixedRightShoulder;
+	public Transform fixedLeftShoulder;
+	public Transform fixedRightHip;
+	public Transform fixedLeftHip;
+
+	public Vector3 initialRightShoulderPos = Vector3.zero;
+	public Vector3 initialLeftShoulderPos = Vector3.zero;
+	public Vector3 initialRightHipPos = Vector3.zero;
+	public Vector3 initialLeftHipPos = Vector3.zero;
 
 	public RUISSkeletonController skeletonController;
 
@@ -20,9 +42,6 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	private Transform characterTransform;
 
 	private Vector3 perpendicularVector = Vector3.zero;
-
-	public Transform fixedRightShoulder;
-	public Transform fixedLeftShoulder;
 
 	[Serializable]
 	public class TrackerPose
@@ -496,6 +515,12 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				leftClavicleShoulderInitialVector = Quaternion.Inverse(chest.trackerChild.rotation) * (leftShoulder.trackerChild.position - chest.trackerChild.position) - leftClavicleInitialOffset;
 
 
+				initialRightShoulderPos = chest.trackerChild.InverseTransformPoint(rightShoulder.trackerChild.position);
+				initialLeftShoulderPos  = chest.trackerChild.InverseTransformPoint( leftShoulder.trackerChild.position);
+				initialRightHipPos = pelvis.trackerChild.InverseTransformPoint(rightHip.trackerChild.position);
+				initialLeftHipPos  = pelvis.trackerChild.InverseTransformPoint( leftHip.trackerChild.position);
+
+
 				doneCalibrating = true; // *** TODO: Make better recalibration signaling
 
 				calibrationState = CalibrationState.StorePose; // ***
@@ -590,6 +615,17 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 			+ 0.1f * (tracker.trackerChild.rotation * Vector3.right), Color.red);
 	}
 
+
+	void DebugDrawTransform(Transform trans)
+	{
+		Debug.DrawLine(trans.position, trans.position
+			+ 0.1f * (trans.rotation * Vector3.forward), Color.cyan);
+		Debug.DrawLine(trans.position, trans.position
+			+ 0.1f * (trans.rotation * Vector3.up), Color.yellow);
+		Debug.DrawLine(trans.position, trans.position
+			+ 0.1f * (trans.rotation * Vector3.right), Color.magenta);
+	}
+
 	void DebugDrawTrackedLimb(Limb limb, TrackerPose upperLimb, TrackerPose lowerLimb, TrackerPose extremity, bool isLeg, bool isRightLimb)
 	{
 		Vector3 boneDirection = Vector3.down; // Upper and lower legs
@@ -679,10 +715,43 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 	void LateUpdate()
 	{
-		if(pelvisFromChest)
+		if(pelvisFromChest && inferedPelvis)
 		{
 			inferedPelvis.rotation = pelvis.trackerChild.rotation;
 			inferedPelvis.position = chest.trackerChild.position + pelvisFromChestLocationBlend * pelvisChestInitialDistance * (chest.trackerChild.rotation * Vector3.down);
+			DebugDrawTransform(inferedPelvis);
+		}
+
+		if(constrainShoulders)
+		{
+			if(fixedRightShoulder)
+			{
+				perpendicularVector = chest.trackerChild.TransformPoint(initialRightShoulderPos);
+				fixedRightShoulder.position = perpendicularVector + Vector3.ClampMagnitude((1.0f - shoulderChestBlend) * (rightShoulder.trackerChild.position - perpendicularVector), shoulderMaxDeviation);
+				fixedRightShoulder.rotation = rightShoulder.trackerChild.rotation;
+			}
+			if(fixedLeftShoulder)
+			{
+				perpendicularVector = chest.trackerChild.TransformPoint(initialLeftShoulderPos);
+				fixedLeftShoulder.position = perpendicularVector + Vector3.ClampMagnitude((1.0f - shoulderChestBlend) * (leftShoulder.trackerChild.position - perpendicularVector), shoulderMaxDeviation);
+				fixedLeftShoulder.rotation = leftShoulder.trackerChild.rotation;
+			}
+		}
+
+		if(constrainHips)
+		{
+			if(fixedRightHip)
+			{
+				perpendicularVector = pelvis.trackerChild.TransformPoint(initialRightHipPos);
+				fixedRightHip.position = perpendicularVector + Vector3.ClampMagnitude((1.0f - hipPelvisBlend) * (rightHip.trackerChild.position - perpendicularVector), hipMaxDeviation);
+				fixedRightHip.rotation = rightHip.trackerChild.rotation;
+			}
+			if(fixedLeftHip)
+			{
+				perpendicularVector = pelvis.trackerChild.TransformPoint(initialLeftHipPos);
+				fixedLeftHip.position = perpendicularVector + Vector3.ClampMagnitude((1.0f - hipPelvisBlend) * (leftHip.trackerChild.position - perpendicularVector), hipMaxDeviation);
+				fixedLeftHip.rotation = leftHip.trackerChild.rotation;
+			}
 		}
 
 //		fixedRightShoulder.rotation = rightShoulder.trackerChild.rotation;
