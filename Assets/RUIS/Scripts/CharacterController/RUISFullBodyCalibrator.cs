@@ -450,7 +450,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 				Quaternion rotationDeltaFromTPoseShoulder = Quaternion.Euler(-90, 0, 0);
 				Quaternion rotationDeltaFromTPoseRightHand = Quaternion.Euler(0, -90, 0);
-				Quaternion rotationDeltaFromTPoseLeftHand  = Quaternion.Euler(0,  90, 0);
+				Quaternion rotationDeltaFromTPoseLeftHand = Quaternion.Euler(0, 90, 0);
 
 				vectorX = (rightHand.trackerChild.parent.position - leftHand.trackerChild.parent.position).normalized; // Note parent: Left to right normalized vector
 				vectorY = Vector3.Cross(Vector3.down, vectorX); // Forward vector
@@ -460,9 +460,9 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				SetTrackerRotationsFromTPose(chest, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(head, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(rightShoulder, firstPoseBodyRotation); // *** Is correct???
-				SetTrackerRotationsFromTPose(leftShoulder,  firstPoseBodyRotation);  // *** Is correct???
+				SetTrackerRotationsFromTPose(leftShoulder, firstPoseBodyRotation);  // *** Is correct???
 				SetTrackerRotationsFromTPose(rightHand, firstPoseBodyRotation * rotationDeltaFromTPoseRightHand);
-				SetTrackerRotationsFromTPose(leftHand,  firstPoseBodyRotation * rotationDeltaFromTPoseLeftHand);
+				SetTrackerRotationsFromTPose(leftHand, firstPoseBodyRotation * rotationDeltaFromTPoseLeftHand);
 				SetTrackerRotationsFromTPose(rightHip, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(leftHip, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(rightFoot, firstPoseBodyRotation);
@@ -476,7 +476,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 				SetTrackerRotationsFromTPose(rightKnee, firstPoseBodyRotation);
 				SetTrackerRotationsFromTPose(leftKnee, firstPoseBodyRotation);
 
-				vectorX = 0.5f * (rightShoulder.trackerChild.parent.position + leftShoulder.trackerChild.parent.position); // Note parent: Hand middlepoint
+				vectorX = head.trackerChild.position; // 0.5f * (rightShoulder.trackerChild.parent.position + leftShoulder.trackerChild.parent.position); // Note parent: Hand middlepoint
 				vectorY = vectorX - 2 * Vector3.down; // Two meters below hand middlepoint
 				// Note parent:
 				chest.trackerChild.localPosition = chest.trackerChild.localRotation * chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine

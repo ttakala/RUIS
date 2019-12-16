@@ -1052,8 +1052,8 @@ public class RUISSkeletonController : MonoBehaviour
 			{
 				skeleton.neck.position = Vector3.Lerp(skeleton.chest.position, skeleton.head.position, neckInterpolateBlend);
 				if(skeleton.chest.rotationConfidence >= minimumConfidenceToUpdate)
-					skeleton.neck.rotation = skeleton.chest.rotation * Quaternion.FromToRotation(skeleton.chest.rotation * Vector3.up, 
-																								 skeleton.head.position - skeleton.neck.position);
+					skeleton.neck.rotation = Quaternion.LookRotation(0.5f * (skeleton.chest.rotation * Vector3.forward + skeleton.head.rotation * Vector3.forward), 
+																	 skeleton.head.position - skeleton.neck.position);
 			}
 
 			ApplyInertialSuitCorrections(); // Updates all skeleton.<joint> rotations and positions if yawCorrectIMU (or headsetDragsBody) is enabled
