@@ -33,11 +33,11 @@ EditorBuildSettings:
     path: Assets/RUIS/Scenes/calibration.unity
     guid: 176f3c6957c2bac4d9290bb9cdc1ae91
   - enabled: 1
-    path: Assets/Yutaro/Scenes/Y_PuppetNotFallDown.unity
-    guid: c5da5b7ce893f9f439539d062379be92
-  - enabled: 1
     path: Assets/Yutaro/Scenes/Y_LateWakeUp.unity
     guid: ec9ef72c875e77e4788ffac409a55fb7
+  - enabled: 1
+    path: Assets/Yutaro/Scenes/Y_PuppetNotFallDown.unity
+    guid: c5da5b7ce893f9f439539d062379be92
   - enabled: 1
     path: Assets/Yutaro/Scenes/Y_FightScene.unity
     guid: 75a55ab36ba83ed4b98006102c14c019
