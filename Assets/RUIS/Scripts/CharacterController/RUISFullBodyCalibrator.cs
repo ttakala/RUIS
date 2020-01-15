@@ -699,38 +699,38 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 // //			leftLeg.TrySavingSample( pelvis,  leftHip,  leftFoot);
 		// }
 
-		DebugDrawTrackedLimb(rightArm, 	rightShoulder, 	rightElbow, rightHand, 	isLeg: false, 	isRightLimb: true);
-		DebugDrawTrackedLimb(leftArm, 	leftShoulder, 	leftElbow, 	leftHand, 	isLeg: false, 	isRightLimb: false);
-		DebugDrawTrackedLimb(rightLeg, 	rightHip, 		rightKnee, 	rightFoot, 	isLeg: true, 	isRightLimb: true);
-		DebugDrawTrackedLimb(leftLeg, 	leftHip, 		leftKnee, 	leftHand, 	isLeg: true, 	isRightLimb: false);
-
-		// ***
-		Debug.DrawLine(leftShoulder.trackerChild.position + 0.05f * Vector3.one, leftShoulder.trackerChild.position
-			+ 0.05f * Vector3.one + 0.3f * (leftShoulder.trackerChild.rotation * Vector3.up), Color.white);
+//		DebugDrawTrackedLimb(rightArm, 	rightShoulder, 	rightElbow, rightHand, 	isLeg: false, 	isRightLimb: true);
+//		DebugDrawTrackedLimb(leftArm, 	leftShoulder, 	leftElbow, 	leftHand, 	isLeg: false, 	isRightLimb: false);
+//		DebugDrawTrackedLimb(rightLeg, 	rightHip, 		rightKnee, 	rightFoot, 	isLeg: true, 	isRightLimb: true);
+//		DebugDrawTrackedLimb(leftLeg, 	leftHip, 		leftKnee, 	leftHand, 	isLeg: true, 	isRightLimb: false);
+//
+//		// ***
+//		Debug.DrawLine(leftShoulder.trackerChild.position + 0.05f * Vector3.one, leftShoulder.trackerChild.position
+//			+ 0.05f * Vector3.one + 0.3f * (leftShoulder.trackerChild.rotation * Vector3.up), Color.white);
 
 		// Vector perpendicular to forearm and parallel to the wrist main rotation axis 
 		perpendicularVector = leftHand.trackerChild.rotation * Vector3.forward - ProjectPointToLineSegment(leftHand.trackerChild.rotation * Vector3.forward, Vector3.zero, 
 			(leftElbow.trackerChild.position - leftHand.trackerChild.position).normalized);
-		Debug.DrawLine(leftHand.trackerChild.position, leftHand.trackerChild.position + 0.3f * perpendicularVector.normalized, Color.black);
-
-		DebugDrawTrackerPose(pelvis);
-		DebugDrawTrackerPose(chest);
-		DebugDrawTrackerPose(neck);
-		DebugDrawTrackerPose(head);
-		DebugDrawTrackerPose(rightClavicle);
-		DebugDrawTrackerPose(leftClavicle);
-		DebugDrawTrackerPose(rightShoulder);
-		DebugDrawTrackerPose(leftShoulder);
-		DebugDrawTrackerPose(rightElbow);
-		DebugDrawTrackerPose(leftElbow);
-		DebugDrawTrackerPose(rightHand);
-		DebugDrawTrackerPose(leftHand);
-		DebugDrawTrackerPose(rightHip);
-		DebugDrawTrackerPose(leftHip);
-		DebugDrawTrackerPose(rightKnee);
-		DebugDrawTrackerPose(leftKnee);
-		DebugDrawTrackerPose(rightFoot);
-		DebugDrawTrackerPose(leftFoot);
+//		Debug.DrawLine(leftHand.trackerChild.position, leftHand.trackerChild.position + 0.3f * perpendicularVector.normalized, Color.black);
+//
+//		DebugDrawTrackerPose(pelvis);
+//		DebugDrawTrackerPose(chest);
+//		DebugDrawTrackerPose(neck);
+//		DebugDrawTrackerPose(head);
+//		DebugDrawTrackerPose(rightClavicle);
+//		DebugDrawTrackerPose(leftClavicle);
+//		DebugDrawTrackerPose(rightShoulder);
+//		DebugDrawTrackerPose(leftShoulder);
+//		DebugDrawTrackerPose(rightElbow);
+//		DebugDrawTrackerPose(leftElbow);
+//		DebugDrawTrackerPose(rightHand);
+//		DebugDrawTrackerPose(leftHand);
+//		DebugDrawTrackerPose(rightHip);
+//		DebugDrawTrackerPose(leftHip);
+//		DebugDrawTrackerPose(rightKnee);
+//		DebugDrawTrackerPose(leftKnee);
+//		DebugDrawTrackerPose(rightFoot);
+//		DebugDrawTrackerPose(leftFoot);
 	}
 
 	void LateUpdate()
@@ -739,7 +739,7 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		{
 			inferedPelvis.rotation = pelvis.trackerChild.rotation;
 			inferedPelvis.position = chest.trackerChild.position + pelvisFromChestLocationBlend * pelvisChestInitialDistance * (chest.trackerChild.rotation * Vector3.down);
-			DebugDrawTransform(inferedPelvis);
+//			DebugDrawTransform(inferedPelvis);
 		}
 
 		if(constrainShoulders)
