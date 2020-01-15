@@ -48,6 +48,12 @@ EditorBuildSettings:
     path: Assets/Yutaro/Scenes/Y_RecordAndPlayback.unity
     guid: 82e84ee2d1677894c9f06aa3ccef470d
   - enabled: 1
+    path: Assets/Yutaro/Scenes/Y_SENSEIScene1.unity
+    guid: 2eed322f3e407284db54cc0ba8aa92db
+  - enabled: 1
+    path: Assets/Yutaro/Scenes/Y_SENSEIScene2.unity
+    guid: 7316132317125584f9b63c9ec537e21f
+  - enabled: 1
     path: Assets/Yutaro/Scenes/Y_ComboPractice.unity
     guid: 5ec287b6bff945a4488eb82a466eaefa
   - enabled: 1
