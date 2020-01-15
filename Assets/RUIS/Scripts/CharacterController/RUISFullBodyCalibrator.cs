@@ -377,6 +377,9 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	bool rightMenuDown = false;
 	bool leftMenuDown = false;
 
+	public List<Renderer> showAfterCalibration;
+	public List<GameObject> hideAfterCalibration;
+
 	Vector3 vectorX = Vector3.zero;
 	Vector3 vectorY = Vector3.zero;
 	Quaternion firstPoseBodyRotation = Quaternion.identity;
@@ -488,12 +491,12 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 		//?? rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * Quaternion.Inverse(firstPoseBodyRotation) * rightArm.limbStartJointOffset;
 				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightShoulder.trackerChild.InverseTransformPoint(rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset);
-				leftShoulder.trackerChild.localPosition  = leftShoulder.trackerChild.localRotation *  leftShoulder.trackerChild.InverseTransformPoint( leftShoulder.trackerChild.parent.position +  leftShoulder.trackerChild.rotation *  leftArm.limbStartJointOffset);
+				leftShoulder.trackerChild.localPosition = leftShoulder.trackerChild.localRotation * leftShoulder.trackerChild.InverseTransformPoint(leftShoulder.trackerChild.parent.position + leftShoulder.trackerChild.rotation * leftArm.limbStartJointOffset);
 				rightHand.trackerChild.localPosition = rightArm.limbEndJointOffset; // *** Why different??? Using controllers not Vive Trackers...
 				leftHand.trackerChild.localPosition = leftArm.limbEndJointOffset;  // *** Why different???
 
 				rightHip.trackerChild.localPosition = rightHip.trackerChild.localRotation * rightHip.trackerChild.InverseTransformPoint(rightHip.trackerChild.parent.position + rightHip.trackerChild.rotation * rightLeg.limbStartJointOffset);
-				leftHip.trackerChild.localPosition  = leftHip.trackerChild.localRotation * leftHip.trackerChild.InverseTransformPoint( leftHip.trackerChild.parent.position  +  leftHip.trackerChild.rotation *  leftLeg.limbStartJointOffset);
+				leftHip.trackerChild.localPosition = leftHip.trackerChild.localRotation * leftHip.trackerChild.InverseTransformPoint(leftHip.trackerChild.parent.position + leftHip.trackerChild.rotation * leftLeg.limbStartJointOffset);
 				rightFoot.trackerChild.localPosition = rightFoot.trackerChild.localRotation * rightLeg.limbEndJointOffset;
 				leftFoot.trackerChild.localPosition = leftFoot.trackerChild.localRotation * leftLeg.limbEndJointOffset;
 
@@ -516,10 +519,21 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 
 				initialRightShoulderPos = chest.trackerChild.InverseTransformPoint(rightShoulder.trackerChild.position);
-				initialLeftShoulderPos  = chest.trackerChild.InverseTransformPoint( leftShoulder.trackerChild.position);
+				initialLeftShoulderPos = chest.trackerChild.InverseTransformPoint(leftShoulder.trackerChild.position);
 				initialRightHipPos = pelvis.trackerChild.InverseTransformPoint(rightHip.trackerChild.position);
-				initialLeftHipPos  = pelvis.trackerChild.InverseTransformPoint( leftHip.trackerChild.position);
+				initialLeftHipPos = pelvis.trackerChild.InverseTransformPoint(leftHip.trackerChild.position);
 
+				foreach(Renderer renderer in showAfterCalibration)
+				{
+					if(renderer)
+						renderer.enabled = true;
+				}
+
+				foreach(GameObject gameObject in hideAfterCalibration)
+				{
+					if(gameObject)
+						gameObject.SetActive(false);
+				}
 
 				doneCalibrating = true; // *** TODO: Make better recalibration signaling
 
@@ -603,6 +617,12 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		leftStartButton.AddOnStateDownListener(TriggerDown, leftController);
 		rightStartButton.AddOnStateUpListener(TriggerUp, rightController);
 		rightStartButton.AddOnStateDownListener(TriggerDown, rightController);
+
+		foreach(Renderer renderer in showAfterCalibration)
+		{
+			if(renderer)
+				renderer.enabled = false;
+		}
 	}
 
 	void DebugDrawTrackerPose(TrackerPose tracker)
