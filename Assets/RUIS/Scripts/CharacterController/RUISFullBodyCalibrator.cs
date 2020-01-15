@@ -620,8 +620,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 
 		foreach(Renderer renderer in showAfterCalibration)
 		{
-			if(renderer)
-				renderer.enabled = false;
+//			if(renderer)
+//				renderer.enabled = false;
 		}
 	}
 
