@@ -529,17 +529,17 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 						renderer.enabled = true;
 				}
 
+				doneCalibrating = true; // *** TODO: Make better recalibration signaling
+
+				calibrationState = CalibrationState.StorePose; // ***
+				break;
+			case CalibrationState.StorePose:
 				foreach(GameObject gameObject in hideAfterCalibration)
 				{
 					if(gameObject)
 						gameObject.SetActive(false);
 				}
 
-				doneCalibrating = true; // *** TODO: Make better recalibration signaling
-
-				calibrationState = CalibrationState.StorePose; // ***
-				break;
-			case CalibrationState.StorePose:
 				doneCalibrating = false; // *** TODO: Make better recalibration signaling
 				calibrationState = CalibrationState.NotCalibrating;
 //				Debug.Log("Finished Vive Tracker Full Body Calibration, and saved rotation and position offsets to tracker child Transforms.");
