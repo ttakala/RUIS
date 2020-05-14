@@ -366,6 +366,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	[HideInInspector]
 	public CalibrationState calibrationState = CalibrationState.NotCalibrating;
 
+	[Space(10)]
+
 	// Reference to the actions
 	public SteamVR_Action_Boolean rightStartButton;
 	public SteamVR_Action_Boolean leftStartButton;
@@ -377,6 +379,8 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 	bool rightMenuDown = false;
 	bool leftMenuDown = false;
 
+	[Space(10)]
+	public bool hideMeshes = false;
 	public List<Renderer> showAfterCalibration;
 	public List<GameObject> hideAfterCalibration;
 
@@ -451,93 +455,95 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 //			case CalibrationState.GetReady:
 				calibrationState = CalibrationState.StorePose;
 
-				Quaternion rotationDeltaFromTPoseShoulder = Quaternion.Euler(-90, 0, 0);
-				Quaternion rotationDeltaFromTPoseRightHand = Quaternion.Euler(0, -90, 0);
-				Quaternion rotationDeltaFromTPoseLeftHand = Quaternion.Euler(0, 90, 0);
+				Quaternion rotationDeltaFromTPoseShoulder = Quaternion.Euler (-90, 0, 0);
+				Quaternion rotationDeltaFromTPoseRightHand = Quaternion.Euler (0, -90, 0);
+				Quaternion rotationDeltaFromTPoseLeftHand = Quaternion.Euler (0, 90, 0);
 
 				vectorX = (rightHand.trackerChild.parent.position - leftHand.trackerChild.parent.position).normalized; // Note parent: Left to right normalized vector
-				vectorY = Vector3.Cross(Vector3.down, vectorX); // Forward vector
-				firstPoseBodyRotation = Quaternion.LookRotation(vectorY, Vector3.up);
+				vectorY = Vector3.Cross (Vector3.down, vectorX); // Forward vector
+				firstPoseBodyRotation = Quaternion.LookRotation (vectorY, Vector3.up);
 
-				SetTrackerRotationsFromTPose(pelvis, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(chest, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(head, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(rightShoulder, firstPoseBodyRotation); // *** Is correct???
-				SetTrackerRotationsFromTPose(leftShoulder, firstPoseBodyRotation);  // *** Is correct???
-				SetTrackerRotationsFromTPose(rightHand, firstPoseBodyRotation * rotationDeltaFromTPoseRightHand);
-				SetTrackerRotationsFromTPose(leftHand, firstPoseBodyRotation * rotationDeltaFromTPoseLeftHand);
-				SetTrackerRotationsFromTPose(rightHip, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(leftHip, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(rightFoot, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(leftFoot, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (pelvis, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (chest, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (head, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (rightShoulder, firstPoseBodyRotation); // *** Is correct???
+				SetTrackerRotationsFromTPose (leftShoulder, firstPoseBodyRotation);  // *** Is correct???
+				SetTrackerRotationsFromTPose (rightHand, firstPoseBodyRotation * rotationDeltaFromTPoseRightHand);
+				SetTrackerRotationsFromTPose (leftHand, firstPoseBodyRotation * rotationDeltaFromTPoseLeftHand);
+				SetTrackerRotationsFromTPose (rightHip, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (leftHip, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (rightFoot, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (leftFoot, firstPoseBodyRotation);
 
-				SetTrackerRotationsFromTPose(neck, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(rightClavicle, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(leftClavicle, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(rightElbow, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(leftElbow, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(rightKnee, firstPoseBodyRotation);
-				SetTrackerRotationsFromTPose(leftKnee, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (neck, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (rightClavicle, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (leftClavicle, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (rightElbow, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (leftElbow, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (rightKnee, firstPoseBodyRotation);
+				SetTrackerRotationsFromTPose (leftKnee, firstPoseBodyRotation);
 
 				vectorX = head.trackerChild.position; // 0.5f * (rightShoulder.trackerChild.parent.position + leftShoulder.trackerChild.parent.position); // Note parent: Hand middlepoint
 				vectorY = vectorX - 2 * Vector3.down; // Two meters below hand middlepoint
-				// Note parent:
-				chest.trackerChild.localPosition = chest.trackerChild.localRotation * chest.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
-				// Note parent:
-				pelvis.trackerChild.localPosition = pelvis.trackerChild.localRotation * pelvis.trackerChild.InverseTransformPoint(ProjectPointToLineSegment(pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
+					// Note parent:
+				chest.trackerChild.localPosition = chest.trackerChild.localRotation * chest.trackerChild.InverseTransformPoint (ProjectPointToLineSegment (chest.trackerChild.parent.position, vectorX, vectorY)); // offset = chest projected to spine
+					// Note parent:
+				pelvis.trackerChild.localPosition = pelvis.trackerChild.localRotation * pelvis.trackerChild.InverseTransformPoint (ProjectPointToLineSegment (pelvis.trackerChild.parent.position, vectorX, vectorY)); // offset = pelvis projected to spine
 
 
 				pelvisChestInitialDistance = (pelvis.trackerChild.position - chest.trackerChild.position).magnitude;
 
-		//?? rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * Quaternion.Inverse(firstPoseBodyRotation) * rightArm.limbStartJointOffset;
-				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightShoulder.trackerChild.InverseTransformPoint(rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset);
-				leftShoulder.trackerChild.localPosition = leftShoulder.trackerChild.localRotation * leftShoulder.trackerChild.InverseTransformPoint(leftShoulder.trackerChild.parent.position + leftShoulder.trackerChild.rotation * leftArm.limbStartJointOffset);
+			//?? rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * Quaternion.Inverse(firstPoseBodyRotation) * rightArm.limbStartJointOffset;
+				rightShoulder.trackerChild.localPosition = rightShoulder.trackerChild.localRotation * rightShoulder.trackerChild.InverseTransformPoint (rightShoulder.trackerChild.parent.position + rightShoulder.trackerChild.rotation * rightArm.limbStartJointOffset);
+				leftShoulder.trackerChild.localPosition = leftShoulder.trackerChild.localRotation * leftShoulder.trackerChild.InverseTransformPoint (leftShoulder.trackerChild.parent.position + leftShoulder.trackerChild.rotation * leftArm.limbStartJointOffset);
 				rightHand.trackerChild.localPosition = rightArm.limbEndJointOffset; // *** Why different??? Using controllers not Vive Trackers...
 				leftHand.trackerChild.localPosition = leftArm.limbEndJointOffset;  // *** Why different???
 
-				rightHip.trackerChild.localPosition = rightHip.trackerChild.localRotation * rightHip.trackerChild.InverseTransformPoint(rightHip.trackerChild.parent.position + rightHip.trackerChild.rotation * rightLeg.limbStartJointOffset);
-				leftHip.trackerChild.localPosition = leftHip.trackerChild.localRotation * leftHip.trackerChild.InverseTransformPoint(leftHip.trackerChild.parent.position + leftHip.trackerChild.rotation * leftLeg.limbStartJointOffset);
+				rightHip.trackerChild.localPosition = rightHip.trackerChild.localRotation * rightHip.trackerChild.InverseTransformPoint (rightHip.trackerChild.parent.position + rightHip.trackerChild.rotation * rightLeg.limbStartJointOffset);
+				leftHip.trackerChild.localPosition = leftHip.trackerChild.localRotation * leftHip.trackerChild.InverseTransformPoint (leftHip.trackerChild.parent.position + leftHip.trackerChild.rotation * leftLeg.limbStartJointOffset);
 				rightFoot.trackerChild.localPosition = rightFoot.trackerChild.localRotation * rightLeg.limbEndJointOffset;
 				leftFoot.trackerChild.localPosition = leftFoot.trackerChild.localRotation * leftLeg.limbEndJointOffset;
 
-				rightArm.InitializeLimbCalibration(calibrationSamples);
-				leftArm.InitializeLimbCalibration(calibrationSamples);
+				rightArm.InitializeLimbCalibration (calibrationSamples);
+				leftArm.InitializeLimbCalibration (calibrationSamples);
 
-				// Estimate for middlepoint between clavicles in chest coordinates at the instant of pose calibration
-				Vector3 clavicleInitialMidpoint = Quaternion.Inverse(chest.trackerChild.rotation) * (0.7f * (0.5f * (rightShoulder.trackerChild.position + leftShoulder.trackerChild.position) - chest.trackerChild.position));
+					// Estimate for middlepoint between clavicles in chest coordinates at the instant of pose calibration
+				Vector3 clavicleInitialMidpoint = Quaternion.Inverse (chest.trackerChild.rotation) * (0.7f * (0.5f * (rightShoulder.trackerChild.position + leftShoulder.trackerChild.position) - chest.trackerChild.position));
 
-				// Estimate for middlepoint between clavicles in world coordinates at the instant of pose calibration
+					// Estimate for middlepoint between clavicles in world coordinates at the instant of pose calibration
 				perpendicularVector = chest.trackerChild.rotation * clavicleInitialMidpoint + chest.trackerChild.position;
 
-				// Clavicle positions in chest coordinates at the instant of pose calibration
-				rightClavicleInitialOffset = clavicleInitialMidpoint + Quaternion.Inverse(chest.trackerChild.rotation) * (0.2f * (rightShoulder.trackerChild.position - perpendicularVector));
-				leftClavicleInitialOffset = clavicleInitialMidpoint + Quaternion.Inverse(chest.trackerChild.rotation) * (0.2f * (leftShoulder.trackerChild.position - perpendicularVector));
+					// Clavicle positions in chest coordinates at the instant of pose calibration
+				rightClavicleInitialOffset = clavicleInitialMidpoint + Quaternion.Inverse (chest.trackerChild.rotation) * (0.2f * (rightShoulder.trackerChild.position - perpendicularVector));
+				leftClavicleInitialOffset = clavicleInitialMidpoint + Quaternion.Inverse (chest.trackerChild.rotation) * (0.2f * (leftShoulder.trackerChild.position - perpendicularVector));
 
-				// Vector from clavicle position to shoulder in chest coordinates at the instant of pose calibration
-				rightClavicleShoulderInitialVector = Quaternion.Inverse(chest.trackerChild.rotation) * (rightShoulder.trackerChild.position - chest.trackerChild.position) - rightClavicleInitialOffset;
-				leftClavicleShoulderInitialVector = Quaternion.Inverse(chest.trackerChild.rotation) * (leftShoulder.trackerChild.position - chest.trackerChild.position) - leftClavicleInitialOffset;
+					// Vector from clavicle position to shoulder in chest coordinates at the instant of pose calibration
+				rightClavicleShoulderInitialVector = Quaternion.Inverse (chest.trackerChild.rotation) * (rightShoulder.trackerChild.position - chest.trackerChild.position) - rightClavicleInitialOffset;
+				leftClavicleShoulderInitialVector = Quaternion.Inverse (chest.trackerChild.rotation) * (leftShoulder.trackerChild.position - chest.trackerChild.position) - leftClavicleInitialOffset;
 
 
-				initialRightShoulderPos = chest.trackerChild.InverseTransformPoint(rightShoulder.trackerChild.position);
-				initialLeftShoulderPos = chest.trackerChild.InverseTransformPoint(leftShoulder.trackerChild.position);
-				initialRightHipPos = pelvis.trackerChild.InverseTransformPoint(rightHip.trackerChild.position);
-				initialLeftHipPos = pelvis.trackerChild.InverseTransformPoint(leftHip.trackerChild.position);
+				initialRightShoulderPos = chest.trackerChild.InverseTransformPoint (rightShoulder.trackerChild.position);
+				initialLeftShoulderPos = chest.trackerChild.InverseTransformPoint (leftShoulder.trackerChild.position);
+				initialRightHipPos = pelvis.trackerChild.InverseTransformPoint (rightHip.trackerChild.position);
+				initialLeftHipPos = pelvis.trackerChild.InverseTransformPoint (leftHip.trackerChild.position);
 
-				foreach(Renderer renderer in showAfterCalibration)
+				foreach(Renderer renderer in showAfterCalibration) 
 				{
-					if(renderer)
+					if (renderer)
 						renderer.enabled = true;
 				}
-
 				doneCalibrating = true; // *** TODO: Make better recalibration signaling
 
 				calibrationState = CalibrationState.StorePose; // ***
 				break;
 			case CalibrationState.StorePose:
-				foreach(GameObject gameObject in hideAfterCalibration)
+				if(hideMeshes) 
 				{
-					if(gameObject)
-						gameObject.SetActive(false);
+					foreach(GameObject gameObject in hideAfterCalibration) 
+					{
+						if (gameObject)
+							gameObject.SetActive (false);
+					}
 				}
 
 				doneCalibrating = false; // *** TODO: Make better recalibration signaling
@@ -618,10 +624,13 @@ public class RUISFullBodyCalibrator : MonoBehaviour
 		rightStartButton.AddOnStateUpListener(TriggerUp, rightController);
 		rightStartButton.AddOnStateDownListener(TriggerDown, rightController);
 
-		foreach(Renderer renderer in showAfterCalibration)
+		if (hideMeshes) 
 		{
-			if(renderer)
-				renderer.enabled = false;
+			foreach (Renderer renderer in showAfterCalibration) 
+			{
+				if (renderer)
+					renderer.enabled = false;
+			}
 		}
 	}
 
