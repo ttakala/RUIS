@@ -8,3 +8,6 @@ The RUIS toolkit in this repository is distributed as a project for Unity Editor
 See 1.21 readme file for details: https://github.com/ttakala/RUIS/blob/trunk/RUIS%20for%20Unity%201.21%20readme.pdf
 
 Please note that this readme does not contain information on the updates that were made after 2018, which changed the avatar functionality in particular.
+
+![RUIS TurboTuscany logo](ruisPromoLogo.jpg)
+![RUIS interface example screenshot](2018SpringAvatarOptions.jpg)
